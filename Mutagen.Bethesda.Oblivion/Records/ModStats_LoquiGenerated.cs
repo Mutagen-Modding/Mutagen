@@ -31,19 +31,19 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Header : 
+    public partial class ModStats : 
         LoquiNotifyingObject,
-        IHeader,
-        ILoquiObject<Header>,
+        IModStats,
+        ILoquiObject<ModStats>,
         ILoquiObjectSetter,
-        IEquatable<Header>
+        IEquatable<ModStats>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Header_Registration.Instance;
-        public static Header_Registration Registration => Header_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
+        public static ModStats_Registration Registration => ModStats_Registration.Instance;
 
         #region Ctor
-        public Header()
+        public ModStats()
         {
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
@@ -76,38 +76,38 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Header>.GetEqualsMask(Header rhs, EqualsMaskHelper.Include include) => HeaderCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IHeaderGetter>.GetEqualsMask(IHeaderGetter rhs, EqualsMaskHelper.Include include) => HeaderCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ModStats>.GetEqualsMask(ModStats rhs, EqualsMaskHelper.Include include) => ModStatsCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IModStatsGetter>.GetEqualsMask(IModStatsGetter rhs, EqualsMaskHelper.Include include) => ModStatsCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
-            Header_Mask<bool> printMask = null)
+            ModStats_Mask<bool> printMask = null)
         {
-            return HeaderCommon.ToString(this, name: name, printMask: printMask);
+            return ModStatsCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            HeaderCommon.ToString(this, fg, name: name, printMask: null);
+            ModStatsCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public Header_Mask<bool> GetHasBeenSetMask()
+        public ModStats_Mask<bool> GetHasBeenSetMask()
         {
-            return HeaderCommon.GetHasBeenSetMask(this);
+            return ModStatsCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Header rhs)) return false;
+            if (!(obj is ModStats rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(Header rhs)
+        public bool Equals(ModStats rhs)
         {
             if (rhs == null) return false;
             if (!this.Version.EqualsWithin(rhs.Version)) return false;
@@ -131,10 +131,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Translation
         #region Xml Create
         [DebuggerStepThrough]
-        public static Header Create_Xml(
+        public static ModStats Create_Xml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
-            Header_TranslationMask translationMask = null)
+            ModStats_TranslationMask translationMask = null)
         {
             return Create_Xml(
                 missing: missing,
@@ -144,11 +144,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Header Create_Xml(
+        public static ModStats Create_Xml(
             XElement node,
-            out Header_ErrorMask errorMask,
+            out ModStats_ErrorMask errorMask,
             bool doMasks = true,
-            Header_TranslationMask translationMask = null,
+            ModStats_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -157,11 +157,11 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
-            errorMask = Header_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static Header Create_Xml(
+        public static ModStats Create_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -171,17 +171,17 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case MissingCreate.New:
                 case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Header() : null;
+                    if (node == null) return missing == MissingCreate.New ? new ModStats() : null;
                     break;
                 default:
                     break;
             }
-            var ret = new Header();
+            var ret = new ModStats();
             try
             {
                 foreach (var elem in node.Elements())
                 {
-                    HeaderCommon.FillPublicElement_Xml(
+                    ModStatsCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -197,10 +197,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Header Create_Xml(
+        public static ModStats Create_Xml(
             string path,
             MissingCreate missing = MissingCreate.New,
-            Header_TranslationMask translationMask = null)
+            ModStats_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return Create_Xml(
@@ -209,10 +209,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static Header Create_Xml(
+        public static ModStats Create_Xml(
             string path,
-            out Header_ErrorMask errorMask,
-            Header_TranslationMask translationMask = null,
+            out ModStats_ErrorMask errorMask,
+            ModStats_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
@@ -223,10 +223,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static Header Create_Xml(
+        public static ModStats Create_Xml(
             string path,
             ErrorMaskBuilder errorMask,
-            Header_TranslationMask translationMask = null,
+            ModStats_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
@@ -237,10 +237,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Header Create_Xml(
+        public static ModStats Create_Xml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
-            Header_TranslationMask translationMask = null)
+            ModStats_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return Create_Xml(
@@ -249,10 +249,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static Header Create_Xml(
+        public static ModStats Create_Xml(
             Stream stream,
-            out Header_ErrorMask errorMask,
-            Header_TranslationMask translationMask = null,
+            out ModStats_ErrorMask errorMask,
+            ModStats_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
@@ -263,10 +263,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static Header Create_Xml(
+        public static ModStats Create_Xml(
             Stream stream,
             ErrorMaskBuilder errorMask,
-            Header_TranslationMask translationMask = null,
+            ModStats_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
@@ -282,25 +282,25 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Write
         public virtual void Write_Xml(
             XElement node,
-            out Header_ErrorMask errorMask,
+            out ModStats_ErrorMask errorMask,
             bool doMasks = true,
-            Header_TranslationMask translationMask = null,
+            ModStats_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            HeaderXmlTranslation.Instance.Write_Xml(
+            ModStatsXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Header_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Xml(
             string path,
-            out Header_ErrorMask errorMask,
-            Header_TranslationMask translationMask = null,
+            out ModStats_ErrorMask errorMask,
+            ModStats_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -330,8 +330,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         public virtual void Write_Xml(
             Stream stream,
-            out Header_ErrorMask errorMask,
-            Header_TranslationMask translationMask = null,
+            out ModStats_ErrorMask errorMask,
+            ModStats_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write_Xml(
             XElement node,
             string name = null,
-            Header_TranslationMask translationMask = null)
+            ModStats_TranslationMask translationMask = null)
         {
             this.Write_Xml(
                 name: name,
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            HeaderXmlTranslation.Instance.Write_Xml(
+            ModStatsXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -417,11 +417,11 @@ namespace Mutagen.Bethesda.Oblivion
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
-            switch ((Header_FieldIndex)index)
+            switch ((ModStats_FieldIndex)index)
             {
-                case Header_FieldIndex.Version:
-                case Header_FieldIndex.NumRecords:
-                case Header_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.Version:
+                case ModStats_FieldIndex.NumRecords:
+                case ModStats_FieldIndex.NextObjectID:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -429,13 +429,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Header_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GRUP_RECORD_TYPE = ModStats_Registration.TRIGGERING_RECORD_TYPE;
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static Header Create_Binary(
+        public static ModStats Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -447,10 +447,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Header Create_Binary(
+        public static ModStats Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            out Header_ErrorMask errorMask,
+            out ModStats_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -459,20 +459,20 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = Header_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static Header Create_Binary(
+        public static ModStats Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            var ret = new Header();
+            var ret = new ModStats();
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(Header_Registration.HEDR_HEADER)));
+                recordTypeConverter.ConvertToCustom(ModStats_Registration.HEDR_HEADER)));
             UtilityTranslation.RecordParse(
                 record: ret,
                 frame: frame,
@@ -490,17 +490,17 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            out Header_ErrorMask errorMask,
+            out ModStats_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            HeaderBinaryTranslation.Instance.Write_Binary(
+            ModStatsBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = Header_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void Write_Binary(
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            HeaderBinaryTranslation.Instance.Write_Binary(
+            ModStatsBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void Fill_Binary_Structs(
-            Header item,
+            ModStats item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -551,29 +551,29 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Header Copy(
-            Header_CopyMask copyMask = null,
-            IHeaderGetter def = null)
+        public ModStats Copy(
+            ModStats_CopyMask copyMask = null,
+            IModStatsGetter def = null)
         {
-            return Header.Copy(
+            return ModStats.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static Header Copy(
-            IHeader item,
-            Header_CopyMask copyMask = null,
-            IHeaderGetter def = null)
+        public static ModStats Copy(
+            IModStats item,
+            ModStats_CopyMask copyMask = null,
+            IModStatsGetter def = null)
         {
-            Header ret;
-            if (item.GetType().Equals(typeof(Header)))
+            ModStats ret;
+            if (item.GetType().Equals(typeof(ModStats)))
             {
-                ret = new Header();
+                ret = new ModStats();
             }
             else
             {
-                ret = (Header)System.Activator.CreateInstance(item.GetType());
+                ret = (ModStats)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -582,19 +582,19 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Header Copy_ToLoqui(
-            IHeaderGetter item,
-            Header_CopyMask copyMask = null,
-            IHeaderGetter def = null)
+        public static ModStats Copy_ToLoqui(
+            IModStatsGetter item,
+            ModStats_CopyMask copyMask = null,
+            IModStatsGetter def = null)
         {
-            Header ret;
-            if (item.GetType().Equals(typeof(Header)))
+            ModStats ret;
+            if (item.GetType().Equals(typeof(ModStats)))
             {
-                ret = new Header() as Header;
+                ret = new ModStats() as ModStats;
             }
             else
             {
-                ret = (Header)System.Activator.CreateInstance(item.GetType());
+                ret = (ModStats)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -603,10 +603,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IHeaderGetter rhs)
+        public void CopyFieldsFrom(IModStatsGetter rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IHeaderGetter)rhs,
+                rhs: (IModStatsGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -614,9 +614,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IHeaderGetter rhs,
-            Header_CopyMask copyMask,
-            IHeaderGetter def = null)
+            IModStatsGetter rhs,
+            ModStats_CopyMask copyMask,
+            IModStatsGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -627,30 +627,30 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IHeaderGetter rhs,
-            out Header_ErrorMask errorMask,
-            Header_CopyMask copyMask = null,
-            IHeaderGetter def = null,
+            IModStatsGetter rhs,
+            out ModStats_ErrorMask errorMask,
+            ModStats_CopyMask copyMask = null,
+            IModStatsGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            HeaderCommon.CopyFieldsFrom(
+            ModStatsCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
-            errorMask = Header_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyFieldsFrom(
-            IHeaderGetter rhs,
+            IModStatsGetter rhs,
             ErrorMaskBuilder errorMask,
-            Header_CopyMask copyMask = null,
-            IHeaderGetter def = null,
+            ModStats_CopyMask copyMask = null,
+            IModStatsGetter def = null,
             bool doMasks = true)
         {
-            HeaderCommon.CopyFieldsFrom(
+            ModStatsCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -660,16 +660,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void SetNthObject(ushort index, object obj)
         {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
+            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
             switch (enu)
             {
-                case Header_FieldIndex.Version:
+                case ModStats_FieldIndex.Version:
                     this.Version = (Single)obj;
                     break;
-                case Header_FieldIndex.NumRecords:
+                case ModStats_FieldIndex.NumRecords:
                     this.NumRecords = (Int32)obj;
                     break;
-                case Header_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.NextObjectID:
                     this.NextObjectID = (UInt32)obj;
                     break;
                 default:
@@ -687,35 +687,35 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear()
         {
             CallClearPartial_Internal();
-            HeaderCommon.Clear(this);
+            ModStatsCommon.Clear(this);
         }
 
 
-        public static Header Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public static ModStats Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new Header();
+            var ret = new ModStats();
             foreach (var pair in fields)
             {
-                CopyInInternal_Header(ret, pair);
+                CopyInInternal_ModStats(ret, pair);
             }
             return ret;
         }
 
-        protected static void CopyInInternal_Header(Header obj, KeyValuePair<ushort, object> pair)
+        protected static void CopyInInternal_ModStats(ModStats obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out Header_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out ModStats_FieldIndex enu))
             {
                 throw new ArgumentException($"Unknown index: {pair.Key}");
             }
             switch (enu)
             {
-                case Header_FieldIndex.Version:
+                case ModStats_FieldIndex.Version:
                     obj.Version = (Single)pair.Value;
                     break;
-                case Header_FieldIndex.NumRecords:
+                case ModStats_FieldIndex.NumRecords:
                     obj.NumRecords = (Int32)pair.Value;
                     break;
-                case Header_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.NextObjectID:
                     obj.NextObjectID = (UInt32)pair.Value;
                     break;
                 default:
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IHeader : IHeaderGetter, ILoquiClass<IHeader, IHeaderGetter>, ILoquiClass<Header, IHeaderGetter>
+    public partial interface IModStats : IModStatsGetter, ILoquiClass<IModStats, IModStatsGetter>, ILoquiClass<ModStats, IModStatsGetter>
     {
         new Single Version { get; set; }
 
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IHeaderGetter : ILoquiObject
+    public partial interface IModStatsGetter : ILoquiObject
     {
         #region Version
         Single Version { get; }
@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum Header_FieldIndex
+    public enum ModStats_FieldIndex
     {
         Version = 0,
         NumRecords = 1,
@@ -769,9 +769,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Header_Registration : ILoquiRegistration
+    public class ModStats_Registration : ILoquiRegistration
     {
-        public static readonly Header_Registration Instance = new Header_Registration();
+        public static readonly ModStats_Registration Instance = new ModStats_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
@@ -786,25 +786,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(Header_Mask<>);
+        public static readonly Type MaskType = typeof(ModStats_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Header_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ModStats_ErrorMask);
 
-        public static readonly Type ClassType = typeof(Header);
+        public static readonly Type ClassType = typeof(ModStats);
 
-        public static readonly Type GetterType = typeof(IHeaderGetter);
+        public static readonly Type GetterType = typeof(IModStatsGetter);
 
         public static readonly Type InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IHeader);
+        public static readonly Type SetterType = typeof(IModStats);
 
         public static readonly Type InternalSetterType = null;
 
-        public static readonly Type CommonType = typeof(HeaderCommon);
+        public static readonly Type CommonType = typeof(ModStatsCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.Header";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.ModStats";
 
-        public const string Name = "Header";
+        public const string Name = "ModStats";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -817,11 +817,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (str.Upper)
             {
                 case "VERSION":
-                    return (ushort)Header_FieldIndex.Version;
+                    return (ushort)ModStats_FieldIndex.Version;
                 case "NUMRECORDS":
-                    return (ushort)Header_FieldIndex.NumRecords;
+                    return (ushort)ModStats_FieldIndex.NumRecords;
                 case "NEXTOBJECTID":
-                    return (ushort)Header_FieldIndex.NextObjectID;
+                    return (ushort)ModStats_FieldIndex.NextObjectID;
                 default:
                     return null;
             }
@@ -829,12 +829,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
+            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
             switch (enu)
             {
-                case Header_FieldIndex.Version:
-                case Header_FieldIndex.NumRecords:
-                case Header_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.Version:
+                case ModStats_FieldIndex.NumRecords:
+                case ModStats_FieldIndex.NextObjectID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -843,12 +843,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
+            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
             switch (enu)
             {
-                case Header_FieldIndex.Version:
-                case Header_FieldIndex.NumRecords:
-                case Header_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.Version:
+                case ModStats_FieldIndex.NumRecords:
+                case ModStats_FieldIndex.NextObjectID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -857,12 +857,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
+            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
             switch (enu)
             {
-                case Header_FieldIndex.Version:
-                case Header_FieldIndex.NumRecords:
-                case Header_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.Version:
+                case ModStats_FieldIndex.NumRecords:
+                case ModStats_FieldIndex.NextObjectID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -871,14 +871,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
+            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
             switch (enu)
             {
-                case Header_FieldIndex.Version:
+                case ModStats_FieldIndex.Version:
                     return "Version";
-                case Header_FieldIndex.NumRecords:
+                case ModStats_FieldIndex.NumRecords:
                     return "NumRecords";
-                case Header_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.NextObjectID:
                     return "NextObjectID";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -887,12 +887,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
+            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
             switch (enu)
             {
-                case Header_FieldIndex.Version:
-                case Header_FieldIndex.NumRecords:
-                case Header_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.Version:
+                case ModStats_FieldIndex.NumRecords:
+                case ModStats_FieldIndex.NextObjectID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -901,12 +901,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
+            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
             switch (enu)
             {
-                case Header_FieldIndex.Version:
-                case Header_FieldIndex.NumRecords:
-                case Header_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.Version:
+                case ModStats_FieldIndex.NumRecords:
+                case ModStats_FieldIndex.NextObjectID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -915,14 +915,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
+            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
             switch (enu)
             {
-                case Header_FieldIndex.Version:
+                case ModStats_FieldIndex.Version:
                     return typeof(Single);
-                case Header_FieldIndex.NumRecords:
+                case ModStats_FieldIndex.NumRecords:
                     return typeof(Int32);
-                case Header_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.NextObjectID:
                     return typeof(UInt32);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -964,19 +964,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Extensions
-    public static partial class HeaderCommon
+    public static partial class ModStatsCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IHeader item,
-            IHeaderGetter rhs,
-            IHeaderGetter def,
+            IModStats item,
+            IModStatsGetter rhs,
+            IModStatsGetter def,
             ErrorMaskBuilder errorMask,
-            Header_CopyMask copyMask)
+            ModStats_CopyMask copyMask)
         {
             if (copyMask?.Version ?? true)
             {
-                errorMask?.PushIndex((int)Header_FieldIndex.Version);
+                errorMask?.PushIndex((int)ModStats_FieldIndex.Version);
                 try
                 {
                     item.Version = rhs.Version;
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.NumRecords ?? true)
             {
-                errorMask?.PushIndex((int)Header_FieldIndex.NumRecords);
+                errorMask?.PushIndex((int)ModStats_FieldIndex.NumRecords);
                 try
                 {
                     item.NumRecords = rhs.NumRecords;
@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.NextObjectID ?? true)
             {
-                errorMask?.PushIndex((int)Header_FieldIndex.NextObjectID);
+                errorMask?.PushIndex((int)ModStats_FieldIndex.NextObjectID);
                 try
                 {
                     item.NextObjectID = rhs.NextObjectID;
@@ -1029,19 +1029,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IHeader item)
+        public static void Clear(IModStats item)
         {
             item.Version = default(Single);
             item.NumRecords = default(Int32);
             item.NextObjectID = default(UInt32);
         }
 
-        public static Header_Mask<bool> GetEqualsMask(
-            this IHeaderGetter item,
-            IHeaderGetter rhs,
+        public static ModStats_Mask<bool> GetEqualsMask(
+            this IModStatsGetter item,
+            IModStatsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Header_Mask<bool>();
+            var ret = new ModStats_Mask<bool>();
             FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1051,9 +1051,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillEqualsMask(
-            IHeaderGetter item,
-            IHeaderGetter rhs,
-            Header_Mask<bool> ret,
+            IModStatsGetter item,
+            IModStatsGetter rhs,
+            ModStats_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1063,9 +1063,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static string ToString(
-            this IHeaderGetter item,
+            this IModStatsGetter item,
             string name = null,
-            Header_Mask<bool> printMask = null)
+            ModStats_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1073,18 +1073,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void ToString(
-            this IHeaderGetter item,
+            this IModStatsGetter item,
             FileGeneration fg,
             string name = null,
-            Header_Mask<bool> printMask = null)
+            ModStats_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Header)} =>");
+                fg.AppendLine($"{nameof(ModStats)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Header)}) =>");
+                fg.AppendLine($"{name} ({nameof(ModStats)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1106,15 +1106,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static bool HasBeenSet(
-            this IHeaderGetter item,
-            Header_Mask<bool?> checkMask)
+            this IModStatsGetter item,
+            ModStats_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static Header_Mask<bool> GetHasBeenSetMask(IHeaderGetter item)
+        public static ModStats_Mask<bool> GetHasBeenSetMask(IModStatsGetter item)
         {
-            var ret = new Header_Mask<bool>();
+            var ret = new ModStats_Mask<bool>();
             ret.Version = true;
             ret.NumRecords = true;
             ret.NextObjectID = true;
@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Xml Translation
         public static void FillPublic_Xml(
-            this Header item,
+            this ModStats item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    HeaderCommon.FillPublicElement_Xml(
+                    ModStatsCommon.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this Header item,
+            this ModStats item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1159,7 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "Version":
                     try
                     {
-                        errorMask?.PushIndex((int)Header_FieldIndex.Version);
+                        errorMask?.PushIndex((int)ModStats_FieldIndex.Version);
                         if (FloatXmlTranslation.Instance.Parse(
                             node: node,
                             item: out Single VersionParse,
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "NumRecords":
                     try
                     {
-                        errorMask?.PushIndex((int)Header_FieldIndex.NumRecords);
+                        errorMask?.PushIndex((int)ModStats_FieldIndex.NumRecords);
                         if (Int32XmlTranslation.Instance.Parse(
                             node: node,
                             item: out Int32 NumRecordsParse,
@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "NextObjectID":
                     try
                     {
-                        errorMask?.PushIndex((int)Header_FieldIndex.NextObjectID);
+                        errorMask?.PushIndex((int)ModStats_FieldIndex.NextObjectID);
                         if (UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             item: out UInt32 NextObjectIDParse,
@@ -1246,41 +1246,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class HeaderXmlTranslation
+    public partial class ModStatsXmlTranslation
     {
-        public readonly static HeaderXmlTranslation Instance = new HeaderXmlTranslation();
+        public readonly static ModStatsXmlTranslation Instance = new ModStatsXmlTranslation();
 
         public static void WriteToNode_Xml(
-            IHeaderGetter item,
+            IModStatsGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)Header_FieldIndex.Version) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ModStats_FieldIndex.Version) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Version),
                     item: item.Version,
-                    fieldIndex: (int)Header_FieldIndex.Version,
+                    fieldIndex: (int)ModStats_FieldIndex.Version,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Header_FieldIndex.NumRecords) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ModStats_FieldIndex.NumRecords) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.NumRecords),
                     item: item.NumRecords,
-                    fieldIndex: (int)Header_FieldIndex.NumRecords,
+                    fieldIndex: (int)ModStats_FieldIndex.NumRecords,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Header_FieldIndex.NextObjectID) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ModStats_FieldIndex.NextObjectID) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.NextObjectID),
                     item: item.NextObjectID,
-                    fieldIndex: (int)Header_FieldIndex.NextObjectID,
+                    fieldIndex: (int)ModStats_FieldIndex.NextObjectID,
                     errorMask: errorMask);
             }
         }
@@ -1288,10 +1288,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public void Write_Xml(
             XElement node,
-            IHeaderGetter item,
+            IModStatsGetter item,
             bool doMasks,
-            out Header_ErrorMask errorMask,
-            Header_TranslationMask translationMask,
+            out ModStats_ErrorMask errorMask,
+            ModStats_TranslationMask translationMask,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -1301,21 +1301,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Header_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void Write_Xml(
             XElement node,
-            IHeaderGetter item,
+            IModStatsGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Header");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ModStats");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Header");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ModStats");
             }
             WriteToNode_Xml(
                 item: item,
@@ -1329,14 +1329,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Mask
-    public class Header_Mask<T> : IMask<T>, IEquatable<Header_Mask<T>>
+    public class ModStats_Mask<T> : IMask<T>, IEquatable<ModStats_Mask<T>>
     {
         #region Ctors
-        public Header_Mask()
+        public ModStats_Mask()
         {
         }
 
-        public Header_Mask(T initialValue)
+        public ModStats_Mask(T initialValue)
         {
             this.Version = initialValue;
             this.NumRecords = initialValue;
@@ -1353,11 +1353,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is Header_Mask<T> rhs)) return false;
+            if (!(obj is ModStats_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(Header_Mask<T> rhs)
+        public bool Equals(ModStats_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!object.Equals(this.Version, rhs.Version)) return false;
@@ -1387,14 +1387,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Translate
-        public Header_Mask<R> Translate<R>(Func<T, R> eval)
+        public ModStats_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new Header_Mask<R>();
+            var ret = new ModStats_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(Header_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(ModStats_Mask<R> obj, Func<T, R> eval)
         {
             obj.Version = eval(this.Version);
             obj.NumRecords = eval(this.NumRecords);
@@ -1414,16 +1414,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Header_Mask<bool> printMask = null)
+        public string ToString(ModStats_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Header_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, ModStats_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(Header_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(ModStats_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1446,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Header_ErrorMask : IErrorMask, IErrorMask<Header_ErrorMask>
+    public class ModStats_ErrorMask : IErrorMask, IErrorMask<ModStats_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }
@@ -1470,14 +1470,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region IErrorMask
         public object GetNthMask(int index)
         {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
+            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
             switch (enu)
             {
-                case Header_FieldIndex.Version:
+                case ModStats_FieldIndex.Version:
                     return Version;
-                case Header_FieldIndex.NumRecords:
+                case ModStats_FieldIndex.NumRecords:
                     return NumRecords;
-                case Header_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.NextObjectID:
                     return NextObjectID;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1486,16 +1486,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void SetNthException(int index, Exception ex)
         {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
+            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
             switch (enu)
             {
-                case Header_FieldIndex.Version:
+                case ModStats_FieldIndex.Version:
                     this.Version = ex;
                     break;
-                case Header_FieldIndex.NumRecords:
+                case ModStats_FieldIndex.NumRecords:
                     this.NumRecords = ex;
                     break;
-                case Header_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.NextObjectID:
                     this.NextObjectID = ex;
                     break;
                 default:
@@ -1505,16 +1505,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void SetNthMask(int index, object obj)
         {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
+            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
             switch (enu)
             {
-                case Header_FieldIndex.Version:
+                case ModStats_FieldIndex.Version:
                     this.Version = (Exception)obj;
                     break;
-                case Header_FieldIndex.NumRecords:
+                case ModStats_FieldIndex.NumRecords:
                     this.NumRecords = (Exception)obj;
                     break;
-                case Header_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.NextObjectID:
                     this.NextObjectID = (Exception)obj;
                     break;
                 default:
@@ -1542,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void ToString(FileGeneration fg)
         {
-            fg.AppendLine("Header_ErrorMask =>");
+            fg.AppendLine("ModStats_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1569,15 +1569,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public Header_ErrorMask Combine(Header_ErrorMask rhs)
+        public ModStats_ErrorMask Combine(ModStats_ErrorMask rhs)
         {
-            var ret = new Header_ErrorMask();
+            var ret = new ModStats_ErrorMask();
             ret.Version = this.Version.Combine(rhs.Version);
             ret.NumRecords = this.NumRecords.Combine(rhs.NumRecords);
             ret.NextObjectID = this.NextObjectID.Combine(rhs.NextObjectID);
             return ret;
         }
-        public static Header_ErrorMask Combine(Header_ErrorMask lhs, Header_ErrorMask rhs)
+        public static ModStats_ErrorMask Combine(ModStats_ErrorMask lhs, ModStats_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1585,21 +1585,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Header_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static ModStats_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            return new Header_ErrorMask();
+            return new ModStats_ErrorMask();
         }
         #endregion
 
     }
-    public class Header_CopyMask
+    public class ModStats_CopyMask
     {
-        public Header_CopyMask()
+        public ModStats_CopyMask()
         {
         }
 
-        public Header_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        public ModStats_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
             this.Version = defaultOn;
             this.NumRecords = defaultOn;
@@ -1614,7 +1614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Header_TranslationMask : ITranslationMask
+    public class ModStats_TranslationMask : ITranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;
@@ -1624,11 +1624,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Ctors
-        public Header_TranslationMask()
+        public ModStats_TranslationMask()
         {
         }
 
-        public Header_TranslationMask(bool defaultOn)
+        public ModStats_TranslationMask(bool defaultOn)
         {
             this.Version = defaultOn;
             this.NumRecords = defaultOn;
@@ -1659,12 +1659,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class HeaderBinaryTranslation
+    public partial class ModStatsBinaryTranslation
     {
-        public readonly static HeaderBinaryTranslation Instance = new HeaderBinaryTranslation();
+        public readonly static ModStatsBinaryTranslation Instance = new ModStatsBinaryTranslation();
 
         public static void Write_Binary_Embedded(
-            IHeaderGetter item,
+            IModStatsGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1679,11 +1679,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public void Write_Binary(
             MutagenWriter writer,
-            IHeaderGetter item,
+            IModStatsGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
-            out Header_ErrorMask errorMask)
+            out ModStats_ErrorMask errorMask)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
@@ -1692,19 +1692,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
-            errorMask = Header_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void Write_Binary(
             MutagenWriter writer,
-            IHeaderGetter item,
+            IModStatsGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Header_Registration.HEDR_HEADER,
+                record: ModStats_Registration.HEDR_HEADER,
                 type: ObjectType.Subrecord))
             {
                 Write_Binary_Embedded(

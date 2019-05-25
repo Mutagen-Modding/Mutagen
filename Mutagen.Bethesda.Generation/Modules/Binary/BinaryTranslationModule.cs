@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Generation
             bool typelessStruct = obj.IsTypelessStruct();
             ObjectType objType = obj.GetObjectType();
 
-            if (obj.BaseClassTrail().Any((b) => b.Name == "MajorRecord"))
+            if (await obj.IsMajorRecord())
             {
                 bool async = this.HasAsync(obj, self: true);
                 string ret;
@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     fg.AppendLine($"var ret = new {obj.Name}{obj.GetGenericTypes(MaskType.Normal)}(modKey);");
-                    fg.AppendLine("var masterReferences = new MasterReferences(ret.TES4.MasterReferences, modKey);");
+                    fg.AppendLine("var masterReferences = new MasterReferences(ret.ModHeader.MasterReferences, modKey);");
                 }
                 else
                 {
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
-                        fg.AppendLine($"MasterReferences masterReferences = new MasterReferences(item.TES4.MasterReferences, modKey);");
+                        fg.AppendLine($"MasterReferences masterReferences = new MasterReferences(item.ModHeader.MasterReferences, modKey);");
                     }
                     if (obj.HasLoquiBaseObject)
                     {

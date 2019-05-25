@@ -6,9 +6,14 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class GameSettingFloat
+    public partial class GameSettingFloat : IGameSettingNumeric
     {
-        public const char TRIGGER_CHAR = 'f';
-        protected override char TriggerChar => TRIGGER_CHAR;
+        public override GameSettingType SettingType => GameSettingType.Float;
+
+        float IGameSettingNumeric.RawData
+        {
+            get => this.Data;
+            set => this.Data = value;
+        }
     }
 }

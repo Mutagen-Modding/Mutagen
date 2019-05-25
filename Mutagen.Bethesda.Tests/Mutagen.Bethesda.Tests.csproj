@@ -8,9 +8,19 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj" />
+    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj" />
+    <ProjectReference Include="..\..\Loqui\Loqui.Presentation\Loqui.Presentation.csproj" />
+    <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmarks\Benchmarks.cs" />
     <Compile Include="Benchmarks\FormKeyParsing.cs" />
@@ -22,6 +32,12 @@
     <Compile Include="FlattenedMod_Tests.cs" />
     <Compile Include="ModList_Tests.cs" />
     <Compile Include="Passthrough_Tests.cs" />
+    <Compile Include="Settings\DataFolderLocations.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\TestingSettings_LoquiGenerated.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\PassthroughSettings_LoquiGenerated.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
@@ -29,25 +45,18 @@
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
     <Compile Include="Settings\ProtocolDefinition_Tests.cs" />
-    <Compile Include="Settings\TestingSettings_LoquiGenerated.cs">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Specific Passthrough Tests\Oblivion\OblivionESM_Passthrough_Tests.cs" />
-    <Compile Include="Specific Passthrough Tests\Oblivion\Oblivion_Passthrough_Test.cs" />
+    <Compile Include="Specific Passthrough Tests\OtherTests.cs" />
+    <Compile Include="Specific Passthrough Tests\Oblivion_Passthrough_Test.cs" />
+    <Compile Include="Specific Passthrough Tests\PassthroughTest.cs" />
+    <Compile Include="Specific Passthrough Tests\Skyrim_Passthrough_Test.cs" />
     <Compile Include="TestBattery.cs" />
     <Compile Include="TestingConstants.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj" />
-    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj" />
-    <ProjectReference Include="..\..\Loqui\Loqui.Presentation\Loqui.Presentation.csproj" />
-    <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
+    <Compile Include="Settings\DataFolderLocations_LoquiGenerated.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\PassthroughGroup_LoquiGenerated.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Settings\TestingSettings.xsd">
@@ -60,5 +69,11 @@
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </None>
     <None Include="Settings\Common.xsd" />
+    <None Include="Settings\DataFolderLocations.xsd">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </None>
+    <None Include="Settings\PassthroughGroup.xsd">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </None>
   </ItemGroup>
 </Project>

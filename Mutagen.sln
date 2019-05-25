@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.UnitTests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt.UnitTests", "..\CSharpExt\CSharpExt.UnitTests\CSharpExt.UnitTests.csproj", "{7D5ED080-106F-4A21-A724-54A53B5080A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Skyrim", "Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj", "{6FD878AB-5FBA-4358-806F-D8C8118CCB01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{7D5ED080-106F-4A21-A724-54A53B5080A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D5ED080-106F-4A21-A724-54A53B5080A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D5ED080-106F-4A21-A724-54A53B5080A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FD878AB-5FBA-4358-806F-D8C8118CCB01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FD878AB-5FBA-4358-806F-D8C8118CCB01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FD878AB-5FBA-4358-806F-D8C8118CCB01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FD878AB-5FBA-4358-806F-D8C8118CCB01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

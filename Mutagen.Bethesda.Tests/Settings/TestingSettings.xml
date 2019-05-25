@@ -6,9 +6,9 @@
       <Bool name="TestModList" />
       <Bool name="TestFlattenedMod" />
       <Bool name="TestBenchmarks" />
+      <RefDirect name="DataFolderLocations" refName="DataFolderLocations" />
       <RefDirect name="PassthroughSettings" refName="PassthroughSettings" />
-      <RefDirect name="OblivionESM" refName="Passthrough" />
-      <RefList name="OtherPassthroughs" refName="Passthrough" />
+      <RefList name="PassthroughGroups" refName="PassthroughGroup" />
     </Fields>
   </Object>
   <Object name="PassthroughSettings" GUID="b6e04291-8a1a-4f43-baa4-0f5fc5074d8b" ID="3">
@@ -19,7 +19,18 @@
       <Bool name="TestImport" />
       <Bool name="TestObservable" />
       <Bool name="TestFolder" />
-      <String name="DataFolder" />
+    </Fields>
+  </Object>
+  <Object name="DataFolderLocations" GUID="352acadd-2222-4274-a2a2-5678a465527e" ID="4">
+    <Fields>
+      <String name="Oblivion" />
+      <String name="Skyrim" />
+    </Fields>
+  </Object>
+  <Object name="PassthroughGroup" GUID="7c60c735-e67c-498a-9d99-80aa1c1277a9" ID="5">
+    <Fields>
+      <Bool name="Do" />
+      <RefList name="Passthroughs" refName="Passthrough" />
     </Fields>
   </Object>
   <Object name="Passthrough" GUID="4eabe8e5-a068-4934-a847-401d92253ade" ID="2">
@@ -27,6 +38,7 @@
       <Bool name="Do" />
       <String name="Path" />
       <UInt8 name="NumMasters" />
+      <Enum name="GameMode" enumName="Mutagen.Bethesda.GameMode" />
     </Fields>
   </Object>
 </Loqui>

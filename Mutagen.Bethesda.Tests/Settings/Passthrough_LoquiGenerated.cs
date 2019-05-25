@@ -51,6 +51,9 @@ namespace Mutagen.Bethesda.Tests
         #region NumMasters
         public Byte NumMasters { get; set; }
         #endregion
+        #region GameMode
+        public Mutagen.Bethesda.GameMode GameMode { get; set; }
+        #endregion
 
         IMask<bool> IEqualsMask<Passthrough>.GetEqualsMask(Passthrough rhs, EqualsMaskHelper.Include include) => PassthroughCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IPassthroughGetter>.GetEqualsMask(IPassthroughGetter rhs, EqualsMaskHelper.Include include) => PassthroughCommon.GetEqualsMask(this, rhs, include);
@@ -94,6 +97,7 @@ namespace Mutagen.Bethesda.Tests
             if (this.Do != rhs.Do) return false;
             if (!string.Equals(this.Path, rhs.Path)) return false;
             if (this.NumMasters != rhs.NumMasters) return false;
+            if (this.GameMode != rhs.GameMode) return false;
             return true;
         }
 
@@ -103,6 +107,7 @@ namespace Mutagen.Bethesda.Tests
             ret = HashHelper.GetHashCode(Do).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Path).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(NumMasters).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(GameMode).CombineHashCode(ret);
             return ret;
         }
 
@@ -613,6 +618,9 @@ namespace Mutagen.Bethesda.Tests
                 case Passthrough_FieldIndex.NumMasters:
                     this.NumMasters = (Byte)obj;
                     break;
+                case Passthrough_FieldIndex.GameMode:
+                    this.GameMode = (Mutagen.Bethesda.GameMode)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -659,6 +667,9 @@ namespace Mutagen.Bethesda.Tests
                 case Passthrough_FieldIndex.NumMasters:
                     obj.NumMasters = (Byte)pair.Value;
                     break;
+                case Passthrough_FieldIndex.GameMode:
+                    obj.GameMode = (Mutagen.Bethesda.GameMode)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -674,6 +685,8 @@ namespace Mutagen.Bethesda.Tests
         new String Path { get; set; }
 
         new Byte NumMasters { get; set; }
+
+        new Mutagen.Bethesda.GameMode GameMode { get; set; }
 
     }
 
@@ -691,6 +704,10 @@ namespace Mutagen.Bethesda.Tests
         Byte NumMasters { get; }
 
         #endregion
+        #region GameMode
+        Mutagen.Bethesda.GameMode GameMode { get; }
+
+        #endregion
 
     }
 
@@ -706,6 +723,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         Do = 0,
         Path = 1,
         NumMasters = 2,
+        GameMode = 3,
     }
     #endregion
 
@@ -723,9 +741,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "4eabe8e5-a068-4934-a847-401d92253ade";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(Passthrough_Mask<>);
 
@@ -763,6 +781,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)Passthrough_FieldIndex.Path;
                 case "NUMMASTERS":
                     return (ushort)Passthrough_FieldIndex.NumMasters;
+                case "GAMEMODE":
+                    return (ushort)Passthrough_FieldIndex.GameMode;
                 default:
                     return null;
             }
@@ -776,6 +796,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Passthrough_FieldIndex.Do:
                 case Passthrough_FieldIndex.Path:
                 case Passthrough_FieldIndex.NumMasters:
+                case Passthrough_FieldIndex.GameMode:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -790,6 +811,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Passthrough_FieldIndex.Do:
                 case Passthrough_FieldIndex.Path:
                 case Passthrough_FieldIndex.NumMasters:
+                case Passthrough_FieldIndex.GameMode:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -804,6 +826,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Passthrough_FieldIndex.Do:
                 case Passthrough_FieldIndex.Path:
                 case Passthrough_FieldIndex.NumMasters:
+                case Passthrough_FieldIndex.GameMode:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -821,6 +844,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "Path";
                 case Passthrough_FieldIndex.NumMasters:
                     return "NumMasters";
+                case Passthrough_FieldIndex.GameMode:
+                    return "GameMode";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -834,6 +859,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Passthrough_FieldIndex.Do:
                 case Passthrough_FieldIndex.Path:
                 case Passthrough_FieldIndex.NumMasters:
+                case Passthrough_FieldIndex.GameMode:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -848,6 +874,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Passthrough_FieldIndex.Do:
                 case Passthrough_FieldIndex.Path:
                 case Passthrough_FieldIndex.NumMasters:
+                case Passthrough_FieldIndex.GameMode:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -865,6 +892,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return typeof(String);
                 case Passthrough_FieldIndex.NumMasters:
                     return typeof(Byte);
+                case Passthrough_FieldIndex.GameMode:
+                    return typeof(Mutagen.Bethesda.GameMode);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -929,6 +958,12 @@ namespace Mutagen.Bethesda.Tests.Internals
                 item.NumMasters = rhs.NumMasters;
                 errorMask?.PopIndex();
             }
+            if (copyMask?.GameMode ?? true)
+            {
+                errorMask?.PushIndex((int)Passthrough_FieldIndex.GameMode);
+                item.GameMode = rhs.GameMode;
+                errorMask?.PopIndex();
+            }
         }
 
         #endregion
@@ -938,6 +973,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Do = default(Boolean);
             item.Path = default(String);
             item.NumMasters = default(Byte);
+            item.GameMode = default(Mutagen.Bethesda.GameMode);
         }
 
         public static Passthrough_Mask<bool> GetEqualsMask(
@@ -964,6 +1000,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Do = item.Do == rhs.Do;
             ret.Path = string.Equals(item.Path, rhs.Path);
             ret.NumMasters = item.NumMasters == rhs.NumMasters;
+            ret.GameMode = item.GameMode == rhs.GameMode;
         }
 
         public static string ToString(
@@ -1005,6 +1042,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"NumMasters => {item.NumMasters}");
                 }
+                if (printMask?.GameMode ?? true)
+                {
+                    fg.AppendLine($"GameMode => {item.GameMode}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1022,6 +1063,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Do = true;
             ret.Path = true;
             ret.NumMasters = true;
+            ret.GameMode = true;
             return ret;
         }
 
@@ -1147,6 +1189,35 @@ namespace Mutagen.Bethesda.Tests.Internals
                         }
                     }
                     break;
+                case "GameMode":
+                    if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.GameMode) ?? true))
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)Passthrough_FieldIndex.GameMode);
+                            if (EnumXmlTranslation<Mutagen.Bethesda.GameMode>.Instance.Parse(
+                                node: node,
+                                item: out Mutagen.Bethesda.GameMode GameModeParse,
+                                errorMask: errorMask))
+                            {
+                                item.GameMode = GameModeParse;
+                            }
+                            else
+                            {
+                                item.GameMode = default(Mutagen.Bethesda.GameMode);
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -1194,6 +1265,15 @@ namespace Mutagen.Bethesda.Tests.Internals
                     name: nameof(item.NumMasters),
                     item: item.NumMasters,
                     fieldIndex: (int)Passthrough_FieldIndex.NumMasters,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.GameMode) ?? true))
+            {
+                EnumXmlTranslation<Mutagen.Bethesda.GameMode>.Instance.Write(
+                    node: node,
+                    name: nameof(item.GameMode),
+                    item: item.GameMode,
+                    fieldIndex: (int)Passthrough_FieldIndex.GameMode,
                     errorMask: errorMask);
             }
         }
@@ -1254,6 +1334,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.Do = initialValue;
             this.Path = initialValue;
             this.NumMasters = initialValue;
+            this.GameMode = initialValue;
         }
         #endregion
 
@@ -1261,6 +1342,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public T Do;
         public T Path;
         public T NumMasters;
+        public T GameMode;
         #endregion
 
         #region Equals
@@ -1276,6 +1358,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!object.Equals(this.Do, rhs.Do)) return false;
             if (!object.Equals(this.Path, rhs.Path)) return false;
             if (!object.Equals(this.NumMasters, rhs.NumMasters)) return false;
+            if (!object.Equals(this.GameMode, rhs.GameMode)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1284,6 +1367,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret = ret.CombineHashCode(this.Do?.GetHashCode());
             ret = ret.CombineHashCode(this.Path?.GetHashCode());
             ret = ret.CombineHashCode(this.NumMasters?.GetHashCode());
+            ret = ret.CombineHashCode(this.GameMode?.GetHashCode());
             return ret;
         }
 
@@ -1295,6 +1379,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!eval(this.Do)) return false;
             if (!eval(this.Path)) return false;
             if (!eval(this.NumMasters)) return false;
+            if (!eval(this.GameMode)) return false;
             return true;
         }
         #endregion
@@ -1312,6 +1397,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             obj.Do = eval(this.Do);
             obj.Path = eval(this.Path);
             obj.NumMasters = eval(this.NumMasters);
+            obj.GameMode = eval(this.GameMode);
         }
         #endregion
 
@@ -1352,6 +1438,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"NumMasters => {NumMasters}");
                 }
+                if (printMask?.GameMode ?? true)
+                {
+                    fg.AppendLine($"GameMode => {GameMode}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1378,6 +1468,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public Exception Do;
         public Exception Path;
         public Exception NumMasters;
+        public Exception GameMode;
         #endregion
 
         #region IErrorMask
@@ -1392,6 +1483,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return Path;
                 case Passthrough_FieldIndex.NumMasters:
                     return NumMasters;
+                case Passthrough_FieldIndex.GameMode:
+                    return GameMode;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1410,6 +1503,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                     break;
                 case Passthrough_FieldIndex.NumMasters:
                     this.NumMasters = ex;
+                    break;
+                case Passthrough_FieldIndex.GameMode:
+                    this.GameMode = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1430,6 +1526,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Passthrough_FieldIndex.NumMasters:
                     this.NumMasters = (Exception)obj;
                     break;
+                case Passthrough_FieldIndex.GameMode:
+                    this.GameMode = (Exception)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1441,6 +1540,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (Do != null) return true;
             if (Path != null) return true;
             if (NumMasters != null) return true;
+            if (GameMode != null) return true;
             return false;
         }
         #endregion
@@ -1478,6 +1578,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine($"Do => {Do}");
             fg.AppendLine($"Path => {Path}");
             fg.AppendLine($"NumMasters => {NumMasters}");
+            fg.AppendLine($"GameMode => {GameMode}");
         }
         #endregion
 
@@ -1488,6 +1589,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Do = this.Do.Combine(rhs.Do);
             ret.Path = this.Path.Combine(rhs.Path);
             ret.NumMasters = this.NumMasters.Combine(rhs.NumMasters);
+            ret.GameMode = this.GameMode.Combine(rhs.GameMode);
             return ret;
         }
         public static Passthrough_ErrorMask Combine(Passthrough_ErrorMask lhs, Passthrough_ErrorMask rhs)
@@ -1517,12 +1619,14 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.Do = defaultOn;
             this.Path = defaultOn;
             this.NumMasters = defaultOn;
+            this.GameMode = defaultOn;
         }
 
         #region Members
         public bool Do;
         public bool Path;
         public bool NumMasters;
+        public bool GameMode;
         #endregion
 
     }
@@ -1534,6 +1638,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool Do;
         public bool Path;
         public bool NumMasters;
+        public bool GameMode;
         #endregion
 
         #region Ctors
@@ -1546,6 +1651,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.Do = defaultOn;
             this.Path = defaultOn;
             this.NumMasters = defaultOn;
+            this.GameMode = defaultOn;
         }
 
         #endregion
@@ -1567,6 +1673,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((Do, null));
             ret.Add((Path, null));
             ret.Add((NumMasters, null));
+            ret.Add((GameMode, null));
         }
     }
     #endregion

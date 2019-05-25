@@ -30,6 +30,7 @@
     <Compile Include="BinaryFileProcessor.cs" />
     <Compile Include="Translators\Binary\BinaryStringUtility.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Enums\GameMode.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Extensions\NoggogRxExt.cs" />
@@ -38,7 +39,8 @@
     <Compile Include="FormKey.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IFormKey.cs" />
-    <Compile Include="Interfaces\IMajorRecordCommon.cs" />
+    <Compile Include="Interfaces\Major Records\IGameSettingCommon.cs" />
+    <Compile Include="Interfaces\Major Records\IMajorRecordCommon.cs" />
     <Compile Include="Interfaces\IMod.cs" />
     <Compile Include="Interfaces\IMutagenReadStream.cs" />
     <Compile Include="Interfaces\INamed.cs" />

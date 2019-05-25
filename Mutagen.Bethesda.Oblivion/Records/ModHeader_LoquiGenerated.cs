@@ -34,19 +34,19 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class TES4 : 
+    public partial class ModHeader : 
         LoquiNotifyingObject,
-        ITES4,
-        ILoquiObject<TES4>,
+        IModHeader,
+        ILoquiObject<ModHeader>,
         ILoquiObjectSetter,
-        IEquatable<TES4>
+        IEquatable<ModHeader>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => TES4_Registration.Instance;
-        public static TES4_Registration Registration => TES4_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
+        public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
 
         #region Ctor
-        public TES4()
+        public ModHeader()
         {
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
@@ -69,23 +69,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         #endregion
-        #region Header
+        #region Stats
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Header _Header = new Header();
-        public Header Header
+        private ModStats _Stats = new ModStats();
+        public ModStats Stats
         {
-            get => _Header;
-            set => _Header = value ?? new Header();
+            get => _Stats;
+            set => _Stats = value ?? new ModStats();
         }
         #endregion
         #region TypeOffsets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool TypeOffsets_IsSet
         {
-            get => _hasBeenSetTracker[(int)TES4_FieldIndex.TypeOffsets];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)TES4_FieldIndex.TypeOffsets, nameof(TypeOffsets_IsSet));
+            get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.TypeOffsets];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.TypeOffsets, nameof(TypeOffsets_IsSet));
         }
-        bool ITES4Getter.TypeOffsets_IsSet => TypeOffsets_IsSet;
+        bool IModHeaderGetter.TypeOffsets_IsSet => TypeOffsets_IsSet;
         protected Byte[] _TypeOffsets;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] TypeOffsets
@@ -94,12 +94,12 @@ namespace Mutagen.Bethesda.Oblivion
             set => TypeOffsets_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] ITES4Getter.TypeOffsets => this.TypeOffsets;
+        Byte[] IModHeaderGetter.TypeOffsets => this.TypeOffsets;
         public void TypeOffsets_Set(
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _TypeOffsets, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.TypeOffsets, nameof(TypeOffsets), nameof(TypeOffsets_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _TypeOffsets, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.TypeOffsets, nameof(TypeOffsets), nameof(TypeOffsets_IsSet));
         }
         public void TypeOffsets_Unset()
         {
@@ -110,10 +110,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool Deleted_IsSet
         {
-            get => _hasBeenSetTracker[(int)TES4_FieldIndex.Deleted];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)TES4_FieldIndex.Deleted, nameof(Deleted_IsSet));
+            get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Deleted];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.Deleted, nameof(Deleted_IsSet));
         }
-        bool ITES4Getter.Deleted_IsSet => Deleted_IsSet;
+        bool IModHeaderGetter.Deleted_IsSet => Deleted_IsSet;
         protected Byte[] _Deleted;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Deleted
@@ -122,12 +122,12 @@ namespace Mutagen.Bethesda.Oblivion
             set => Deleted_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] ITES4Getter.Deleted => this.Deleted;
+        Byte[] IModHeaderGetter.Deleted => this.Deleted;
         public void Deleted_Set(
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Deleted, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.Deleted, nameof(Deleted), nameof(Deleted_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Deleted, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.Deleted, nameof(Deleted), nameof(Deleted_IsSet));
         }
         public void Deleted_Unset()
         {
@@ -137,10 +137,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region Author
         public bool Author_IsSet
         {
-            get => _hasBeenSetTracker[(int)TES4_FieldIndex.Author];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)TES4_FieldIndex.Author, nameof(Author_IsSet));
+            get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Author];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.Author, nameof(Author_IsSet));
         }
-        bool ITES4Getter.Author_IsSet => Author_IsSet;
+        bool IModHeaderGetter.Author_IsSet => Author_IsSet;
         private String _Author;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Author
@@ -148,12 +148,12 @@ namespace Mutagen.Bethesda.Oblivion
             get => this._Author;
             set => Author_Set(value);
         }
-        String ITES4Getter.Author => this.Author;
+        String IModHeaderGetter.Author => this.Author;
         public void Author_Set(
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Author, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.Author, nameof(Author), nameof(Author_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Author, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.Author, nameof(Author), nameof(Author_IsSet));
         }
         public void Author_Unset()
         {
@@ -163,10 +163,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region Description
         public bool Description_IsSet
         {
-            get => _hasBeenSetTracker[(int)TES4_FieldIndex.Description];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)TES4_FieldIndex.Description, nameof(Description_IsSet));
+            get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Description];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.Description, nameof(Description_IsSet));
         }
-        bool ITES4Getter.Description_IsSet => Description_IsSet;
+        bool IModHeaderGetter.Description_IsSet => Description_IsSet;
         private String _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
@@ -174,12 +174,12 @@ namespace Mutagen.Bethesda.Oblivion
             get => this._Description;
             set => Description_Set(value);
         }
-        String ITES4Getter.Description => this.Description;
+        String IModHeaderGetter.Description => this.Description;
         public void Description_Set(
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
         }
         public void Description_Unset()
         {
@@ -198,19 +198,19 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<MasterReference> ITES4.MasterReferences => _MasterReferences;
+        ISourceSetList<MasterReference> IModHeader.MasterReferences => _MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<MasterReference> ITES4Getter.MasterReferences => _MasterReferences;
+        IObservableSetList<MasterReference> IModHeaderGetter.MasterReferences => _MasterReferences;
         #endregion
 
         #endregion
         #region VestigialData
         public bool VestigialData_IsSet
         {
-            get => _hasBeenSetTracker[(int)TES4_FieldIndex.VestigialData];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)TES4_FieldIndex.VestigialData, nameof(VestigialData_IsSet));
+            get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.VestigialData];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.VestigialData, nameof(VestigialData_IsSet));
         }
-        bool ITES4Getter.VestigialData_IsSet => VestigialData_IsSet;
+        bool IModHeaderGetter.VestigialData_IsSet => VestigialData_IsSet;
         private UInt64 _VestigialData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt64 VestigialData
@@ -218,12 +218,12 @@ namespace Mutagen.Bethesda.Oblivion
             get => this._VestigialData;
             set => VestigialData_Set(value);
         }
-        UInt64 ITES4Getter.VestigialData => this.VestigialData;
+        UInt64 IModHeaderGetter.VestigialData => this.VestigialData;
         public void VestigialData_Set(
             UInt64 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _VestigialData, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.VestigialData, nameof(VestigialData), nameof(VestigialData_IsSet));
+            this.RaiseAndSetIfChanged(ref _VestigialData, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.VestigialData, nameof(VestigialData), nameof(VestigialData_IsSet));
         }
         public void VestigialData_Unset()
         {
@@ -231,42 +231,42 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<TES4>.GetEqualsMask(TES4 rhs, EqualsMaskHelper.Include include) => TES4Common.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ITES4Getter>.GetEqualsMask(ITES4Getter rhs, EqualsMaskHelper.Include include) => TES4Common.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ModHeader>.GetEqualsMask(ModHeader rhs, EqualsMaskHelper.Include include) => ModHeaderCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IModHeaderGetter>.GetEqualsMask(IModHeaderGetter rhs, EqualsMaskHelper.Include include) => ModHeaderCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
-            TES4_Mask<bool> printMask = null)
+            ModHeader_Mask<bool> printMask = null)
         {
-            return TES4Common.ToString(this, name: name, printMask: printMask);
+            return ModHeaderCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            TES4Common.ToString(this, fg, name: name, printMask: null);
+            ModHeaderCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public TES4_Mask<bool> GetHasBeenSetMask()
+        public ModHeader_Mask<bool> GetHasBeenSetMask()
         {
-            return TES4Common.GetHasBeenSetMask(this);
+            return ModHeaderCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is TES4 rhs)) return false;
+            if (!(obj is ModHeader rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(TES4 rhs)
+        public bool Equals(ModHeader rhs)
         {
             if (rhs == null) return false;
             if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
-            if (!object.Equals(this.Header, rhs.Header)) return false;
+            if (!object.Equals(this.Stats, rhs.Stats)) return false;
             if (TypeOffsets_IsSet != rhs.TypeOffsets_IsSet) return false;
             if (TypeOffsets_IsSet)
             {
@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             int ret = 0;
             ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Header).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Stats).CombineHashCode(ret);
             if (TypeOffsets_IsSet)
             {
                 ret = HashHelper.GetHashCode(TypeOffsets).CombineHashCode(ret);
@@ -338,10 +338,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Translation
         #region Xml Create
         [DebuggerStepThrough]
-        public static TES4 Create_Xml(
+        public static ModHeader Create_Xml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
-            TES4_TranslationMask translationMask = null)
+            ModHeader_TranslationMask translationMask = null)
         {
             return Create_Xml(
                 missing: missing,
@@ -351,11 +351,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static TES4 Create_Xml(
+        public static ModHeader Create_Xml(
             XElement node,
-            out TES4_ErrorMask errorMask,
+            out ModHeader_ErrorMask errorMask,
             bool doMasks = true,
-            TES4_TranslationMask translationMask = null,
+            ModHeader_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -364,11 +364,11 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
-            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static TES4 Create_Xml(
+        public static ModHeader Create_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -378,17 +378,17 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case MissingCreate.New:
                 case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new TES4() : null;
+                    if (node == null) return missing == MissingCreate.New ? new ModHeader() : null;
                     break;
                 default:
                     break;
             }
-            var ret = new TES4();
+            var ret = new ModHeader();
             try
             {
                 foreach (var elem in node.Elements())
                 {
-                    TES4Common.FillPublicElement_Xml(
+                    ModHeaderCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -404,10 +404,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static TES4 Create_Xml(
+        public static ModHeader Create_Xml(
             string path,
             MissingCreate missing = MissingCreate.New,
-            TES4_TranslationMask translationMask = null)
+            ModHeader_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return Create_Xml(
@@ -416,10 +416,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static TES4 Create_Xml(
+        public static ModHeader Create_Xml(
             string path,
-            out TES4_ErrorMask errorMask,
-            TES4_TranslationMask translationMask = null,
+            out ModHeader_ErrorMask errorMask,
+            ModHeader_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
@@ -430,10 +430,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static TES4 Create_Xml(
+        public static ModHeader Create_Xml(
             string path,
             ErrorMaskBuilder errorMask,
-            TES4_TranslationMask translationMask = null,
+            ModHeader_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
@@ -444,10 +444,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static TES4 Create_Xml(
+        public static ModHeader Create_Xml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
-            TES4_TranslationMask translationMask = null)
+            ModHeader_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return Create_Xml(
@@ -456,10 +456,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static TES4 Create_Xml(
+        public static ModHeader Create_Xml(
             Stream stream,
-            out TES4_ErrorMask errorMask,
-            TES4_TranslationMask translationMask = null,
+            out ModHeader_ErrorMask errorMask,
+            ModHeader_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
@@ -470,10 +470,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static TES4 Create_Xml(
+        public static ModHeader Create_Xml(
             Stream stream,
             ErrorMaskBuilder errorMask,
-            TES4_TranslationMask translationMask = null,
+            ModHeader_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
@@ -489,25 +489,25 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Write
         public virtual void Write_Xml(
             XElement node,
-            out TES4_ErrorMask errorMask,
+            out ModHeader_ErrorMask errorMask,
             bool doMasks = true,
-            TES4_TranslationMask translationMask = null,
+            ModHeader_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            TES4XmlTranslation.Instance.Write_Xml(
+            ModHeaderXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Xml(
             string path,
-            out TES4_ErrorMask errorMask,
-            TES4_TranslationMask translationMask = null,
+            out ModHeader_ErrorMask errorMask,
+            ModHeader_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -537,8 +537,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         public virtual void Write_Xml(
             Stream stream,
-            out TES4_ErrorMask errorMask,
-            TES4_TranslationMask translationMask = null,
+            out ModHeader_ErrorMask errorMask,
+            ModHeader_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write_Xml(
             XElement node,
             string name = null,
-            TES4_TranslationMask translationMask = null)
+            ModHeader_TranslationMask translationMask = null)
         {
             this.Write_Xml(
                 name: name,
@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            TES4XmlTranslation.Instance.Write_Xml(
+            ModHeaderXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -624,18 +624,18 @@ namespace Mutagen.Bethesda.Oblivion
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
-            switch ((TES4_FieldIndex)index)
+            switch ((ModHeader_FieldIndex)index)
             {
-                case TES4_FieldIndex.TypeOffsets:
-                case TES4_FieldIndex.Deleted:
-                case TES4_FieldIndex.Author:
-                case TES4_FieldIndex.Description:
-                case TES4_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.TypeOffsets:
+                case ModHeader_FieldIndex.Deleted:
+                case ModHeader_FieldIndex.Author:
+                case ModHeader_FieldIndex.Description:
+                case ModHeader_FieldIndex.VestigialData:
                     return _hasBeenSetTracker[index];
-                case TES4_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.MasterReferences:
                     return MasterReferences.HasBeenSet;
-                case TES4_FieldIndex.Fluff:
-                case TES4_FieldIndex.Header:
+                case ModHeader_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Stats:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = TES4_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GRUP_RECORD_TYPE = ModHeader_Registration.TRIGGERING_RECORD_TYPE;
         public async Task Write_Xml_Folder(
             DirectoryPath? dir,
             string name,
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static TES4 Create_Binary(
+        public static ModHeader Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -673,10 +673,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static TES4 Create_Binary(
+        public static ModHeader Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            out TES4_ErrorMask errorMask,
+            out ModHeader_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -685,20 +685,20 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static TES4 Create_Binary(
+        public static ModHeader Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            var ret = new TES4();
+            var ret = new ModHeader();
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(TES4_Registration.TES4_HEADER)));
+                recordTypeConverter.ConvertToCustom(ModHeader_Registration.TES4_HEADER)));
             UtilityTranslation.RecordParse(
                 record: ret,
                 frame: frame,
@@ -717,17 +717,17 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            out TES4_ErrorMask errorMask,
+            out ModHeader_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            TES4BinaryTranslation.Instance.Write_Binary(
+            ModHeaderBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void Write_Binary(
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            TES4BinaryTranslation.Instance.Write_Binary(
+            ModHeaderBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void Fill_Binary_Structs(
-            TES4 item,
+            ModHeader item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
-            TES4 item,
+            ModHeader item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -790,8 +790,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     try
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.Header);
-                        item.Header = Header.Create_Binary(
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.Stats);
+                        item.Stats = ModStats.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PopIndex();
                     }
-                    return TryGet<int?>.Succeed((int)TES4_FieldIndex.Header);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
                 }
                 case 0x5453464F: // OFST
                 {
@@ -821,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.TypeOffsets = default(Byte[]);
                     }
-                    return TryGet<int?>.Succeed((int)TES4_FieldIndex.TypeOffsets);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
                 }
                 case 0x454C4544: // DELE
                 {
@@ -836,7 +836,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Deleted = default(Byte[]);
                     }
-                    return TryGet<int?>.Succeed((int)TES4_FieldIndex.Deleted);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
                 }
                 case 0x4D414E43: // CNAM
                 {
@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Author = default(String);
                     }
-                    return TryGet<int?>.Succeed((int)TES4_FieldIndex.Author);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
                 }
                 case 0x4D414E53: // SNAM
                 {
@@ -868,15 +868,15 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Description = default(String);
                     }
-                    return TryGet<int?>.Succeed((int)TES4_FieldIndex.Description);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
                 }
                 case 0x5453414D: // MAST
                 {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.ParseRepeatedItem(
                         frame: frame,
-                        triggeringRecord: TES4_Registration.MAST_HEADER,
+                        triggeringRecord: ModHeader_Registration.MAST_HEADER,
                         item: item.MasterReferences,
-                        fieldIndex: (int)TES4_FieldIndex.MasterReferences,
+                        fieldIndex: (int)ModHeader_FieldIndex.MasterReferences,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out MasterReference listSubItem, ErrorMaskBuilder listErrMask) =>
@@ -888,13 +888,13 @@ namespace Mutagen.Bethesda.Oblivion
                                 masterReferences: masterReferences);
                         }
                         );
-                    return TryGet<int?>.Succeed((int)TES4_FieldIndex.MasterReferences);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }
                 case 0x41544144: // DATA
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     item.VestigialData = frame.ReadUInt64();
-                    return TryGet<int?>.Succeed((int)TES4_FieldIndex.VestigialData);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.VestigialData);
                 }
                 default:
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
@@ -905,29 +905,29 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public TES4 Copy(
-            TES4_CopyMask copyMask = null,
-            ITES4Getter def = null)
+        public ModHeader Copy(
+            ModHeader_CopyMask copyMask = null,
+            IModHeaderGetter def = null)
         {
-            return TES4.Copy(
+            return ModHeader.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static TES4 Copy(
-            ITES4 item,
-            TES4_CopyMask copyMask = null,
-            ITES4Getter def = null)
+        public static ModHeader Copy(
+            IModHeader item,
+            ModHeader_CopyMask copyMask = null,
+            IModHeaderGetter def = null)
         {
-            TES4 ret;
-            if (item.GetType().Equals(typeof(TES4)))
+            ModHeader ret;
+            if (item.GetType().Equals(typeof(ModHeader)))
             {
-                ret = new TES4();
+                ret = new ModHeader();
             }
             else
             {
-                ret = (TES4)System.Activator.CreateInstance(item.GetType());
+                ret = (ModHeader)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -936,19 +936,19 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static TES4 Copy_ToLoqui(
-            ITES4Getter item,
-            TES4_CopyMask copyMask = null,
-            ITES4Getter def = null)
+        public static ModHeader Copy_ToLoqui(
+            IModHeaderGetter item,
+            ModHeader_CopyMask copyMask = null,
+            IModHeaderGetter def = null)
         {
-            TES4 ret;
-            if (item.GetType().Equals(typeof(TES4)))
+            ModHeader ret;
+            if (item.GetType().Equals(typeof(ModHeader)))
             {
-                ret = new TES4() as TES4;
+                ret = new ModHeader() as ModHeader;
             }
             else
             {
-                ret = (TES4)System.Activator.CreateInstance(item.GetType());
+                ret = (ModHeader)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -957,10 +957,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(ITES4Getter rhs)
+        public void CopyFieldsFrom(IModHeaderGetter rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ITES4Getter)rhs,
+                rhs: (IModHeaderGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -968,9 +968,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ITES4Getter rhs,
-            TES4_CopyMask copyMask,
-            ITES4Getter def = null)
+            IModHeaderGetter rhs,
+            ModHeader_CopyMask copyMask,
+            IModHeaderGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -981,30 +981,30 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ITES4Getter rhs,
-            out TES4_ErrorMask errorMask,
-            TES4_CopyMask copyMask = null,
-            ITES4Getter def = null,
+            IModHeaderGetter rhs,
+            out ModHeader_ErrorMask errorMask,
+            ModHeader_CopyMask copyMask = null,
+            IModHeaderGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            TES4Common.CopyFieldsFrom(
+            ModHeaderCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
-            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyFieldsFrom(
-            ITES4Getter rhs,
+            IModHeaderGetter rhs,
             ErrorMaskBuilder errorMask,
-            TES4_CopyMask copyMask = null,
-            ITES4Getter def = null,
+            ModHeader_CopyMask copyMask = null,
+            IModHeaderGetter def = null,
             bool doMasks = true)
         {
-            TES4Common.CopyFieldsFrom(
+            ModHeaderCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1014,31 +1014,31 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void SetNthObject(ushort index, object obj)
         {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
+            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case TES4_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Fluff:
                     this.Fluff = (Byte[])obj;
                     break;
-                case TES4_FieldIndex.Header:
-                    this.Header = (Header)obj;
+                case ModHeader_FieldIndex.Stats:
+                    this.Stats = (ModStats)obj;
                     break;
-                case TES4_FieldIndex.TypeOffsets:
+                case ModHeader_FieldIndex.TypeOffsets:
                     this.TypeOffsets = (Byte[])obj;
                     break;
-                case TES4_FieldIndex.Deleted:
+                case ModHeader_FieldIndex.Deleted:
                     this.Deleted = (Byte[])obj;
                     break;
-                case TES4_FieldIndex.Author:
+                case ModHeader_FieldIndex.Author:
                     this.Author = (String)obj;
                     break;
-                case TES4_FieldIndex.Description:
+                case ModHeader_FieldIndex.Description:
                     this.Description = (String)obj;
                     break;
-                case TES4_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.MasterReferences:
                     this._MasterReferences.SetTo((IEnumerable<MasterReference>)obj);
                     break;
-                case TES4_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.VestigialData:
                     this.VestigialData = (UInt64)obj;
                     break;
                 default:
@@ -1056,50 +1056,50 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear()
         {
             CallClearPartial_Internal();
-            TES4Common.Clear(this);
+            ModHeaderCommon.Clear(this);
         }
 
 
-        public static TES4 Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public static ModHeader Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new TES4();
+            var ret = new ModHeader();
             foreach (var pair in fields)
             {
-                CopyInInternal_TES4(ret, pair);
+                CopyInInternal_ModHeader(ret, pair);
             }
             return ret;
         }
 
-        protected static void CopyInInternal_TES4(TES4 obj, KeyValuePair<ushort, object> pair)
+        protected static void CopyInInternal_ModHeader(ModHeader obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out TES4_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out ModHeader_FieldIndex enu))
             {
                 throw new ArgumentException($"Unknown index: {pair.Key}");
             }
             switch (enu)
             {
-                case TES4_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Fluff:
                     obj.Fluff = (Byte[])pair.Value;
                     break;
-                case TES4_FieldIndex.Header:
-                    obj.Header = (Header)pair.Value;
+                case ModHeader_FieldIndex.Stats:
+                    obj.Stats = (ModStats)pair.Value;
                     break;
-                case TES4_FieldIndex.TypeOffsets:
+                case ModHeader_FieldIndex.TypeOffsets:
                     obj.TypeOffsets = (Byte[])pair.Value;
                     break;
-                case TES4_FieldIndex.Deleted:
+                case ModHeader_FieldIndex.Deleted:
                     obj.Deleted = (Byte[])pair.Value;
                     break;
-                case TES4_FieldIndex.Author:
+                case ModHeader_FieldIndex.Author:
                     obj.Author = (String)pair.Value;
                     break;
-                case TES4_FieldIndex.Description:
+                case ModHeader_FieldIndex.Description:
                     obj.Description = (String)pair.Value;
                     break;
-                case TES4_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.MasterReferences:
                     obj._MasterReferences.SetTo((IEnumerable<MasterReference>)pair.Value);
                     break;
-                case TES4_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.VestigialData:
                     obj.VestigialData = (UInt64)pair.Value;
                     break;
                 default:
@@ -1110,11 +1110,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ITES4 : ITES4Getter, ILoquiClass<ITES4, ITES4Getter>, ILoquiClass<TES4, ITES4Getter>
+    public partial interface IModHeader : IModHeaderGetter, ILoquiClass<IModHeader, IModHeaderGetter>, ILoquiClass<ModHeader, IModHeaderGetter>
     {
         new Byte[] Fluff { get; set; }
 
-        new Header Header { get; set; }
+        new ModStats Stats { get; set; }
 
         new Byte[] TypeOffsets { get; set; }
         new bool TypeOffsets_IsSet { get; set; }
@@ -1144,14 +1144,14 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface ITES4Getter : ILoquiObject
+    public partial interface IModHeaderGetter : ILoquiObject
     {
         #region Fluff
         Byte[] Fluff { get; }
 
         #endregion
-        #region Header
-        Header Header { get; }
+        #region Stats
+        ModStats Stats { get; }
 
         #endregion
         #region TypeOffsets
@@ -1192,10 +1192,10 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum TES4_FieldIndex
+    public enum ModHeader_FieldIndex
     {
         Fluff = 0,
-        Header = 1,
+        Stats = 1,
         TypeOffsets = 2,
         Deleted = 3,
         Author = 4,
@@ -1206,9 +1206,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class TES4_Registration : ILoquiRegistration
+    public class ModHeader_Registration : ILoquiRegistration
     {
-        public static readonly TES4_Registration Instance = new TES4_Registration();
+        public static readonly ModHeader_Registration Instance = new ModHeader_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
@@ -1223,25 +1223,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(TES4_Mask<>);
+        public static readonly Type MaskType = typeof(ModHeader_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(TES4_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ModHeader_ErrorMask);
 
-        public static readonly Type ClassType = typeof(TES4);
+        public static readonly Type ClassType = typeof(ModHeader);
 
-        public static readonly Type GetterType = typeof(ITES4Getter);
+        public static readonly Type GetterType = typeof(IModHeaderGetter);
 
         public static readonly Type InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ITES4);
+        public static readonly Type SetterType = typeof(IModHeader);
 
         public static readonly Type InternalSetterType = null;
 
-        public static readonly Type CommonType = typeof(TES4Common);
+        public static readonly Type CommonType = typeof(ModHeaderCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.TES4";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.ModHeader";
 
-        public const string Name = "TES4";
+        public const string Name = "ModHeader";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -1254,21 +1254,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (str.Upper)
             {
                 case "FLUFF":
-                    return (ushort)TES4_FieldIndex.Fluff;
-                case "HEADER":
-                    return (ushort)TES4_FieldIndex.Header;
+                    return (ushort)ModHeader_FieldIndex.Fluff;
+                case "STATS":
+                    return (ushort)ModHeader_FieldIndex.Stats;
                 case "TYPEOFFSETS":
-                    return (ushort)TES4_FieldIndex.TypeOffsets;
+                    return (ushort)ModHeader_FieldIndex.TypeOffsets;
                 case "DELETED":
-                    return (ushort)TES4_FieldIndex.Deleted;
+                    return (ushort)ModHeader_FieldIndex.Deleted;
                 case "AUTHOR":
-                    return (ushort)TES4_FieldIndex.Author;
+                    return (ushort)ModHeader_FieldIndex.Author;
                 case "DESCRIPTION":
-                    return (ushort)TES4_FieldIndex.Description;
+                    return (ushort)ModHeader_FieldIndex.Description;
                 case "MASTERREFERENCES":
-                    return (ushort)TES4_FieldIndex.MasterReferences;
+                    return (ushort)ModHeader_FieldIndex.MasterReferences;
                 case "VESTIGIALDATA":
-                    return (ushort)TES4_FieldIndex.VestigialData;
+                    return (ushort)ModHeader_FieldIndex.VestigialData;
                 default:
                     return null;
             }
@@ -1276,18 +1276,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
+            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case TES4_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.MasterReferences:
                     return true;
-                case TES4_FieldIndex.Fluff:
-                case TES4_FieldIndex.Header:
-                case TES4_FieldIndex.TypeOffsets:
-                case TES4_FieldIndex.Deleted:
-                case TES4_FieldIndex.Author:
-                case TES4_FieldIndex.Description:
-                case TES4_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Stats:
+                case ModHeader_FieldIndex.TypeOffsets:
+                case ModHeader_FieldIndex.Deleted:
+                case ModHeader_FieldIndex.Author:
+                case ModHeader_FieldIndex.Description:
+                case ModHeader_FieldIndex.VestigialData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1296,18 +1296,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
+            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case TES4_FieldIndex.Header:
-                case TES4_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.Stats:
+                case ModHeader_FieldIndex.MasterReferences:
                     return true;
-                case TES4_FieldIndex.Fluff:
-                case TES4_FieldIndex.TypeOffsets:
-                case TES4_FieldIndex.Deleted:
-                case TES4_FieldIndex.Author:
-                case TES4_FieldIndex.Description:
-                case TES4_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.TypeOffsets:
+                case ModHeader_FieldIndex.Deleted:
+                case ModHeader_FieldIndex.Author:
+                case ModHeader_FieldIndex.Description:
+                case ModHeader_FieldIndex.VestigialData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1316,17 +1316,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
+            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case TES4_FieldIndex.Fluff:
-                case TES4_FieldIndex.Header:
-                case TES4_FieldIndex.TypeOffsets:
-                case TES4_FieldIndex.Deleted:
-                case TES4_FieldIndex.Author:
-                case TES4_FieldIndex.Description:
-                case TES4_FieldIndex.MasterReferences:
-                case TES4_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Stats:
+                case ModHeader_FieldIndex.TypeOffsets:
+                case ModHeader_FieldIndex.Deleted:
+                case ModHeader_FieldIndex.Author:
+                case ModHeader_FieldIndex.Description:
+                case ModHeader_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.VestigialData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1335,24 +1335,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
+            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case TES4_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Fluff:
                     return "Fluff";
-                case TES4_FieldIndex.Header:
-                    return "Header";
-                case TES4_FieldIndex.TypeOffsets:
+                case ModHeader_FieldIndex.Stats:
+                    return "Stats";
+                case ModHeader_FieldIndex.TypeOffsets:
                     return "TypeOffsets";
-                case TES4_FieldIndex.Deleted:
+                case ModHeader_FieldIndex.Deleted:
                     return "Deleted";
-                case TES4_FieldIndex.Author:
+                case ModHeader_FieldIndex.Author:
                     return "Author";
-                case TES4_FieldIndex.Description:
+                case ModHeader_FieldIndex.Description:
                     return "Description";
-                case TES4_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.MasterReferences:
                     return "MasterReferences";
-                case TES4_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.VestigialData:
                     return "VestigialData";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1361,17 +1361,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
+            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case TES4_FieldIndex.Fluff:
-                case TES4_FieldIndex.Header:
-                case TES4_FieldIndex.TypeOffsets:
-                case TES4_FieldIndex.Deleted:
-                case TES4_FieldIndex.Author:
-                case TES4_FieldIndex.Description:
-                case TES4_FieldIndex.MasterReferences:
-                case TES4_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Stats:
+                case ModHeader_FieldIndex.TypeOffsets:
+                case ModHeader_FieldIndex.Deleted:
+                case ModHeader_FieldIndex.Author:
+                case ModHeader_FieldIndex.Description:
+                case ModHeader_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.VestigialData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1380,17 +1380,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
+            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case TES4_FieldIndex.Fluff:
-                case TES4_FieldIndex.Header:
-                case TES4_FieldIndex.TypeOffsets:
-                case TES4_FieldIndex.Deleted:
-                case TES4_FieldIndex.Author:
-                case TES4_FieldIndex.Description:
-                case TES4_FieldIndex.MasterReferences:
-                case TES4_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Stats:
+                case ModHeader_FieldIndex.TypeOffsets:
+                case ModHeader_FieldIndex.Deleted:
+                case ModHeader_FieldIndex.Author:
+                case ModHeader_FieldIndex.Description:
+                case ModHeader_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.VestigialData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1399,24 +1399,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
+            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case TES4_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Fluff:
                     return typeof(Byte[]);
-                case TES4_FieldIndex.Header:
-                    return typeof(Header);
-                case TES4_FieldIndex.TypeOffsets:
+                case ModHeader_FieldIndex.Stats:
+                    return typeof(ModStats);
+                case ModHeader_FieldIndex.TypeOffsets:
                     return typeof(Byte[]);
-                case TES4_FieldIndex.Deleted:
+                case ModHeader_FieldIndex.Deleted:
                     return typeof(Byte[]);
-                case TES4_FieldIndex.Author:
+                case ModHeader_FieldIndex.Author:
                     return typeof(String);
-                case TES4_FieldIndex.Description:
+                case ModHeader_FieldIndex.Description:
                     return typeof(String);
-                case TES4_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.MasterReferences:
                     return typeof(SourceSetList<MasterReference>);
-                case TES4_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.VestigialData:
                     return typeof(UInt64);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1465,19 +1465,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Extensions
-    public static partial class TES4Common
+    public static partial class ModHeaderCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ITES4 item,
-            ITES4Getter rhs,
-            ITES4Getter def,
+            IModHeader item,
+            IModHeaderGetter rhs,
+            IModHeaderGetter def,
             ErrorMaskBuilder errorMask,
-            TES4_CopyMask copyMask)
+            ModHeader_CopyMask copyMask)
         {
             if (copyMask?.Fluff ?? true)
             {
-                errorMask?.PushIndex((int)TES4_FieldIndex.Fluff);
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff = rhs.Fluff;
@@ -1492,39 +1492,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Header.Overall != CopyOption.Skip)
+            if (copyMask?.Stats.Overall != CopyOption.Skip)
             {
-                errorMask?.PushIndex((int)TES4_FieldIndex.Header);
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.Stats);
                 try
                 {
-                    switch (copyMask?.Header?.Overall ?? CopyOption.Reference)
+                    switch (copyMask?.Stats?.Overall ?? CopyOption.Reference)
                     {
                         case CopyOption.Reference:
-                            item.Header = rhs.Header;
+                            item.Stats = rhs.Stats;
                             break;
                         case CopyOption.CopyIn:
-                            HeaderCommon.CopyFieldsFrom(
-                                item: item.Header,
-                                rhs: rhs.Header,
-                                def: def?.Header,
+                            ModStatsCommon.CopyFieldsFrom(
+                                item: item.Stats,
+                                rhs: rhs.Stats,
+                                def: def?.Stats,
                                 errorMask: errorMask,
-                                copyMask: copyMask?.Header.Specific);
+                                copyMask: copyMask?.Stats.Specific);
                             break;
                         case CopyOption.MakeCopy:
-                            if (rhs.Header == null)
+                            if (rhs.Stats == null)
                             {
-                                item.Header = null;
+                                item.Stats = null;
                             }
                             else
                             {
-                                item.Header = Header.Copy(
-                                    rhs.Header,
-                                    copyMask?.Header?.Specific,
-                                    def?.Header);
+                                item.Stats = ModStats.Copy(
+                                    rhs.Stats,
+                                    copyMask?.Stats?.Specific,
+                                    def?.Stats);
                             }
                             break;
                         default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Header?.Overall}. Cannot execute copy.");
+                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Stats?.Overall}. Cannot execute copy.");
                     }
                 }
                 catch (Exception ex)
@@ -1539,7 +1539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.TypeOffsets ?? true)
             {
-                errorMask?.PushIndex((int)TES4_FieldIndex.TypeOffsets);
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.TypeOffsets);
                 try
                 {
                     if (LoquiHelper.DefaultSwitch(
@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Deleted ?? true)
             {
-                errorMask?.PushIndex((int)TES4_FieldIndex.Deleted);
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.Deleted);
                 try
                 {
                     if (LoquiHelper.DefaultSwitch(
@@ -1599,7 +1599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Author ?? true)
             {
-                errorMask?.PushIndex((int)TES4_FieldIndex.Author);
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.Author);
                 try
                 {
                     if (LoquiHelper.DefaultSwitch(
@@ -1629,7 +1629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Description ?? true)
             {
-                errorMask?.PushIndex((int)TES4_FieldIndex.Description);
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.Description);
                 try
                 {
                     if (LoquiHelper.DefaultSwitch(
@@ -1659,7 +1659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.MasterReferences.Overall != CopyOption.Skip)
             {
-                errorMask?.PushIndex((int)TES4_FieldIndex.MasterReferences);
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.MasterReferences);
                 try
                 {
                     item.MasterReferences.SetToWithDefault(
@@ -1694,7 +1694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.VestigialData ?? true)
             {
-                errorMask?.PushIndex((int)TES4_FieldIndex.VestigialData);
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.VestigialData);
                 try
                 {
                     if (LoquiHelper.DefaultSwitch(
@@ -1726,10 +1726,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ITES4 item)
+        public static void Clear(IModHeader item)
         {
             item.Fluff = default(Byte[]);
-            item.Header = default(Header);
+            item.Stats = default(ModStats);
             item.TypeOffsets_Unset();
             item.Deleted_Unset();
             item.Author_Unset();
@@ -1738,12 +1738,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.VestigialData_Unset();
         }
 
-        public static TES4_Mask<bool> GetEqualsMask(
-            this ITES4Getter item,
-            ITES4Getter rhs,
+        public static ModHeader_Mask<bool> GetEqualsMask(
+            this IModHeaderGetter item,
+            IModHeaderGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new TES4_Mask<bool>();
+            var ret = new ModHeader_Mask<bool>();
             FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1753,14 +1753,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillEqualsMask(
-            ITES4Getter item,
-            ITES4Getter rhs,
-            TES4_Mask<bool> ret,
+            IModHeaderGetter item,
+            IModHeaderGetter rhs,
+            ModHeader_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
-            ret.Header = MaskItemExt.Factory(HeaderCommon.GetEqualsMask(item.Header, rhs.Header, include), include);
+            ret.Stats = MaskItemExt.Factory(ModStatsCommon.GetEqualsMask(item.Stats, rhs.Stats, include), include);
             ret.TypeOffsets = item.TypeOffsets_IsSet == rhs.TypeOffsets_IsSet && ByteExt.EqualsFast(item.TypeOffsets, rhs.TypeOffsets);
             ret.Deleted = item.Deleted_IsSet == rhs.Deleted_IsSet && ByteExt.EqualsFast(item.Deleted, rhs.Deleted);
             ret.Author = item.Author_IsSet == rhs.Author_IsSet && string.Equals(item.Author, rhs.Author);
@@ -1773,9 +1773,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static string ToString(
-            this ITES4Getter item,
+            this IModHeaderGetter item,
             string name = null,
-            TES4_Mask<bool> printMask = null)
+            ModHeader_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1783,18 +1783,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void ToString(
-            this ITES4Getter item,
+            this IModHeaderGetter item,
             FileGeneration fg,
             string name = null,
-            TES4_Mask<bool> printMask = null)
+            ModHeader_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(TES4)} =>");
+                fg.AppendLine($"{nameof(ModHeader)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(TES4)}) =>");
+                fg.AppendLine($"{name} ({nameof(ModHeader)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1803,9 +1803,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Fluff => {item.Fluff}");
                 }
-                if (printMask?.Header?.Overall ?? true)
+                if (printMask?.Stats?.Overall ?? true)
                 {
-                    item.Header?.ToString(fg, "Header");
+                    item.Stats?.ToString(fg, "Stats");
                 }
                 if (printMask?.TypeOffsets ?? true)
                 {
@@ -1850,8 +1850,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static bool HasBeenSet(
-            this ITES4Getter item,
-            TES4_Mask<bool?> checkMask)
+            this IModHeaderGetter item,
+            ModHeader_Mask<bool?> checkMask)
         {
             if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != item.TypeOffsets_IsSet) return false;
             if (checkMask.Deleted.HasValue && checkMask.Deleted.Value != item.Deleted_IsSet) return false;
@@ -1862,11 +1862,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return true;
         }
 
-        public static TES4_Mask<bool> GetHasBeenSetMask(ITES4Getter item)
+        public static ModHeader_Mask<bool> GetHasBeenSetMask(IModHeaderGetter item)
         {
-            var ret = new TES4_Mask<bool>();
+            var ret = new ModHeader_Mask<bool>();
             ret.Fluff = true;
-            ret.Header = new MaskItem<bool, Header_Mask<bool>>(true, HeaderCommon.GetHasBeenSetMask(item.Header));
+            ret.Stats = new MaskItem<bool, ModStats_Mask<bool>>(true, ModStatsCommon.GetHasBeenSetMask(item.Stats));
             ret.TypeOffsets = item.TypeOffsets_IsSet;
             ret.Deleted = item.Deleted_IsSet;
             ret.Author = item.Author_IsSet;
@@ -1878,7 +1878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Xml Translation
         public static void FillPublic_Xml(
-            this TES4 item,
+            this ModHeader item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1887,7 +1887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    TES4Common.FillPublicElement_Xml(
+                    ModHeaderCommon.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1903,7 +1903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this TES4 item,
+            this ModHeader item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1914,7 +1914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "Fluff":
                     try
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.Fluff);
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.Fluff);
                         if (ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             item: out Byte[] FluffParse,
@@ -1937,21 +1937,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Header":
+                case "Stats":
                     try
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.Header);
-                        if (LoquiXmlTranslation<Header>.Instance.Parse(
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.Stats);
+                        if (LoquiXmlTranslation<ModStats>.Instance.Parse(
                             node: node,
-                            item: out Header HeaderParse,
+                            item: out ModStats StatsParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)TES4_FieldIndex.Header)))
+                            translationMask: translationMask?.GetSubCrystal((int)ModHeader_FieldIndex.Stats)))
                         {
-                            item.Header = HeaderParse;
+                            item.Stats = StatsParse;
                         }
                         else
                         {
-                            item.Header = default(Header);
+                            item.Stats = default(ModStats);
                         }
                     }
                     catch (Exception ex)
@@ -1967,7 +1967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "TypeOffsets":
                     try
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.TypeOffsets);
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.TypeOffsets);
                         if (ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             item: out Byte[] TypeOffsetsParse,
@@ -1993,7 +1993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "Deleted":
                     try
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.Deleted);
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.Deleted);
                         if (ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             item: out Byte[] DeletedParse,
@@ -2019,7 +2019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "Author":
                     try
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.Author);
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.Author);
                         if (StringXmlTranslation.Instance.Parse(
                             node: node,
                             item: out String AuthorParse,
@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "Description":
                     try
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.Description);
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.Description);
                         if (StringXmlTranslation.Instance.Parse(
                             node: node,
                             item: out String DescriptionParse,
@@ -2071,7 +2071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "MasterReferences":
                     try
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.MasterReferences);
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.MasterReferences);
                         if (ListXmlTranslation<MasterReference>.Instance.Parse(
                             node: node,
                             enumer: out var MasterReferencesItem,
@@ -2099,7 +2099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "VestigialData":
                     try
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.VestigialData);
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.VestigialData);
                         if (UInt64XmlTranslation.Instance.Parse(
                             node: node,
                             item: out UInt64 VestigialDataParse,
@@ -2134,85 +2134,85 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class TES4XmlTranslation
+    public partial class ModHeaderXmlTranslation
     {
-        public readonly static TES4XmlTranslation Instance = new TES4XmlTranslation();
+        public readonly static ModHeaderXmlTranslation Instance = new ModHeaderXmlTranslation();
 
         public static void WriteToNode_Xml(
-            ITES4Getter item,
+            IModHeaderGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Fluff) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Fluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Fluff),
                     item: item.Fluff,
-                    fieldIndex: (int)TES4_FieldIndex.Fluff,
+                    fieldIndex: (int)ModHeader_FieldIndex.Fluff,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Header) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Stats) ?? true))
             {
-                LoquiXmlTranslation<Header>.Instance.Write(
+                LoquiXmlTranslation<ModStats>.Instance.Write(
                     node: node,
-                    item: item.Header,
-                    name: nameof(item.Header),
-                    fieldIndex: (int)TES4_FieldIndex.Header,
+                    item: item.Stats,
+                    name: nameof(item.Stats),
+                    fieldIndex: (int)ModHeader_FieldIndex.Stats,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)TES4_FieldIndex.Header));
+                    translationMask: translationMask?.GetSubCrystal((int)ModHeader_FieldIndex.Stats));
             }
             if (item.TypeOffsets_IsSet
-                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.TypeOffsets) ?? true))
+                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.TypeOffsets) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.TypeOffsets),
                     item: item.TypeOffsets,
-                    fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
+                    fieldIndex: (int)ModHeader_FieldIndex.TypeOffsets,
                     errorMask: errorMask);
             }
             if (item.Deleted_IsSet
-                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Deleted) ?? true))
+                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Deleted) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Deleted),
                     item: item.Deleted,
-                    fieldIndex: (int)TES4_FieldIndex.Deleted,
+                    fieldIndex: (int)ModHeader_FieldIndex.Deleted,
                     errorMask: errorMask);
             }
             if (item.Author_IsSet
-                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Author) ?? true))
+                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Author) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Author),
                     item: item.Author,
-                    fieldIndex: (int)TES4_FieldIndex.Author,
+                    fieldIndex: (int)ModHeader_FieldIndex.Author,
                     errorMask: errorMask);
             }
             if (item.Description_IsSet
-                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Description) ?? true))
+                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Description),
                     item: item.Description,
-                    fieldIndex: (int)TES4_FieldIndex.Description,
+                    fieldIndex: (int)ModHeader_FieldIndex.Description,
                     errorMask: errorMask);
             }
             if (item.MasterReferences.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.MasterReferences) ?? true))
+                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.MasterReferences) ?? true))
             {
                 ListXmlTranslation<MasterReference>.Instance.Write(
                     node: node,
                     name: nameof(item.MasterReferences),
                     item: item.MasterReferences,
-                    fieldIndex: (int)TES4_FieldIndex.MasterReferences,
+                    fieldIndex: (int)ModHeader_FieldIndex.MasterReferences,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)TES4_FieldIndex.MasterReferences),
+                    translationMask: translationMask?.GetSubCrystal((int)ModHeader_FieldIndex.MasterReferences),
                     transl: (XElement subNode, MasterReference subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<MasterReference>.Instance.Write(
@@ -2225,13 +2225,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
             if (item.VestigialData_IsSet
-                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.VestigialData) ?? true))
+                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.VestigialData) ?? true))
             {
                 UInt64XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.VestigialData),
                     item: item.VestigialData,
-                    fieldIndex: (int)TES4_FieldIndex.VestigialData,
+                    fieldIndex: (int)ModHeader_FieldIndex.VestigialData,
                     errorMask: errorMask);
             }
         }
@@ -2239,10 +2239,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public void Write_Xml(
             XElement node,
-            ITES4Getter item,
+            IModHeaderGetter item,
             bool doMasks,
-            out TES4_ErrorMask errorMask,
-            TES4_TranslationMask translationMask,
+            out ModHeader_ErrorMask errorMask,
+            ModHeader_TranslationMask translationMask,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -2252,21 +2252,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void Write_Xml(
             XElement node,
-            ITES4Getter item,
+            IModHeaderGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.TES4");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ModHeader");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.TES4");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ModHeader");
             }
             WriteToNode_Xml(
                 item: item,
@@ -2280,17 +2280,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Mask
-    public class TES4_Mask<T> : IMask<T>, IEquatable<TES4_Mask<T>>
+    public class ModHeader_Mask<T> : IMask<T>, IEquatable<ModHeader_Mask<T>>
     {
         #region Ctors
-        public TES4_Mask()
+        public ModHeader_Mask()
         {
         }
 
-        public TES4_Mask(T initialValue)
+        public ModHeader_Mask(T initialValue)
         {
             this.Fluff = initialValue;
-            this.Header = new MaskItem<T, Header_Mask<T>>(initialValue, new Header_Mask<T>(initialValue));
+            this.Stats = new MaskItem<T, ModStats_Mask<T>>(initialValue, new ModStats_Mask<T>(initialValue));
             this.TypeOffsets = initialValue;
             this.Deleted = initialValue;
             this.Author = initialValue;
@@ -2302,7 +2302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public T Fluff;
-        public MaskItem<T, Header_Mask<T>> Header { get; set; }
+        public MaskItem<T, ModStats_Mask<T>> Stats { get; set; }
         public T TypeOffsets;
         public T Deleted;
         public T Author;
@@ -2314,15 +2314,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is TES4_Mask<T> rhs)) return false;
+            if (!(obj is ModHeader_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(TES4_Mask<T> rhs)
+        public bool Equals(ModHeader_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
-            if (!object.Equals(this.Header, rhs.Header)) return false;
+            if (!object.Equals(this.Stats, rhs.Stats)) return false;
             if (!object.Equals(this.TypeOffsets, rhs.TypeOffsets)) return false;
             if (!object.Equals(this.Deleted, rhs.Deleted)) return false;
             if (!object.Equals(this.Author, rhs.Author)) return false;
@@ -2335,7 +2335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-            ret = ret.CombineHashCode(this.Header?.GetHashCode());
+            ret = ret.CombineHashCode(this.Stats?.GetHashCode());
             ret = ret.CombineHashCode(this.TypeOffsets?.GetHashCode());
             ret = ret.CombineHashCode(this.Deleted?.GetHashCode());
             ret = ret.CombineHashCode(this.Author?.GetHashCode());
@@ -2351,10 +2351,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool AllEqual(Func<T, bool> eval)
         {
             if (!eval(this.Fluff)) return false;
-            if (Header != null)
+            if (Stats != null)
             {
-                if (!eval(this.Header.Overall)) return false;
-                if (this.Header.Specific != null && !this.Header.Specific.AllEqual(eval)) return false;
+                if (!eval(this.Stats.Overall)) return false;
+                if (this.Stats.Specific != null && !this.Stats.Specific.AllEqual(eval)) return false;
             }
             if (!eval(this.TypeOffsets)) return false;
             if (!eval(this.Deleted)) return false;
@@ -2378,23 +2378,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Translate
-        public TES4_Mask<R> Translate<R>(Func<T, R> eval)
+        public ModHeader_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new TES4_Mask<R>();
+            var ret = new ModHeader_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(TES4_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(ModHeader_Mask<R> obj, Func<T, R> eval)
         {
             obj.Fluff = eval(this.Fluff);
-            if (this.Header != null)
+            if (this.Stats != null)
             {
-                obj.Header = new MaskItem<R, Header_Mask<R>>();
-                obj.Header.Overall = eval(this.Header.Overall);
-                if (this.Header.Specific != null)
+                obj.Stats = new MaskItem<R, ModStats_Mask<R>>();
+                obj.Stats.Overall = eval(this.Stats.Overall);
+                if (this.Stats.Specific != null)
                 {
-                    obj.Header.Specific = this.Header.Specific.Translate(eval);
+                    obj.Stats.Specific = this.Stats.Specific.Translate(eval);
                 }
             }
             obj.TypeOffsets = eval(this.TypeOffsets);
@@ -2443,16 +2443,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(TES4_Mask<bool> printMask = null)
+        public string ToString(ModHeader_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, TES4_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, ModHeader_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(TES4_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(ModHeader_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -2460,9 +2460,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Fluff => {Fluff}");
                 }
-                if (printMask?.Header?.Overall ?? true)
+                if (printMask?.Stats?.Overall ?? true)
                 {
-                    Header?.ToString(fg);
+                    Stats?.ToString(fg);
                 }
                 if (printMask?.TypeOffsets ?? true)
                 {
@@ -2516,7 +2516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class TES4_ErrorMask : IErrorMask, IErrorMask<TES4_ErrorMask>
+    public class ModHeader_ErrorMask : IErrorMask, IErrorMask<ModHeader_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }
@@ -2533,7 +2533,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         public Exception Fluff;
-        public MaskItem<Exception, Header_ErrorMask> Header;
+        public MaskItem<Exception, ModStats_ErrorMask> Stats;
         public Exception TypeOffsets;
         public Exception Deleted;
         public Exception Author;
@@ -2545,24 +2545,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region IErrorMask
         public object GetNthMask(int index)
         {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
+            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case TES4_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Fluff:
                     return Fluff;
-                case TES4_FieldIndex.Header:
-                    return Header;
-                case TES4_FieldIndex.TypeOffsets:
+                case ModHeader_FieldIndex.Stats:
+                    return Stats;
+                case ModHeader_FieldIndex.TypeOffsets:
                     return TypeOffsets;
-                case TES4_FieldIndex.Deleted:
+                case ModHeader_FieldIndex.Deleted:
                     return Deleted;
-                case TES4_FieldIndex.Author:
+                case ModHeader_FieldIndex.Author:
                     return Author;
-                case TES4_FieldIndex.Description:
+                case ModHeader_FieldIndex.Description:
                     return Description;
-                case TES4_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.MasterReferences:
                     return MasterReferences;
-                case TES4_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.VestigialData:
                     return VestigialData;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2571,31 +2571,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void SetNthException(int index, Exception ex)
         {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
+            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case TES4_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Fluff:
                     this.Fluff = ex;
                     break;
-                case TES4_FieldIndex.Header:
-                    this.Header = new MaskItem<Exception, Header_ErrorMask>(ex, null);
+                case ModHeader_FieldIndex.Stats:
+                    this.Stats = new MaskItem<Exception, ModStats_ErrorMask>(ex, null);
                     break;
-                case TES4_FieldIndex.TypeOffsets:
+                case ModHeader_FieldIndex.TypeOffsets:
                     this.TypeOffsets = ex;
                     break;
-                case TES4_FieldIndex.Deleted:
+                case ModHeader_FieldIndex.Deleted:
                     this.Deleted = ex;
                     break;
-                case TES4_FieldIndex.Author:
+                case ModHeader_FieldIndex.Author:
                     this.Author = ex;
                     break;
-                case TES4_FieldIndex.Description:
+                case ModHeader_FieldIndex.Description:
                     this.Description = ex;
                     break;
-                case TES4_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.MasterReferences:
                     this.MasterReferences = new MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>>(ex, null);
                     break;
-                case TES4_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.VestigialData:
                     this.VestigialData = ex;
                     break;
                 default:
@@ -2605,31 +2605,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void SetNthMask(int index, object obj)
         {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
+            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case TES4_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Fluff:
                     this.Fluff = (Exception)obj;
                     break;
-                case TES4_FieldIndex.Header:
-                    this.Header = (MaskItem<Exception, Header_ErrorMask>)obj;
+                case ModHeader_FieldIndex.Stats:
+                    this.Stats = (MaskItem<Exception, ModStats_ErrorMask>)obj;
                     break;
-                case TES4_FieldIndex.TypeOffsets:
+                case ModHeader_FieldIndex.TypeOffsets:
                     this.TypeOffsets = (Exception)obj;
                     break;
-                case TES4_FieldIndex.Deleted:
+                case ModHeader_FieldIndex.Deleted:
                     this.Deleted = (Exception)obj;
                     break;
-                case TES4_FieldIndex.Author:
+                case ModHeader_FieldIndex.Author:
                     this.Author = (Exception)obj;
                     break;
-                case TES4_FieldIndex.Description:
+                case ModHeader_FieldIndex.Description:
                     this.Description = (Exception)obj;
                     break;
-                case TES4_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.MasterReferences:
                     this.MasterReferences = (MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>>)obj;
                     break;
-                case TES4_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.VestigialData:
                     this.VestigialData = (Exception)obj;
                     break;
                 default:
@@ -2641,7 +2641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (Overall != null) return true;
             if (Fluff != null) return true;
-            if (Header != null) return true;
+            if (Stats != null) return true;
             if (TypeOffsets != null) return true;
             if (Deleted != null) return true;
             if (Author != null) return true;
@@ -2662,7 +2662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void ToString(FileGeneration fg)
         {
-            fg.AppendLine("TES4_ErrorMask =>");
+            fg.AppendLine("ModHeader_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -2683,7 +2683,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void ToString_FillInternal(FileGeneration fg)
         {
             fg.AppendLine($"Fluff => {Fluff}");
-            Header?.ToString(fg);
+            Stats?.ToString(fg);
             fg.AppendLine($"TypeOffsets => {TypeOffsets}");
             fg.AppendLine($"Deleted => {Deleted}");
             fg.AppendLine($"Author => {Author}");
@@ -2715,11 +2715,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public TES4_ErrorMask Combine(TES4_ErrorMask rhs)
+        public ModHeader_ErrorMask Combine(ModHeader_ErrorMask rhs)
         {
-            var ret = new TES4_ErrorMask();
+            var ret = new ModHeader_ErrorMask();
             ret.Fluff = this.Fluff.Combine(rhs.Fluff);
-            ret.Header = new MaskItem<Exception, Header_ErrorMask>(this.Header.Overall.Combine(rhs.Header.Overall), ((IErrorMask<Header_ErrorMask>)this.Header.Specific).Combine(rhs.Header.Specific));
+            ret.Stats = new MaskItem<Exception, ModStats_ErrorMask>(this.Stats.Overall.Combine(rhs.Stats.Overall), ((IErrorMask<ModStats_ErrorMask>)this.Stats.Specific).Combine(rhs.Stats.Specific));
             ret.TypeOffsets = this.TypeOffsets.Combine(rhs.TypeOffsets);
             ret.Deleted = this.Deleted.Combine(rhs.Deleted);
             ret.Author = this.Author.Combine(rhs.Author);
@@ -2728,7 +2728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.VestigialData = this.VestigialData.Combine(rhs.VestigialData);
             return ret;
         }
-        public static TES4_ErrorMask Combine(TES4_ErrorMask lhs, TES4_ErrorMask rhs)
+        public static ModHeader_ErrorMask Combine(ModHeader_ErrorMask lhs, ModHeader_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2736,24 +2736,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static TES4_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static ModHeader_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            return new TES4_ErrorMask();
+            return new ModHeader_ErrorMask();
         }
         #endregion
 
     }
-    public class TES4_CopyMask
+    public class ModHeader_CopyMask
     {
-        public TES4_CopyMask()
+        public ModHeader_CopyMask()
         {
         }
 
-        public TES4_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        public ModHeader_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
             this.Fluff = defaultOn;
-            this.Header = new MaskItem<CopyOption, Header_CopyMask>(deepCopyOption, default);
+            this.Stats = new MaskItem<CopyOption, ModStats_CopyMask>(deepCopyOption, default);
             this.TypeOffsets = defaultOn;
             this.Deleted = defaultOn;
             this.Author = defaultOn;
@@ -2764,7 +2764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public bool Fluff;
-        public MaskItem<CopyOption, Header_CopyMask> Header;
+        public MaskItem<CopyOption, ModStats_CopyMask> Stats;
         public bool TypeOffsets;
         public bool Deleted;
         public bool Author;
@@ -2775,12 +2775,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class TES4_TranslationMask : ITranslationMask
+    public class ModHeader_TranslationMask : ITranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;
         public bool Fluff;
-        public MaskItem<bool, Header_TranslationMask> Header;
+        public MaskItem<bool, ModStats_TranslationMask> Stats;
         public bool TypeOffsets;
         public bool Deleted;
         public bool Author;
@@ -2790,14 +2790,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Ctors
-        public TES4_TranslationMask()
+        public ModHeader_TranslationMask()
         {
         }
 
-        public TES4_TranslationMask(bool defaultOn)
+        public ModHeader_TranslationMask(bool defaultOn)
         {
             this.Fluff = defaultOn;
-            this.Header = new MaskItem<bool, Header_TranslationMask>(defaultOn, null);
+            this.Stats = new MaskItem<bool, ModStats_TranslationMask>(defaultOn, null);
             this.TypeOffsets = defaultOn;
             this.Deleted = defaultOn;
             this.Author = defaultOn;
@@ -2823,7 +2823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
             ret.Add((Fluff, null));
-            ret.Add((Header?.Overall ?? true, Header?.Specific?.GetCrystal()));
+            ret.Add((Stats?.Overall ?? true, Stats?.Specific?.GetCrystal()));
             ret.Add((TypeOffsets, null));
             ret.Add((Deleted, null));
             ret.Add((Author, null));
@@ -2835,12 +2835,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class TES4BinaryTranslation
+    public partial class ModHeaderBinaryTranslation
     {
-        public readonly static TES4BinaryTranslation Instance = new TES4BinaryTranslation();
+        public readonly static ModHeaderBinaryTranslation Instance = new ModHeaderBinaryTranslation();
 
         public static void Write_Binary_Embedded(
-            ITES4Getter item,
+            IModHeaderGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -2851,16 +2851,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void Write_Binary_RecordTypes(
-            ITES4Getter item,
+            IModHeaderGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            LoquiBinaryTranslation<Header>.Instance.Write(
+            LoquiBinaryTranslation<ModStats>.Instance.Write(
                 writer: writer,
-                item: item.Header,
-                fieldIndex: (int)TES4_FieldIndex.Header,
+                item: item.Stats,
+                fieldIndex: (int)ModHeader_FieldIndex.Stats,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
             if (item.TypeOffsets_IsSet)
@@ -2868,7 +2868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.TypeOffsets,
-                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.OFST_HEADER),
+                    header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.OFST_HEADER),
                     nullable: false);
             }
             if (item.Deleted_IsSet)
@@ -2876,7 +2876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Deleted,
-                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.DELE_HEADER),
+                    header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.DELE_HEADER),
                     nullable: false);
             }
             if (item.Author_IsSet)
@@ -2884,7 +2884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Author,
-                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.CNAM_HEADER),
+                    header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.CNAM_HEADER),
                     nullable: false);
             }
             if (item.Description_IsSet)
@@ -2892,7 +2892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Description,
-                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.SNAM_HEADER),
+                    header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.SNAM_HEADER),
                     nullable: false);
             }
             if (item.MasterReferences.HasBeenSet)
@@ -2900,7 +2900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Write(
                     writer: writer,
                     items: item.MasterReferences,
-                    fieldIndex: (int)TES4_FieldIndex.MasterReferences,
+                    fieldIndex: (int)ModHeader_FieldIndex.MasterReferences,
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, MasterReference subItem, ErrorMaskBuilder listErrorMask) =>
                     {
@@ -2917,7 +2917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.VestigialData,
-                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.DATA_HEADER),
+                    header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.DATA_HEADER),
                     nullable: false);
             }
         }
@@ -2925,11 +2925,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public void Write_Binary(
             MutagenWriter writer,
-            ITES4Getter item,
+            IModHeaderGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
-            out TES4_ErrorMask errorMask)
+            out ModHeader_ErrorMask errorMask)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
@@ -2938,19 +2938,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
-            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void Write_Binary(
             MutagenWriter writer,
-            ITES4Getter item,
+            IModHeaderGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: TES4_Registration.TES4_HEADER,
+                record: ModHeader_Registration.TES4_HEADER,
                 type: ObjectType.Record))
             {
                 Write_Binary_Embedded(

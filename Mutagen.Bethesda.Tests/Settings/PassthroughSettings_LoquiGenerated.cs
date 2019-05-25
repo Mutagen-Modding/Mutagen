@@ -61,9 +61,6 @@ namespace Mutagen.Bethesda.Tests
         #region TestFolder
         public Boolean TestFolder { get; set; }
         #endregion
-        #region DataFolder
-        public String DataFolder { get; set; }
-        #endregion
 
         IMask<bool> IEqualsMask<PassthroughSettings>.GetEqualsMask(PassthroughSettings rhs, EqualsMaskHelper.Include include) => PassthroughSettingsCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IPassthroughSettingsGetter>.GetEqualsMask(IPassthroughSettingsGetter rhs, EqualsMaskHelper.Include include) => PassthroughSettingsCommon.GetEqualsMask(this, rhs, include);
@@ -110,7 +107,6 @@ namespace Mutagen.Bethesda.Tests
             if (this.TestImport != rhs.TestImport) return false;
             if (this.TestObservable != rhs.TestObservable) return false;
             if (this.TestFolder != rhs.TestFolder) return false;
-            if (!string.Equals(this.DataFolder, rhs.DataFolder)) return false;
             return true;
         }
 
@@ -123,7 +119,6 @@ namespace Mutagen.Bethesda.Tests
             ret = HashHelper.GetHashCode(TestImport).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestObservable).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestFolder).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DataFolder).CombineHashCode(ret);
             return ret;
         }
 
@@ -643,9 +638,6 @@ namespace Mutagen.Bethesda.Tests
                 case PassthroughSettings_FieldIndex.TestFolder:
                     this.TestFolder = (Boolean)obj;
                     break;
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    this.DataFolder = (String)obj;
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -701,9 +693,6 @@ namespace Mutagen.Bethesda.Tests
                 case PassthroughSettings_FieldIndex.TestFolder:
                     obj.TestFolder = (Boolean)pair.Value;
                     break;
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    obj.DataFolder = (String)pair.Value;
-                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -725,8 +714,6 @@ namespace Mutagen.Bethesda.Tests
         new Boolean TestObservable { get; set; }
 
         new Boolean TestFolder { get; set; }
-
-        new String DataFolder { get; set; }
 
     }
 
@@ -756,10 +743,6 @@ namespace Mutagen.Bethesda.Tests
         Boolean TestFolder { get; }
 
         #endregion
-        #region DataFolder
-        String DataFolder { get; }
-
-        #endregion
 
     }
 
@@ -778,7 +761,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         TestImport = 3,
         TestObservable = 4,
         TestFolder = 5,
-        DataFolder = 6,
     }
     #endregion
 
@@ -796,9 +778,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "b6e04291-8a1a-4f43-baa4-0f5fc5074d8b";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(PassthroughSettings_Mask<>);
 
@@ -842,8 +824,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)PassthroughSettings_FieldIndex.TestObservable;
                 case "TESTFOLDER":
                     return (ushort)PassthroughSettings_FieldIndex.TestFolder;
-                case "DATAFOLDER":
-                    return (ushort)PassthroughSettings_FieldIndex.DataFolder;
                 default:
                     return null;
             }
@@ -860,7 +840,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestObservable:
                 case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.DataFolder:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -878,7 +857,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestObservable:
                 case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.DataFolder:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -896,7 +874,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestObservable:
                 case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.DataFolder:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -920,8 +897,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "TestObservable";
                 case PassthroughSettings_FieldIndex.TestFolder:
                     return "TestFolder";
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    return "DataFolder";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -938,7 +913,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestObservable:
                 case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.DataFolder:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -956,7 +930,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestObservable:
                 case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.DataFolder:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -980,8 +953,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return typeof(Boolean);
                 case PassthroughSettings_FieldIndex.TestFolder:
                     return typeof(Boolean);
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    return typeof(String);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1064,12 +1035,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 item.TestFolder = rhs.TestFolder;
                 errorMask?.PopIndex();
             }
-            if (copyMask?.DataFolder ?? true)
-            {
-                errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DataFolder);
-                item.DataFolder = rhs.DataFolder;
-                errorMask?.PopIndex();
-            }
         }
 
         #endregion
@@ -1082,7 +1047,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestImport = default(Boolean);
             item.TestObservable = default(Boolean);
             item.TestFolder = default(Boolean);
-            item.DataFolder = default(String);
         }
 
         public static PassthroughSettings_Mask<bool> GetEqualsMask(
@@ -1112,7 +1076,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestImport = item.TestImport == rhs.TestImport;
             ret.TestObservable = item.TestObservable == rhs.TestObservable;
             ret.TestFolder = item.TestFolder == rhs.TestFolder;
-            ret.DataFolder = string.Equals(item.DataFolder, rhs.DataFolder);
         }
 
         public static string ToString(
@@ -1166,10 +1129,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestFolder => {item.TestFolder}");
                 }
-                if (printMask?.DataFolder ?? true)
-                {
-                    fg.AppendLine($"DataFolder => {item.DataFolder}");
-                }
             }
             fg.AppendLine("]");
         }
@@ -1190,7 +1149,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestImport = true;
             ret.TestObservable = true;
             ret.TestFolder = true;
-            ret.DataFolder = true;
             return ret;
         }
 
@@ -1403,35 +1361,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                         }
                     }
                     break;
-                case "DataFolder":
-                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.DataFolder) ?? true))
-                    {
-                        try
-                        {
-                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DataFolder);
-                            if (StringXmlTranslation.Instance.Parse(
-                                node: node,
-                                item: out String DataFolderParse,
-                                errorMask: errorMask))
-                            {
-                                item.DataFolder = DataFolderParse;
-                            }
-                            else
-                            {
-                                item.DataFolder = default(String);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                    }
-                    break;
                 default:
                     break;
             }
@@ -1508,15 +1437,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     fieldIndex: (int)PassthroughSettings_FieldIndex.TestFolder,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.DataFolder) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DataFolder),
-                    item: item.DataFolder,
-                    fieldIndex: (int)PassthroughSettings_FieldIndex.DataFolder,
-                    errorMask: errorMask);
-            }
         }
 
         #region Xml Write
@@ -1578,7 +1498,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.TestImport = initialValue;
             this.TestObservable = initialValue;
             this.TestFolder = initialValue;
-            this.DataFolder = initialValue;
         }
         #endregion
 
@@ -1589,7 +1508,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public T TestImport;
         public T TestObservable;
         public T TestFolder;
-        public T DataFolder;
         #endregion
 
         #region Equals
@@ -1608,7 +1526,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!object.Equals(this.TestImport, rhs.TestImport)) return false;
             if (!object.Equals(this.TestObservable, rhs.TestObservable)) return false;
             if (!object.Equals(this.TestFolder, rhs.TestFolder)) return false;
-            if (!object.Equals(this.DataFolder, rhs.DataFolder)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1620,7 +1537,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret = ret.CombineHashCode(this.TestImport?.GetHashCode());
             ret = ret.CombineHashCode(this.TestObservable?.GetHashCode());
             ret = ret.CombineHashCode(this.TestFolder?.GetHashCode());
-            ret = ret.CombineHashCode(this.DataFolder?.GetHashCode());
             return ret;
         }
 
@@ -1635,7 +1551,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!eval(this.TestImport)) return false;
             if (!eval(this.TestObservable)) return false;
             if (!eval(this.TestFolder)) return false;
-            if (!eval(this.DataFolder)) return false;
             return true;
         }
         #endregion
@@ -1656,7 +1571,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             obj.TestImport = eval(this.TestImport);
             obj.TestObservable = eval(this.TestObservable);
             obj.TestFolder = eval(this.TestFolder);
-            obj.DataFolder = eval(this.DataFolder);
         }
         #endregion
 
@@ -1709,10 +1623,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestFolder => {TestFolder}");
                 }
-                if (printMask?.DataFolder ?? true)
-                {
-                    fg.AppendLine($"DataFolder => {DataFolder}");
-                }
             }
             fg.AppendLine("]");
         }
@@ -1742,7 +1652,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public Exception TestImport;
         public Exception TestObservable;
         public Exception TestFolder;
-        public Exception DataFolder;
         #endregion
 
         #region IErrorMask
@@ -1763,8 +1672,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return TestObservable;
                 case PassthroughSettings_FieldIndex.TestFolder:
                     return TestFolder;
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    return DataFolder;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1792,9 +1699,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     break;
                 case PassthroughSettings_FieldIndex.TestFolder:
                     this.TestFolder = ex;
-                    break;
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    this.DataFolder = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1824,9 +1728,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestFolder:
                     this.TestFolder = (Exception)obj;
                     break;
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    this.DataFolder = (Exception)obj;
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1841,7 +1742,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (TestImport != null) return true;
             if (TestObservable != null) return true;
             if (TestFolder != null) return true;
-            if (DataFolder != null) return true;
             return false;
         }
         #endregion
@@ -1882,7 +1782,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine($"TestImport => {TestImport}");
             fg.AppendLine($"TestObservable => {TestObservable}");
             fg.AppendLine($"TestFolder => {TestFolder}");
-            fg.AppendLine($"DataFolder => {DataFolder}");
         }
         #endregion
 
@@ -1896,7 +1795,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestImport = this.TestImport.Combine(rhs.TestImport);
             ret.TestObservable = this.TestObservable.Combine(rhs.TestObservable);
             ret.TestFolder = this.TestFolder.Combine(rhs.TestFolder);
-            ret.DataFolder = this.DataFolder.Combine(rhs.DataFolder);
             return ret;
         }
         public static PassthroughSettings_ErrorMask Combine(PassthroughSettings_ErrorMask lhs, PassthroughSettings_ErrorMask rhs)
@@ -1929,7 +1827,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.TestImport = defaultOn;
             this.TestObservable = defaultOn;
             this.TestFolder = defaultOn;
-            this.DataFolder = defaultOn;
         }
 
         #region Members
@@ -1939,7 +1836,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool TestImport;
         public bool TestObservable;
         public bool TestFolder;
-        public bool DataFolder;
         #endregion
 
     }
@@ -1954,7 +1850,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool TestImport;
         public bool TestObservable;
         public bool TestFolder;
-        public bool DataFolder;
         #endregion
 
         #region Ctors
@@ -1970,7 +1865,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.TestImport = defaultOn;
             this.TestObservable = defaultOn;
             this.TestFolder = defaultOn;
-            this.DataFolder = defaultOn;
         }
 
         #endregion
@@ -1995,7 +1889,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((TestImport, null));
             ret.Add((TestObservable, null));
             ret.Add((TestFolder, null));
-            ret.Add((DataFolder, null));
         }
     }
     #endregion

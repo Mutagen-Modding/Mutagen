@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj" />
+    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj" />
+    <ProjectReference Include="..\..\Loqui\Loqui.Presentation\Loqui.Presentation.csproj" />
+    <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Records\Major Records\GameSetting.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingFloat.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingInt.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingString.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Global.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalFloat.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalFloat_LoquiGenerated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalInt.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalInt_LoquiGenerated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalShort.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalShort_LoquiGenerated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Global_LoquiGenerated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\ModHeader_LoquiGenerated.cs">
+      <DependentUpon>ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\ModStats_LoquiGenerated.cs">
+      <DependentUpon>ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\SkyrimMajorRecord.cs">
+      <DependentUpon>SkyrimMajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\SkyrimMod.cs">
+      <DependentUpon>SkyrimMod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\SkyrimMod_LoquiGenerated.cs">
+      <DependentUpon>SkyrimMod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSetting_LoquiGenerated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingInt_LoquiGenerated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingFloat_LoquiGenerated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingString_LoquiGenerated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\SkyrimMajorRecord_LoquiGenerated.cs">
+      <DependentUpon>SkyrimMajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="ProtocolDefinition_Skyrim.cs" />
+  </ItemGroup>
+</Project>

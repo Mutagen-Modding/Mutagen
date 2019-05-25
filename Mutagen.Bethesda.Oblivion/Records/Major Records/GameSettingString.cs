@@ -8,7 +8,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class GameSettingString
     {
-        public const char TRIGGER_CHAR = 's';
-        protected override char TriggerChar => TRIGGER_CHAR;
+        public override GameSettingType SettingType => GameSettingType.String;
     }
 }
