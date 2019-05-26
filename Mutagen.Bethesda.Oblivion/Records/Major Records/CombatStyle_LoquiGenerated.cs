@@ -1523,7 +1523,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
-                        item.Advanced = CombatStyleAdvanced.Create_Binary(
+                        item.Advanced = Mutagen.Bethesda.Oblivion.CombatStyleAdvanced.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

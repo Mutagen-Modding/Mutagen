@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)GenderedBodyData_FieldIndex.Male);
-                        item.Male = BodyData.Create_Binary(
+                        item.Male = Mutagen.Bethesda.Oblivion.BodyData.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)GenderedBodyData_FieldIndex.Female);
-                        item.Female = BodyData.Create_Binary(
+                        item.Female = Mutagen.Bethesda.Oblivion.BodyData.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

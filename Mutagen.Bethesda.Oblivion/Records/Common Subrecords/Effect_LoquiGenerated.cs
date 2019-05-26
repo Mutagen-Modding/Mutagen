@@ -763,7 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Effect_FieldIndex.ScriptEffect);
-                        item.ScriptEffect = ScriptEffect.Create_Binary(
+                        item.ScriptEffect = Mutagen.Bethesda.Oblivion.ScriptEffect.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

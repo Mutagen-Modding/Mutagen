@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
-                        item.MaleBipedModel = Model.Create_Binary(
+                        item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
-                        item.MaleWorldModel = Model.Create_Binary(
+                        item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter,
                             masterReferences: masterReferences,
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
-                        item.FemaleBipedModel = Model.Create_Binary(
+                        item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter,
                             masterReferences: masterReferences,
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
-                        item.FemaleWorldModel = Model.Create_Binary(
+                        item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter,
                             masterReferences: masterReferences,

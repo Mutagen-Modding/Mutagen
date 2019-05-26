@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim
                     try
                     {
                         errorMask?.PushIndex((int)ModHeader_FieldIndex.Stats);
-                        item.Stats = ModStats.Create_Binary(
+                        item.Stats = Mutagen.Bethesda.Skyrim.ModStats.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

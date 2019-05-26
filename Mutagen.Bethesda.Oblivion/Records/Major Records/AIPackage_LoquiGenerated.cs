@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.Location);
-                        item.Location = AIPackageLocation.Create_Binary(
+                        item.Location = Mutagen.Bethesda.Oblivion.AIPackageLocation.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -868,7 +868,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.Schedule);
-                        item.Schedule = AIPackageSchedule.Create_Binary(
+                        item.Schedule = Mutagen.Bethesda.Oblivion.AIPackageSchedule.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.Target);
-                        item.Target = AIPackageTarget.Create_Binary(
+                        item.Target = Mutagen.Bethesda.Oblivion.AIPackageTarget.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

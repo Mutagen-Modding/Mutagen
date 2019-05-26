@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)MagicEffect_FieldIndex.Model);
-                        item.Model = Model.Create_Binary(
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)MagicEffect_FieldIndex.SubData);
-                        item.SubData = MagicEffectSubData.Create_Binary(
+                        item.SubData = Mutagen.Bethesda.Oblivion.MagicEffectSubData.Create_Binary(
                             frame: dataFrame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

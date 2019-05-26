@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)PlacedNPC_FieldIndex.DistantLODData);
-                        item.DistantLODData = DistantLODData.Create_Binary(
+                        item.DistantLODData = Mutagen.Bethesda.Oblivion.DistantLODData.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)PlacedNPC_FieldIndex.EnableParent);
-                        item.EnableParent = EnableParent.Create_Binary(
+                        item.EnableParent = Mutagen.Bethesda.Oblivion.EnableParent.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

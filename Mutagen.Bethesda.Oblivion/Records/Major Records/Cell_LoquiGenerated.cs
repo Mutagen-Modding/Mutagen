@@ -1376,7 +1376,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
-                        item.Lighting = CellLighting.Create_Binary(
+                        item.Lighting = Mutagen.Bethesda.Oblivion.CellLighting.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

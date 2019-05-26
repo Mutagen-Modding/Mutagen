@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Sound_FieldIndex.Data);
-                        item.Data = SoundData.Create_Binary(
+                        item.Data = Mutagen.Bethesda.Oblivion.SoundData.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Sound_FieldIndex.Data);
-                        item.Data = SoundDataExtended.Create_Binary(
+                        item.Data = Mutagen.Bethesda.Oblivion.SoundDataExtended.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

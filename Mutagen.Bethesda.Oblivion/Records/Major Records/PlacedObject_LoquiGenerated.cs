@@ -1474,7 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.TeleportDestination);
-                        item.TeleportDestination = TeleportDestination.Create_Binary(
+                        item.TeleportDestination = Mutagen.Bethesda.Oblivion.TeleportDestination.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1496,7 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.Lock);
-                        item.Lock = LockInformation.Create_Binary(
+                        item.Lock = Mutagen.Bethesda.Oblivion.LockInformation.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1542,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.EnableParent);
-                        item.EnableParent = EnableParent.Create_Binary(
+                        item.EnableParent = Mutagen.Bethesda.Oblivion.EnableParent.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1579,7 +1579,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.DistantLODData);
-                        item.DistantLODData = DistantLODData.Create_Binary(
+                        item.DistantLODData = Mutagen.Bethesda.Oblivion.DistantLODData.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1659,7 +1659,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.MapMarker);
-                        item.MapMarker = MapMarker.Create_Binary(
+                        item.MapMarker = Mutagen.Bethesda.Oblivion.MapMarker.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

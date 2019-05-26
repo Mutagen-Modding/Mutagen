@@ -1672,7 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
-                        item.RelatedWaters = RelatedWaters.Create_Binary(
+                        item.RelatedWaters = Mutagen.Bethesda.Oblivion.RelatedWaters.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

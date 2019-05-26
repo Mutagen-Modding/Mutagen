@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)LogEntry_FieldIndex.ResultScript);
-                        item.ResultScript = ScriptFields.Create_Binary(
+                        item.ResultScript = Mutagen.Bethesda.Oblivion.ScriptFields.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Training);
-                        item.Training = ClassTraining.Create_Binary(
+                        item.Training = Mutagen.Bethesda.Oblivion.ClassTraining.Create_Binary(
                             frame: dataFrame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

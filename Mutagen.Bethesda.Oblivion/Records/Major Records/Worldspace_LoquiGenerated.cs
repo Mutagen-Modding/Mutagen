@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
-                        item.MapData = MapData.Create_Binary(
+                        item.MapData = Mutagen.Bethesda.Oblivion.MapData.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

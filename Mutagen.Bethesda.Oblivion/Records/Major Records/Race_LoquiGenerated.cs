@@ -1520,7 +1520,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.Voices);
-                        item.Voices = RaceVoices.Create_Binary(
+                        item.Voices = Mutagen.Bethesda.Oblivion.RaceVoices.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1542,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.DefaultHair);
-                        item.DefaultHair = RaceHair.Create_Binary(
+                        item.DefaultHair = Mutagen.Bethesda.Oblivion.RaceHair.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1582,7 +1582,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.RaceStats);
-                        item.RaceStats = RaceStatsGendered.Create_Binary(
+                        item.RaceStats = Mutagen.Bethesda.Oblivion.RaceStatsGendered.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1626,7 +1626,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
-                        item.BodyData = GenderedBodyData.Create_Binary(
+                        item.BodyData = Mutagen.Bethesda.Oblivion.GenderedBodyData.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1672,7 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.FaceGenData);
-                        item.FaceGenData = FaceGenData.Create_Binary(
+                        item.FaceGenData = Mutagen.Bethesda.Oblivion.FaceGenData.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,

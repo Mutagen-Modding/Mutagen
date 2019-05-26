@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)LandTexture_FieldIndex.Havok);
-                        item.Havok = HavokData.Create_Binary(
+                        item.Havok = Mutagen.Bethesda.Oblivion.HavokData.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
