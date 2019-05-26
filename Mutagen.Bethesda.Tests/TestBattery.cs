@@ -19,22 +19,21 @@ namespace Mutagen.Bethesda.Tests
 
         public static IEnumerable<Task> GetTests(TestingSettings settings)
         {
-            var oblivPassthrough = new Passthrough()
+            var oblivPassthrough = new Target()
             {
                 Do = true,
                 GameMode = GameMode.Oblivion,
                 Path = "Oblivion.esm"
             };
-            var oblivPassthroughTest = new Oblivion_Passthrough_Test(settings, oblivPassthrough);
             var passthroughTests = (settings.PassthroughSettings?.TestNormal ?? false)
                 || (settings.PassthroughSettings?.TestObservable ?? false);
-            foreach (var passthroughGroup in settings.PassthroughGroups)
+            foreach (var targetGroup in settings.TargetGroups)
             {
-                if (!passthroughGroup.Do) continue;
-                foreach (var passthrough in passthroughGroup.Passthroughs)
+                if (!targetGroup.Do) continue;
+                foreach (var target in targetGroup.Targets)
                 {
-                    if (!passthrough.Do) continue;
-                    PassthroughTest passthroughTest = PassthroughTest.Factory(settings, passthrough);
+                    if (!target.Do) continue;
+                    PassthroughTest passthroughTest = PassthroughTest.Factory(settings, target);
                     if (passthroughTests)
                     {
                         yield return passthroughTest.BinaryPassthroughTest();
@@ -42,6 +41,10 @@ namespace Mutagen.Bethesda.Tests
                     if (settings.PassthroughSettings?.TestImport ?? false)
                     {
                         yield return passthroughTest.TestImport();
+                    }
+                    if (settings.TestLocators)
+                    {
+                        yield return OtherTests.BaseGroupIterator(target, settings.DataFolderLocations);
                     }
                 }
             }
@@ -51,6 +54,7 @@ namespace Mutagen.Bethesda.Tests
                 yield return OtherTests.OblivionESM_GroupMask_Import(settings, oblivPassthrough);
                 yield return OtherTests.OblivionESM_GroupMask_Export(settings, oblivPassthrough);
             }
+            var oblivPassthroughTest = new Oblivion_Passthrough_Test(settings, oblivPassthrough);
             if (settings.PassthroughSettings?.TestFolder ?? false)
             {
                 yield return OtherTests.OblivionESM_Folder_Reimport(settings.PassthroughSettings, oblivPassthrough, oblivPassthroughTest);

@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
                 DataPath,
                 ModKey);
 
-            var passthrough = new Oblivion_Passthrough_Test(Settings, new Passthrough()
+            var passthrough = new Oblivion_Passthrough_Test(Settings, new Target()
             {
                 Path = BinaryPath,
                 Do = true,
@@ -84,17 +84,17 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
                 ModKey);
         }
 
-        //[Benchmark]
-        //public PathGrid PathGridImporting()
-        //{
-        //    PathGridReader.Position = 0;
-        //    var pathGrid = new PathGrid(FormKey.NULL);
-        //    PathGridBinaryTranslation.FillBinary_PointToPointConnections_Custom_Public(
-        //        new Binary.MutagenFrame(PathGridReader),
-        //        pathGrid,
-        //        masterReferences: null,
-        //        errorMask: null);
-        //    return pathGrid;
-        //}
+        [Benchmark]
+        public PathGrid PathGridImporting()
+        {
+            PathGridReader.Position = 0;
+            var pathGrid = new PathGrid(FormKey.NULL);
+            PathGridBinaryTranslation.FillBinary_PointToPointConnections_Custom_Public(
+                new Binary.MutagenFrame(PathGridReader),
+                pathGrid,
+                masterReferences: null,
+                errorMask: null);
+            return pathGrid;
+        }
     }
 }

@@ -6,9 +6,10 @@
       <Bool name="TestModList" />
       <Bool name="TestFlattenedMod" />
       <Bool name="TestBenchmarks" />
+      <Bool name="TestLocators" />
       <RefDirect name="DataFolderLocations" refName="DataFolderLocations" />
       <RefDirect name="PassthroughSettings" refName="PassthroughSettings" />
-      <RefList name="PassthroughGroups" refName="PassthroughGroup" />
+      <RefList name="TargetGroups" refName="TargetGroup" />
     </Fields>
   </Object>
   <Object name="PassthroughSettings" GUID="b6e04291-8a1a-4f43-baa4-0f5fc5074d8b" ID="3">
@@ -27,18 +28,19 @@
       <String name="Skyrim" />
     </Fields>
   </Object>
-  <Object name="PassthroughGroup" GUID="7c60c735-e67c-498a-9d99-80aa1c1277a9" ID="5">
+  <Object name="TargetGroup" GUID="7c60c735-e67c-498a-9d99-80aa1c1277a9" ID="5">
     <Fields>
       <Bool name="Do" />
-      <RefList name="Passthroughs" refName="Passthrough" />
+      <RefList name="Targets" refName="Target" />
     </Fields>
   </Object>
-  <Object name="Passthrough" GUID="4eabe8e5-a068-4934-a847-401d92253ade" ID="2">
+  <Object name="Target" GUID="4eabe8e5-a068-4934-a847-401d92253ade" ID="2">
     <Fields>
       <Bool name="Do" />
       <String name="Path" />
       <UInt8 name="NumMasters" />
       <Enum name="GameMode" enumName="Mutagen.Bethesda.GameMode" />
+      <UInt8 name="ExpectedBaseGroupCount" hasBeenSet="True" />
     </Fields>
   </Object>
 </Loqui>

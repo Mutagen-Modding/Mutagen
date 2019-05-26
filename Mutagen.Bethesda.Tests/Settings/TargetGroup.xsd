@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<xs:schema id="TargetGroup" targetNamespace="Tests" elementFormDefault="qualified" xmlns="Tests" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="Target.xsd" />
+   <xs:include schemaLocation="Common.xsd" />
+   <xs:element name="TargetGroup" type="TargetGroupType" />
+   <xs:complexType name="TargetGroupType">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:element name="Do" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="Targets" type="TargetsType" minOccurs="0" maxOccurs="1" />
+      </xs:choice>
+   </xs:complexType>
+   <xs:complexType name="TargetsType">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:element name="Item" type="TargetType" />
+      </xs:choice>
+   </xs:complexType>
+</xs:schema>

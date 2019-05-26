@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="us-ascii"?>
-<xs:schema id="Passthrough" targetNamespace="Tests" elementFormDefault="qualified" xmlns="Tests" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema id="Target" targetNamespace="Tests" elementFormDefault="qualified" xmlns="Tests" xmlns:xs="http://www.w3.org/2001/XMLSchema">
    <xs:include schemaLocation="Common.xsd" />
-   <xs:element name="Passthrough" type="PassthroughType" />
-   <xs:complexType name="PassthroughType">
+   <xs:element name="Target" type="TargetType" />
+   <xs:complexType name="TargetType">
       <xs:choice minOccurs="0" maxOccurs="unbounded">
          <xs:element name="Do" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="Path" type="NullableValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="NumMasters" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="GameMode" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="ExpectedBaseGroupCount" type="ValueType" minOccurs="0" maxOccurs="1" />
       </xs:choice>
    </xs:complexType>
 </xs:schema>

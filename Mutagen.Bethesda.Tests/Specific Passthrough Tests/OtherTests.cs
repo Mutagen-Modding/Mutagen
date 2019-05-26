@@ -17,10 +17,10 @@ namespace Mutagen.Bethesda.Tests
 {
     public class OtherTests
     {
-        public static async Task OblivionESM_GroupMask_Import(TestingSettings settings, Passthrough passthrough)
+        public static async Task OblivionESM_GroupMask_Import(TestingSettings settings, Target target)
         {
             var mod = await OblivionMod.Create_Binary(
-                Path.Combine(settings.DataFolderLocations.Oblivion, passthrough.Path),
+                Path.Combine(settings.DataFolderLocations.Oblivion, target.Path),
                 modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
                 importMask: new GroupMask()
                 {
@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public static async Task OblivionESM_GroupMask_Export(TestingSettings settings, Passthrough passthrough)
+        public static async Task OblivionESM_GroupMask_Export(TestingSettings settings, Target target)
         {
             var mod = await OblivionMod.Create_Binary(
-                Path.Combine(settings.DataFolderLocations.Oblivion, passthrough.Path),
+                Path.Combine(settings.DataFolderLocations.Oblivion, target.Path),
                 modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
 
             using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Export"))
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public static async Task OblivionESM_Folder_Reimport(PassthroughSettings settings, Passthrough passthrough, Oblivion_Passthrough_Test oblivPassthrough)
+        public static async Task OblivionESM_Folder_Reimport(PassthroughSettings settings, Target target, Oblivion_Passthrough_Test oblivPassthrough)
         {
             Task<OblivionMod> ImportModBinary(string sourcePath)
             {
@@ -133,6 +133,17 @@ namespace Mutagen.Bethesda.Tests
                         }
                     }
                 }
+            }
+        }
+
+        public static async Task BaseGroupIterator(Target settings, DataFolderLocations locs)
+        {
+            if (!settings.ExpectedBaseGroupCount_IsSet) return;
+            var loc = settings.GetFilePath(locs);
+            using (var stream = new MutagenBinaryReadStream(loc.Path))
+            {
+                var grups = RecordLocator.IterateBaseGroupLocations(stream).ToArray();
+                Assert.Equal(settings.ExpectedBaseGroupCount, grups.Length);
             }
         }
     }

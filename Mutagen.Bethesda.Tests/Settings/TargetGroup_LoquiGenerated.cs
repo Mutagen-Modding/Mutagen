@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Tests.Internals;
+using ReactiveUI;
 using DynamicData;
 using CSharpExt.Rx;
 using System.Xml;
@@ -26,87 +27,94 @@ using System.Collections.Specialized;
 namespace Mutagen.Bethesda.Tests
 {
     #region Class
-    public partial class PassthroughGroup : 
-        IPassthroughGroup,
-        ILoquiObject<PassthroughGroup>,
+    public partial class TargetGroup : 
+        LoquiNotifyingObject,
+        ITargetGroup,
+        ILoquiObject<TargetGroup>,
         ILoquiObjectSetter,
-        IEquatable<PassthroughGroup>
+        IEquatable<TargetGroup>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PassthroughGroup_Registration.Instance;
-        public static PassthroughGroup_Registration Registration => PassthroughGroup_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => TargetGroup_Registration.Instance;
+        public static TargetGroup_Registration Registration => TargetGroup_Registration.Instance;
 
         #region Ctor
-        public PassthroughGroup()
+        public TargetGroup()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Do
-        public Boolean Do { get; set; }
-        #endregion
-        #region Passthroughs
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<Passthrough> _Passthroughs = new SourceSetList<Passthrough>();
-        public ISourceSetList<Passthrough> Passthroughs => _Passthroughs;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<Passthrough> PassthroughsEnumerable
+        private Boolean _Do;
+        public Boolean Do
         {
-            get => _Passthroughs.Items;
-            set => _Passthroughs.SetTo(value);
+            get => this._Do;
+            set => this.RaiseAndSetIfChanged(ref this._Do, value, nameof(Do));
+        }
+        #endregion
+        #region Targets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly SourceSetList<Target> _Targets = new SourceSetList<Target>();
+        public ISourceSetList<Target> Targets => _Targets;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEnumerable<Target> TargetsEnumerable
+        {
+            get => _Targets.Items;
+            set => _Targets.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Passthrough> IPassthroughGroup.Passthroughs => _Passthroughs;
+        ISourceSetList<Target> ITargetGroup.Targets => _Targets;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Passthrough> IPassthroughGroupGetter.Passthroughs => _Passthroughs;
+        IObservableSetList<Target> ITargetGroupGetter.Targets => _Targets;
         #endregion
 
         #endregion
 
-        IMask<bool> IEqualsMask<PassthroughGroup>.GetEqualsMask(PassthroughGroup rhs, EqualsMaskHelper.Include include) => PassthroughGroupCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IPassthroughGroupGetter>.GetEqualsMask(IPassthroughGroupGetter rhs, EqualsMaskHelper.Include include) => PassthroughGroupCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<TargetGroup>.GetEqualsMask(TargetGroup rhs, EqualsMaskHelper.Include include) => TargetGroupCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ITargetGroupGetter>.GetEqualsMask(ITargetGroupGetter rhs, EqualsMaskHelper.Include include) => TargetGroupCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public override string ToString()
         {
-            return PassthroughGroupCommon.ToString(this, printMask: null);
+            return TargetGroupCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            PassthroughGroup_Mask<bool> printMask = null)
+            TargetGroup_Mask<bool> printMask = null)
         {
-            return PassthroughGroupCommon.ToString(this, name: name, printMask: printMask);
+            return TargetGroupCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            PassthroughGroupCommon.ToString(this, fg, name: name, printMask: null);
+            TargetGroupCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public PassthroughGroup_Mask<bool> GetHasBeenSetMask()
+        public TargetGroup_Mask<bool> GetHasBeenSetMask()
         {
-            return PassthroughGroupCommon.GetHasBeenSetMask(this);
+            return TargetGroupCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is PassthroughGroup rhs)) return false;
+            if (!(obj is TargetGroup rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(PassthroughGroup rhs)
+        public bool Equals(TargetGroup rhs)
         {
             if (rhs == null) return false;
             if (this.Do != rhs.Do) return false;
-            if (!this.Passthroughs.SequenceEqual(rhs.Passthroughs)) return false;
+            if (!this.Targets.SequenceEqual(rhs.Targets)) return false;
             return true;
         }
 
@@ -114,7 +122,7 @@ namespace Mutagen.Bethesda.Tests
         {
             int ret = 0;
             ret = HashHelper.GetHashCode(Do).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Passthroughs).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Targets).CombineHashCode(ret);
             return ret;
         }
 
@@ -124,10 +132,10 @@ namespace Mutagen.Bethesda.Tests
         #region Xml Translation
         #region Xml Create
         [DebuggerStepThrough]
-        public static PassthroughGroup Create_Xml(
+        public static TargetGroup Create_Xml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
-            PassthroughGroup_TranslationMask translationMask = null)
+            TargetGroup_TranslationMask translationMask = null)
         {
             return Create_Xml(
                 missing: missing,
@@ -137,11 +145,11 @@ namespace Mutagen.Bethesda.Tests
         }
 
         [DebuggerStepThrough]
-        public static PassthroughGroup Create_Xml(
+        public static TargetGroup Create_Xml(
             XElement node,
-            out PassthroughGroup_ErrorMask errorMask,
+            out TargetGroup_ErrorMask errorMask,
             bool doMasks = true,
-            PassthroughGroup_TranslationMask translationMask = null,
+            TargetGroup_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -150,11 +158,11 @@ namespace Mutagen.Bethesda.Tests
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
-            errorMask = PassthroughGroup_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = TargetGroup_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static PassthroughGroup Create_Xml(
+        public static TargetGroup Create_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -164,17 +172,17 @@ namespace Mutagen.Bethesda.Tests
             {
                 case MissingCreate.New:
                 case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new PassthroughGroup() : null;
+                    if (node == null) return missing == MissingCreate.New ? new TargetGroup() : null;
                     break;
                 default:
                     break;
             }
-            var ret = new PassthroughGroup();
+            var ret = new TargetGroup();
             try
             {
                 foreach (var elem in node.Elements())
                 {
-                    PassthroughGroupCommon.FillPublicElement_Xml(
+                    TargetGroupCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -190,10 +198,10 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static PassthroughGroup Create_Xml(
+        public static TargetGroup Create_Xml(
             string path,
             MissingCreate missing = MissingCreate.New,
-            PassthroughGroup_TranslationMask translationMask = null)
+            TargetGroup_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return Create_Xml(
@@ -202,10 +210,10 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask);
         }
 
-        public static PassthroughGroup Create_Xml(
+        public static TargetGroup Create_Xml(
             string path,
-            out PassthroughGroup_ErrorMask errorMask,
-            PassthroughGroup_TranslationMask translationMask = null,
+            out TargetGroup_ErrorMask errorMask,
+            TargetGroup_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
@@ -216,10 +224,10 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask);
         }
 
-        public static PassthroughGroup Create_Xml(
+        public static TargetGroup Create_Xml(
             string path,
             ErrorMaskBuilder errorMask,
-            PassthroughGroup_TranslationMask translationMask = null,
+            TargetGroup_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
@@ -230,10 +238,10 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static PassthroughGroup Create_Xml(
+        public static TargetGroup Create_Xml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
-            PassthroughGroup_TranslationMask translationMask = null)
+            TargetGroup_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return Create_Xml(
@@ -242,10 +250,10 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask);
         }
 
-        public static PassthroughGroup Create_Xml(
+        public static TargetGroup Create_Xml(
             Stream stream,
-            out PassthroughGroup_ErrorMask errorMask,
-            PassthroughGroup_TranslationMask translationMask = null,
+            out TargetGroup_ErrorMask errorMask,
+            TargetGroup_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
@@ -256,10 +264,10 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask);
         }
 
-        public static PassthroughGroup Create_Xml(
+        public static TargetGroup Create_Xml(
             Stream stream,
             ErrorMaskBuilder errorMask,
-            PassthroughGroup_TranslationMask translationMask = null,
+            TargetGroup_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
@@ -286,8 +294,8 @@ namespace Mutagen.Bethesda.Tests
 
         public virtual void CopyIn_Xml(
             XElement node,
-            out PassthroughGroup_ErrorMask errorMask,
-            PassthroughGroup_TranslationMask translationMask = null,
+            out TargetGroup_ErrorMask errorMask,
+            TargetGroup_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New,
             bool doMasks = true)
         {
@@ -297,7 +305,7 @@ namespace Mutagen.Bethesda.Tests
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = PassthroughGroup_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = TargetGroup_ErrorMask.Factory(errorMaskBuilder);
         }
 
         protected void CopyIn_Xml_Internal(
@@ -306,7 +314,7 @@ namespace Mutagen.Bethesda.Tests
             TranslationCrystal translationMask,
             MissingCreate missing = MissingCreate.New)
         {
-            LoquiXmlTranslation<PassthroughGroup>.Instance.CopyIn(
+            LoquiXmlTranslation<TargetGroup>.Instance.CopyIn(
                 missing: missing,
                 node: node,
                 item: this,
@@ -327,8 +335,8 @@ namespace Mutagen.Bethesda.Tests
 
         public void CopyIn_Xml(
             string path,
-            out PassthroughGroup_ErrorMask errorMask,
-            PassthroughGroup_TranslationMask translationMask,
+            out TargetGroup_ErrorMask errorMask,
+            TargetGroup_TranslationMask translationMask,
             MissingCreate missing = MissingCreate.New,
             bool doMasks = true)
         {
@@ -353,8 +361,8 @@ namespace Mutagen.Bethesda.Tests
 
         public void CopyIn_Xml(
             Stream stream,
-            out PassthroughGroup_ErrorMask errorMask,
-            PassthroughGroup_TranslationMask translationMask,
+            out TargetGroup_ErrorMask errorMask,
+            TargetGroup_TranslationMask translationMask,
             MissingCreate missing = MissingCreate.New,
             bool doMasks = true)
         {
@@ -372,25 +380,25 @@ namespace Mutagen.Bethesda.Tests
         #region Xml Write
         public virtual void Write_Xml(
             XElement node,
-            out PassthroughGroup_ErrorMask errorMask,
+            out TargetGroup_ErrorMask errorMask,
             bool doMasks = true,
-            PassthroughGroup_TranslationMask translationMask = null,
+            TargetGroup_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            PassthroughGroupXmlTranslation.Instance.Write_Xml(
+            TargetGroupXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = PassthroughGroup_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = TargetGroup_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Xml(
             string path,
-            out PassthroughGroup_ErrorMask errorMask,
-            PassthroughGroup_TranslationMask translationMask = null,
+            out TargetGroup_ErrorMask errorMask,
+            TargetGroup_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -420,8 +428,8 @@ namespace Mutagen.Bethesda.Tests
         }
         public virtual void Write_Xml(
             Stream stream,
-            out PassthroughGroup_ErrorMask errorMask,
-            PassthroughGroup_TranslationMask translationMask = null,
+            out TargetGroup_ErrorMask errorMask,
+            TargetGroup_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -452,7 +460,7 @@ namespace Mutagen.Bethesda.Tests
         public void Write_Xml(
             XElement node,
             string name = null,
-            PassthroughGroup_TranslationMask translationMask = null)
+            TargetGroup_TranslationMask translationMask = null)
         {
             this.Write_Xml(
                 name: name,
@@ -493,7 +501,7 @@ namespace Mutagen.Bethesda.Tests
             TranslationCrystal translationMask,
             string name = null)
         {
-            PassthroughGroupXmlTranslation.Instance.Write_Xml(
+            TargetGroupXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -504,29 +512,42 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        public PassthroughGroup Copy(
-            PassthroughGroup_CopyMask copyMask = null,
-            IPassthroughGroupGetter def = null)
+        protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
         {
-            return PassthroughGroup.Copy(
+            switch ((TargetGroup_FieldIndex)index)
+            {
+                case TargetGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.Targets:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
+        public TargetGroup Copy(
+            TargetGroup_CopyMask copyMask = null,
+            ITargetGroupGetter def = null)
+        {
+            return TargetGroup.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static PassthroughGroup Copy(
-            IPassthroughGroup item,
-            PassthroughGroup_CopyMask copyMask = null,
-            IPassthroughGroupGetter def = null)
+        public static TargetGroup Copy(
+            ITargetGroup item,
+            TargetGroup_CopyMask copyMask = null,
+            ITargetGroupGetter def = null)
         {
-            PassthroughGroup ret;
-            if (item.GetType().Equals(typeof(PassthroughGroup)))
+            TargetGroup ret;
+            if (item.GetType().Equals(typeof(TargetGroup)))
             {
-                ret = new PassthroughGroup();
+                ret = new TargetGroup();
             }
             else
             {
-                ret = (PassthroughGroup)System.Activator.CreateInstance(item.GetType());
+                ret = (TargetGroup)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -535,19 +556,19 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static PassthroughGroup Copy_ToLoqui(
-            IPassthroughGroupGetter item,
-            PassthroughGroup_CopyMask copyMask = null,
-            IPassthroughGroupGetter def = null)
+        public static TargetGroup Copy_ToLoqui(
+            ITargetGroupGetter item,
+            TargetGroup_CopyMask copyMask = null,
+            ITargetGroupGetter def = null)
         {
-            PassthroughGroup ret;
-            if (item.GetType().Equals(typeof(PassthroughGroup)))
+            TargetGroup ret;
+            if (item.GetType().Equals(typeof(TargetGroup)))
             {
-                ret = new PassthroughGroup() as PassthroughGroup;
+                ret = new TargetGroup() as TargetGroup;
             }
             else
             {
-                ret = (PassthroughGroup)System.Activator.CreateInstance(item.GetType());
+                ret = (TargetGroup)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -556,10 +577,10 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public void CopyFieldsFrom(IPassthroughGroupGetter rhs)
+        public void CopyFieldsFrom(ITargetGroupGetter rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IPassthroughGroupGetter)rhs,
+                rhs: (ITargetGroupGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -567,9 +588,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            IPassthroughGroupGetter rhs,
-            PassthroughGroup_CopyMask copyMask,
-            IPassthroughGroupGetter def = null)
+            ITargetGroupGetter rhs,
+            TargetGroup_CopyMask copyMask,
+            ITargetGroupGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -580,30 +601,30 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            IPassthroughGroupGetter rhs,
-            out PassthroughGroup_ErrorMask errorMask,
-            PassthroughGroup_CopyMask copyMask = null,
-            IPassthroughGroupGetter def = null,
+            ITargetGroupGetter rhs,
+            out TargetGroup_ErrorMask errorMask,
+            TargetGroup_CopyMask copyMask = null,
+            ITargetGroupGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PassthroughGroupCommon.CopyFieldsFrom(
+            TargetGroupCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
-            errorMask = PassthroughGroup_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = TargetGroup_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyFieldsFrom(
-            IPassthroughGroupGetter rhs,
+            ITargetGroupGetter rhs,
             ErrorMaskBuilder errorMask,
-            PassthroughGroup_CopyMask copyMask = null,
-            IPassthroughGroupGetter def = null,
+            TargetGroup_CopyMask copyMask = null,
+            ITargetGroupGetter def = null,
             bool doMasks = true)
         {
-            PassthroughGroupCommon.CopyFieldsFrom(
+            TargetGroupCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -613,14 +634,14 @@ namespace Mutagen.Bethesda.Tests
 
         protected void SetNthObject(ushort index, object obj)
         {
-            PassthroughGroup_FieldIndex enu = (PassthroughGroup_FieldIndex)index;
+            TargetGroup_FieldIndex enu = (TargetGroup_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.Do:
                     this.Do = (Boolean)obj;
                     break;
-                case PassthroughGroup_FieldIndex.Passthroughs:
-                    this._Passthroughs.SetTo((IEnumerable<Passthrough>)obj);
+                case TargetGroup_FieldIndex.Targets:
+                    this._Targets.SetTo((IEnumerable<Target>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -637,33 +658,33 @@ namespace Mutagen.Bethesda.Tests
         public void Clear()
         {
             CallClearPartial_Internal();
-            PassthroughGroupCommon.Clear(this);
+            TargetGroupCommon.Clear(this);
         }
 
 
-        public static PassthroughGroup Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public static TargetGroup Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new PassthroughGroup();
+            var ret = new TargetGroup();
             foreach (var pair in fields)
             {
-                CopyInInternal_PassthroughGroup(ret, pair);
+                CopyInInternal_TargetGroup(ret, pair);
             }
             return ret;
         }
 
-        protected static void CopyInInternal_PassthroughGroup(PassthroughGroup obj, KeyValuePair<ushort, object> pair)
+        protected static void CopyInInternal_TargetGroup(TargetGroup obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out PassthroughGroup_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out TargetGroup_FieldIndex enu))
             {
                 throw new ArgumentException($"Unknown index: {pair.Key}");
             }
             switch (enu)
             {
-                case PassthroughGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.Do:
                     obj.Do = (Boolean)pair.Value;
                     break;
-                case PassthroughGroup_FieldIndex.Passthroughs:
-                    obj._Passthroughs.SetTo((IEnumerable<Passthrough>)pair.Value);
+                case TargetGroup_FieldIndex.Targets:
+                    obj._Targets.SetTo((IEnumerable<Target>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -673,21 +694,21 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Interface
-    public partial interface IPassthroughGroup : IPassthroughGroupGetter, ILoquiClass<IPassthroughGroup, IPassthroughGroupGetter>, ILoquiClass<PassthroughGroup, IPassthroughGroupGetter>
+    public partial interface ITargetGroup : ITargetGroupGetter, ILoquiClass<ITargetGroup, ITargetGroupGetter>, ILoquiClass<TargetGroup, ITargetGroupGetter>
     {
         new Boolean Do { get; set; }
 
-        new ISourceSetList<Passthrough> Passthroughs { get; }
+        new ISourceSetList<Target> Targets { get; }
     }
 
-    public partial interface IPassthroughGroupGetter : ILoquiObject
+    public partial interface ITargetGroupGetter : ILoquiObject
     {
         #region Do
         Boolean Do { get; }
 
         #endregion
-        #region Passthroughs
-        IObservableSetList<Passthrough> Passthroughs { get; }
+        #region Targets
+        IObservableSetList<Target> Targets { get; }
         #endregion
 
     }
@@ -699,17 +720,17 @@ namespace Mutagen.Bethesda.Tests
 namespace Mutagen.Bethesda.Tests.Internals
 {
     #region Field Index
-    public enum PassthroughGroup_FieldIndex
+    public enum TargetGroup_FieldIndex
     {
         Do = 0,
-        Passthroughs = 1,
+        Targets = 1,
     }
     #endregion
 
     #region Registration
-    public class PassthroughGroup_Registration : ILoquiRegistration
+    public class TargetGroup_Registration : ILoquiRegistration
     {
-        public static readonly PassthroughGroup_Registration Instance = new PassthroughGroup_Registration();
+        public static readonly TargetGroup_Registration Instance = new TargetGroup_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Tests.ProtocolKey;
 
@@ -724,25 +745,25 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(PassthroughGroup_Mask<>);
+        public static readonly Type MaskType = typeof(TargetGroup_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(PassthroughGroup_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(TargetGroup_ErrorMask);
 
-        public static readonly Type ClassType = typeof(PassthroughGroup);
+        public static readonly Type ClassType = typeof(TargetGroup);
 
-        public static readonly Type GetterType = typeof(IPassthroughGroupGetter);
+        public static readonly Type GetterType = typeof(ITargetGroupGetter);
 
         public static readonly Type InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IPassthroughGroup);
+        public static readonly Type SetterType = typeof(ITargetGroup);
 
         public static readonly Type InternalSetterType = null;
 
-        public static readonly Type CommonType = typeof(PassthroughGroupCommon);
+        public static readonly Type CommonType = typeof(TargetGroupCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Tests.PassthroughGroup";
+        public const string FullName = "Mutagen.Bethesda.Tests.TargetGroup";
 
-        public const string Name = "PassthroughGroup";
+        public const string Name = "TargetGroup";
 
         public const string Namespace = "Mutagen.Bethesda.Tests";
 
@@ -755,9 +776,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (str.Upper)
             {
                 case "DO":
-                    return (ushort)PassthroughGroup_FieldIndex.Do;
-                case "PASSTHROUGHS":
-                    return (ushort)PassthroughGroup_FieldIndex.Passthroughs;
+                    return (ushort)TargetGroup_FieldIndex.Do;
+                case "TARGETS":
+                    return (ushort)TargetGroup_FieldIndex.Targets;
                 default:
                     return null;
             }
@@ -765,12 +786,12 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            PassthroughGroup_FieldIndex enu = (PassthroughGroup_FieldIndex)index;
+            TargetGroup_FieldIndex enu = (TargetGroup_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughGroup_FieldIndex.Passthroughs:
+                case TargetGroup_FieldIndex.Targets:
                     return true;
-                case PassthroughGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.Do:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -779,12 +800,12 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            PassthroughGroup_FieldIndex enu = (PassthroughGroup_FieldIndex)index;
+            TargetGroup_FieldIndex enu = (TargetGroup_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughGroup_FieldIndex.Passthroughs:
+                case TargetGroup_FieldIndex.Targets:
                     return true;
-                case PassthroughGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.Do:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -793,11 +814,11 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            PassthroughGroup_FieldIndex enu = (PassthroughGroup_FieldIndex)index;
+            TargetGroup_FieldIndex enu = (TargetGroup_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughGroup_FieldIndex.Do:
-                case PassthroughGroup_FieldIndex.Passthroughs:
+                case TargetGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.Targets:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -806,13 +827,13 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static string GetNthName(ushort index)
         {
-            PassthroughGroup_FieldIndex enu = (PassthroughGroup_FieldIndex)index;
+            TargetGroup_FieldIndex enu = (TargetGroup_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.Do:
                     return "Do";
-                case PassthroughGroup_FieldIndex.Passthroughs:
-                    return "Passthroughs";
+                case TargetGroup_FieldIndex.Targets:
+                    return "Targets";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -820,11 +841,11 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            PassthroughGroup_FieldIndex enu = (PassthroughGroup_FieldIndex)index;
+            TargetGroup_FieldIndex enu = (TargetGroup_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughGroup_FieldIndex.Do:
-                case PassthroughGroup_FieldIndex.Passthroughs:
+                case TargetGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.Targets:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -833,11 +854,11 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static bool IsProtected(ushort index)
         {
-            PassthroughGroup_FieldIndex enu = (PassthroughGroup_FieldIndex)index;
+            TargetGroup_FieldIndex enu = (TargetGroup_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughGroup_FieldIndex.Do:
-                case PassthroughGroup_FieldIndex.Passthroughs:
+                case TargetGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.Targets:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -846,13 +867,13 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static Type GetNthType(ushort index)
         {
-            PassthroughGroup_FieldIndex enu = (PassthroughGroup_FieldIndex)index;
+            TargetGroup_FieldIndex enu = (TargetGroup_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.Do:
                     return typeof(Boolean);
-                case PassthroughGroup_FieldIndex.Passthroughs:
-                    return typeof(SourceSetList<Passthrough>);
+                case TargetGroup_FieldIndex.Targets:
+                    return typeof(SourceSetList<Target>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -889,43 +910,54 @@ namespace Mutagen.Bethesda.Tests.Internals
     #endregion
 
     #region Extensions
-    public static partial class PassthroughGroupCommon
+    public static partial class TargetGroupCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IPassthroughGroup item,
-            IPassthroughGroupGetter rhs,
-            IPassthroughGroupGetter def,
+            ITargetGroup item,
+            ITargetGroupGetter rhs,
+            ITargetGroupGetter def,
             ErrorMaskBuilder errorMask,
-            PassthroughGroup_CopyMask copyMask)
+            TargetGroup_CopyMask copyMask)
         {
             if (copyMask?.Do ?? true)
             {
-                errorMask?.PushIndex((int)PassthroughGroup_FieldIndex.Do);
-                item.Do = rhs.Do;
-                errorMask?.PopIndex();
-            }
-            if (copyMask?.Passthroughs.Overall != CopyOption.Skip)
-            {
-                errorMask?.PushIndex((int)PassthroughGroup_FieldIndex.Passthroughs);
+                errorMask?.PushIndex((int)TargetGroup_FieldIndex.Do);
                 try
                 {
-                    item.Passthroughs.SetToWithDefault(
-                        rhs: rhs.Passthroughs,
-                        def: def?.Passthroughs,
+                    item.Do = rhs.Do;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Targets.Overall != CopyOption.Skip)
+            {
+                errorMask?.PushIndex((int)TargetGroup_FieldIndex.Targets);
+                try
+                {
+                    item.Targets.SetToWithDefault(
+                        rhs: rhs.Targets,
+                        def: def?.Targets,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Passthroughs.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Targets.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    return Passthrough.Copy(
+                                    return Target.Copy(
                                         r,
-                                        copyMask?.Passthroughs?.Specific,
+                                        copyMask?.Targets?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Passthroughs.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Targets.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -944,18 +976,18 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         #endregion
 
-        public static void Clear(IPassthroughGroup item)
+        public static void Clear(ITargetGroup item)
         {
             item.Do = default(Boolean);
-            item.Passthroughs.Unset();
+            item.Targets.Unset();
         }
 
-        public static PassthroughGroup_Mask<bool> GetEqualsMask(
-            this IPassthroughGroupGetter item,
-            IPassthroughGroupGetter rhs,
+        public static TargetGroup_Mask<bool> GetEqualsMask(
+            this ITargetGroupGetter item,
+            ITargetGroupGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PassthroughGroup_Mask<bool>();
+            var ret = new TargetGroup_Mask<bool>();
             FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -965,23 +997,23 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         public static void FillEqualsMask(
-            IPassthroughGroupGetter item,
-            IPassthroughGroupGetter rhs,
-            PassthroughGroup_Mask<bool> ret,
+            ITargetGroupGetter item,
+            ITargetGroupGetter rhs,
+            TargetGroup_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Do = item.Do == rhs.Do;
-            ret.Passthroughs = item.Passthroughs.CollectionEqualsHelper(
-                rhs.Passthroughs,
+            ret.Targets = item.Targets.CollectionEqualsHelper(
+                rhs.Targets,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
         }
 
         public static string ToString(
-            this IPassthroughGroupGetter item,
+            this ITargetGroupGetter item,
             string name = null,
-            PassthroughGroup_Mask<bool> printMask = null)
+            TargetGroup_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -989,18 +1021,18 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         public static void ToString(
-            this IPassthroughGroupGetter item,
+            this ITargetGroupGetter item,
             FileGeneration fg,
             string name = null,
-            PassthroughGroup_Mask<bool> printMask = null)
+            TargetGroup_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(PassthroughGroup)} =>");
+                fg.AppendLine($"{nameof(TargetGroup)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(PassthroughGroup)}) =>");
+                fg.AppendLine($"{name} ({nameof(TargetGroup)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1009,13 +1041,13 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"Do => {item.Do}");
                 }
-                if (printMask?.Passthroughs?.Overall ?? true)
+                if (printMask?.Targets?.Overall ?? true)
                 {
-                    fg.AppendLine("Passthroughs =>");
+                    fg.AppendLine("Targets =>");
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        foreach (var subItem in item.Passthroughs)
+                        foreach (var subItem in item.Targets)
                         {
                             fg.AppendLine("[");
                             using (new DepthWrapper(fg))
@@ -1032,23 +1064,24 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         public static bool HasBeenSet(
-            this IPassthroughGroupGetter item,
-            PassthroughGroup_Mask<bool?> checkMask)
+            this ITargetGroupGetter item,
+            TargetGroup_Mask<bool?> checkMask)
         {
+            if (checkMask.Targets.Overall.HasValue && checkMask.Targets.Overall.Value != item.Targets.HasBeenSet) return false;
             return true;
         }
 
-        public static PassthroughGroup_Mask<bool> GetHasBeenSetMask(IPassthroughGroupGetter item)
+        public static TargetGroup_Mask<bool> GetHasBeenSetMask(ITargetGroupGetter item)
         {
-            var ret = new PassthroughGroup_Mask<bool>();
+            var ret = new TargetGroup_Mask<bool>();
             ret.Do = true;
-            ret.Passthroughs = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Passthrough_Mask<bool>>>>(item.Passthroughs.HasBeenSet, item.Passthroughs.WithIndex().Select((i) => new MaskItemIndexed<bool, Passthrough_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.Targets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Target_Mask<bool>>>>(item.Targets.HasBeenSet, item.Targets.WithIndex().Select((i) => new MaskItemIndexed<bool, Target_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
         #region Xml Translation
         public static void FillPublic_Xml(
-            this PassthroughGroup item,
+            this TargetGroup item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1057,7 +1090,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    PassthroughGroupCommon.FillPublicElement_Xml(
+                    TargetGroupCommon.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1073,7 +1106,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this PassthroughGroup item,
+            this TargetGroup item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1082,11 +1115,11 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (name)
             {
                 case "Do":
-                    if ((translationMask?.GetShouldTranslate((int)PassthroughGroup_FieldIndex.Do) ?? true))
+                    if ((translationMask?.GetShouldTranslate((int)TargetGroup_FieldIndex.Do) ?? true))
                     {
                         try
                         {
-                            errorMask?.PushIndex((int)PassthroughGroup_FieldIndex.Do);
+                            errorMask?.PushIndex((int)TargetGroup_FieldIndex.Do);
                             if (BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 item: out Boolean DoParse,
@@ -1110,24 +1143,24 @@ namespace Mutagen.Bethesda.Tests.Internals
                         }
                     }
                     break;
-                case "Passthroughs":
-                    if ((translationMask?.GetShouldTranslate((int)PassthroughGroup_FieldIndex.Passthroughs) ?? true))
+                case "Targets":
+                    if ((translationMask?.GetShouldTranslate((int)TargetGroup_FieldIndex.Targets) ?? true))
                     {
                         try
                         {
-                            errorMask?.PushIndex((int)PassthroughGroup_FieldIndex.Passthroughs);
-                            if (ListXmlTranslation<Passthrough>.Instance.Parse(
+                            errorMask?.PushIndex((int)TargetGroup_FieldIndex.Targets);
+                            if (ListXmlTranslation<Target>.Instance.Parse(
                                 node: node,
-                                enumer: out var PassthroughsItem,
-                                transl: LoquiXmlTranslation<Passthrough>.Instance.Parse,
+                                enumer: out var TargetsItem,
+                                transl: LoquiXmlTranslation<Target>.Instance.Parse,
                                 errorMask: errorMask,
                                 translationMask: translationMask))
                             {
-                                item.Passthroughs.SetTo(PassthroughsItem);
+                                item.Targets.SetTo(TargetsItem);
                             }
                             else
                             {
-                                item.Passthroughs.Unset();
+                                item.Targets.Unset();
                             }
                         }
                         catch (Exception ex)
@@ -1153,37 +1186,37 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class PassthroughGroupXmlTranslation
+    public partial class TargetGroupXmlTranslation
     {
-        public readonly static PassthroughGroupXmlTranslation Instance = new PassthroughGroupXmlTranslation();
+        public readonly static TargetGroupXmlTranslation Instance = new TargetGroupXmlTranslation();
 
         public static void WriteToNode_Xml(
-            IPassthroughGroupGetter item,
+            ITargetGroupGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)PassthroughGroup_FieldIndex.Do) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)TargetGroup_FieldIndex.Do) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Do),
                     item: item.Do,
-                    fieldIndex: (int)PassthroughGroup_FieldIndex.Do,
+                    fieldIndex: (int)TargetGroup_FieldIndex.Do,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)PassthroughGroup_FieldIndex.Passthroughs) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)TargetGroup_FieldIndex.Targets) ?? true))
             {
-                ListXmlTranslation<Passthrough>.Instance.Write(
+                ListXmlTranslation<Target>.Instance.Write(
                     node: node,
-                    name: nameof(item.Passthroughs),
-                    item: item.Passthroughs,
-                    fieldIndex: (int)PassthroughGroup_FieldIndex.Passthroughs,
+                    name: nameof(item.Targets),
+                    item: item.Targets,
+                    fieldIndex: (int)TargetGroup_FieldIndex.Targets,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PassthroughGroup_FieldIndex.Passthroughs),
-                    transl: (XElement subNode, Passthrough subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    translationMask: translationMask?.GetSubCrystal((int)TargetGroup_FieldIndex.Targets),
+                    transl: (XElement subNode, Target subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        LoquiXmlTranslation<Passthrough>.Instance.Write(
+                        LoquiXmlTranslation<Target>.Instance.Write(
                             node: subNode,
                             item: subItem,
                             name: null,
@@ -1197,10 +1230,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         #region Xml Write
         public void Write_Xml(
             XElement node,
-            IPassthroughGroupGetter item,
+            ITargetGroupGetter item,
             bool doMasks,
-            out PassthroughGroup_ErrorMask errorMask,
-            PassthroughGroup_TranslationMask translationMask,
+            out TargetGroup_ErrorMask errorMask,
+            TargetGroup_TranslationMask translationMask,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -1210,21 +1243,21 @@ namespace Mutagen.Bethesda.Tests.Internals
                 item: item,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = PassthroughGroup_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = TargetGroup_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void Write_Xml(
             XElement node,
-            IPassthroughGroupGetter item,
+            ITargetGroupGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.PassthroughGroup");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.TargetGroup");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.PassthroughGroup");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.TargetGroup");
             }
             WriteToNode_Xml(
                 item: item,
@@ -1238,44 +1271,44 @@ namespace Mutagen.Bethesda.Tests.Internals
     #endregion
 
     #region Mask
-    public class PassthroughGroup_Mask<T> : IMask<T>, IEquatable<PassthroughGroup_Mask<T>>
+    public class TargetGroup_Mask<T> : IMask<T>, IEquatable<TargetGroup_Mask<T>>
     {
         #region Ctors
-        public PassthroughGroup_Mask()
+        public TargetGroup_Mask()
         {
         }
 
-        public PassthroughGroup_Mask(T initialValue)
+        public TargetGroup_Mask(T initialValue)
         {
             this.Do = initialValue;
-            this.Passthroughs = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Passthrough_Mask<T>>>>(initialValue, null);
+            this.Targets = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Target_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T Do;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Passthrough_Mask<T>>>> Passthroughs;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Target_Mask<T>>>> Targets;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is PassthroughGroup_Mask<T> rhs)) return false;
+            if (!(obj is TargetGroup_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(PassthroughGroup_Mask<T> rhs)
+        public bool Equals(TargetGroup_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!object.Equals(this.Do, rhs.Do)) return false;
-            if (!object.Equals(this.Passthroughs, rhs.Passthroughs)) return false;
+            if (!object.Equals(this.Targets, rhs.Targets)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.Do?.GetHashCode());
-            ret = ret.CombineHashCode(this.Passthroughs?.GetHashCode());
+            ret = ret.CombineHashCode(this.Targets?.GetHashCode());
             return ret;
         }
 
@@ -1285,12 +1318,12 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool AllEqual(Func<T, bool> eval)
         {
             if (!eval(this.Do)) return false;
-            if (this.Passthroughs != null)
+            if (this.Targets != null)
             {
-                if (!eval(this.Passthroughs.Overall)) return false;
-                if (this.Passthroughs.Specific != null)
+                if (!eval(this.Targets.Overall)) return false;
+                if (this.Targets.Specific != null)
                 {
-                    foreach (var item in this.Passthroughs.Specific)
+                    foreach (var item in this.Targets.Specific)
                     {
                         if (!eval(item.Overall)) return false;
                         if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
@@ -1302,31 +1335,31 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
         #region Translate
-        public PassthroughGroup_Mask<R> Translate<R>(Func<T, R> eval)
+        public TargetGroup_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new PassthroughGroup_Mask<R>();
+            var ret = new TargetGroup_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(PassthroughGroup_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(TargetGroup_Mask<R> obj, Func<T, R> eval)
         {
             obj.Do = eval(this.Do);
-            if (Passthroughs != null)
+            if (Targets != null)
             {
-                obj.Passthroughs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Passthrough_Mask<R>>>>();
-                obj.Passthroughs.Overall = eval(this.Passthroughs.Overall);
-                if (Passthroughs.Specific != null)
+                obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Target_Mask<R>>>>();
+                obj.Targets.Overall = eval(this.Targets.Overall);
+                if (Targets.Specific != null)
                 {
-                    List<MaskItemIndexed<R, Passthrough_Mask<R>>> l = new List<MaskItemIndexed<R, Passthrough_Mask<R>>>();
-                    obj.Passthroughs.Specific = l;
-                    foreach (var item in Passthroughs.Specific.WithIndex())
+                    List<MaskItemIndexed<R, Target_Mask<R>>> l = new List<MaskItemIndexed<R, Target_Mask<R>>>();
+                    obj.Targets.Specific = l;
+                    foreach (var item in Targets.Specific.WithIndex())
                     {
-                        MaskItemIndexed<R, Passthrough_Mask<R>> mask = default;
+                        MaskItemIndexed<R, Target_Mask<R>> mask = default;
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, Passthrough_Mask<R>>(item.Item.Index);
+                            mask = new MaskItemIndexed<R, Target_Mask<R>>(item.Item.Index);
                             mask.Overall = eval(item.Item.Overall);
                             if (item.Item.Specific != null)
                             {
@@ -1343,7 +1376,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         #region Clear Enumerables
         public void ClearEnumerables()
         {
-            this.Passthroughs.Specific = null;
+            this.Targets.Specific = null;
         }
         #endregion
 
@@ -1353,16 +1386,16 @@ namespace Mutagen.Bethesda.Tests.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(PassthroughGroup_Mask<bool> printMask = null)
+        public string ToString(TargetGroup_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, PassthroughGroup_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, TargetGroup_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(PassthroughGroup_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(TargetGroup_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1370,19 +1403,19 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"Do => {Do}");
                 }
-                if (printMask?.Passthroughs?.Overall ?? true)
+                if (printMask?.Targets?.Overall ?? true)
                 {
-                    fg.AppendLine("Passthroughs =>");
+                    fg.AppendLine("Targets =>");
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        if (Passthroughs.Overall != null)
+                        if (Targets.Overall != null)
                         {
-                            fg.AppendLine(Passthroughs.Overall.ToString());
+                            fg.AppendLine(Targets.Overall.ToString());
                         }
-                        if (Passthroughs.Specific != null)
+                        if (Targets.Specific != null)
                         {
-                            foreach (var subItem in Passthroughs.Specific)
+                            foreach (var subItem in Targets.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1402,7 +1435,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
-    public class PassthroughGroup_ErrorMask : IErrorMask, IErrorMask<PassthroughGroup_ErrorMask>
+    public class TargetGroup_ErrorMask : IErrorMask, IErrorMask<TargetGroup_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }
@@ -1419,19 +1452,19 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
         public Exception Do;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Passthrough_ErrorMask>>> Passthroughs;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Target_ErrorMask>>> Targets;
         #endregion
 
         #region IErrorMask
         public object GetNthMask(int index)
         {
-            PassthroughGroup_FieldIndex enu = (PassthroughGroup_FieldIndex)index;
+            TargetGroup_FieldIndex enu = (TargetGroup_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.Do:
                     return Do;
-                case PassthroughGroup_FieldIndex.Passthroughs:
-                    return Passthroughs;
+                case TargetGroup_FieldIndex.Targets:
+                    return Targets;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1439,14 +1472,14 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public void SetNthException(int index, Exception ex)
         {
-            PassthroughGroup_FieldIndex enu = (PassthroughGroup_FieldIndex)index;
+            TargetGroup_FieldIndex enu = (TargetGroup_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.Do:
                     this.Do = ex;
                     break;
-                case PassthroughGroup_FieldIndex.Passthroughs:
-                    this.Passthroughs = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Passthrough_ErrorMask>>>(ex, null);
+                case TargetGroup_FieldIndex.Targets:
+                    this.Targets = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Target_ErrorMask>>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1455,14 +1488,14 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public void SetNthMask(int index, object obj)
         {
-            PassthroughGroup_FieldIndex enu = (PassthroughGroup_FieldIndex)index;
+            TargetGroup_FieldIndex enu = (TargetGroup_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.Do:
                     this.Do = (Exception)obj;
                     break;
-                case PassthroughGroup_FieldIndex.Passthroughs:
-                    this.Passthroughs = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Passthrough_ErrorMask>>>)obj;
+                case TargetGroup_FieldIndex.Targets:
+                    this.Targets = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Target_ErrorMask>>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1473,7 +1506,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (Overall != null) return true;
             if (Do != null) return true;
-            if (Passthroughs != null) return true;
+            if (Targets != null) return true;
             return false;
         }
         #endregion
@@ -1488,7 +1521,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public void ToString(FileGeneration fg)
         {
-            fg.AppendLine("PassthroughGroup_ErrorMask =>");
+            fg.AppendLine("TargetGroup_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1509,17 +1542,17 @@ namespace Mutagen.Bethesda.Tests.Internals
         protected void ToString_FillInternal(FileGeneration fg)
         {
             fg.AppendLine($"Do => {Do}");
-            fg.AppendLine("Passthroughs =>");
+            fg.AppendLine("Targets =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (Passthroughs.Overall != null)
+                if (Targets.Overall != null)
                 {
-                    fg.AppendLine(Passthroughs.Overall.ToString());
+                    fg.AppendLine(Targets.Overall.ToString());
                 }
-                if (Passthroughs.Specific != null)
+                if (Targets.Specific != null)
                 {
-                    foreach (var subItem in Passthroughs.Specific)
+                    foreach (var subItem in Targets.Specific)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1535,14 +1568,14 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
         #region Combine
-        public PassthroughGroup_ErrorMask Combine(PassthroughGroup_ErrorMask rhs)
+        public TargetGroup_ErrorMask Combine(TargetGroup_ErrorMask rhs)
         {
-            var ret = new PassthroughGroup_ErrorMask();
+            var ret = new TargetGroup_ErrorMask();
             ret.Do = this.Do.Combine(rhs.Do);
-            ret.Passthroughs = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Passthrough_ErrorMask>>>(this.Passthroughs.Overall.Combine(rhs.Passthroughs.Overall), new List<MaskItem<Exception, Passthrough_ErrorMask>>(this.Passthroughs.Specific.And(rhs.Passthroughs.Specific)));
+            ret.Targets = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Target_ErrorMask>>>(this.Targets.Overall.Combine(rhs.Targets.Overall), new List<MaskItem<Exception, Target_ErrorMask>>(this.Targets.Specific.And(rhs.Targets.Specific)));
             return ret;
         }
-        public static PassthroughGroup_ErrorMask Combine(PassthroughGroup_ErrorMask lhs, PassthroughGroup_ErrorMask rhs)
+        public static TargetGroup_ErrorMask Combine(TargetGroup_ErrorMask lhs, TargetGroup_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1550,50 +1583,50 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
         #region Factory
-        public static PassthroughGroup_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static TargetGroup_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            return new PassthroughGroup_ErrorMask();
+            return new TargetGroup_ErrorMask();
         }
         #endregion
 
     }
-    public class PassthroughGroup_CopyMask
+    public class TargetGroup_CopyMask
     {
-        public PassthroughGroup_CopyMask()
+        public TargetGroup_CopyMask()
         {
         }
 
-        public PassthroughGroup_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        public TargetGroup_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
             this.Do = defaultOn;
-            this.Passthroughs = new MaskItem<CopyOption, Passthrough_CopyMask>(deepCopyOption, default);
+            this.Targets = new MaskItem<CopyOption, Target_CopyMask>(deepCopyOption, default);
         }
 
         #region Members
         public bool Do;
-        public MaskItem<CopyOption, Passthrough_CopyMask> Passthroughs;
+        public MaskItem<CopyOption, Target_CopyMask> Targets;
         #endregion
 
     }
 
-    public class PassthroughGroup_TranslationMask : ITranslationMask
+    public class TargetGroup_TranslationMask : ITranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;
         public bool Do;
-        public MaskItem<bool, Passthrough_TranslationMask> Passthroughs;
+        public MaskItem<bool, Target_TranslationMask> Targets;
         #endregion
 
         #region Ctors
-        public PassthroughGroup_TranslationMask()
+        public TargetGroup_TranslationMask()
         {
         }
 
-        public PassthroughGroup_TranslationMask(bool defaultOn)
+        public TargetGroup_TranslationMask(bool defaultOn)
         {
             this.Do = defaultOn;
-            this.Passthroughs = new MaskItem<bool, Passthrough_TranslationMask>(defaultOn, null);
+            this.Targets = new MaskItem<bool, Target_TranslationMask>(defaultOn, null);
         }
 
         #endregion
@@ -1613,7 +1646,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
             ret.Add((Do, null));
-            ret.Add((Passthroughs?.Overall ?? true, Passthroughs?.Specific?.GetCrystal()));
+            ret.Add((Targets?.Overall ?? true, Targets?.Specific?.GetCrystal()));
         }
     }
     #endregion

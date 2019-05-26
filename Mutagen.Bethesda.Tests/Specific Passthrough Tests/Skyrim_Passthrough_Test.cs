@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Tests
     {
         public override GameMode GameMode => GameMode.Skyrim;
 
-        public Skyrim_Passthrough_Test(TestingSettings settings, Passthrough passthrough) 
-            : base(settings, passthrough)
+        public Skyrim_Passthrough_Test(TestingSettings settings, Target target) 
+            : base(settings, target)
         {
         }
 

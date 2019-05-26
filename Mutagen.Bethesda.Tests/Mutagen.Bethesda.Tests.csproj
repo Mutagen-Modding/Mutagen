@@ -27,6 +27,7 @@
   <ItemGroup>
     <Compile Include="Benchmarks\Benchmarks.cs" />
     <Compile Include="Benchmarks\FormKeyParsing.cs" />
+    <Compile Include="Benchmarks\Locators.cs" />
     <Compile Include="Benchmarks\MiscOverhead.cs" />
     <Compile Include="Benchmarks\OblivionBinaryTranslation.cs" />
     <Compile Include="Benchmarks\OblivionXmlTranslation.cs" />
@@ -40,13 +41,13 @@
     <Compile Include="Settings\DataFolderLocations.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Target.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\TestingSettings_LoquiGenerated.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
     <Compile Include="Settings\PassthroughSettings_LoquiGenerated.cs">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Passthrough_LoquiGenerated.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
     <Compile Include="Settings\ProtocolDefinition_Tests.cs" />
@@ -59,7 +60,10 @@
     <Compile Include="Settings\DataFolderLocations_LoquiGenerated.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\PassthroughGroup_LoquiGenerated.cs">
+    <Compile Include="Settings\TargetGroup_LoquiGenerated.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Target_LoquiGenerated.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -70,14 +74,14 @@
     <None Include="Settings\PassthroughSettings.xsd">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </None>
-    <None Include="Settings\Passthrough.xsd">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </None>
     <None Include="Settings\Common.xsd" />
     <None Include="Settings\DataFolderLocations.xsd">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </None>
-    <None Include="Settings\PassthroughGroup.xsd">
+    <None Include="Settings\TargetGroup.xsd">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </None>
+    <None Include="Settings\Target.xsd">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </None>
   </ItemGroup>

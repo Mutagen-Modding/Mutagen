@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda
             var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
             if (!targetRec.Equals(Group_Registration.GRUP_HEADER))
             {
-                throw new ArgumentException();
+                throw new DataMisalignedException("Group was not read in where expected: 0x" + (frame.Position - 4).ToString("X"));
             }
             fileLocs.GrupLocations.Add(grupLoc);
             var recLength = frame.Reader.ReadUInt32();
@@ -460,6 +460,10 @@ namespace Mutagen.Bethesda
             {
                 var grupLoc = reader.Position;
                 var grup = HeaderTranslation.ReadNextRecordType(reader);
+                if (grup != Constants.GRUP)
+                {
+                    throw new DataMisalignedException("Group was not read in where expected: 0x" + (reader.Position - 4).ToString("X"));
+                }
                 var grupLength = reader.ReadUInt32();
                 var recType = HeaderTranslation.ReadNextRecordType(reader);
                 yield return new KeyValuePair<RecordType, long>(recType, grupLoc);

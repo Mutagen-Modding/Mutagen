@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Tests.Internals;
+using ReactiveUI;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -25,6 +26,7 @@ namespace Mutagen.Bethesda.Tests
 {
     #region Class
     public partial class PassthroughSettings : 
+        LoquiNotifyingObject,
         IPassthroughSettings,
         ILoquiObject<PassthroughSettings>,
         ILoquiObjectSetter,
@@ -37,29 +39,60 @@ namespace Mutagen.Bethesda.Tests
         #region Ctor
         public PassthroughSettings()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region ReuseCaches
-        public Boolean ReuseCaches { get; set; }
+        private Boolean _ReuseCaches;
+        public Boolean ReuseCaches
+        {
+            get => this._ReuseCaches;
+            set => this.RaiseAndSetIfChanged(ref this._ReuseCaches, value, nameof(ReuseCaches));
+        }
         #endregion
         #region DeleteCachesAfter
+        private Boolean _DeleteCachesAfter;
         public readonly static Boolean _DeleteCachesAfter_Default = true;
-        public Boolean DeleteCachesAfter { get; set; }
+        public Boolean DeleteCachesAfter
+        {
+            get => this._DeleteCachesAfter;
+            set => this.RaiseAndSetIfChanged(ref this._DeleteCachesAfter, value, nameof(DeleteCachesAfter));
+        }
         #endregion
         #region TestNormal
-        public Boolean TestNormal { get; set; }
+        private Boolean _TestNormal;
+        public Boolean TestNormal
+        {
+            get => this._TestNormal;
+            set => this.RaiseAndSetIfChanged(ref this._TestNormal, value, nameof(TestNormal));
+        }
         #endregion
         #region TestImport
-        public Boolean TestImport { get; set; }
+        private Boolean _TestImport;
+        public Boolean TestImport
+        {
+            get => this._TestImport;
+            set => this.RaiseAndSetIfChanged(ref this._TestImport, value, nameof(TestImport));
+        }
         #endregion
         #region TestObservable
-        public Boolean TestObservable { get; set; }
+        private Boolean _TestObservable;
+        public Boolean TestObservable
+        {
+            get => this._TestObservable;
+            set => this.RaiseAndSetIfChanged(ref this._TestObservable, value, nameof(TestObservable));
+        }
         #endregion
         #region TestFolder
-        public Boolean TestFolder { get; set; }
+        private Boolean _TestFolder;
+        public Boolean TestFolder
+        {
+            get => this._TestFolder;
+            set => this.RaiseAndSetIfChanged(ref this._TestFolder, value, nameof(TestFolder));
+        }
         #endregion
 
         IMask<bool> IEqualsMask<PassthroughSettings>.GetEqualsMask(PassthroughSettings rhs, EqualsMaskHelper.Include include) => PassthroughSettingsCommon.GetEqualsMask(this, rhs, include);
@@ -507,6 +540,23 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((PassthroughSettings_FieldIndex)index)
+            {
+                case PassthroughSettings_FieldIndex.ReuseCaches:
+                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
+                case PassthroughSettings_FieldIndex.TestNormal:
+                case PassthroughSettings_FieldIndex.TestImport:
+                case PassthroughSettings_FieldIndex.TestObservable:
+                case PassthroughSettings_FieldIndex.TestFolder:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
 
         public PassthroughSettings Copy(
             PassthroughSettings_CopyMask copyMask = null,
@@ -1002,38 +1052,104 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (copyMask?.ReuseCaches ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReuseCaches);
-                item.ReuseCaches = rhs.ReuseCaches;
-                errorMask?.PopIndex();
+                try
+                {
+                    item.ReuseCaches = rhs.ReuseCaches;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if (copyMask?.DeleteCachesAfter ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DeleteCachesAfter);
-                item.DeleteCachesAfter = rhs.DeleteCachesAfter;
-                errorMask?.PopIndex();
+                try
+                {
+                    item.DeleteCachesAfter = rhs.DeleteCachesAfter;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if (copyMask?.TestNormal ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestNormal);
-                item.TestNormal = rhs.TestNormal;
-                errorMask?.PopIndex();
+                try
+                {
+                    item.TestNormal = rhs.TestNormal;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if (copyMask?.TestImport ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestImport);
-                item.TestImport = rhs.TestImport;
-                errorMask?.PopIndex();
+                try
+                {
+                    item.TestImport = rhs.TestImport;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if (copyMask?.TestObservable ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestObservable);
-                item.TestObservable = rhs.TestObservable;
-                errorMask?.PopIndex();
+                try
+                {
+                    item.TestObservable = rhs.TestObservable;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if (copyMask?.TestFolder ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestFolder);
-                item.TestFolder = rhs.TestFolder;
-                errorMask?.PopIndex();
+                try
+                {
+                    item.TestFolder = rhs.TestFolder;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
 

@@ -10,10 +10,10 @@ namespace Loqui
         public static void Register()
         {
             LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.TestingSettings_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.Passthrough_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.Target_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.PassthroughSettings_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.DataFolderLocations_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.PassthroughGroup_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.TargetGroup_Registration.Instance);
         }
     }
 }

@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Tests.Internals;
+using ReactiveUI;
 using Mutagen.Bethesda.Tests;
 using DynamicData;
 using CSharpExt.Rx;
@@ -28,6 +29,7 @@ namespace Mutagen.Bethesda.Tests
 {
     #region Class
     public partial class TestingSettings : 
+        LoquiNotifyingObject,
         ITestingSettings,
         ILoquiObject<TestingSettings>,
         ILoquiObjectSetter,
@@ -40,22 +42,51 @@ namespace Mutagen.Bethesda.Tests
         #region Ctor
         public TestingSettings()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region TestGroupMasks
-        public Boolean TestGroupMasks { get; set; }
+        private Boolean _TestGroupMasks;
+        public Boolean TestGroupMasks
+        {
+            get => this._TestGroupMasks;
+            set => this.RaiseAndSetIfChanged(ref this._TestGroupMasks, value, nameof(TestGroupMasks));
+        }
         #endregion
         #region TestModList
-        public Boolean TestModList { get; set; }
+        private Boolean _TestModList;
+        public Boolean TestModList
+        {
+            get => this._TestModList;
+            set => this.RaiseAndSetIfChanged(ref this._TestModList, value, nameof(TestModList));
+        }
         #endregion
         #region TestFlattenedMod
-        public Boolean TestFlattenedMod { get; set; }
+        private Boolean _TestFlattenedMod;
+        public Boolean TestFlattenedMod
+        {
+            get => this._TestFlattenedMod;
+            set => this.RaiseAndSetIfChanged(ref this._TestFlattenedMod, value, nameof(TestFlattenedMod));
+        }
         #endregion
         #region TestBenchmarks
-        public Boolean TestBenchmarks { get; set; }
+        private Boolean _TestBenchmarks;
+        public Boolean TestBenchmarks
+        {
+            get => this._TestBenchmarks;
+            set => this.RaiseAndSetIfChanged(ref this._TestBenchmarks, value, nameof(TestBenchmarks));
+        }
+        #endregion
+        #region TestLocators
+        private Boolean _TestLocators;
+        public Boolean TestLocators
+        {
+            get => this._TestLocators;
+            set => this.RaiseAndSetIfChanged(ref this._TestLocators, value, nameof(TestLocators));
+        }
         #endregion
         #region DataFolderLocations
         public DataFolderLocations DataFolderLocations { get; set; }
@@ -63,21 +94,21 @@ namespace Mutagen.Bethesda.Tests
         #region PassthroughSettings
         public PassthroughSettings PassthroughSettings { get; set; }
         #endregion
-        #region PassthroughGroups
+        #region TargetGroups
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<PassthroughGroup> _PassthroughGroups = new SourceSetList<PassthroughGroup>();
-        public ISourceSetList<PassthroughGroup> PassthroughGroups => _PassthroughGroups;
+        private readonly SourceSetList<TargetGroup> _TargetGroups = new SourceSetList<TargetGroup>();
+        public ISourceSetList<TargetGroup> TargetGroups => _TargetGroups;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<PassthroughGroup> PassthroughGroupsEnumerable
+        public IEnumerable<TargetGroup> TargetGroupsEnumerable
         {
-            get => _PassthroughGroups.Items;
-            set => _PassthroughGroups.SetTo(value);
+            get => _TargetGroups.Items;
+            set => _TargetGroups.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<PassthroughGroup> ITestingSettings.PassthroughGroups => _PassthroughGroups;
+        ISourceSetList<TargetGroup> ITestingSettings.TargetGroups => _TargetGroups;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<PassthroughGroup> ITestingSettingsGetter.PassthroughGroups => _PassthroughGroups;
+        IObservableSetList<TargetGroup> ITestingSettingsGetter.TargetGroups => _TargetGroups;
         #endregion
 
         #endregion
@@ -125,9 +156,10 @@ namespace Mutagen.Bethesda.Tests
             if (this.TestModList != rhs.TestModList) return false;
             if (this.TestFlattenedMod != rhs.TestFlattenedMod) return false;
             if (this.TestBenchmarks != rhs.TestBenchmarks) return false;
+            if (this.TestLocators != rhs.TestLocators) return false;
             if (!object.Equals(this.DataFolderLocations, rhs.DataFolderLocations)) return false;
             if (!object.Equals(this.PassthroughSettings, rhs.PassthroughSettings)) return false;
-            if (!this.PassthroughGroups.SequenceEqual(rhs.PassthroughGroups)) return false;
+            if (!this.TargetGroups.SequenceEqual(rhs.TargetGroups)) return false;
             return true;
         }
 
@@ -138,9 +170,10 @@ namespace Mutagen.Bethesda.Tests
             ret = HashHelper.GetHashCode(TestModList).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestFlattenedMod).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestBenchmarks).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(TestLocators).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(DataFolderLocations).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(PassthroughSettings).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PassthroughGroups).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(TargetGroups).CombineHashCode(ret);
             return ret;
         }
 
@@ -530,6 +563,25 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((TestingSettings_FieldIndex)index)
+            {
+                case TestingSettings_FieldIndex.TestGroupMasks:
+                case TestingSettings_FieldIndex.TestModList:
+                case TestingSettings_FieldIndex.TestFlattenedMod:
+                case TestingSettings_FieldIndex.TestBenchmarks:
+                case TestingSettings_FieldIndex.TestLocators:
+                case TestingSettings_FieldIndex.DataFolderLocations:
+                case TestingSettings_FieldIndex.PassthroughSettings:
+                case TestingSettings_FieldIndex.TargetGroups:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         public TestingSettings Copy(
             TestingSettings_CopyMask copyMask = null,
             ITestingSettingsGetter def = null)
@@ -654,14 +706,17 @@ namespace Mutagen.Bethesda.Tests
                 case TestingSettings_FieldIndex.TestBenchmarks:
                     this.TestBenchmarks = (Boolean)obj;
                     break;
+                case TestingSettings_FieldIndex.TestLocators:
+                    this.TestLocators = (Boolean)obj;
+                    break;
                 case TestingSettings_FieldIndex.DataFolderLocations:
                     this.DataFolderLocations = (DataFolderLocations)obj;
                     break;
                 case TestingSettings_FieldIndex.PassthroughSettings:
                     this.PassthroughSettings = (PassthroughSettings)obj;
                     break;
-                case TestingSettings_FieldIndex.PassthroughGroups:
-                    this._PassthroughGroups.SetTo((IEnumerable<PassthroughGroup>)obj);
+                case TestingSettings_FieldIndex.TargetGroups:
+                    this._TargetGroups.SetTo((IEnumerable<TargetGroup>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -712,14 +767,17 @@ namespace Mutagen.Bethesda.Tests
                 case TestingSettings_FieldIndex.TestBenchmarks:
                     obj.TestBenchmarks = (Boolean)pair.Value;
                     break;
+                case TestingSettings_FieldIndex.TestLocators:
+                    obj.TestLocators = (Boolean)pair.Value;
+                    break;
                 case TestingSettings_FieldIndex.DataFolderLocations:
                     obj.DataFolderLocations = (DataFolderLocations)pair.Value;
                     break;
                 case TestingSettings_FieldIndex.PassthroughSettings:
                     obj.PassthroughSettings = (PassthroughSettings)pair.Value;
                     break;
-                case TestingSettings_FieldIndex.PassthroughGroups:
-                    obj._PassthroughGroups.SetTo((IEnumerable<PassthroughGroup>)pair.Value);
+                case TestingSettings_FieldIndex.TargetGroups:
+                    obj._TargetGroups.SetTo((IEnumerable<TargetGroup>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -739,11 +797,13 @@ namespace Mutagen.Bethesda.Tests
 
         new Boolean TestBenchmarks { get; set; }
 
+        new Boolean TestLocators { get; set; }
+
         new DataFolderLocations DataFolderLocations { get; set; }
 
         new PassthroughSettings PassthroughSettings { get; set; }
 
-        new ISourceSetList<PassthroughGroup> PassthroughGroups { get; }
+        new ISourceSetList<TargetGroup> TargetGroups { get; }
     }
 
     public partial interface ITestingSettingsGetter : ILoquiObject
@@ -764,14 +824,20 @@ namespace Mutagen.Bethesda.Tests
         Boolean TestBenchmarks { get; }
 
         #endregion
+        #region TestLocators
+        Boolean TestLocators { get; }
+
+        #endregion
         #region DataFolderLocations
         DataFolderLocations DataFolderLocations { get; }
+
         #endregion
         #region PassthroughSettings
         PassthroughSettings PassthroughSettings { get; }
+
         #endregion
-        #region PassthroughGroups
-        IObservableSetList<PassthroughGroup> PassthroughGroups { get; }
+        #region TargetGroups
+        IObservableSetList<TargetGroup> TargetGroups { get; }
         #endregion
 
     }
@@ -789,9 +855,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         TestModList = 1,
         TestFlattenedMod = 2,
         TestBenchmarks = 3,
-        DataFolderLocations = 4,
-        PassthroughSettings = 5,
-        PassthroughGroups = 6,
+        TestLocators = 4,
+        DataFolderLocations = 5,
+        PassthroughSettings = 6,
+        TargetGroups = 7,
     }
     #endregion
 
@@ -809,9 +876,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "8238bf49-028c-4e0b-b914-3ade480308ec";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(TestingSettings_Mask<>);
 
@@ -851,12 +918,14 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)TestingSettings_FieldIndex.TestFlattenedMod;
                 case "TESTBENCHMARKS":
                     return (ushort)TestingSettings_FieldIndex.TestBenchmarks;
+                case "TESTLOCATORS":
+                    return (ushort)TestingSettings_FieldIndex.TestLocators;
                 case "DATAFOLDERLOCATIONS":
                     return (ushort)TestingSettings_FieldIndex.DataFolderLocations;
                 case "PASSTHROUGHSETTINGS":
                     return (ushort)TestingSettings_FieldIndex.PassthroughSettings;
-                case "PASSTHROUGHGROUPS":
-                    return (ushort)TestingSettings_FieldIndex.PassthroughGroups;
+                case "TARGETGROUPS":
+                    return (ushort)TestingSettings_FieldIndex.TargetGroups;
                 default:
                     return null;
             }
@@ -867,12 +936,13 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.PassthroughGroups:
+                case TestingSettings_FieldIndex.TargetGroups:
                     return true;
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
                 case TestingSettings_FieldIndex.TestFlattenedMod:
                 case TestingSettings_FieldIndex.TestBenchmarks:
+                case TestingSettings_FieldIndex.TestLocators:
                 case TestingSettings_FieldIndex.DataFolderLocations:
                 case TestingSettings_FieldIndex.PassthroughSettings:
                     return false;
@@ -888,12 +958,13 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case TestingSettings_FieldIndex.DataFolderLocations:
                 case TestingSettings_FieldIndex.PassthroughSettings:
-                case TestingSettings_FieldIndex.PassthroughGroups:
+                case TestingSettings_FieldIndex.TargetGroups:
                     return true;
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
                 case TestingSettings_FieldIndex.TestFlattenedMod:
                 case TestingSettings_FieldIndex.TestBenchmarks:
+                case TestingSettings_FieldIndex.TestLocators:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -909,9 +980,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.TestModList:
                 case TestingSettings_FieldIndex.TestFlattenedMod:
                 case TestingSettings_FieldIndex.TestBenchmarks:
+                case TestingSettings_FieldIndex.TestLocators:
                 case TestingSettings_FieldIndex.DataFolderLocations:
                 case TestingSettings_FieldIndex.PassthroughSettings:
-                case TestingSettings_FieldIndex.PassthroughGroups:
+                case TestingSettings_FieldIndex.TargetGroups:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -931,12 +1003,14 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "TestFlattenedMod";
                 case TestingSettings_FieldIndex.TestBenchmarks:
                     return "TestBenchmarks";
+                case TestingSettings_FieldIndex.TestLocators:
+                    return "TestLocators";
                 case TestingSettings_FieldIndex.DataFolderLocations:
                     return "DataFolderLocations";
                 case TestingSettings_FieldIndex.PassthroughSettings:
                     return "PassthroughSettings";
-                case TestingSettings_FieldIndex.PassthroughGroups:
-                    return "PassthroughGroups";
+                case TestingSettings_FieldIndex.TargetGroups:
+                    return "TargetGroups";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -951,9 +1025,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.TestModList:
                 case TestingSettings_FieldIndex.TestFlattenedMod:
                 case TestingSettings_FieldIndex.TestBenchmarks:
+                case TestingSettings_FieldIndex.TestLocators:
                 case TestingSettings_FieldIndex.DataFolderLocations:
                 case TestingSettings_FieldIndex.PassthroughSettings:
-                case TestingSettings_FieldIndex.PassthroughGroups:
+                case TestingSettings_FieldIndex.TargetGroups:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -969,9 +1044,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.TestModList:
                 case TestingSettings_FieldIndex.TestFlattenedMod:
                 case TestingSettings_FieldIndex.TestBenchmarks:
+                case TestingSettings_FieldIndex.TestLocators:
                 case TestingSettings_FieldIndex.DataFolderLocations:
                 case TestingSettings_FieldIndex.PassthroughSettings:
-                case TestingSettings_FieldIndex.PassthroughGroups:
+                case TestingSettings_FieldIndex.TargetGroups:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -991,12 +1067,14 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return typeof(Boolean);
                 case TestingSettings_FieldIndex.TestBenchmarks:
                     return typeof(Boolean);
+                case TestingSettings_FieldIndex.TestLocators:
+                    return typeof(Boolean);
                 case TestingSettings_FieldIndex.DataFolderLocations:
                     return typeof(DataFolderLocations);
                 case TestingSettings_FieldIndex.PassthroughSettings:
                     return typeof(PassthroughSettings);
-                case TestingSettings_FieldIndex.PassthroughGroups:
-                    return typeof(SourceSetList<PassthroughGroup>);
+                case TestingSettings_FieldIndex.TargetGroups:
+                    return typeof(SourceSetList<TargetGroup>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1046,26 +1124,87 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (copyMask?.TestGroupMasks ?? true)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestGroupMasks);
-                item.TestGroupMasks = rhs.TestGroupMasks;
-                errorMask?.PopIndex();
+                try
+                {
+                    item.TestGroupMasks = rhs.TestGroupMasks;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if (copyMask?.TestModList ?? true)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestModList);
-                item.TestModList = rhs.TestModList;
-                errorMask?.PopIndex();
+                try
+                {
+                    item.TestModList = rhs.TestModList;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if (copyMask?.TestFlattenedMod ?? true)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFlattenedMod);
-                item.TestFlattenedMod = rhs.TestFlattenedMod;
-                errorMask?.PopIndex();
+                try
+                {
+                    item.TestFlattenedMod = rhs.TestFlattenedMod;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if (copyMask?.TestBenchmarks ?? true)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestBenchmarks);
-                item.TestBenchmarks = rhs.TestBenchmarks;
-                errorMask?.PopIndex();
+                try
+                {
+                    item.TestBenchmarks = rhs.TestBenchmarks;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.TestLocators ?? true)
+            {
+                errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestLocators);
+                try
+                {
+                    item.TestLocators = rhs.TestLocators;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if (copyMask?.DataFolderLocations.Overall != CopyOption.Skip)
             {
@@ -1157,27 +1296,27 @@ namespace Mutagen.Bethesda.Tests.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.PassthroughGroups.Overall != CopyOption.Skip)
+            if (copyMask?.TargetGroups.Overall != CopyOption.Skip)
             {
-                errorMask?.PushIndex((int)TestingSettings_FieldIndex.PassthroughGroups);
+                errorMask?.PushIndex((int)TestingSettings_FieldIndex.TargetGroups);
                 try
                 {
-                    item.PassthroughGroups.SetToWithDefault(
-                        rhs: rhs.PassthroughGroups,
-                        def: def?.PassthroughGroups,
+                    item.TargetGroups.SetToWithDefault(
+                        rhs: rhs.TargetGroups,
+                        def: def?.TargetGroups,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.PassthroughGroups.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.TargetGroups.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    return PassthroughGroup.Copy(
+                                    return TargetGroup.Copy(
                                         r,
-                                        copyMask?.PassthroughGroups?.Specific,
+                                        copyMask?.TargetGroups?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.PassthroughGroups.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.TargetGroups.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -1202,9 +1341,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestModList = default(Boolean);
             item.TestFlattenedMod = default(Boolean);
             item.TestBenchmarks = default(Boolean);
+            item.TestLocators = default(Boolean);
             item.DataFolderLocations = default(DataFolderLocations);
             item.PassthroughSettings = default(PassthroughSettings);
-            item.PassthroughGroups.Unset();
+            item.TargetGroups.Unset();
         }
 
         public static TestingSettings_Mask<bool> GetEqualsMask(
@@ -1232,10 +1372,11 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestModList = item.TestModList == rhs.TestModList;
             ret.TestFlattenedMod = item.TestFlattenedMod == rhs.TestFlattenedMod;
             ret.TestBenchmarks = item.TestBenchmarks == rhs.TestBenchmarks;
+            ret.TestLocators = item.TestLocators == rhs.TestLocators;
             ret.DataFolderLocations = MaskItemExt.Factory(DataFolderLocationsCommon.GetEqualsMask(item.DataFolderLocations, rhs.DataFolderLocations, include), include);
             ret.PassthroughSettings = MaskItemExt.Factory(PassthroughSettingsCommon.GetEqualsMask(item.PassthroughSettings, rhs.PassthroughSettings, include), include);
-            ret.PassthroughGroups = item.PassthroughGroups.CollectionEqualsHelper(
-                rhs.PassthroughGroups,
+            ret.TargetGroups = item.TargetGroups.CollectionEqualsHelper(
+                rhs.TargetGroups,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
         }
@@ -1283,6 +1424,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestBenchmarks => {item.TestBenchmarks}");
                 }
+                if (printMask?.TestLocators ?? true)
+                {
+                    fg.AppendLine($"TestLocators => {item.TestLocators}");
+                }
                 if (printMask?.DataFolderLocations?.Overall ?? true)
                 {
                     item.DataFolderLocations?.ToString(fg, "DataFolderLocations");
@@ -1291,13 +1436,13 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     item.PassthroughSettings?.ToString(fg, "PassthroughSettings");
                 }
-                if (printMask?.PassthroughGroups?.Overall ?? true)
+                if (printMask?.TargetGroups?.Overall ?? true)
                 {
-                    fg.AppendLine("PassthroughGroups =>");
+                    fg.AppendLine("TargetGroups =>");
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        foreach (var subItem in item.PassthroughGroups)
+                        foreach (var subItem in item.TargetGroups)
                         {
                             fg.AppendLine("[");
                             using (new DepthWrapper(fg))
@@ -1317,6 +1462,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this ITestingSettingsGetter item,
             TestingSettings_Mask<bool?> checkMask)
         {
+            if (checkMask.TargetGroups.Overall.HasValue && checkMask.TargetGroups.Overall.Value != item.TargetGroups.HasBeenSet) return false;
             return true;
         }
 
@@ -1327,9 +1473,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestModList = true;
             ret.TestFlattenedMod = true;
             ret.TestBenchmarks = true;
+            ret.TestLocators = true;
             ret.DataFolderLocations = new MaskItem<bool, DataFolderLocations_Mask<bool>>(true, DataFolderLocationsCommon.GetHasBeenSetMask(item.DataFolderLocations));
             ret.PassthroughSettings = new MaskItem<bool, PassthroughSettings_Mask<bool>>(true, PassthroughSettingsCommon.GetHasBeenSetMask(item.PassthroughSettings));
-            ret.PassthroughGroups = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PassthroughGroup_Mask<bool>>>>(item.PassthroughGroups.HasBeenSet, item.PassthroughGroups.WithIndex().Select((i) => new MaskItemIndexed<bool, PassthroughGroup_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.TargetGroups = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, TargetGroup_Mask<bool>>>>(item.TargetGroups.HasBeenSet, item.TargetGroups.WithIndex().Select((i) => new MaskItemIndexed<bool, TargetGroup_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1484,6 +1631,35 @@ namespace Mutagen.Bethesda.Tests.Internals
                         }
                     }
                     break;
+                case "TestLocators":
+                    if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestLocators) ?? true))
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestLocators);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean TestLocatorsParse,
+                                errorMask: errorMask))
+                            {
+                                item.TestLocators = TestLocatorsParse;
+                            }
+                            else
+                            {
+                                item.TestLocators = default(Boolean);
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    break;
                 case "DataFolderLocations":
                     if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.DataFolderLocations) ?? true))
                     {
@@ -1544,24 +1720,24 @@ namespace Mutagen.Bethesda.Tests.Internals
                         }
                     }
                     break;
-                case "PassthroughGroups":
-                    if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.PassthroughGroups) ?? true))
+                case "TargetGroups":
+                    if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TargetGroups) ?? true))
                     {
                         try
                         {
-                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.PassthroughGroups);
-                            if (ListXmlTranslation<PassthroughGroup>.Instance.Parse(
+                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.TargetGroups);
+                            if (ListXmlTranslation<TargetGroup>.Instance.Parse(
                                 node: node,
-                                enumer: out var PassthroughGroupsItem,
-                                transl: LoquiXmlTranslation<PassthroughGroup>.Instance.Parse,
+                                enumer: out var TargetGroupsItem,
+                                transl: LoquiXmlTranslation<TargetGroup>.Instance.Parse,
                                 errorMask: errorMask,
                                 translationMask: translationMask))
                             {
-                                item.PassthroughGroups.SetTo(PassthroughGroupsItem);
+                                item.TargetGroups.SetTo(TargetGroupsItem);
                             }
                             else
                             {
-                                item.PassthroughGroups.Unset();
+                                item.TargetGroups.Unset();
                             }
                         }
                         catch (Exception ex)
@@ -1633,6 +1809,15 @@ namespace Mutagen.Bethesda.Tests.Internals
                     fieldIndex: (int)TestingSettings_FieldIndex.TestBenchmarks,
                     errorMask: errorMask);
             }
+            if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestLocators) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TestLocators),
+                    item: item.TestLocators,
+                    fieldIndex: (int)TestingSettings_FieldIndex.TestLocators,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.DataFolderLocations) ?? true))
             {
                 LoquiXmlTranslation<DataFolderLocations>.Instance.Write(
@@ -1653,18 +1838,18 @@ namespace Mutagen.Bethesda.Tests.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.PassthroughSettings));
             }
-            if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.PassthroughGroups) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TargetGroups) ?? true))
             {
-                ListXmlTranslation<PassthroughGroup>.Instance.Write(
+                ListXmlTranslation<TargetGroup>.Instance.Write(
                     node: node,
-                    name: nameof(item.PassthroughGroups),
-                    item: item.PassthroughGroups,
-                    fieldIndex: (int)TestingSettings_FieldIndex.PassthroughGroups,
+                    name: nameof(item.TargetGroups),
+                    item: item.TargetGroups,
+                    fieldIndex: (int)TestingSettings_FieldIndex.TargetGroups,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.PassthroughGroups),
-                    transl: (XElement subNode, PassthroughGroup subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.TargetGroups),
+                    transl: (XElement subNode, TargetGroup subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        LoquiXmlTranslation<PassthroughGroup>.Instance.Write(
+                        LoquiXmlTranslation<TargetGroup>.Instance.Write(
                             node: subNode,
                             item: subItem,
                             name: null,
@@ -1732,9 +1917,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.TestModList = initialValue;
             this.TestFlattenedMod = initialValue;
             this.TestBenchmarks = initialValue;
+            this.TestLocators = initialValue;
             this.DataFolderLocations = new MaskItem<T, DataFolderLocations_Mask<T>>(initialValue, new DataFolderLocations_Mask<T>(initialValue));
             this.PassthroughSettings = new MaskItem<T, PassthroughSettings_Mask<T>>(initialValue, new PassthroughSettings_Mask<T>(initialValue));
-            this.PassthroughGroups = new MaskItem<T, IEnumerable<MaskItemIndexed<T, PassthroughGroup_Mask<T>>>>(initialValue, null);
+            this.TargetGroups = new MaskItem<T, IEnumerable<MaskItemIndexed<T, TargetGroup_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -1743,9 +1929,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         public T TestModList;
         public T TestFlattenedMod;
         public T TestBenchmarks;
+        public T TestLocators;
         public MaskItem<T, DataFolderLocations_Mask<T>> DataFolderLocations { get; set; }
         public MaskItem<T, PassthroughSettings_Mask<T>> PassthroughSettings { get; set; }
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, PassthroughGroup_Mask<T>>>> PassthroughGroups;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, TargetGroup_Mask<T>>>> TargetGroups;
         #endregion
 
         #region Equals
@@ -1762,9 +1949,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!object.Equals(this.TestModList, rhs.TestModList)) return false;
             if (!object.Equals(this.TestFlattenedMod, rhs.TestFlattenedMod)) return false;
             if (!object.Equals(this.TestBenchmarks, rhs.TestBenchmarks)) return false;
+            if (!object.Equals(this.TestLocators, rhs.TestLocators)) return false;
             if (!object.Equals(this.DataFolderLocations, rhs.DataFolderLocations)) return false;
             if (!object.Equals(this.PassthroughSettings, rhs.PassthroughSettings)) return false;
-            if (!object.Equals(this.PassthroughGroups, rhs.PassthroughGroups)) return false;
+            if (!object.Equals(this.TargetGroups, rhs.TargetGroups)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1774,9 +1962,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret = ret.CombineHashCode(this.TestModList?.GetHashCode());
             ret = ret.CombineHashCode(this.TestFlattenedMod?.GetHashCode());
             ret = ret.CombineHashCode(this.TestBenchmarks?.GetHashCode());
+            ret = ret.CombineHashCode(this.TestLocators?.GetHashCode());
             ret = ret.CombineHashCode(this.DataFolderLocations?.GetHashCode());
             ret = ret.CombineHashCode(this.PassthroughSettings?.GetHashCode());
-            ret = ret.CombineHashCode(this.PassthroughGroups?.GetHashCode());
+            ret = ret.CombineHashCode(this.TargetGroups?.GetHashCode());
             return ret;
         }
 
@@ -1789,6 +1978,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!eval(this.TestModList)) return false;
             if (!eval(this.TestFlattenedMod)) return false;
             if (!eval(this.TestBenchmarks)) return false;
+            if (!eval(this.TestLocators)) return false;
             if (DataFolderLocations != null)
             {
                 if (!eval(this.DataFolderLocations.Overall)) return false;
@@ -1799,12 +1989,12 @@ namespace Mutagen.Bethesda.Tests.Internals
                 if (!eval(this.PassthroughSettings.Overall)) return false;
                 if (this.PassthroughSettings.Specific != null && !this.PassthroughSettings.Specific.AllEqual(eval)) return false;
             }
-            if (this.PassthroughGroups != null)
+            if (this.TargetGroups != null)
             {
-                if (!eval(this.PassthroughGroups.Overall)) return false;
-                if (this.PassthroughGroups.Specific != null)
+                if (!eval(this.TargetGroups.Overall)) return false;
+                if (this.TargetGroups.Specific != null)
                 {
-                    foreach (var item in this.PassthroughGroups.Specific)
+                    foreach (var item in this.TargetGroups.Specific)
                     {
                         if (!eval(item.Overall)) return false;
                         if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
@@ -1829,6 +2019,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             obj.TestModList = eval(this.TestModList);
             obj.TestFlattenedMod = eval(this.TestFlattenedMod);
             obj.TestBenchmarks = eval(this.TestBenchmarks);
+            obj.TestLocators = eval(this.TestLocators);
             if (this.DataFolderLocations != null)
             {
                 obj.DataFolderLocations = new MaskItem<R, DataFolderLocations_Mask<R>>();
@@ -1847,21 +2038,21 @@ namespace Mutagen.Bethesda.Tests.Internals
                     obj.PassthroughSettings.Specific = this.PassthroughSettings.Specific.Translate(eval);
                 }
             }
-            if (PassthroughGroups != null)
+            if (TargetGroups != null)
             {
-                obj.PassthroughGroups = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PassthroughGroup_Mask<R>>>>();
-                obj.PassthroughGroups.Overall = eval(this.PassthroughGroups.Overall);
-                if (PassthroughGroups.Specific != null)
+                obj.TargetGroups = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TargetGroup_Mask<R>>>>();
+                obj.TargetGroups.Overall = eval(this.TargetGroups.Overall);
+                if (TargetGroups.Specific != null)
                 {
-                    List<MaskItemIndexed<R, PassthroughGroup_Mask<R>>> l = new List<MaskItemIndexed<R, PassthroughGroup_Mask<R>>>();
-                    obj.PassthroughGroups.Specific = l;
-                    foreach (var item in PassthroughGroups.Specific.WithIndex())
+                    List<MaskItemIndexed<R, TargetGroup_Mask<R>>> l = new List<MaskItemIndexed<R, TargetGroup_Mask<R>>>();
+                    obj.TargetGroups.Specific = l;
+                    foreach (var item in TargetGroups.Specific.WithIndex())
                     {
-                        MaskItemIndexed<R, PassthroughGroup_Mask<R>> mask = default;
+                        MaskItemIndexed<R, TargetGroup_Mask<R>> mask = default;
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, PassthroughGroup_Mask<R>>(item.Item.Index);
+                            mask = new MaskItemIndexed<R, TargetGroup_Mask<R>>(item.Item.Index);
                             mask.Overall = eval(item.Item.Overall);
                             if (item.Item.Specific != null)
                             {
@@ -1878,7 +2069,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         #region Clear Enumerables
         public void ClearEnumerables()
         {
-            this.PassthroughGroups.Specific = null;
+            this.TargetGroups.Specific = null;
         }
         #endregion
 
@@ -1917,6 +2108,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestBenchmarks => {TestBenchmarks}");
                 }
+                if (printMask?.TestLocators ?? true)
+                {
+                    fg.AppendLine($"TestLocators => {TestLocators}");
+                }
                 if (printMask?.DataFolderLocations?.Overall ?? true)
                 {
                     DataFolderLocations?.ToString(fg);
@@ -1925,19 +2120,19 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     PassthroughSettings?.ToString(fg);
                 }
-                if (printMask?.PassthroughGroups?.Overall ?? true)
+                if (printMask?.TargetGroups?.Overall ?? true)
                 {
-                    fg.AppendLine("PassthroughGroups =>");
+                    fg.AppendLine("TargetGroups =>");
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        if (PassthroughGroups.Overall != null)
+                        if (TargetGroups.Overall != null)
                         {
-                            fg.AppendLine(PassthroughGroups.Overall.ToString());
+                            fg.AppendLine(TargetGroups.Overall.ToString());
                         }
-                        if (PassthroughGroups.Specific != null)
+                        if (TargetGroups.Specific != null)
                         {
-                            foreach (var subItem in PassthroughGroups.Specific)
+                            foreach (var subItem in TargetGroups.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1977,9 +2172,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         public Exception TestModList;
         public Exception TestFlattenedMod;
         public Exception TestBenchmarks;
+        public Exception TestLocators;
         public MaskItem<Exception, DataFolderLocations_ErrorMask> DataFolderLocations;
         public MaskItem<Exception, PassthroughSettings_ErrorMask> PassthroughSettings;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, PassthroughGroup_ErrorMask>>> PassthroughGroups;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, TargetGroup_ErrorMask>>> TargetGroups;
         #endregion
 
         #region IErrorMask
@@ -1996,12 +2192,14 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return TestFlattenedMod;
                 case TestingSettings_FieldIndex.TestBenchmarks:
                     return TestBenchmarks;
+                case TestingSettings_FieldIndex.TestLocators:
+                    return TestLocators;
                 case TestingSettings_FieldIndex.DataFolderLocations:
                     return DataFolderLocations;
                 case TestingSettings_FieldIndex.PassthroughSettings:
                     return PassthroughSettings;
-                case TestingSettings_FieldIndex.PassthroughGroups:
-                    return PassthroughGroups;
+                case TestingSettings_FieldIndex.TargetGroups:
+                    return TargetGroups;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2024,14 +2222,17 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.TestBenchmarks:
                     this.TestBenchmarks = ex;
                     break;
+                case TestingSettings_FieldIndex.TestLocators:
+                    this.TestLocators = ex;
+                    break;
                 case TestingSettings_FieldIndex.DataFolderLocations:
                     this.DataFolderLocations = new MaskItem<Exception, DataFolderLocations_ErrorMask>(ex, null);
                     break;
                 case TestingSettings_FieldIndex.PassthroughSettings:
                     this.PassthroughSettings = new MaskItem<Exception, PassthroughSettings_ErrorMask>(ex, null);
                     break;
-                case TestingSettings_FieldIndex.PassthroughGroups:
-                    this.PassthroughGroups = new MaskItem<Exception, IEnumerable<MaskItem<Exception, PassthroughGroup_ErrorMask>>>(ex, null);
+                case TestingSettings_FieldIndex.TargetGroups:
+                    this.TargetGroups = new MaskItem<Exception, IEnumerable<MaskItem<Exception, TargetGroup_ErrorMask>>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2055,14 +2256,17 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.TestBenchmarks:
                     this.TestBenchmarks = (Exception)obj;
                     break;
+                case TestingSettings_FieldIndex.TestLocators:
+                    this.TestLocators = (Exception)obj;
+                    break;
                 case TestingSettings_FieldIndex.DataFolderLocations:
                     this.DataFolderLocations = (MaskItem<Exception, DataFolderLocations_ErrorMask>)obj;
                     break;
                 case TestingSettings_FieldIndex.PassthroughSettings:
                     this.PassthroughSettings = (MaskItem<Exception, PassthroughSettings_ErrorMask>)obj;
                     break;
-                case TestingSettings_FieldIndex.PassthroughGroups:
-                    this.PassthroughGroups = (MaskItem<Exception, IEnumerable<MaskItem<Exception, PassthroughGroup_ErrorMask>>>)obj;
+                case TestingSettings_FieldIndex.TargetGroups:
+                    this.TargetGroups = (MaskItem<Exception, IEnumerable<MaskItem<Exception, TargetGroup_ErrorMask>>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2076,9 +2280,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (TestModList != null) return true;
             if (TestFlattenedMod != null) return true;
             if (TestBenchmarks != null) return true;
+            if (TestLocators != null) return true;
             if (DataFolderLocations != null) return true;
             if (PassthroughSettings != null) return true;
-            if (PassthroughGroups != null) return true;
+            if (TargetGroups != null) return true;
             return false;
         }
         #endregion
@@ -2117,19 +2322,20 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine($"TestModList => {TestModList}");
             fg.AppendLine($"TestFlattenedMod => {TestFlattenedMod}");
             fg.AppendLine($"TestBenchmarks => {TestBenchmarks}");
+            fg.AppendLine($"TestLocators => {TestLocators}");
             DataFolderLocations?.ToString(fg);
             PassthroughSettings?.ToString(fg);
-            fg.AppendLine("PassthroughGroups =>");
+            fg.AppendLine("TargetGroups =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (PassthroughGroups.Overall != null)
+                if (TargetGroups.Overall != null)
                 {
-                    fg.AppendLine(PassthroughGroups.Overall.ToString());
+                    fg.AppendLine(TargetGroups.Overall.ToString());
                 }
-                if (PassthroughGroups.Specific != null)
+                if (TargetGroups.Specific != null)
                 {
-                    foreach (var subItem in PassthroughGroups.Specific)
+                    foreach (var subItem in TargetGroups.Specific)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2152,9 +2358,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestModList = this.TestModList.Combine(rhs.TestModList);
             ret.TestFlattenedMod = this.TestFlattenedMod.Combine(rhs.TestFlattenedMod);
             ret.TestBenchmarks = this.TestBenchmarks.Combine(rhs.TestBenchmarks);
+            ret.TestLocators = this.TestLocators.Combine(rhs.TestLocators);
             ret.DataFolderLocations = new MaskItem<Exception, DataFolderLocations_ErrorMask>(this.DataFolderLocations.Overall.Combine(rhs.DataFolderLocations.Overall), ((IErrorMask<DataFolderLocations_ErrorMask>)this.DataFolderLocations.Specific).Combine(rhs.DataFolderLocations.Specific));
             ret.PassthroughSettings = new MaskItem<Exception, PassthroughSettings_ErrorMask>(this.PassthroughSettings.Overall.Combine(rhs.PassthroughSettings.Overall), ((IErrorMask<PassthroughSettings_ErrorMask>)this.PassthroughSettings.Specific).Combine(rhs.PassthroughSettings.Specific));
-            ret.PassthroughGroups = new MaskItem<Exception, IEnumerable<MaskItem<Exception, PassthroughGroup_ErrorMask>>>(this.PassthroughGroups.Overall.Combine(rhs.PassthroughGroups.Overall), new List<MaskItem<Exception, PassthroughGroup_ErrorMask>>(this.PassthroughGroups.Specific.And(rhs.PassthroughGroups.Specific)));
+            ret.TargetGroups = new MaskItem<Exception, IEnumerable<MaskItem<Exception, TargetGroup_ErrorMask>>>(this.TargetGroups.Overall.Combine(rhs.TargetGroups.Overall), new List<MaskItem<Exception, TargetGroup_ErrorMask>>(this.TargetGroups.Specific.And(rhs.TargetGroups.Specific)));
             return ret;
         }
         public static TestingSettings_ErrorMask Combine(TestingSettings_ErrorMask lhs, TestingSettings_ErrorMask rhs)
@@ -2185,9 +2392,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.TestModList = defaultOn;
             this.TestFlattenedMod = defaultOn;
             this.TestBenchmarks = defaultOn;
+            this.TestLocators = defaultOn;
             this.DataFolderLocations = new MaskItem<CopyOption, DataFolderLocations_CopyMask>(deepCopyOption, default);
             this.PassthroughSettings = new MaskItem<CopyOption, PassthroughSettings_CopyMask>(deepCopyOption, default);
-            this.PassthroughGroups = new MaskItem<CopyOption, PassthroughGroup_CopyMask>(deepCopyOption, default);
+            this.TargetGroups = new MaskItem<CopyOption, TargetGroup_CopyMask>(deepCopyOption, default);
         }
 
         #region Members
@@ -2195,9 +2403,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool TestModList;
         public bool TestFlattenedMod;
         public bool TestBenchmarks;
+        public bool TestLocators;
         public MaskItem<CopyOption, DataFolderLocations_CopyMask> DataFolderLocations;
         public MaskItem<CopyOption, PassthroughSettings_CopyMask> PassthroughSettings;
-        public MaskItem<CopyOption, PassthroughGroup_CopyMask> PassthroughGroups;
+        public MaskItem<CopyOption, TargetGroup_CopyMask> TargetGroups;
         #endregion
 
     }
@@ -2210,9 +2419,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool TestModList;
         public bool TestFlattenedMod;
         public bool TestBenchmarks;
+        public bool TestLocators;
         public MaskItem<bool, DataFolderLocations_TranslationMask> DataFolderLocations;
         public MaskItem<bool, PassthroughSettings_TranslationMask> PassthroughSettings;
-        public MaskItem<bool, PassthroughGroup_TranslationMask> PassthroughGroups;
+        public MaskItem<bool, TargetGroup_TranslationMask> TargetGroups;
         #endregion
 
         #region Ctors
@@ -2226,9 +2436,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.TestModList = defaultOn;
             this.TestFlattenedMod = defaultOn;
             this.TestBenchmarks = defaultOn;
+            this.TestLocators = defaultOn;
             this.DataFolderLocations = new MaskItem<bool, DataFolderLocations_TranslationMask>(defaultOn, null);
             this.PassthroughSettings = new MaskItem<bool, PassthroughSettings_TranslationMask>(defaultOn, null);
-            this.PassthroughGroups = new MaskItem<bool, PassthroughGroup_TranslationMask>(defaultOn, null);
+            this.TargetGroups = new MaskItem<bool, TargetGroup_TranslationMask>(defaultOn, null);
         }
 
         #endregion
@@ -2251,9 +2462,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((TestModList, null));
             ret.Add((TestFlattenedMod, null));
             ret.Add((TestBenchmarks, null));
+            ret.Add((TestLocators, null));
             ret.Add((DataFolderLocations?.Overall ?? true, DataFolderLocations?.Specific?.GetCrystal()));
             ret.Add((PassthroughSettings?.Overall ?? true, PassthroughSettings?.Specific?.GetCrystal()));
-            ret.Add((PassthroughGroups?.Overall ?? true, PassthroughGroups?.Specific?.GetCrystal()));
+            ret.Add((TargetGroups?.Overall ?? true, TargetGroups?.Specific?.GetCrystal()));
         }
     }
     #endregion

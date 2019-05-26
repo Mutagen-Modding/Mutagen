@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Tests.Internals;
+using ReactiveUI;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -25,6 +26,7 @@ namespace Mutagen.Bethesda.Tests
 {
     #region Class
     public partial class DataFolderLocations : 
+        LoquiNotifyingObject,
         IDataFolderLocations,
         ILoquiObject<DataFolderLocations>,
         ILoquiObjectSetter,
@@ -37,16 +39,27 @@ namespace Mutagen.Bethesda.Tests
         #region Ctor
         public DataFolderLocations()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Oblivion
-        public String Oblivion { get; set; }
+        private String _Oblivion;
+        public String Oblivion
+        {
+            get => this._Oblivion;
+            set => this.RaiseAndSetIfReferenceChanged(ref this._Oblivion, value, nameof(Oblivion));
+        }
         #endregion
         #region Skyrim
-        public String Skyrim { get; set; }
+        private String _Skyrim;
+        public String Skyrim
+        {
+            get => this._Skyrim;
+            set => this.RaiseAndSetIfReferenceChanged(ref this._Skyrim, value, nameof(Skyrim));
+        }
         #endregion
 
         IMask<bool> IEqualsMask<DataFolderLocations>.GetEqualsMask(DataFolderLocations rhs, EqualsMaskHelper.Include include) => DataFolderLocationsCommon.GetEqualsMask(this, rhs, include);
@@ -487,6 +500,19 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((DataFolderLocations_FieldIndex)index)
+            {
+                case DataFolderLocations_FieldIndex.Oblivion:
+                case DataFolderLocations_FieldIndex.Skyrim:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         public DataFolderLocations Copy(
             DataFolderLocations_CopyMask copyMask = null,
             IDataFolderLocationsGetter def = null)
@@ -885,14 +911,36 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (copyMask?.Oblivion ?? true)
             {
                 errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Oblivion);
-                item.Oblivion = rhs.Oblivion;
-                errorMask?.PopIndex();
+                try
+                {
+                    item.Oblivion = rhs.Oblivion;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if (copyMask?.Skyrim ?? true)
             {
                 errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Skyrim);
-                item.Skyrim = rhs.Skyrim;
-                errorMask?.PopIndex();
+                try
+                {
+                    item.Skyrim = rhs.Skyrim;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
 

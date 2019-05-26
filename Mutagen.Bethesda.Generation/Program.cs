@@ -101,8 +101,8 @@ namespace Mutagen.Bethesda.Generation
             LoquiGenerator gen = new LoquiGenerator()
             {
                 RaisePropertyChangedDefault = false,
-                NotifyingDefault = NotifyingType.None,
-                ObjectCentralizedDefault = false,
+                NotifyingDefault = NotifyingType.ReactiveUI,
+                ObjectCentralizedDefault = true,
                 HasBeenSetDefault = false
             };
             gen.XmlTranslation.ShouldGenerateXSD = true;

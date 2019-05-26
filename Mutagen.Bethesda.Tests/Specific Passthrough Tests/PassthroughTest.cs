@@ -26,11 +26,11 @@ namespace Mutagen.Bethesda.Tests
 
         public abstract GameMode GameMode { get; }
 
-        public PassthroughTest(TestingSettings settings, Passthrough passthrough)
+        public PassthroughTest(TestingSettings settings, Target target)
         {
-            this.FilePath = Path.Combine(settings.DataFolderLocations.Get(passthrough.GameMode), passthrough.Path);
-            this.Nickname = passthrough.Path;
-            this.NumMasters = passthrough.NumMasters;
+            this.FilePath = Path.Combine(settings.DataFolderLocations.Get(target.GameMode), target.Path);
+            this.Nickname = target.Path;
+            this.NumMasters = target.NumMasters;
             this.Settings = settings.PassthroughSettings;
         }
 
@@ -269,14 +269,14 @@ namespace Mutagen.Bethesda.Tests
             await ImportBinary(this.FilePath.Path, modKey);
         }
 
-        public static PassthroughTest Factory(TestingSettings settings, Passthrough passthrough)
+        public static PassthroughTest Factory(TestingSettings settings, Target target)
         {
-            switch (passthrough.GameMode)
+            switch (target.GameMode)
             {
                 case GameMode.Oblivion:
-                    return new Oblivion_Passthrough_Test(settings, passthrough);
+                    return new Oblivion_Passthrough_Test(settings, target);
                 case GameMode.Skyrim:
-                    return new Skyrim_Passthrough_Test(settings, passthrough);
+                    return new Skyrim_Passthrough_Test(settings, target);
                 default:
                     throw new NotImplementedException();
             }
