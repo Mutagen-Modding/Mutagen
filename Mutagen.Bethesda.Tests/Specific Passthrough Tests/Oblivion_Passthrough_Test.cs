@@ -16,6 +16,7 @@ namespace Mutagen.Bethesda.Tests
 {
     public class Oblivion_Passthrough_Test : PassthroughTest
     {
+        public override GameMode GameMode => GameMode.Oblivion;
         private HashSet<string> magicEffectEDIDs = new HashSet<string>();
 
         public Oblivion_Passthrough_Test(TestingSettings settings, Passthrough passthrough)

@@ -15,6 +15,7 @@ namespace Mutagen.Bethesda.Preprocessing
         public static void Decompress(
             Func<Stream> streamCreator,
             Stream outputStream,
+            GameMode gameMode,
             RecordInterest interest = null)
         {
             using (var inputStream = new MutagenBinaryReadStream(streamCreator()))
@@ -26,7 +27,8 @@ namespace Mutagen.Bethesda.Preprocessing
                         long runningDiff = 0;
                         var fileLocs = RecordLocator.GetFileLocations(
                             inputStream,
-                            interest,
+                            gameMode: gameMode,
+                            interest: interest,
                             additionalCriteria: (stream, recType, len) =>
                             {
                                 stream.Position += 8;

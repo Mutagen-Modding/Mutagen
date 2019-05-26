@@ -24,6 +24,7 @@ namespace Mutagen.Bethesda.Tests
         public string OrderedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
         public string ProcessedPath(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
 
+        public abstract GameMode GameMode { get; }
 
         public PassthroughTest(TestingSettings settings, Passthrough passthrough)
         {
@@ -82,6 +83,7 @@ namespace Mutagen.Bethesda.Tests
                     {
                         ModDecompressor.Decompress(
                             streamCreator: () => File.OpenRead(this.FilePath.Path),
+                            gameMode: this.GameMode,
                             outputStream: outStream);
                     }
                 }
@@ -121,6 +123,7 @@ namespace Mutagen.Bethesda.Tests
                 ModRecordAligner.Align(
                     inputPath: orderedPath,
                     outputPath: alignedPath,
+                    gameMode: this.GameMode,
                     alignmentRules: GetAlignmentRules(),
                     temp: tmp);
             }
@@ -128,7 +131,7 @@ namespace Mutagen.Bethesda.Tests
             BinaryFileProcessor.Config instructions;
             if (!Settings.ReuseCaches || !File.Exists(processedPath))
             {
-                var alignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath);
+                var alignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath, this.GameMode);
 
                 Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
 
@@ -147,7 +150,7 @@ namespace Mutagen.Bethesda.Tests
 
                 using (var stream = new MutagenBinaryReadStream(preprocessedPath))
                 {
-                    var fileLocs = RecordLocator.GetFileLocations(this.FilePath.Path);
+                    var fileLocs = RecordLocator.GetFileLocations(this.FilePath.Path, this.GameMode);
                     PreProcessorJobs(
                         stream: stream,
                         fileLocs: fileLocs,

@@ -12,8 +12,6 @@ namespace Mutagen.Bethesda
 {
     public static class RecordLocator
     {
-        private readonly static RecordType GRUP = new RecordType("GRUP");
-
         #region Get File Locations
         internal class FileLocationConstructor
         {
@@ -24,6 +22,15 @@ namespace Mutagen.Bethesda
             public List<long> GrupLocations = new List<long>();
             public FormID LastParsed;
             public long LastLoc;
+            public Constants Constants { get; }
+            public GameMode GameMode { get; }
+            public Func<IMutagenReadStream, RecordType, uint, bool> AdditionalCriteria;
+
+            public FileLocationConstructor(GameMode mode)
+            {
+                this.GameMode = mode;
+                this.Constants = Constants.Get(mode);
+            }
 
             public void Add(
                 FormID id,
@@ -143,11 +150,12 @@ namespace Mutagen.Bethesda
 
         public static FileLocations GetFileLocations(
             string filePath,
+            GameMode gameMode,
             RecordInterest interest = null)
         {
             using (var stream = new MutagenBinaryReadStream(filePath))
             {
-                return GetFileLocations(stream, interest);
+                return GetFileLocations(stream, gameMode, interest);
             }
         }
 
@@ -162,10 +170,14 @@ namespace Mutagen.Bethesda
 
         public static FileLocations GetFileLocations(
             MutagenBinaryReadStream reader,
+            GameMode gameMode,
             RecordInterest interest = null,
             Func<IMutagenReadStream, RecordType, uint, bool> additionalCriteria = null)
         {
-            FileLocationConstructor ret = new FileLocationConstructor();
+            FileLocationConstructor ret = new FileLocationConstructor(gameMode)
+            {
+                AdditionalCriteria = additionalCriteria,
+            };
             SkipHeader(reader);
 
             HashSet<RecordType> remainingTypes = ((interest?.InterestingTypes?.Count ?? 0) <= 0) ? null : new HashSet<RecordType>(interest.InterestingTypes);
@@ -179,7 +191,6 @@ namespace Mutagen.Bethesda
                     interest: interest,
                     grupRecOverride: null,
                     checkOverallGrupType: true,
-                    additionalCriteria: additionalCriteria,
                     parentGroupLocations: grupPositions);
                 if (parsed.HasValue)
                 {
@@ -195,12 +206,11 @@ namespace Mutagen.Bethesda
             RecordInterest interest,
             Stack<long> parentGroupLocations,
             RecordType? grupRecOverride,
-            bool checkOverallGrupType,
-            Func<IMutagenReadStream, RecordType, uint, bool> additionalCriteria)
+            bool checkOverallGrupType)
         {
             var grupLoc = reader.Position;
             var grup = HeaderTranslation.ReadNextRecordType(reader);
-            if (!grup.Equals(GRUP))
+            if (!grup.Equals(Constants.GRUP))
             {
                 throw new ArgumentException();
             }
@@ -240,7 +250,6 @@ namespace Mutagen.Bethesda
                                 fileLocs: fileLocs,
                                 recordType: grupRec,
                                 parentGroupLocations: parentGroupLocations,
-                                additionalCriteria: additionalCriteria,
                                 interest: interest);
                             parentGroupLocations.Pop();
                             continue;
@@ -255,11 +264,11 @@ namespace Mutagen.Bethesda
                         }
                     }
                     var recLength = reader.ReadUInt32();
-                    if (additionalCriteria != null)
+                    if (fileLocs.AdditionalCriteria != null)
                     {
                         var pos = reader.Position;
                         reader.Position -= 8;
-                        if (!additionalCriteria(reader, targetRec, recLength))
+                        if (!fileLocs.AdditionalCriteria(reader, targetRec, recLength))
                         {
                             reader.Position = pos + 12 + recLength;
                             continue;
@@ -315,8 +324,7 @@ namespace Mutagen.Bethesda
             FileLocationConstructor fileLocs,
             RecordType recordType,
             RecordInterest interest,
-            Stack<long> parentGroupLocations,
-            Func<IMutagenReadStream, RecordType, uint, bool> additionalCriteria)
+            Stack<long> parentGroupLocations)
         {
             var grupLoc = frame.Position;
             var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
@@ -338,8 +346,7 @@ namespace Mutagen.Bethesda
                         frame: frame.SpawnWithLength(recLength),
                         fileLocs: fileLocs,
                         parentGroupLocations: parentGroupLocations,
-                        interest: interest,
-                        additionalCriteria: additionalCriteria);
+                        interest: interest);
                     parentGroupLocations.Pop();
                     break;
                 case GroupTypeEnum.CellChildren:
@@ -348,8 +355,7 @@ namespace Mutagen.Bethesda
                         frame: frame.SpawnWithLength(recLength),
                         fileLocs: fileLocs,
                         parentGroupLocations: parentGroupLocations,
-                        interest: interest,
-                        additionalCriteria: additionalCriteria);
+                        interest: interest);
                     parentGroupLocations.Pop();
                     break;
                 case GroupTypeEnum.WorldChildren:
@@ -360,8 +366,7 @@ namespace Mutagen.Bethesda
                         interest: interest,
                         parentGroupLocations: parentGroupLocations,
                         checkOverallGrupType: false,
-                        grupRecOverride: null,
-                        additionalCriteria: additionalCriteria);
+                        grupRecOverride: null);
                     break;
                 default:
                     throw new NotImplementedException();
@@ -372,8 +377,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             FileLocationConstructor fileLocs,
             RecordInterest interest,
-            Stack<long> parentGroupLocations,
-            Func<IMutagenReadStream, RecordType, uint, bool> additionalCriteria)
+            Stack<long> parentGroupLocations)
         {
             frame.Reader.Position += Constants.GRUP_LENGTH;
             while (!frame.Complete)
@@ -399,8 +403,7 @@ namespace Mutagen.Bethesda
                             interest: interest,
                             parentGroupLocations: parentGroupLocations,
                             grupRecOverride: new RecordType("CELL"),
-                            checkOverallGrupType: true,
-                            additionalCriteria: additionalCriteria);
+                            checkOverallGrupType: true);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -412,8 +415,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             FileLocationConstructor fileLocs,
             RecordInterest interest,
-            Stack<long> parentGroupLocations,
-            Func<IMutagenReadStream, RecordType, uint, bool> additionalCriteria)
+            Stack<long> parentGroupLocations)
         {
             frame.Reader.Position += Constants.GRUP_LENGTH;
             while (!frame.Complete)
@@ -440,7 +442,6 @@ namespace Mutagen.Bethesda
                             interest: interest,
                             parentGroupLocations: parentGroupLocations,
                             grupRecOverride: null,
-                            additionalCriteria: additionalCriteria,
                             checkOverallGrupType: false);
                         break;
                     default:
@@ -472,7 +473,7 @@ namespace Mutagen.Bethesda
         {
             var grupLoc = reader.Position;
             var grup = HeaderTranslation.ReadNextRecordType(reader);
-            if (!grup.Equals(GRUP))
+            if (!grup.Equals(Constants.GRUP))
             {
                 throw new ArgumentException();
             }

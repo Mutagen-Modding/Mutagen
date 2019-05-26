@@ -135,11 +135,12 @@ namespace Mutagen.Bethesda.Tests
         public static void Align(
             FilePath inputPath,
             FilePath outputPath,
+            GameMode gameMode,
             AlignmentRules alignmentRules,
             TempFolder temp = null)
         {
             var interest = new RecordInterest(alignmentRules.Alignments.Keys);
-            var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, interest);
+            var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, gameMode, interest);
             temp = temp ?? new TempFolder();
             using (temp)
             {
@@ -161,7 +162,7 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
-                fileLocs = RecordLocator.GetFileLocations(alignedGroupsFile, interest);
+                fileLocs = RecordLocator.GetFileLocations(alignedGroupsFile, gameMode, interest);
                 var alignedCellsFile = Path.Combine(temp.Dir.Path, "alignedCells");
                 using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
                 {
@@ -192,7 +193,7 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
-                fileLocs = RecordLocator.GetFileLocations(alignedCellsFile, interest);
+                fileLocs = RecordLocator.GetFileLocations(alignedCellsFile, gameMode, interest);
                 using (var mutaReader = new BinaryReadStream(alignedCellsFile))
                 {
                     using (var writer = new MutagenWriter(outputPath.Path))
