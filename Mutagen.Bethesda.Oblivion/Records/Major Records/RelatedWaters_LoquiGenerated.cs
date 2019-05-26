@@ -31,7 +31,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class RelatedWaters : 
+    public partial class RelatedWaters :
         LoquiNotifyingObject,
         IRelatedWaters,
         ILoquiObject<RelatedWaters>,
@@ -123,6 +123,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => RelatedWatersXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static RelatedWaters Create_Xml(
@@ -175,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    RelatedWatersCommon.FillPublicElement_Xml(
+                    RelatedWatersXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -273,139 +275,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out RelatedWaters_ErrorMask errorMask,
-            bool doMasks = true,
-            RelatedWaters_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            RelatedWatersXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            RelatedWaters_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            RelatedWatersXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         #region Mutagen
@@ -438,6 +307,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected IBinaryTranslator BinaryTranslator => RelatedWatersBinaryTranslation.Instance;
+        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static RelatedWaters Create_Binary(
@@ -489,49 +360,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out RelatedWaters_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            RelatedWatersBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences)
-        {
-            this.Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            RelatedWatersBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -652,8 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRelatedWatersGetter rhs,
             ErrorMaskBuilder errorMask,
             RelatedWaters_CopyMask copyMask = null,
-            IRelatedWatersGetter def = null,
-            bool doMasks = true)
+            IRelatedWatersGetter def = null)
         {
             RelatedWatersCommon.CopyFieldsFrom(
                 item: this,
@@ -731,14 +558,25 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IRelatedWaters : IRelatedWatersGetter, ILoquiClass<IRelatedWaters, IRelatedWatersGetter>, ILoquiClass<RelatedWaters, IRelatedWatersGetter>
+    public partial interface IRelatedWaters :
+        IRelatedWatersGetter,
+        ILoquiClass<IRelatedWaters, IRelatedWatersGetter>,
+        ILoquiClass<RelatedWaters, IRelatedWatersGetter>
     {
         new Water RelatedWaterDaytime { get; set; }
         new Water RelatedWaterNighttime { get; set; }
         new Water RelatedWaterUnderwater { get; set; }
+        void CopyFieldsFrom(
+            IRelatedWatersGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            RelatedWaters_CopyMask copyMask = null,
+            IRelatedWatersGetter def = null);
     }
 
-    public partial interface IRelatedWatersGetter : ILoquiObject
+    public partial interface IRelatedWatersGetter :
+        ILoquiObject,
+        IXmlItem,
+        IBinaryItem
     {
         #region RelatedWaterDaytime
         Water RelatedWaterDaytime { get; }
@@ -934,10 +772,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(RelatedWatersXmlTranslation);
         public static readonly RecordType GNAM_HEADER = new RecordType("GNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GNAM_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
+        public static readonly Type BinaryTranslation = typeof(RelatedWatersBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1126,75 +966,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region Xml Translation
-        public static void FillPublic_Xml(
-            this RelatedWaters item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RelatedWatersCommon.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            this RelatedWaters item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "RelatedWaterDaytime":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.RelatedWaterDaytime_Property,
-                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
-                        errorMask: errorMask);
-                    break;
-                case "RelatedWaterNighttime":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.RelatedWaterNighttime_Property,
-                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
-                        errorMask: errorMask);
-                    break;
-                case "RelatedWaterUnderwater":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.RelatedWaterUnderwater_Property,
-                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
-                        errorMask: errorMask);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        #endregion
-
     }
     #endregion
 
     #region Modules
     #region Xml Translation
-    public partial class RelatedWatersXmlTranslation
+    public partial class RelatedWatersXmlTranslation : IXmlTranslator
     {
         public readonly static RelatedWatersXmlTranslation Instance = new RelatedWatersXmlTranslation();
 
@@ -1233,26 +1010,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Xml Write
-        public void Write_Xml(
+        public static void FillPublic_Xml(
+            IRelatedWaters item,
             XElement node,
-            IRelatedWatersGetter item,
-            bool doMasks,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask translationMask,
-            string name = null)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RelatedWatersXmlTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
         }
 
-        public void Write_Xml(
+        public static void FillPublicElement_Xml(
+            IRelatedWaters item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "RelatedWaterDaytime":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.RelatedWaterDaytime_Property,
+                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
+                        errorMask: errorMask);
+                    break;
+                case "RelatedWaterNighttime":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.RelatedWaterNighttime_Property,
+                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
+                        errorMask: errorMask);
+                    break;
+                case "RelatedWaterUnderwater":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.RelatedWaterUnderwater_Property,
+                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
+                        errorMask: errorMask);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void Write(
             XElement node,
             IRelatedWatersGetter item,
             ErrorMaskBuilder errorMask,
@@ -1271,9 +1089,210 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IRelatedWatersGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IRelatedWatersGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IRelatedWatersGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class RelatedWatersXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IRelatedWatersGetter item,
+            XElement node,
+            out RelatedWaters_ErrorMask errorMask,
+            bool doMasks = true,
+            RelatedWaters_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((RelatedWatersXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IRelatedWatersGetter item,
+            string path,
+            out RelatedWaters_ErrorMask errorMask,
+            RelatedWaters_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IRelatedWatersGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IRelatedWatersGetter item,
+            Stream stream,
+            out RelatedWaters_ErrorMask errorMask,
+            RelatedWaters_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IRelatedWatersGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IRelatedWatersGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((RelatedWatersXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this IRelatedWatersGetter item,
+            XElement node,
+            string name = null,
+            RelatedWaters_TranslationMask translationMask = null)
+        {
+            ((RelatedWatersXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this IRelatedWatersGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((RelatedWatersXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IRelatedWatersGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((RelatedWatersXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -1607,11 +1626,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class RelatedWatersBinaryTranslation
+    public partial class RelatedWatersBinaryTranslation : IBinaryTranslator
     {
         public readonly static RelatedWatersBinaryTranslation Instance = new RelatedWatersBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             IRelatedWatersGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
@@ -1631,26 +1650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IRelatedWatersGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out RelatedWaters_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IRelatedWatersGetter item,
             MasterReferences masterReferences,
@@ -1662,16 +1662,81 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: RelatedWaters_Registration.GNAM_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IRelatedWatersGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class RelatedWatersBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IRelatedWatersGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out RelatedWaters_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((RelatedWatersBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Binary(
+            this IRelatedWatersGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RelatedWatersBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary(
+            this IRelatedWatersGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences)
+        {
+            ((RelatedWatersBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

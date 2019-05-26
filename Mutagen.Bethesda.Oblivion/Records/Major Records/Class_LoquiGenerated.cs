@@ -35,7 +35,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Class : 
+    public partial class Class :
         OblivionMajorRecord,
         IClass,
         IClassInternal,
@@ -323,6 +323,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => ClassXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Class Create_Xml(
@@ -382,7 +383,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    ClassCommon.FillPublicElement_Xml(
+                    ClassXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -480,138 +481,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out Class_ErrorMask errorMask,
-            bool doMasks = true,
-            Class_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClassXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            OblivionMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClassXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClassXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            ClassXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         protected static void FillPrivateElement_Xml(
             Class item,
             XElement node,
@@ -686,6 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected override IBinaryTranslator BinaryTranslator => ClassBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Class Create_Binary(
@@ -733,73 +603,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out Class_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClassBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClassBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClassBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            ClassBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -1070,8 +873,7 @@ namespace Mutagen.Bethesda.Oblivion
             IClassGetter rhs,
             ErrorMaskBuilder errorMask,
             Class_CopyMask copyMask = null,
-            IClassGetter def = null,
-            bool doMasks = true)
+            IClassGetter def = null)
         {
             ClassCommon.CopyFieldsFrom(
                 item: this,
@@ -1185,7 +987,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IClass : IClassGetter, IOblivionMajorRecord, ILoquiClass<IClass, IClassGetter>, ILoquiClass<Class, IClassGetter>
+    public partial interface IClass :
+        IClassGetter,
+        IOblivionMajorRecord,
+        ILoquiClass<IClass, IClassGetter>,
+        ILoquiClass<Class, IClassGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1212,9 +1018,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         new ClassTraining Training { get; set; }
 
+        void CopyFieldsFrom(
+            IClassGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            Class_CopyMask copyMask = null,
+            IClassGetter def = null);
     }
 
-    public partial interface IClassInternal : IClass, IClassInternalGetter, IOblivionMajorRecordInternal
+    public partial interface IClassInternal :
+        IOblivionMajorRecordInternal,
+        IClass,
+        IClassInternalGetter
     {
         new ISourceSetList<ActorValue> PrimaryAttributes { get; }
         new ISourceSetList<ActorValue> SecondaryAttributes { get; }
@@ -1222,7 +1036,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IClassGetter : IOblivionMajorRecordGetter
+    public partial interface IClassGetter :
+        IOblivionMajorRecordGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region Name
         String Name { get; }
@@ -1264,7 +1081,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IClassInternalGetter : IClassGetter, IOblivionMajorRecordInternalGetter
+    public partial interface IClassInternalGetter :
+        IOblivionMajorRecordInternalGetter,
+        IClassGetter
     {
         #region DATADataTypeState
         Class.DATADataType DATADataTypeState { get; }
@@ -1541,6 +1360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(ClassXmlTranslation);
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
@@ -1549,6 +1369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CLAS_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
+        public static readonly Type BinaryTranslation = typeof(ClassBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2054,9 +1875,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class ClassXmlTranslation :
+        OblivionMajorRecordXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static ClassXmlTranslation Instance = new ClassXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IClassInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Class_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if (item.Description_IsSet
+                && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Description),
+                    item: item.Description,
+                    fieldIndex: (int)Class_FieldIndex.Description,
+                    errorMask: errorMask);
+            }
+            if (item.Icon_IsSet
+                && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Icon),
+                    item: item.Icon,
+                    fieldIndex: (int)Class_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            if (item.DATADataTypeState.HasFlag(Class.DATADataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.PrimaryAttributes) ?? true))
+                {
+                    ListXmlTranslation<ActorValue>.Instance.Write(
+                        node: node,
+                        name: nameof(item.PrimaryAttributes),
+                        item: item.PrimaryAttributes,
+                        fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.PrimaryAttributes),
+                        transl: (XElement subNode, ActorValue subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                        {
+                            EnumXmlTranslation<ActorValue>.Instance.Write(
+                                node: subNode,
+                                name: null,
+                                item: subItem,
+                                errorMask: listSubMask);
+                        }
+                        );
+                }
+                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Specialization) ?? true))
+                {
+                    EnumXmlTranslation<Class.SpecializationFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Specialization),
+                        item: item.Specialization,
+                        fieldIndex: (int)Class_FieldIndex.Specialization,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.SecondaryAttributes) ?? true))
+                {
+                    ListXmlTranslation<ActorValue>.Instance.Write(
+                        node: node,
+                        name: nameof(item.SecondaryAttributes),
+                        item: item.SecondaryAttributes,
+                        fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.SecondaryAttributes),
+                        transl: (XElement subNode, ActorValue subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                        {
+                            EnumXmlTranslation<ActorValue>.Instance.Write(
+                                node: subNode,
+                                name: null,
+                                item: subItem,
+                                errorMask: listSubMask);
+                        }
+                        );
+                }
+                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<ClassFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Class_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.ClassServices) ?? true))
+                {
+                    EnumXmlTranslation<ClassService>.Instance.Write(
+                        node: node,
+                        name: nameof(item.ClassServices),
+                        item: item.ClassServices,
+                        fieldIndex: (int)Class_FieldIndex.ClassServices,
+                        errorMask: errorMask);
+                }
+                if (!item.DATADataTypeState.HasFlag(Class.DATADataType.Break0))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Training) ?? true))
+                    {
+                        ((ClassTrainingXmlTranslation)((IXmlItem)item.Training).XmlTranslator).Write(
+                            item: item.Training,
+                            node: node,
+                            name: nameof(item.Training),
+                            fieldIndex: (int)Class_FieldIndex.Training,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Training));
+                    }
+                }
+                else
+                {
+                    node.Add(new XElement("HasDATADataType"));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Class.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Class_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this Class item,
+            IClassInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2065,7 +2033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ClassCommon.FillPublicElement_Xml(
+                    ClassXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2081,7 +2049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this Class item,
+            IClassInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -2357,7 +2325,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2367,174 +2335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class ClassXmlTranslation : OblivionMajorRecordXmlTranslation
-    {
-        public new readonly static ClassXmlTranslation Instance = new ClassXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IClassInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Class_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Description_IsSet
-                && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)Class_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if (item.Icon_IsSet
-                && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)Class_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-            if (item.DATADataTypeState.HasFlag(Class.DATADataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.PrimaryAttributes) ?? true))
-                {
-                    ListXmlTranslation<ActorValue>.Instance.Write(
-                        node: node,
-                        name: nameof(item.PrimaryAttributes),
-                        item: item.PrimaryAttributes,
-                        fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.PrimaryAttributes),
-                        transl: (XElement subNode, ActorValue subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                        {
-                            EnumXmlTranslation<ActorValue>.Instance.Write(
-                                node: subNode,
-                                name: null,
-                                item: subItem,
-                                errorMask: listSubMask);
-                        }
-                        );
-                }
-                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Specialization) ?? true))
-                {
-                    EnumXmlTranslation<Class.SpecializationFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Specialization),
-                        item: item.Specialization,
-                        fieldIndex: (int)Class_FieldIndex.Specialization,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.SecondaryAttributes) ?? true))
-                {
-                    ListXmlTranslation<ActorValue>.Instance.Write(
-                        node: node,
-                        name: nameof(item.SecondaryAttributes),
-                        item: item.SecondaryAttributes,
-                        fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.SecondaryAttributes),
-                        transl: (XElement subNode, ActorValue subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                        {
-                            EnumXmlTranslation<ActorValue>.Instance.Write(
-                                node: subNode,
-                                name: null,
-                                item: subItem,
-                                errorMask: listSubMask);
-                        }
-                        );
-                }
-                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<ClassFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)Class_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.ClassServices) ?? true))
-                {
-                    EnumXmlTranslation<ClassService>.Instance.Write(
-                        node: node,
-                        name: nameof(item.ClassServices),
-                        item: item.ClassServices,
-                        fieldIndex: (int)Class_FieldIndex.ClassServices,
-                        errorMask: errorMask);
-                }
-                if (!item.DATADataTypeState.HasFlag(Class.DATADataType.Break0))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Training) ?? true))
-                    {
-                        LoquiXmlTranslation<ClassTraining>.Instance.Write(
-                            node: node,
-                            item: item.Training,
-                            name: nameof(item.Training),
-                            fieldIndex: (int)Class_FieldIndex.Training,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Training));
-                    }
-                }
-                else
-                {
-                    node.Add(new XElement("HasDATADataType"));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Class.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Class_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IClassInternalGetter item,
-            bool doMasks,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IClassInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -2553,9 +2354,116 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IClassInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IClassInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IClassInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class ClassXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IClassInternalGetter item,
+            XElement node,
+            out Class_ErrorMask errorMask,
+            bool doMasks = true,
+            Class_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ClassXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IClassInternalGetter item,
+            string path,
+            out Class_ErrorMask errorMask,
+            Class_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IClassInternalGetter item,
+            Stream stream,
+            out Class_ErrorMask errorMask,
+            Class_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -3213,31 +3121,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class ClassBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    public partial class ClassBinaryTranslation :
+        OblivionMajorRecordBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static ClassBinaryTranslation Instance = new ClassBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             IClassInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+            OblivionMajorRecordBinaryTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             IClassInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3307,37 +3217,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         length: 4);
                     if (!item.DATADataTypeState.HasFlag(Class.DATADataType.Break0))
                     {
-                        LoquiBinaryTranslation<ClassTraining>.Instance.Write(
-                            writer: writer,
+                        ((ClassTrainingBinaryTranslation)((IBinaryItem)item.Training).BinaryTranslator).Write(
                             item: item.Training,
-                            fieldIndex: (int)Class_FieldIndex.Training,
+                            writer: writer,
                             errorMask: errorMask,
-                            masterReferences: masterReferences);
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 }
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IClassInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out Class_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IClassInternalGetter item,
             MasterReferences masterReferences,
@@ -3349,12 +3240,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Class_Registration.CLAS_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
+                Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -3362,9 +3253,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IClassInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IClassInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IClassInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class ClassBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IClassInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out Class_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ClassBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

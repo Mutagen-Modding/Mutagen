@@ -1,5 +1,6 @@
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,23 +80,31 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"if ({itemAccessor.PropertyOrDirectAccess}.Items.Count > 0)");
             }
+            string line;
+            if (loquiGen.TargetObjectGeneration != null)
+            {
+                line = $"(({this.Module.TranslationClassName(loquiGen.TargetObjectGeneration)}{loquiGen.GenericTypes})(({nameof(IBinaryItem)}){itemAccessor.DirectAccess}).{this.Module.ModuleNickname}Translator)";
+            }
+            else
+            {
+                line = $"(({nameof(IBinaryItem)}){itemAccessor.DirectAccess}).{this.Module.ModuleNickname}Translator";
+            }
             using (new BraceWrapper(fg, doIt: isGroup))
             {
-                using (var args = new ArgsWrapper(fg,
-                $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.Write"))
+                using (var args = new ArgsWrapper(fg, $"{line}.Write"))
                 {
-                    args.Add($"writer: {writerAccessor}");
                     args.Add($"item: {itemAccessor.DirectAccess}");
-                    if (loquiGen.HasIndex)
-                    {
-                        args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                    }
+                    args.Add($"writer: {writerAccessor}");
                     args.Add($"errorMask: {errorMaskAccessor}");
                     args.Add($"masterReferences: masterReferences");
                     if (data?.RecordTypeConverter != null
                         && data.RecordTypeConverter.FromConversions.Count > 0)
                     {
                         args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                    }
+                    else
+                    {
+                        args.Add($"recordTypeConverter: null");
                     }
                 }
             }

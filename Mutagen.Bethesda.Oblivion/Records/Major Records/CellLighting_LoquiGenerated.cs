@@ -33,7 +33,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class CellLighting : 
+    public partial class CellLighting :
         LoquiNotifyingObject,
         ICellLighting,
         ILoquiObject<CellLighting>,
@@ -191,6 +191,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => CellLightingXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static CellLighting Create_Xml(
@@ -243,7 +245,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    CellLightingCommon.FillPublicElement_Xml(
+                    CellLightingXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -341,139 +343,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out CellLighting_ErrorMask errorMask,
-            bool doMasks = true,
-            CellLighting_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CellLightingXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            CellLighting_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            CellLightingXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -501,6 +370,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected IBinaryTranslator BinaryTranslator => CellLightingBinaryTranslation.Instance;
+        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static CellLighting Create_Binary(
@@ -552,49 +423,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out CellLighting_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CellLightingBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences)
-        {
-            this.Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            CellLightingBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -778,8 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICellLightingGetter rhs,
             ErrorMaskBuilder errorMask,
             CellLighting_CopyMask copyMask = null,
-            ICellLightingGetter def = null,
-            bool doMasks = true)
+            ICellLightingGetter def = null)
         {
             CellLightingCommon.CopyFieldsFrom(
                 item: this,
@@ -893,7 +720,10 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ICellLighting : ICellLightingGetter, ILoquiClass<ICellLighting, ICellLightingGetter>, ILoquiClass<CellLighting, ICellLightingGetter>
+    public partial interface ICellLighting :
+        ICellLightingGetter,
+        ILoquiClass<ICellLighting, ICellLightingGetter>,
+        ILoquiClass<CellLighting, ICellLightingGetter>
     {
         new Color AmbientColor { get; set; }
 
@@ -913,9 +743,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single FogClipDistance { get; set; }
 
+        void CopyFieldsFrom(
+            ICellLightingGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            CellLighting_CopyMask copyMask = null,
+            ICellLightingGetter def = null);
     }
 
-    public partial interface ICellLightingGetter : ILoquiObject
+    public partial interface ICellLightingGetter :
+        ILoquiObject,
+        IXmlItem,
+        IBinaryItem
     {
         #region AmbientColor
         Color AmbientColor { get; }
@@ -1204,10 +1042,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(CellLightingXmlTranslation);
         public static readonly RecordType XCLL_HEADER = new RecordType("XCLL");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = XCLL_HEADER;
         public const int NumStructFields = 9;
         public const int NumTypedFields = 0;
+        public static readonly Type BinaryTranslation = typeof(CellLightingBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1540,9 +1380,106 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class CellLightingXmlTranslation : IXmlTranslator
+    {
+        public readonly static CellLightingXmlTranslation Instance = new CellLightingXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ICellLightingGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.AmbientColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AmbientColor),
+                    item: item.AmbientColor,
+                    fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DirectionalColor),
+                    item: item.DirectionalColor,
+                    fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogColor),
+                    item: item.FogColor,
+                    fieldIndex: (int)CellLighting_FieldIndex.FogColor,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogNear) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogNear),
+                    item: item.FogNear,
+                    fieldIndex: (int)CellLighting_FieldIndex.FogNear,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogFar) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogFar),
+                    item: item.FogFar,
+                    fieldIndex: (int)CellLighting_FieldIndex.FogFar,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalRotationXY) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DirectionalRotationXY),
+                    item: item.DirectionalRotationXY,
+                    fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalRotationZ) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DirectionalRotationZ),
+                    item: item.DirectionalRotationZ,
+                    fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalFade) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DirectionalFade),
+                    item: item.DirectionalFade,
+                    fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogClipDistance) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogClipDistance),
+                    item: item.FogClipDistance,
+                    fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this CellLighting item,
+            ICellLighting item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1551,7 +1488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    CellLightingCommon.FillPublicElement_Xml(
+                    CellLightingXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1567,7 +1504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this CellLighting item,
+            ICellLighting item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1814,126 +1751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class CellLightingXmlTranslation
-    {
-        public readonly static CellLightingXmlTranslation Instance = new CellLightingXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            ICellLightingGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.AmbientColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AmbientColor),
-                    item: item.AmbientColor,
-                    fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DirectionalColor),
-                    item: item.DirectionalColor,
-                    fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogColor),
-                    item: item.FogColor,
-                    fieldIndex: (int)CellLighting_FieldIndex.FogColor,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogNear) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogNear),
-                    item: item.FogNear,
-                    fieldIndex: (int)CellLighting_FieldIndex.FogNear,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogFar) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogFar),
-                    item: item.FogFar,
-                    fieldIndex: (int)CellLighting_FieldIndex.FogFar,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalRotationXY) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DirectionalRotationXY),
-                    item: item.DirectionalRotationXY,
-                    fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalRotationZ) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DirectionalRotationZ),
-                    item: item.DirectionalRotationZ,
-                    fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalFade) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DirectionalFade),
-                    item: item.DirectionalFade,
-                    fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogClipDistance) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogClipDistance),
-                    item: item.FogClipDistance,
-                    fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            ICellLightingGetter item,
-            bool doMasks,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             ICellLightingGetter item,
             ErrorMaskBuilder errorMask,
@@ -1952,9 +1770,210 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ICellLightingGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            ICellLightingGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (ICellLightingGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class CellLightingXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this ICellLightingGetter item,
+            XElement node,
+            out CellLighting_ErrorMask errorMask,
+            bool doMasks = true,
+            CellLighting_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((CellLightingXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this ICellLightingGetter item,
+            string path,
+            out CellLighting_ErrorMask errorMask,
+            CellLighting_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ICellLightingGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ICellLightingGetter item,
+            Stream stream,
+            out CellLighting_ErrorMask errorMask,
+            CellLighting_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this ICellLightingGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this ICellLightingGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((CellLightingXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this ICellLightingGetter item,
+            XElement node,
+            string name = null,
+            CellLighting_TranslationMask translationMask = null)
+        {
+            ((CellLightingXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this ICellLightingGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((CellLightingXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ICellLightingGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((CellLightingXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -2450,11 +2469,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class CellLightingBinaryTranslation
+    public partial class CellLightingBinaryTranslation : IBinaryTranslator
     {
         public readonly static CellLightingBinaryTranslation Instance = new CellLightingBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             ICellLightingGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
@@ -2488,26 +2507,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.FogClipDistance);
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            ICellLightingGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out CellLighting_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             ICellLightingGetter item,
             MasterReferences masterReferences,
@@ -2519,16 +2519,81 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: CellLighting_Registration.XCLL_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ICellLightingGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class CellLightingBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this ICellLightingGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out CellLighting_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((CellLightingBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Binary(
+            this ICellLightingGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ((CellLightingBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary(
+            this ICellLightingGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences)
+        {
+            ((CellLightingBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

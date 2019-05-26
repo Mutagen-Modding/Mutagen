@@ -19,7 +19,7 @@ using Loqui.Xml;
 namespace Mutagen.Bethesda
 {
     public partial class Group<T> : IEnumerable<T>
-        where T : ILoquiObject<T>, IMajorRecord
+        where T : ILoquiObject<T>, IMajorRecordInternal, IXmlItem, IBinaryItem
     {
         private Lazy<IObservableCache<T, string>> _editorIDCache;
         public IObservableCache<T, string> ByEditorID => _editorIDCache.Value;
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda
             string name,
             ErrorMaskBuilder errorMask,
             int index)
-            where T : MajorRecord, ILoquiObject<T>, IFormKey
+            where T : MajorRecord, ILoquiObject<T>, IFormKey, IXmlItem, IBinaryItem
         {
             using (errorMask?.PushIndex(index))
             {
@@ -85,7 +85,8 @@ namespace Mutagen.Bethesda
                         {
                             throw new ArgumentException("XML file did not have \"Group\" top node.");
                         }
-                        group.FillPublic_Xml(
+                        GroupXmlTranslation<T>.FillPublic_Xml(
+                            group,
                             elem,
                             errorMask,
                             translationMask: GroupExt.XmlFolderTranslationCrystal);
@@ -121,7 +122,7 @@ namespace Mutagen.Bethesda
             string name,
             ErrorMaskBuilder errorMask,
             int index)
-            where T : MajorRecord, ILoquiObject<T>, IFormKey
+            where T : MajorRecord, ILoquiObject<T>, IFormKey, IXmlItem, IBinaryItem
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             using (errorMask?.PushIndex(index))

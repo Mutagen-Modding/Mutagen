@@ -35,7 +35,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class PathGrid : 
+    public partial class PathGrid :
         OblivionMajorRecord,
         IPathGrid,
         IPathGridInternal,
@@ -224,6 +224,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => PathGridXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static PathGrid Create_Xml(
@@ -282,7 +283,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    PathGridCommon.FillPublicElement_Xml(
+                    PathGridXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -380,138 +381,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out PathGrid_ErrorMask errorMask,
-            bool doMasks = true,
-            PathGrid_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            PathGridXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out PathGrid_ErrorMask errorMask,
-            PathGrid_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out PathGrid_ErrorMask errorMask,
-            PathGrid_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            OblivionMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            PathGridXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            PathGridXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            PathGridXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         protected static void FillPrivateElement_Xml(
             PathGrid item,
             XElement node,
@@ -603,6 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected override IBinaryTranslator BinaryTranslator => PathGridBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static PathGrid Create_Binary(
@@ -650,73 +520,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out PathGrid_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            PathGridBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            PathGridBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            PathGridBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            PathGridBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -907,8 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
             IPathGridGetter rhs,
             ErrorMaskBuilder errorMask,
             PathGrid_CopyMask copyMask = null,
-            IPathGridGetter def = null,
-            bool doMasks = true)
+            IPathGridGetter def = null)
         {
             PathGridCommon.CopyFieldsFrom(
                 item: this,
@@ -986,7 +788,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IPathGrid : IPathGridGetter, IOblivionMajorRecord, ILoquiClass<IPathGrid, IPathGridGetter>, ILoquiClass<PathGrid, IPathGridGetter>
+    public partial interface IPathGrid :
+        IPathGridGetter,
+        IOblivionMajorRecord,
+        ILoquiClass<IPathGrid, IPathGridGetter>,
+        ILoquiClass<PathGrid, IPathGridGetter>
     {
         new ISourceSetList<PathGridPoint> PointToPointConnections { get; }
         new Byte[] Unknown { get; set; }
@@ -996,16 +802,27 @@ namespace Mutagen.Bethesda.Oblivion
 
         new ISourceSetList<InterCellPoint> InterCellConnections { get; }
         new ISourceSetList<PointToReferenceMapping> PointToReferenceMappings { get; }
+        void CopyFieldsFrom(
+            IPathGridGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            PathGrid_CopyMask copyMask = null,
+            IPathGridGetter def = null);
     }
 
-    public partial interface IPathGridInternal : IPathGrid, IPathGridInternalGetter, IOblivionMajorRecordInternal
+    public partial interface IPathGridInternal :
+        IOblivionMajorRecordInternal,
+        IPathGrid,
+        IPathGridInternalGetter
     {
         new ISourceSetList<PathGridPoint> PointToPointConnections { get; }
         new ISourceSetList<InterCellPoint> InterCellConnections { get; }
         new ISourceSetList<PointToReferenceMapping> PointToReferenceMappings { get; }
     }
 
-    public partial interface IPathGridGetter : IOblivionMajorRecordGetter
+    public partial interface IPathGridGetter :
+        IOblivionMajorRecordGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region PointToPointConnections
         IObservableSetList<PathGridPoint> PointToPointConnections { get; }
@@ -1024,7 +841,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IPathGridInternalGetter : IPathGridGetter, IOblivionMajorRecordInternalGetter
+    public partial interface IPathGridInternalGetter :
+        IOblivionMajorRecordInternalGetter,
+        IPathGridGetter
     {
 
     }
@@ -1225,6 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(PathGridXmlTranslation);
         public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType PGAG_HEADER = new RecordType("PGAG");
@@ -1233,6 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = PGRD_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
+        public static readonly Type BinaryTranslation = typeof(PathGridBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1626,9 +1447,105 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class PathGridXmlTranslation :
+        OblivionMajorRecordXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static PathGridXmlTranslation Instance = new PathGridXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IPathGridInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.PointToPointConnections.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToPointConnections) ?? true))
+            {
+                ListXmlTranslation<PathGridPoint>.Instance.Write(
+                    node: node,
+                    name: nameof(item.PointToPointConnections),
+                    item: item.PointToPointConnections,
+                    fieldIndex: (int)PathGrid_FieldIndex.PointToPointConnections,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PathGrid_FieldIndex.PointToPointConnections),
+                    transl: (XElement subNode, PathGridPoint subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        ((PathGridPointXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                            item: subItem,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+            if (item.Unknown_IsSet
+                && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.Unknown) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)PathGrid_FieldIndex.Unknown,
+                    errorMask: errorMask);
+            }
+            if (item.InterCellConnections.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.InterCellConnections) ?? true))
+            {
+                ListXmlTranslation<InterCellPoint>.Instance.Write(
+                    node: node,
+                    name: nameof(item.InterCellConnections),
+                    item: item.InterCellConnections,
+                    fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PathGrid_FieldIndex.InterCellConnections),
+                    transl: (XElement subNode, InterCellPoint subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        ((InterCellPointXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                            item: subItem,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+            if (item.PointToReferenceMappings.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToReferenceMappings) ?? true))
+            {
+                ListXmlTranslation<PointToReferenceMapping>.Instance.Write(
+                    node: node,
+                    name: nameof(item.PointToReferenceMappings),
+                    item: item.PointToReferenceMappings,
+                    fieldIndex: (int)PathGrid_FieldIndex.PointToReferenceMappings,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PathGrid_FieldIndex.PointToReferenceMappings),
+                    transl: (XElement subNode, PointToReferenceMapping subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        ((PointToReferenceMappingXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                            item: subItem,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+        }
+
         public static void FillPublic_Xml(
-            this PathGrid item,
+            IPathGridInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1637,7 +1554,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    PathGridCommon.FillPublicElement_Xml(
+                    PathGridXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1653,7 +1570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this PathGrid item,
+            IPathGridInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1772,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1782,123 +1699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class PathGridXmlTranslation : OblivionMajorRecordXmlTranslation
-    {
-        public new readonly static PathGridXmlTranslation Instance = new PathGridXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IPathGridInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.PointToPointConnections.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToPointConnections) ?? true))
-            {
-                ListXmlTranslation<PathGridPoint>.Instance.Write(
-                    node: node,
-                    name: nameof(item.PointToPointConnections),
-                    item: item.PointToPointConnections,
-                    fieldIndex: (int)PathGrid_FieldIndex.PointToPointConnections,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PathGrid_FieldIndex.PointToPointConnections),
-                    transl: (XElement subNode, PathGridPoint subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation<PathGridPoint>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-            if (item.Unknown_IsSet
-                && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.Unknown) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)PathGrid_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if (item.InterCellConnections.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.InterCellConnections) ?? true))
-            {
-                ListXmlTranslation<InterCellPoint>.Instance.Write(
-                    node: node,
-                    name: nameof(item.InterCellConnections),
-                    item: item.InterCellConnections,
-                    fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PathGrid_FieldIndex.InterCellConnections),
-                    transl: (XElement subNode, InterCellPoint subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation<InterCellPoint>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-            if (item.PointToReferenceMappings.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToReferenceMappings) ?? true))
-            {
-                ListXmlTranslation<PointToReferenceMapping>.Instance.Write(
-                    node: node,
-                    name: nameof(item.PointToReferenceMappings),
-                    item: item.PointToReferenceMappings,
-                    fieldIndex: (int)PathGrid_FieldIndex.PointToReferenceMappings,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PathGrid_FieldIndex.PointToReferenceMappings),
-                    transl: (XElement subNode, PointToReferenceMapping subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation<PointToReferenceMapping>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IPathGridInternalGetter item,
-            bool doMasks,
-            out PathGrid_ErrorMask errorMask,
-            PathGrid_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IPathGridInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -1917,9 +1718,116 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IPathGridInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IPathGridInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IPathGridInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class PathGridXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IPathGridInternalGetter item,
+            XElement node,
+            out PathGrid_ErrorMask errorMask,
+            bool doMasks = true,
+            PathGrid_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((PathGridXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IPathGridInternalGetter item,
+            string path,
+            out PathGrid_ErrorMask errorMask,
+            PathGrid_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IPathGridInternalGetter item,
+            Stream stream,
+            out PathGrid_ErrorMask errorMask,
+            PathGrid_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -2499,7 +2407,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class PathGridBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    public partial class PathGridBinaryTranslation :
+        OblivionMajorRecordBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static PathGridBinaryTranslation Instance = new PathGridBinaryTranslation();
 
@@ -2541,14 +2451,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             IPathGridInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2569,11 +2479,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, InterCellPoint subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        LoquiBinaryTranslation<InterCellPoint>.Instance.Write(
-                            writer: subWriter,
+                        ((InterCellPointBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
+                            writer: subWriter,
                             errorMask: listErrorMask,
-                            masterReferences: masterReferences);
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                     );
             }
@@ -2586,36 +2497,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, PointToReferenceMapping subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        LoquiBinaryTranslation<PointToReferenceMapping>.Instance.Write(
-                            writer: subWriter,
+                        ((PointToReferenceMappingBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
+                            writer: subWriter,
                             errorMask: listErrorMask,
-                            masterReferences: masterReferences);
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                     );
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IPathGridInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out PathGrid_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IPathGridInternalGetter item,
             MasterReferences masterReferences,
@@ -2627,12 +2520,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: PathGrid_Registration.PGRD_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                OblivionMajorRecordBinaryTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
+                Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -2640,9 +2533,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IPathGridInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IPathGridInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IPathGridInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class PathGridBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IPathGridInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out PathGrid_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((PathGridBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

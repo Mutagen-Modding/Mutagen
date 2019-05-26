@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Internals;
 using System.IO;
 using System.Xml.Linq;
 using Loqui.Xml;
+using Mutagen.Bethesda.Skyrim.Internals;
 
 namespace Mutagen.Bethesda.Skyrim
 {

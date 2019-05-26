@@ -31,7 +31,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Condition : 
+    public partial class Condition :
         LoquiNotifyingObject,
         ICondition,
         ILoquiObject<Condition>,
@@ -186,6 +186,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => ConditionXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static Condition Create_Xml(
@@ -238,7 +240,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    ConditionCommon.FillPublicElement_Xml(
+                    ConditionXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -336,139 +338,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out Condition_ErrorMask errorMask,
-            bool doMasks = true,
-            Condition_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ConditionXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            Condition_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            ConditionXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -491,6 +360,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
+        protected IBinaryTranslator BinaryTranslator => ConditionBinaryTranslation.Instance;
+        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static Condition Create_Binary(
@@ -558,49 +429,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out Condition_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ConditionBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences)
-        {
-            this.Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            ConditionBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -742,8 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
             IConditionGetter rhs,
             ErrorMaskBuilder errorMask,
             Condition_CopyMask copyMask = null,
-            IConditionGetter def = null,
-            bool doMasks = true)
+            IConditionGetter def = null)
         {
             ConditionCommon.CopyFieldsFrom(
                 item: this,
@@ -851,7 +678,10 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ICondition : IConditionGetter, ILoquiClass<ICondition, IConditionGetter>, ILoquiClass<Condition, IConditionGetter>
+    public partial interface ICondition :
+        IConditionGetter,
+        ILoquiClass<ICondition, IConditionGetter>,
+        ILoquiClass<Condition, IConditionGetter>
     {
         new CompareOperator CompareOperator { get; set; }
 
@@ -869,9 +699,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Int32 ThirdParameter { get; set; }
 
+        void CopyFieldsFrom(
+            IConditionGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            Condition_CopyMask copyMask = null,
+            IConditionGetter def = null);
     }
 
-    public partial interface IConditionGetter : ILoquiObject
+    public partial interface IConditionGetter :
+        ILoquiObject,
+        IXmlItem,
+        IBinaryItem
     {
         #region CompareOperator
         CompareOperator CompareOperator { get; }
@@ -1144,6 +982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(ConditionXmlTranslation);
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1160,6 +999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         });
         public const int NumStructFields = 8;
         public const int NumTypedFields = 0;
+        public static readonly Type BinaryTranslation = typeof(ConditionBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1468,9 +1308,97 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class ConditionXmlTranslation : IXmlTranslator
+    {
+        public readonly static ConditionXmlTranslation Instance = new ConditionXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IConditionGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.CompareOperator) ?? true))
+            {
+                EnumXmlTranslation<CompareOperator>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CompareOperator),
+                    item: item.CompareOperator,
+                    fieldIndex: (int)Condition_FieldIndex.CompareOperator,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<Condition.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Condition_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.Fluff) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Fluff),
+                    item: item.Fluff,
+                    fieldIndex: (int)Condition_FieldIndex.Fluff,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.ComparisonValue) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ComparisonValue),
+                    item: item.ComparisonValue,
+                    fieldIndex: (int)Condition_FieldIndex.ComparisonValue,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.Function) ?? true))
+            {
+                EnumXmlTranslation<Function>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Function),
+                    item: item.Function,
+                    fieldIndex: (int)Condition_FieldIndex.Function,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.FirstParameter) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FirstParameter),
+                    item: item.FirstParameter,
+                    fieldIndex: (int)Condition_FieldIndex.FirstParameter,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.SecondParameter) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SecondParameter),
+                    item: item.SecondParameter,
+                    fieldIndex: (int)Condition_FieldIndex.SecondParameter,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.ThirdParameter) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ThirdParameter),
+                    item: item.ThirdParameter,
+                    fieldIndex: (int)Condition_FieldIndex.ThirdParameter,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this Condition item,
+            ICondition item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1479,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ConditionCommon.FillPublicElement_Xml(
+                    ConditionXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1495,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this Condition item,
+            ICondition item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1716,117 +1644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class ConditionXmlTranslation
-    {
-        public readonly static ConditionXmlTranslation Instance = new ConditionXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IConditionGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.CompareOperator) ?? true))
-            {
-                EnumXmlTranslation<CompareOperator>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CompareOperator),
-                    item: item.CompareOperator,
-                    fieldIndex: (int)Condition_FieldIndex.CompareOperator,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Condition.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Condition_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.Fluff) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff,
-                    fieldIndex: (int)Condition_FieldIndex.Fluff,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.ComparisonValue) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ComparisonValue),
-                    item: item.ComparisonValue,
-                    fieldIndex: (int)Condition_FieldIndex.ComparisonValue,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.Function) ?? true))
-            {
-                EnumXmlTranslation<Function>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Function),
-                    item: item.Function,
-                    fieldIndex: (int)Condition_FieldIndex.Function,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.FirstParameter) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FirstParameter),
-                    item: item.FirstParameter,
-                    fieldIndex: (int)Condition_FieldIndex.FirstParameter,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.SecondParameter) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SecondParameter),
-                    item: item.SecondParameter,
-                    fieldIndex: (int)Condition_FieldIndex.SecondParameter,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.ThirdParameter) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ThirdParameter),
-                    item: item.ThirdParameter,
-                    fieldIndex: (int)Condition_FieldIndex.ThirdParameter,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IConditionGetter item,
-            bool doMasks,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IConditionGetter item,
             ErrorMaskBuilder errorMask,
@@ -1845,9 +1663,210 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IConditionGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IConditionGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IConditionGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class ConditionXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IConditionGetter item,
+            XElement node,
+            out Condition_ErrorMask errorMask,
+            bool doMasks = true,
+            Condition_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ConditionXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IConditionGetter item,
+            string path,
+            out Condition_ErrorMask errorMask,
+            Condition_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IConditionGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IConditionGetter item,
+            Stream stream,
+            out Condition_ErrorMask errorMask,
+            Condition_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IConditionGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IConditionGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((ConditionXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this IConditionGetter item,
+            XElement node,
+            string name = null,
+            Condition_TranslationMask translationMask = null)
+        {
+            ((ConditionXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this IConditionGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((ConditionXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IConditionGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((ConditionXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -2316,11 +2335,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class ConditionBinaryTranslation
+    public partial class ConditionBinaryTranslation : IBinaryTranslator
     {
         public readonly static ConditionBinaryTranslation Instance = new ConditionBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             IConditionGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
@@ -2341,26 +2360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.ThirdParameter);
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IConditionGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out Condition_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IConditionGetter item,
             MasterReferences masterReferences,
@@ -2372,16 +2372,81 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Condition_Registration.CTDA_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IConditionGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class ConditionBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IConditionGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out Condition_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ConditionBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Binary(
+            this IConditionGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ConditionBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary(
+            this IConditionGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences)
+        {
+            ((ConditionBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

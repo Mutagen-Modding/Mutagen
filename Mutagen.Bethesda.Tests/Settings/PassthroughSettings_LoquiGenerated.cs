@@ -25,7 +25,7 @@ using System.Collections.Specialized;
 namespace Mutagen.Bethesda.Tests
 {
     #region Class
-    public partial class PassthroughSettings : 
+    public partial class PassthroughSettings :
         LoquiNotifyingObject,
         IPassthroughSettings,
         ILoquiObject<PassthroughSettings>,
@@ -159,6 +159,8 @@ namespace Mutagen.Bethesda.Tests
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => PassthroughSettingsXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static PassthroughSettings Create_Xml(
@@ -211,7 +213,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 foreach (var elem in node.Elements())
                 {
-                    PassthroughSettingsCommon.FillPublicElement_Xml(
+                    PassthroughSettingsXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -406,139 +408,6 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out PassthroughSettings_ErrorMask errorMask,
-            bool doMasks = true,
-            PassthroughSettings_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            PassthroughSettingsXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            PassthroughSettings_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            PassthroughSettingsXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -654,8 +523,7 @@ namespace Mutagen.Bethesda.Tests
             IPassthroughSettingsGetter rhs,
             ErrorMaskBuilder errorMask,
             PassthroughSettings_CopyMask copyMask = null,
-            IPassthroughSettingsGetter def = null,
-            bool doMasks = true)
+            IPassthroughSettingsGetter def = null)
         {
             PassthroughSettingsCommon.CopyFieldsFrom(
                 item: this,
@@ -751,7 +619,10 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Interface
-    public partial interface IPassthroughSettings : IPassthroughSettingsGetter, ILoquiClass<IPassthroughSettings, IPassthroughSettingsGetter>, ILoquiClass<PassthroughSettings, IPassthroughSettingsGetter>
+    public partial interface IPassthroughSettings :
+        IPassthroughSettingsGetter,
+        ILoquiClass<IPassthroughSettings, IPassthroughSettingsGetter>,
+        ILoquiClass<PassthroughSettings, IPassthroughSettingsGetter>
     {
         new Boolean ReuseCaches { get; set; }
 
@@ -765,9 +636,16 @@ namespace Mutagen.Bethesda.Tests
 
         new Boolean TestFolder { get; set; }
 
+        void CopyFieldsFrom(
+            IPassthroughSettingsGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            PassthroughSettings_CopyMask copyMask = null,
+            IPassthroughSettingsGetter def = null);
     }
 
-    public partial interface IPassthroughSettingsGetter : ILoquiObject
+    public partial interface IPassthroughSettingsGetter :
+        ILoquiObject,
+        IXmlItem
     {
         #region ReuseCaches
         Boolean ReuseCaches { get; }
@@ -1008,6 +886,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(PassthroughSettingsXmlTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1268,9 +1147,79 @@ namespace Mutagen.Bethesda.Tests.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class PassthroughSettingsXmlTranslation : IXmlTranslator
+    {
+        public readonly static PassthroughSettingsXmlTranslation Instance = new PassthroughSettingsXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IPassthroughSettingsGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReuseCaches) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ReuseCaches),
+                    item: item.ReuseCaches,
+                    fieldIndex: (int)PassthroughSettings_FieldIndex.ReuseCaches,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.DeleteCachesAfter) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DeleteCachesAfter),
+                    item: item.DeleteCachesAfter,
+                    fieldIndex: (int)PassthroughSettings_FieldIndex.DeleteCachesAfter,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestNormal) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TestNormal),
+                    item: item.TestNormal,
+                    fieldIndex: (int)PassthroughSettings_FieldIndex.TestNormal,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestImport) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TestImport),
+                    item: item.TestImport,
+                    fieldIndex: (int)PassthroughSettings_FieldIndex.TestImport,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestObservable) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TestObservable),
+                    item: item.TestObservable,
+                    fieldIndex: (int)PassthroughSettings_FieldIndex.TestObservable,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestFolder) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TestFolder),
+                    item: item.TestFolder,
+                    fieldIndex: (int)PassthroughSettings_FieldIndex.TestFolder,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this PassthroughSettings item,
+            IPassthroughSettings item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1279,7 +1228,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    PassthroughSettingsCommon.FillPublicElement_Xml(
+                    PassthroughSettingsXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1295,7 +1244,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this PassthroughSettings item,
+            IPassthroughSettings item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1482,99 +1431,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class PassthroughSettingsXmlTranslation
-    {
-        public readonly static PassthroughSettingsXmlTranslation Instance = new PassthroughSettingsXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IPassthroughSettingsGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReuseCaches) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ReuseCaches),
-                    item: item.ReuseCaches,
-                    fieldIndex: (int)PassthroughSettings_FieldIndex.ReuseCaches,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.DeleteCachesAfter) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DeleteCachesAfter),
-                    item: item.DeleteCachesAfter,
-                    fieldIndex: (int)PassthroughSettings_FieldIndex.DeleteCachesAfter,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestNormal) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TestNormal),
-                    item: item.TestNormal,
-                    fieldIndex: (int)PassthroughSettings_FieldIndex.TestNormal,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestImport) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TestImport),
-                    item: item.TestImport,
-                    fieldIndex: (int)PassthroughSettings_FieldIndex.TestImport,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestObservable) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TestObservable),
-                    item: item.TestObservable,
-                    fieldIndex: (int)PassthroughSettings_FieldIndex.TestObservable,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestFolder) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TestFolder),
-                    item: item.TestFolder,
-                    fieldIndex: (int)PassthroughSettings_FieldIndex.TestFolder,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IPassthroughSettingsGetter item,
-            bool doMasks,
-            out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IPassthroughSettingsGetter item,
             ErrorMaskBuilder errorMask,
@@ -1593,9 +1450,210 @@ namespace Mutagen.Bethesda.Tests.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IPassthroughSettingsGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IPassthroughSettingsGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IPassthroughSettingsGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class PassthroughSettingsXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IPassthroughSettingsGetter item,
+            XElement node,
+            out PassthroughSettings_ErrorMask errorMask,
+            bool doMasks = true,
+            PassthroughSettings_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((PassthroughSettingsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IPassthroughSettingsGetter item,
+            string path,
+            out PassthroughSettings_ErrorMask errorMask,
+            PassthroughSettings_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IPassthroughSettingsGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IPassthroughSettingsGetter item,
+            Stream stream,
+            out PassthroughSettings_ErrorMask errorMask,
+            PassthroughSettings_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IPassthroughSettingsGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IPassthroughSettingsGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((PassthroughSettingsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this IPassthroughSettingsGetter item,
+            XElement node,
+            string name = null,
+            PassthroughSettings_TranslationMask translationMask = null)
+        {
+            ((PassthroughSettingsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this IPassthroughSettingsGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((PassthroughSettingsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IPassthroughSettingsGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((PassthroughSettingsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask

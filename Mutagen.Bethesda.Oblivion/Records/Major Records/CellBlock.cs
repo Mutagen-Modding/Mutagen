@@ -67,7 +67,8 @@ namespace Mutagen.Bethesda.Oblivion
             if (File.Exists(groupPath))
             {
                 XElement elem = XElement.Load(groupPath);
-                ret.FillPublic_Xml(
+                CellBlockXmlTranslation.FillPublic_Xml(
+                    ret,
                     elem,
                     errorMask,
                     translationMask: GroupExt.XmlFolderTranslationCrystal);

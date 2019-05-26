@@ -1,4 +1,4 @@
-﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
 
             var passthrough = new Oblivion_Passthrough_Test(Settings, new Target()
             {
-                Path = BinaryPath,
+                Path = $"Oblivion.esm",
                 Do = true,
                 GameMode = GameMode.Oblivion,
             });

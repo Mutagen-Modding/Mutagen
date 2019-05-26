@@ -94,6 +94,7 @@
     <Compile Include="Translators\Binary\ByteBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\CharBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\ColorBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\IBinaryItem.cs" />
     <Compile Include="Translators\Binary\ListBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\DateTimeBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\DoubleBinaryTranslation.cs" />

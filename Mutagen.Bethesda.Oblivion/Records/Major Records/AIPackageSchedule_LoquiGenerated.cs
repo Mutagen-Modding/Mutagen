@@ -31,7 +31,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class AIPackageSchedule : 
+    public partial class AIPackageSchedule :
         LoquiNotifyingObject,
         IAIPackageSchedule,
         ILoquiObject<AIPackageSchedule>,
@@ -149,6 +149,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => AIPackageScheduleXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static AIPackageSchedule Create_Xml(
@@ -201,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    AIPackageScheduleCommon.FillPublicElement_Xml(
+                    AIPackageScheduleXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -299,139 +301,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out AIPackageSchedule_ErrorMask errorMask,
-            bool doMasks = true,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            AIPackageScheduleXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            AIPackageSchedule_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            AIPackageScheduleXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -455,6 +324,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected IBinaryTranslator BinaryTranslator => AIPackageScheduleBinaryTranslation.Instance;
+        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static AIPackageSchedule Create_Binary(
@@ -506,49 +377,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out AIPackageSchedule_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            AIPackageScheduleBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences)
-        {
-            this.Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            AIPackageScheduleBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -680,8 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
             IAIPackageScheduleGetter rhs,
             ErrorMaskBuilder errorMask,
             AIPackageSchedule_CopyMask copyMask = null,
-            IAIPackageScheduleGetter def = null,
-            bool doMasks = true)
+            IAIPackageScheduleGetter def = null)
         {
             AIPackageScheduleCommon.CopyFieldsFrom(
                 item: this,
@@ -771,7 +598,10 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IAIPackageSchedule : IAIPackageScheduleGetter, ILoquiClass<IAIPackageSchedule, IAIPackageScheduleGetter>, ILoquiClass<AIPackageSchedule, IAIPackageScheduleGetter>
+    public partial interface IAIPackageSchedule :
+        IAIPackageScheduleGetter,
+        ILoquiClass<IAIPackageSchedule, IAIPackageScheduleGetter>,
+        ILoquiClass<AIPackageSchedule, IAIPackageScheduleGetter>
     {
         new Month Month { get; set; }
 
@@ -783,9 +613,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Int32 Duration { get; set; }
 
+        void CopyFieldsFrom(
+            IAIPackageScheduleGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            AIPackageSchedule_CopyMask copyMask = null,
+            IAIPackageScheduleGetter def = null);
     }
 
-    public partial interface IAIPackageScheduleGetter : ILoquiObject
+    public partial interface IAIPackageScheduleGetter :
+        ILoquiObject,
+        IXmlItem,
+        IBinaryItem
     {
         #region Month
         Month Month { get; }
@@ -1010,10 +848,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(AIPackageScheduleXmlTranslation);
         public static readonly RecordType PSDT_HEADER = new RecordType("PSDT");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = PSDT_HEADER;
         public const int NumStructFields = 5;
         public const int NumTypedFields = 0;
+        public static readonly Type BinaryTranslation = typeof(AIPackageScheduleBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1250,9 +1090,70 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class AIPackageScheduleXmlTranslation : IXmlTranslator
+    {
+        public readonly static AIPackageScheduleXmlTranslation Instance = new AIPackageScheduleXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IAIPackageScheduleGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Month) ?? true))
+            {
+                EnumXmlTranslation<Month>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Month),
+                    item: item.Month,
+                    fieldIndex: (int)AIPackageSchedule_FieldIndex.Month,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.DayOfWeek) ?? true))
+            {
+                EnumXmlTranslation<Weekday>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DayOfWeek),
+                    item: item.DayOfWeek,
+                    fieldIndex: (int)AIPackageSchedule_FieldIndex.DayOfWeek,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Day) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Day),
+                    item: item.Day,
+                    fieldIndex: (int)AIPackageSchedule_FieldIndex.Day,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Time) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Time),
+                    item: item.Time,
+                    fieldIndex: (int)AIPackageSchedule_FieldIndex.Time,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Duration) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Duration),
+                    item: item.Duration,
+                    fieldIndex: (int)AIPackageSchedule_FieldIndex.Duration,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this AIPackageSchedule item,
+            IAIPackageSchedule item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1261,7 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    AIPackageScheduleCommon.FillPublicElement_Xml(
+                    AIPackageScheduleXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1277,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this AIPackageSchedule item,
+            IAIPackageSchedule item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1420,90 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class AIPackageScheduleXmlTranslation
-    {
-        public readonly static AIPackageScheduleXmlTranslation Instance = new AIPackageScheduleXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IAIPackageScheduleGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Month) ?? true))
-            {
-                EnumXmlTranslation<Month>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Month),
-                    item: item.Month,
-                    fieldIndex: (int)AIPackageSchedule_FieldIndex.Month,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.DayOfWeek) ?? true))
-            {
-                EnumXmlTranslation<Weekday>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DayOfWeek),
-                    item: item.DayOfWeek,
-                    fieldIndex: (int)AIPackageSchedule_FieldIndex.DayOfWeek,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Day) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Day),
-                    item: item.Day,
-                    fieldIndex: (int)AIPackageSchedule_FieldIndex.Day,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Time) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Time),
-                    item: item.Time,
-                    fieldIndex: (int)AIPackageSchedule_FieldIndex.Time,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Duration) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Duration),
-                    item: item.Duration,
-                    fieldIndex: (int)AIPackageSchedule_FieldIndex.Duration,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IAIPackageScheduleGetter item,
-            bool doMasks,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IAIPackageScheduleGetter item,
             ErrorMaskBuilder errorMask,
@@ -1522,9 +1340,210 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IAIPackageScheduleGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IAIPackageScheduleGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IAIPackageScheduleGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class AIPackageScheduleXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IAIPackageScheduleGetter item,
+            XElement node,
+            out AIPackageSchedule_ErrorMask errorMask,
+            bool doMasks = true,
+            AIPackageSchedule_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((AIPackageScheduleXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IAIPackageScheduleGetter item,
+            string path,
+            out AIPackageSchedule_ErrorMask errorMask,
+            AIPackageSchedule_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IAIPackageScheduleGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IAIPackageScheduleGetter item,
+            Stream stream,
+            out AIPackageSchedule_ErrorMask errorMask,
+            AIPackageSchedule_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IAIPackageScheduleGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IAIPackageScheduleGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((AIPackageScheduleXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this IAIPackageScheduleGetter item,
+            XElement node,
+            string name = null,
+            AIPackageSchedule_TranslationMask translationMask = null)
+        {
+            ((AIPackageScheduleXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this IAIPackageScheduleGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((AIPackageScheduleXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IAIPackageScheduleGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((AIPackageScheduleXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -1912,11 +1931,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class AIPackageScheduleBinaryTranslation
+    public partial class AIPackageScheduleBinaryTranslation : IBinaryTranslator
     {
         public readonly static AIPackageScheduleBinaryTranslation Instance = new AIPackageScheduleBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             IAIPackageScheduleGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
@@ -1935,26 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.Duration);
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IAIPackageScheduleGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out AIPackageSchedule_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IAIPackageScheduleGetter item,
             MasterReferences masterReferences,
@@ -1966,16 +1966,81 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: AIPackageSchedule_Registration.PSDT_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IAIPackageScheduleGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class AIPackageScheduleBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IAIPackageScheduleGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out AIPackageSchedule_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((AIPackageScheduleBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Binary(
+            this IAIPackageScheduleGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ((AIPackageScheduleBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary(
+            this IAIPackageScheduleGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences)
+        {
+            ((AIPackageScheduleBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

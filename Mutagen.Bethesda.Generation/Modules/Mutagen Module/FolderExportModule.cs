@@ -252,7 +252,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    "Write_Xml"))
+                    "this.Write_Xml"))
                 {
                     args.Add("node: node");
                     args.Add("errorMask: errorMask");

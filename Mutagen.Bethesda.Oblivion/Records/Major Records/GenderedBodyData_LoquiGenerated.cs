@@ -32,7 +32,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class GenderedBodyData : 
+    public partial class GenderedBodyData :
         LoquiNotifyingObject,
         IGenderedBodyData,
         ILoquiObject<GenderedBodyData>,
@@ -172,6 +172,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => GenderedBodyDataXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static GenderedBodyData Create_Xml(
@@ -224,7 +226,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    GenderedBodyDataCommon.FillPublicElement_Xml(
+                    GenderedBodyDataXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -322,139 +324,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out GenderedBodyData_ErrorMask errorMask,
-            bool doMasks = true,
-            GenderedBodyData_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            GenderedBodyDataXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            GenderedBodyData_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            GenderedBodyDataXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -471,6 +340,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
+        protected IBinaryTranslator BinaryTranslator => GenderedBodyDataBinaryTranslation.Instance;
+        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static GenderedBodyData Create_Binary(
@@ -520,49 +391,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out GenderedBodyData_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            GenderedBodyDataBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences)
-        {
-            this.Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            GenderedBodyDataBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -737,8 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
             IGenderedBodyDataGetter rhs,
             ErrorMaskBuilder errorMask,
             GenderedBodyData_CopyMask copyMask = null,
-            IGenderedBodyDataGetter def = null,
-            bool doMasks = true)
+            IGenderedBodyDataGetter def = null)
         {
             GenderedBodyDataCommon.CopyFieldsFrom(
                 item: this,
@@ -810,7 +637,10 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IGenderedBodyData : IGenderedBodyDataGetter, ILoquiClass<IGenderedBodyData, IGenderedBodyDataGetter>, ILoquiClass<GenderedBodyData, IGenderedBodyDataGetter>
+    public partial interface IGenderedBodyData :
+        IGenderedBodyDataGetter,
+        ILoquiClass<IGenderedBodyData, IGenderedBodyDataGetter>,
+        ILoquiClass<GenderedBodyData, IGenderedBodyDataGetter>
     {
         new BodyData Male { get; set; }
         new bool Male_IsSet { get; set; }
@@ -822,9 +652,17 @@ namespace Mutagen.Bethesda.Oblivion
         void Female_Set(BodyData item, bool hasBeenSet = true);
         void Female_Unset();
 
+        void CopyFieldsFrom(
+            IGenderedBodyDataGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            GenderedBodyData_CopyMask copyMask = null,
+            IGenderedBodyDataGetter def = null);
     }
 
-    public partial interface IGenderedBodyDataGetter : ILoquiObject
+    public partial interface IGenderedBodyDataGetter :
+        ILoquiObject,
+        IXmlItem,
+        IBinaryItem
     {
         #region Male
         BodyData Male { get; }
@@ -1003,6 +841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(GenderedBodyDataXmlTranslation);
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1019,6 +858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
+        public static readonly Type BinaryTranslation = typeof(GenderedBodyDataBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1202,14 +1042,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Male_IsSet,
                 item.Male,
                 rhs.Male,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => BodyDataCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.Female = EqualsMaskHelper.EqualsHelper(
                 item.Female_IsSet,
                 rhs.Female_IsSet,
                 item.Female,
                 rhs.Female,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => BodyDataCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
         }
 
@@ -1271,9 +1111,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class GenderedBodyDataXmlTranslation : IXmlTranslator
+    {
+        public readonly static GenderedBodyDataXmlTranslation Instance = new GenderedBodyDataXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IGenderedBodyDataGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if (item.Male_IsSet
+                && (translationMask?.GetShouldTranslate((int)GenderedBodyData_FieldIndex.Male) ?? true))
+            {
+                ((BodyDataXmlTranslation)((IXmlItem)item.Male).XmlTranslator).Write(
+                    item: item.Male,
+                    node: node,
+                    name: nameof(item.Male),
+                    fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)GenderedBodyData_FieldIndex.Male));
+            }
+            if (item.Female_IsSet
+                && (translationMask?.GetShouldTranslate((int)GenderedBodyData_FieldIndex.Female) ?? true))
+            {
+                ((BodyDataXmlTranslation)((IXmlItem)item.Female).XmlTranslator).Write(
+                    item: item.Female,
+                    node: node,
+                    name: nameof(item.Female),
+                    fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)GenderedBodyData_FieldIndex.Female));
+            }
+        }
+
         public static void FillPublic_Xml(
-            this GenderedBodyData item,
+            IGenderedBodyData item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1282,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    GenderedBodyDataCommon.FillPublicElement_Xml(
+                    GenderedBodyDataXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1298,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this GenderedBodyData item,
+            IGenderedBodyData item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1365,67 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class GenderedBodyDataXmlTranslation
-    {
-        public readonly static GenderedBodyDataXmlTranslation Instance = new GenderedBodyDataXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IGenderedBodyDataGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.Male_IsSet
-                && (translationMask?.GetShouldTranslate((int)GenderedBodyData_FieldIndex.Male) ?? true))
-            {
-                LoquiXmlTranslation<BodyData>.Instance.Write(
-                    node: node,
-                    item: item.Male,
-                    name: nameof(item.Male),
-                    fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)GenderedBodyData_FieldIndex.Male));
-            }
-            if (item.Female_IsSet
-                && (translationMask?.GetShouldTranslate((int)GenderedBodyData_FieldIndex.Female) ?? true))
-            {
-                LoquiXmlTranslation<BodyData>.Instance.Write(
-                    node: node,
-                    item: item.Female,
-                    name: nameof(item.Female),
-                    fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)GenderedBodyData_FieldIndex.Female));
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IGenderedBodyDataGetter item,
-            bool doMasks,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IGenderedBodyDataGetter item,
             ErrorMaskBuilder errorMask,
@@ -1444,9 +1262,210 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IGenderedBodyDataGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IGenderedBodyDataGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IGenderedBodyDataGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class GenderedBodyDataXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IGenderedBodyDataGetter item,
+            XElement node,
+            out GenderedBodyData_ErrorMask errorMask,
+            bool doMasks = true,
+            GenderedBodyData_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((GenderedBodyDataXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IGenderedBodyDataGetter item,
+            string path,
+            out GenderedBodyData_ErrorMask errorMask,
+            GenderedBodyData_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IGenderedBodyDataGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IGenderedBodyDataGetter item,
+            Stream stream,
+            out GenderedBodyData_ErrorMask errorMask,
+            GenderedBodyData_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IGenderedBodyDataGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IGenderedBodyDataGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((GenderedBodyDataXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this IGenderedBodyDataGetter item,
+            XElement node,
+            string name = null,
+            GenderedBodyData_TranslationMask translationMask = null)
+        {
+            ((GenderedBodyDataXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this IGenderedBodyDataGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((GenderedBodyDataXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IGenderedBodyDataGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((GenderedBodyDataXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -1777,11 +1796,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class GenderedBodyDataBinaryTranslation
+    public partial class GenderedBodyDataBinaryTranslation : IBinaryTranslator
     {
         public readonly static GenderedBodyDataBinaryTranslation Instance = new GenderedBodyDataBinaryTranslation();
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             IGenderedBodyDataGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
@@ -1791,61 +1810,107 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Male_IsSet)
             {
                 using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.MNAM_HEADER, ObjectType.Subrecord)) { }
-                LoquiBinaryTranslation<BodyData>.Instance.Write(
-                    writer: writer,
+                ((BodyDataBinaryTranslation)((IBinaryItem)item.Male).BinaryTranslator).Write(
                     item: item.Male,
-                    fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
+                    writer: writer,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             if (item.Female_IsSet)
             {
                 using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.FNAM_HEADER, ObjectType.Subrecord)) { }
-                LoquiBinaryTranslation<BodyData>.Instance.Write(
-                    writer: writer,
+                ((BodyDataBinaryTranslation)((IBinaryItem)item.Female).BinaryTranslator).Write(
                     item: item.Female,
-                    fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
+                    writer: writer,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IGenderedBodyDataGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out GenderedBodyData_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IGenderedBodyDataGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Write_Binary_RecordTypes(
+            Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
-        #endregion
+
+        public void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IGenderedBodyDataGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class GenderedBodyDataBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IGenderedBodyDataGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out GenderedBodyData_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((GenderedBodyDataBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Binary(
+            this IGenderedBodyDataGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ((GenderedBodyDataBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary(
+            this IGenderedBodyDataGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences)
+        {
+            ((GenderedBodyDataBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

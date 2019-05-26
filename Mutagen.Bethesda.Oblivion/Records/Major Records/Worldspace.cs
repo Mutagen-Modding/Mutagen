@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
             dir.Value.Create();
 
             var worldspaceNode = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: worldspaceNode,
                 errorMask: errorMask,
@@ -424,19 +424,15 @@ namespace Mutagen.Bethesda.Oblivion
 
                     if (obj.Road_IsSet)
                     {
-                        LoquiBinaryTranslation<Road>.Instance.Write(
+                        obj.Road.Write_Binary(
                             writer,
-                            obj.Road,
-                            (int)Worldspace_FieldIndex.Road,
                             masterReferences: masterReferences,
                             errorMask: errorMask);
                     }
                     if (obj.TopCell_IsSet)
                     {
-                        LoquiBinaryTranslation<Cell>.Instance.Write(
+                        obj.TopCell.Write_Binary(
                             writer,
-                            obj.TopCell,
-                            (int)Worldspace_FieldIndex.TopCell,
                             masterReferences: masterReferences,
                             errorMask: errorMask);
                     }
@@ -447,9 +443,8 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: (MutagenWriter subWriter, WorldspaceBlock subItem, ErrorMaskBuilder listSubMask) =>
                         {
-                            LoquiBinaryTranslation<WorldspaceBlock>.Instance.Write(
+                            subItem.Write_Binary(
                                 writer: subWriter,
-                                item: subItem,
                                 masterReferences: masterReferences,
                                 errorMask: listSubMask);
                         });

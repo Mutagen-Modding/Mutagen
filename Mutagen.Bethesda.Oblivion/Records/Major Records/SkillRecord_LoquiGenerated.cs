@@ -33,7 +33,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class SkillRecord : 
+    public partial class SkillRecord :
         OblivionMajorRecord,
         ISkillRecord,
         ISkillRecordInternal,
@@ -437,6 +437,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => SkillRecordXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static SkillRecord Create_Xml(
@@ -495,7 +496,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    SkillRecordCommon.FillPublicElement_Xml(
+                    SkillRecordXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -593,138 +594,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out SkillRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            SkillRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SkillRecordXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out SkillRecord_ErrorMask errorMask,
-            SkillRecord_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out SkillRecord_ErrorMask errorMask,
-            SkillRecord_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            OblivionMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SkillRecordXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SkillRecordXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            SkillRecordXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         protected static void FillPrivateElement_Xml(
             SkillRecord item,
             XElement node,
@@ -801,6 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected override IBinaryTranslator BinaryTranslator => SkillRecordBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static SkillRecord Create_Binary(
@@ -848,73 +718,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out SkillRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SkillRecordBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SkillRecordBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SkillRecordBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            SkillRecordBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -1223,8 +1026,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISkillRecordGetter rhs,
             ErrorMaskBuilder errorMask,
             SkillRecord_CopyMask copyMask = null,
-            ISkillRecordGetter def = null,
-            bool doMasks = true)
+            ISkillRecordGetter def = null)
         {
             SkillRecordCommon.CopyFieldsFrom(
                 item: this,
@@ -1356,7 +1158,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ISkillRecord : ISkillRecordGetter, IOblivionMajorRecord, ILoquiClass<ISkillRecord, ISkillRecordGetter>, ILoquiClass<SkillRecord, ISkillRecordGetter>
+    public partial interface ISkillRecord :
+        ISkillRecordGetter,
+        IOblivionMajorRecord,
+        ILoquiClass<ISkillRecord, ISkillRecordGetter>,
+        ILoquiClass<SkillRecord, ISkillRecordGetter>
     {
         new ActorValue Skill { get; set; }
         new bool Skill_IsSet { get; set; }
@@ -1403,15 +1209,26 @@ namespace Mutagen.Bethesda.Oblivion
         void MasterText_Set(String item, bool hasBeenSet = true);
         void MasterText_Unset();
 
+        void CopyFieldsFrom(
+            ISkillRecordGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            SkillRecord_CopyMask copyMask = null,
+            ISkillRecordGetter def = null);
     }
 
-    public partial interface ISkillRecordInternal : ISkillRecord, ISkillRecordInternalGetter, IOblivionMajorRecordInternal
+    public partial interface ISkillRecordInternal :
+        IOblivionMajorRecordInternal,
+        ISkillRecord,
+        ISkillRecordInternalGetter
     {
         new SkillRecord.DATADataType DATADataTypeState { get; set; }
 
     }
 
-    public partial interface ISkillRecordGetter : IOblivionMajorRecordGetter
+    public partial interface ISkillRecordGetter :
+        IOblivionMajorRecordGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region Skill
         ActorValue Skill { get; }
@@ -1471,7 +1288,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface ISkillRecordInternalGetter : ISkillRecordGetter, IOblivionMajorRecordInternalGetter
+    public partial interface ISkillRecordInternalGetter :
+        IOblivionMajorRecordInternalGetter,
+        ISkillRecordGetter
     {
         #region DATADataTypeState
         SkillRecord.DATADataType DATADataTypeState { get; }
@@ -1782,6 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(SkillRecordXmlTranslation);
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
         public static readonly RecordType INDX_HEADER = new RecordType("INDX");
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
@@ -1794,6 +1614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SKIL_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 7;
+        public static readonly Type BinaryTranslation = typeof(SkillRecordBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2359,9 +2180,159 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class SkillRecordXmlTranslation :
+        OblivionMajorRecordXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static SkillRecordXmlTranslation Instance = new SkillRecordXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ISkillRecordInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Skill_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Skill) ?? true))
+            {
+                EnumXmlTranslation<ActorValue>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Skill),
+                    item: item.Skill,
+                    fieldIndex: (int)SkillRecord_FieldIndex.Skill,
+                    errorMask: errorMask);
+            }
+            if (item.Description_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Description) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Description),
+                    item: item.Description,
+                    fieldIndex: (int)SkillRecord_FieldIndex.Description,
+                    errorMask: errorMask);
+            }
+            if (item.Icon_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Icon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Icon),
+                    item: item.Icon,
+                    fieldIndex: (int)SkillRecord_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            if (item.DATADataTypeState.HasFlag(SkillRecord.DATADataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Action) ?? true))
+                {
+                    EnumXmlTranslation<ActorValue>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Action),
+                        item: item.Action,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Action,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Attribute) ?? true))
+                {
+                    EnumXmlTranslation<ActorValue>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Attribute),
+                        item: item.Attribute,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Specialization) ?? true))
+                {
+                    EnumXmlTranslation<Specialization>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Specialization),
+                        item: item.Specialization,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueFirst) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.UseValueFirst),
+                        item: item.UseValueFirst,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueSecond) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.UseValueSecond),
+                        item: item.UseValueSecond,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
+                        errorMask: errorMask);
+                }
+            }
+            if (item.ApprenticeText_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ApprenticeText) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ApprenticeText),
+                    item: item.ApprenticeText,
+                    fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
+                    errorMask: errorMask);
+            }
+            if (item.JourneymanText_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.JourneymanText) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.JourneymanText),
+                    item: item.JourneymanText,
+                    fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
+                    errorMask: errorMask);
+            }
+            if (item.ExpertText_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ExpertText) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ExpertText),
+                    item: item.ExpertText,
+                    fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
+                    errorMask: errorMask);
+            }
+            if (item.MasterText_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.MasterText) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MasterText),
+                    item: item.MasterText,
+                    fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<SkillRecord.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)SkillRecord_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this SkillRecord item,
+            ISkillRecordInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2370,7 +2341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    SkillRecordCommon.FillPublicElement_Xml(
+                    SkillRecordXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2386,7 +2357,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this SkillRecord item,
+            ISkillRecordInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -2734,7 +2705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2744,177 +2715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class SkillRecordXmlTranslation : OblivionMajorRecordXmlTranslation
-    {
-        public new readonly static SkillRecordXmlTranslation Instance = new SkillRecordXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            ISkillRecordInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Skill_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Skill) ?? true))
-            {
-                EnumXmlTranslation<ActorValue>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Skill),
-                    item: item.Skill,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Skill,
-                    errorMask: errorMask);
-            }
-            if (item.Description_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Description) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if (item.Icon_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-            if (item.DATADataTypeState.HasFlag(SkillRecord.DATADataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Action) ?? true))
-                {
-                    EnumXmlTranslation<ActorValue>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Action),
-                        item: item.Action,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Action,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Attribute) ?? true))
-                {
-                    EnumXmlTranslation<ActorValue>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Attribute),
-                        item: item.Attribute,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Specialization) ?? true))
-                {
-                    EnumXmlTranslation<Specialization>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Specialization),
-                        item: item.Specialization,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueFirst) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.UseValueFirst),
-                        item: item.UseValueFirst,
-                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueSecond) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.UseValueSecond),
-                        item: item.UseValueSecond,
-                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
-                        errorMask: errorMask);
-                }
-            }
-            if (item.ApprenticeText_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ApprenticeText) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ApprenticeText),
-                    item: item.ApprenticeText,
-                    fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
-                    errorMask: errorMask);
-            }
-            if (item.JourneymanText_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.JourneymanText) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.JourneymanText),
-                    item: item.JourneymanText,
-                    fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
-                    errorMask: errorMask);
-            }
-            if (item.ExpertText_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ExpertText) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ExpertText),
-                    item: item.ExpertText,
-                    fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
-                    errorMask: errorMask);
-            }
-            if (item.MasterText_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.MasterText) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MasterText),
-                    item: item.MasterText,
-                    fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<SkillRecord.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)SkillRecord_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            ISkillRecordInternalGetter item,
-            bool doMasks,
-            out SkillRecord_ErrorMask errorMask,
-            SkillRecord_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             ISkillRecordInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -2933,9 +2734,116 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISkillRecordInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISkillRecordInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISkillRecordInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class SkillRecordXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this ISkillRecordInternalGetter item,
+            XElement node,
+            out SkillRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            SkillRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((SkillRecordXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this ISkillRecordInternalGetter item,
+            string path,
+            out SkillRecord_ErrorMask errorMask,
+            SkillRecord_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ISkillRecordInternalGetter item,
+            Stream stream,
+            out SkillRecord_ErrorMask errorMask,
+            SkillRecord_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -3524,31 +3432,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class SkillRecordBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    public partial class SkillRecordBinaryTranslation :
+        OblivionMajorRecordBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static SkillRecordBinaryTranslation Instance = new SkillRecordBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             ISkillRecordInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+            OblivionMajorRecordBinaryTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             ISkillRecordInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3637,26 +3547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            ISkillRecordInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out SkillRecord_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             ISkillRecordInternalGetter item,
             MasterReferences masterReferences,
@@ -3668,12 +3559,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: SkillRecord_Registration.SKIL_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
+                Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -3681,9 +3572,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ISkillRecordInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ISkillRecordInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ISkillRecordInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class SkillRecordBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this ISkillRecordInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out SkillRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((SkillRecordBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion
