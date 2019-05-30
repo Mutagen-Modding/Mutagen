@@ -20,7 +20,7 @@ namespace System
 {
     public static class ObjectTypeExt
     {
-        public static long GetLengthLength(this ObjectType objType)
+        public static sbyte GetLengthLength(this ObjectType objType)
         {
             switch (objType)
             {
@@ -36,7 +36,7 @@ namespace System
             }
         }
 
-        public static long GetOffset(this ObjectType objType)
+        public static sbyte GetOffset(this ObjectType objType)
         {
             switch (objType)
             {
