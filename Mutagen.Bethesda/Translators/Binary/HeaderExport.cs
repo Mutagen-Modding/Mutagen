@@ -12,22 +12,21 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly MutagenWriter Writer;
         public readonly long SizePosition;
+        public readonly sbyte MetaLengthToSkip;
         public readonly ObjectType Type;
-        private const byte ZeroByte = 0;
+        private static readonly byte[] SubRecordZeros = new byte[Constants.SUBRECORD_LENGTHLENGTH];
+        private static readonly byte[] RecordZeros = new byte[Constants.RECORD_LENGTHLENGTH];
 
         private HeaderExport(
             MutagenWriter writer,
-            RecordType record,
-            ObjectType type)
+            long sizePosition,
+            ObjectType type,
+            sbyte metaLenToSkip)
         {
             this.Writer = writer;
             this.Type = type;
-            writer.Write(record.TypeInt);
-            this.SizePosition = writer.Position;
-            for (int i = 0; i < this.Type.GetLengthLength(); i++)
-            {
-                writer.Write(ZeroByte);
-            }
+            this.SizePosition = sizePosition;
+            this.MetaLengthToSkip = metaLenToSkip;
         }
 
         public static HeaderExport ExportHeader(
@@ -35,37 +34,47 @@ namespace Mutagen.Bethesda.Binary
             RecordType record,
             ObjectType type)
         {
-            return new HeaderExport(writer, record, type);
-        }
-
-        public static HeaderExport ExportRecordHeader(
-            MutagenWriter writer,
-            RecordType record)
-        {
-            return new HeaderExport(writer, record, ObjectType.Record);
+            writer.Write(record.TypeInt);
+            var sizePosition = writer.Position;
+            var offset = type.GetOffset();
+            sbyte metaLen;
+            switch (type)
+            {
+                case ObjectType.Subrecord:
+                    writer.Write(SubRecordZeros);
+                    metaLen = (sbyte)(Constants.SUBRECORD_LENGTHLENGTH + offset);
+                    break;
+                case ObjectType.Record:
+                case ObjectType.Group:
+                    writer.Write(RecordZeros);
+                    metaLen = (SByte)(Constants.RECORD_LENGTHLENGTH + offset);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            return new HeaderExport(writer, sizePosition, type, metaLen);
         }
 
         public static HeaderExport ExportSubRecordHeader(
             MutagenWriter writer,
             RecordType record)
         {
-            return new HeaderExport(writer, record, ObjectType.Subrecord);
+            return ExportHeader(writer, record, ObjectType.Subrecord);
         }
 
         public void Dispose()
         {
             var endPos = this.Writer.Position;
             this.Writer.Position = this.SizePosition;
-            var lengthLength = this.Type.GetLengthLength();
-            var offset = this.Type.GetOffset();
             var diff = endPos - this.Writer.Position;
-            var totalLength = diff - offset - lengthLength;
-            switch (lengthLength)
+            var totalLength = diff - this.MetaLengthToSkip;
+            switch (this.Type)
             {
-                case 2:
+                case ObjectType.Subrecord:
                     this.Writer.Write((Int16)totalLength);
                     break;
-                case 4:
+                case ObjectType.Record:
+                case ObjectType.Group:
                     this.Writer.Write((Int32)totalLength);
                     break;
                 default:
