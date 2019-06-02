@@ -669,8 +669,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Version = 2,
         EditorID = 3,
         OblivionMajorRecordFlags = 4,
-        TypeChar = 5,
-        Data = 6,
+        Data = 5,
     }
     #endregion
 
@@ -690,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(GlobalFloat_Mask<>);
 
@@ -1000,8 +999,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Global_FieldIndex.EditorID:
                     return (GlobalFloat_FieldIndex)((int)index);
                 case Global_FieldIndex.OblivionMajorRecordFlags:
-                    return (GlobalFloat_FieldIndex)((int)index);
-                case Global_FieldIndex.TypeChar:
                     return (GlobalFloat_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

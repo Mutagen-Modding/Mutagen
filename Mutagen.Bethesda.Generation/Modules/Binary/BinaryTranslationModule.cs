@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Generation
 
         private IEnumerable<TypeGeneration> GetRecordTypeFields(ObjectGeneration obj)
         {
-            foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
+            foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
             {
                 if (field.TryGetFieldData(out var data)
                     && data.HasTrigger)
