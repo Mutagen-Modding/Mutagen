@@ -1541,24 +1541,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Parent = 7,
-        Climate = 8,
-        Water = 9,
-        Icon = 10,
-        MapData = 11,
-        Flags = 12,
-        ObjectBoundsMin = 13,
-        ObjectBoundsMax = 14,
-        Music = 15,
-        OffsetData = 16,
-        Road = 17,
-        TopCell = 18,
-        SubCellsTimestamp = 19,
-        SubCells = 20,
-        UsingOffsetLength = 21,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Parent = 6,
+        Climate = 7,
+        Water = 8,
+        Icon = 9,
+        MapData = 10,
+        Flags = 11,
+        ObjectBoundsMin = 12,
+        ObjectBoundsMax = 13,
+        Music = 14,
+        OffsetData = 15,
+        Road = 16,
+        TopCell = 17,
+        SubCellsTimestamp = 18,
+        SubCells = 19,
+        UsingOffsetLength = 20,
     }
     #endregion
 
@@ -1578,7 +1577,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(Worldspace_Mask<>);
 
@@ -2689,8 +2688,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Worldspace_FieldIndex)((int)index);
                 case Place_FieldIndex.EditorID:
                     return (Worldspace_FieldIndex)((int)index);
-                case Place_FieldIndex.RecordType:
-                    return (Worldspace_FieldIndex)((int)index);
                 case Place_FieldIndex.OblivionMajorRecordFlags:
                     return (Worldspace_FieldIndex)((int)index);
                 default:
@@ -2716,8 +2713,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Worldspace_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Worldspace_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Worldspace_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Worldspace_FieldIndex)((int)index);
                 default:
@@ -2742,8 +2737,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Worldspace_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Worldspace_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Worldspace_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

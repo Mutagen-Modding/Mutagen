@@ -107,14 +107,6 @@ namespace Mutagen.Bethesda
             this.EditorID_Set(default(String), false);
         }
         #endregion
-        #region RecordType
-        public RecordType RecordType { get; protected set; }
-        protected void UnsetRecordType()
-        {
-            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.RecordType] = false;
-            RecordType = default(RecordType);
-        }
-        #endregion
 
         IMask<bool> IEqualsMask<MajorRecord>.GetEqualsMask(MajorRecord rhs, EqualsMaskHelper.Include include) => MajorRecordCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IMajorRecordGetter>.GetEqualsMask(IMajorRecordGetter rhs, EqualsMaskHelper.Include include) => MajorRecordCommon.GetEqualsMask(this, rhs, include);
@@ -158,7 +150,6 @@ namespace Mutagen.Bethesda
             {
                 if (!string.Equals(this.EditorID, rhs.EditorID)) return false;
             }
-            if (!object.Equals(this.RecordType, rhs.RecordType)) return false;
             return true;
         }
 
@@ -172,7 +163,6 @@ namespace Mutagen.Bethesda
             {
                 ret = HashHelper.GetHashCode(EditorID).CombineHashCode(ret);
             }
-            ret = HashHelper.GetHashCode(RecordType).CombineHashCode(ret);
             return ret;
         }
 
@@ -371,7 +361,6 @@ namespace Mutagen.Bethesda
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
-                case MajorRecord_FieldIndex.RecordType:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -569,8 +558,6 @@ namespace Mutagen.Bethesda
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.RecordType:
-                    throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                     this.MajorRecordFlagsRaw = (Int32)obj;
                     break;
@@ -681,10 +668,6 @@ namespace Mutagen.Bethesda
         bool EditorID_IsSet { get; }
 
         #endregion
-        #region RecordType
-        RecordType RecordType { get; }
-
-        #endregion
 
     }
 
@@ -706,7 +689,6 @@ namespace Mutagen.Bethesda.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
     }
     #endregion
 
@@ -724,9 +706,9 @@ namespace Mutagen.Bethesda.Internals
 
         public const string GUID = "1382b2d8-9016-424e-923f-502a4417cbc7";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(MajorRecord_Mask<>);
 
@@ -766,8 +748,6 @@ namespace Mutagen.Bethesda.Internals
                     return (ushort)MajorRecord_FieldIndex.Version;
                 case "EDITORID":
                     return (ushort)MajorRecord_FieldIndex.EditorID;
-                case "RECORDTYPE":
-                    return (ushort)MajorRecord_FieldIndex.RecordType;
                 default:
                     return null;
             }
@@ -782,7 +762,6 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
-                case MajorRecord_FieldIndex.RecordType:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -798,7 +777,6 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
-                case MajorRecord_FieldIndex.RecordType:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -814,7 +792,6 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
-                case MajorRecord_FieldIndex.RecordType:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -834,8 +811,6 @@ namespace Mutagen.Bethesda.Internals
                     return "Version";
                 case MajorRecord_FieldIndex.EditorID:
                     return "EditorID";
-                case MajorRecord_FieldIndex.RecordType:
-                    return "RecordType";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -846,8 +821,6 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.RecordType:
-                    return true;
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
@@ -864,7 +837,6 @@ namespace Mutagen.Bethesda.Internals
             switch (enu)
             {
                 case MajorRecord_FieldIndex.FormKey:
-                case MajorRecord_FieldIndex.RecordType:
                     return true;
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                 case MajorRecord_FieldIndex.Version:
@@ -888,8 +860,6 @@ namespace Mutagen.Bethesda.Internals
                     return typeof(UInt32);
                 case MajorRecord_FieldIndex.EditorID:
                     return typeof(String);
-                case MajorRecord_FieldIndex.RecordType:
-                    return typeof(RecordType);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1043,7 +1013,7 @@ namespace Mutagen.Bethesda.Internals
                     })
             );
         });
-        public const int NumStructFields = 4;
+        public const int NumStructFields = 3;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryTranslation = typeof(MajorRecordBinaryTranslation);
         #region Interface
@@ -1186,7 +1156,6 @@ namespace Mutagen.Bethesda.Internals
             ret.MajorRecordFlagsRaw = item.MajorRecordFlagsRaw == rhs.MajorRecordFlagsRaw;
             ret.Version = item.Version == rhs.Version;
             ret.EditorID = item.EditorID_IsSet == rhs.EditorID_IsSet && string.Equals(item.EditorID, rhs.EditorID);
-            ret.RecordType = object.Equals(item.RecordType, rhs.RecordType);
         }
 
         public static string ToString(
@@ -1231,10 +1200,6 @@ namespace Mutagen.Bethesda.Internals
                 {
                     fg.AppendLine($"EditorID => {item.EditorID}");
                 }
-                if (printMask?.RecordType ?? true)
-                {
-                    fg.AppendLine($"RecordType => {item.RecordType}");
-                }
             }
             fg.AppendLine("]");
         }
@@ -1254,7 +1219,6 @@ namespace Mutagen.Bethesda.Internals
             ret.FormKey = true;
             ret.Version = true;
             ret.EditorID = item.EditorID_IsSet;
-            ret.RecordType = true;
             return ret;
         }
 
@@ -1668,7 +1632,6 @@ namespace Mutagen.Bethesda.Internals
             this.FormKey = initialValue;
             this.Version = initialValue;
             this.EditorID = initialValue;
-            this.RecordType = initialValue;
         }
         #endregion
 
@@ -1677,7 +1640,6 @@ namespace Mutagen.Bethesda.Internals
         public T FormKey;
         public T Version;
         public T EditorID;
-        public T RecordType;
         #endregion
 
         #region Equals
@@ -1694,7 +1656,6 @@ namespace Mutagen.Bethesda.Internals
             if (!object.Equals(this.FormKey, rhs.FormKey)) return false;
             if (!object.Equals(this.Version, rhs.Version)) return false;
             if (!object.Equals(this.EditorID, rhs.EditorID)) return false;
-            if (!object.Equals(this.RecordType, rhs.RecordType)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1704,7 +1665,6 @@ namespace Mutagen.Bethesda.Internals
             ret = ret.CombineHashCode(this.FormKey?.GetHashCode());
             ret = ret.CombineHashCode(this.Version?.GetHashCode());
             ret = ret.CombineHashCode(this.EditorID?.GetHashCode());
-            ret = ret.CombineHashCode(this.RecordType?.GetHashCode());
             return ret;
         }
 
@@ -1717,7 +1677,6 @@ namespace Mutagen.Bethesda.Internals
             if (!eval(this.FormKey)) return false;
             if (!eval(this.Version)) return false;
             if (!eval(this.EditorID)) return false;
-            if (!eval(this.RecordType)) return false;
             return true;
         }
         #endregion
@@ -1736,7 +1695,6 @@ namespace Mutagen.Bethesda.Internals
             obj.FormKey = eval(this.FormKey);
             obj.Version = eval(this.Version);
             obj.EditorID = eval(this.EditorID);
-            obj.RecordType = eval(this.RecordType);
         }
         #endregion
 
@@ -1781,10 +1739,6 @@ namespace Mutagen.Bethesda.Internals
                 {
                     fg.AppendLine($"EditorID => {EditorID}");
                 }
-                if (printMask?.RecordType ?? true)
-                {
-                    fg.AppendLine($"RecordType => {RecordType}");
-                }
             }
             fg.AppendLine("]");
         }
@@ -1812,7 +1766,6 @@ namespace Mutagen.Bethesda.Internals
         public Exception FormKey;
         public Exception Version;
         public Exception EditorID;
-        public object RecordType;
         #endregion
 
         #region IErrorMask
@@ -1829,8 +1782,6 @@ namespace Mutagen.Bethesda.Internals
                     return Version;
                 case MajorRecord_FieldIndex.EditorID:
                     return EditorID;
-                case MajorRecord_FieldIndex.RecordType:
-                    return RecordType;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1852,9 +1803,6 @@ namespace Mutagen.Bethesda.Internals
                     break;
                 case MajorRecord_FieldIndex.EditorID:
                     this.EditorID = ex;
-                    break;
-                case MajorRecord_FieldIndex.RecordType:
-                    this.RecordType = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1878,9 +1826,6 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.EditorID:
                     this.EditorID = (Exception)obj;
                     break;
-                case MajorRecord_FieldIndex.RecordType:
-                    this.RecordType = obj;
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1893,7 +1838,6 @@ namespace Mutagen.Bethesda.Internals
             if (FormKey != null) return true;
             if (Version != null) return true;
             if (EditorID != null) return true;
-            if (RecordType != null) return true;
             return false;
         }
         #endregion
@@ -1932,7 +1876,6 @@ namespace Mutagen.Bethesda.Internals
             fg.AppendLine($"FormKey => {FormKey}");
             fg.AppendLine($"Version => {Version}");
             fg.AppendLine($"EditorID => {EditorID}");
-            fg.AppendLine($"RecordType => {RecordType}");
         }
         #endregion
 
@@ -1944,7 +1887,6 @@ namespace Mutagen.Bethesda.Internals
             ret.FormKey = this.FormKey.Combine(rhs.FormKey);
             ret.Version = this.Version.Combine(rhs.Version);
             ret.EditorID = this.EditorID.Combine(rhs.EditorID);
-            ret.RecordType = this.RecordType ?? rhs.RecordType;
             return ret;
         }
         public static MajorRecord_ErrorMask Combine(MajorRecord_ErrorMask lhs, MajorRecord_ErrorMask rhs)
@@ -1975,7 +1917,6 @@ namespace Mutagen.Bethesda.Internals
             this.FormKey = defaultOn;
             this.Version = defaultOn;
             this.EditorID = defaultOn;
-            this.RecordType = defaultOn;
         }
 
         #region Members
@@ -1983,7 +1924,6 @@ namespace Mutagen.Bethesda.Internals
         public bool FormKey;
         public bool Version;
         public bool EditorID;
-        public bool RecordType;
         #endregion
 
     }
@@ -1996,7 +1936,6 @@ namespace Mutagen.Bethesda.Internals
         public bool FormKey;
         public bool Version;
         public bool EditorID;
-        public bool RecordType;
         #endregion
 
         #region Ctors
@@ -2010,7 +1949,6 @@ namespace Mutagen.Bethesda.Internals
             this.FormKey = defaultOn;
             this.Version = defaultOn;
             this.EditorID = defaultOn;
-            this.RecordType = defaultOn;
         }
 
         #endregion
@@ -2033,7 +1971,6 @@ namespace Mutagen.Bethesda.Internals
             ret.Add((FormKey, null));
             ret.Add((Version, null));
             ret.Add((EditorID, null));
-            ret.Add((RecordType, null));
         }
     }
     #endregion

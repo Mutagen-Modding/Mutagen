@@ -845,11 +845,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        ChanceNone = 6,
-        Flags = 7,
-        Entries = 8,
+        OblivionMajorRecordFlags = 4,
+        ChanceNone = 5,
+        Flags = 6,
+        Entries = 7,
     }
     #endregion
 
@@ -869,7 +868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(LeveledItem_Mask<>);
 
@@ -1303,8 +1302,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (LeveledItem_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.EditorID:
                     return (LeveledItem_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.RecordType:
-                    return (LeveledItem_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (LeveledItem_FieldIndex)((int)index);
                 default:
@@ -1330,8 +1327,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (LeveledItem_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (LeveledItem_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (LeveledItem_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (LeveledItem_FieldIndex)((int)index);
                 default:
@@ -1356,8 +1351,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (LeveledItem_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (LeveledItem_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (LeveledItem_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

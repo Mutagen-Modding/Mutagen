@@ -509,9 +509,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        SkyrimMajorRecordFlags = 5,
-        TypeChar = 6,
+        SkyrimMajorRecordFlags = 4,
+        TypeChar = 5,
     }
     #endregion
 
@@ -531,7 +530,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(Global_Mask<>);
 
@@ -808,8 +807,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Global_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Global_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.RecordType:
-                    return (Global_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Global_FieldIndex)((int)index);
                 default:
@@ -834,8 +831,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Global_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Global_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Global_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

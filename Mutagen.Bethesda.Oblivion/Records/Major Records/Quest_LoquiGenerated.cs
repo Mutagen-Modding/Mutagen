@@ -1122,17 +1122,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Script = 6,
-        Name = 7,
-        Icon = 8,
-        Flags = 9,
-        Priority = 10,
-        Conditions = 11,
-        Stages = 12,
-        Targets = 13,
-        DATADataTypeState = 14,
+        OblivionMajorRecordFlags = 4,
+        Script = 5,
+        Name = 6,
+        Icon = 7,
+        Flags = 8,
+        Priority = 9,
+        Conditions = 10,
+        Stages = 11,
+        Targets = 12,
+        DATADataTypeState = 13,
     }
     #endregion
 
@@ -1152,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Quest_Mask<>);
 
@@ -1855,8 +1854,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Quest_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Quest_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Quest_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Quest_FieldIndex)((int)index);
                 default:
@@ -1881,8 +1878,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Quest_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Quest_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Quest_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

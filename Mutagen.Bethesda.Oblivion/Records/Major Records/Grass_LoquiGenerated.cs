@@ -1117,22 +1117,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Model = 6,
-        Density = 7,
-        MinSlope = 8,
-        MaxSlope = 9,
-        Fluff1 = 10,
-        UnitFromWaterAmount = 11,
-        Fluff2 = 12,
-        UnitFromWaterMode = 13,
-        PositionRange = 14,
-        HeightRange = 15,
-        ColorRange = 16,
-        WavePeriod = 17,
-        Flags = 18,
-        DATADataTypeState = 19,
+        OblivionMajorRecordFlags = 4,
+        Model = 5,
+        Density = 6,
+        MinSlope = 7,
+        MaxSlope = 8,
+        Fluff1 = 9,
+        UnitFromWaterAmount = 10,
+        Fluff2 = 11,
+        UnitFromWaterMode = 12,
+        PositionRange = 13,
+        HeightRange = 14,
+        ColorRange = 15,
+        WavePeriod = 16,
+        Flags = 17,
+        DATADataTypeState = 18,
     }
     #endregion
 
@@ -1152,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Grass_Mask<>);
 
@@ -1928,8 +1927,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Grass_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Grass_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Grass_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Grass_FieldIndex)((int)index);
                 default:
@@ -1954,8 +1951,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Grass_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Grass_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Grass_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

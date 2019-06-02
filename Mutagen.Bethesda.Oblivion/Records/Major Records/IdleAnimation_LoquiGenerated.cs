@@ -888,12 +888,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Model = 6,
-        Conditions = 7,
-        AnimationGroupSection = 8,
-        RelatedIdleAnimations = 9,
+        OblivionMajorRecordFlags = 4,
+        Model = 5,
+        Conditions = 6,
+        AnimationGroupSection = 7,
+        RelatedIdleAnimations = 8,
     }
     #endregion
 
@@ -913,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(IdleAnimation_Mask<>);
 
@@ -1433,8 +1432,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (IdleAnimation_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (IdleAnimation_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (IdleAnimation_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (IdleAnimation_FieldIndex)((int)index);
                 default:
@@ -1459,8 +1456,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (IdleAnimation_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (IdleAnimation_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (IdleAnimation_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

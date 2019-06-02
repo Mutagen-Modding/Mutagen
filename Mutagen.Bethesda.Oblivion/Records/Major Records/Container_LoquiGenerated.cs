@@ -1092,17 +1092,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Model = 7,
-        Script = 8,
-        Items = 9,
-        Flags = 10,
-        Weight = 11,
-        OpenSound = 12,
-        CloseSound = 13,
-        DATADataTypeState = 14,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Model = 6,
+        Script = 7,
+        Items = 8,
+        Flags = 9,
+        Weight = 10,
+        OpenSound = 11,
+        CloseSound = 12,
+        DATADataTypeState = 13,
     }
     #endregion
 
@@ -1122,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Container_Mask<>);
 
@@ -1788,8 +1787,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Container_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Container_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Container_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Container_FieldIndex)((int)index);
                 default:
@@ -1814,8 +1811,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Container_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Container_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Container_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

@@ -572,9 +572,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
     }
     #endregion
 
@@ -594,7 +593,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(Spell_Mask<>);
 
@@ -916,8 +915,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Spell_FieldIndex)((int)index);
                 case SpellAbstract_FieldIndex.EditorID:
                     return (Spell_FieldIndex)((int)index);
-                case SpellAbstract_FieldIndex.RecordType:
-                    return (Spell_FieldIndex)((int)index);
                 case SpellAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (Spell_FieldIndex)((int)index);
                 default:
@@ -943,8 +940,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Spell_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Spell_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Spell_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Spell_FieldIndex)((int)index);
                 default:
@@ -969,8 +964,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Spell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Spell_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Spell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

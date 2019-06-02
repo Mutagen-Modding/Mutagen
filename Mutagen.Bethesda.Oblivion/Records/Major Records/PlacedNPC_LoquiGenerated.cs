@@ -1314,20 +1314,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Base = 6,
-        XPCIFluff = 7,
-        FULLFluff = 8,
-        DistantLODData = 9,
-        EnableParent = 10,
-        MerchantContainer = 11,
-        Horse = 12,
-        RagdollData = 13,
-        Scale = 14,
-        Position = 15,
-        Rotation = 16,
-        DATADataTypeState = 17,
+        OblivionMajorRecordFlags = 4,
+        Base = 5,
+        XPCIFluff = 6,
+        FULLFluff = 7,
+        DistantLODData = 8,
+        EnableParent = 9,
+        MerchantContainer = 10,
+        Horse = 11,
+        RagdollData = 12,
+        Scale = 13,
+        Position = 14,
+        Rotation = 15,
+        DATADataTypeState = 16,
     }
     #endregion
 
@@ -1347,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(PlacedNPC_Mask<>);
 
@@ -2170,8 +2169,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (PlacedNPC_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (PlacedNPC_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (PlacedNPC_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (PlacedNPC_FieldIndex)((int)index);
                 default:
@@ -2196,8 +2193,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (PlacedNPC_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (PlacedNPC_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (PlacedNPC_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

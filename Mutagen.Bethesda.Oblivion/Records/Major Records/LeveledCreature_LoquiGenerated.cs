@@ -905,13 +905,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        ChanceNone = 6,
-        Flags = 7,
-        Entries = 8,
-        Script = 9,
-        Template = 10,
+        OblivionMajorRecordFlags = 4,
+        ChanceNone = 5,
+        Flags = 6,
+        Entries = 7,
+        Script = 8,
+        Template = 9,
     }
     #endregion
 
@@ -931,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(LeveledCreature_Mask<>);
 
@@ -1442,8 +1441,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (LeveledCreature_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.EditorID:
                     return (LeveledCreature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.RecordType:
-                    return (LeveledCreature_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
                     return (LeveledCreature_FieldIndex)((int)index);
                 default:
@@ -1469,8 +1466,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (LeveledCreature_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (LeveledCreature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (LeveledCreature_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (LeveledCreature_FieldIndex)((int)index);
                 default:
@@ -1495,8 +1490,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (LeveledCreature_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (LeveledCreature_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

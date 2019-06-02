@@ -1093,17 +1093,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Model = 7,
-        Icon = 8,
-        Script = 9,
-        Effects = 10,
-        Uses = 11,
-        Value = 12,
-        Weight = 13,
-        DATADataTypeState = 14,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Model = 6,
+        Icon = 7,
+        Script = 8,
+        Effects = 9,
+        Uses = 10,
+        Value = 11,
+        Weight = 12,
+        DATADataTypeState = 13,
     }
     #endregion
 
@@ -1123,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(SigilStone_Mask<>);
 
@@ -1796,8 +1795,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (SigilStone_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.EditorID:
                     return (SigilStone_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.RecordType:
-                    return (SigilStone_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (SigilStone_FieldIndex)((int)index);
                 default:
@@ -1823,8 +1820,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (SigilStone_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (SigilStone_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (SigilStone_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (SigilStone_FieldIndex)((int)index);
                 default:
@@ -1849,8 +1844,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (SigilStone_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (SigilStone_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (SigilStone_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

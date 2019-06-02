@@ -2045,32 +2045,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Description = 7,
-        Spells = 8,
-        Relations = 9,
-        SkillBoosts = 10,
-        Fluff = 11,
-        MaleHeight = 12,
-        FemaleHeight = 13,
-        MaleWeight = 14,
-        FemaleWeight = 15,
-        Flags = 16,
-        Voices = 17,
-        DefaultHair = 18,
-        DefaultHairColor = 19,
-        FaceGenMainClamp = 20,
-        FaceGenFaceClamp = 21,
-        RaceStats = 22,
-        FaceData = 23,
-        BodyData = 24,
-        Hairs = 25,
-        Eyes = 26,
-        FaceGenData = 27,
-        Unknown = 28,
-        DATADataTypeState = 29,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Description = 6,
+        Spells = 7,
+        Relations = 8,
+        SkillBoosts = 9,
+        Fluff = 10,
+        MaleHeight = 11,
+        FemaleHeight = 12,
+        MaleWeight = 13,
+        FemaleWeight = 14,
+        Flags = 15,
+        Voices = 16,
+        DefaultHair = 17,
+        DefaultHairColor = 18,
+        FaceGenMainClamp = 19,
+        FaceGenFaceClamp = 20,
+        RaceStats = 21,
+        FaceData = 22,
+        BodyData = 23,
+        Hairs = 24,
+        Eyes = 25,
+        FaceGenData = 26,
+        Unknown = 27,
+        DATADataTypeState = 28,
     }
     #endregion
 
@@ -2090,7 +2089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 24;
 
-        public const ushort FieldCount = 30;
+        public const ushort FieldCount = 29;
 
         public static readonly Type MaskType = typeof(Race_Mask<>);
 
@@ -3665,8 +3664,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Race_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Race_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Race_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Race_FieldIndex)((int)index);
                 default:
@@ -3691,8 +3688,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Race_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Race_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Race_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

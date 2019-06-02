@@ -766,10 +766,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        File = 6,
-        Data = 7,
+        OblivionMajorRecordFlags = 4,
+        File = 5,
+        Data = 6,
     }
     #endregion
 
@@ -789,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Sound_Mask<>);
 
@@ -1180,8 +1179,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Sound_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Sound_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Sound_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Sound_FieldIndex)((int)index);
                 default:
@@ -1206,8 +1203,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Sound_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Sound_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Sound_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

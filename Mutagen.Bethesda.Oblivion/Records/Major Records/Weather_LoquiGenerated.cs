@@ -2166,47 +2166,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        TextureLowerLayer = 6,
-        TextureUpperLayer = 7,
-        Model = 8,
-        WeatherTypes = 9,
-        FogDayNear = 10,
-        FogDayFar = 11,
-        FogNightNear = 12,
-        FogNightFar = 13,
-        HdrEyeAdaptSpeed = 14,
-        HdrBlurRadius = 15,
-        HdrBlurPasses = 16,
-        HdrEmissiveMult = 17,
-        HdrTargetLum = 18,
-        HdrUpperLumClamp = 19,
-        HdrBrightScale = 20,
-        HdrBrightClamp = 21,
-        HdrLumRampNoTex = 22,
-        HdrLumRampMin = 23,
-        HdrLumRampMax = 24,
-        HdrSunlightDimmer = 25,
-        HdrGrassDimmer = 26,
-        HdrTreeDimmer = 27,
-        WindSpeed = 28,
-        CloudSpeedLower = 29,
-        CloudSpeedUpper = 30,
-        TransDelta = 31,
-        SunGlare = 32,
-        SunDamage = 33,
-        PrecipitationBeginFadeIn = 34,
-        PrecipitationEndFadeOut = 35,
-        ThunderLightningBeginFadeIn = 36,
-        ThunderLightningEndFadeOut = 37,
-        ThunderLightningFrequency = 38,
-        Classification = 39,
-        LightningColor = 40,
-        Sounds = 41,
-        FNAMDataTypeState = 42,
-        HNAMDataTypeState = 43,
-        DATADataTypeState = 44,
+        OblivionMajorRecordFlags = 4,
+        TextureLowerLayer = 5,
+        TextureUpperLayer = 6,
+        Model = 7,
+        WeatherTypes = 8,
+        FogDayNear = 9,
+        FogDayFar = 10,
+        FogNightNear = 11,
+        FogNightFar = 12,
+        HdrEyeAdaptSpeed = 13,
+        HdrBlurRadius = 14,
+        HdrBlurPasses = 15,
+        HdrEmissiveMult = 16,
+        HdrTargetLum = 17,
+        HdrUpperLumClamp = 18,
+        HdrBrightScale = 19,
+        HdrBrightClamp = 20,
+        HdrLumRampNoTex = 21,
+        HdrLumRampMin = 22,
+        HdrLumRampMax = 23,
+        HdrSunlightDimmer = 24,
+        HdrGrassDimmer = 25,
+        HdrTreeDimmer = 26,
+        WindSpeed = 27,
+        CloudSpeedLower = 28,
+        CloudSpeedUpper = 29,
+        TransDelta = 30,
+        SunGlare = 31,
+        SunDamage = 32,
+        PrecipitationBeginFadeIn = 33,
+        PrecipitationEndFadeOut = 34,
+        ThunderLightningBeginFadeIn = 35,
+        ThunderLightningEndFadeOut = 36,
+        ThunderLightningFrequency = 37,
+        Classification = 38,
+        LightningColor = 39,
+        Sounds = 40,
+        FNAMDataTypeState = 41,
+        HNAMDataTypeState = 42,
+        DATADataTypeState = 43,
     }
     #endregion
 
@@ -2226,7 +2225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 39;
 
-        public const ushort FieldCount = 45;
+        public const ushort FieldCount = 44;
 
         public static readonly Type MaskType = typeof(Weather_Mask<>);
 
@@ -3944,8 +3943,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Weather_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Weather_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Weather_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Weather_FieldIndex)((int)index);
                 default:
@@ -3970,8 +3967,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Weather_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Weather_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Weather_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

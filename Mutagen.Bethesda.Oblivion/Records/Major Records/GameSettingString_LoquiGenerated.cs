@@ -669,9 +669,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Data = 6,
+        OblivionMajorRecordFlags = 4,
+        Data = 5,
     }
     #endregion
 
@@ -691,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(GameSettingString_Mask<>);
 
@@ -1000,8 +999,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (GameSettingString_FieldIndex)((int)index);
                 case GameSetting_FieldIndex.EditorID:
                     return (GameSettingString_FieldIndex)((int)index);
-                case GameSetting_FieldIndex.RecordType:
-                    return (GameSettingString_FieldIndex)((int)index);
                 case GameSetting_FieldIndex.OblivionMajorRecordFlags:
                     return (GameSettingString_FieldIndex)((int)index);
                 default:
@@ -1027,8 +1024,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (GameSettingString_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (GameSettingString_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (GameSettingString_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (GameSettingString_FieldIndex)((int)index);
                 default:
@@ -1053,8 +1048,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (GameSettingString_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (GameSettingString_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (GameSettingString_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

@@ -2861,60 +2861,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Model = 7,
-        Items = 8,
-        Spells = 9,
-        Models = 10,
-        NIFT = 11,
-        Flags = 12,
-        BaseSpellPoints = 13,
-        Fatigue = 14,
-        BarterGold = 15,
-        LevelOffset = 16,
-        CalcMin = 17,
-        CalcMax = 18,
-        Factions = 19,
-        DeathItem = 20,
-        Script = 21,
-        Aggression = 22,
-        Confidence = 23,
-        EnergyLevel = 24,
-        Responsibility = 25,
-        BuySellServices = 26,
-        Teaches = 27,
-        MaximumTrainingLevel = 28,
-        AIPackages = 29,
-        Animations = 30,
-        CreatureType = 31,
-        CombatSkill = 32,
-        MagicSkill = 33,
-        StealthSkill = 34,
-        SoulLevel = 35,
-        Health = 36,
-        AttackDamage = 37,
-        Strength = 38,
-        Intelligence = 39,
-        Willpower = 40,
-        Agility = 41,
-        Speed = 42,
-        Endurance = 43,
-        Personality = 44,
-        Luck = 45,
-        AttackReach = 46,
-        CombatStyle = 47,
-        TurningSpeed = 48,
-        BaseScale = 49,
-        FootWeight = 50,
-        BloodSpray = 51,
-        BloodDecal = 52,
-        InheritsSoundFrom = 53,
-        Sounds = 54,
-        ACBSDataTypeState = 55,
-        AIDTDataTypeState = 56,
-        DATADataTypeState = 57,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Model = 6,
+        Items = 7,
+        Spells = 8,
+        Models = 9,
+        NIFT = 10,
+        Flags = 11,
+        BaseSpellPoints = 12,
+        Fatigue = 13,
+        BarterGold = 14,
+        LevelOffset = 15,
+        CalcMin = 16,
+        CalcMax = 17,
+        Factions = 18,
+        DeathItem = 19,
+        Script = 20,
+        Aggression = 21,
+        Confidence = 22,
+        EnergyLevel = 23,
+        Responsibility = 24,
+        BuySellServices = 25,
+        Teaches = 26,
+        MaximumTrainingLevel = 27,
+        AIPackages = 28,
+        Animations = 29,
+        CreatureType = 30,
+        CombatSkill = 31,
+        MagicSkill = 32,
+        StealthSkill = 33,
+        SoulLevel = 34,
+        Health = 35,
+        AttackDamage = 36,
+        Strength = 37,
+        Intelligence = 38,
+        Willpower = 39,
+        Agility = 40,
+        Speed = 41,
+        Endurance = 42,
+        Personality = 43,
+        Luck = 44,
+        AttackReach = 45,
+        CombatStyle = 46,
+        TurningSpeed = 47,
+        BaseScale = 48,
+        FootWeight = 49,
+        BloodSpray = 50,
+        BloodDecal = 51,
+        InheritsSoundFrom = 52,
+        Sounds = 53,
+        ACBSDataTypeState = 54,
+        AIDTDataTypeState = 55,
+        DATADataTypeState = 56,
     }
     #endregion
 
@@ -2934,7 +2933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 52;
 
-        public const ushort FieldCount = 58;
+        public const ushort FieldCount = 57;
 
         public static readonly Type MaskType = typeof(Creature_Mask<>);
 
@@ -5336,8 +5335,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Creature_FieldIndex)((int)index);
                 case NPCAbstract_FieldIndex.EditorID:
                     return (Creature_FieldIndex)((int)index);
-                case NPCAbstract_FieldIndex.RecordType:
-                    return (Creature_FieldIndex)((int)index);
                 case NPCAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (Creature_FieldIndex)((int)index);
                 default:
@@ -5362,8 +5359,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPCSpawn_FieldIndex.Version:
                     return (Creature_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.EditorID:
-                    return (Creature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.RecordType:
                     return (Creature_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
                     return (Creature_FieldIndex)((int)index);
@@ -5390,8 +5385,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Creature_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Creature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Creature_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Creature_FieldIndex)((int)index);
                 default:
@@ -5416,8 +5409,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Creature_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Creature_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Creature_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

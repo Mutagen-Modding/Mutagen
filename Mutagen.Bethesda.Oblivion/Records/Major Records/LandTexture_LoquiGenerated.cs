@@ -886,12 +886,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Icon = 6,
-        Havok = 7,
-        TextureSpecularExponent = 8,
-        PotentialGrass = 9,
+        OblivionMajorRecordFlags = 4,
+        Icon = 5,
+        Havok = 6,
+        TextureSpecularExponent = 7,
+        PotentialGrass = 8,
     }
     #endregion
 
@@ -911,7 +910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(LandTexture_Mask<>);
 
@@ -1408,8 +1407,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (LandTexture_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (LandTexture_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (LandTexture_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (LandTexture_FieldIndex)((int)index);
                 default:
@@ -1434,8 +1431,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (LandTexture_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (LandTexture_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (LandTexture_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

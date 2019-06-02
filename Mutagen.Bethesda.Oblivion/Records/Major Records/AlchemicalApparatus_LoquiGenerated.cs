@@ -1067,17 +1067,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Model = 7,
-        Icon = 8,
-        Script = 9,
-        Type = 10,
-        Value = 11,
-        Weight = 12,
-        Quality = 13,
-        DATADataTypeState = 14,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Model = 6,
+        Icon = 7,
+        Script = 8,
+        Type = 9,
+        Value = 10,
+        Weight = 11,
+        Quality = 12,
+        DATADataTypeState = 13,
     }
     #endregion
 
@@ -1097,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(AlchemicalApparatus_Mask<>);
 
@@ -1732,8 +1731,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (AlchemicalApparatus_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.EditorID:
                     return (AlchemicalApparatus_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.RecordType:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (AlchemicalApparatus_FieldIndex)((int)index);
                 default:
@@ -1759,8 +1756,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (AlchemicalApparatus_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (AlchemicalApparatus_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (AlchemicalApparatus_FieldIndex)((int)index);
                 default:
@@ -1785,8 +1780,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (AlchemicalApparatus_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (AlchemicalApparatus_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

@@ -716,24 +716,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Script = 7,
-        Enchantment = 8,
-        EnchantmentPoints = 9,
-        BipedFlags = 10,
-        Flags = 11,
-        MaleBipedModel = 12,
-        MaleWorldModel = 13,
-        MaleIcon = 14,
-        FemaleBipedModel = 15,
-        FemaleWorldModel = 16,
-        FemaleIcon = 17,
-        BMDTDataTypeState = 18,
-        Value = 19,
-        Weight = 20,
-        DATADataTypeState = 21,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Script = 6,
+        Enchantment = 7,
+        EnchantmentPoints = 8,
+        BipedFlags = 9,
+        Flags = 10,
+        MaleBipedModel = 11,
+        MaleWorldModel = 12,
+        MaleIcon = 13,
+        FemaleBipedModel = 14,
+        FemaleWorldModel = 15,
+        FemaleIcon = 16,
+        BMDTDataTypeState = 17,
+        Value = 18,
+        Weight = 19,
+        DATADataTypeState = 20,
     }
     #endregion
 
@@ -753,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(Clothing_Mask<>);
 
@@ -1098,8 +1097,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Clothing_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.EditorID:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.RecordType:
-                    return (Clothing_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (Clothing_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.Name:
@@ -1151,8 +1148,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Clothing_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.EditorID:
                     return (Clothing_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.RecordType:
-                    return (Clothing_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (Clothing_FieldIndex)((int)index);
                 default:
@@ -1178,8 +1173,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Clothing_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Clothing_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Clothing_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Clothing_FieldIndex)((int)index);
                 default:
@@ -1204,8 +1197,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Clothing_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Clothing_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Clothing_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

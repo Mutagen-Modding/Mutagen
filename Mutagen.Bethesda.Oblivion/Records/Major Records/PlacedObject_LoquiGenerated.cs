@@ -2151,34 +2151,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Base = 6,
-        XPCIFluff = 7,
-        FULLFluff = 8,
-        TeleportDestination = 9,
-        Lock = 10,
-        Owner = 11,
-        FactionRank = 12,
-        GlobalVariable = 13,
-        EnableParent = 14,
-        Target = 15,
-        SpeedTreeSeed = 16,
-        DistantLODData = 17,
-        Charge = 18,
-        Health = 19,
-        LevelModifier = 20,
-        Unknown = 21,
-        ActionFlags = 22,
-        Count = 23,
-        MapMarker = 24,
-        OpenByDefault = 25,
-        RagdollData = 26,
-        Scale = 27,
-        ContainedSoul = 28,
-        Position = 29,
-        Rotation = 30,
-        DATADataTypeState = 31,
+        OblivionMajorRecordFlags = 4,
+        Base = 5,
+        XPCIFluff = 6,
+        FULLFluff = 7,
+        TeleportDestination = 8,
+        Lock = 9,
+        Owner = 10,
+        FactionRank = 11,
+        GlobalVariable = 12,
+        EnableParent = 13,
+        Target = 14,
+        SpeedTreeSeed = 15,
+        DistantLODData = 16,
+        Charge = 17,
+        Health = 18,
+        LevelModifier = 19,
+        Unknown = 20,
+        ActionFlags = 21,
+        Count = 22,
+        MapMarker = 23,
+        OpenByDefault = 24,
+        RagdollData = 25,
+        Scale = 26,
+        ContainedSoul = 27,
+        Position = 28,
+        Rotation = 29,
+        DATADataTypeState = 30,
     }
     #endregion
 
@@ -2198,7 +2197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 26;
 
-        public const ushort FieldCount = 32;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(PlacedObject_Mask<>);
 
@@ -3764,8 +3763,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (PlacedObject_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (PlacedObject_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (PlacedObject_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (PlacedObject_FieldIndex)((int)index);
                 default:
@@ -3790,8 +3787,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (PlacedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (PlacedObject_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (PlacedObject_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

@@ -2015,46 +2015,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        DodgePercentChance = 6,
-        LeftRightPercentChance = 7,
-        DodgeLeftRightTimerMin = 8,
-        DodgeLeftRightTimerMax = 9,
-        DodgeForwardTimerMin = 10,
-        DodgeForwardTimerMax = 11,
-        DodgeBackTimerMin = 12,
-        DodgeBackTimerMax = 13,
-        IdleTimerMin = 14,
-        IdleTimerMax = 15,
-        BlockPercentChance = 16,
-        AttackPercentChance = 17,
-        RecoilStaggerBonusToAttack = 18,
-        UnconsciousBonusToAttack = 19,
-        HandToHandBonusToAttack = 20,
-        PowerAttackPercentChance = 21,
-        RecoilStaggerBonusToPowerAttack = 22,
-        UnconsciousBonusToPowerAttack = 23,
-        PowerAttackNormal = 24,
-        PowerAttackForward = 25,
-        PowerAttackBack = 26,
-        PowerAttackLeft = 27,
-        PowerAttackRight = 28,
-        HoldTimerMin = 29,
-        HoldTimerMax = 30,
-        Flags = 31,
-        AcrobaticDodgePercentChance = 32,
-        RangeMultOptimal = 33,
-        RangeMultMax = 34,
-        SwitchDistanceMelee = 35,
-        SwitchDistanceRanged = 36,
-        BuffStandoffDistance = 37,
-        RangedStandoffDistance = 38,
-        GroupStandoffDistance = 39,
-        RushingAttackPercentChance = 40,
-        RushingAttackDistanceMult = 41,
-        Advanced = 42,
-        CSTDDataTypeState = 43,
+        OblivionMajorRecordFlags = 4,
+        DodgePercentChance = 5,
+        LeftRightPercentChance = 6,
+        DodgeLeftRightTimerMin = 7,
+        DodgeLeftRightTimerMax = 8,
+        DodgeForwardTimerMin = 9,
+        DodgeForwardTimerMax = 10,
+        DodgeBackTimerMin = 11,
+        DodgeBackTimerMax = 12,
+        IdleTimerMin = 13,
+        IdleTimerMax = 14,
+        BlockPercentChance = 15,
+        AttackPercentChance = 16,
+        RecoilStaggerBonusToAttack = 17,
+        UnconsciousBonusToAttack = 18,
+        HandToHandBonusToAttack = 19,
+        PowerAttackPercentChance = 20,
+        RecoilStaggerBonusToPowerAttack = 21,
+        UnconsciousBonusToPowerAttack = 22,
+        PowerAttackNormal = 23,
+        PowerAttackForward = 24,
+        PowerAttackBack = 25,
+        PowerAttackLeft = 26,
+        PowerAttackRight = 27,
+        HoldTimerMin = 28,
+        HoldTimerMax = 29,
+        Flags = 30,
+        AcrobaticDodgePercentChance = 31,
+        RangeMultOptimal = 32,
+        RangeMultMax = 33,
+        SwitchDistanceMelee = 34,
+        SwitchDistanceRanged = 35,
+        BuffStandoffDistance = 36,
+        RangedStandoffDistance = 37,
+        GroupStandoffDistance = 38,
+        RushingAttackPercentChance = 39,
+        RushingAttackDistanceMult = 40,
+        Advanced = 41,
+        CSTDDataTypeState = 42,
     }
     #endregion
 
@@ -2074,7 +2073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 38;
 
-        public const ushort FieldCount = 44;
+        public const ushort FieldCount = 43;
 
         public static readonly Type MaskType = typeof(CombatStyle_Mask<>);
 
@@ -3690,8 +3689,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (CombatStyle_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (CombatStyle_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (CombatStyle_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (CombatStyle_FieldIndex)((int)index);
                 default:
@@ -3716,8 +3713,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (CombatStyle_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (CombatStyle_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (CombatStyle_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

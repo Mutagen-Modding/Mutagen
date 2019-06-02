@@ -883,15 +883,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Type = 7,
-        Cost = 8,
-        Level = 9,
-        Flag = 10,
-        Effects = 11,
-        SPITDataTypeState = 12,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Type = 6,
+        Cost = 7,
+        Level = 8,
+        Flag = 9,
+        Effects = 10,
+        SPITDataTypeState = 11,
     }
     #endregion
 
@@ -911,7 +910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(SpellUnleveled_Mask<>);
 
@@ -1400,8 +1399,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (SpellUnleveled_FieldIndex)((int)index);
                 case Spell_FieldIndex.EditorID:
                     return (SpellUnleveled_FieldIndex)((int)index);
-                case Spell_FieldIndex.RecordType:
-                    return (SpellUnleveled_FieldIndex)((int)index);
                 case Spell_FieldIndex.OblivionMajorRecordFlags:
                     return (SpellUnleveled_FieldIndex)((int)index);
                 case Spell_FieldIndex.Name:
@@ -1429,8 +1426,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (SpellUnleveled_FieldIndex)((int)index);
                 case SpellAbstract_FieldIndex.EditorID:
                     return (SpellUnleveled_FieldIndex)((int)index);
-                case SpellAbstract_FieldIndex.RecordType:
-                    return (SpellUnleveled_FieldIndex)((int)index);
                 case SpellAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (SpellUnleveled_FieldIndex)((int)index);
                 default:
@@ -1456,8 +1451,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (SpellUnleveled_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (SpellUnleveled_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (SpellUnleveled_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (SpellUnleveled_FieldIndex)((int)index);
                 default:
@@ -1482,8 +1475,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (SpellUnleveled_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (SpellUnleveled_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (SpellUnleveled_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

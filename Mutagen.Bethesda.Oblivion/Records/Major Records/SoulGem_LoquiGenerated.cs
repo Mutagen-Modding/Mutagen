@@ -1127,17 +1127,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Model = 7,
-        Icon = 8,
-        Script = 9,
-        Value = 10,
-        Weight = 11,
-        ContainedSoul = 12,
-        MaximumCapacity = 13,
-        DATADataTypeState = 14,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Model = 6,
+        Icon = 7,
+        Script = 8,
+        Value = 9,
+        Weight = 10,
+        ContainedSoul = 11,
+        MaximumCapacity = 12,
+        DATADataTypeState = 13,
     }
     #endregion
 
@@ -1157,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(SoulGem_Mask<>);
 
@@ -1822,8 +1821,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (SoulGem_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.EditorID:
                     return (SoulGem_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.RecordType:
-                    return (SoulGem_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (SoulGem_FieldIndex)((int)index);
                 default:
@@ -1849,8 +1846,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (SoulGem_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (SoulGem_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (SoulGem_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (SoulGem_FieldIndex)((int)index);
                 default:
@@ -1875,8 +1870,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (SoulGem_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (SoulGem_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (SoulGem_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

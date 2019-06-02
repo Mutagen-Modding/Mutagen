@@ -2121,41 +2121,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Texture = 6,
-        Opacity = 7,
-        Flags = 8,
-        MaterialID = 9,
-        Sound = 10,
-        WindVelocity = 11,
-        WindDirection = 12,
-        WaveAmplitude = 13,
-        WaveFrequency = 14,
-        SunPower = 15,
-        ReflectivityAmount = 16,
-        FresnelAmount = 17,
-        ScrollXSpeed = 18,
-        ScrollYSpeed = 19,
-        FogDistanceNearPlane = 20,
-        FogDistanceFarPlane = 21,
-        ShallowColor = 22,
-        DeepColor = 23,
-        ReflectionColor = 24,
-        TextureBlend = 25,
-        RainSimulatorForce = 26,
-        RainSimulatorVelocity = 27,
-        RainSimulatorFalloff = 28,
-        RainSimulatorDampner = 29,
-        RainSimulatorStartingSize = 30,
-        DisplacementSimulatorForce = 31,
-        DisplacementSimulatorVelocity = 32,
-        DisplacementSimulatorFalloff = 33,
-        DisplacementSimulatorDampner = 34,
-        DisplacementSimulatorStartingSize = 35,
-        Damage = 36,
-        RelatedWaters = 37,
-        DATADataTypeState = 38,
+        OblivionMajorRecordFlags = 4,
+        Texture = 5,
+        Opacity = 6,
+        Flags = 7,
+        MaterialID = 8,
+        Sound = 9,
+        WindVelocity = 10,
+        WindDirection = 11,
+        WaveAmplitude = 12,
+        WaveFrequency = 13,
+        SunPower = 14,
+        ReflectivityAmount = 15,
+        FresnelAmount = 16,
+        ScrollXSpeed = 17,
+        ScrollYSpeed = 18,
+        FogDistanceNearPlane = 19,
+        FogDistanceFarPlane = 20,
+        ShallowColor = 21,
+        DeepColor = 22,
+        ReflectionColor = 23,
+        TextureBlend = 24,
+        RainSimulatorForce = 25,
+        RainSimulatorVelocity = 26,
+        RainSimulatorFalloff = 27,
+        RainSimulatorDampner = 28,
+        RainSimulatorStartingSize = 29,
+        DisplacementSimulatorForce = 30,
+        DisplacementSimulatorVelocity = 31,
+        DisplacementSimulatorFalloff = 32,
+        DisplacementSimulatorDampner = 33,
+        DisplacementSimulatorStartingSize = 34,
+        Damage = 35,
+        RelatedWaters = 36,
+        DATADataTypeState = 37,
     }
     #endregion
 
@@ -2175,7 +2174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 33;
 
-        public const ushort FieldCount = 39;
+        public const ushort FieldCount = 38;
 
         public static readonly Type MaskType = typeof(Water_Mask<>);
 
@@ -3680,8 +3679,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Water_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Water_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Water_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Water_FieldIndex)((int)index);
                 default:
@@ -3706,8 +3703,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Water_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Water_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

@@ -762,12 +762,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        X = 6,
-        Y = 7,
-        Z = 8,
-        DNAMDataTypeState = 9,
+        OblivionMajorRecordFlags = 4,
+        X = 5,
+        Y = 6,
+        Z = 7,
+        DNAMDataTypeState = 8,
     }
     #endregion
 
@@ -787,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(Subspace_Mask<>);
 
@@ -1167,8 +1166,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Subspace_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Subspace_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Subspace_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Subspace_FieldIndex)((int)index);
                 default:
@@ -1193,8 +1190,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Subspace_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Subspace_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Subspace_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

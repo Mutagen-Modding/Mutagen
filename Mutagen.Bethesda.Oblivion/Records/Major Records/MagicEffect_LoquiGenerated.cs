@@ -1385,24 +1385,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Description = 7,
-        Icon = 8,
-        Model = 9,
-        Flags = 10,
-        BaseCost = 11,
-        Unused = 12,
-        MagicSchool = 13,
-        Resistance = 14,
-        CounterEffectCount = 15,
-        Light = 16,
-        ProjectileSpeed = 17,
-        EffectShader = 18,
-        SubData = 19,
-        CounterEffects = 20,
-        DATADataTypeState = 21,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Description = 6,
+        Icon = 7,
+        Model = 8,
+        Flags = 9,
+        BaseCost = 10,
+        Unused = 11,
+        MagicSchool = 12,
+        Resistance = 13,
+        CounterEffectCount = 14,
+        Light = 15,
+        ProjectileSpeed = 16,
+        EffectShader = 17,
+        SubData = 18,
+        CounterEffects = 19,
+        DATADataTypeState = 20,
     }
     #endregion
 
@@ -1422,7 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(MagicEffect_Mask<>);
 
@@ -2363,8 +2362,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (MagicEffect_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (MagicEffect_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (MagicEffect_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (MagicEffect_FieldIndex)((int)index);
                 default:
@@ -2389,8 +2386,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (MagicEffect_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (MagicEffect_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (MagicEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

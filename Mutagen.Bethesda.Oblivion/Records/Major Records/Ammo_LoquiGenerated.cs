@@ -1153,19 +1153,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Model = 7,
-        Icon = 8,
-        Enchantment = 9,
-        EnchantmentPoints = 10,
-        Speed = 11,
-        Flags = 12,
-        Value = 13,
-        Weight = 14,
-        Damage = 15,
-        DATADataTypeState = 16,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Model = 6,
+        Icon = 7,
+        Enchantment = 8,
+        EnchantmentPoints = 9,
+        Speed = 10,
+        Flags = 11,
+        Value = 12,
+        Weight = 13,
+        Damage = 14,
+        DATADataTypeState = 15,
     }
     #endregion
 
@@ -1185,7 +1184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(Ammo_Mask<>);
 
@@ -1905,8 +1904,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Ammo_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.EditorID:
                     return (Ammo_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.RecordType:
-                    return (Ammo_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (Ammo_FieldIndex)((int)index);
                 default:
@@ -1932,8 +1929,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Ammo_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Ammo_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Ammo_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Ammo_FieldIndex)((int)index);
                 default:
@@ -1958,8 +1953,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Ammo_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Ammo_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Ammo_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

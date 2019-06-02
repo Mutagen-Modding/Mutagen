@@ -1312,21 +1312,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Skill = 6,
-        Description = 7,
-        Icon = 8,
-        Action = 9,
-        Attribute = 10,
-        Specialization = 11,
-        UseValueFirst = 12,
-        UseValueSecond = 13,
-        ApprenticeText = 14,
-        JourneymanText = 15,
-        ExpertText = 16,
-        MasterText = 17,
-        DATADataTypeState = 18,
+        OblivionMajorRecordFlags = 4,
+        Skill = 5,
+        Description = 6,
+        Icon = 7,
+        Action = 8,
+        Attribute = 9,
+        Specialization = 10,
+        UseValueFirst = 11,
+        UseValueSecond = 12,
+        ApprenticeText = 13,
+        JourneymanText = 14,
+        ExpertText = 15,
+        MasterText = 16,
+        DATADataTypeState = 17,
     }
     #endregion
 
@@ -1346,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(SkillRecord_Mask<>);
 
@@ -2146,8 +2145,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (SkillRecord_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (SkillRecord_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (SkillRecord_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (SkillRecord_FieldIndex)((int)index);
                 default:
@@ -2172,8 +2169,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (SkillRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (SkillRecord_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (SkillRecord_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

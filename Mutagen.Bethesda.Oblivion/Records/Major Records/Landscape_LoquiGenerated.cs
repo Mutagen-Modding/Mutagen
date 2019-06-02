@@ -1045,14 +1045,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Unknown = 6,
-        VertexNormals = 7,
-        VertexHeightMap = 8,
-        VertexColors = 9,
-        Layers = 10,
-        Textures = 11,
+        OblivionMajorRecordFlags = 4,
+        Unknown = 5,
+        VertexNormals = 6,
+        VertexHeightMap = 7,
+        VertexColors = 8,
+        Layers = 9,
+        Textures = 10,
     }
     #endregion
 
@@ -1072,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(Landscape_Mask<>);
 
@@ -1662,8 +1661,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Landscape_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Landscape_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Landscape_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Landscape_FieldIndex)((int)index);
                 default:
@@ -1688,8 +1685,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Landscape_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Landscape_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Landscape_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

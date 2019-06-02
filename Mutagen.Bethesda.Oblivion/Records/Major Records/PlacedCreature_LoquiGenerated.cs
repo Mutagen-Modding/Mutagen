@@ -1159,18 +1159,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Base = 6,
-        Owner = 7,
-        FactionRank = 8,
-        GlobalVariable = 9,
-        EnableParent = 10,
-        RagdollData = 11,
-        Scale = 12,
-        Position = 13,
-        Rotation = 14,
-        DATADataTypeState = 15,
+        OblivionMajorRecordFlags = 4,
+        Base = 5,
+        Owner = 6,
+        FactionRank = 7,
+        GlobalVariable = 8,
+        EnableParent = 9,
+        RagdollData = 10,
+        Scale = 11,
+        Position = 12,
+        Rotation = 13,
+        DATADataTypeState = 14,
     }
     #endregion
 
@@ -1190,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(PlacedCreature_Mask<>);
 
@@ -1883,8 +1882,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (PlacedCreature_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (PlacedCreature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (PlacedCreature_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (PlacedCreature_FieldIndex)((int)index);
                 default:
@@ -1909,8 +1906,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (PlacedCreature_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (PlacedCreature_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (PlacedCreature_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

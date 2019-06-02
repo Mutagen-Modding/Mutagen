@@ -944,15 +944,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Type = 7,
-        ChargeAmount = 8,
-        EnchantCost = 9,
-        Flags = 10,
-        Effects = 11,
-        ENITDataTypeState = 12,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Type = 6,
+        ChargeAmount = 7,
+        EnchantCost = 8,
+        Flags = 9,
+        Effects = 10,
+        ENITDataTypeState = 11,
     }
     #endregion
 
@@ -972,7 +971,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(Enchantment_Mask<>);
 
@@ -1511,8 +1510,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Enchantment_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Enchantment_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Enchantment_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Enchantment_FieldIndex)((int)index);
                 default:
@@ -1537,8 +1534,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Enchantment_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Enchantment_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Enchantment_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

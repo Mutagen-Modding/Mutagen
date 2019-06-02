@@ -1015,17 +1015,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Model = 7,
-        Script = 8,
-        Ingredient = 9,
-        Spring = 10,
-        Summer = 11,
-        Fall = 12,
-        Winter = 13,
-        PFPCDataTypeState = 14,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Model = 6,
+        Script = 7,
+        Ingredient = 8,
+        Spring = 9,
+        Summer = 10,
+        Fall = 11,
+        Winter = 12,
+        PFPCDataTypeState = 13,
     }
     #endregion
 
@@ -1045,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Flora_Mask<>);
 
@@ -1669,8 +1668,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Flora_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Flora_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Flora_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Flora_FieldIndex)((int)index);
                 default:
@@ -1695,8 +1692,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Flora_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Flora_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Flora_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

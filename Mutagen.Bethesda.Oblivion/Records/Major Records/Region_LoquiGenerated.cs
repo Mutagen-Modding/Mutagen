@@ -1192,17 +1192,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Icon = 6,
-        MapColor = 7,
-        Worldspace = 8,
-        Areas = 9,
-        Objects = 10,
-        Weather = 11,
-        MapName = 12,
-        Grasses = 13,
-        Sounds = 14,
+        OblivionMajorRecordFlags = 4,
+        Icon = 5,
+        MapColor = 6,
+        Worldspace = 7,
+        Areas = 8,
+        Objects = 9,
+        Weather = 10,
+        MapName = 11,
+        Grasses = 12,
+        Sounds = 13,
     }
     #endregion
 
@@ -1222,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Region_Mask<>);
 
@@ -2091,8 +2090,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Region_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Region_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Region_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Region_FieldIndex)((int)index);
                 default:
@@ -2117,8 +2114,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Region_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Region_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Region_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

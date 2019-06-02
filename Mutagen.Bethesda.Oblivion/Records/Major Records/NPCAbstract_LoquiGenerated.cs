@@ -469,8 +469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
+        OblivionMajorRecordFlags = 4,
     }
     #endregion
 
@@ -490,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 0;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(NPCAbstract_Mask<>);
 
@@ -756,8 +755,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (NPCAbstract_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.EditorID:
                     return (NPCAbstract_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.RecordType:
-                    return (NPCAbstract_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
                     return (NPCAbstract_FieldIndex)((int)index);
                 default:
@@ -783,8 +780,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (NPCAbstract_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (NPCAbstract_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (NPCAbstract_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (NPCAbstract_FieldIndex)((int)index);
                 default:
@@ -809,8 +804,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (NPCAbstract_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (NPCAbstract_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (NPCAbstract_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

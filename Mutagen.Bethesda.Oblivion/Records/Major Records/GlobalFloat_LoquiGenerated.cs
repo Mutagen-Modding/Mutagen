@@ -668,10 +668,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        TypeChar = 6,
-        Data = 7,
+        OblivionMajorRecordFlags = 4,
+        TypeChar = 5,
+        Data = 6,
     }
     #endregion
 
@@ -691,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(GlobalFloat_Mask<>);
 
@@ -1000,8 +999,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (GlobalFloat_FieldIndex)((int)index);
                 case Global_FieldIndex.EditorID:
                     return (GlobalFloat_FieldIndex)((int)index);
-                case Global_FieldIndex.RecordType:
-                    return (GlobalFloat_FieldIndex)((int)index);
                 case Global_FieldIndex.OblivionMajorRecordFlags:
                     return (GlobalFloat_FieldIndex)((int)index);
                 case Global_FieldIndex.TypeChar:
@@ -1029,8 +1026,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (GlobalFloat_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (GlobalFloat_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (GlobalFloat_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (GlobalFloat_FieldIndex)((int)index);
                 default:
@@ -1055,8 +1050,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (GlobalFloat_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (GlobalFloat_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (GlobalFloat_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

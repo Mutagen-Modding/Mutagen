@@ -1176,20 +1176,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Weathers = 6,
-        SunTexture = 7,
-        SunGlareTexture = 8,
-        Model = 9,
-        SunriseBegin = 10,
-        SunriseEnd = 11,
-        SunsetBegin = 12,
-        SunsetEnd = 13,
-        Volatility = 14,
-        Phase = 15,
-        PhaseLength = 16,
-        TNAMDataTypeState = 17,
+        OblivionMajorRecordFlags = 4,
+        Weathers = 5,
+        SunTexture = 6,
+        SunGlareTexture = 7,
+        Model = 8,
+        SunriseBegin = 9,
+        SunriseEnd = 10,
+        SunsetBegin = 11,
+        SunsetEnd = 12,
+        Volatility = 13,
+        Phase = 14,
+        PhaseLength = 15,
+        TNAMDataTypeState = 16,
     }
     #endregion
 
@@ -1209,7 +1208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(Climate_Mask<>);
 
@@ -1983,8 +1982,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Climate_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Climate_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Climate_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Climate_FieldIndex)((int)index);
                 default:
@@ -2009,8 +2006,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (Climate_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Climate_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (Climate_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

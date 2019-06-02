@@ -662,10 +662,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        SkyrimMajorRecordFlags = 5,
-        TypeChar = 6,
-        Data = 7,
+        SkyrimMajorRecordFlags = 4,
+        TypeChar = 5,
+        Data = 6,
     }
     #endregion
 
@@ -685,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(GlobalInt_Mask<>);
 
@@ -994,8 +993,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (GlobalInt_FieldIndex)((int)index);
                 case Global_FieldIndex.EditorID:
                     return (GlobalInt_FieldIndex)((int)index);
-                case Global_FieldIndex.RecordType:
-                    return (GlobalInt_FieldIndex)((int)index);
                 case Global_FieldIndex.SkyrimMajorRecordFlags:
                     return (GlobalInt_FieldIndex)((int)index);
                 case Global_FieldIndex.TypeChar:
@@ -1023,8 +1020,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (GlobalInt_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (GlobalInt_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.RecordType:
-                    return (GlobalInt_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (GlobalInt_FieldIndex)((int)index);
                 default:
@@ -1049,8 +1044,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (GlobalInt_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (GlobalInt_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (GlobalInt_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

@@ -2906,67 +2906,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        FillTexture = 6,
-        ParticleShaderTexture = 7,
-        Flags = 8,
-        MembraneShaderSourceBlendMode = 9,
-        MembraneShaderBlendOperation = 10,
-        MembraneShaderZTestFunction = 11,
-        FillTextureEffectColor = 12,
-        FillTextureEffectAlphaFadeInTime = 13,
-        FillTextureEffectFullAlphaTime = 14,
-        FillTextureEffectAlphaFadeOutTime = 15,
-        FillTextureEffectPersistentAlphaRatio = 16,
-        FillTextureEffectAlphaPulseAmplitude = 17,
-        FillTextureEffectAlphaPulseFrequency = 18,
-        FillTextureEffectTextureAnimationSpeedU = 19,
-        FillTextureEffectTextureAnimationSpeedV = 20,
-        EdgeEffectFallOff = 21,
-        EdgeEffectColor = 22,
-        EdgeEffectAlphaFadeInTime = 23,
-        EdgeEffectFullAlphaTime = 24,
-        EdgeEffectAlphaFadeOutTime = 25,
-        EdgeEffectPersistentAlphaRatio = 26,
-        EdgeEffectAlphaPulseAmplitude = 27,
-        EdgeEffectAlphaPulseFrequency = 28,
-        FillTextureEffectFullAlphaRatio = 29,
-        EdgeEffectFullAlphaRatio = 30,
-        MembraneShaderDestBlendMode = 31,
-        ParticleShaderSourceBlendMode = 32,
-        ParticleShaderBlendOperation = 33,
-        ParticleShaderZTestFunction = 34,
-        ParticleShaderDestBlendMode = 35,
-        ParticleShaderParticleBirthRampUpTime = 36,
-        ParticleShaderFullParticleBirthTime = 37,
-        ParticleShaderParticleBirthRampDownTime = 38,
-        ParticleShaderFullParticleBirthRatio = 39,
-        ParticleShaderPersistentParticleBirthRatio = 40,
-        ParticleShaderParticleLifetime = 41,
-        ParticleShaderParticleLifetimePlusMinus = 42,
-        ParticleShaderInitialSpeedAlongNormal = 43,
-        ParticleShaderAccelerationAlongNormal = 44,
-        ParticleShaderInitialVelocity1 = 45,
-        ParticleShaderInitialVelocity2 = 46,
-        ParticleShaderInitialVelocity3 = 47,
-        ParticleShaderAcceleration1 = 48,
-        ParticleShaderAcceleration2 = 49,
-        ParticleShaderAcceleration3 = 50,
-        ParticleShaderScaleKey1 = 51,
-        ParticleShaderScaleKey2 = 52,
-        ParticleShaderScaleKey1Time = 53,
-        ParticleShaderScaleKey2Time = 54,
-        ColorKey1Color = 55,
-        ColorKey2Color = 56,
-        ColorKey3Color = 57,
-        ColorKey1ColorAlpha = 58,
-        ColorKey2ColorAlpha = 59,
-        ColorKey3ColorAlpha = 60,
-        ColorKey1ColorKeyTime = 61,
-        ColorKey2ColorKeyTime = 62,
-        ColorKey3ColorKeyTime = 63,
-        DATADataTypeState = 64,
+        OblivionMajorRecordFlags = 4,
+        FillTexture = 5,
+        ParticleShaderTexture = 6,
+        Flags = 7,
+        MembraneShaderSourceBlendMode = 8,
+        MembraneShaderBlendOperation = 9,
+        MembraneShaderZTestFunction = 10,
+        FillTextureEffectColor = 11,
+        FillTextureEffectAlphaFadeInTime = 12,
+        FillTextureEffectFullAlphaTime = 13,
+        FillTextureEffectAlphaFadeOutTime = 14,
+        FillTextureEffectPersistentAlphaRatio = 15,
+        FillTextureEffectAlphaPulseAmplitude = 16,
+        FillTextureEffectAlphaPulseFrequency = 17,
+        FillTextureEffectTextureAnimationSpeedU = 18,
+        FillTextureEffectTextureAnimationSpeedV = 19,
+        EdgeEffectFallOff = 20,
+        EdgeEffectColor = 21,
+        EdgeEffectAlphaFadeInTime = 22,
+        EdgeEffectFullAlphaTime = 23,
+        EdgeEffectAlphaFadeOutTime = 24,
+        EdgeEffectPersistentAlphaRatio = 25,
+        EdgeEffectAlphaPulseAmplitude = 26,
+        EdgeEffectAlphaPulseFrequency = 27,
+        FillTextureEffectFullAlphaRatio = 28,
+        EdgeEffectFullAlphaRatio = 29,
+        MembraneShaderDestBlendMode = 30,
+        ParticleShaderSourceBlendMode = 31,
+        ParticleShaderBlendOperation = 32,
+        ParticleShaderZTestFunction = 33,
+        ParticleShaderDestBlendMode = 34,
+        ParticleShaderParticleBirthRampUpTime = 35,
+        ParticleShaderFullParticleBirthTime = 36,
+        ParticleShaderParticleBirthRampDownTime = 37,
+        ParticleShaderFullParticleBirthRatio = 38,
+        ParticleShaderPersistentParticleBirthRatio = 39,
+        ParticleShaderParticleLifetime = 40,
+        ParticleShaderParticleLifetimePlusMinus = 41,
+        ParticleShaderInitialSpeedAlongNormal = 42,
+        ParticleShaderAccelerationAlongNormal = 43,
+        ParticleShaderInitialVelocity1 = 44,
+        ParticleShaderInitialVelocity2 = 45,
+        ParticleShaderInitialVelocity3 = 46,
+        ParticleShaderAcceleration1 = 47,
+        ParticleShaderAcceleration2 = 48,
+        ParticleShaderAcceleration3 = 49,
+        ParticleShaderScaleKey1 = 50,
+        ParticleShaderScaleKey2 = 51,
+        ParticleShaderScaleKey1Time = 52,
+        ParticleShaderScaleKey2Time = 53,
+        ColorKey1Color = 54,
+        ColorKey2Color = 55,
+        ColorKey3Color = 56,
+        ColorKey1ColorAlpha = 57,
+        ColorKey2ColorAlpha = 58,
+        ColorKey3ColorAlpha = 59,
+        ColorKey1ColorKeyTime = 60,
+        ColorKey2ColorKeyTime = 61,
+        ColorKey3ColorKeyTime = 62,
+        DATADataTypeState = 63,
     }
     #endregion
 
@@ -2986,7 +2985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 59;
 
-        public const ushort FieldCount = 65;
+        public const ushort FieldCount = 64;
 
         public static readonly Type MaskType = typeof(EffectShader_Mask<>);
 
@@ -5321,8 +5320,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (EffectShader_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (EffectShader_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (EffectShader_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (EffectShader_FieldIndex)((int)index);
                 default:
@@ -5347,8 +5344,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.Version:
                     return (EffectShader_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (EffectShader_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
                     return (EffectShader_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
