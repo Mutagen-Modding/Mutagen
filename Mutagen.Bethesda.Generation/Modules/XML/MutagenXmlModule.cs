@@ -20,8 +20,7 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateWriteToNode(ObjectGeneration obj, FileGeneration fg)
         {
             using (var args = new FunctionWrapper(fg,
-                $"public static void WriteToNode_{ModuleNickname}{obj.GetGenericTypes(MaskType.Normal)}",
-                obj.GenericTypeMaskWheres(MaskType.Normal)))
+                $"public static void WriteToNode_{ModuleNickname}"))
             {
                 args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} item");
                 args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
@@ -305,7 +304,7 @@ namespace Mutagen.Bethesda.Generation
                 $"public static void FillPublicElement_{ModuleNickname}{obj.GetGenericTypes(MaskType.Normal)}",
                 obj.GenericTypeMaskWheres(MaskType.Normal)))
             {
-                args.Add($"this {obj.ObjectName} item");
+                args.Add($"{obj.Interface(getter: false, internalInterface: obj.HasInternalInterface)} item");
                 args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
                 args.Add("string name");
                 args.Add($"ErrorMaskBuilder errorMask");
@@ -384,7 +383,7 @@ namespace Mutagen.Bethesda.Generation
                         if (obj.HasLoquiBaseObject)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"{obj.BaseClass.ExtCommonName}.FillPublicElement_{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
+                                $"{this.TranslationClass(obj.BaseClass)}.FillPublicElement_{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
                             {
                                 args.Add("item: item");
                                 args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: {XmlTranslationModule.XElementLine.GetParameterName(obj)}");

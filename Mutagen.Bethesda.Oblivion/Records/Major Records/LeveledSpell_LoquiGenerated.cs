@@ -35,7 +35,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class LeveledSpell : 
+    public partial class LeveledSpell :
         SpellAbstract,
         ILeveledSpell,
         ILeveledSpellInternal,
@@ -203,6 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => LeveledSpellXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static LeveledSpell Create_Xml(
@@ -261,7 +262,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    LeveledSpellCommon.FillPublicElement_Xml(
+                    LeveledSpellXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -359,155 +360,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out LeveledSpell_ErrorMask errorMask,
-            bool doMasks = true,
-            LeveledSpell_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LeveledSpellXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledSpell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out LeveledSpell_ErrorMask errorMask,
-            LeveledSpell_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out LeveledSpell_ErrorMask errorMask,
-            LeveledSpell_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out SpellAbstract_ErrorMask errorMask,
-            bool doMasks = true,
-            SpellAbstract_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LeveledSpellXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledSpell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            OblivionMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LeveledSpellXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledSpell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LeveledSpellXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledSpell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            LeveledSpellXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         protected static void FillPrivateElement_Xml(
             LeveledSpell item,
             XElement node,
@@ -596,6 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected override IBinaryTranslator BinaryTranslator => LeveledSpellBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static LeveledSpell Create_Binary(
@@ -643,89 +496,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out LeveledSpell_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LeveledSpellBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = LeveledSpell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out SpellAbstract_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LeveledSpellBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = LeveledSpell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LeveledSpellBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = LeveledSpell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LeveledSpellBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = LeveledSpell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            LeveledSpellBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -904,8 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILeveledSpellGetter rhs,
             ErrorMaskBuilder errorMask,
             LeveledSpell_CopyMask copyMask = null,
-            ILeveledSpellGetter def = null,
-            bool doMasks = true)
+            ILeveledSpellGetter def = null)
         {
             LeveledSpellCommon.CopyFieldsFrom(
                 item: this,
@@ -977,7 +746,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ILeveledSpell : ILeveledSpellGetter, ISpellAbstract, ILoquiClass<ILeveledSpell, ILeveledSpellGetter>, ILoquiClass<LeveledSpell, ILeveledSpellGetter>
+    public partial interface ILeveledSpell :
+        ILeveledSpellGetter,
+        ISpellAbstract,
+        ILoquiClass<ILeveledSpell, ILeveledSpellGetter>,
+        ILoquiClass<LeveledSpell, ILeveledSpellGetter>
     {
         new Byte ChanceNone { get; set; }
         new bool ChanceNone_IsSet { get; set; }
@@ -990,14 +763,25 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Unset();
 
         new ISourceSetList<LeveledEntry<SpellAbstract>> Entries { get; }
+        void CopyFieldsFrom(
+            ILeveledSpellGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            LeveledSpell_CopyMask copyMask = null,
+            ILeveledSpellGetter def = null);
     }
 
-    public partial interface ILeveledSpellInternal : ILeveledSpell, ILeveledSpellInternalGetter, ISpellAbstractInternal
+    public partial interface ILeveledSpellInternal :
+        ISpellAbstractInternal,
+        ILeveledSpell,
+        ILeveledSpellInternalGetter
     {
         new ISourceSetList<LeveledEntry<SpellAbstract>> Entries { get; }
     }
 
-    public partial interface ILeveledSpellGetter : ISpellAbstractGetter
+    public partial interface ILeveledSpellGetter :
+        ISpellAbstractGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region ChanceNone
         Byte ChanceNone { get; }
@@ -1015,7 +799,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface ILeveledSpellInternalGetter : ILeveledSpellGetter, ISpellAbstractInternalGetter
+    public partial interface ILeveledSpellInternalGetter :
+        ISpellAbstractInternalGetter,
+        ILeveledSpellGetter
     {
 
     }
@@ -1033,11 +819,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        ChanceNone = 6,
-        Flags = 7,
-        Entries = 8,
+        OblivionMajorRecordFlags = 4,
+        ChanceNone = 5,
+        Flags = 6,
+        Entries = 7,
     }
     #endregion
 
@@ -1057,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(LeveledSpell_Mask<>);
 
@@ -1204,6 +989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(LeveledSpellXmlTranslation);
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType LVLD_HEADER = new RecordType("LVLD");
         public static readonly RecordType LVLF_HEADER = new RecordType("LVLF");
@@ -1211,6 +997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = LVSP_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
+        public static readonly Type BinaryTranslation = typeof(LeveledSpellBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1488,8 +1275,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (LeveledSpell_FieldIndex)((int)index);
                 case SpellAbstract_FieldIndex.EditorID:
                     return (LeveledSpell_FieldIndex)((int)index);
-                case SpellAbstract_FieldIndex.RecordType:
-                    return (LeveledSpell_FieldIndex)((int)index);
                 case SpellAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (LeveledSpell_FieldIndex)((int)index);
                 default:
@@ -1514,8 +1299,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMajorRecord_FieldIndex.Version:
                     return (LeveledSpell_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (LeveledSpell_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
                     return (LeveledSpell_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (LeveledSpell_FieldIndex)((int)index);
@@ -1542,16 +1325,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (LeveledSpell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (LeveledSpell_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
-                    return (LeveledSpell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class LeveledSpellXmlTranslation :
+        SpellAbstractXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static LeveledSpellXmlTranslation Instance = new LeveledSpellXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ILeveledSpellInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            SpellAbstractXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.ChanceNone_IsSet
+                && (translationMask?.GetShouldTranslate((int)LeveledSpell_FieldIndex.ChanceNone) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ChanceNone),
+                    item: item.ChanceNone,
+                    fieldIndex: (int)LeveledSpell_FieldIndex.ChanceNone,
+                    errorMask: errorMask);
+            }
+            if (item.Flags_IsSet
+                && (translationMask?.GetShouldTranslate((int)LeveledSpell_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<LeveledFlag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)LeveledSpell_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if (item.Entries.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)LeveledSpell_FieldIndex.Entries) ?? true))
+            {
+                ListXmlTranslation<LeveledEntry<SpellAbstract>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Entries),
+                    item: item.Entries,
+                    fieldIndex: (int)LeveledSpell_FieldIndex.Entries,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)LeveledSpell_FieldIndex.Entries),
+                    transl: (XElement subNode, LeveledEntry<SpellAbstract> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        ((LeveledEntryXmlTranslation<SpellAbstract>)((IXmlItem)subItem).XmlTranslator).Write(
+                            item: subItem,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+        }
+
         public static void FillPublic_Xml(
-            this LeveledSpell item,
+            ILeveledSpellInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1560,7 +1405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    LeveledSpellCommon.FillPublicElement_Xml(
+                    LeveledSpellXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1576,7 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this LeveledSpell item,
+            ILeveledSpellInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1665,7 +1510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    SpellAbstractCommon.FillPublicElement_Xml(
+                    SpellAbstractXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1675,91 +1520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class LeveledSpellXmlTranslation : SpellAbstractXmlTranslation
-    {
-        public new readonly static LeveledSpellXmlTranslation Instance = new LeveledSpellXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            ILeveledSpellInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            SpellAbstractXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.ChanceNone_IsSet
-                && (translationMask?.GetShouldTranslate((int)LeveledSpell_FieldIndex.ChanceNone) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ChanceNone),
-                    item: item.ChanceNone,
-                    fieldIndex: (int)LeveledSpell_FieldIndex.ChanceNone,
-                    errorMask: errorMask);
-            }
-            if (item.Flags_IsSet
-                && (translationMask?.GetShouldTranslate((int)LeveledSpell_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<LeveledFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)LeveledSpell_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if (item.Entries.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)LeveledSpell_FieldIndex.Entries) ?? true))
-            {
-                ListXmlTranslation<LeveledEntry<SpellAbstract>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Entries),
-                    item: item.Entries,
-                    fieldIndex: (int)LeveledSpell_FieldIndex.Entries,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LeveledSpell_FieldIndex.Entries),
-                    transl: (XElement subNode, LeveledEntry<SpellAbstract> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation<LeveledEntry<SpellAbstract>>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            ILeveledSpellInternalGetter item,
-            bool doMasks,
-            out LeveledSpell_ErrorMask errorMask,
-            LeveledSpell_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledSpell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             ILeveledSpellInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -1778,9 +1539,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ILeveledSpellInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            ISpellAbstractInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ILeveledSpellInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ILeveledSpellInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ILeveledSpellInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class LeveledSpellXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this ILeveledSpellInternalGetter item,
+            XElement node,
+            out LeveledSpell_ErrorMask errorMask,
+            bool doMasks = true,
+            LeveledSpell_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((LeveledSpellXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = LeveledSpell_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this ILeveledSpellInternalGetter item,
+            string path,
+            out LeveledSpell_ErrorMask errorMask,
+            LeveledSpell_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ILeveledSpellInternalGetter item,
+            Stream stream,
+            out LeveledSpell_ErrorMask errorMask,
+            LeveledSpell_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -2177,18 +2060,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class LeveledSpellBinaryTranslation : SpellAbstractBinaryTranslation
+    public partial class LeveledSpellBinaryTranslation :
+        SpellAbstractBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static LeveledSpellBinaryTranslation Instance = new LeveledSpellBinaryTranslation();
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             ILeveledSpellInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2220,36 +2105,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, LeveledEntry<SpellAbstract> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        LoquiBinaryTranslation<LeveledEntry<SpellAbstract>>.Instance.Write(
-                            writer: subWriter,
+                        ((LeveledEntryBinaryTranslation<SpellAbstract>)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
+                            writer: subWriter,
                             errorMask: listErrorMask,
-                            masterReferences: masterReferences);
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                     );
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            ILeveledSpellInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out LeveledSpell_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = LeveledSpell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             ILeveledSpellInternalGetter item,
             MasterReferences masterReferences,
@@ -2261,12 +2128,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: LeveledSpell_Registration.LVSP_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                OblivionMajorRecordBinaryTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
+                Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -2274,9 +2141,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ILeveledSpellInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            ISpellAbstractInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ILeveledSpellInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ILeveledSpellInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ILeveledSpellInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class LeveledSpellBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this ILeveledSpellInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out LeveledSpell_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((LeveledSpellBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = LeveledSpell_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

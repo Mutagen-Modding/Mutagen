@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary(path, modKey, importMask: null);
         }
 
-        private IObservable<IChangeSet<IMajorRecord>> GetCellRecords(Cell cell)
+        private IObservable<IChangeSet<IMajorRecord>> GetCellRecords(ICell cell)
         {
             if (cell == null) return Observable.Empty<IChangeSet<IMajorRecord>>();
             return Observable.Merge<IChangeSet<IMajorRecord>>(
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
                     .Transform<IPlaced, IMajorRecord>(p => p));
         }
 
-        private IObservable<IChangeSet<IMajorRecord>> GetWorldspaceRecords(Worldspace worldspace)
+        private IObservable<IChangeSet<IMajorRecord>> GetWorldspaceRecords(IWorldspace worldspace)
         {
             return Observable.Merge<IChangeSet<IMajorRecord>>(
                 Observable
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
                     .MergeMany(c => GetCellRecords(c)));
         }
 
-        private IObservable<IChangeSet<IMajorRecord>> GetDialogRecords(DialogTopic dialog)
+        private IObservable<IChangeSet<IMajorRecord>> GetDialogRecords(IDialogTopic dialog)
         {
             return Observable.Merge<IChangeSet<IMajorRecord>>(
                 Observable
@@ -174,7 +174,8 @@ namespace Mutagen.Bethesda.Oblivion
                         var path = Path.Combine(dir.Path, $"Group.xml");
                         if (File.Exists(path))
                         {
-                            this.Worldspaces.FillPublic_Xml(
+                            GroupXmlTranslation<Worldspace>.FillPublic_Xml(
+                                this.Worldspaces,
                                 XElement.Load(path),
                                 errorMask,
                                 translationMask: GroupExt.XmlFolderTranslationCrystal);
@@ -270,7 +271,8 @@ namespace Mutagen.Bethesda.Oblivion
             var path = Path.Combine(dir.Path, $"Group.xml");
             if (File.Exists(path))
             {
-                this.Scripts.FillPublic_Xml(
+                GroupXmlTranslation<Script>.FillPublic_Xml(
+                    this.Scripts,
                     XElement.Load(path),
                     errorMask,
                     translationMask: GroupExt.XmlFolderTranslationCrystal);

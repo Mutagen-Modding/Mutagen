@@ -35,7 +35,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class SigilStone : 
+    public partial class SigilStone :
         ItemAbstract,
         ISigilStone,
         ISigilStoneInternal,
@@ -316,6 +316,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => SigilStoneXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static SigilStone Create_Xml(
@@ -374,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    SigilStoneCommon.FillPublicElement_Xml(
+                    SigilStoneXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -470,155 +471,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        #endregion
-
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out SigilStone_ErrorMask errorMask,
-            bool doMasks = true,
-            SigilStone_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SigilStoneXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out ItemAbstract_ErrorMask errorMask,
-            bool doMasks = true,
-            ItemAbstract_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SigilStoneXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            OblivionMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SigilStoneXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SigilStoneXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            SigilStoneXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         #endregion
 
         protected static void FillPrivateElement_Xml(
@@ -729,6 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected override IBinaryTranslator BinaryTranslator => SigilStoneBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static SigilStone Create_Binary(
@@ -778,89 +631,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out SigilStone_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SigilStoneBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out ItemAbstract_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SigilStoneBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SigilStoneBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SigilStoneBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            SigilStoneBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
-        #endregion
-
         protected static void Fill_Binary_Structs(
             SigilStone item,
             MutagenFrame frame,
@@ -907,7 +677,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)SigilStone_FieldIndex.Model);
-                        item.Model = Model.Create_Binary(
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1101,8 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISigilStoneGetter rhs,
             ErrorMaskBuilder errorMask,
             SigilStone_CopyMask copyMask = null,
-            ISigilStoneGetter def = null,
-            bool doMasks = true)
+            ISigilStoneGetter def = null)
         {
             SigilStoneCommon.CopyFieldsFrom(
                 item: this,
@@ -1210,7 +979,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ISigilStone : ISigilStoneGetter, IItemAbstract, ILoquiClass<ISigilStone, ISigilStoneGetter>, ILoquiClass<SigilStone, ISigilStoneGetter>
+    public partial interface ISigilStone :
+        ISigilStoneGetter,
+        IItemAbstract,
+        ILoquiClass<ISigilStone, ISigilStoneGetter>,
+        ILoquiClass<SigilStone, ISigilStoneGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1235,9 +1008,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single Weight { get; set; }
 
+        void CopyFieldsFrom(
+            ISigilStoneGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            SigilStone_CopyMask copyMask = null,
+            ISigilStoneGetter def = null);
     }
 
-    public partial interface ISigilStoneInternal : ISigilStone, ISigilStoneInternalGetter, IItemAbstractInternal
+    public partial interface ISigilStoneInternal :
+        IItemAbstractInternal,
+        ISigilStone,
+        ISigilStoneInternalGetter
     {
         new Script Script { get; set; }
         new ISourceSetList<Effect> Effects { get; }
@@ -1245,7 +1026,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface ISigilStoneGetter : IItemAbstractGetter
+    public partial interface ISigilStoneGetter :
+        IItemAbstractGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region Name
         String Name { get; }
@@ -1285,7 +1069,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface ISigilStoneInternalGetter : ISigilStoneGetter, IItemAbstractInternalGetter
+    public partial interface ISigilStoneInternalGetter :
+        IItemAbstractInternalGetter,
+        ISigilStoneGetter
     {
         #region DATADataTypeState
         SigilStone.DATADataType DATADataTypeState { get; }
@@ -1307,17 +1093,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Model = 7,
-        Icon = 8,
-        Script = 9,
-        Effects = 10,
-        Uses = 11,
-        Value = 12,
-        Weight = 13,
-        DATADataTypeState = 14,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Model = 6,
+        Icon = 7,
+        Script = 8,
+        Effects = 9,
+        Uses = 10,
+        Value = 11,
+        Weight = 12,
+        DATADataTypeState = 13,
     }
     #endregion
 
@@ -1337,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(SigilStone_Mask<>);
 
@@ -1550,6 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(SigilStoneXmlTranslation);
         public static readonly RecordType SGST_HEADER = new RecordType("SGST");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
@@ -1560,6 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SGST_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 5;
+        public static readonly Type BinaryTranslation = typeof(SigilStoneBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1868,7 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
@@ -2008,8 +1795,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (SigilStone_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.EditorID:
                     return (SigilStone_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.RecordType:
-                    return (SigilStone_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (SigilStone_FieldIndex)((int)index);
                 default:
@@ -2034,8 +1819,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMajorRecord_FieldIndex.Version:
                     return (SigilStone_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (SigilStone_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
                     return (SigilStone_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (SigilStone_FieldIndex)((int)index);
@@ -2062,16 +1845,138 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (SigilStone_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (SigilStone_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
-                    return (SigilStone_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class SigilStoneXmlTranslation :
+        ItemAbstractXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static SigilStoneXmlTranslation Instance = new SigilStoneXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ISigilStoneInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            ItemAbstractXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)SigilStone_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if (item.Model_IsSet
+                && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Model) ?? true))
+            {
+                ((ModelXmlTranslation)((IXmlItem)item.Model).XmlTranslator).Write(
+                    item: item.Model,
+                    node: node,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)SigilStone_FieldIndex.Model,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SigilStone_FieldIndex.Model));
+            }
+            if (item.Icon_IsSet
+                && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Icon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Icon),
+                    item: item.Icon,
+                    fieldIndex: (int)SigilStone_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            if (item.Script_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Script) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Script),
+                    item: item.Script_Property?.FormKey,
+                    fieldIndex: (int)SigilStone_FieldIndex.Script,
+                    errorMask: errorMask);
+            }
+            if (item.Effects.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Effects) ?? true))
+            {
+                ListXmlTranslation<Effect>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Effects),
+                    item: item.Effects,
+                    fieldIndex: (int)SigilStone_FieldIndex.Effects,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SigilStone_FieldIndex.Effects),
+                    transl: (XElement subNode, Effect subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        ((EffectXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                            item: subItem,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+            if (item.DATADataTypeState.HasFlag(SigilStone.DATADataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Uses) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Uses),
+                        item: item.Uses,
+                        fieldIndex: (int)SigilStone_FieldIndex.Uses,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Value) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)SigilStone_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Weight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight,
+                        fieldIndex: (int)SigilStone_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<SigilStone.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)SigilStone_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this SigilStone item,
+            ISigilStoneInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2080,7 +1985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    SigilStoneCommon.FillPublicElement_Xml(
+                    SigilStoneXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2096,7 +2001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this SigilStone item,
+            ISigilStoneInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -2324,7 +2229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    ItemAbstractCommon.FillPublicElement_Xml(
+                    ItemAbstractXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2334,151 +2239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class SigilStoneXmlTranslation : ItemAbstractXmlTranslation
-    {
-        public new readonly static SigilStoneXmlTranslation Instance = new SigilStoneXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            ISigilStoneInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            ItemAbstractXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)SigilStone_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Model_IsSet
-                && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Model) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.Model,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)SigilStone_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SigilStone_FieldIndex.Model));
-            }
-            if (item.Icon_IsSet
-                && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)SigilStone_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-            if (item.Script_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Script) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
-                    fieldIndex: (int)SigilStone_FieldIndex.Script,
-                    errorMask: errorMask);
-            }
-            if (item.Effects.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Effects) ?? true))
-            {
-                ListXmlTranslation<Effect>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Effects),
-                    item: item.Effects,
-                    fieldIndex: (int)SigilStone_FieldIndex.Effects,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SigilStone_FieldIndex.Effects),
-                    transl: (XElement subNode, Effect subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation<Effect>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-            if (item.DATADataTypeState.HasFlag(SigilStone.DATADataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Uses) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Uses),
-                        item: item.Uses,
-                        fieldIndex: (int)SigilStone_FieldIndex.Uses,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Value) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Value),
-                        item: item.Value,
-                        fieldIndex: (int)SigilStone_FieldIndex.Value,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Weight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Weight),
-                        item: item.Weight,
-                        fieldIndex: (int)SigilStone_FieldIndex.Weight,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<SigilStone.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)SigilStone_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            ISigilStoneInternalGetter item,
-            bool doMasks,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             ISigilStoneInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -2497,9 +2258,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISigilStoneInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IItemAbstractInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISigilStoneInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISigilStoneInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISigilStoneInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class SigilStoneXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this ISigilStoneInternalGetter item,
+            XElement node,
+            out SigilStone_ErrorMask errorMask,
+            bool doMasks = true,
+            SigilStone_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((SigilStoneXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this ISigilStoneInternalGetter item,
+            string path,
+            out SigilStone_ErrorMask errorMask,
+            SigilStone_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ISigilStoneInternalGetter item,
+            Stream stream,
+            out SigilStone_ErrorMask errorMask,
+            SigilStone_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -3070,31 +2953,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class SigilStoneBinaryTranslation : ItemAbstractBinaryTranslation
+    public partial class SigilStoneBinaryTranslation :
+        ItemAbstractBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static SigilStoneBinaryTranslation Instance = new SigilStoneBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             ISigilStoneInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+            OblivionMajorRecordBinaryTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             ISigilStoneInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3110,12 +2995,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Model_IsSet)
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                ((ModelBinaryTranslation)((IBinaryItem)item.Model).BinaryTranslator).Write(
                     item: item.Model,
-                    fieldIndex: (int)SigilStone_FieldIndex.Model,
+                    writer: writer,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             if (item.Icon_IsSet)
             {
@@ -3143,11 +3028,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, Effect subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        LoquiBinaryTranslation<Effect>.Instance.Write(
-                            writer: subWriter,
+                        ((EffectBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
+                            writer: subWriter,
                             errorMask: listErrorMask,
-                            masterReferences: masterReferences);
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                     );
             }
@@ -3164,26 +3050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            ISigilStoneInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out SigilStone_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             ISigilStoneInternalGetter item,
             MasterReferences masterReferences,
@@ -3195,12 +3062,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: SigilStone_Registration.SGST_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
+                Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -3208,9 +3075,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ISigilStoneInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IItemAbstractInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ISigilStoneInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ISigilStoneInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ISigilStoneInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class SigilStoneBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this ISigilStoneInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out SigilStone_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((SigilStoneBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

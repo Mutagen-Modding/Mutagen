@@ -31,7 +31,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class ScriptEffect : 
+    public partial class ScriptEffect :
         LoquiNotifyingObject,
         IScriptEffect,
         IScriptEffectInternal,
@@ -203,6 +203,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => ScriptEffectXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static ScriptEffect Create_Xml(
@@ -257,7 +259,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.SCITDataTypeState |= ScriptEffect.SCITDataType.Break1;
                 foreach (var elem in node.Elements())
                 {
-                    ScriptEffectCommon.FillPublicElement_Xml(
+                    ScriptEffectXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -355,139 +357,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out ScriptEffect_ErrorMask errorMask,
-            bool doMasks = true,
-            ScriptEffect_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ScriptEffectXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            ScriptEffect_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            ScriptEffectXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -541,6 +410,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected IBinaryTranslator BinaryTranslator => ScriptEffectBinaryTranslation.Instance;
+        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static ScriptEffect Create_Binary(
@@ -611,49 +482,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out ScriptEffect_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ScriptEffectBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences)
-        {
-            this.Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            ScriptEffectBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -844,8 +672,7 @@ namespace Mutagen.Bethesda.Oblivion
             IScriptEffectGetter rhs,
             ErrorMaskBuilder errorMask,
             ScriptEffect_CopyMask copyMask = null,
-            IScriptEffectGetter def = null,
-            bool doMasks = true)
+            IScriptEffectGetter def = null)
         {
             ScriptEffectCommon.CopyFieldsFrom(
                 item: this,
@@ -941,7 +768,10 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IScriptEffect : IScriptEffectGetter, ILoquiClass<IScriptEffect, IScriptEffectGetter>, ILoquiClass<ScriptEffect, IScriptEffectGetter>
+    public partial interface IScriptEffect :
+        IScriptEffectGetter,
+        ILoquiClass<IScriptEffect, IScriptEffectGetter>,
+        ILoquiClass<ScriptEffect, IScriptEffectGetter>
     {
         new Script Script { get; set; }
         new MagicSchool MagicSchool { get; set; }
@@ -954,9 +784,16 @@ namespace Mutagen.Bethesda.Oblivion
         void Name_Set(String item, bool hasBeenSet = true);
         void Name_Unset();
 
+        void CopyFieldsFrom(
+            IScriptEffectGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            ScriptEffect_CopyMask copyMask = null,
+            IScriptEffectGetter def = null);
     }
 
-    public partial interface IScriptEffectInternal : IScriptEffect, IScriptEffectInternalGetter
+    public partial interface IScriptEffectInternal :
+        IScriptEffect,
+        IScriptEffectInternalGetter
     {
         new Script Script { get; set; }
         new MagicEffect VisualEffect { get; set; }
@@ -964,7 +801,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IScriptEffectGetter : ILoquiObject
+    public partial interface IScriptEffectGetter :
+        ILoquiObject,
+        IXmlItem,
+        IBinaryItem
     {
         #region Script
         Script Script { get; }
@@ -1213,11 +1053,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(ScriptEffectXmlTranslation);
         public static readonly RecordType SCIT_HEADER = new RecordType("SCIT");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SCIT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
+        public static readonly Type BinaryTranslation = typeof(ScriptEffectBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1472,9 +1314,93 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class ScriptEffectXmlTranslation : IXmlTranslator
+    {
+        public readonly static ScriptEffectXmlTranslation Instance = new ScriptEffectXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IScriptEffectInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if (item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Script) ?? true))
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Script),
+                        item: item.Script_Property?.FormKey,
+                        fieldIndex: (int)ScriptEffect_FieldIndex.Script,
+                        errorMask: errorMask);
+                }
+                if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.MagicSchool) ?? true))
+                    {
+                        EnumXmlTranslation<MagicSchool>.Instance.Write(
+                            node: node,
+                            name: nameof(item.MagicSchool),
+                            item: item.MagicSchool,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.VisualEffect),
+                            item: item.VisualEffect_Property?.FormKey,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
+                            errorMask: errorMask);
+                    }
+                    if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1))
+                    {
+                        if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Flags) ?? true))
+                        {
+                            EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
+                                node: node,
+                                name: nameof(item.Flags),
+                                item: item.Flags,
+                                fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
+                                errorMask: errorMask);
+                        }
+                    }
+                }
+                else
+                {
+                    node.Add(new XElement("HasSCITDataType"));
+                }
+            }
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)ScriptEffect_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.SCITDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<ScriptEffect.SCITDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.SCITDataTypeState),
+                    item: item.SCITDataTypeState,
+                    fieldIndex: (int)ScriptEffect_FieldIndex.SCITDataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this ScriptEffect item,
+            IScriptEffectInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1483,7 +1409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ScriptEffectCommon.FillPublicElement_Xml(
+                    ScriptEffectXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1499,7 +1425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this ScriptEffect item,
+            IScriptEffectInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1633,113 +1559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class ScriptEffectXmlTranslation
-    {
-        public readonly static ScriptEffectXmlTranslation Instance = new ScriptEffectXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IScriptEffectInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Script) ?? true))
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Script),
-                        item: item.Script_Property?.FormKey,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.Script,
-                        errorMask: errorMask);
-                }
-                if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.MagicSchool) ?? true))
-                    {
-                        EnumXmlTranslation<MagicSchool>.Instance.Write(
-                            node: node,
-                            name: nameof(item.MagicSchool),
-                            item: item.MagicSchool,
-                            fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.VisualEffect),
-                            item: item.VisualEffect_Property?.FormKey,
-                            fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
-                            errorMask: errorMask);
-                    }
-                    if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1))
-                    {
-                        if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Flags) ?? true))
-                        {
-                            EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
-                                node: node,
-                                name: nameof(item.Flags),
-                                item: item.Flags,
-                                fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
-                                errorMask: errorMask);
-                        }
-                    }
-                }
-                else
-                {
-                    node.Add(new XElement("HasSCITDataType"));
-                }
-            }
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)ScriptEffect_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.SCITDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<ScriptEffect.SCITDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SCITDataTypeState),
-                    item: item.SCITDataTypeState,
-                    fieldIndex: (int)ScriptEffect_FieldIndex.SCITDataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IScriptEffectInternalGetter item,
-            bool doMasks,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IScriptEffectInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -1758,9 +1578,210 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IScriptEffectInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IScriptEffectInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IScriptEffectInternalGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class ScriptEffectXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IScriptEffectInternalGetter item,
+            XElement node,
+            out ScriptEffect_ErrorMask errorMask,
+            bool doMasks = true,
+            ScriptEffect_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ScriptEffectXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IScriptEffectInternalGetter item,
+            string path,
+            out ScriptEffect_ErrorMask errorMask,
+            ScriptEffect_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IScriptEffectInternalGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IScriptEffectInternalGetter item,
+            Stream stream,
+            out ScriptEffect_ErrorMask errorMask,
+            ScriptEffect_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IScriptEffectInternalGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IScriptEffectInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((ScriptEffectXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this IScriptEffectInternalGetter item,
+            XElement node,
+            string name = null,
+            ScriptEffect_TranslationMask translationMask = null)
+        {
+            ((ScriptEffectXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this IScriptEffectInternalGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((ScriptEffectXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IScriptEffectInternalGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((ScriptEffectXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -2175,11 +2196,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class ScriptEffectBinaryTranslation
+    public partial class ScriptEffectBinaryTranslation : IBinaryTranslator
     {
         public readonly static ScriptEffectBinaryTranslation Instance = new ScriptEffectBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             IScriptEffectInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
@@ -2187,7 +2208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             IScriptEffectInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
@@ -2231,47 +2252,93 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IScriptEffectInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out ScriptEffect_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IScriptEffectInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Write_Binary_Embedded(
+            Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            Write_Binary_RecordTypes(
+            Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
-        #endregion
+
+        public void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IScriptEffectInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class ScriptEffectBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IScriptEffectInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out ScriptEffect_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ScriptEffectBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Binary(
+            this IScriptEffectInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ScriptEffectBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary(
+            this IScriptEffectInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences)
+        {
+            ((ScriptEffectBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

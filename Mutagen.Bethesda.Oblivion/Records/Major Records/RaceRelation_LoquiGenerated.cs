@@ -31,7 +31,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class RaceRelation : 
+    public partial class RaceRelation :
         LoquiNotifyingObject,
         IRaceRelation,
         ILoquiObject<RaceRelation>,
@@ -118,6 +118,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => RaceRelationXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static RaceRelation Create_Xml(
@@ -170,7 +172,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    RaceRelationCommon.FillPublicElement_Xml(
+                    RaceRelationXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -268,139 +270,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out RaceRelation_ErrorMask errorMask,
-            bool doMasks = true,
-            RaceRelation_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            RaceRelationXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RaceRelation_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out RaceRelation_ErrorMask errorMask,
-            RaceRelation_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out RaceRelation_ErrorMask errorMask,
-            RaceRelation_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            RaceRelation_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            RaceRelationXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -438,6 +307,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected IBinaryTranslator BinaryTranslator => RaceRelationBinaryTranslation.Instance;
+        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static RaceRelation Create_Binary(
@@ -489,49 +360,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out RaceRelation_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            RaceRelationBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = RaceRelation_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences)
-        {
-            this.Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            RaceRelationBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -645,8 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceRelationGetter rhs,
             ErrorMaskBuilder errorMask,
             RaceRelation_CopyMask copyMask = null,
-            IRaceRelationGetter def = null,
-            bool doMasks = true)
+            IRaceRelationGetter def = null)
         {
             RaceRelationCommon.CopyFieldsFrom(
                 item: this,
@@ -718,14 +545,25 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IRaceRelation : IRaceRelationGetter, ILoquiClass<IRaceRelation, IRaceRelationGetter>, ILoquiClass<RaceRelation, IRaceRelationGetter>
+    public partial interface IRaceRelation :
+        IRaceRelationGetter,
+        ILoquiClass<IRaceRelation, IRaceRelationGetter>,
+        ILoquiClass<RaceRelation, IRaceRelationGetter>
     {
         new Race Race { get; set; }
         new Int32 Modifier { get; set; }
 
+        void CopyFieldsFrom(
+            IRaceRelationGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            RaceRelation_CopyMask copyMask = null,
+            IRaceRelationGetter def = null);
     }
 
-    public partial interface IRaceRelationGetter : ILoquiObject
+    public partial interface IRaceRelationGetter :
+        ILoquiObject,
+        IXmlItem,
+        IBinaryItem
     {
         #region Race
         Race Race { get; }
@@ -903,10 +741,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(RaceRelationXmlTranslation);
         public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = XNAM_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
+        public static readonly Type BinaryTranslation = typeof(RaceRelationBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1071,9 +911,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class RaceRelationXmlTranslation : IXmlTranslator
+    {
+        public readonly static RaceRelationXmlTranslation Instance = new RaceRelationXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IRaceRelationGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Race) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Race),
+                    item: item.Race_Property?.FormKey,
+                    fieldIndex: (int)RaceRelation_FieldIndex.Race,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Modifier) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Modifier),
+                    item: item.Modifier,
+                    fieldIndex: (int)RaceRelation_FieldIndex.Modifier,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this RaceRelation item,
+            IRaceRelation item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1082,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    RaceRelationCommon.FillPublicElement_Xml(
+                    RaceRelationXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1098,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this RaceRelation item,
+            IRaceRelation item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1144,63 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class RaceRelationXmlTranslation
-    {
-        public readonly static RaceRelationXmlTranslation Instance = new RaceRelationXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IRaceRelationGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Race) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Race),
-                    item: item.Race_Property?.FormKey,
-                    fieldIndex: (int)RaceRelation_FieldIndex.Race,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Modifier) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Modifier),
-                    item: item.Modifier,
-                    fieldIndex: (int)RaceRelation_FieldIndex.Modifier,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IRaceRelationGetter item,
-            bool doMasks,
-            out RaceRelation_ErrorMask errorMask,
-            RaceRelation_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RaceRelation_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IRaceRelationGetter item,
             ErrorMaskBuilder errorMask,
@@ -1219,9 +1037,210 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IRaceRelationGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IRaceRelationGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IRaceRelationGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class RaceRelationXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IRaceRelationGetter item,
+            XElement node,
+            out RaceRelation_ErrorMask errorMask,
+            bool doMasks = true,
+            RaceRelation_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((RaceRelationXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = RaceRelation_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IRaceRelationGetter item,
+            string path,
+            out RaceRelation_ErrorMask errorMask,
+            RaceRelation_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IRaceRelationGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IRaceRelationGetter item,
+            Stream stream,
+            out RaceRelation_ErrorMask errorMask,
+            RaceRelation_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IRaceRelationGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IRaceRelationGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((RaceRelationXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this IRaceRelationGetter item,
+            XElement node,
+            string name = null,
+            RaceRelation_TranslationMask translationMask = null)
+        {
+            ((RaceRelationXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this IRaceRelationGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((RaceRelationXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IRaceRelationGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((RaceRelationXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -1528,11 +1547,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class RaceRelationBinaryTranslation
+    public partial class RaceRelationBinaryTranslation : IBinaryTranslator
     {
         public readonly static RaceRelationBinaryTranslation Instance = new RaceRelationBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             IRaceRelationGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
@@ -1545,26 +1564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.Modifier);
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IRaceRelationGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out RaceRelation_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = RaceRelation_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IRaceRelationGetter item,
             MasterReferences masterReferences,
@@ -1576,16 +1576,81 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: RaceRelation_Registration.XNAM_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IRaceRelationGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class RaceRelationBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IRaceRelationGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out RaceRelation_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((RaceRelationBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = RaceRelation_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Binary(
+            this IRaceRelationGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RaceRelationBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary(
+            this IRaceRelationGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences)
+        {
+            ((RaceRelationBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

@@ -1,5 +1,6 @@
 using Loqui;
 using Loqui.Internal;
+using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Folder;
 using Mutagen.Bethesda.Internals;
@@ -16,7 +17,7 @@ using System.Xml.Linq;
 namespace Mutagen.Bethesda
 {
     public partial class ListGroup<T>
-        where T : ILoquiObject<T>
+        where T : ILoquiObject<T>, IXmlItem, IBinaryItem
     {
         public static readonly ListGroup_TranslationMask<TranslationMaskStub> XmlFolderTranslationMask = new ListGroup_TranslationMask<TranslationMaskStub>(true)
         {
@@ -32,7 +33,7 @@ namespace Mutagen.Bethesda
             string name,
             ErrorMaskBuilder errorMask,
             int index)
-            where T : ILoquiObject<T>, IXmlFolderItem, new()
+            where T : ILoquiObject<T>, IXmlItem, IBinaryItem, IXmlFolderItem, new()
         {
             using (errorMask?.PushIndex(index))
             {
@@ -50,7 +51,8 @@ namespace Mutagen.Bethesda
                             {
                                 throw new ArgumentException("XML file did not have \"Group\" top node.");
                             }
-                            group.FillPublic_Xml(
+                            ListGroupXmlTranslation<T>.FillPublic_Xml(
+                                group,
                                 elem,
                                 errorMask,
                                 translationMask: ListGroup<T>.XmlFolderTranslationMask.GetCrystal());
@@ -111,7 +113,7 @@ namespace Mutagen.Bethesda
             string name,
             ErrorMaskBuilder errorMask,
             int index)
-            where T : ILoquiObject<T>, IXmlFolderItem
+            where T : ILoquiObject<T>, IXmlItem, IBinaryItem, IXmlFolderItem
         {
             using (errorMask?.PushIndex(index))
             {

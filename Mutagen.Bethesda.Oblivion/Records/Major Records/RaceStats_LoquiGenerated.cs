@@ -31,7 +31,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class RaceStats : 
+    public partial class RaceStats :
         LoquiNotifyingObject,
         IRaceStats,
         ILoquiObject<RaceStats>,
@@ -179,6 +179,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => RaceStatsXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static RaceStats Create_Xml(
@@ -231,7 +233,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    RaceStatsCommon.FillPublicElement_Xml(
+                    RaceStatsXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -329,139 +331,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out RaceStats_ErrorMask errorMask,
-            bool doMasks = true,
-            RaceStats_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            RaceStatsXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            RaceStats_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            RaceStatsXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -484,6 +353,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
+        protected IBinaryTranslator BinaryTranslator => RaceStatsBinaryTranslation.Instance;
+        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static RaceStats Create_Binary(
@@ -532,49 +403,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out RaceStats_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            RaceStatsBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences)
-        {
-            this.Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            RaceStatsBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -691,8 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceStatsGetter rhs,
             ErrorMaskBuilder errorMask,
             RaceStats_CopyMask copyMask = null,
-            IRaceStatsGetter def = null,
-            bool doMasks = true)
+            IRaceStatsGetter def = null)
         {
             RaceStatsCommon.CopyFieldsFrom(
                 item: this,
@@ -800,7 +627,10 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IRaceStats : IRaceStatsGetter, ILoquiClass<IRaceStats, IRaceStatsGetter>, ILoquiClass<RaceStats, IRaceStatsGetter>
+    public partial interface IRaceStats :
+        IRaceStatsGetter,
+        ILoquiClass<IRaceStats, IRaceStatsGetter>,
+        ILoquiClass<RaceStats, IRaceStatsGetter>
     {
         new Byte Strength { get; set; }
 
@@ -818,9 +648,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte Luck { get; set; }
 
+        void CopyFieldsFrom(
+            IRaceStatsGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            RaceStats_CopyMask copyMask = null,
+            IRaceStatsGetter def = null);
     }
 
-    public partial interface IRaceStatsGetter : ILoquiObject
+    public partial interface IRaceStatsGetter :
+        ILoquiObject,
+        IXmlItem,
+        IBinaryItem
     {
         #region Strength
         Byte Strength { get; }
@@ -1093,8 +931,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(RaceStatsXmlTranslation);
         public const int NumStructFields = 8;
         public const int NumTypedFields = 0;
+        public static readonly Type BinaryTranslation = typeof(RaceStatsBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1403,9 +1243,97 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class RaceStatsXmlTranslation : IXmlTranslator
+    {
+        public readonly static RaceStatsXmlTranslation Instance = new RaceStatsXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IRaceStatsGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Strength) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Strength),
+                    item: item.Strength,
+                    fieldIndex: (int)RaceStats_FieldIndex.Strength,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Intelligence) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Intelligence),
+                    item: item.Intelligence,
+                    fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Willpower) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Willpower),
+                    item: item.Willpower,
+                    fieldIndex: (int)RaceStats_FieldIndex.Willpower,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Agility) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Agility),
+                    item: item.Agility,
+                    fieldIndex: (int)RaceStats_FieldIndex.Agility,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Speed) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Speed),
+                    item: item.Speed,
+                    fieldIndex: (int)RaceStats_FieldIndex.Speed,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Endurance) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Endurance),
+                    item: item.Endurance,
+                    fieldIndex: (int)RaceStats_FieldIndex.Endurance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Personality) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Personality),
+                    item: item.Personality,
+                    fieldIndex: (int)RaceStats_FieldIndex.Personality,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Luck) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Luck),
+                    item: item.Luck,
+                    fieldIndex: (int)RaceStats_FieldIndex.Luck,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this RaceStats item,
+            IRaceStats item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1414,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    RaceStatsCommon.FillPublicElement_Xml(
+                    RaceStatsXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1430,7 +1358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this RaceStats item,
+            IRaceStats item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1651,117 +1579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class RaceStatsXmlTranslation
-    {
-        public readonly static RaceStatsXmlTranslation Instance = new RaceStatsXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IRaceStatsGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Strength) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Strength),
-                    item: item.Strength,
-                    fieldIndex: (int)RaceStats_FieldIndex.Strength,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Intelligence) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Intelligence),
-                    item: item.Intelligence,
-                    fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Willpower) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Willpower),
-                    item: item.Willpower,
-                    fieldIndex: (int)RaceStats_FieldIndex.Willpower,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Agility) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Agility),
-                    item: item.Agility,
-                    fieldIndex: (int)RaceStats_FieldIndex.Agility,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Speed) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Speed),
-                    item: item.Speed,
-                    fieldIndex: (int)RaceStats_FieldIndex.Speed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Endurance) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Endurance),
-                    item: item.Endurance,
-                    fieldIndex: (int)RaceStats_FieldIndex.Endurance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Personality) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Personality),
-                    item: item.Personality,
-                    fieldIndex: (int)RaceStats_FieldIndex.Personality,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Luck) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Luck),
-                    item: item.Luck,
-                    fieldIndex: (int)RaceStats_FieldIndex.Luck,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IRaceStatsGetter item,
-            bool doMasks,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IRaceStatsGetter item,
             ErrorMaskBuilder errorMask,
@@ -1780,9 +1598,210 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IRaceStatsGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IRaceStatsGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IRaceStatsGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class RaceStatsXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IRaceStatsGetter item,
+            XElement node,
+            out RaceStats_ErrorMask errorMask,
+            bool doMasks = true,
+            RaceStats_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((RaceStatsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IRaceStatsGetter item,
+            string path,
+            out RaceStats_ErrorMask errorMask,
+            RaceStats_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IRaceStatsGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IRaceStatsGetter item,
+            Stream stream,
+            out RaceStats_ErrorMask errorMask,
+            RaceStats_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IRaceStatsGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IRaceStatsGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((RaceStatsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this IRaceStatsGetter item,
+            XElement node,
+            string name = null,
+            RaceStats_TranslationMask translationMask = null)
+        {
+            ((RaceStatsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this IRaceStatsGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((RaceStatsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IRaceStatsGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((RaceStatsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -2251,11 +2270,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class RaceStatsBinaryTranslation
+    public partial class RaceStatsBinaryTranslation : IBinaryTranslator
     {
         public readonly static RaceStatsBinaryTranslation Instance = new RaceStatsBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             IRaceStatsGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
@@ -2271,41 +2290,87 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.Luck);
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IRaceStatsGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out RaceStats_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IRaceStatsGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Write_Binary_Embedded(
+            Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
-        #endregion
+
+        public void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IRaceStatsGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class RaceStatsBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IRaceStatsGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out RaceStats_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((RaceStatsBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Binary(
+            this IRaceStatsGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RaceStatsBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary(
+            this IRaceStatsGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences)
+        {
+            ((RaceStatsBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

@@ -10,10 +10,16 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>97b7b30ae033be9a860b441793a8c6cc00e4af84</Sha>
+<<<<<<< babas
+         <Sha>1532a1b15d1d764b4031416b9c1b9aef53dfeebe</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>05-24-2019 17:33:14</CommitDate>
-         <Description>Bugfix for EnumXml subgen</Description>
+         <CommitDate>05-27-2019 02:54:13</CommitDate>
+=======
+         <Sha>2c2380dc370b1a9e6e2b74291154e358f36e5a16</Sha>
+         <Path>../Loqui</Path>
+         <CommitDate>05-27-2019 02:02:20</CommitDate>
+>>>>>>> Library Updates
+         <Description>TranslationInterface system</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

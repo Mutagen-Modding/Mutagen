@@ -32,7 +32,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public abstract partial class SkyrimMajorRecord : 
+    public abstract partial class SkyrimMajorRecord :
         MajorRecord,
         ISkyrimMajorRecord,
         ISkyrimMajorRecordInternal,
@@ -104,6 +104,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => SkyrimMajorRecordXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static SkyrimMajorRecord Create_Xml(
@@ -241,121 +242,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out SkyrimMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            SkyrimMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SkyrimMajorRecordXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out SkyrimMajorRecord_ErrorMask errorMask,
-            SkyrimMajorRecord_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out SkyrimMajorRecord_ErrorMask errorMask,
-            SkyrimMajorRecord_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SkyrimMajorRecordXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            SkyrimMajorRecordXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         protected static void FillPrivateElement_Xml(
             SkyrimMajorRecord item,
             XElement node,
@@ -399,57 +285,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out SkyrimMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SkyrimMajorRecordBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SkyrimMajorRecordBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            SkyrimMajorRecordBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
-        #endregion
-
+        protected override IBinaryTranslator BinaryTranslator => SkyrimMajorRecordBinaryTranslation.Instance;
         protected static void Fill_Binary_Structs(
             SkyrimMajorRecord item,
             MutagenFrame frame,
@@ -545,8 +381,7 @@ namespace Mutagen.Bethesda.Skyrim
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder errorMask,
             SkyrimMajorRecord_CopyMask copyMask = null,
-            ISkyrimMajorRecordGetter def = null,
-            bool doMasks = true)
+            ISkyrimMajorRecordGetter def = null)
         {
             SkyrimMajorRecordCommon.CopyFieldsFrom(
                 item: this,
@@ -596,17 +431,32 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
-    public partial interface ISkyrimMajorRecord : ISkyrimMajorRecordGetter, IMajorRecord, ILoquiClass<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>, ILoquiClass<SkyrimMajorRecord, ISkyrimMajorRecordGetter>
+    public partial interface ISkyrimMajorRecord :
+        ISkyrimMajorRecordGetter,
+        IMajorRecord,
+        ILoquiClass<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>,
+        ILoquiClass<SkyrimMajorRecord, ISkyrimMajorRecordGetter>
     {
         new SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlags { get; set; }
 
+        void CopyFieldsFrom(
+            ISkyrimMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            SkyrimMajorRecord_CopyMask copyMask = null,
+            ISkyrimMajorRecordGetter def = null);
     }
 
-    public partial interface ISkyrimMajorRecordInternal : ISkyrimMajorRecord, ISkyrimMajorRecordInternalGetter, IMajorRecordInternal
+    public partial interface ISkyrimMajorRecordInternal :
+        IMajorRecordInternal,
+        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternalGetter
     {
     }
 
-    public partial interface ISkyrimMajorRecordGetter : IMajorRecordGetter
+    public partial interface ISkyrimMajorRecordGetter :
+        IMajorRecordGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region SkyrimMajorRecordFlags
         SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlags { get; }
@@ -615,7 +465,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
-    public partial interface ISkyrimMajorRecordInternalGetter : ISkyrimMajorRecordGetter, IMajorRecordInternalGetter
+    public partial interface ISkyrimMajorRecordInternalGetter :
+        IMajorRecordInternalGetter,
+        ISkyrimMajorRecordGetter
     {
 
     }
@@ -633,8 +485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        SkyrimMajorRecordFlags = 5,
+        SkyrimMajorRecordFlags = 4,
     }
     #endregion
 
@@ -654,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(SkyrimMajorRecord_Mask<>);
 
@@ -777,6 +628,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(SkyrimMajorRecordXmlTranslation);
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -793,6 +645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
+        public static readonly Type BinaryTranslation = typeof(SkyrimMajorRecordBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -958,16 +811,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (SkyrimMajorRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (SkyrimMajorRecord_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
-                    return (SkyrimMajorRecord_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class SkyrimMajorRecordXmlTranslation :
+        MajorRecordXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static SkyrimMajorRecordXmlTranslation Instance = new SkyrimMajorRecordXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ISkyrimMajorRecordInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags) ?? true))
+            {
+                EnumXmlTranslation<SkyrimMajorRecord.SkyrimMajorRecordFlag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.SkyrimMajorRecordFlags),
+                    item: item.SkyrimMajorRecordFlags,
+                    fieldIndex: (int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this SkyrimMajorRecord item,
+            ISkyrimMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -976,7 +859,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    SkyrimMajorRecordCommon.FillPublicElement_Xml(
+                    SkyrimMajorRecordXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -992,7 +875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this SkyrimMajorRecord item,
+            ISkyrimMajorRecordInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1027,7 +910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    MajorRecordXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1037,59 +920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class SkyrimMajorRecordXmlTranslation : MajorRecordXmlTranslation
-    {
-        public new readonly static SkyrimMajorRecordXmlTranslation Instance = new SkyrimMajorRecordXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            ISkyrimMajorRecordInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            MajorRecordXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags) ?? true))
-            {
-                EnumXmlTranslation<SkyrimMajorRecord.SkyrimMajorRecordFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SkyrimMajorRecordFlags),
-                    item: item.SkyrimMajorRecordFlags,
-                    fieldIndex: (int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            ISkyrimMajorRecordInternalGetter item,
-            bool doMasks,
-            out SkyrimMajorRecord_ErrorMask errorMask,
-            SkyrimMajorRecord_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public virtual void Write(
             XElement node,
             ISkyrimMajorRecordInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -1108,9 +939,101 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISkyrimMajorRecordInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISkyrimMajorRecordInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class SkyrimMajorRecordXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this ISkyrimMajorRecordInternalGetter item,
+            XElement node,
+            out SkyrimMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            SkyrimMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((SkyrimMajorRecordXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this ISkyrimMajorRecordInternalGetter item,
+            string path,
+            out SkyrimMajorRecord_ErrorMask errorMask,
+            SkyrimMajorRecord_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ISkyrimMajorRecordInternalGetter item,
+            Stream stream,
+            out SkyrimMajorRecord_ErrorMask errorMask,
+            SkyrimMajorRecord_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -1375,64 +1298,100 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Binary Translation
-    public partial class SkyrimMajorRecordBinaryTranslation : MajorRecordBinaryTranslation
+    public partial class SkyrimMajorRecordBinaryTranslation :
+        MajorRecordBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static SkyrimMajorRecordBinaryTranslation Instance = new SkyrimMajorRecordBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             ISkyrimMajorRecordInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_Embedded(
+            MajorRecordBinaryTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            ISkyrimMajorRecordInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out SkyrimMajorRecord_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public virtual void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Write_Binary_Embedded(
+            Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ISkyrimMajorRecordInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ISkyrimMajorRecordInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class SkyrimMajorRecordBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this ISkyrimMajorRecordInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out SkyrimMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((SkyrimMajorRecordBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

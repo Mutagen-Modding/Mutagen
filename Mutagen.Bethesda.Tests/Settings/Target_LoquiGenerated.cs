@@ -25,7 +25,7 @@ using System.Collections.Specialized;
 namespace Mutagen.Bethesda.Tests
 {
     #region Class
-    public partial class Target : 
+    public partial class Target :
         LoquiNotifyingObject,
         ITarget,
         ILoquiObject<Target>,
@@ -173,6 +173,8 @@ namespace Mutagen.Bethesda.Tests
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => TargetXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static Target Create_Xml(
@@ -225,7 +227,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 foreach (var elem in node.Elements())
                 {
-                    TargetCommon.FillPublicElement_Xml(
+                    TargetXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -420,139 +422,6 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out Target_ErrorMask errorMask,
-            bool doMasks = true,
-            Target_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            TargetXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Target_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out Target_ErrorMask errorMask,
-            Target_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out Target_ErrorMask errorMask,
-            Target_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            Target_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            TargetXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -668,8 +537,7 @@ namespace Mutagen.Bethesda.Tests
             ITargetGetter rhs,
             ErrorMaskBuilder errorMask,
             Target_CopyMask copyMask = null,
-            ITargetGetter def = null,
-            bool doMasks = true)
+            ITargetGetter def = null)
         {
             TargetCommon.CopyFieldsFrom(
                 item: this,
@@ -759,7 +627,10 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Interface
-    public partial interface ITarget : ITargetGetter, ILoquiClass<ITarget, ITargetGetter>, ILoquiClass<Target, ITargetGetter>
+    public partial interface ITarget :
+        ITargetGetter,
+        ILoquiClass<ITarget, ITargetGetter>,
+        ILoquiClass<Target, ITargetGetter>
     {
         new Boolean Do { get; set; }
 
@@ -774,9 +645,16 @@ namespace Mutagen.Bethesda.Tests
         void ExpectedBaseGroupCount_Set(Byte item, bool hasBeenSet = true);
         void ExpectedBaseGroupCount_Unset();
 
+        void CopyFieldsFrom(
+            ITargetGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            Target_CopyMask copyMask = null,
+            ITargetGetter def = null);
     }
 
-    public partial interface ITargetGetter : ILoquiObject
+    public partial interface ITargetGetter :
+        ILoquiObject,
+        IXmlItem
     {
         #region Do
         Boolean Do { get; }
@@ -1002,6 +880,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(TargetXmlTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1252,9 +1131,71 @@ namespace Mutagen.Bethesda.Tests.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class TargetXmlTranslation : IXmlTranslator
+    {
+        public readonly static TargetXmlTranslation Instance = new TargetXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ITargetGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.Do) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Do),
+                    item: item.Do,
+                    fieldIndex: (int)Target_FieldIndex.Do,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.Path) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Path),
+                    item: item.Path,
+                    fieldIndex: (int)Target_FieldIndex.Path,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.NumMasters) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NumMasters),
+                    item: item.NumMasters,
+                    fieldIndex: (int)Target_FieldIndex.NumMasters,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.GameMode) ?? true))
+            {
+                EnumXmlTranslation<Mutagen.Bethesda.GameMode>.Instance.Write(
+                    node: node,
+                    name: nameof(item.GameMode),
+                    item: item.GameMode,
+                    fieldIndex: (int)Target_FieldIndex.GameMode,
+                    errorMask: errorMask);
+            }
+            if (item.ExpectedBaseGroupCount_IsSet
+                && (translationMask?.GetShouldTranslate((int)Target_FieldIndex.ExpectedBaseGroupCount) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ExpectedBaseGroupCount),
+                    item: item.ExpectedBaseGroupCount,
+                    fieldIndex: (int)Target_FieldIndex.ExpectedBaseGroupCount,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this Target item,
+            ITarget item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1263,7 +1204,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    TargetCommon.FillPublicElement_Xml(
+                    TargetXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1279,7 +1220,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this Target item,
+            ITarget item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1437,91 +1378,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class TargetXmlTranslation
-    {
-        public readonly static TargetXmlTranslation Instance = new TargetXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            ITargetGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.Do) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Do),
-                    item: item.Do,
-                    fieldIndex: (int)Target_FieldIndex.Do,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.Path) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Path),
-                    item: item.Path,
-                    fieldIndex: (int)Target_FieldIndex.Path,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.NumMasters) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NumMasters),
-                    item: item.NumMasters,
-                    fieldIndex: (int)Target_FieldIndex.NumMasters,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.GameMode) ?? true))
-            {
-                EnumXmlTranslation<Mutagen.Bethesda.GameMode>.Instance.Write(
-                    node: node,
-                    name: nameof(item.GameMode),
-                    item: item.GameMode,
-                    fieldIndex: (int)Target_FieldIndex.GameMode,
-                    errorMask: errorMask);
-            }
-            if (item.ExpectedBaseGroupCount_IsSet
-                && (translationMask?.GetShouldTranslate((int)Target_FieldIndex.ExpectedBaseGroupCount) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ExpectedBaseGroupCount),
-                    item: item.ExpectedBaseGroupCount,
-                    fieldIndex: (int)Target_FieldIndex.ExpectedBaseGroupCount,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            ITargetGetter item,
-            bool doMasks,
-            out Target_ErrorMask errorMask,
-            Target_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Target_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             ITargetGetter item,
             ErrorMaskBuilder errorMask,
@@ -1540,9 +1397,210 @@ namespace Mutagen.Bethesda.Tests.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ITargetGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            ITargetGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (ITargetGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class TargetXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this ITargetGetter item,
+            XElement node,
+            out Target_ErrorMask errorMask,
+            bool doMasks = true,
+            Target_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((TargetXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Target_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this ITargetGetter item,
+            string path,
+            out Target_ErrorMask errorMask,
+            Target_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ITargetGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ITargetGetter item,
+            Stream stream,
+            out Target_ErrorMask errorMask,
+            Target_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this ITargetGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this ITargetGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((TargetXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this ITargetGetter item,
+            XElement node,
+            string name = null,
+            Target_TranslationMask translationMask = null)
+        {
+            ((TargetXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this ITargetGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((TargetXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ITargetGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((TargetXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask

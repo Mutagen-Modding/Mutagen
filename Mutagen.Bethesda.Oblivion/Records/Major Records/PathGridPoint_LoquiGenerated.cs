@@ -33,7 +33,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class PathGridPoint : 
+    public partial class PathGridPoint :
         LoquiNotifyingObject,
         IPathGridPoint,
         ILoquiObject<PathGridPoint>,
@@ -148,6 +148,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => PathGridPointXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static PathGridPoint Create_Xml(
@@ -200,7 +202,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    PathGridPointCommon.FillPublicElement_Xml(
+                    PathGridPointXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -298,139 +300,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out PathGridPoint_ErrorMask errorMask,
-            bool doMasks = true,
-            PathGridPoint_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            PathGridPointXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            PathGridPoint_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            PathGridPointXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -448,6 +317,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
+        protected IBinaryTranslator BinaryTranslator => PathGridPointBinaryTranslation.Instance;
+        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static PathGridPoint Create_Binary(
@@ -496,49 +367,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out PathGridPoint_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            PathGridPointBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences)
-        {
-            this.Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            PathGridPointBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -672,8 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
             IPathGridPointGetter rhs,
             ErrorMaskBuilder errorMask,
             PathGridPoint_CopyMask copyMask = null,
-            IPathGridPointGetter def = null,
-            bool doMasks = true)
+            IPathGridPointGetter def = null)
         {
             PathGridPointCommon.CopyFieldsFrom(
                 item: this,
@@ -751,16 +578,27 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IPathGridPoint : IPathGridPointGetter, ILoquiClass<IPathGridPoint, IPathGridPointGetter>, ILoquiClass<PathGridPoint, IPathGridPointGetter>
+    public partial interface IPathGridPoint :
+        IPathGridPointGetter,
+        ILoquiClass<IPathGridPoint, IPathGridPointGetter>,
+        ILoquiClass<PathGridPoint, IPathGridPointGetter>
     {
         new P3Float Point { get; set; }
 
         new Byte[] NumConnectionsFluffBytes { get; set; }
 
         new ISourceSetList<Int16> Connections { get; }
+        void CopyFieldsFrom(
+            IPathGridPointGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            PathGridPoint_CopyMask copyMask = null,
+            IPathGridPointGetter def = null);
     }
 
-    public partial interface IPathGridPointGetter : ILoquiObject
+    public partial interface IPathGridPointGetter :
+        ILoquiObject,
+        IXmlItem,
+        IBinaryItem
     {
         #region Point
         P3Float Point { get; }
@@ -953,8 +791,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(PathGridPointXmlTranslation);
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
+        public static readonly Type BinaryTranslation = typeof(PathGridPointBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1163,9 +1003,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class PathGridPointXmlTranslation : IXmlTranslator
+    {
+        public readonly static PathGridPointXmlTranslation Instance = new PathGridPointXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IPathGridPointGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Point) ?? true))
+            {
+                P3FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Point),
+                    item: item.Point,
+                    fieldIndex: (int)PathGridPoint_FieldIndex.Point,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NumConnectionsFluffBytes),
+                    item: item.NumConnectionsFluffBytes,
+                    fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Connections) ?? true))
+            {
+                ListXmlTranslation<Int16>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Connections),
+                    item: item.Connections,
+                    fieldIndex: (int)PathGridPoint_FieldIndex.Connections,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PathGridPoint_FieldIndex.Connections),
+                    transl: (XElement subNode, Int16 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        Int16XmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+        }
+
         public static void FillPublic_Xml(
-            this PathGridPoint item,
+            IPathGridPoint item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1174,7 +1067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    PathGridPointCommon.FillPublicElement_Xml(
+                    PathGridPointXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1190,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this PathGridPoint item,
+            IPathGridPoint item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1283,82 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class PathGridPointXmlTranslation
-    {
-        public readonly static PathGridPointXmlTranslation Instance = new PathGridPointXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IPathGridPointGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Point) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Point),
-                    item: item.Point,
-                    fieldIndex: (int)PathGridPoint_FieldIndex.Point,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NumConnectionsFluffBytes),
-                    item: item.NumConnectionsFluffBytes,
-                    fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Connections) ?? true))
-            {
-                ListXmlTranslation<Int16>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Connections),
-                    item: item.Connections,
-                    fieldIndex: (int)PathGridPoint_FieldIndex.Connections,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PathGridPoint_FieldIndex.Connections),
-                    transl: (XElement subNode, Int16 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        Int16XmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    }
-                    );
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IPathGridPointGetter item,
-            bool doMasks,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IPathGridPointGetter item,
             ErrorMaskBuilder errorMask,
@@ -1377,9 +1195,210 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IPathGridPointGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IPathGridPointGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IPathGridPointGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class PathGridPointXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IPathGridPointGetter item,
+            XElement node,
+            out PathGridPoint_ErrorMask errorMask,
+            bool doMasks = true,
+            PathGridPoint_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((PathGridPointXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IPathGridPointGetter item,
+            string path,
+            out PathGridPoint_ErrorMask errorMask,
+            PathGridPoint_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IPathGridPointGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IPathGridPointGetter item,
+            Stream stream,
+            out PathGridPoint_ErrorMask errorMask,
+            PathGridPoint_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IPathGridPointGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IPathGridPointGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((PathGridPointXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this IPathGridPointGetter item,
+            XElement node,
+            string name = null,
+            PathGridPoint_TranslationMask translationMask = null)
+        {
+            ((PathGridPointXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this IPathGridPointGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((PathGridPointXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IPathGridPointGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((PathGridPointXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -1782,11 +1801,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class PathGridPointBinaryTranslation
+    public partial class PathGridPointBinaryTranslation : IBinaryTranslator
     {
         public readonly static PathGridPointBinaryTranslation Instance = new PathGridPointBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             IPathGridPointGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
@@ -1804,41 +1823,87 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 transl: Int16BinaryTranslation.Instance.Write);
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IPathGridPointGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out PathGridPoint_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IPathGridPointGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Write_Binary_Embedded(
+            Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
-        #endregion
+
+        public void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IPathGridPointGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class PathGridPointBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IPathGridPointGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out PathGridPoint_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((PathGridPointBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Binary(
+            this IPathGridPointGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ((PathGridPointBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary(
+            this IPathGridPointGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences)
+        {
+            ((PathGridPointBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

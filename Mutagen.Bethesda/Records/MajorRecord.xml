@@ -6,9 +6,6 @@
       <FormKey name="FormKey" setPermission="protected" hasBeenSet="False" notifying="None" internalSetInterface="true" />
       <UInt32 name="Version" hasBeenSet="False" />
       <String name="EditorID" recordType="EDID" />
-      <UnsafeObject name="RecordType" derivative="true" hasBeenSet="False" notifying="None">
-        <TargetType>RecordType</TargetType>
-      </UnsafeObject>
     </Fields>
   </Object>
 </Loqui>

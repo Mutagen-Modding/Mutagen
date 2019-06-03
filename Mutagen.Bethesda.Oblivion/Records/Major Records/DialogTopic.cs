@@ -83,9 +83,8 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: (MutagenWriter subWriter, DialogItem subItem, ErrorMaskBuilder listErrMask) =>
                         {
-                            LoquiBinaryTranslation<DialogItem>.Instance.Write(
+                           subItem.Write_Binary(
                                 writer: subWriter,
-                                item: subItem,
                                 masterReferences: masterReferences,
                                 errorMask: listErrMask);
                         });

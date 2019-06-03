@@ -33,7 +33,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class GameSettingInt : 
+    public partial class GameSettingInt :
         GameSetting,
         IGameSettingInt,
         IGameSettingIntInternal,
@@ -138,6 +138,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => GameSettingIntXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static GameSettingInt Create_Xml(
@@ -196,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    GameSettingIntCommon.FillPublicElement_Xml(
+                    GameSettingIntXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -294,155 +295,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out GameSettingInt_ErrorMask errorMask,
-            bool doMasks = true,
-            GameSettingInt_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            GameSettingIntXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out GameSettingInt_ErrorMask errorMask,
-            GameSettingInt_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out GameSettingInt_ErrorMask errorMask,
-            GameSettingInt_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out GameSetting_ErrorMask errorMask,
-            bool doMasks = true,
-            GameSetting_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            GameSettingIntXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out SkyrimMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            SkyrimMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            GameSettingIntXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            GameSettingIntXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            GameSettingIntXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         protected static void FillPrivateElement_Xml(
             GameSettingInt item,
             XElement node,
@@ -498,6 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
+        protected override IBinaryTranslator BinaryTranslator => GameSettingIntBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static GameSettingInt Create_Binary(
@@ -545,89 +398,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out GameSettingInt_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            GameSettingIntBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out GameSetting_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            GameSettingIntBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out SkyrimMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            GameSettingIntBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            GameSettingIntBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            GameSettingIntBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -771,8 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
             IGameSettingIntGetter rhs,
             ErrorMaskBuilder errorMask,
             GameSettingInt_CopyMask copyMask = null,
-            IGameSettingIntGetter def = null,
-            bool doMasks = true)
+            IGameSettingIntGetter def = null)
         {
             GameSettingIntCommon.CopyFieldsFrom(
                 item: this,
@@ -832,20 +601,35 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
-    public partial interface IGameSettingInt : IGameSettingIntGetter, IGameSetting, ILoquiClass<IGameSettingInt, IGameSettingIntGetter>, ILoquiClass<GameSettingInt, IGameSettingIntGetter>
+    public partial interface IGameSettingInt :
+        IGameSettingIntGetter,
+        IGameSetting,
+        ILoquiClass<IGameSettingInt, IGameSettingIntGetter>,
+        ILoquiClass<GameSettingInt, IGameSettingIntGetter>
     {
         new Int32 Data { get; set; }
         new bool Data_IsSet { get; set; }
         void Data_Set(Int32 item, bool hasBeenSet = true);
         void Data_Unset();
 
+        void CopyFieldsFrom(
+            IGameSettingIntGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            GameSettingInt_CopyMask copyMask = null,
+            IGameSettingIntGetter def = null);
     }
 
-    public partial interface IGameSettingIntInternal : IGameSettingInt, IGameSettingIntInternalGetter, IGameSettingInternal
+    public partial interface IGameSettingIntInternal :
+        IGameSettingInternal,
+        IGameSettingInt,
+        IGameSettingIntInternalGetter
     {
     }
 
-    public partial interface IGameSettingIntGetter : IGameSettingGetter
+    public partial interface IGameSettingIntGetter :
+        IGameSettingGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region Data
         Int32 Data { get; }
@@ -855,7 +639,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
-    public partial interface IGameSettingIntInternalGetter : IGameSettingIntGetter, IGameSettingInternalGetter
+    public partial interface IGameSettingIntInternalGetter :
+        IGameSettingInternalGetter,
+        IGameSettingIntGetter
     {
 
     }
@@ -873,9 +659,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        SkyrimMajorRecordFlags = 5,
-        Data = 6,
+        SkyrimMajorRecordFlags = 4,
+        Data = 5,
     }
     #endregion
 
@@ -895,7 +680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(GameSettingInt_Mask<>);
 
@@ -1018,11 +803,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(GameSettingIntXmlTranslation);
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GMST_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
+        public static readonly Type BinaryTranslation = typeof(GameSettingIntBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1202,8 +989,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (GameSettingInt_FieldIndex)((int)index);
                 case GameSetting_FieldIndex.EditorID:
                     return (GameSettingInt_FieldIndex)((int)index);
-                case GameSetting_FieldIndex.RecordType:
-                    return (GameSettingInt_FieldIndex)((int)index);
                 case GameSetting_FieldIndex.SkyrimMajorRecordFlags:
                     return (GameSettingInt_FieldIndex)((int)index);
                 default:
@@ -1228,8 +1013,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMajorRecord_FieldIndex.Version:
                     return (GameSettingInt_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (GameSettingInt_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.RecordType:
                     return (GameSettingInt_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (GameSettingInt_FieldIndex)((int)index);
@@ -1256,16 +1039,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (GameSettingInt_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (GameSettingInt_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
-                    return (GameSettingInt_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class GameSettingIntXmlTranslation :
+        GameSettingXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static GameSettingIntXmlTranslation Instance = new GameSettingIntXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IGameSettingIntInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            GameSettingXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Data_IsSet
+                && (translationMask?.GetShouldTranslate((int)GameSettingInt_FieldIndex.Data) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Data),
+                    item: item.Data,
+                    fieldIndex: (int)GameSettingInt_FieldIndex.Data,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this GameSettingInt item,
+            IGameSettingIntInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1274,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    GameSettingIntCommon.FillPublicElement_Xml(
+                    GameSettingIntXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1290,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this GameSettingInt item,
+            IGameSettingIntInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1325,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 default:
-                    GameSettingCommon.FillPublicElement_Xml(
+                    GameSettingXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1335,60 +1149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class GameSettingIntXmlTranslation : GameSettingXmlTranslation
-    {
-        public new readonly static GameSettingIntXmlTranslation Instance = new GameSettingIntXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IGameSettingIntInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            GameSettingXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Data_IsSet
-                && (translationMask?.GetShouldTranslate((int)GameSettingInt_FieldIndex.Data) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Data),
-                    item: item.Data,
-                    fieldIndex: (int)GameSettingInt_FieldIndex.Data,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IGameSettingIntInternalGetter item,
-            bool doMasks,
-            out GameSettingInt_ErrorMask errorMask,
-            GameSettingInt_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IGameSettingIntInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -1407,9 +1168,131 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IGameSettingIntInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IGameSettingInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IGameSettingIntInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            ISkyrimMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IGameSettingIntInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IGameSettingIntInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class GameSettingIntXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IGameSettingIntInternalGetter item,
+            XElement node,
+            out GameSettingInt_ErrorMask errorMask,
+            bool doMasks = true,
+            GameSettingInt_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((GameSettingIntXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IGameSettingIntInternalGetter item,
+            string path,
+            out GameSettingInt_ErrorMask errorMask,
+            GameSettingInt_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IGameSettingIntInternalGetter item,
+            Stream stream,
+            out GameSettingInt_ErrorMask errorMask,
+            GameSettingInt_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -1674,18 +1557,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Binary Translation
-    public partial class GameSettingIntBinaryTranslation : GameSettingBinaryTranslation
+    public partial class GameSettingIntBinaryTranslation :
+        GameSettingBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static GameSettingIntBinaryTranslation Instance = new GameSettingIntBinaryTranslation();
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             IGameSettingIntInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1701,26 +1586,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IGameSettingIntInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out GameSettingInt_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IGameSettingIntInternalGetter item,
             MasterReferences masterReferences,
@@ -1732,12 +1598,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: GameSettingInt_Registration.GMST_HEADER,
                 type: ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                SkyrimMajorRecordBinaryTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
+                Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -1745,9 +1611,92 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IGameSettingIntInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IGameSettingInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IGameSettingIntInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            ISkyrimMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IGameSettingIntInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IGameSettingIntInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class GameSettingIntBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IGameSettingIntInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out GameSettingInt_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((GameSettingIntBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

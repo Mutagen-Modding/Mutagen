@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class GlobalFloat
     {
         public const char TRIGGER_CHAR = 'f';
+        public override char TypeChar => TRIGGER_CHAR;
 
         public override float RawFloat
         {
@@ -33,11 +34,6 @@ namespace Mutagen.Bethesda.Oblivion
         internal static GlobalFloat Factory()
         {
             return new GlobalFloat();
-        }
-
-        partial void CustomCtor()
-        {
-            this.TypeChar = TRIGGER_CHAR;
         }
     }
 }

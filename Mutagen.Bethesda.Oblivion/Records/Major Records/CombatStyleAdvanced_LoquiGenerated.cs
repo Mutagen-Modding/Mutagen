@@ -31,7 +31,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class CombatStyleAdvanced : 
+    public partial class CombatStyleAdvanced :
         LoquiNotifyingObject,
         ICombatStyleAdvanced,
         ILoquiObject<CombatStyleAdvanced>,
@@ -309,6 +309,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => CombatStyleAdvancedXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static CombatStyleAdvanced Create_Xml(
@@ -361,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    CombatStyleAdvancedCommon.FillPublicElement_Xml(
+                    CombatStyleAdvancedXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -459,139 +461,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            bool doMasks = true,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CombatStyleAdvancedXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            CombatStyleAdvanced_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            CombatStyleAdvancedXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -631,6 +500,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected IBinaryTranslator BinaryTranslator => CombatStyleAdvancedBinaryTranslation.Instance;
+        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static CombatStyleAdvanced Create_Binary(
@@ -682,49 +553,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CombatStyleAdvancedBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences)
-        {
-            this.Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            CombatStyleAdvancedBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -1043,8 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICombatStyleAdvancedGetter rhs,
             ErrorMaskBuilder errorMask,
             CombatStyleAdvanced_CopyMask copyMask = null,
-            ICombatStyleAdvancedGetter def = null,
-            bool doMasks = true)
+            ICombatStyleAdvancedGetter def = null)
         {
             CombatStyleAdvancedCommon.CopyFieldsFrom(
                 item: this,
@@ -1230,7 +1057,10 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ICombatStyleAdvanced : ICombatStyleAdvancedGetter, ILoquiClass<ICombatStyleAdvanced, ICombatStyleAdvancedGetter>, ILoquiClass<CombatStyleAdvanced, ICombatStyleAdvancedGetter>
+    public partial interface ICombatStyleAdvanced :
+        ICombatStyleAdvancedGetter,
+        ILoquiClass<ICombatStyleAdvanced, ICombatStyleAdvancedGetter>,
+        ILoquiClass<CombatStyleAdvanced, ICombatStyleAdvancedGetter>
     {
         new Single DodgeFatigueModMult { get; set; }
 
@@ -1274,9 +1104,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single PowerAttackFatigueModMult { get; set; }
 
+        void CopyFieldsFrom(
+            ICombatStyleAdvancedGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            CombatStyleAdvanced_CopyMask copyMask = null,
+            ICombatStyleAdvancedGetter def = null);
     }
 
-    public partial interface ICombatStyleAdvancedGetter : ILoquiObject
+    public partial interface ICombatStyleAdvancedGetter :
+        ILoquiObject,
+        IXmlItem,
+        IBinaryItem
     {
         #region DodgeFatigueModMult
         Single DodgeFatigueModMult { get; }
@@ -1757,10 +1595,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(CombatStyleAdvancedXmlTranslation);
         public static readonly RecordType CSAD_HEADER = new RecordType("CSAD");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CSAD_HEADER;
         public const int NumStructFields = 21;
         public const int NumTypedFields = 0;
+        public static readonly Type BinaryTranslation = typeof(CombatStyleAdvancedBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2381,9 +2221,214 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class CombatStyleAdvancedXmlTranslation : IXmlTranslator
+    {
+        public readonly static CombatStyleAdvancedXmlTranslation Instance = new CombatStyleAdvancedXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ICombatStyleAdvancedGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DodgeFatigueModMult),
+                    item: item.DodgeFatigueModMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DodgeFatigueModBase),
+                    item: item.DodgeFatigueModBase,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EncumbSpeedModBase),
+                    item: item.EncumbSpeedModBase,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EncumbSpeedModMult),
+                    item: item.EncumbSpeedModMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DodgeWhileUnderAttackMult),
+                    item: item.DodgeWhileUnderAttackMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DodgeNotUnderAttackMult),
+                    item: item.DodgeNotUnderAttackMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DodgeBackWhileUnderAttackMult),
+                    item: item.DodgeBackWhileUnderAttackMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DodgeBackNotUnderAttackMult),
+                    item: item.DodgeBackNotUnderAttackMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DodgeForwardWhileUnderAttackMult),
+                    item: item.DodgeForwardWhileUnderAttackMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DodgeForwardNotUnderAttackMult),
+                    item: item.DodgeForwardNotUnderAttackMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BlockSkillModifierMult),
+                    item: item.BlockSkillModifierMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BlockSkillModifierBase),
+                    item: item.BlockSkillModifierBase,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BlockWhileUnderAttackMult),
+                    item: item.BlockWhileUnderAttackMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BlockNotUnderAttackMult),
+                    item: item.BlockNotUnderAttackMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AttackSkillModifierMult),
+                    item: item.AttackSkillModifierMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AttackSkillModifierBase),
+                    item: item.AttackSkillModifierBase,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AttackWhileUnderAttackMult),
+                    item: item.AttackWhileUnderAttackMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AttackNotUnderAttackMult),
+                    item: item.AttackNotUnderAttackMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AttackDuringBlockMult),
+                    item: item.AttackDuringBlockMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.PowerAttackFatigueModBase),
+                    item: item.PowerAttackFatigueModBase,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.PowerAttackFatigueModMult),
+                    item: item.PowerAttackFatigueModMult,
+                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this CombatStyleAdvanced item,
+            ICombatStyleAdvanced item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2392,7 +2437,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    CombatStyleAdvancedCommon.FillPublicElement_Xml(
+                    CombatStyleAdvancedXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2408,7 +2453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this CombatStyleAdvanced item,
+            ICombatStyleAdvanced item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -2967,234 +3012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class CombatStyleAdvancedXmlTranslation
-    {
-        public readonly static CombatStyleAdvancedXmlTranslation Instance = new CombatStyleAdvancedXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            ICombatStyleAdvancedGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DodgeFatigueModMult),
-                    item: item.DodgeFatigueModMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DodgeFatigueModBase),
-                    item: item.DodgeFatigueModBase,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EncumbSpeedModBase),
-                    item: item.EncumbSpeedModBase,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EncumbSpeedModMult),
-                    item: item.EncumbSpeedModMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DodgeWhileUnderAttackMult),
-                    item: item.DodgeWhileUnderAttackMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DodgeNotUnderAttackMult),
-                    item: item.DodgeNotUnderAttackMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DodgeBackWhileUnderAttackMult),
-                    item: item.DodgeBackWhileUnderAttackMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DodgeBackNotUnderAttackMult),
-                    item: item.DodgeBackNotUnderAttackMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DodgeForwardWhileUnderAttackMult),
-                    item: item.DodgeForwardWhileUnderAttackMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DodgeForwardNotUnderAttackMult),
-                    item: item.DodgeForwardNotUnderAttackMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BlockSkillModifierMult),
-                    item: item.BlockSkillModifierMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BlockSkillModifierBase),
-                    item: item.BlockSkillModifierBase,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BlockWhileUnderAttackMult),
-                    item: item.BlockWhileUnderAttackMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BlockNotUnderAttackMult),
-                    item: item.BlockNotUnderAttackMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AttackSkillModifierMult),
-                    item: item.AttackSkillModifierMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AttackSkillModifierBase),
-                    item: item.AttackSkillModifierBase,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AttackWhileUnderAttackMult),
-                    item: item.AttackWhileUnderAttackMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AttackNotUnderAttackMult),
-                    item: item.AttackNotUnderAttackMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AttackDuringBlockMult),
-                    item: item.AttackDuringBlockMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PowerAttackFatigueModBase),
-                    item: item.PowerAttackFatigueModBase,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PowerAttackFatigueModMult),
-                    item: item.PowerAttackFatigueModMult,
-                    fieldIndex: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            ICombatStyleAdvancedGetter item,
-            bool doMasks,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             ICombatStyleAdvancedGetter item,
             ErrorMaskBuilder errorMask,
@@ -3213,9 +3031,210 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ICombatStyleAdvancedGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            ICombatStyleAdvancedGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (ICombatStyleAdvancedGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class CombatStyleAdvancedXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this ICombatStyleAdvancedGetter item,
+            XElement node,
+            out CombatStyleAdvanced_ErrorMask errorMask,
+            bool doMasks = true,
+            CombatStyleAdvanced_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((CombatStyleAdvancedXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this ICombatStyleAdvancedGetter item,
+            string path,
+            out CombatStyleAdvanced_ErrorMask errorMask,
+            CombatStyleAdvanced_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ICombatStyleAdvancedGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ICombatStyleAdvancedGetter item,
+            Stream stream,
+            out CombatStyleAdvanced_ErrorMask errorMask,
+            CombatStyleAdvanced_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this ICombatStyleAdvancedGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this ICombatStyleAdvancedGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((CombatStyleAdvancedXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this ICombatStyleAdvancedGetter item,
+            XElement node,
+            string name = null,
+            CombatStyleAdvanced_TranslationMask translationMask = null)
+        {
+            ((CombatStyleAdvancedXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this ICombatStyleAdvancedGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((CombatStyleAdvancedXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ICombatStyleAdvancedGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((CombatStyleAdvancedXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -4035,11 +4054,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class CombatStyleAdvancedBinaryTranslation
+    public partial class CombatStyleAdvancedBinaryTranslation : IBinaryTranslator
     {
         public readonly static CombatStyleAdvancedBinaryTranslation Instance = new CombatStyleAdvancedBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             ICombatStyleAdvancedGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
@@ -4110,26 +4129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.PowerAttackFatigueModMult);
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            ICombatStyleAdvancedGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out CombatStyleAdvanced_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             ICombatStyleAdvancedGetter item,
             MasterReferences masterReferences,
@@ -4141,16 +4141,81 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: CombatStyleAdvanced_Registration.CSAD_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ICombatStyleAdvancedGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class CombatStyleAdvancedBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this ICombatStyleAdvancedGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out CombatStyleAdvanced_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((CombatStyleAdvancedBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Binary(
+            this ICombatStyleAdvancedGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ((CombatStyleAdvancedBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary(
+            this ICombatStyleAdvancedGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences)
+        {
+            ((CombatStyleAdvancedBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

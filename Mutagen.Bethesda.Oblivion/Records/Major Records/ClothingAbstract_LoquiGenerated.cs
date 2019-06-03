@@ -33,7 +33,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public abstract partial class ClothingAbstract : 
+    public abstract partial class ClothingAbstract :
         ItemAbstract,
         IClothingAbstract,
         IClothingAbstractInternal,
@@ -466,6 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => ClothingAbstractXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static ClothingAbstract Create_Xml(
@@ -603,155 +604,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out ClothingAbstract_ErrorMask errorMask,
-            bool doMasks = true,
-            ClothingAbstract_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClothingAbstractXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out ClothingAbstract_ErrorMask errorMask,
-            ClothingAbstract_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out ClothingAbstract_ErrorMask errorMask,
-            ClothingAbstract_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out ItemAbstract_ErrorMask errorMask,
-            bool doMasks = true,
-            ItemAbstract_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClothingAbstractXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            OblivionMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClothingAbstractXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClothingAbstractXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            ClothingAbstractXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         protected static void FillPrivateElement_Xml(
             ClothingAbstract item,
             XElement node,
@@ -846,89 +698,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out ClothingAbstract_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClothingAbstractBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out ItemAbstract_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClothingAbstractBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClothingAbstractBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ClothingAbstractBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            ClothingAbstractBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
-        #endregion
-
+        protected override IBinaryTranslator BinaryTranslator => ClothingAbstractBinaryTranslation.Instance;
         protected static void Fill_Binary_Structs(
             ClothingAbstract item,
             MutagenFrame frame,
@@ -1029,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
-                        item.MaleBipedModel = Model.Create_Binary(
+                        item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1051,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
-                        item.MaleWorldModel = Model.Create_Binary(
+                        item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter,
                             masterReferences: masterReferences,
@@ -1089,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
-                        item.FemaleBipedModel = Model.Create_Binary(
+                        item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter,
                             masterReferences: masterReferences,
@@ -1111,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
-                        item.FemaleWorldModel = Model.Create_Binary(
+                        item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter,
                             masterReferences: masterReferences,
@@ -1238,8 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
             IClothingAbstractGetter rhs,
             ErrorMaskBuilder errorMask,
             ClothingAbstract_CopyMask copyMask = null,
-            IClothingAbstractGetter def = null,
-            bool doMasks = true)
+            IClothingAbstractGetter def = null)
         {
             ClothingAbstractCommon.CopyFieldsFrom(
                 item: this,
@@ -1361,7 +1130,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IClothingAbstract : IClothingAbstractGetter, IItemAbstract, ILoquiClass<IClothingAbstract, IClothingAbstractGetter>, ILoquiClass<ClothingAbstract, IClothingAbstractGetter>
+    public partial interface IClothingAbstract :
+        IClothingAbstractGetter,
+        IItemAbstract,
+        ILoquiClass<IClothingAbstract, IClothingAbstractGetter>,
+        ILoquiClass<ClothingAbstract, IClothingAbstractGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1409,9 +1182,17 @@ namespace Mutagen.Bethesda.Oblivion
         void FemaleIcon_Set(String item, bool hasBeenSet = true);
         void FemaleIcon_Unset();
 
+        void CopyFieldsFrom(
+            IClothingAbstractGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            ClothingAbstract_CopyMask copyMask = null,
+            IClothingAbstractGetter def = null);
     }
 
-    public partial interface IClothingAbstractInternal : IClothingAbstract, IClothingAbstractInternalGetter, IItemAbstractInternal
+    public partial interface IClothingAbstractInternal :
+        IItemAbstractInternal,
+        IClothingAbstract,
+        IClothingAbstractInternalGetter
     {
         new Script Script { get; set; }
         new Enchantment Enchantment { get; set; }
@@ -1419,7 +1200,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IClothingAbstractGetter : IItemAbstractGetter
+    public partial interface IClothingAbstractGetter :
+        IItemAbstractGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region Name
         String Name { get; }
@@ -1482,7 +1266,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IClothingAbstractInternalGetter : IClothingAbstractGetter, IItemAbstractInternalGetter
+    public partial interface IClothingAbstractInternalGetter :
+        IItemAbstractInternalGetter,
+        IClothingAbstractGetter
     {
         #region BMDTDataTypeState
         ClothingAbstract.BMDTDataType BMDTDataTypeState { get; }
@@ -1504,21 +1290,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Script = 7,
-        Enchantment = 8,
-        EnchantmentPoints = 9,
-        BipedFlags = 10,
-        Flags = 11,
-        MaleBipedModel = 12,
-        MaleWorldModel = 13,
-        MaleIcon = 14,
-        FemaleBipedModel = 15,
-        FemaleWorldModel = 16,
-        FemaleIcon = 17,
-        BMDTDataTypeState = 18,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Script = 6,
+        Enchantment = 7,
+        EnchantmentPoints = 8,
+        BipedFlags = 9,
+        Flags = 10,
+        MaleBipedModel = 11,
+        MaleWorldModel = 12,
+        MaleIcon = 13,
+        FemaleBipedModel = 14,
+        FemaleWorldModel = 15,
+        FemaleIcon = 16,
+        BMDTDataTypeState = 17,
     }
     #endregion
 
@@ -1538,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(ClothingAbstract_Mask<>);
 
@@ -1794,6 +1579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(ClothingAbstractXmlTranslation);
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
         public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
@@ -1865,6 +1651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         public const int NumStructFields = 0;
         public const int NumTypedFields = 10;
+        public static readonly Type BinaryTranslation = typeof(ClothingAbstractBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2368,14 +2155,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.MaleBipedModel_IsSet,
                 item.MaleBipedModel,
                 rhs.MaleBipedModel,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.MaleWorldModel = EqualsMaskHelper.EqualsHelper(
                 item.MaleWorldModel_IsSet,
                 rhs.MaleWorldModel_IsSet,
                 item.MaleWorldModel,
                 rhs.MaleWorldModel,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.MaleIcon = item.MaleIcon_IsSet == rhs.MaleIcon_IsSet && string.Equals(item.MaleIcon, rhs.MaleIcon);
             ret.FemaleBipedModel = EqualsMaskHelper.EqualsHelper(
@@ -2383,14 +2170,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.FemaleBipedModel_IsSet,
                 item.FemaleBipedModel,
                 rhs.FemaleBipedModel,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.FemaleWorldModel = EqualsMaskHelper.EqualsHelper(
                 item.FemaleWorldModel_IsSet,
                 rhs.FemaleWorldModel_IsSet,
                 item.FemaleWorldModel,
                 rhs.FemaleWorldModel,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.FemaleIcon = item.FemaleIcon_IsSet == rhs.FemaleIcon_IsSet && string.Equals(item.FemaleIcon, rhs.FemaleIcon);
             ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
@@ -2536,8 +2323,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ClothingAbstract_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.EditorID:
                     return (ClothingAbstract_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.RecordType:
-                    return (ClothingAbstract_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (ClothingAbstract_FieldIndex)((int)index);
                 default:
@@ -2562,8 +2347,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMajorRecord_FieldIndex.Version:
                     return (ClothingAbstract_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (ClothingAbstract_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
                     return (ClothingAbstract_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (ClothingAbstract_FieldIndex)((int)index);
@@ -2590,16 +2373,171 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ClothingAbstract_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (ClothingAbstract_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
-                    return (ClothingAbstract_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class ClothingAbstractXmlTranslation :
+        ItemAbstractXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static ClothingAbstractXmlTranslation Instance = new ClothingAbstractXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IClothingAbstractInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            ItemAbstractXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if (item.Script_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Script) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Script),
+                    item: item.Script_Property?.FormKey,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
+                    errorMask: errorMask);
+            }
+            if (item.Enchantment_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Enchantment) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Enchantment),
+                    item: item.Enchantment_Property?.FormKey,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
+                    errorMask: errorMask);
+            }
+            if (item.EnchantmentPoints_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.EnchantmentPoints) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EnchantmentPoints),
+                    item: item.EnchantmentPoints,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
+                    errorMask: errorMask);
+            }
+            if (item.BMDTDataTypeState.HasFlag(ClothingAbstract.BMDTDataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.BipedFlags) ?? true))
+                {
+                    EnumXmlTranslation<BipedFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.BipedFlags),
+                        item: item.BipedFlags,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<EquipmentFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+            }
+            if (item.MaleBipedModel_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleBipedModel) ?? true))
+            {
+                ((ModelXmlTranslation)((IXmlItem)item.MaleBipedModel).XmlTranslator).Write(
+                    item: item.MaleBipedModel,
+                    node: node,
+                    name: nameof(item.MaleBipedModel),
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleBipedModel));
+            }
+            if (item.MaleWorldModel_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleWorldModel) ?? true))
+            {
+                ((ModelXmlTranslation)((IXmlItem)item.MaleWorldModel).XmlTranslator).Write(
+                    item: item.MaleWorldModel,
+                    node: node,
+                    name: nameof(item.MaleWorldModel),
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleWorldModel));
+            }
+            if (item.MaleIcon_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleIcon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MaleIcon),
+                    item: item.MaleIcon,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
+                    errorMask: errorMask);
+            }
+            if (item.FemaleBipedModel_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleBipedModel) ?? true))
+            {
+                ((ModelXmlTranslation)((IXmlItem)item.FemaleBipedModel).XmlTranslator).Write(
+                    item: item.FemaleBipedModel,
+                    node: node,
+                    name: nameof(item.FemaleBipedModel),
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleBipedModel));
+            }
+            if (item.FemaleWorldModel_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleWorldModel) ?? true))
+            {
+                ((ModelXmlTranslation)((IXmlItem)item.FemaleWorldModel).XmlTranslator).Write(
+                    item: item.FemaleWorldModel,
+                    node: node,
+                    name: nameof(item.FemaleWorldModel),
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleWorldModel));
+            }
+            if (item.FemaleIcon_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleIcon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FemaleIcon),
+                    item: item.FemaleIcon,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.BMDTDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<ClothingAbstract.BMDTDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.BMDTDataTypeState),
+                    item: item.BMDTDataTypeState,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.BMDTDataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this ClothingAbstract item,
+            IClothingAbstractInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2608,7 +2546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ClothingAbstractCommon.FillPublicElement_Xml(
+                    ClothingAbstractXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2624,7 +2562,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this ClothingAbstract item,
+            IClothingAbstractInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -2938,7 +2876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    ItemAbstractCommon.FillPublicElement_Xml(
+                    ItemAbstractXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2948,184 +2886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class ClothingAbstractXmlTranslation : ItemAbstractXmlTranslation
-    {
-        public new readonly static ClothingAbstractXmlTranslation Instance = new ClothingAbstractXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IClothingAbstractInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            ItemAbstractXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Script_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Script) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
-                    errorMask: errorMask);
-            }
-            if (item.Enchantment_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Enchantment) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Enchantment),
-                    item: item.Enchantment_Property?.FormKey,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
-                    errorMask: errorMask);
-            }
-            if (item.EnchantmentPoints_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.EnchantmentPoints) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EnchantmentPoints),
-                    item: item.EnchantmentPoints,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
-                    errorMask: errorMask);
-            }
-            if (item.BMDTDataTypeState.HasFlag(ClothingAbstract.BMDTDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.BipedFlags) ?? true))
-                {
-                    EnumXmlTranslation<BipedFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.BipedFlags),
-                        item: item.BipedFlags,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<EquipmentFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-            }
-            if (item.MaleBipedModel_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleBipedModel) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.MaleBipedModel,
-                    name: nameof(item.MaleBipedModel),
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleBipedModel));
-            }
-            if (item.MaleWorldModel_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleWorldModel) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.MaleWorldModel,
-                    name: nameof(item.MaleWorldModel),
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleWorldModel));
-            }
-            if (item.MaleIcon_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleIcon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaleIcon),
-                    item: item.MaleIcon,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
-                    errorMask: errorMask);
-            }
-            if (item.FemaleBipedModel_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleBipedModel) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.FemaleBipedModel,
-                    name: nameof(item.FemaleBipedModel),
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleBipedModel));
-            }
-            if (item.FemaleWorldModel_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleWorldModel) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.FemaleWorldModel,
-                    name: nameof(item.FemaleWorldModel),
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleWorldModel));
-            }
-            if (item.FemaleIcon_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleIcon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FemaleIcon),
-                    item: item.FemaleIcon,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.BMDTDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<ClothingAbstract.BMDTDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.BMDTDataTypeState),
-                    item: item.BMDTDataTypeState,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.BMDTDataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IClothingAbstractInternalGetter item,
-            bool doMasks,
-            out ClothingAbstract_ErrorMask errorMask,
-            ClothingAbstract_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public virtual void Write(
             XElement node,
             IClothingAbstractInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -3144,9 +2905,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IClothingAbstractInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IItemAbstractInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IClothingAbstractInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IClothingAbstractInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IClothingAbstractInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class ClothingAbstractXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IClothingAbstractInternalGetter item,
+            XElement node,
+            out ClothingAbstract_ErrorMask errorMask,
+            bool doMasks = true,
+            ClothingAbstract_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ClothingAbstractXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IClothingAbstractInternalGetter item,
+            string path,
+            out ClothingAbstract_ErrorMask errorMask,
+            ClothingAbstract_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IClothingAbstractInternalGetter item,
+            Stream stream,
+            out ClothingAbstract_ErrorMask errorMask,
+            ClothingAbstract_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -3783,31 +3666,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class ClothingAbstractBinaryTranslation : ItemAbstractBinaryTranslation
+    public partial class ClothingAbstractBinaryTranslation :
+        ItemAbstractBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static ClothingAbstractBinaryTranslation Instance = new ClothingAbstractBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             IClothingAbstractInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+            OblivionMajorRecordBinaryTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             IClothingAbstractInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3863,19 +3748,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.MaleBipedModel_IsSet)
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                ((ModelBinaryTranslation)((IBinaryItem)item.MaleBipedModel).BinaryTranslator).Write(
                     item: item.MaleBipedModel,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
+                    writer: writer,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             if (item.MaleWorldModel_IsSet)
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                ((ModelBinaryTranslation)((IBinaryItem)item.MaleWorldModel).BinaryTranslator).Write(
                     item: item.MaleWorldModel,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
+                    writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
                     recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter);
@@ -3890,20 +3774,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.FemaleBipedModel_IsSet)
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                ((ModelBinaryTranslation)((IBinaryItem)item.FemaleBipedModel).BinaryTranslator).Write(
                     item: item.FemaleBipedModel,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
+                    writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
                     recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter);
             }
             if (item.FemaleWorldModel_IsSet)
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                ((ModelBinaryTranslation)((IBinaryItem)item.FemaleWorldModel).BinaryTranslator).Write(
                     item: item.FemaleWorldModel,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
+                    writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
                     recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter);
@@ -3918,47 +3800,111 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IClothingAbstractInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out ClothingAbstract_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public virtual void Write(
             MutagenWriter writer,
             IClothingAbstractInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Write_Binary_Embedded(
+            Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            Write_Binary_RecordTypes(
+            Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IClothingAbstractInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IItemAbstractInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IClothingAbstractInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IClothingAbstractInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IClothingAbstractInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class ClothingAbstractBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IClothingAbstractInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out ClothingAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ClothingAbstractBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

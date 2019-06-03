@@ -35,7 +35,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Tree : 
+    public partial class Tree :
         OblivionMajorRecord,
         ITree,
         ITreeInternal,
@@ -381,6 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => TreeXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Tree Create_Xml(
@@ -439,7 +440,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    TreeCommon.FillPublicElement_Xml(
+                    TreeXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -537,138 +538,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out Tree_ErrorMask errorMask,
-            bool doMasks = true,
-            Tree_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            TreeXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            OblivionMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            TreeXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            TreeXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            TreeXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         protected static void FillPrivateElement_Xml(
             Tree item,
             XElement node,
@@ -756,6 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected override IBinaryTranslator BinaryTranslator => TreeBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Tree Create_Binary(
@@ -805,73 +675,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out Tree_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            TreeBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            TreeBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            TreeBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            TreeBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
-        #endregion
-
         protected static void Fill_Binary_Structs(
             Tree item,
             MutagenFrame frame,
@@ -902,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Tree_FieldIndex.Model);
-                        item.Model = Model.Create_Binary(
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1166,8 +969,7 @@ namespace Mutagen.Bethesda.Oblivion
             ITreeGetter rhs,
             ErrorMaskBuilder errorMask,
             Tree_CopyMask copyMask = null,
-            ITreeGetter def = null,
-            bool doMasks = true)
+            ITreeGetter def = null)
         {
             TreeCommon.CopyFieldsFrom(
                 item: this,
@@ -1311,7 +1113,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ITree : ITreeGetter, IOblivionMajorRecord, ILoquiClass<ITree, ITreeGetter>, ILoquiClass<Tree, ITreeGetter>
+    public partial interface ITree :
+        ITreeGetter,
+        IOblivionMajorRecord,
+        ILoquiClass<ITree, ITreeGetter>,
+        ILoquiClass<Tree, ITreeGetter>
     {
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }
@@ -1344,9 +1150,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single BillboardHeight { get; set; }
 
+        void CopyFieldsFrom(
+            ITreeGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            Tree_CopyMask copyMask = null,
+            ITreeGetter def = null);
     }
 
-    public partial interface ITreeInternal : ITree, ITreeInternalGetter, IOblivionMajorRecordInternal
+    public partial interface ITreeInternal :
+        IOblivionMajorRecordInternal,
+        ITree,
+        ITreeInternalGetter
     {
         new ISourceSetList<UInt32> SpeedTreeSeeds { get; }
         new Tree.CNAMDataType CNAMDataTypeState { get; set; }
@@ -1355,7 +1169,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface ITreeGetter : IOblivionMajorRecordGetter
+    public partial interface ITreeGetter :
+        IOblivionMajorRecordGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region Model
         Model Model { get; }
@@ -1413,7 +1230,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface ITreeInternalGetter : ITreeGetter, IOblivionMajorRecordInternalGetter
+    public partial interface ITreeInternalGetter :
+        IOblivionMajorRecordInternalGetter,
+        ITreeGetter
     {
         #region CNAMDataTypeState
         Tree.CNAMDataType CNAMDataTypeState { get; }
@@ -1439,23 +1258,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Model = 6,
-        Icon = 7,
-        SpeedTreeSeeds = 8,
-        LeafCurvature = 9,
-        MinimumLeafAngle = 10,
-        MaximumLeafAngle = 11,
-        BranchDimmingValue = 12,
-        LeafDimmingValue = 13,
-        ShadowRadius = 14,
-        RockingSpeed = 15,
-        RustleSpeed = 16,
-        BillboardWidth = 17,
-        BillboardHeight = 18,
-        CNAMDataTypeState = 19,
-        BNAMDataTypeState = 20,
+        OblivionMajorRecordFlags = 4,
+        Model = 5,
+        Icon = 6,
+        SpeedTreeSeeds = 7,
+        LeafCurvature = 8,
+        MinimumLeafAngle = 9,
+        MaximumLeafAngle = 10,
+        BranchDimmingValue = 11,
+        LeafDimmingValue = 12,
+        ShadowRadius = 13,
+        RockingSpeed = 14,
+        RustleSpeed = 15,
+        BillboardWidth = 16,
+        BillboardHeight = 17,
+        CNAMDataTypeState = 18,
+        BNAMDataTypeState = 19,
     }
     #endregion
 
@@ -1475,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(Tree_Mask<>);
 
@@ -1754,6 +1572,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(TreeXmlTranslation);
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
@@ -1763,6 +1582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = TREE_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
+        public static readonly Type BinaryTranslation = typeof(TreeBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2129,7 +1949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.SpeedTreeSeeds = item.SpeedTreeSeeds.CollectionEqualsHelper(
@@ -2302,8 +2122,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Tree_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Tree_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Tree_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Tree_FieldIndex)((int)index);
                 default:
@@ -2329,16 +2147,192 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Tree_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Tree_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
-                    return (Tree_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class TreeXmlTranslation :
+        OblivionMajorRecordXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static TreeXmlTranslation Instance = new TreeXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ITreeInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Model_IsSet
+                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
+            {
+                ((ModelXmlTranslation)((IXmlItem)item.Model).XmlTranslator).Write(
+                    item: item.Model,
+                    node: node,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)Tree_FieldIndex.Model,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Model));
+            }
+            if (item.Icon_IsSet
+                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Icon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Icon),
+                    item: item.Icon,
+                    fieldIndex: (int)Tree_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            if (item.SpeedTreeSeeds.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.SpeedTreeSeeds) ?? true))
+            {
+                ListXmlTranslation<UInt32>.Instance.Write(
+                    node: node,
+                    name: nameof(item.SpeedTreeSeeds),
+                    item: item.SpeedTreeSeeds,
+                    fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.SpeedTreeSeeds),
+                    transl: (XElement subNode, UInt32 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        UInt32XmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.CNAMDataTypeState.HasFlag(Tree.CNAMDataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafCurvature) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.LeafCurvature),
+                        item: item.LeafCurvature,
+                        fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MinimumLeafAngle) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MinimumLeafAngle),
+                        item: item.MinimumLeafAngle,
+                        fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MaximumLeafAngle) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MaximumLeafAngle),
+                        item: item.MaximumLeafAngle,
+                        fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchDimmingValue) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.BranchDimmingValue),
+                        item: item.BranchDimmingValue,
+                        fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafDimmingValue) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.LeafDimmingValue),
+                        item: item.LeafDimmingValue,
+                        fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.ShadowRadius) ?? true))
+                {
+                    Int32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.ShadowRadius),
+                        item: item.ShadowRadius,
+                        fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RockingSpeed) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.RockingSpeed),
+                        item: item.RockingSpeed,
+                        fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RustleSpeed) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.RustleSpeed),
+                        item: item.RustleSpeed,
+                        fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
+                        errorMask: errorMask);
+                }
+            }
+            if (item.BNAMDataTypeState.HasFlag(Tree.BNAMDataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardWidth) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.BillboardWidth),
+                        item: item.BillboardWidth,
+                        fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardHeight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.BillboardHeight),
+                        item: item.BillboardHeight,
+                        fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Tree.CNAMDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CNAMDataTypeState),
+                    item: item.CNAMDataTypeState,
+                    fieldIndex: (int)Tree_FieldIndex.CNAMDataTypeState,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BNAMDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Tree.BNAMDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.BNAMDataTypeState),
+                    item: item.BNAMDataTypeState,
+                    fieldIndex: (int)Tree_FieldIndex.BNAMDataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this Tree item,
+            ITreeInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2347,7 +2341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    TreeCommon.FillPublicElement_Xml(
+                    TreeXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2363,7 +2357,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this Tree item,
+            ITreeInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -2767,7 +2761,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2777,205 +2771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class TreeXmlTranslation : OblivionMajorRecordXmlTranslation
-    {
-        public new readonly static TreeXmlTranslation Instance = new TreeXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            ITreeInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Model_IsSet
-                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.Model,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Tree_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Model));
-            }
-            if (item.Icon_IsSet
-                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)Tree_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-            if (item.SpeedTreeSeeds.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.SpeedTreeSeeds) ?? true))
-            {
-                ListXmlTranslation<UInt32>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpeedTreeSeeds),
-                    item: item.SpeedTreeSeeds,
-                    fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.SpeedTreeSeeds),
-                    transl: (XElement subNode, UInt32 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    }
-                    );
-            }
-            if (item.CNAMDataTypeState.HasFlag(Tree.CNAMDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafCurvature) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.LeafCurvature),
-                        item: item.LeafCurvature,
-                        fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MinimumLeafAngle) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.MinimumLeafAngle),
-                        item: item.MinimumLeafAngle,
-                        fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MaximumLeafAngle) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.MaximumLeafAngle),
-                        item: item.MaximumLeafAngle,
-                        fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchDimmingValue) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.BranchDimmingValue),
-                        item: item.BranchDimmingValue,
-                        fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafDimmingValue) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.LeafDimmingValue),
-                        item: item.LeafDimmingValue,
-                        fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.ShadowRadius) ?? true))
-                {
-                    Int32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.ShadowRadius),
-                        item: item.ShadowRadius,
-                        fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RockingSpeed) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.RockingSpeed),
-                        item: item.RockingSpeed,
-                        fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RustleSpeed) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.RustleSpeed),
-                        item: item.RustleSpeed,
-                        fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
-                        errorMask: errorMask);
-                }
-            }
-            if (item.BNAMDataTypeState.HasFlag(Tree.BNAMDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardWidth) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.BillboardWidth),
-                        item: item.BillboardWidth,
-                        fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardHeight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.BillboardHeight),
-                        item: item.BillboardHeight,
-                        fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Tree.CNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CNAMDataTypeState),
-                    item: item.CNAMDataTypeState,
-                    fieldIndex: (int)Tree_FieldIndex.CNAMDataTypeState,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Tree.BNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.BNAMDataTypeState),
-                    item: item.BNAMDataTypeState,
-                    fieldIndex: (int)Tree_FieldIndex.BNAMDataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            ITreeInternalGetter item,
-            bool doMasks,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             ITreeInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -2994,9 +2790,116 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ITreeInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ITreeInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ITreeInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class TreeXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this ITreeInternalGetter item,
+            XElement node,
+            out Tree_ErrorMask errorMask,
+            bool doMasks = true,
+            Tree_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((TreeXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this ITreeInternalGetter item,
+            string path,
+            out Tree_ErrorMask errorMask,
+            Tree_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ITreeInternalGetter item,
+            Stream stream,
+            out Tree_ErrorMask errorMask,
+            Tree_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -3720,31 +3623,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class TreeBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    public partial class TreeBinaryTranslation :
+        OblivionMajorRecordBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static TreeBinaryTranslation Instance = new TreeBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             ITreeInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+            OblivionMajorRecordBinaryTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             ITreeInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3752,12 +3657,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
             if (item.Model_IsSet)
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                ((ModelBinaryTranslation)((IBinaryItem)item.Model).BinaryTranslator).Write(
                     item: item.Model,
-                    fieldIndex: (int)Tree_FieldIndex.Model,
+                    writer: writer,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             if (item.Icon_IsSet)
             {
@@ -3817,26 +3722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            ITreeInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out Tree_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             ITreeInternalGetter item,
             MasterReferences masterReferences,
@@ -3848,12 +3734,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Tree_Registration.TREE_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
+                Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -3861,9 +3747,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ITreeInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ITreeInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ITreeInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class TreeBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this ITreeInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out Tree_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((TreeBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

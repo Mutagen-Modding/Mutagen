@@ -35,7 +35,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Door : 
+    public partial class Door :
         OblivionMajorRecord,
         IDoor,
         IDoorInternal,
@@ -300,6 +300,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => DoorXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Door Create_Xml(
@@ -358,7 +359,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    DoorCommon.FillPublicElement_Xml(
+                    DoorXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -454,138 +455,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        #endregion
-
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out Door_ErrorMask errorMask,
-            bool doMasks = true,
-            Door_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            DoorXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            OblivionMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            DoorXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            DoorXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            DoorXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         #endregion
 
         protected static void FillPrivateElement_Xml(
@@ -701,6 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected override IBinaryTranslator BinaryTranslator => DoorBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Door Create_Binary(
@@ -750,73 +620,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out Door_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            DoorBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            DoorBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            DoorBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            DoorBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
-        #endregion
-
         protected static void Fill_Binary_Structs(
             Door item,
             MutagenFrame frame,
@@ -863,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.Model);
-                        item.Model = Model.Create_Binary(
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1052,8 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
             IDoorGetter rhs,
             ErrorMaskBuilder errorMask,
             Door_CopyMask copyMask = null,
-            IDoorGetter def = null,
-            bool doMasks = true)
+            IDoorGetter def = null)
         {
             DoorCommon.CopyFieldsFrom(
                 item: this,
@@ -1155,7 +957,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IDoor : IDoorGetter, IOblivionMajorRecord, ILoquiClass<IDoor, IDoorGetter>, ILoquiClass<Door, IDoorGetter>
+    public partial interface IDoor :
+        IDoorGetter,
+        IOblivionMajorRecord,
+        ILoquiClass<IDoor, IDoorGetter>,
+        ILoquiClass<Door, IDoorGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1177,9 +983,17 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Unset();
 
         new ISourceSetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
+        void CopyFieldsFrom(
+            IDoorGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            Door_CopyMask copyMask = null,
+            IDoorGetter def = null);
     }
 
-    public partial interface IDoorInternal : IDoor, IDoorInternalGetter, IOblivionMajorRecordInternal
+    public partial interface IDoorInternal :
+        IOblivionMajorRecordInternal,
+        IDoor,
+        IDoorInternalGetter
     {
         new Script Script { get; set; }
         new Sound OpenSound { get; set; }
@@ -1188,7 +1002,10 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
     }
 
-    public partial interface IDoorGetter : IOblivionMajorRecordGetter
+    public partial interface IDoorGetter :
+        IOblivionMajorRecordGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region Name
         String Name { get; }
@@ -1231,7 +1048,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IDoorInternalGetter : IDoorGetter, IOblivionMajorRecordInternalGetter
+    public partial interface IDoorInternalGetter :
+        IOblivionMajorRecordInternalGetter,
+        IDoorGetter
     {
 
     }
@@ -1249,16 +1068,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Model = 7,
-        Script = 8,
-        OpenSound = 9,
-        CloseSound = 10,
-        LoopSound = 11,
-        Flags = 12,
-        RandomTeleportDestinations = 13,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Model = 6,
+        Script = 7,
+        OpenSound = 8,
+        CloseSound = 9,
+        LoopSound = 10,
+        Flags = 11,
+        RandomTeleportDestinations = 12,
     }
     #endregion
 
@@ -1278,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Door_Mask<>);
 
@@ -1480,6 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(DoorXmlTranslation);
         public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
@@ -1492,6 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = DOOR_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 8;
+        public static readonly Type BinaryTranslation = typeof(DoorBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1790,7 +1610,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.OpenSound = item.OpenSound_Property.FormKey == rhs.OpenSound_Property.FormKey;
@@ -1929,8 +1749,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Door_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Door_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Door_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Door_FieldIndex)((int)index);
                 default:
@@ -1956,16 +1774,128 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Door_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Door_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
-                    return (Door_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class DoorXmlTranslation :
+        OblivionMajorRecordXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static DoorXmlTranslation Instance = new DoorXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IDoorInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Door_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if (item.Model_IsSet
+                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Model) ?? true))
+            {
+                ((ModelXmlTranslation)((IXmlItem)item.Model).XmlTranslator).Write(
+                    item: item.Model,
+                    node: node,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)Door_FieldIndex.Model,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Door_FieldIndex.Model));
+            }
+            if (item.Script_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Script) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Script),
+                    item: item.Script_Property?.FormKey,
+                    fieldIndex: (int)Door_FieldIndex.Script,
+                    errorMask: errorMask);
+            }
+            if (item.OpenSound_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.OpenSound),
+                    item: item.OpenSound_Property?.FormKey,
+                    fieldIndex: (int)Door_FieldIndex.OpenSound,
+                    errorMask: errorMask);
+            }
+            if (item.CloseSound_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.CloseSound),
+                    item: item.CloseSound_Property?.FormKey,
+                    fieldIndex: (int)Door_FieldIndex.CloseSound,
+                    errorMask: errorMask);
+            }
+            if (item.LoopSound_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LoopSound),
+                    item: item.LoopSound_Property?.FormKey,
+                    fieldIndex: (int)Door_FieldIndex.LoopSound,
+                    errorMask: errorMask);
+            }
+            if (item.Flags_IsSet
+                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<Door.DoorFlag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Door_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if (item.RandomTeleportDestinations.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.RandomTeleportDestinations) ?? true))
+            {
+                ListXmlTranslation<FormIDSetLink<Place>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.RandomTeleportDestinations),
+                    item: item.RandomTeleportDestinations,
+                    fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Door_FieldIndex.RandomTeleportDestinations),
+                    transl: (XElement subNode, FormIDSetLink<Place> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem?.FormKey,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+        }
+
         public static void FillPublic_Xml(
-            this Door item,
+            IDoorInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1974,7 +1904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    DoorCommon.FillPublicElement_Xml(
+                    DoorXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1990,7 +1920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this Door item,
+            IDoorInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -2134,7 +2064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2144,141 +2074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class DoorXmlTranslation : OblivionMajorRecordXmlTranslation
-    {
-        public new readonly static DoorXmlTranslation Instance = new DoorXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IDoorInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Door_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Model_IsSet
-                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Model) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.Model,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Door_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Door_FieldIndex.Model));
-            }
-            if (item.Script_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Script) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
-                    fieldIndex: (int)Door_FieldIndex.Script,
-                    errorMask: errorMask);
-            }
-            if (item.OpenSound_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.OpenSound),
-                    item: item.OpenSound_Property?.FormKey,
-                    fieldIndex: (int)Door_FieldIndex.OpenSound,
-                    errorMask: errorMask);
-            }
-            if (item.CloseSound_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CloseSound),
-                    item: item.CloseSound_Property?.FormKey,
-                    fieldIndex: (int)Door_FieldIndex.CloseSound,
-                    errorMask: errorMask);
-            }
-            if (item.LoopSound_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LoopSound),
-                    item: item.LoopSound_Property?.FormKey,
-                    fieldIndex: (int)Door_FieldIndex.LoopSound,
-                    errorMask: errorMask);
-            }
-            if (item.Flags_IsSet
-                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Door.DoorFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Door_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if (item.RandomTeleportDestinations.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.RandomTeleportDestinations) ?? true))
-            {
-                ListXmlTranslation<FormIDSetLink<Place>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.RandomTeleportDestinations),
-                    item: item.RandomTeleportDestinations,
-                    fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Door_FieldIndex.RandomTeleportDestinations),
-                    transl: (XElement subNode, FormIDSetLink<Place> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem?.FormKey,
-                            errorMask: listSubMask);
-                    }
-                    );
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IDoorInternalGetter item,
-            bool doMasks,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IDoorInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -2297,9 +2093,116 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IDoorInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IDoorInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IDoorInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class DoorXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IDoorInternalGetter item,
+            XElement node,
+            out Door_ErrorMask errorMask,
+            bool doMasks = true,
+            Door_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((DoorXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IDoorInternalGetter item,
+            string path,
+            out Door_ErrorMask errorMask,
+            Door_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IDoorInternalGetter item,
+            Stream stream,
+            out Door_ErrorMask errorMask,
+            Door_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -2834,18 +2737,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class DoorBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    public partial class DoorBinaryTranslation :
+        OblivionMajorRecordBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static DoorBinaryTranslation Instance = new DoorBinaryTranslation();
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             IDoorInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2861,12 +2766,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Model_IsSet)
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                ((ModelBinaryTranslation)((IBinaryItem)item.Model).BinaryTranslator).Write(
                     item: item.Model,
-                    fieldIndex: (int)Door_FieldIndex.Model,
+                    writer: writer,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             if (item.Script_Property.HasBeenSet)
             {
@@ -2931,26 +2836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IDoorInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out Door_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IDoorInternalGetter item,
             MasterReferences masterReferences,
@@ -2962,12 +2848,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Door_Registration.DOOR_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                OblivionMajorRecordBinaryTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
+                Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -2975,9 +2861,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IDoorInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IDoorInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IDoorInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class DoorBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IDoorInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out Door_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((DoorBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

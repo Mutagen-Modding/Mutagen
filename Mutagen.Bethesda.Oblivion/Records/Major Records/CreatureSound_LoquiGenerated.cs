@@ -33,7 +33,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class CreatureSound : 
+    public partial class CreatureSound :
         LoquiNotifyingObject,
         ICreatureSound,
         ILoquiObject<CreatureSound>,
@@ -164,6 +164,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => CreatureSoundXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static CreatureSound Create_Xml(
@@ -216,7 +218,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    CreatureSoundCommon.FillPublicElement_Xml(
+                    CreatureSoundXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -314,139 +316,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out CreatureSound_ErrorMask errorMask,
-            bool doMasks = true,
-            CreatureSound_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CreatureSoundXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CreatureSound_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out CreatureSound_ErrorMask errorMask,
-            CreatureSound_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out CreatureSound_ErrorMask errorMask,
-            CreatureSound_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            CreatureSound_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            CreatureSoundXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -490,6 +359,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected IBinaryTranslator BinaryTranslator => CreatureSoundBinaryTranslation.Instance;
+        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static CreatureSound Create_Binary(
@@ -539,49 +410,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out CreatureSound_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CreatureSoundBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = CreatureSound_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences)
-        {
-            this.Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            CreatureSoundBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -746,8 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICreatureSoundGetter rhs,
             ErrorMaskBuilder errorMask,
             CreatureSound_CopyMask copyMask = null,
-            ICreatureSoundGetter def = null,
-            bool doMasks = true)
+            ICreatureSoundGetter def = null)
         {
             CreatureSoundCommon.CopyFieldsFrom(
                 item: this,
@@ -819,7 +646,10 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ICreatureSound : ICreatureSoundGetter, ILoquiClass<ICreatureSound, ICreatureSoundGetter>, ILoquiClass<CreatureSound, ICreatureSoundGetter>
+    public partial interface ICreatureSound :
+        ICreatureSoundGetter,
+        ILoquiClass<ICreatureSound, ICreatureSoundGetter>,
+        ILoquiClass<CreatureSound, ICreatureSoundGetter>
     {
         new CreatureSound.CreatureSoundType SoundType { get; set; }
         new bool SoundType_IsSet { get; set; }
@@ -827,9 +657,17 @@ namespace Mutagen.Bethesda.Oblivion
         void SoundType_Unset();
 
         new ISourceSetList<SoundItem> Sounds { get; }
+        void CopyFieldsFrom(
+            ICreatureSoundGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            CreatureSound_CopyMask copyMask = null,
+            ICreatureSoundGetter def = null);
     }
 
-    public partial interface ICreatureSoundGetter : ILoquiObject
+    public partial interface ICreatureSoundGetter :
+        ILoquiObject,
+        IXmlItem,
+        IBinaryItem
     {
         #region SoundType
         CreatureSound.CreatureSoundType SoundType { get; }
@@ -1008,6 +846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(CreatureSoundXmlTranslation);
         public static readonly RecordType CSDT_HEADER = new RecordType("CSDT");
         public static readonly RecordType CSDI_HEADER = new RecordType("CSDI");
         public static readonly RecordType CSDC_HEADER = new RecordType("CSDC");
@@ -1026,6 +865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
+        public static readonly Type BinaryTranslation = typeof(CreatureSoundBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1240,9 +1080,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class CreatureSoundXmlTranslation : IXmlTranslator
+    {
+        public readonly static CreatureSoundXmlTranslation Instance = new CreatureSoundXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ICreatureSoundGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if (item.SoundType_IsSet
+                && (translationMask?.GetShouldTranslate((int)CreatureSound_FieldIndex.SoundType) ?? true))
+            {
+                EnumXmlTranslation<CreatureSound.CreatureSoundType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.SoundType),
+                    item: item.SoundType,
+                    fieldIndex: (int)CreatureSound_FieldIndex.SoundType,
+                    errorMask: errorMask);
+            }
+            if (item.Sounds.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)CreatureSound_FieldIndex.Sounds) ?? true))
+            {
+                ListXmlTranslation<SoundItem>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Sounds),
+                    item: item.Sounds,
+                    fieldIndex: (int)CreatureSound_FieldIndex.Sounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)CreatureSound_FieldIndex.Sounds),
+                    transl: (XElement subNode, SoundItem subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        ((SoundItemXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                            item: subItem,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+        }
+
         public static void FillPublic_Xml(
-            this CreatureSound item,
+            ICreatureSound item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1251,7 +1138,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    CreatureSoundCommon.FillPublicElement_Xml(
+                    CreatureSoundXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1267,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this CreatureSound item,
+            ICreatureSound item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1334,76 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class CreatureSoundXmlTranslation
-    {
-        public readonly static CreatureSoundXmlTranslation Instance = new CreatureSoundXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            ICreatureSoundGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.SoundType_IsSet
-                && (translationMask?.GetShouldTranslate((int)CreatureSound_FieldIndex.SoundType) ?? true))
-            {
-                EnumXmlTranslation<CreatureSound.CreatureSoundType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SoundType),
-                    item: item.SoundType,
-                    fieldIndex: (int)CreatureSound_FieldIndex.SoundType,
-                    errorMask: errorMask);
-            }
-            if (item.Sounds.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)CreatureSound_FieldIndex.Sounds) ?? true))
-            {
-                ListXmlTranslation<SoundItem>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sounds),
-                    item: item.Sounds,
-                    fieldIndex: (int)CreatureSound_FieldIndex.Sounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)CreatureSound_FieldIndex.Sounds),
-                    transl: (XElement subNode, SoundItem subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation<SoundItem>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            ICreatureSoundGetter item,
-            bool doMasks,
-            out CreatureSound_ErrorMask errorMask,
-            CreatureSound_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CreatureSound_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             ICreatureSoundGetter item,
             ErrorMaskBuilder errorMask,
@@ -1422,9 +1240,210 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ICreatureSoundGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            ICreatureSoundGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (ICreatureSoundGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class CreatureSoundXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this ICreatureSoundGetter item,
+            XElement node,
+            out CreatureSound_ErrorMask errorMask,
+            bool doMasks = true,
+            CreatureSound_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((CreatureSoundXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = CreatureSound_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this ICreatureSoundGetter item,
+            string path,
+            out CreatureSound_ErrorMask errorMask,
+            CreatureSound_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ICreatureSoundGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ICreatureSoundGetter item,
+            Stream stream,
+            out CreatureSound_ErrorMask errorMask,
+            CreatureSound_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this ICreatureSoundGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this ICreatureSoundGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((CreatureSoundXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this ICreatureSoundGetter item,
+            XElement node,
+            string name = null,
+            CreatureSound_TranslationMask translationMask = null)
+        {
+            ((CreatureSoundXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this ICreatureSoundGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((CreatureSoundXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ICreatureSoundGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((CreatureSoundXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -1809,11 +1828,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class CreatureSoundBinaryTranslation
+    public partial class CreatureSoundBinaryTranslation : IBinaryTranslator
     {
         public readonly static CreatureSoundBinaryTranslation Instance = new CreatureSoundBinaryTranslation();
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             ICreatureSoundGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
@@ -1838,52 +1857,99 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, SoundItem subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        LoquiBinaryTranslation<SoundItem>.Instance.Write(
-                            writer: subWriter,
+                        ((SoundItemBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
+                            writer: subWriter,
                             errorMask: listErrorMask,
-                            masterReferences: masterReferences);
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                     );
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            ICreatureSoundGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out CreatureSound_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = CreatureSound_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             ICreatureSoundGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Write_Binary_RecordTypes(
+            Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
-        #endregion
+
+        public void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ICreatureSoundGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class CreatureSoundBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this ICreatureSoundGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out CreatureSound_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((CreatureSoundBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = CreatureSound_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Binary(
+            this ICreatureSoundGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ((CreatureSoundBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary(
+            this ICreatureSoundGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences)
+        {
+            ((CreatureSoundBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

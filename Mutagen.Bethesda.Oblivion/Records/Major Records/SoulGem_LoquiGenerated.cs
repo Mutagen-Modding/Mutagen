@@ -33,7 +33,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class SoulGem : 
+    public partial class SoulGem :
         ItemAbstract,
         ISoulGem,
         ISoulGemInternal,
@@ -343,6 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => SoulGemXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static SoulGem Create_Xml(
@@ -401,7 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    SoulGemCommon.FillPublicElement_Xml(
+                    SoulGemXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -497,155 +498,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        #endregion
-
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out SoulGem_ErrorMask errorMask,
-            bool doMasks = true,
-            SoulGem_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SoulGemXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out SoulGem_ErrorMask errorMask,
-            SoulGem_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out SoulGem_ErrorMask errorMask,
-            SoulGem_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out ItemAbstract_ErrorMask errorMask,
-            bool doMasks = true,
-            ItemAbstract_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SoulGemXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            OblivionMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SoulGemXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SoulGemXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            SoulGemXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         #endregion
 
         protected static void FillPrivateElement_Xml(
@@ -745,6 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected override IBinaryTranslator BinaryTranslator => SoulGemBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static SoulGem Create_Binary(
@@ -794,89 +647,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out SoulGem_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SoulGemBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out ItemAbstract_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SoulGemBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SoulGemBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SoulGemBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            SoulGemBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
-        #endregion
-
         protected static void Fill_Binary_Structs(
             SoulGem item,
             MutagenFrame frame,
@@ -923,7 +693,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)SoulGem_FieldIndex.Model);
-                        item.Model = Model.Create_Binary(
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1126,8 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISoulGemGetter rhs,
             ErrorMaskBuilder errorMask,
             SoulGem_CopyMask copyMask = null,
-            ISoulGemGetter def = null,
-            bool doMasks = true)
+            ISoulGemGetter def = null)
         {
             SoulGemCommon.CopyFieldsFrom(
                 item: this,
@@ -1235,7 +1004,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ISoulGem : ISoulGemGetter, IItemAbstract, ILoquiClass<ISoulGem, ISoulGemGetter>, ILoquiClass<SoulGem, ISoulGemGetter>
+    public partial interface ISoulGem :
+        ISoulGemGetter,
+        IItemAbstract,
+        ILoquiClass<ISoulGem, ISoulGemGetter>,
+        ILoquiClass<SoulGem, ISoulGemGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1267,16 +1040,27 @@ namespace Mutagen.Bethesda.Oblivion
         void MaximumCapacity_Set(SoulLevel item, bool hasBeenSet = true);
         void MaximumCapacity_Unset();
 
+        void CopyFieldsFrom(
+            ISoulGemGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            SoulGem_CopyMask copyMask = null,
+            ISoulGemGetter def = null);
     }
 
-    public partial interface ISoulGemInternal : ISoulGem, ISoulGemInternalGetter, IItemAbstractInternal
+    public partial interface ISoulGemInternal :
+        IItemAbstractInternal,
+        ISoulGem,
+        ISoulGemInternalGetter
     {
         new Script Script { get; set; }
         new SoulGem.DATADataType DATADataTypeState { get; set; }
 
     }
 
-    public partial interface ISoulGemGetter : IItemAbstractGetter
+    public partial interface ISoulGemGetter :
+        IItemAbstractGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region Name
         String Name { get; }
@@ -1319,7 +1103,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface ISoulGemInternalGetter : ISoulGemGetter, IItemAbstractInternalGetter
+    public partial interface ISoulGemInternalGetter :
+        IItemAbstractInternalGetter,
+        ISoulGemGetter
     {
         #region DATADataTypeState
         SoulGem.DATADataType DATADataTypeState { get; }
@@ -1341,17 +1127,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Model = 7,
-        Icon = 8,
-        Script = 9,
-        Value = 10,
-        Weight = 11,
-        ContainedSoul = 12,
-        MaximumCapacity = 13,
-        DATADataTypeState = 14,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Model = 6,
+        Icon = 7,
+        Script = 8,
+        Value = 9,
+        Weight = 10,
+        ContainedSoul = 11,
+        MaximumCapacity = 12,
+        DATADataTypeState = 13,
     }
     #endregion
 
@@ -1371,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(SoulGem_Mask<>);
 
@@ -1583,6 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(SoulGemXmlTranslation);
         public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
@@ -1594,6 +1380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SLGM_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 6;
+        public static readonly Type BinaryTranslation = typeof(SoulGemBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1910,7 +1697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
@@ -2034,8 +1821,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (SoulGem_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.EditorID:
                     return (SoulGem_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.RecordType:
-                    return (SoulGem_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (SoulGem_FieldIndex)((int)index);
                 default:
@@ -2060,8 +1845,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMajorRecord_FieldIndex.Version:
                     return (SoulGem_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (SoulGem_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
                     return (SoulGem_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (SoulGem_FieldIndex)((int)index);
@@ -2088,16 +1871,128 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (SoulGem_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (SoulGem_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
-                    return (SoulGem_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class SoulGemXmlTranslation :
+        ItemAbstractXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static SoulGemXmlTranslation Instance = new SoulGemXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ISoulGemInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            ItemAbstractXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)SoulGem_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if (item.Model_IsSet
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Model) ?? true))
+            {
+                ((ModelXmlTranslation)((IXmlItem)item.Model).XmlTranslator).Write(
+                    item: item.Model,
+                    node: node,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)SoulGem_FieldIndex.Model,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.Model));
+            }
+            if (item.Icon_IsSet
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Icon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Icon),
+                    item: item.Icon,
+                    fieldIndex: (int)SoulGem_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            if (item.Script_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Script) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Script),
+                    item: item.Script_Property?.FormKey,
+                    fieldIndex: (int)SoulGem_FieldIndex.Script,
+                    errorMask: errorMask);
+            }
+            if (item.DATADataTypeState.HasFlag(SoulGem.DATADataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)SoulGem_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight,
+                        fieldIndex: (int)SoulGem_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
+            }
+            if (item.ContainedSoul_IsSet
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ContainedSoul) ?? true))
+            {
+                EnumXmlTranslation<SoulLevel>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ContainedSoul),
+                    item: item.ContainedSoul,
+                    fieldIndex: (int)SoulGem_FieldIndex.ContainedSoul,
+                    errorMask: errorMask);
+            }
+            if (item.MaximumCapacity_IsSet
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.MaximumCapacity) ?? true))
+            {
+                EnumXmlTranslation<SoulLevel>.Instance.Write(
+                    node: node,
+                    name: nameof(item.MaximumCapacity),
+                    item: item.MaximumCapacity,
+                    fieldIndex: (int)SoulGem_FieldIndex.MaximumCapacity,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<SoulGem.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)SoulGem_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this SoulGem item,
+            ISoulGemInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2106,7 +2001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    SoulGemCommon.FillPublicElement_Xml(
+                    SoulGemXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2122,7 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this SoulGem item,
+            ISoulGemInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -2348,7 +2243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    ItemAbstractCommon.FillPublicElement_Xml(
+                    ItemAbstractXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2358,141 +2253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class SoulGemXmlTranslation : ItemAbstractXmlTranslation
-    {
-        public new readonly static SoulGemXmlTranslation Instance = new SoulGemXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            ISoulGemInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            ItemAbstractXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)SoulGem_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Model_IsSet
-                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Model) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.Model,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)SoulGem_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.Model));
-            }
-            if (item.Icon_IsSet
-                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)SoulGem_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-            if (item.Script_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Script) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
-                    fieldIndex: (int)SoulGem_FieldIndex.Script,
-                    errorMask: errorMask);
-            }
-            if (item.DATADataTypeState.HasFlag(SoulGem.DATADataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Value),
-                        item: item.Value,
-                        fieldIndex: (int)SoulGem_FieldIndex.Value,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Weight),
-                        item: item.Weight,
-                        fieldIndex: (int)SoulGem_FieldIndex.Weight,
-                        errorMask: errorMask);
-                }
-            }
-            if (item.ContainedSoul_IsSet
-                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ContainedSoul) ?? true))
-            {
-                EnumXmlTranslation<SoulLevel>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ContainedSoul),
-                    item: item.ContainedSoul,
-                    fieldIndex: (int)SoulGem_FieldIndex.ContainedSoul,
-                    errorMask: errorMask);
-            }
-            if (item.MaximumCapacity_IsSet
-                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.MaximumCapacity) ?? true))
-            {
-                EnumXmlTranslation<SoulLevel>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaximumCapacity),
-                    item: item.MaximumCapacity,
-                    fieldIndex: (int)SoulGem_FieldIndex.MaximumCapacity,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<SoulGem.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)SoulGem_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            ISoulGemInternalGetter item,
-            bool doMasks,
-            out SoulGem_ErrorMask errorMask,
-            SoulGem_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             ISoulGemInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -2511,9 +2272,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISoulGemInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IItemAbstractInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISoulGemInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISoulGemInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISoulGemInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class SoulGemXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this ISoulGemInternalGetter item,
+            XElement node,
+            out SoulGem_ErrorMask errorMask,
+            bool doMasks = true,
+            SoulGem_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((SoulGemXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this ISoulGemInternalGetter item,
+            string path,
+            out SoulGem_ErrorMask errorMask,
+            SoulGem_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ISoulGemInternalGetter item,
+            Stream stream,
+            out SoulGem_ErrorMask errorMask,
+            SoulGem_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -3006,31 +2889,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class SoulGemBinaryTranslation : ItemAbstractBinaryTranslation
+    public partial class SoulGemBinaryTranslation :
+        ItemAbstractBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static SoulGemBinaryTranslation Instance = new SoulGemBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             ISoulGemInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+            OblivionMajorRecordBinaryTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             ISoulGemInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3046,12 +2931,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Model_IsSet)
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                ((ModelBinaryTranslation)((IBinaryItem)item.Model).BinaryTranslator).Write(
                     item: item.Model,
-                    fieldIndex: (int)SoulGem_FieldIndex.Model,
+                    writer: writer,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             if (item.Icon_IsSet)
             {
@@ -3100,26 +2985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            ISoulGemInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out SoulGem_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             ISoulGemInternalGetter item,
             MasterReferences masterReferences,
@@ -3131,12 +2997,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: SoulGem_Registration.SLGM_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
+                Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -3144,9 +3010,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ISoulGemInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IItemAbstractInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ISoulGemInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ISoulGemInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ISoulGemInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class SoulGemBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this ISoulGemInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out SoulGem_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((SoulGemBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

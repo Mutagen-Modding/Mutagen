@@ -33,7 +33,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Weapon : 
+    public partial class Weapon :
         ItemAbstract,
         IWeapon,
         IWeaponInternal,
@@ -407,6 +407,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => WeaponXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Weapon Create_Xml(
@@ -465,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    WeaponCommon.FillPublicElement_Xml(
+                    WeaponXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -561,155 +562,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        #endregion
-
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out Weapon_ErrorMask errorMask,
-            bool doMasks = true,
-            Weapon_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            WeaponXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out ItemAbstract_ErrorMask errorMask,
-            bool doMasks = true,
-            ItemAbstract_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            WeaponXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            OblivionMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            WeaponXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            WeaponXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            WeaponXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         #endregion
 
         protected static void FillPrivateElement_Xml(
@@ -820,6 +672,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected override IBinaryTranslator BinaryTranslator => WeaponBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Weapon Create_Binary(
@@ -869,89 +722,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out Weapon_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            WeaponBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out ItemAbstract_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            WeaponBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            WeaponBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            WeaponBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            WeaponBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
-        #endregion
-
         protected static void Fill_Binary_Structs(
             Weapon item,
             MutagenFrame frame,
@@ -998,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Weapon_FieldIndex.Model);
-                        item.Model = Model.Create_Binary(
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1228,8 +998,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWeaponGetter rhs,
             ErrorMaskBuilder errorMask,
             Weapon_CopyMask copyMask = null,
-            IWeaponGetter def = null,
-            bool doMasks = true)
+            IWeaponGetter def = null)
         {
             WeaponCommon.CopyFieldsFrom(
                 item: this,
@@ -1373,7 +1142,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IWeapon : IWeaponGetter, IItemAbstract, ILoquiClass<IWeapon, IWeaponGetter>, ILoquiClass<Weapon, IWeaponGetter>
+    public partial interface IWeapon :
+        IWeaponGetter,
+        IItemAbstract,
+        ILoquiClass<IWeapon, IWeaponGetter>,
+        ILoquiClass<Weapon, IWeaponGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1413,9 +1186,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         new UInt16 Damage { get; set; }
 
+        void CopyFieldsFrom(
+            IWeaponGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            Weapon_CopyMask copyMask = null,
+            IWeaponGetter def = null);
     }
 
-    public partial interface IWeaponInternal : IWeapon, IWeaponInternalGetter, IItemAbstractInternal
+    public partial interface IWeaponInternal :
+        IItemAbstractInternal,
+        IWeapon,
+        IWeaponInternalGetter
     {
         new Script Script { get; set; }
         new Enchantment Enchantment { get; set; }
@@ -1423,7 +1204,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IWeaponGetter : IItemAbstractGetter
+    public partial interface IWeaponGetter :
+        IItemAbstractGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region Name
         String Name { get; }
@@ -1490,7 +1274,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IWeaponInternalGetter : IWeaponGetter, IItemAbstractInternalGetter
+    public partial interface IWeaponInternalGetter :
+        IItemAbstractInternalGetter,
+        IWeaponGetter
     {
         #region DATADataTypeState
         Weapon.DATADataType DATADataTypeState { get; }
@@ -1512,23 +1298,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Model = 7,
-        Icon = 8,
-        Script = 9,
-        Enchantment = 10,
-        EnchantmentPoints = 11,
-        Type = 12,
-        Speed = 13,
-        Reach = 14,
-        Flags = 15,
-        Value = 16,
-        Health = 17,
-        Weight = 18,
-        Damage = 19,
-        DATADataTypeState = 20,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Model = 6,
+        Icon = 7,
+        Script = 8,
+        Enchantment = 9,
+        EnchantmentPoints = 10,
+        Type = 11,
+        Speed = 12,
+        Reach = 13,
+        Flags = 14,
+        Value = 15,
+        Health = 16,
+        Weight = 17,
+        Damage = 18,
+        DATADataTypeState = 19,
     }
     #endregion
 
@@ -1548,7 +1333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(Weapon_Mask<>);
 
@@ -1826,6 +1611,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(WeaponXmlTranslation);
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
@@ -1837,6 +1623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = WEAP_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 6;
+        public static readonly Type BinaryTranslation = typeof(WeaponBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2250,7 +2037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
@@ -2410,8 +2197,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Weapon_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.EditorID:
                     return (Weapon_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.RecordType:
-                    return (Weapon_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (Weapon_FieldIndex)((int)index);
                 default:
@@ -2436,8 +2221,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMajorRecord_FieldIndex.Version:
                     return (Weapon_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Weapon_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
                     return (Weapon_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Weapon_FieldIndex)((int)index);
@@ -2464,16 +2247,182 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Weapon_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Weapon_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
-                    return (Weapon_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class WeaponXmlTranslation :
+        ItemAbstractXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static WeaponXmlTranslation Instance = new WeaponXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IWeaponInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            ItemAbstractXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Weapon_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if (item.Model_IsSet
+                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
+            {
+                ((ModelXmlTranslation)((IXmlItem)item.Model).XmlTranslator).Write(
+                    item: item.Model,
+                    node: node,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)Weapon_FieldIndex.Model,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Model));
+            }
+            if (item.Icon_IsSet
+                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Icon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Icon),
+                    item: item.Icon,
+                    fieldIndex: (int)Weapon_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            if (item.Script_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Script) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Script),
+                    item: item.Script_Property?.FormKey,
+                    fieldIndex: (int)Weapon_FieldIndex.Script,
+                    errorMask: errorMask);
+            }
+            if (item.Enchantment_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Enchantment) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Enchantment),
+                    item: item.Enchantment_Property?.FormKey,
+                    fieldIndex: (int)Weapon_FieldIndex.Enchantment,
+                    errorMask: errorMask);
+            }
+            if (item.EnchantmentPoints_IsSet
+                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentPoints) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EnchantmentPoints),
+                    item: item.EnchantmentPoints,
+                    fieldIndex: (int)Weapon_FieldIndex.EnchantmentPoints,
+                    errorMask: errorMask);
+            }
+            if (item.DATADataTypeState.HasFlag(Weapon.DATADataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Type) ?? true))
+                {
+                    EnumXmlTranslation<Weapon.WeaponType>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Type),
+                        item: item.Type,
+                        fieldIndex: (int)Weapon_FieldIndex.Type,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Speed) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Speed),
+                        item: item.Speed,
+                        fieldIndex: (int)Weapon_FieldIndex.Speed,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Reach) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Reach),
+                        item: item.Reach,
+                        fieldIndex: (int)Weapon_FieldIndex.Reach,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<Weapon.WeaponFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Weapon_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Value) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)Weapon_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Health) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Health),
+                        item: item.Health,
+                        fieldIndex: (int)Weapon_FieldIndex.Health,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Weight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight,
+                        fieldIndex: (int)Weapon_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Damage) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Damage),
+                        item: item.Damage,
+                        fieldIndex: (int)Weapon_FieldIndex.Damage,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Weapon.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Weapon_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this Weapon item,
+            IWeaponInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2482,7 +2431,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    WeaponCommon.FillPublicElement_Xml(
+                    WeaponXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2498,7 +2447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this Weapon item,
+            IWeaponInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -2861,7 +2810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    ItemAbstractCommon.FillPublicElement_Xml(
+                    ItemAbstractXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2871,195 +2820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class WeaponXmlTranslation : ItemAbstractXmlTranslation
-    {
-        public new readonly static WeaponXmlTranslation Instance = new WeaponXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IWeaponInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            ItemAbstractXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Weapon_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Model_IsSet
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.Model,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Weapon_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Model));
-            }
-            if (item.Icon_IsSet
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)Weapon_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-            if (item.Script_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Script) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.Script,
-                    errorMask: errorMask);
-            }
-            if (item.Enchantment_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Enchantment) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Enchantment),
-                    item: item.Enchantment_Property?.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.Enchantment,
-                    errorMask: errorMask);
-            }
-            if (item.EnchantmentPoints_IsSet
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentPoints) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EnchantmentPoints),
-                    item: item.EnchantmentPoints,
-                    fieldIndex: (int)Weapon_FieldIndex.EnchantmentPoints,
-                    errorMask: errorMask);
-            }
-            if (item.DATADataTypeState.HasFlag(Weapon.DATADataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Type) ?? true))
-                {
-                    EnumXmlTranslation<Weapon.WeaponType>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Type),
-                        item: item.Type,
-                        fieldIndex: (int)Weapon_FieldIndex.Type,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Speed) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Speed),
-                        item: item.Speed,
-                        fieldIndex: (int)Weapon_FieldIndex.Speed,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Reach) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Reach),
-                        item: item.Reach,
-                        fieldIndex: (int)Weapon_FieldIndex.Reach,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<Weapon.WeaponFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)Weapon_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Value) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Value),
-                        item: item.Value,
-                        fieldIndex: (int)Weapon_FieldIndex.Value,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Health) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Health),
-                        item: item.Health,
-                        fieldIndex: (int)Weapon_FieldIndex.Health,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Weight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Weight),
-                        item: item.Weight,
-                        fieldIndex: (int)Weapon_FieldIndex.Weight,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Damage) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Damage),
-                        item: item.Damage,
-                        fieldIndex: (int)Weapon_FieldIndex.Damage,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Weapon.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Weapon_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IWeaponInternalGetter item,
-            bool doMasks,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IWeaponInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -3078,9 +2839,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWeaponInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IItemAbstractInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWeaponInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWeaponInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWeaponInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class WeaponXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IWeaponInternalGetter item,
+            XElement node,
+            out Weapon_ErrorMask errorMask,
+            bool doMasks = true,
+            Weapon_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((WeaponXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IWeaponInternalGetter item,
+            string path,
+            out Weapon_ErrorMask errorMask,
+            Weapon_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IWeaponInternalGetter item,
+            Stream stream,
+            out Weapon_ErrorMask errorMask,
+            Weapon_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -3735,31 +3618,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class WeaponBinaryTranslation : ItemAbstractBinaryTranslation
+    public partial class WeaponBinaryTranslation :
+        ItemAbstractBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static WeaponBinaryTranslation Instance = new WeaponBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             IWeaponInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+            OblivionMajorRecordBinaryTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             IWeaponInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3775,12 +3660,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Model_IsSet)
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                ((ModelBinaryTranslation)((IBinaryItem)item.Model).BinaryTranslator).Write(
                     item: item.Model,
-                    fieldIndex: (int)Weapon_FieldIndex.Model,
+                    writer: writer,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             if (item.Icon_IsSet)
             {
@@ -3844,26 +3729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IWeaponInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out Weapon_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IWeaponInternalGetter item,
             MasterReferences masterReferences,
@@ -3875,12 +3741,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Weapon_Registration.WEAP_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
+                Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -3888,9 +3754,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IWeaponInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IItemAbstractInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IWeaponInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IWeaponInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IWeaponInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class WeaponBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IWeaponInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out Weapon_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((WeaponBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

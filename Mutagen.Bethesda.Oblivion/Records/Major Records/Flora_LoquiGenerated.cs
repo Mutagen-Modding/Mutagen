@@ -33,7 +33,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Flora : 
+    public partial class Flora :
         OblivionMajorRecord,
         IFlora,
         IFloraInternal,
@@ -281,6 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => FloraXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Flora Create_Xml(
@@ -339,7 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    FloraCommon.FillPublicElement_Xml(
+                    FloraXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -435,138 +436,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        #endregion
-
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out Flora_ErrorMask errorMask,
-            bool doMasks = true,
-            Flora_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            FloraXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            OblivionMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            FloraXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            FloraXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            FloraXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         #endregion
 
         protected static void FillPrivateElement_Xml(
@@ -671,6 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected override IBinaryTranslator BinaryTranslator => FloraBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Flora Create_Binary(
@@ -720,73 +590,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out Flora_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            FloraBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            FloraBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            FloraBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            FloraBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
-        #endregion
-
         protected static void Fill_Binary_Structs(
             Flora item,
             MutagenFrame frame,
@@ -833,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Flora_FieldIndex.Model);
-                        item.Model = Model.Create_Binary(
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -992,8 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
             IFloraGetter rhs,
             ErrorMaskBuilder errorMask,
             Flora_CopyMask copyMask = null,
-            IFloraGetter def = null,
-            bool doMasks = true)
+            IFloraGetter def = null)
         {
             FloraCommon.CopyFieldsFrom(
                 item: this,
@@ -1101,7 +903,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IFlora : IFloraGetter, IOblivionMajorRecord, ILoquiClass<IFlora, IFloraGetter>, ILoquiClass<Flora, IFloraGetter>
+    public partial interface IFlora :
+        IFloraGetter,
+        IOblivionMajorRecord,
+        ILoquiClass<IFlora, IFloraGetter>,
+        ILoquiClass<Flora, IFloraGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1123,9 +929,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte Winter { get; set; }
 
+        void CopyFieldsFrom(
+            IFloraGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            Flora_CopyMask copyMask = null,
+            IFloraGetter def = null);
     }
 
-    public partial interface IFloraInternal : IFlora, IFloraInternalGetter, IOblivionMajorRecordInternal
+    public partial interface IFloraInternal :
+        IOblivionMajorRecordInternal,
+        IFlora,
+        IFloraInternalGetter
     {
         new Script Script { get; set; }
         new Ingredient Ingredient { get; set; }
@@ -1133,7 +947,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IFloraGetter : IOblivionMajorRecordGetter
+    public partial interface IFloraGetter :
+        IOblivionMajorRecordGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region Name
         String Name { get; }
@@ -1174,7 +991,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IFloraInternalGetter : IFloraGetter, IOblivionMajorRecordInternalGetter
+    public partial interface IFloraInternalGetter :
+        IOblivionMajorRecordInternalGetter,
+        IFloraGetter
     {
         #region PFPCDataTypeState
         Flora.PFPCDataType PFPCDataTypeState { get; }
@@ -1196,17 +1015,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Model = 7,
-        Script = 8,
-        Ingredient = 9,
-        Spring = 10,
-        Summer = 11,
-        Fall = 12,
-        Winter = 13,
-        PFPCDataTypeState = 14,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Model = 6,
+        Script = 7,
+        Ingredient = 8,
+        Spring = 9,
+        Summer = 10,
+        Fall = 11,
+        Winter = 12,
+        PFPCDataTypeState = 13,
     }
     #endregion
 
@@ -1226,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Flora_Mask<>);
 
@@ -1438,6 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(FloraXmlTranslation);
         public static readonly RecordType FLOR_HEADER = new RecordType("FLOR");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
@@ -1447,6 +1266,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = FLOR_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
+        public static readonly Type BinaryTranslation = typeof(FloraBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1726,7 +1546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.Ingredient = item.Ingredient_Property.FormKey == rhs.Ingredient_Property.FormKey;
@@ -1848,8 +1668,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Flora_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Flora_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (Flora_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Flora_FieldIndex)((int)index);
                 default:
@@ -1875,16 +1693,126 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Flora_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Flora_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
-                    return (Flora_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class FloraXmlTranslation :
+        OblivionMajorRecordXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static FloraXmlTranslation Instance = new FloraXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IFloraInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Flora_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if (item.Model_IsSet
+                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Model) ?? true))
+            {
+                ((ModelXmlTranslation)((IXmlItem)item.Model).XmlTranslator).Write(
+                    item: item.Model,
+                    node: node,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)Flora_FieldIndex.Model,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Flora_FieldIndex.Model));
+            }
+            if (item.Script_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Script),
+                    item: item.Script_Property?.FormKey,
+                    fieldIndex: (int)Flora_FieldIndex.Script,
+                    errorMask: errorMask);
+            }
+            if (item.Ingredient_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Ingredient),
+                    item: item.Ingredient_Property?.FormKey,
+                    fieldIndex: (int)Flora_FieldIndex.Ingredient,
+                    errorMask: errorMask);
+            }
+            if (item.PFPCDataTypeState.HasFlag(Flora.PFPCDataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Spring) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Spring),
+                        item: item.Spring,
+                        fieldIndex: (int)Flora_FieldIndex.Spring,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Summer) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Summer),
+                        item: item.Summer,
+                        fieldIndex: (int)Flora_FieldIndex.Summer,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Fall) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fall),
+                        item: item.Fall,
+                        fieldIndex: (int)Flora_FieldIndex.Fall,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Winter) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Winter),
+                        item: item.Winter,
+                        fieldIndex: (int)Flora_FieldIndex.Winter,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.PFPCDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Flora.PFPCDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.PFPCDataTypeState),
+                    item: item.PFPCDataTypeState,
+                    fieldIndex: (int)Flora_FieldIndex.PFPCDataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this Flora item,
+            IFloraInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1893,7 +1821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    FloraCommon.FillPublicElement_Xml(
+                    FloraXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1909,7 +1837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this Flora item,
+            IFloraInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -2116,7 +2044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2126,139 +2054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class FloraXmlTranslation : OblivionMajorRecordXmlTranslation
-    {
-        public new readonly static FloraXmlTranslation Instance = new FloraXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IFloraInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Flora_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Model_IsSet
-                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Model) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.Model,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Flora_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Flora_FieldIndex.Model));
-            }
-            if (item.Script_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
-                    fieldIndex: (int)Flora_FieldIndex.Script,
-                    errorMask: errorMask);
-            }
-            if (item.Ingredient_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Ingredient),
-                    item: item.Ingredient_Property?.FormKey,
-                    fieldIndex: (int)Flora_FieldIndex.Ingredient,
-                    errorMask: errorMask);
-            }
-            if (item.PFPCDataTypeState.HasFlag(Flora.PFPCDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Spring) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Spring),
-                        item: item.Spring,
-                        fieldIndex: (int)Flora_FieldIndex.Spring,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Summer) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Summer),
-                        item: item.Summer,
-                        fieldIndex: (int)Flora_FieldIndex.Summer,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Fall) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Fall),
-                        item: item.Fall,
-                        fieldIndex: (int)Flora_FieldIndex.Fall,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Winter) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Winter),
-                        item: item.Winter,
-                        fieldIndex: (int)Flora_FieldIndex.Winter,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.PFPCDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Flora.PFPCDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.PFPCDataTypeState),
-                    item: item.PFPCDataTypeState,
-                    fieldIndex: (int)Flora_FieldIndex.PFPCDataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IFloraInternalGetter item,
-            bool doMasks,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IFloraInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -2277,9 +2073,116 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IFloraInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IFloraInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IFloraInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class FloraXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IFloraInternalGetter item,
+            XElement node,
+            out Flora_ErrorMask errorMask,
+            bool doMasks = true,
+            Flora_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((FloraXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IFloraInternalGetter item,
+            string path,
+            out Flora_ErrorMask errorMask,
+            Flora_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IFloraInternalGetter item,
+            Stream stream,
+            out Flora_ErrorMask errorMask,
+            Flora_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -2772,31 +2675,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class FloraBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    public partial class FloraBinaryTranslation :
+        OblivionMajorRecordBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static FloraBinaryTranslation Instance = new FloraBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             IFloraInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+            OblivionMajorRecordBinaryTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             IFloraInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2812,12 +2717,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Model_IsSet)
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                ((ModelBinaryTranslation)((IBinaryItem)item.Model).BinaryTranslator).Write(
                     item: item.Model,
-                    fieldIndex: (int)Flora_FieldIndex.Model,
+                    writer: writer,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             if (item.Script_Property.HasBeenSet)
             {
@@ -2849,26 +2754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IFloraInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out Flora_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IFloraInternalGetter item,
             MasterReferences masterReferences,
@@ -2880,12 +2766,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Flora_Registration.FLOR_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
+                Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -2893,9 +2779,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IFloraInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IFloraInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IFloraInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class FloraBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IFloraInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out Flora_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((FloraBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

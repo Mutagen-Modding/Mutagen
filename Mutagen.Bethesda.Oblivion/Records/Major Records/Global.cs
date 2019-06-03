@@ -12,11 +12,17 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
+    public partial interface IGlobalInternalGetter
+    {
+        char TypeChar { get; }
+    }
+
     public partial class Global
     {
         protected static readonly RecordType FNAM = new RecordType("FNAM");
 
         public abstract float RawFloat { get; set; }
+        public abstract char TypeChar { get; }
         
         public static Global Create_Binary(
             MutagenFrame frame,

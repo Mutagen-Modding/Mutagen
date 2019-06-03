@@ -330,9 +330,8 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: errorMask,
                                 transl: (r, item, subErr) =>
                                 {
-                                    LoquiBinaryTranslation.Instance.Write<IPlaced>(
+                                    item.Write_Binary(
                                         r,
-                                        item,
                                         masterReferences,
                                         errorMask);
                                 });
@@ -352,20 +351,16 @@ namespace Mutagen.Bethesda.Oblivion
                             writer.Write(obj.TemporaryTimestamp);
                             if (obj.Landscape_IsSet)
                             {
-                                LoquiBinaryTranslation<Landscape>.Instance.Write(
+                                obj.Landscape.Write_Binary(
                                     writer,
-                                    item: obj.Landscape,
                                     masterReferences: masterReferences,
-                                    fieldIndex: (int)Cell_FieldIndex.Landscape,
                                     errorMask: errorMask);
                             }
                             if (obj.PathGrid_IsSet)
                             {
-                                LoquiBinaryTranslation<PathGrid>.Instance.Write(
+                                obj.PathGrid.Write_Binary(
                                     writer,
-                                    item: obj.PathGrid,
                                     masterReferences: masterReferences,
-                                    fieldIndex: (int)Cell_FieldIndex.PathGrid,
                                     errorMask: errorMask);
                             }
                             Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Write(
@@ -375,9 +370,8 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: errorMask,
                                 transl: (r, item, subErr) =>
                                 {
-                                    LoquiBinaryTranslation.Instance.Write<IPlaced>(
+                                    item.Write_Binary(
                                         r,
-                                        item,
                                         masterReferences,
                                         errorMask);
                                 });
@@ -400,9 +394,8 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: errorMask,
                                 transl: (r, item, subErr) =>
                                 {
-                                    LoquiBinaryTranslation.Instance.Write<IPlaced>(
+                                    item.Write_Binary(
                                         r,
-                                        item,
                                         masterReferences,
                                         errorMask);
                                 });

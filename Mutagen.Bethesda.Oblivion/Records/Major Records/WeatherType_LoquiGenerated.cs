@@ -33,7 +33,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class WeatherType : 
+    public partial class WeatherType :
         LoquiNotifyingObject,
         IWeatherType,
         ILoquiObject<WeatherType>,
@@ -141,6 +141,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => WeatherTypeXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static WeatherType Create_Xml(
@@ -193,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    WeatherTypeCommon.FillPublicElement_Xml(
+                    WeatherTypeXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -291,139 +293,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out WeatherType_ErrorMask errorMask,
-            bool doMasks = true,
-            WeatherType_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            WeatherTypeXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            WeatherType_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            WeatherTypeXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -442,6 +311,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
+        protected IBinaryTranslator BinaryTranslator => WeatherTypeBinaryTranslation.Instance;
+        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static WeatherType Create_Binary(
@@ -490,49 +361,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out WeatherType_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            WeatherTypeBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences)
-        {
-            this.Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            WeatherTypeBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -685,8 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWeatherTypeGetter rhs,
             ErrorMaskBuilder errorMask,
             WeatherType_CopyMask copyMask = null,
-            IWeatherTypeGetter def = null,
-            bool doMasks = true)
+            IWeatherTypeGetter def = null)
         {
             WeatherTypeCommon.CopyFieldsFrom(
                 item: this,
@@ -770,7 +597,10 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IWeatherType : IWeatherTypeGetter, ILoquiClass<IWeatherType, IWeatherTypeGetter>, ILoquiClass<WeatherType, IWeatherTypeGetter>
+    public partial interface IWeatherType :
+        IWeatherTypeGetter,
+        ILoquiClass<IWeatherType, IWeatherTypeGetter>,
+        ILoquiClass<WeatherType, IWeatherTypeGetter>
     {
         new Color Sunrise { get; set; }
 
@@ -780,9 +610,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Color Night { get; set; }
 
+        void CopyFieldsFrom(
+            IWeatherTypeGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            WeatherType_CopyMask copyMask = null,
+            IWeatherTypeGetter def = null);
     }
 
-    public partial interface IWeatherTypeGetter : ILoquiObject
+    public partial interface IWeatherTypeGetter :
+        ILoquiObject,
+        IXmlItem,
+        IBinaryItem
     {
         #region Sunrise
         Color Sunrise { get; }
@@ -991,8 +829,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(WeatherTypeXmlTranslation);
         public const int NumStructFields = 4;
         public const int NumTypedFields = 0;
+        public static readonly Type BinaryTranslation = typeof(WeatherTypeBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1205,9 +1045,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class WeatherTypeXmlTranslation : IXmlTranslator
+    {
+        public readonly static WeatherTypeXmlTranslation Instance = new WeatherTypeXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IWeatherTypeGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Sunrise) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Sunrise),
+                    item: item.Sunrise,
+                    fieldIndex: (int)WeatherType_FieldIndex.Sunrise,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Day) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Day),
+                    item: item.Day,
+                    fieldIndex: (int)WeatherType_FieldIndex.Day,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Sunset) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Sunset),
+                    item: item.Sunset,
+                    fieldIndex: (int)WeatherType_FieldIndex.Sunset,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Night) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Night),
+                    item: item.Night,
+                    fieldIndex: (int)WeatherType_FieldIndex.Night,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this WeatherType item,
+            IWeatherType item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1216,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    WeatherTypeCommon.FillPublicElement_Xml(
+                    WeatherTypeXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1232,7 +1124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this WeatherType item,
+            IWeatherType item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1349,81 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class WeatherTypeXmlTranslation
-    {
-        public readonly static WeatherTypeXmlTranslation Instance = new WeatherTypeXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IWeatherTypeGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Sunrise) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sunrise),
-                    item: item.Sunrise,
-                    fieldIndex: (int)WeatherType_FieldIndex.Sunrise,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Day) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Day),
-                    item: item.Day,
-                    fieldIndex: (int)WeatherType_FieldIndex.Day,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Sunset) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sunset),
-                    item: item.Sunset,
-                    fieldIndex: (int)WeatherType_FieldIndex.Sunset,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Night) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Night),
-                    item: item.Night,
-                    fieldIndex: (int)WeatherType_FieldIndex.Night,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IWeatherTypeGetter item,
-            bool doMasks,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IWeatherTypeGetter item,
             ErrorMaskBuilder errorMask,
@@ -1442,9 +1260,210 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWeatherTypeGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IWeatherTypeGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IWeatherTypeGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class WeatherTypeXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IWeatherTypeGetter item,
+            XElement node,
+            out WeatherType_ErrorMask errorMask,
+            bool doMasks = true,
+            WeatherType_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((WeatherTypeXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IWeatherTypeGetter item,
+            string path,
+            out WeatherType_ErrorMask errorMask,
+            WeatherType_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IWeatherTypeGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IWeatherTypeGetter item,
+            Stream stream,
+            out WeatherType_ErrorMask errorMask,
+            WeatherType_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IWeatherTypeGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IWeatherTypeGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((WeatherTypeXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this IWeatherTypeGetter item,
+            XElement node,
+            string name = null,
+            WeatherType_TranslationMask translationMask = null)
+        {
+            ((WeatherTypeXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this IWeatherTypeGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((WeatherTypeXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IWeatherTypeGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((WeatherTypeXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -1805,11 +1824,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class WeatherTypeBinaryTranslation
+    public partial class WeatherTypeBinaryTranslation : IBinaryTranslator
     {
         public readonly static WeatherTypeBinaryTranslation Instance = new WeatherTypeBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             IWeatherTypeGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
@@ -1833,41 +1852,87 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 extraByte: true);
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IWeatherTypeGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out WeatherType_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IWeatherTypeGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Write_Binary_Embedded(
+            Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
-        #endregion
+
+        public void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IWeatherTypeGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class WeatherTypeBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IWeatherTypeGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out WeatherType_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((WeatherTypeBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Binary(
+            this IWeatherTypeGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ((WeatherTypeBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary(
+            this IWeatherTypeGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences)
+        {
+            ((WeatherTypeBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

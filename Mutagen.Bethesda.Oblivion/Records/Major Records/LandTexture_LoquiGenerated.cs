@@ -35,7 +35,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class LandTexture : 
+    public partial class LandTexture :
         OblivionMajorRecord,
         ILandTexture,
         ILandTextureInternal,
@@ -239,6 +239,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => LandTextureXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static LandTexture Create_Xml(
@@ -297,7 +298,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    LandTextureCommon.FillPublicElement_Xml(
+                    LandTextureXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -395,138 +396,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out LandTexture_ErrorMask errorMask,
-            bool doMasks = true,
-            LandTexture_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LandTextureXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            OblivionMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LandTextureXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LandTextureXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            LandTextureXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         protected static void FillPrivateElement_Xml(
             LandTexture item,
             XElement node,
@@ -616,6 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected override IBinaryTranslator BinaryTranslator => LandTextureBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static LandTexture Create_Binary(
@@ -665,73 +535,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out LandTexture_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LandTextureBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LandTextureBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            LandTextureBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            LandTextureBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
-        #endregion
-
         protected static void Fill_Binary_Structs(
             LandTexture item,
             MutagenFrame frame,
@@ -778,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)LandTexture_FieldIndex.Havok);
-                        item.Havok = HavokData.Create_Binary(
+                        item.Havok = Mutagen.Bethesda.Oblivion.HavokData.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -922,8 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILandTextureGetter rhs,
             ErrorMaskBuilder errorMask,
             LandTexture_CopyMask copyMask = null,
-            ILandTextureGetter def = null,
-            bool doMasks = true)
+            ILandTextureGetter def = null)
         {
             LandTextureCommon.CopyFieldsFrom(
                 item: this,
@@ -1001,7 +803,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ILandTexture : ILandTextureGetter, IOblivionMajorRecord, ILoquiClass<ILandTexture, ILandTextureGetter>, ILoquiClass<LandTexture, ILandTextureGetter>
+    public partial interface ILandTexture :
+        ILandTextureGetter,
+        IOblivionMajorRecord,
+        ILoquiClass<ILandTexture, ILandTextureGetter>,
+        ILoquiClass<LandTexture, ILandTextureGetter>
     {
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }
@@ -1019,14 +825,25 @@ namespace Mutagen.Bethesda.Oblivion
         void TextureSpecularExponent_Unset();
 
         new ISourceSetList<FormIDSetLink<Grass>> PotentialGrass { get; }
+        void CopyFieldsFrom(
+            ILandTextureGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            LandTexture_CopyMask copyMask = null,
+            ILandTextureGetter def = null);
     }
 
-    public partial interface ILandTextureInternal : ILandTexture, ILandTextureInternalGetter, IOblivionMajorRecordInternal
+    public partial interface ILandTextureInternal :
+        IOblivionMajorRecordInternal,
+        ILandTexture,
+        ILandTextureInternalGetter
     {
         new ISourceSetList<FormIDSetLink<Grass>> PotentialGrass { get; }
     }
 
-    public partial interface ILandTextureGetter : IOblivionMajorRecordGetter
+    public partial interface ILandTextureGetter :
+        IOblivionMajorRecordGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region Icon
         String Icon { get; }
@@ -1049,7 +866,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface ILandTextureInternalGetter : ILandTextureGetter, IOblivionMajorRecordInternalGetter
+    public partial interface ILandTextureInternalGetter :
+        IOblivionMajorRecordInternalGetter,
+        ILandTextureGetter
     {
 
     }
@@ -1067,12 +886,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Icon = 6,
-        Havok = 7,
-        TextureSpecularExponent = 8,
-        PotentialGrass = 9,
+        OblivionMajorRecordFlags = 4,
+        Icon = 5,
+        Havok = 6,
+        TextureSpecularExponent = 7,
+        PotentialGrass = 8,
     }
     #endregion
 
@@ -1092,7 +910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(LandTexture_Mask<>);
 
@@ -1250,6 +1068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(LandTextureXmlTranslation);
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
@@ -1258,6 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = LTEX_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
+        public static readonly Type BinaryTranslation = typeof(LandTextureBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1476,7 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Havok_IsSet,
                 item.Havok,
                 rhs.Havok,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => HavokDataCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.TextureSpecularExponent = item.TextureSpecularExponent_IsSet == rhs.TextureSpecularExponent_IsSet && item.TextureSpecularExponent == rhs.TextureSpecularExponent;
             ret.PotentialGrass = item.PotentialGrass.CollectionEqualsHelper(
@@ -1587,8 +1407,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (LandTexture_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (LandTexture_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
-                    return (LandTexture_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (LandTexture_FieldIndex)((int)index);
                 default:
@@ -1614,16 +1432,88 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (LandTexture_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (LandTexture_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
-                    return (LandTexture_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class LandTextureXmlTranslation :
+        OblivionMajorRecordXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static LandTextureXmlTranslation Instance = new LandTextureXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ILandTextureInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Icon_IsSet
+                && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Icon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Icon),
+                    item: item.Icon,
+                    fieldIndex: (int)LandTexture_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            if (item.Havok_IsSet
+                && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Havok) ?? true))
+            {
+                ((HavokDataXmlTranslation)((IXmlItem)item.Havok).XmlTranslator).Write(
+                    item: item.Havok,
+                    node: node,
+                    name: nameof(item.Havok),
+                    fieldIndex: (int)LandTexture_FieldIndex.Havok,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)LandTexture_FieldIndex.Havok));
+            }
+            if (item.TextureSpecularExponent_IsSet
+                && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.TextureSpecularExponent) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TextureSpecularExponent),
+                    item: item.TextureSpecularExponent,
+                    fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
+                    errorMask: errorMask);
+            }
+            if (item.PotentialGrass.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.PotentialGrass) ?? true))
+            {
+                ListXmlTranslation<FormIDSetLink<Grass>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.PotentialGrass),
+                    item: item.PotentialGrass,
+                    fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)LandTexture_FieldIndex.PotentialGrass),
+                    transl: (XElement subNode, FormIDSetLink<Grass> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem?.FormKey,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+        }
+
         public static void FillPublic_Xml(
-            this LandTexture item,
+            ILandTextureInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1632,7 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    LandTextureCommon.FillPublicElement_Xml(
+                    LandTextureXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1648,7 +1538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this LandTexture item,
+            ILandTextureInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1764,7 +1654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1774,101 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class LandTextureXmlTranslation : OblivionMajorRecordXmlTranslation
-    {
-        public new readonly static LandTextureXmlTranslation Instance = new LandTextureXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            ILandTextureInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Icon_IsSet
-                && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)LandTexture_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-            if (item.Havok_IsSet
-                && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Havok) ?? true))
-            {
-                LoquiXmlTranslation<HavokData>.Instance.Write(
-                    node: node,
-                    item: item.Havok,
-                    name: nameof(item.Havok),
-                    fieldIndex: (int)LandTexture_FieldIndex.Havok,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LandTexture_FieldIndex.Havok));
-            }
-            if (item.TextureSpecularExponent_IsSet
-                && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.TextureSpecularExponent) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TextureSpecularExponent),
-                    item: item.TextureSpecularExponent,
-                    fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
-                    errorMask: errorMask);
-            }
-            if (item.PotentialGrass.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.PotentialGrass) ?? true))
-            {
-                ListXmlTranslation<FormIDSetLink<Grass>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.PotentialGrass),
-                    item: item.PotentialGrass,
-                    fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LandTexture_FieldIndex.PotentialGrass),
-                    transl: (XElement subNode, FormIDSetLink<Grass> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem?.FormKey,
-                            errorMask: listSubMask);
-                    }
-                    );
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            ILandTextureInternalGetter item,
-            bool doMasks,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             ILandTextureInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -1887,9 +1683,116 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ILandTextureInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ILandTextureInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ILandTextureInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class LandTextureXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this ILandTextureInternalGetter item,
+            XElement node,
+            out LandTexture_ErrorMask errorMask,
+            bool doMasks = true,
+            LandTexture_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((LandTextureXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this ILandTextureInternalGetter item,
+            string path,
+            out LandTexture_ErrorMask errorMask,
+            LandTexture_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ILandTextureInternalGetter item,
+            Stream stream,
+            out LandTexture_ErrorMask errorMask,
+            LandTexture_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -2316,18 +2219,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class LandTextureBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    public partial class LandTextureBinaryTranslation :
+        OblivionMajorRecordBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static LandTextureBinaryTranslation Instance = new LandTextureBinaryTranslation();
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             ILandTextureInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2343,12 +2248,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Havok_IsSet)
             {
-                LoquiBinaryTranslation<HavokData>.Instance.Write(
-                    writer: writer,
+                ((HavokDataBinaryTranslation)((IBinaryItem)item.Havok).BinaryTranslator).Write(
                     item: item.Havok,
-                    fieldIndex: (int)LandTexture_FieldIndex.Havok,
+                    writer: writer,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             if (item.TextureSpecularExponent_IsSet)
             {
@@ -2376,26 +2281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            ILandTextureInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out LandTexture_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             ILandTextureInternalGetter item,
             MasterReferences masterReferences,
@@ -2407,12 +2293,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: LandTexture_Registration.LTEX_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                OblivionMajorRecordBinaryTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
+                Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -2420,9 +2306,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ILandTextureInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ILandTextureInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ILandTextureInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class LandTextureBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this ILandTextureInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out LandTexture_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((LandTextureBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

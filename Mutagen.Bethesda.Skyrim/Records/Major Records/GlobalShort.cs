@@ -15,7 +15,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class GlobalShort
     {
         public const char TRIGGER_CHAR = 's';
-        
+        public override char TypeChar => TRIGGER_CHAR;
+
         public override float RawFloat
         {
             get => (float)this.Data;
@@ -41,7 +42,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor()
         {
-            this.TypeChar = TRIGGER_CHAR;
             this.WhenAny(x => x.RawFloat)
                 .Skip(1)
                 .DistinctUntilChanged()

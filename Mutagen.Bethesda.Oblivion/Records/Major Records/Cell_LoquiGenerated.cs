@@ -35,7 +35,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Cell : 
+    public partial class Cell :
         Place,
         ICell,
         ICellInternal,
@@ -662,6 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected override IXmlTranslator XmlTranslator => CellXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Cell Create_Xml(
@@ -720,7 +721,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    CellCommon.FillPublicElement_Xml(
+                    CellXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -816,155 +817,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        #endregion
-
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out Cell_ErrorMask errorMask,
-            bool doMasks = true,
-            Cell_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CellXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public override void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public override void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out Place_ErrorMask errorMask,
-            bool doMasks = true,
-            Place_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CellXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            OblivionMajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CellXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
-            MajorRecord_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CellXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            CellXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         #endregion
 
         protected static void FillPrivateElement_Xml(
@@ -1156,6 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected override IBinaryTranslator BinaryTranslator => CellBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static async Task<Cell> Create_Binary(
@@ -1215,89 +1068,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out Cell_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CellBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #region Base Class Trickdown Overrides
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out Place_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CellBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CellBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CellBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        #endregion
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            CellBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -1376,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
-                        item.Lighting = CellLighting.Create_Binary(
+                        item.Lighting = Mutagen.Bethesda.Oblivion.CellLighting.Create_Binary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1586,8 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICellGetter rhs,
             ErrorMaskBuilder errorMask,
             Cell_CopyMask copyMask = null,
-            ICellGetter def = null,
-            bool doMasks = true)
+            ICellGetter def = null)
         {
             CellCommon.CopyFieldsFrom(
                 item: this,
@@ -1767,7 +1536,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ICell : ICellGetter, IPlace, ILoquiClass<ICell, ICellGetter>, ILoquiClass<Cell, ICellGetter>
+    public partial interface ICell :
+        ICellGetter,
+        IPlace,
+        ILoquiClass<ICell, ICellGetter>,
+        ILoquiClass<Cell, ICellGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1830,9 +1603,17 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte[] VisibleWhenDistantTimestamp { get; set; }
 
         new ISourceSetList<IPlaced> VisibleWhenDistant { get; }
+        void CopyFieldsFrom(
+            ICellGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            Cell_CopyMask copyMask = null,
+            ICellGetter def = null);
     }
 
-    public partial interface ICellInternal : ICell, ICellInternalGetter, IPlaceInternal
+    public partial interface ICellInternal :
+        IPlaceInternal,
+        ICell,
+        ICellInternalGetter
     {
         new ISourceSetList<FormIDLink<Region>> Regions { get; }
         new Climate Climate { get; set; }
@@ -1844,7 +1625,10 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<IPlaced> VisibleWhenDistant { get; }
     }
 
-    public partial interface ICellGetter : IPlaceGetter
+    public partial interface ICellGetter :
+        IPlaceGetter,
+        IXmlItem,
+        IBinaryItem
     {
         #region Name
         String Name { get; }
@@ -1942,7 +1726,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface ICellInternalGetter : ICellGetter, IPlaceInternalGetter
+    public partial interface ICellInternalGetter :
+        IPlaceInternalGetter,
+        ICellGetter
     {
 
     }
@@ -1960,29 +1746,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        RecordType = 4,
-        OblivionMajorRecordFlags = 5,
-        Name = 6,
-        Flags = 7,
-        Grid = 8,
-        Lighting = 9,
-        Regions = 10,
-        MusicType = 11,
-        WaterHeight = 12,
-        Climate = 13,
-        Water = 14,
-        Owner = 15,
-        FactionRank = 16,
-        GlobalVariable = 17,
-        PathGrid = 18,
-        Landscape = 19,
-        Timestamp = 20,
-        PersistentTimestamp = 21,
-        Persistent = 22,
-        TemporaryTimestamp = 23,
-        Temporary = 24,
-        VisibleWhenDistantTimestamp = 25,
-        VisibleWhenDistant = 26,
+        OblivionMajorRecordFlags = 4,
+        Name = 5,
+        Flags = 6,
+        Grid = 7,
+        Lighting = 8,
+        Regions = 9,
+        MusicType = 10,
+        WaterHeight = 11,
+        Climate = 12,
+        Water = 13,
+        Owner = 14,
+        FactionRank = 15,
+        GlobalVariable = 16,
+        PathGrid = 17,
+        Landscape = 18,
+        Timestamp = 19,
+        PersistentTimestamp = 20,
+        Persistent = 21,
+        TemporaryTimestamp = 22,
+        Temporary = 23,
+        VisibleWhenDistantTimestamp = 24,
+        VisibleWhenDistant = 25,
     }
     #endregion
 
@@ -2002,7 +1787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 26;
 
         public static readonly Type MaskType = typeof(Cell_Mask<>);
 
@@ -2347,6 +2132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(CellXmlTranslation);
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
@@ -2368,6 +2154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CELL_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 17;
+        public static readonly Type BinaryTranslation = typeof(CellBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -3071,7 +2858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Lighting_IsSet,
                 item.Lighting,
                 rhs.Lighting,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => CellLightingCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.Regions = item.Regions.CollectionEqualsHelper(
                 rhs.Regions,
@@ -3089,14 +2876,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.PathGrid_IsSet,
                 item.PathGrid,
                 rhs.PathGrid,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => PathGridCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.Landscape = EqualsMaskHelper.EqualsHelper(
                 item.Landscape_IsSet,
                 rhs.Landscape_IsSet,
                 item.Landscape,
                 rhs.Landscape,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs) => LandscapeCommon.GetEqualsMask(loqLhs, loqRhs),
                 include);
             ret.Timestamp = ByteExt.EqualsFast(item.Timestamp, rhs.Timestamp);
             ret.PersistentTimestamp = ByteExt.EqualsFast(item.PersistentTimestamp, rhs.PersistentTimestamp);
@@ -3360,8 +3147,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Cell_FieldIndex)((int)index);
                 case Place_FieldIndex.EditorID:
                     return (Cell_FieldIndex)((int)index);
-                case Place_FieldIndex.RecordType:
-                    return (Cell_FieldIndex)((int)index);
                 case Place_FieldIndex.OblivionMajorRecordFlags:
                     return (Cell_FieldIndex)((int)index);
                 default:
@@ -3386,8 +3171,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMajorRecord_FieldIndex.Version:
                     return (Cell_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Cell_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.RecordType:
                     return (Cell_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Cell_FieldIndex)((int)index);
@@ -3414,16 +3197,289 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Cell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Cell_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
-                    return (Cell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class CellXmlTranslation :
+        PlaceXmlTranslation,
+        IXmlTranslator
+    {
+        public new readonly static CellXmlTranslation Instance = new CellXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ICellInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            PlaceXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Cell_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if (item.Flags_IsSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<Cell.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Cell_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if (item.Grid_IsSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Grid) ?? true))
+            {
+                P2IntXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Grid),
+                    item: item.Grid,
+                    fieldIndex: (int)Cell_FieldIndex.Grid,
+                    errorMask: errorMask);
+            }
+            if (item.Lighting_IsSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
+            {
+                ((CellLightingXmlTranslation)((IXmlItem)item.Lighting).XmlTranslator).Write(
+                    item: item.Lighting,
+                    node: node,
+                    name: nameof(item.Lighting),
+                    fieldIndex: (int)Cell_FieldIndex.Lighting,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Lighting));
+            }
+            if (item.Regions.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
+            {
+                ListXmlTranslation<FormIDLink<Region>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Regions),
+                    item: item.Regions,
+                    fieldIndex: (int)Cell_FieldIndex.Regions,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Regions),
+                    transl: (XElement subNode, FormIDLink<Region> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem?.FormKey,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.MusicType_IsSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.MusicType) ?? true))
+            {
+                EnumXmlTranslation<MusicType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.MusicType),
+                    item: item.MusicType,
+                    fieldIndex: (int)Cell_FieldIndex.MusicType,
+                    errorMask: errorMask);
+            }
+            if (item.WaterHeight_IsSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.WaterHeight),
+                    item: item.WaterHeight,
+                    fieldIndex: (int)Cell_FieldIndex.WaterHeight,
+                    errorMask: errorMask);
+            }
+            if (item.Climate_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Climate) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Climate),
+                    item: item.Climate_Property?.FormKey,
+                    fieldIndex: (int)Cell_FieldIndex.Climate,
+                    errorMask: errorMask);
+            }
+            if (item.Water_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Water),
+                    item: item.Water_Property?.FormKey,
+                    fieldIndex: (int)Cell_FieldIndex.Water,
+                    errorMask: errorMask);
+            }
+            if (item.Owner_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Owner),
+                    item: item.Owner_Property?.FormKey,
+                    fieldIndex: (int)Cell_FieldIndex.Owner,
+                    errorMask: errorMask);
+            }
+            if (item.FactionRank_IsSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FactionRank),
+                    item: item.FactionRank,
+                    fieldIndex: (int)Cell_FieldIndex.FactionRank,
+                    errorMask: errorMask);
+            }
+            if (item.GlobalVariable_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.GlobalVariable),
+                    item: item.GlobalVariable_Property?.FormKey,
+                    fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
+                    errorMask: errorMask);
+            }
+            if (item.PathGrid_IsSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
+            {
+                ((PathGridXmlTranslation)((IXmlItem)item.PathGrid).XmlTranslator).Write(
+                    item: item.PathGrid,
+                    node: node,
+                    name: nameof(item.PathGrid),
+                    fieldIndex: (int)Cell_FieldIndex.PathGrid,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.PathGrid));
+            }
+            if (item.Landscape_IsSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
+            {
+                ((LandscapeXmlTranslation)((IXmlItem)item.Landscape).XmlTranslator).Write(
+                    item: item.Landscape,
+                    node: node,
+                    name: nameof(item.Landscape),
+                    fieldIndex: (int)Cell_FieldIndex.Landscape,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape));
+            }
+            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Timestamp),
+                    item: item.Timestamp,
+                    fieldIndex: (int)Cell_FieldIndex.Timestamp,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.PersistentTimestamp) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.PersistentTimestamp),
+                    item: item.PersistentTimestamp,
+                    fieldIndex: (int)Cell_FieldIndex.PersistentTimestamp,
+                    errorMask: errorMask);
+            }
+            if (item.Persistent.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
+            {
+                ListXmlTranslation<IPlaced>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Persistent),
+                    item: item.Persistent,
+                    fieldIndex: (int)Cell_FieldIndex.Persistent,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Persistent),
+                    transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        ((IXmlItem)subItem).XmlTranslator.Write(
+                            item: subItem,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryTimestamp) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TemporaryTimestamp),
+                    item: item.TemporaryTimestamp,
+                    fieldIndex: (int)Cell_FieldIndex.TemporaryTimestamp,
+                    errorMask: errorMask);
+            }
+            if (item.Temporary.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
+            {
+                ListXmlTranslation<IPlaced>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Temporary),
+                    item: item.Temporary,
+                    fieldIndex: (int)Cell_FieldIndex.Temporary,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Temporary),
+                    transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        ((IXmlItem)subItem).XmlTranslator.Write(
+                            item: subItem,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistantTimestamp) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.VisibleWhenDistantTimestamp),
+                    item: item.VisibleWhenDistantTimestamp,
+                    fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistantTimestamp,
+                    errorMask: errorMask);
+            }
+            if (item.VisibleWhenDistant.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistant) ?? true))
+            {
+                ListXmlTranslation<IPlaced>.Instance.Write(
+                    node: node,
+                    name: nameof(item.VisibleWhenDistant),
+                    item: item.VisibleWhenDistant,
+                    fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.VisibleWhenDistant),
+                    transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        ((IXmlItem)subItem).XmlTranslator.Write(
+                            item: subItem,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+        }
+
         public static void FillPublic_Xml(
-            this Cell item,
+            ICellInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -3432,7 +3488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    CellCommon.FillPublicElement_Xml(
+                    CellXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -3448,7 +3504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this Cell item,
+            ICellInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -3938,7 +3994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    PlaceCommon.FillPublicElement_Xml(
+                    PlaceXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -3948,302 +4004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class CellXmlTranslation : PlaceXmlTranslation
-    {
-        public new readonly static CellXmlTranslation Instance = new CellXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            ICellInternalGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            PlaceXmlTranslation.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Cell_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Flags_IsSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Cell.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Cell_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if (item.Grid_IsSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Grid) ?? true))
-            {
-                P2IntXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Grid),
-                    item: item.Grid,
-                    fieldIndex: (int)Cell_FieldIndex.Grid,
-                    errorMask: errorMask);
-            }
-            if (item.Lighting_IsSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
-            {
-                LoquiXmlTranslation<CellLighting>.Instance.Write(
-                    node: node,
-                    item: item.Lighting,
-                    name: nameof(item.Lighting),
-                    fieldIndex: (int)Cell_FieldIndex.Lighting,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Lighting));
-            }
-            if (item.Regions.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
-            {
-                ListXmlTranslation<FormIDLink<Region>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Regions),
-                    item: item.Regions,
-                    fieldIndex: (int)Cell_FieldIndex.Regions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Regions),
-                    transl: (XElement subNode, FormIDLink<Region> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem?.FormKey,
-                            errorMask: listSubMask);
-                    }
-                    );
-            }
-            if (item.MusicType_IsSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.MusicType) ?? true))
-            {
-                EnumXmlTranslation<MusicType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MusicType),
-                    item: item.MusicType,
-                    fieldIndex: (int)Cell_FieldIndex.MusicType,
-                    errorMask: errorMask);
-            }
-            if (item.WaterHeight_IsSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WaterHeight),
-                    item: item.WaterHeight,
-                    fieldIndex: (int)Cell_FieldIndex.WaterHeight,
-                    errorMask: errorMask);
-            }
-            if (item.Climate_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Climate) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Climate),
-                    item: item.Climate_Property?.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.Climate,
-                    errorMask: errorMask);
-            }
-            if (item.Water_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Water),
-                    item: item.Water_Property?.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.Water,
-                    errorMask: errorMask);
-            }
-            if (item.Owner_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Owner),
-                    item: item.Owner_Property?.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.Owner,
-                    errorMask: errorMask);
-            }
-            if (item.FactionRank_IsSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FactionRank),
-                    item: item.FactionRank,
-                    fieldIndex: (int)Cell_FieldIndex.FactionRank,
-                    errorMask: errorMask);
-            }
-            if (item.GlobalVariable_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.GlobalVariable),
-                    item: item.GlobalVariable_Property?.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
-                    errorMask: errorMask);
-            }
-            if (item.PathGrid_IsSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
-            {
-                LoquiXmlTranslation<PathGrid>.Instance.Write(
-                    node: node,
-                    item: item.PathGrid,
-                    name: nameof(item.PathGrid),
-                    fieldIndex: (int)Cell_FieldIndex.PathGrid,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.PathGrid));
-            }
-            if (item.Landscape_IsSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
-            {
-                LoquiXmlTranslation<Landscape>.Instance.Write(
-                    node: node,
-                    item: item.Landscape,
-                    name: nameof(item.Landscape),
-                    fieldIndex: (int)Cell_FieldIndex.Landscape,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Timestamp),
-                    item: item.Timestamp,
-                    fieldIndex: (int)Cell_FieldIndex.Timestamp,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.PersistentTimestamp) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PersistentTimestamp),
-                    item: item.PersistentTimestamp,
-                    fieldIndex: (int)Cell_FieldIndex.PersistentTimestamp,
-                    errorMask: errorMask);
-            }
-            if (item.Persistent.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
-            {
-                ListXmlTranslation<IPlaced>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Persistent),
-                    item: item.Persistent,
-                    fieldIndex: (int)Cell_FieldIndex.Persistent,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Persistent),
-                    transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation.Instance.Write<IPlaced>(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryTimestamp) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TemporaryTimestamp),
-                    item: item.TemporaryTimestamp,
-                    fieldIndex: (int)Cell_FieldIndex.TemporaryTimestamp,
-                    errorMask: errorMask);
-            }
-            if (item.Temporary.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
-            {
-                ListXmlTranslation<IPlaced>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Temporary),
-                    item: item.Temporary,
-                    fieldIndex: (int)Cell_FieldIndex.Temporary,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Temporary),
-                    transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation.Instance.Write<IPlaced>(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistantTimestamp) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VisibleWhenDistantTimestamp),
-                    item: item.VisibleWhenDistantTimestamp,
-                    fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistantTimestamp,
-                    errorMask: errorMask);
-            }
-            if (item.VisibleWhenDistant.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistant) ?? true))
-            {
-                ListXmlTranslation<IPlaced>.Instance.Write(
-                    node: node,
-                    name: nameof(item.VisibleWhenDistant),
-                    item: item.VisibleWhenDistant,
-                    fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.VisibleWhenDistant),
-                    transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation.Instance.Write<IPlaced>(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            ICellInternalGetter item,
-            bool doMasks,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             ICellInternalGetter item,
             ErrorMaskBuilder errorMask,
@@ -4262,9 +4023,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ICellInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IPlaceInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ICellInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ICellInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ICellInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class CellXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this ICellInternalGetter item,
+            XElement node,
+            out Cell_ErrorMask errorMask,
+            bool doMasks = true,
+            Cell_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((CellXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this ICellInternalGetter item,
+            string path,
+            out Cell_ErrorMask errorMask,
+            Cell_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this ICellInternalGetter item,
+            Stream stream,
+            out Cell_ErrorMask errorMask,
+            Cell_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -5399,7 +5282,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class CellBinaryTranslation : PlaceBinaryTranslation
+    public partial class CellBinaryTranslation :
+        PlaceBinaryTranslation,
+        IBinaryTranslator
     {
         public new readonly static CellBinaryTranslation Instance = new CellBinaryTranslation();
 
@@ -5420,27 +5305,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             ICellInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+            OblivionMajorRecordBinaryTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Binary_RecordTypes(
+        public static void Write_RecordTypes(
             ICellInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -5473,12 +5358,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Lighting_IsSet)
             {
-                LoquiBinaryTranslation<CellLighting>.Instance.Write(
-                    writer: writer,
+                ((CellLightingBinaryTranslation)((IBinaryItem)item.Lighting).BinaryTranslator).Write(
                     item: item.Lighting,
-                    fieldIndex: (int)Cell_FieldIndex.Lighting,
+                    writer: writer,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             if (item.Regions.HasBeenSet)
             {
@@ -5558,26 +5443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            ICellInternalGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out Cell_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             ICellInternalGetter item,
             MasterReferences masterReferences,
@@ -5589,12 +5455,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Cell_Registration.CELL_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
+                Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -5607,9 +5473,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 masterReferences: masterReferences);
         }
-        #endregion
+
+        public override void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ICellInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IPlaceInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ICellInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ICellInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (ICellInternalGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class CellBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this ICellInternalGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out Cell_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((CellBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

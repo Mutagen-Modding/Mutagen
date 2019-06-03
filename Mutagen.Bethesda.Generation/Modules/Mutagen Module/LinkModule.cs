@@ -12,20 +12,20 @@ namespace Mutagen.Bethesda.Generation
     {
         public enum LinkCase { No, Yes, Maybe }
 
-        public override async Task<IEnumerable<string>> Interfaces(ObjectGeneration obj)
+        public override async Task<IEnumerable<(LoquiInterfaceType Location, string Interface)>> Interfaces(ObjectGeneration obj)
         {
             if (await HasLinks(obj, includeBaseClass: false) != LinkCase.No)
             {
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
-                    return $"{nameof(ILinkContainer)}".Single();
+                    return (LoquiInterfaceType.Direct, $"{nameof(ILinkContainer)}").Single();
                 }
                 else
                 {
-                    return $"{nameof(ILinkSubContainer)}".Single();
+                    return (LoquiInterfaceType.Direct, $"{nameof(ILinkSubContainer)}").Single();
                 }
             }
-            return Enumerable.Empty<string>();
+            return Enumerable.Empty<(LoquiInterfaceType Location, string Interface)>();
         }
 
         public async Task<LinkCase> HasLinks(LoquiType loqui, bool includeBaseClass, GenericSpecification specifications = null)

@@ -31,7 +31,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class RaceVoices : 
+    public partial class RaceVoices :
         LoquiNotifyingObject,
         IRaceVoices,
         ILoquiObject<RaceVoices>,
@@ -115,6 +115,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => RaceVoicesXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static RaceVoices Create_Xml(
@@ -167,7 +169,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    RaceVoicesCommon.FillPublicElement_Xml(
+                    RaceVoicesXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -265,139 +267,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out RaceVoices_ErrorMask errorMask,
-            bool doMasks = true,
-            RaceVoices_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            RaceVoicesXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            RaceVoices_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            RaceVoicesXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         #region Mutagen
@@ -426,6 +295,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        protected IBinaryTranslator BinaryTranslator => RaceVoicesBinaryTranslation.Instance;
+        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static RaceVoices Create_Binary(
@@ -477,49 +348,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        #endregion
-
-        #region Binary Write
-        public virtual void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out RaceVoices_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            RaceVoicesBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences)
-        {
-            this.Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        public void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            RaceVoicesBinaryTranslation.Instance.Write_Binary(
-                item: this,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-        }
         #endregion
 
         protected static void Fill_Binary_Structs(
@@ -636,8 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceVoicesGetter rhs,
             ErrorMaskBuilder errorMask,
             RaceVoices_CopyMask copyMask = null,
-            IRaceVoicesGetter def = null,
-            bool doMasks = true)
+            IRaceVoicesGetter def = null)
         {
             RaceVoicesCommon.CopyFieldsFrom(
                 item: this,
@@ -709,13 +536,24 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IRaceVoices : IRaceVoicesGetter, ILoquiClass<IRaceVoices, IRaceVoicesGetter>, ILoquiClass<RaceVoices, IRaceVoicesGetter>
+    public partial interface IRaceVoices :
+        IRaceVoicesGetter,
+        ILoquiClass<IRaceVoices, IRaceVoicesGetter>,
+        ILoquiClass<RaceVoices, IRaceVoicesGetter>
     {
         new Race Male { get; set; }
         new Race Female { get; set; }
+        void CopyFieldsFrom(
+            IRaceVoicesGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            RaceVoices_CopyMask copyMask = null,
+            IRaceVoicesGetter def = null);
     }
 
-    public partial interface IRaceVoicesGetter : ILoquiObject
+    public partial interface IRaceVoicesGetter :
+        ILoquiObject,
+        IXmlItem,
+        IBinaryItem
     {
         #region Male
         Race Male { get; }
@@ -894,10 +732,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(RaceVoicesXmlTranslation);
         public static readonly RecordType VNAM_HEADER = new RecordType("VNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = VNAM_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
+        public static readonly Type BinaryTranslation = typeof(RaceVoicesBinaryTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1062,68 +902,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region Xml Translation
-        public static void FillPublic_Xml(
-            this RaceVoices item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RaceVoicesCommon.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            this RaceVoices item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Male":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Male_Property,
-                        fieldIndex: (int)RaceVoices_FieldIndex.Male,
-                        errorMask: errorMask);
-                    break;
-                case "Female":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Female_Property,
-                        fieldIndex: (int)RaceVoices_FieldIndex.Female,
-                        errorMask: errorMask);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        #endregion
-
     }
     #endregion
 
     #region Modules
     #region Xml Translation
-    public partial class RaceVoicesXmlTranslation
+    public partial class RaceVoicesXmlTranslation : IXmlTranslator
     {
         public readonly static RaceVoicesXmlTranslation Instance = new RaceVoicesXmlTranslation();
 
@@ -1153,26 +937,60 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region Xml Write
-        public void Write_Xml(
+        public static void FillPublic_Xml(
+            IRaceVoices item,
             XElement node,
-            IRaceVoicesGetter item,
-            bool doMasks,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask translationMask,
-            string name = null)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RaceVoicesXmlTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
         }
 
-        public void Write_Xml(
+        public static void FillPublicElement_Xml(
+            IRaceVoices item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Male":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Male_Property,
+                        fieldIndex: (int)RaceVoices_FieldIndex.Male,
+                        errorMask: errorMask);
+                    break;
+                case "Female":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Female_Property,
+                        fieldIndex: (int)RaceVoices_FieldIndex.Female,
+                        errorMask: errorMask);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void Write(
             XElement node,
             IRaceVoicesGetter item,
             ErrorMaskBuilder errorMask,
@@ -1191,9 +1009,210 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IRaceVoicesGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IRaceVoicesGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IRaceVoicesGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class RaceVoicesXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IRaceVoicesGetter item,
+            XElement node,
+            out RaceVoices_ErrorMask errorMask,
+            bool doMasks = true,
+            RaceVoices_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((RaceVoicesXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IRaceVoicesGetter item,
+            string path,
+            out RaceVoices_ErrorMask errorMask,
+            RaceVoices_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IRaceVoicesGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IRaceVoicesGetter item,
+            Stream stream,
+            out RaceVoices_ErrorMask errorMask,
+            RaceVoices_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IRaceVoicesGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IRaceVoicesGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((RaceVoicesXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this IRaceVoicesGetter item,
+            XElement node,
+            string name = null,
+            RaceVoices_TranslationMask translationMask = null)
+        {
+            ((RaceVoicesXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this IRaceVoicesGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((RaceVoicesXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IRaceVoicesGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((RaceVoicesXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask
@@ -1500,11 +1519,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class RaceVoicesBinaryTranslation
+    public partial class RaceVoicesBinaryTranslation : IBinaryTranslator
     {
         public readonly static RaceVoicesBinaryTranslation Instance = new RaceVoicesBinaryTranslation();
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Embedded(
             IRaceVoicesGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
@@ -1520,26 +1539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
         }
 
-        #region Binary Write
-        public void Write_Binary(
-            MutagenWriter writer,
-            IRaceVoicesGetter item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out RaceVoices_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Binary(
+        public void Write(
             MutagenWriter writer,
             IRaceVoicesGetter item,
             MasterReferences masterReferences,
@@ -1551,16 +1551,81 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: RaceVoices_Registration.VNAM_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Binary_Embedded(
+                Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
             }
         }
-        #endregion
+
+        public void Write(
+            MutagenWriter writer,
+            object item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write(
+                item: (IRaceVoicesGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
 
     }
+
+    #region Binary Write Mixins
+    public static class RaceVoicesBinaryTranslationMixIn
+    {
+        public static void Write_Binary(
+            this IRaceVoicesGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out RaceVoices_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((RaceVoicesBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Binary(
+            this IRaceVoicesGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RaceVoicesBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary(
+            this IRaceVoicesGetter item,
+            MutagenWriter writer,
+            MasterReferences masterReferences)
+        {
+            ((RaceVoicesBinaryTranslation)item.BinaryTranslator).Write(
+                item: item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #endregion

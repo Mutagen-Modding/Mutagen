@@ -25,7 +25,7 @@ using System.Collections.Specialized;
 namespace Mutagen.Bethesda.Tests
 {
     #region Class
-    public partial class DataFolderLocations : 
+    public partial class DataFolderLocations :
         LoquiNotifyingObject,
         IDataFolderLocations,
         ILoquiObject<DataFolderLocations>,
@@ -118,6 +118,8 @@ namespace Mutagen.Bethesda.Tests
 
 
         #region Xml Translation
+        protected IXmlTranslator XmlTranslator => DataFolderLocationsXmlTranslation.Instance;
+        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static DataFolderLocations Create_Xml(
@@ -170,7 +172,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 foreach (var elem in node.Elements())
                 {
-                    DataFolderLocationsCommon.FillPublicElement_Xml(
+                    DataFolderLocationsXmlTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -365,139 +367,6 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        #region Xml Write
-        public virtual void Write_Xml(
-            XElement node,
-            out DataFolderLocations_ErrorMask errorMask,
-            bool doMasks = true,
-            DataFolderLocations_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            DataFolderLocationsXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public virtual void Write_Xml(
-            string path,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-        public virtual void Write_Xml(
-            Stream stream,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask translationMask = null,
-            bool doMasks = true,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            Write_Xml(
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                doMasks: doMasks,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-        public void Write_Xml(
-            XElement node,
-            string name = null,
-            DataFolderLocations_TranslationMask translationMask = null)
-        {
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask.GetCrystal());
-        }
-
-        public void Write_Xml(
-            string path,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public void Write_Xml(
-            Stream stream,
-            string name = null)
-        {
-            var node = new XElement("topnode");
-            this.Write_Xml(
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-        public void Write_Xml(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            DataFolderLocationsXmlTranslation.Instance.Write_Xml(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -609,8 +478,7 @@ namespace Mutagen.Bethesda.Tests
             IDataFolderLocationsGetter rhs,
             ErrorMaskBuilder errorMask,
             DataFolderLocations_CopyMask copyMask = null,
-            IDataFolderLocationsGetter def = null,
-            bool doMasks = true)
+            IDataFolderLocationsGetter def = null)
         {
             DataFolderLocationsCommon.CopyFieldsFrom(
                 item: this,
@@ -682,15 +550,25 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Interface
-    public partial interface IDataFolderLocations : IDataFolderLocationsGetter, ILoquiClass<IDataFolderLocations, IDataFolderLocationsGetter>, ILoquiClass<DataFolderLocations, IDataFolderLocationsGetter>
+    public partial interface IDataFolderLocations :
+        IDataFolderLocationsGetter,
+        ILoquiClass<IDataFolderLocations, IDataFolderLocationsGetter>,
+        ILoquiClass<DataFolderLocations, IDataFolderLocationsGetter>
     {
         new String Oblivion { get; set; }
 
         new String Skyrim { get; set; }
 
+        void CopyFieldsFrom(
+            IDataFolderLocationsGetter rhs,
+            ErrorMaskBuilder errorMask = null,
+            DataFolderLocations_CopyMask copyMask = null,
+            IDataFolderLocationsGetter def = null);
     }
 
-    public partial interface IDataFolderLocationsGetter : ILoquiObject
+    public partial interface IDataFolderLocationsGetter :
+        ILoquiObject,
+        IXmlItem
     {
         #region Oblivion
         String Oblivion { get; }
@@ -867,6 +745,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
+        public static readonly Type XmlTranslation = typeof(DataFolderLocationsXmlTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1031,9 +910,43 @@ namespace Mutagen.Bethesda.Tests.Internals
             return ret;
         }
 
-        #region Xml Translation
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class DataFolderLocationsXmlTranslation : IXmlTranslator
+    {
+        public readonly static DataFolderLocationsXmlTranslation Instance = new DataFolderLocationsXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IDataFolderLocationsGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.Oblivion) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Oblivion),
+                    item: item.Oblivion,
+                    fieldIndex: (int)DataFolderLocations_FieldIndex.Oblivion,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.Skyrim) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Skyrim),
+                    item: item.Skyrim,
+                    fieldIndex: (int)DataFolderLocations_FieldIndex.Skyrim,
+                    errorMask: errorMask);
+            }
+        }
+
         public static void FillPublic_Xml(
-            this DataFolderLocations item,
+            IDataFolderLocations item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1042,7 +955,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    DataFolderLocationsCommon.FillPublicElement_Xml(
+                    DataFolderLocationsXmlTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1058,7 +971,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         public static void FillPublicElement_Xml(
-            this DataFolderLocations item,
+            IDataFolderLocations item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1129,63 +1042,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Xml Translation
-    public partial class DataFolderLocationsXmlTranslation
-    {
-        public readonly static DataFolderLocationsXmlTranslation Instance = new DataFolderLocationsXmlTranslation();
-
-        public static void WriteToNode_Xml(
-            IDataFolderLocationsGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.Oblivion) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Oblivion),
-                    item: item.Oblivion,
-                    fieldIndex: (int)DataFolderLocations_FieldIndex.Oblivion,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.Skyrim) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Skyrim),
-                    item: item.Skyrim,
-                    fieldIndex: (int)DataFolderLocations_FieldIndex.Skyrim,
-                    errorMask: errorMask);
-            }
-        }
-
-        #region Xml Write
-        public void Write_Xml(
-            XElement node,
-            IDataFolderLocationsGetter item,
-            bool doMasks,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void Write_Xml(
+        public void Write(
             XElement node,
             IDataFolderLocationsGetter item,
             ErrorMaskBuilder errorMask,
@@ -1204,9 +1061,210 @@ namespace Mutagen.Bethesda.Tests.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        #endregion
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IDataFolderLocationsGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IDataFolderLocationsGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IDataFolderLocationsGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
     }
+
+    #region Xml Write Mixins
+    public static class DataFolderLocationsXmlTranslationMixIn
+    {
+        public static void Write_Xml(
+            this IDataFolderLocationsGetter item,
+            XElement node,
+            out DataFolderLocations_ErrorMask errorMask,
+            bool doMasks = true,
+            DataFolderLocations_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((DataFolderLocationsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void Write_Xml(
+            this IDataFolderLocationsGetter item,
+            string path,
+            out DataFolderLocations_ErrorMask errorMask,
+            DataFolderLocations_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IDataFolderLocationsGetter item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IDataFolderLocationsGetter item,
+            Stream stream,
+            out DataFolderLocations_ErrorMask errorMask,
+            DataFolderLocations_TranslationMask translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IDataFolderLocationsGetter item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            bool doMasks = true,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            Write_Xml(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            node.Elements().First().Save(stream);
+        }
+
+        public static void Write_Xml(
+            this IDataFolderLocationsGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask = null,
+            string name = null)
+        {
+            ((DataFolderLocationsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void Write_Xml(
+            this IDataFolderLocationsGetter item,
+            XElement node,
+            string name = null,
+            DataFolderLocations_TranslationMask translationMask = null)
+        {
+            ((DataFolderLocationsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public static void Write_Xml(
+            this IDataFolderLocationsGetter item,
+            string path,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((DataFolderLocationsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().SaveIfChanged(path);
+        }
+
+        public static void Write_Xml(
+            this IDataFolderLocationsGetter item,
+            Stream stream,
+            string name = null)
+        {
+            var node = new XElement("topnode");
+            ((DataFolderLocationsXmlTranslation)item.XmlTranslator).Write(
+                item: item,
+                name: name,
+                node: node,
+                errorMask: null,
+                translationMask: null);
+            node.Elements().First().Save(stream);
+        }
+
+    }
+    #endregion
+
     #endregion
 
     #region Mask

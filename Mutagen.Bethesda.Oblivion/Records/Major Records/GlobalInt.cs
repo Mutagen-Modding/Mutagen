@@ -15,6 +15,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class GlobalInt
     {
         public const char TRIGGER_CHAR = 'l';
+        public override char TypeChar => TRIGGER_CHAR;
 
         public override float RawFloat
         {
@@ -41,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor()
         {
-            this.TypeChar = TRIGGER_CHAR;
             this.WhenAny(x => x.RawFloat)
                 .Skip(1)
                 .DistinctUntilChanged()
