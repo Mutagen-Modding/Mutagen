@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.DistantLODData_Set(default(DistantLODData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        DistantLODData IPlacedNPCGetter.DistantLODData => this.DistantLODData;
+        IDistantLODDataGetter IPlacedNPCGetter.DistantLODData => this.DistantLODData;
         #endregion
         #region EnableParent
         public bool EnableParent_IsSet
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.EnableParent_Set(default(EnableParent), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        EnableParent IPlacedNPCGetter.EnableParent => this.EnableParent;
+        IEnableParentGetter IPlacedNPCGetter.EnableParent => this.EnableParent;
         #endregion
         #region MerchantContainer
         public FormIDSetLink<PlacedObject> MerchantContainer_Property { get; } = new FormIDSetLink<PlacedObject>();
@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static PlacedNPC Copy(
-            IPlacedNPC item,
+            IPlacedNPCGetter item,
             PlacedNPC_CopyMask copyMask = null,
             IPlacedNPCGetter def = null)
         {
@@ -1250,12 +1250,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DistantLODData
-        DistantLODData DistantLODData { get; }
+        IDistantLODDataGetter DistantLODData { get; }
         bool DistantLODData_IsSet { get; }
 
         #endregion
         #region EnableParent
-        EnableParent EnableParent { get; }
+        IEnableParentGetter EnableParent { get; }
         bool EnableParent_IsSet { get; }
 
         #endregion
@@ -1749,8 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.DistantLODData.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.DistantLODData = rhsDistantLODDataItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 DistantLODDataCommon.CopyFieldsFrom(
                                     item: item.DistantLODData,
@@ -1802,8 +1801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.EnableParent.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.EnableParent = rhsEnableParentItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 EnableParentCommon.CopyFieldsFrom(
                                     item: item.EnableParent,

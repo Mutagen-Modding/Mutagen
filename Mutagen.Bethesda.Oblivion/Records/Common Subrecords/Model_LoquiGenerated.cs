@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Model Copy(
-            IModel item,
+            IModelGetter item,
             Model_CopyMask copyMask = null,
             IModelGetter def = null)
         {

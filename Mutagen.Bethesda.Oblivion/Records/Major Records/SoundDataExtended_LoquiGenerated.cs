@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SoundDataExtended Copy(
-            ISoundDataExtended item,
+            ISoundDataExtendedGetter item,
             SoundDataExtended_CopyMask copyMask = null,
             ISoundDataExtendedGetter def = null)
         {

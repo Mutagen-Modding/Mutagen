@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static WorldspaceBlock Copy(
-            IWorldspaceBlock item,
+            IWorldspaceBlockGetter item,
             WorldspaceBlock_CopyMask copyMask = null,
             IWorldspaceBlockGetter def = null)
         {

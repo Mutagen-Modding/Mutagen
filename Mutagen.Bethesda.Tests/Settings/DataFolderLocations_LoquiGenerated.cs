@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static DataFolderLocations Copy(
-            IDataFolderLocations item,
+            IDataFolderLocationsGetter item,
             DataFolderLocations_CopyMask copyMask = null,
             IDataFolderLocationsGetter def = null)
         {

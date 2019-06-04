@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda
         }
 
         public static MajorRecord Copy(
-            IMajorRecord item,
+            IMajorRecordGetter item,
             MajorRecord_CopyMask copyMask = null,
             IMajorRecordGetter def = null)
         {

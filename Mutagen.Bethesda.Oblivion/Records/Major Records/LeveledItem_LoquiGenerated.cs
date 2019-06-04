@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LeveledItem Copy(
-            ILeveledItem item,
+            ILeveledItemGetter item,
             LeveledItem_CopyMask copyMask = null,
             ILeveledItemGetter def = null)
         {

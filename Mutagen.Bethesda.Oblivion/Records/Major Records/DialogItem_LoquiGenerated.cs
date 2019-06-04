@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ScriptFields Script => _Script_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ScriptFields IDialogItemGetter.Script => this.Script;
+        IScriptFieldsGetter IDialogItemGetter.Script => this.Script;
         #endregion
         #region DATADataTypeState
         private DialogItem.DATADataType _DATADataTypeState;
@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static DialogItem Copy(
-            IDialogItem item,
+            IDialogItemGetter item,
             DialogItem_CopyMask copyMask = null,
             IDialogItemGetter def = null)
         {
@@ -1154,6 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<Condition> Conditions { get; }
         new ISourceSetList<FormIDSetLink<DialogTopic>> Choices { get; }
         new ISourceSetList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
+        new ScriptFields Script { get; }
         void CopyFieldsFrom(
             IDialogItemGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -1173,6 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<Condition> Conditions { get; }
         new ISourceSetList<FormIDSetLink<DialogTopic>> Choices { get; }
         new ISourceSetList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
+        new ScriptFields Script { get; }
         new DialogItem.DATADataType DATADataTypeState { get; set; }
 
     }
@@ -1216,7 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion
         IObservableSetList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
         #endregion
         #region Script
-        ScriptFields Script { get; }
+        IScriptFieldsGetter Script { get; }
         bool Script_IsSet { get; }
 
         #endregion

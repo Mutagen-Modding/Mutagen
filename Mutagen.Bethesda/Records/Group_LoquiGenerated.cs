@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda
         }
 
         public static Group<T> Copy<T_CopyMask>(
-            IGroup<T> item,
+            IGroupGetter<T> item,
             Group_CopyMask<T_CopyMask> copyMask = null,
             IGroupGetter<T> def = null)
             where T_CopyMask : class, new()

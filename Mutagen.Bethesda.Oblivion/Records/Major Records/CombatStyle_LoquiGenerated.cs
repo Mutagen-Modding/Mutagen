@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Advanced_Set(default(CombatStyleAdvanced), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        CombatStyleAdvanced ICombatStyleGetter.Advanced => this.Advanced;
+        ICombatStyleAdvancedGetter ICombatStyleGetter.Advanced => this.Advanced;
         #endregion
         #region CSTDDataTypeState
         private CombatStyle.CSTDDataType _CSTDDataTypeState;
@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static CombatStyle Copy(
-            ICombatStyle item,
+            ICombatStyleGetter item,
             CombatStyle_CopyMask copyMask = null,
             ICombatStyleGetter def = null)
         {
@@ -1984,7 +1984,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Advanced
-        CombatStyleAdvanced Advanced { get; }
+        ICombatStyleAdvancedGetter Advanced { get; }
         bool Advanced_IsSet { get; }
 
         #endregion
@@ -3287,8 +3287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Advanced.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Advanced = rhsAdvancedItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 CombatStyleAdvancedCommon.CopyFieldsFrom(
                                     item: item.Advanced,

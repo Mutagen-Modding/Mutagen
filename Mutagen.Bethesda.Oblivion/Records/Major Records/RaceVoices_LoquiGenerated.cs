@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RaceVoices Copy(
-            IRaceVoices item,
+            IRaceVoicesGetter item,
             RaceVoices_CopyMask copyMask = null,
             IRaceVoicesGetter def = null)
         {

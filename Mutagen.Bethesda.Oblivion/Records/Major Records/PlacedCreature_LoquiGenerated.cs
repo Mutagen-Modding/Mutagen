@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.EnableParent_Set(default(EnableParent), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        EnableParent IPlacedCreatureGetter.EnableParent => this.EnableParent;
+        IEnableParentGetter IPlacedCreatureGetter.EnableParent => this.EnableParent;
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static PlacedCreature Copy(
-            IPlacedCreature item,
+            IPlacedCreatureGetter item,
             PlacedCreature_CopyMask copyMask = null,
             IPlacedCreatureGetter def = null)
         {
@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region EnableParent
-        EnableParent EnableParent { get; }
+        IEnableParentGetter EnableParent { get; }
         bool EnableParent_IsSet { get; }
 
         #endregion
@@ -1576,8 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.EnableParent.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.EnableParent = rhsEnableParentItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 EnableParentCommon.CopyFieldsFrom(
                                     item: item.EnableParent,

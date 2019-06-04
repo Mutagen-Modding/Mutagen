@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static GameSettingInt Copy(
-            IGameSettingInt item,
+            IGameSettingIntGetter item,
             GameSettingInt_CopyMask copyMask = null,
             IGameSettingIntGetter def = null)
         {

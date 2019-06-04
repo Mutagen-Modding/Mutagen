@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static InterCellPoint Copy(
-            IInterCellPoint item,
+            IInterCellPointGetter item,
             InterCellPoint_CopyMask copyMask = null,
             IInterCellPointGetter def = null)
         {

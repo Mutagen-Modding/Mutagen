@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Generation
         public override bool ShouldGenerateCopyIn(TypeGeneration typeGen)
         {
             var loquiGen = typeGen as LoquiType;
-            return loquiGen.SingletonType != SingletonLevel.Singleton || loquiGen.InterfaceType != LoquiInterfaceType.IGetter;
+            return loquiGen.SingletonType != SingletonLevel.Singleton || loquiGen.SetterInterfaceType != LoquiInterfaceType.IGetter;
         }
 
         public override void GenerateCopyIn(
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
                 }
 
-                if (loquiGen.InterfaceType == LoquiInterfaceType.IGetter) return;
+                if (loquiGen.SetterInterfaceType == LoquiInterfaceType.IGetter) return;
                 MaskGenerationUtility.WrapErrorFieldIndexPush(fg,
                     () =>
                     {

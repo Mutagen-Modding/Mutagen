@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RoadPoint Copy(
-            IRoadPoint item,
+            IRoadPointGetter item,
             RoadPoint_CopyMask copyMask = null,
             IRoadPointGetter def = null)
         {

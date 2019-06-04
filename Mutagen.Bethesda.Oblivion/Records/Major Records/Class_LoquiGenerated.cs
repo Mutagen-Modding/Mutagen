@@ -214,6 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
             get => _Training;
             set => _Training = value ?? new ClassTraining();
         }
+        IClassTrainingGetter IClassGetter.Training => _Training;
         #endregion
         #region DATADataTypeState
         private Class.DATADataType _DATADataTypeState;
@@ -788,7 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Class Copy(
-            IClass item,
+            IClassGetter item,
             Class_CopyMask copyMask = null,
             IClassGetter def = null)
         {
@@ -1075,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Training
-        ClassTraining Training { get; }
+        IClassTrainingGetter Training { get; }
 
         #endregion
 
@@ -1603,7 +1604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     switch (copyMask?.Training?.Overall ?? CopyOption.Reference)
                     {
                         case CopyOption.Reference:
-                            item.Training = rhs.Training;
+                            item.Training = Utility.GetGetterInterfaceReference<ClassTraining>(rhs.Training);
                             break;
                         case CopyOption.CopyIn:
                             ClassTrainingCommon.CopyFieldsFrom(

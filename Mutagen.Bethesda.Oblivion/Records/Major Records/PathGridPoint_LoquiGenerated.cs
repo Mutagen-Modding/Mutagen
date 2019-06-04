@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static PathGridPoint Copy(
-            IPathGridPoint item,
+            IPathGridPointGetter item,
             PathGridPoint_CopyMask copyMask = null,
             IPathGridPointGetter def = null)
         {

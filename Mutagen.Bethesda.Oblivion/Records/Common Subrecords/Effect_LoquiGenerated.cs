@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.ScriptEffect_Set(default(ScriptEffect), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ScriptEffect IEffectGetter.ScriptEffect => this.ScriptEffect;
+        IScriptEffectInternalGetter IEffectGetter.ScriptEffect => this.ScriptEffect;
         #endregion
         #region EFITDataTypeState
         private Effect.EFITDataType _EFITDataTypeState;
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Effect Copy(
-            IEffect item,
+            IEffectGetter item,
             Effect_CopyMask copyMask = null,
             IEffectGetter def = null)
         {
@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region ScriptEffect
-        ScriptEffect ScriptEffect { get; }
+        IScriptEffectInternalGetter ScriptEffect { get; }
         bool ScriptEffect_IsSet { get; }
 
         #endregion
@@ -1307,8 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.ScriptEffect.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.ScriptEffect = rhsScriptEffectItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ScriptEffectCommon.CopyFieldsFrom(
                                     item: item.ScriptEffect,

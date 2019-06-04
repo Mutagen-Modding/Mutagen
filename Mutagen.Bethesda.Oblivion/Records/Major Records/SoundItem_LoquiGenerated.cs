@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SoundItem Copy(
-            ISoundItem item,
+            ISoundItemGetter item,
             SoundItem_CopyMask copyMask = null,
             ISoundItemGetter def = null)
         {

@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionArea Copy(
-            IRegionArea item,
+            IRegionAreaGetter item,
             RegionArea_CopyMask copyMask = null,
             IRegionAreaGetter def = null)
         {

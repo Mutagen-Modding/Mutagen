@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionDataSounds Copy(
-            IRegionDataSounds item,
+            IRegionDataSoundsGetter item,
             RegionDataSounds_CopyMask copyMask = null,
             IRegionDataSoundsGetter def = null)
         {

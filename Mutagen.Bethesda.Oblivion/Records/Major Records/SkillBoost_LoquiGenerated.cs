@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SkillBoost Copy(
-            ISkillBoost item,
+            ISkillBoostGetter item,
             SkillBoost_CopyMask copyMask = null,
             ISkillBoostGetter def = null)
         {

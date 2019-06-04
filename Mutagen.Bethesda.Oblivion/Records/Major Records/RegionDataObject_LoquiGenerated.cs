@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionDataObject Copy(
-            IRegionDataObject item,
+            IRegionDataObjectGetter item,
             RegionDataObject_CopyMask copyMask = null,
             IRegionDataObjectGetter def = null)
         {

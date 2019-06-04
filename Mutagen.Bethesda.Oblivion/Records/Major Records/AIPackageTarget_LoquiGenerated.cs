@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static AIPackageTarget Copy(
-            IAIPackageTarget item,
+            IAIPackageTargetGetter item,
             AIPackageTarget_CopyMask copyMask = null,
             IAIPackageTargetGetter def = null)
         {

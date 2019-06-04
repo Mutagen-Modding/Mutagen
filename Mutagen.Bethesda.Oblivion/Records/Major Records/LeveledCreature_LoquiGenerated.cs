@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LeveledCreature Copy(
-            ILeveledCreature item,
+            ILeveledCreatureGetter item,
             LeveledCreature_CopyMask copyMask = null,
             ILeveledCreatureGetter def = null)
         {

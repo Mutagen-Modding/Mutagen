@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static CellSubBlock Copy(
-            ICellSubBlock item,
+            ICellSubBlockGetter item,
             CellSubBlock_CopyMask copyMask = null,
             ICellSubBlockGetter def = null)
         {

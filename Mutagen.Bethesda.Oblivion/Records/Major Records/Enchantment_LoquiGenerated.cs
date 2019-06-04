@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Enchantment Copy(
-            IEnchantment item,
+            IEnchantmentGetter item,
             Enchantment_CopyMask copyMask = null,
             IEnchantmentGetter def = null)
         {

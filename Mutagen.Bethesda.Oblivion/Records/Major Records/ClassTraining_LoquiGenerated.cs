@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ClassTraining Copy(
-            IClassTraining item,
+            IClassTrainingGetter item,
             ClassTraining_CopyMask copyMask = null,
             IClassTrainingGetter def = null)
         {

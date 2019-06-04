@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Place Copy(
-            IPlace item,
+            IPlaceGetter item,
             Place_CopyMask copyMask = null,
             IPlaceGetter def = null)
         {

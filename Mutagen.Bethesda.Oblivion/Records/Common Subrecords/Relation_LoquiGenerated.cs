@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Relation Copy(
-            IRelation item,
+            IRelationGetter item,
             Relation_CopyMask copyMask = null,
             IRelationGetter def = null)
         {

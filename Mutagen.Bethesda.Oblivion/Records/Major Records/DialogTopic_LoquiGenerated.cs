@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static DialogTopic Copy(
-            IDialogTopic item,
+            IDialogTopicGetter item,
             DialogTopic_CopyMask copyMask = null,
             IDialogTopicGetter def = null)
         {

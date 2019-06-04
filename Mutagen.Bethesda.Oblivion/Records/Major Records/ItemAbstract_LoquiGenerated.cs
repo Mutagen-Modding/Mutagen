@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ItemAbstract Copy(
-            IItemAbstract item,
+            IItemAbstractGetter item,
             ItemAbstract_CopyMask copyMask = null,
             IItemAbstractGetter def = null)
         {

@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static PassthroughSettings Copy(
-            IPassthroughSettings item,
+            IPassthroughSettingsGetter item,
             PassthroughSettings_CopyMask copyMask = null,
             IPassthroughSettingsGetter def = null)
         {

@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IClimateGetter.Model => this.Model;
+        IModelGetter IClimateGetter.Model => this.Model;
         #endregion
         #region SunriseBegin
         private DateTime _SunriseBegin;
@@ -834,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Climate Copy(
-            IClimate item,
+            IClimateGetter item,
             Climate_CopyMask copyMask = null,
             IClimateGetter def = null)
         {
@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        Model Model { get; }
+        IModelGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -1623,8 +1623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Model = rhsModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.Model,

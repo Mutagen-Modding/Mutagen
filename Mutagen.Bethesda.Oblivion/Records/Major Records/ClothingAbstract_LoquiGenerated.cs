@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.MaleBipedModel_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IClothingAbstractGetter.MaleBipedModel => this.MaleBipedModel;
+        IModelGetter IClothingAbstractGetter.MaleBipedModel => this.MaleBipedModel;
         #endregion
         #region MaleWorldModel
         public bool MaleWorldModel_IsSet
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.MaleWorldModel_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IClothingAbstractGetter.MaleWorldModel => this.MaleWorldModel;
+        IModelGetter IClothingAbstractGetter.MaleWorldModel => this.MaleWorldModel;
         #endregion
         #region MaleIcon
         public bool MaleIcon_IsSet
@@ -248,7 +248,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.FemaleBipedModel_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IClothingAbstractGetter.FemaleBipedModel => this.FemaleBipedModel;
+        IModelGetter IClothingAbstractGetter.FemaleBipedModel => this.FemaleBipedModel;
         #endregion
         #region FemaleWorldModel
         public bool FemaleWorldModel_IsSet
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.FemaleWorldModel_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IClothingAbstractGetter.FemaleWorldModel => this.FemaleWorldModel;
+        IModelGetter IClothingAbstractGetter.FemaleWorldModel => this.FemaleWorldModel;
         #endregion
         #region FemaleIcon
         public bool FemaleIcon_IsSet
@@ -939,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ClothingAbstract Copy(
-            IClothingAbstract item,
+            IClothingAbstractGetter item,
             ClothingAbstract_CopyMask copyMask = null,
             IClothingAbstractGetter def = null)
         {
@@ -1234,12 +1234,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region MaleBipedModel
-        Model MaleBipedModel { get; }
+        IModelGetter MaleBipedModel { get; }
         bool MaleBipedModel_IsSet { get; }
 
         #endregion
         #region MaleWorldModel
-        Model MaleWorldModel { get; }
+        IModelGetter MaleWorldModel { get; }
         bool MaleWorldModel_IsSet { get; }
 
         #endregion
@@ -1249,12 +1249,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region FemaleBipedModel
-        Model FemaleBipedModel { get; }
+        IModelGetter FemaleBipedModel { get; }
         bool FemaleBipedModel_IsSet { get; }
 
         #endregion
         #region FemaleWorldModel
-        Model FemaleWorldModel { get; }
+        IModelGetter FemaleWorldModel { get; }
         bool FemaleWorldModel_IsSet { get; }
 
         #endregion
@@ -1847,8 +1847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.MaleBipedModel.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.MaleBipedModel = rhsMaleBipedModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.MaleBipedModel,
@@ -1900,8 +1899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.MaleWorldModel.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.MaleWorldModel = rhsMaleWorldModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.MaleWorldModel,
@@ -1983,8 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.FemaleBipedModel.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.FemaleBipedModel = rhsFemaleBipedModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.FemaleBipedModel,
@@ -2036,8 +2033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.FemaleWorldModel.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.FemaleWorldModel = rhsFemaleWorldModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.FemaleWorldModel,

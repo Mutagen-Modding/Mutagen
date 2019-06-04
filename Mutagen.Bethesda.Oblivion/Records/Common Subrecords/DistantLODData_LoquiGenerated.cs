@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static DistantLODData Copy(
-            IDistantLODData item,
+            IDistantLODDataGetter item,
             DistantLODData_CopyMask copyMask = null,
             IDistantLODDataGetter def = null)
         {

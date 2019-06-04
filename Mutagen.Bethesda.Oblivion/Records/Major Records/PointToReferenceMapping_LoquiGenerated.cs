@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static PointToReferenceMapping Copy(
-            IPointToReferenceMapping item,
+            IPointToReferenceMappingGetter item,
             PointToReferenceMapping_CopyMask copyMask = null,
             IPointToReferenceMappingGetter def = null)
         {

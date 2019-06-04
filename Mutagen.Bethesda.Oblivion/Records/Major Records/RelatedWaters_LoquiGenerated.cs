@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RelatedWaters Copy(
-            IRelatedWaters item,
+            IRelatedWatersGetter item,
             RelatedWaters_CopyMask copyMask = null,
             IRelatedWatersGetter def = null)
         {

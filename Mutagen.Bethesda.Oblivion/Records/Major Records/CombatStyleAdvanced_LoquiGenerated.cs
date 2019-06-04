@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static CombatStyleAdvanced Copy(
-            ICombatStyleAdvanced item,
+            ICombatStyleAdvancedGetter item,
             CombatStyleAdvanced_CopyMask copyMask = null,
             ICombatStyleAdvancedGetter def = null)
         {

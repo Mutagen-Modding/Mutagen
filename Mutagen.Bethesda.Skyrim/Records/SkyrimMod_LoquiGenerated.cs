@@ -67,17 +67,19 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ModHeader ModHeader => _ModHeader_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ModHeader ISkyrimModGetter.ModHeader => this.ModHeader;
+        IModHeaderGetter ISkyrimModGetter.ModHeader => this.ModHeader;
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<GameSetting> _GameSettings_Object = new Group<GameSetting>();
         public Group<GameSetting> GameSettings => _GameSettings_Object;
+        IGroupGetter<GameSetting> ISkyrimModGetter.GameSettings => _GameSettings_Object;
         #endregion
         #region Globals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Global> _Globals_Object = new Group<Global>();
         public Group<Global> Globals => _Globals_Object;
+        IGroupGetter<Global> ISkyrimModGetter.Globals => _Globals_Object;
         #endregion
 
         IMask<bool> IEqualsMask<SkyrimMod>.GetEqualsMask(SkyrimMod rhs, EqualsMaskHelper.Include include) => SkyrimModCommon.GetEqualsMask(this, rhs, include);
@@ -851,7 +853,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static SkyrimMod Copy(
-            ISkyrimMod item,
+            ISkyrimModGetter item,
             SkyrimMod_CopyMask copyMask = null,
             ISkyrimModGetter def = null)
         {
@@ -1019,6 +1021,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiClass<ISkyrimMod, ISkyrimModGetter>,
         ILoquiClass<SkyrimMod, ISkyrimModGetter>
     {
+        new ModHeader ModHeader { get; }
+        new Group<GameSetting> GameSettings { get; }
+        new Group<Global> Globals { get; }
         void CopyFieldsFrom(
             ISkyrimModGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -1031,15 +1036,15 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem
     {
         #region ModHeader
-        ModHeader ModHeader { get; }
+        IModHeaderGetter ModHeader { get; }
         bool ModHeader_IsSet { get; }
 
         #endregion
         #region GameSettings
-        Group<GameSetting> GameSettings { get; }
+        IGroupGetter<GameSetting> GameSettings { get; }
         #endregion
         #region Globals
-        Group<Global> Globals { get; }
+        IGroupGetter<Global> Globals { get; }
         #endregion
 
     }

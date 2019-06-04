@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static TargetGroup Copy(
-            ITargetGroup item,
+            ITargetGroupGetter item,
             TargetGroup_CopyMask copyMask = null,
             ITargetGroupGetter def = null)
         {

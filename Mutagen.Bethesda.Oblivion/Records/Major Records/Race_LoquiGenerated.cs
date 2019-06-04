@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Voices_Set(default(RaceVoices), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RaceVoices IRaceGetter.Voices => this.Voices;
+        IRaceVoicesGetter IRaceGetter.Voices => this.Voices;
         #endregion
         #region DefaultHair
         public bool DefaultHair_IsSet
@@ -290,7 +290,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.DefaultHair_Set(default(RaceHair), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RaceHair IRaceGetter.DefaultHair => this.DefaultHair;
+        IRaceHairGetter IRaceGetter.DefaultHair => this.DefaultHair;
         #endregion
         #region DefaultHairColor
         public bool DefaultHairColor_IsSet
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.RaceStats_Set(default(RaceStatsGendered), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RaceStatsGendered IRaceGetter.RaceStats => this.RaceStats;
+        IRaceStatsGenderedGetter IRaceGetter.RaceStats => this.RaceStats;
         #endregion
         #region FaceData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.BodyData_Set(default(GenderedBodyData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        GenderedBodyData IRaceGetter.BodyData => this.BodyData;
+        IGenderedBodyDataGetter IRaceGetter.BodyData => this.BodyData;
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.FaceGenData_Set(default(FaceGenData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FaceGenData IRaceGetter.FaceGenData => this.FaceGenData;
+        IFaceGenDataGetter IRaceGetter.FaceGenData => this.FaceGenData;
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1532,7 +1532,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Race Copy(
-            IRace item,
+            IRaceGetter item,
             Race_CopyMask copyMask = null,
             IRaceGetter def = null)
         {
@@ -1965,12 +1965,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Voices
-        RaceVoices Voices { get; }
+        IRaceVoicesGetter Voices { get; }
         bool Voices_IsSet { get; }
 
         #endregion
         #region DefaultHair
-        RaceHair DefaultHair { get; }
+        IRaceHairGetter DefaultHair { get; }
         bool DefaultHair_IsSet { get; }
 
         #endregion
@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RaceStats
-        RaceStatsGendered RaceStats { get; }
+        IRaceStatsGenderedGetter RaceStats { get; }
         bool RaceStats_IsSet { get; }
 
         #endregion
@@ -1998,7 +1998,7 @@ namespace Mutagen.Bethesda.Oblivion
         IObservableSetList<FacePart> FaceData { get; }
         #endregion
         #region BodyData
-        GenderedBodyData BodyData { get; }
+        IGenderedBodyDataGetter BodyData { get; }
         bool BodyData_IsSet { get; }
 
         #endregion
@@ -2009,7 +2009,7 @@ namespace Mutagen.Bethesda.Oblivion
         IObservableSetList<FormIDLink<Eye>> Eyes { get; }
         #endregion
         #region FaceGenData
-        FaceGenData FaceGenData { get; }
+        IFaceGenDataGetter FaceGenData { get; }
         bool FaceGenData_IsSet { get; }
 
         #endregion
@@ -2809,8 +2809,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Voices.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Voices = rhsVoicesItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 RaceVoicesCommon.CopyFieldsFrom(
                                     item: item.Voices,
@@ -2862,8 +2861,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.DefaultHair.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.DefaultHair = rhsDefaultHairItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 RaceHairCommon.CopyFieldsFrom(
                                     item: item.DefaultHair,
@@ -3005,8 +3003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.RaceStats.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.RaceStats = rhsRaceStatsItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 RaceStatsGenderedCommon.CopyFieldsFrom(
                                     item: item.RaceStats,
@@ -3093,8 +3090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.BodyData.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.BodyData = rhsBodyDataItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 GenderedBodyDataCommon.CopyFieldsFrom(
                                     item: item.BodyData,
@@ -3184,8 +3180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.FaceGenData.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.FaceGenData = rhsFaceGenDataItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 FaceGenDataCommon.CopyFieldsFrom(
                                     item: item.FaceGenData,

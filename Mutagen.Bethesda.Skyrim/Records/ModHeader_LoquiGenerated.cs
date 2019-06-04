@@ -77,6 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             get => _Stats;
             set => _Stats = value ?? new ModStats();
         }
+        IModStatsGetter IModHeaderGetter.Stats => _Stats;
         #endregion
         #region TypeOffsets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -744,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static ModHeader Copy(
-            IModHeader item,
+            IModHeaderGetter item,
             ModHeader_CopyMask copyMask = null,
             IModHeaderGetter def = null)
         {
@@ -989,7 +990,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Stats
-        ModStats Stats { get; }
+        IModStatsGetter Stats { get; }
 
         #endregion
         #region TypeOffsets
@@ -1340,7 +1341,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     switch (copyMask?.Stats?.Overall ?? CopyOption.Reference)
                     {
                         case CopyOption.Reference:
-                            item.Stats = rhs.Stats;
+                            item.Stats = Utility.GetGetterInterfaceReference<ModStats>(rhs.Stats);
                             break;
                         case CopyOption.CopyIn:
                             ModStatsCommon.CopyFieldsFrom(

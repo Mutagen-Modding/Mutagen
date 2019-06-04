@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Male_Set(default(BodyData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        BodyData IGenderedBodyDataGetter.Male => this.Male;
+        IBodyDataGetter IGenderedBodyDataGetter.Male => this.Male;
         #endregion
         #region Female
         public bool Female_IsSet
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Female_Set(default(BodyData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        BodyData IGenderedBodyDataGetter.Female => this.Female;
+        IBodyDataGetter IGenderedBodyDataGetter.Female => this.Female;
         #endregion
 
         IMask<bool> IEqualsMask<GenderedBodyData>.GetEqualsMask(GenderedBodyData rhs, EqualsMaskHelper.Include include) => GenderedBodyDataCommon.GetEqualsMask(this, rhs, include);
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static GenderedBodyData Copy(
-            IGenderedBodyData item,
+            IGenderedBodyDataGetter item,
             GenderedBodyData_CopyMask copyMask = null,
             IGenderedBodyDataGetter def = null)
         {
@@ -665,12 +665,12 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Male
-        BodyData Male { get; }
+        IBodyDataGetter Male { get; }
         bool Male_IsSet { get; }
 
         #endregion
         #region Female
-        BodyData Female { get; }
+        IBodyDataGetter Female { get; }
         bool Female_IsSet { get; }
 
         #endregion
@@ -916,8 +916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Male.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Male = rhsMaleItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 BodyDataCommon.CopyFieldsFrom(
                                     item: item.Male,
@@ -969,8 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Female.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Female = rhsFemaleItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 BodyDataCommon.CopyFieldsFrom(
                                     item: item.Female,

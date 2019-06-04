@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda
         }
 
         public static MasterReference Copy(
-            IMasterReference item,
+            IMasterReferenceGetter item,
             MasterReference_CopyMask copyMask = null,
             IMasterReferenceGetter def = null)
         {

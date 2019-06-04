@@ -90,9 +90,11 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region DataFolderLocations
         public DataFolderLocations DataFolderLocations { get; set; }
+        IDataFolderLocationsGetter ITestingSettingsGetter.DataFolderLocations => DataFolderLocations;
         #endregion
         #region PassthroughSettings
         public PassthroughSettings PassthroughSettings { get; set; }
+        IPassthroughSettingsGetter ITestingSettingsGetter.PassthroughSettings => PassthroughSettings;
         #endregion
         #region TargetGroups
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -462,7 +464,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static TestingSettings Copy(
-            ITestingSettings item,
+            ITestingSettingsGetter item,
             TestingSettings_CopyMask copyMask = null,
             ITestingSettingsGetter def = null)
         {
@@ -707,11 +709,11 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
         #region DataFolderLocations
-        DataFolderLocations DataFolderLocations { get; }
+        IDataFolderLocationsGetter DataFolderLocations { get; }
 
         #endregion
         #region PassthroughSettings
-        PassthroughSettings PassthroughSettings { get; }
+        IPassthroughSettingsGetter PassthroughSettings { get; }
 
         #endregion
         #region TargetGroups
@@ -1093,7 +1095,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     switch (copyMask?.DataFolderLocations?.Overall ?? CopyOption.Reference)
                     {
                         case CopyOption.Reference:
-                            item.DataFolderLocations = rhs.DataFolderLocations;
+                            item.DataFolderLocations = Utility.GetGetterInterfaceReference<DataFolderLocations>(rhs.DataFolderLocations);
                             break;
                         case CopyOption.CopyIn:
                             DataFolderLocationsCommon.CopyFieldsFrom(
@@ -1138,7 +1140,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     switch (copyMask?.PassthroughSettings?.Overall ?? CopyOption.Reference)
                     {
                         case CopyOption.Reference:
-                            item.PassthroughSettings = rhs.PassthroughSettings;
+                            item.PassthroughSettings = Utility.GetGetterInterfaceReference<PassthroughSettings>(rhs.PassthroughSettings);
                             break;
                         case CopyOption.CopyIn:
                             PassthroughSettingsCommon.CopyFieldsFrom(

@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Global Copy(
-            IGlobal item,
+            IGlobalGetter item,
             Global_CopyMask copyMask = null,
             IGlobalGetter def = null)
         {

@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static AIPackageLocation Copy(
-            IAIPackageLocation item,
+            IAIPackageLocationGetter item,
             AIPackageLocation_CopyMask copyMask = null,
             IAIPackageLocationGetter def = null)
         {

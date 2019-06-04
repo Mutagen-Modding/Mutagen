@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Rank Copy(
-            IRank item,
+            IRankGetter item,
             Rank_CopyMask copyMask = null,
             IRankGetter def = null)
         {

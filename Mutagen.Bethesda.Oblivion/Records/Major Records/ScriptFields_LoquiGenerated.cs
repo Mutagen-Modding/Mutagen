@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ScriptMetaSummary MetadataSummary => _MetadataSummary_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ScriptMetaSummary IScriptFieldsGetter.MetadataSummary => this.MetadataSummary;
+        IScriptMetaSummaryGetter IScriptFieldsGetter.MetadataSummary => this.MetadataSummary;
         #endregion
         #region SourceCode
         public bool SourceCode_IsSet
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ScriptFields Copy(
-            IScriptFields item,
+            IScriptFieldsGetter item,
             ScriptFields_CopyMask copyMask = null,
             IScriptFieldsGetter def = null)
         {
@@ -861,6 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiClass<IScriptFields, IScriptFieldsGetter>,
         ILoquiClass<ScriptFields, IScriptFieldsGetter>
     {
+        new ScriptMetaSummary MetadataSummary { get; }
         new Byte[] CompiledScript { get; set; }
         new bool CompiledScript_IsSet { get; set; }
         void CompiledScript_Set(Byte[] item, bool hasBeenSet = true);
@@ -886,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region MetadataSummary
-        ScriptMetaSummary MetadataSummary { get; }
+        IScriptMetaSummaryGetter MetadataSummary { get; }
         bool MetadataSummary_IsSet { get; }
 
         #endregion

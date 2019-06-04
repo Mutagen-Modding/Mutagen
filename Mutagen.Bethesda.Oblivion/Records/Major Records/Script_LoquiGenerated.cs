@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ScriptFields Fields => _Fields_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ScriptFields IScriptGetter.Fields => this.Fields;
+        IScriptFieldsGetter IScriptGetter.Fields => this.Fields;
         #endregion
 
         IMask<bool> IEqualsMask<Script>.GetEqualsMask(Script rhs, EqualsMaskHelper.Include include) => ScriptCommon.GetEqualsMask(this, rhs, include);
@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Script Copy(
-            IScript item,
+            IScriptGetter item,
             Script_CopyMask copyMask = null,
             IScriptGetter def = null)
         {
@@ -675,6 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiClass<IScript, IScriptGetter>,
         ILoquiClass<Script, IScriptGetter>
     {
+        new ScriptFields Fields { get; }
         void CopyFieldsFrom(
             IScriptGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -687,6 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScript,
         IScriptInternalGetter
     {
+        new ScriptFields Fields { get; }
     }
 
     public partial interface IScriptGetter :
@@ -695,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Fields
-        ScriptFields Fields { get; }
+        IScriptFieldsGetter Fields { get; }
         bool Fields_IsSet { get; }
 
         #endregion

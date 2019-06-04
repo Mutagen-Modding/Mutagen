@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LoadScreen Copy(
-            ILoadScreen item,
+            ILoadScreenGetter item,
             LoadScreen_CopyMask copyMask = null,
             ILoadScreenGetter def = null)
         {

@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static CreatureSound Copy(
-            ICreatureSound item,
+            ICreatureSoundGetter item,
             CreatureSound_CopyMask copyMask = null,
             ICreatureSoundGetter def = null)
         {

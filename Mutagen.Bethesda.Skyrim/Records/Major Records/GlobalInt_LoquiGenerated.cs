@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static GlobalInt Copy(
-            IGlobalInt item,
+            IGlobalIntGetter item,
             GlobalInt_CopyMask copyMask = null,
             IGlobalIntGetter def = null)
         {

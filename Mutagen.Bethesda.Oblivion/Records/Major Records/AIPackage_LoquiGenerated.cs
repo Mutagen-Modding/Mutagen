@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Location_Set(default(AIPackageLocation), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        AIPackageLocation IAIPackageGetter.Location => this.Location;
+        IAIPackageLocationGetter IAIPackageGetter.Location => this.Location;
         #endregion
         #region Schedule
         public bool Schedule_IsSet
@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Schedule_Set(default(AIPackageSchedule), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        AIPackageSchedule IAIPackageGetter.Schedule => this.Schedule;
+        IAIPackageScheduleGetter IAIPackageGetter.Schedule => this.Schedule;
         #endregion
         #region Target
         public bool Target_IsSet
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Target_Set(default(AIPackageTarget), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        AIPackageTarget IAIPackageGetter.Target => this.Target;
+        IAIPackageTargetGetter IAIPackageGetter.Target => this.Target;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -756,7 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static AIPackage Copy(
-            IAIPackage item,
+            IAIPackageGetter item,
             AIPackage_CopyMask copyMask = null,
             IAIPackageGetter def = null)
         {
@@ -994,17 +994,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Location
-        AIPackageLocation Location { get; }
+        IAIPackageLocationGetter Location { get; }
         bool Location_IsSet { get; }
 
         #endregion
         #region Schedule
-        AIPackageSchedule Schedule { get; }
+        IAIPackageScheduleGetter Schedule { get; }
         bool Schedule_IsSet { get; }
 
         #endregion
         #region Target
-        AIPackageTarget Target { get; }
+        IAIPackageTargetGetter Target { get; }
         bool Target_IsSet { get; }
 
         #endregion
@@ -1365,8 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Location.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Location = rhsLocationItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 AIPackageLocationCommon.CopyFieldsFrom(
                                     item: item.Location,
@@ -1418,8 +1417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Schedule.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Schedule = rhsScheduleItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 AIPackageScheduleCommon.CopyFieldsFrom(
                                     item: item.Schedule,
@@ -1471,8 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Target.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Target = rhsTargetItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 AIPackageTargetCommon.CopyFieldsFrom(
                                     item: item.Target,

@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static DialogResponse Copy(
-            IDialogResponse item,
+            IDialogResponseGetter item,
             DialogResponse_CopyMask copyMask = null,
             IDialogResponseGetter def = null)
         {

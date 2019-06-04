@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static FaceGenData Copy(
-            IFaceGenData item,
+            IFaceGenDataGetter item,
             FaceGenData_CopyMask copyMask = null,
             IFaceGenDataGetter def = null)
         {

@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IAnimatedObjectGetter.Model => this.Model;
+        IModelGetter IAnimatedObjectGetter.Model => this.Model;
         #endregion
         #region IdleAnimation
         public FormIDSetLink<IdleAnimation> IdleAnimation_Property { get; } = new FormIDSetLink<IdleAnimation>();
@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static AnimatedObject Copy(
-            IAnimatedObject item,
+            IAnimatedObjectGetter item,
             AnimatedObject_CopyMask copyMask = null,
             IAnimatedObjectGetter def = null)
         {
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Model
-        Model Model { get; }
+        IModelGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -968,8 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Model = rhsModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.Model,

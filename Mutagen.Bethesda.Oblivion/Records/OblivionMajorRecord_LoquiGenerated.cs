@@ -333,7 +333,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static OblivionMajorRecord Copy(
-            IOblivionMajorRecord item,
+            IOblivionMajorRecordGetter item,
             OblivionMajorRecord_CopyMask copyMask = null,
             IOblivionMajorRecordGetter def = null)
         {

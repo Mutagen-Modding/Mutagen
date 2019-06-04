@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionDataWeather Copy(
-            IRegionDataWeather item,
+            IRegionDataWeatherGetter item,
             RegionDataWeather_CopyMask copyMask = null,
             IRegionDataWeatherGetter def = null)
         {

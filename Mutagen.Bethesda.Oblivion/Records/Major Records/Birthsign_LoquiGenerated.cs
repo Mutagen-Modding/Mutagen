@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Birthsign Copy(
-            IBirthsign item,
+            IBirthsignGetter item,
             Birthsign_CopyMask copyMask = null,
             IBirthsignGetter def = null)
         {

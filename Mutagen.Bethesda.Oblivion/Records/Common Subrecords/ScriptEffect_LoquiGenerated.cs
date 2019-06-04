@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ScriptEffect Copy(
-            IScriptEffect item,
+            IScriptEffectGetter item,
             ScriptEffect_CopyMask copyMask = null,
             IScriptEffectGetter def = null)
         {

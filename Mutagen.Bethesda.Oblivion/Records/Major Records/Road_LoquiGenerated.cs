@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Road Copy(
-            IRoad item,
+            IRoadGetter item,
             Road_CopyMask copyMask = null,
             IRoadGetter def = null)
         {

@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static QuestTarget Copy(
-            IQuestTarget item,
+            IQuestTargetGetter item,
             QuestTarget_CopyMask copyMask = null,
             IQuestTargetGetter def = null)
         {

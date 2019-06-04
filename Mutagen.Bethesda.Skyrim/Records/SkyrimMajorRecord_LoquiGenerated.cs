@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static SkyrimMajorRecord Copy(
-            ISkyrimMajorRecord item,
+            ISkyrimMajorRecordGetter item,
             SkyrimMajorRecord_CopyMask copyMask = null,
             ISkyrimMajorRecordGetter def = null)
         {

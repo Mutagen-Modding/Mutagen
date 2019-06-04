@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static MapMarker Copy(
-            IMapMarker item,
+            IMapMarkerGetter item,
             MapMarker_CopyMask copyMask = null,
             IMapMarkerGetter def = null)
         {

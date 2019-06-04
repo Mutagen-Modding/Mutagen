@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Eye Copy(
-            IEye item,
+            IEyeGetter item,
             Eye_CopyMask copyMask = null,
             IEyeGetter def = null)
         {

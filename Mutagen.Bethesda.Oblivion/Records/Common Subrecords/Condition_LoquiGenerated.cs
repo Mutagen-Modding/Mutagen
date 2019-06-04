@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Condition Copy(
-            ICondition item,
+            IConditionGetter item,
             Condition_CopyMask copyMask = null,
             IConditionGetter def = null)
         {

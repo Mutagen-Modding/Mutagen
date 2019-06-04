@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Landscape Copy(
-            ILandscape item,
+            ILandscapeGetter item,
             Landscape_CopyMask copyMask = null,
             ILandscapeGetter def = null)
         {

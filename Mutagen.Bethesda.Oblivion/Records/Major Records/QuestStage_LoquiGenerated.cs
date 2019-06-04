@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static QuestStage Copy(
-            IQuestStage item,
+            IQuestStageGetter item,
             QuestStage_CopyMask copyMask = null,
             IQuestStageGetter def = null)
         {

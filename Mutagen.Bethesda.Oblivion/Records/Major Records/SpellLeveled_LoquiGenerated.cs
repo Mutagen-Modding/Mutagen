@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SpellLeveled Copy(
-            ISpellLeveled item,
+            ISpellLeveledGetter item,
             SpellLeveled_CopyMask copyMask = null,
             ISpellLeveledGetter def = null)
         {

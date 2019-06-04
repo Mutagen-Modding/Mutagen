@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Lighting_Set(default(CellLighting), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        CellLighting ICellGetter.Lighting => this.Lighting;
+        ICellLightingGetter ICellGetter.Lighting => this.Lighting;
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.PathGrid_Set(default(PathGrid), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        PathGrid ICellGetter.PathGrid => this.PathGrid;
+        IPathGridInternalGetter ICellGetter.PathGrid => this.PathGrid;
         #endregion
         #region Landscape
         public bool Landscape_IsSet
@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Landscape_Set(default(Landscape), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Landscape ICellGetter.Landscape => this.Landscape;
+        ILandscapeInternalGetter ICellGetter.Landscape => this.Landscape;
         #endregion
         #region Timestamp
         private Byte[] _Timestamp = new byte[4];
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Cell Copy(
-            ICell item,
+            ICellGetter item,
             Cell_CopyMask copyMask = null,
             ICellGetter def = null)
         {
@@ -1646,7 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Lighting
-        CellLighting Lighting { get; }
+        ICellLightingGetter Lighting { get; }
         bool Lighting_IsSet { get; }
 
         #endregion
@@ -1689,12 +1689,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region PathGrid
-        PathGrid PathGrid { get; }
+        IPathGridInternalGetter PathGrid { get; }
         bool PathGrid_IsSet { get; }
 
         #endregion
         #region Landscape
-        Landscape Landscape { get; }
+        ILandscapeInternalGetter Landscape { get; }
         bool Landscape_IsSet { get; }
 
         #endregion
@@ -2308,8 +2308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Lighting.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Lighting = rhsLightingItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 CellLightingCommon.CopyFieldsFrom(
                                     item: item.Lighting,
@@ -2546,8 +2545,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.PathGrid.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.PathGrid = rhsPathGridItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 PathGridCommon.CopyFieldsFrom(
                                     item: item.PathGrid,
@@ -2599,8 +2597,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Landscape.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Landscape = rhsLandscapeItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 LandscapeCommon.CopyFieldsFrom(
                                     item: item.Landscape,

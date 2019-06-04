@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static PathGrid Copy(
-            IPathGrid item,
+            IPathGridGetter item,
             PathGrid_CopyMask copyMask = null,
             IPathGridGetter def = null)
         {

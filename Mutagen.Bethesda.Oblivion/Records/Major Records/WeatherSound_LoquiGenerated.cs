@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static WeatherSound Copy(
-            IWeatherSound item,
+            IWeatherSoundGetter item,
             WeatherSound_CopyMask copyMask = null,
             IWeatherSoundGetter def = null)
         {

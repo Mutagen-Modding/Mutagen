@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LeveledEntry<T> Copy<T_CopyMask>(
-            ILeveledEntry<T> item,
+            ILeveledEntryGetter<T> item,
             LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
             ILeveledEntryGetter<T> def = null)
             where T_CopyMask : OblivionMajorRecord_CopyMask, new()

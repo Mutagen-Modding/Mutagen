@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static GameSettingFloat Copy(
-            IGameSettingFloat item,
+            IGameSettingFloatGetter item,
             GameSettingFloat_CopyMask copyMask = null,
             IGameSettingFloatGetter def = null)
         {

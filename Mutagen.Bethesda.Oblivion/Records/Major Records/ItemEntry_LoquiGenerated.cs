@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ItemEntry Copy(
-            IItemEntry item,
+            IItemEntryGetter item,
             ItemEntry_CopyMask copyMask = null,
             IItemEntryGetter def = null)
         {

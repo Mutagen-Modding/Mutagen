@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IBodyDataGetter.Model => this.Model;
+        IModelGetter IBodyDataGetter.Model => this.Model;
         #endregion
         #region BodyParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static BodyData Copy(
-            IBodyData item,
+            IBodyDataGetter item,
             BodyData_CopyMask copyMask = null,
             IBodyDataGetter def = null)
         {
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Model
-        Model Model { get; }
+        IModelGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -904,8 +904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Model = rhsModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.Model,

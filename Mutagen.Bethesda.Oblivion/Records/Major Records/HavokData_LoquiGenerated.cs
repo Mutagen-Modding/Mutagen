@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static HavokData Copy(
-            IHavokData item,
+            IHavokDataGetter item,
             HavokData_CopyMask copyMask = null,
             IHavokDataGetter def = null)
         {

@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.ResultScript_Set(default(ScriptFields), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ScriptFields ILogEntryGetter.ResultScript => this.ResultScript;
+        IScriptFieldsGetter ILogEntryGetter.ResultScript => this.ResultScript;
         #endregion
 
         IMask<bool> IEqualsMask<LogEntry>.GetEqualsMask(LogEntry rhs, EqualsMaskHelper.Include include) => LogEntryCommon.GetEqualsMask(this, rhs, include);
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LogEntry Copy(
-            ILogEntry item,
+            ILogEntryGetter item,
             LogEntry_CopyMask copyMask = null,
             ILogEntryGetter def = null)
         {
@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region ResultScript
-        ScriptFields ResultScript { get; }
+        IScriptFieldsGetter ResultScript { get; }
         bool ResultScript_IsSet { get; }
 
         #endregion
@@ -1210,8 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.ResultScript.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.ResultScript = rhsResultScriptItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ScriptFieldsCommon.CopyFieldsFrom(
                                     item: item.ResultScript,

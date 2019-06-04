@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static TeleportDestination Copy(
-            ITeleportDestination item,
+            ITeleportDestinationGetter item,
             TeleportDestination_CopyMask copyMask = null,
             ITeleportDestinationGetter def = null)
         {

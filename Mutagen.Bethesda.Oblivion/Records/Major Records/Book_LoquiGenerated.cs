@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IBookGetter.Model => this.Model;
+        IModelGetter IBookGetter.Model => this.Model;
         #endregion
         #region Icon
         public bool Icon_IsSet
@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Book Copy(
-            IBook item,
+            IBookGetter item,
             Book_CopyMask copyMask = null,
             IBookGetter def = null)
         {
@@ -1173,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        Model Model { get; }
+        IModelGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -1629,8 +1629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Model = rhsModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.Model,

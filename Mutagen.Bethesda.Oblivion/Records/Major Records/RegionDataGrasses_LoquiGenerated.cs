@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionDataGrasses Copy(
-            IRegionDataGrasses item,
+            IRegionDataGrassesGetter item,
             RegionDataGrasses_CopyMask copyMask = null,
             IRegionDataGrassesGetter def = null)
         {

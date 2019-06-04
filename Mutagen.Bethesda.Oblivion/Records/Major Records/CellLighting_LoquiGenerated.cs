@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static CellLighting Copy(
-            ICellLighting item,
+            ICellLightingGetter item,
             CellLighting_CopyMask copyMask = null,
             ICellLightingGetter def = null)
         {

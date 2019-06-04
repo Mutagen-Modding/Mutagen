@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.RelatedWaters_Set(default(RelatedWaters), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RelatedWaters IWaterGetter.RelatedWaters => this.RelatedWaters;
+        IRelatedWatersGetter IWaterGetter.RelatedWaters => this.RelatedWaters;
         #endregion
         #region DATADataTypeState
         private Water.DATADataType _DATADataTypeState;
@@ -1517,7 +1517,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Water Copy(
-            IWater item,
+            IWaterGetter item,
             Water_CopyMask copyMask = null,
             IWaterGetter def = null)
         {
@@ -2090,7 +2090,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RelatedWaters
-        RelatedWaters RelatedWaters { get; }
+        IRelatedWatersGetter RelatedWaters { get; }
         bool RelatedWaters_IsSet { get; }
 
         #endregion
@@ -3307,8 +3307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.RelatedWaters.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.RelatedWaters = rhsRelatedWatersItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 RelatedWatersCommon.CopyFieldsFrom(
                                     item: item.RelatedWaters,

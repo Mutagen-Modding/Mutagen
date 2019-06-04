@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.TeleportDestination_Set(default(TeleportDestination), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TeleportDestination IPlacedObjectGetter.TeleportDestination => this.TeleportDestination;
+        ITeleportDestinationGetter IPlacedObjectGetter.TeleportDestination => this.TeleportDestination;
         #endregion
         #region Lock
         public bool Lock_IsSet
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Lock_Set(default(LockInformation), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        LockInformation IPlacedObjectGetter.Lock => this.Lock;
+        ILockInformationGetter IPlacedObjectGetter.Lock => this.Lock;
         #endregion
         #region Owner
         public FormIDSetLink<IOwner> Owner_Property { get; } = new FormIDSetLink<IOwner>();
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.EnableParent_Set(default(EnableParent), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        EnableParent IPlacedObjectGetter.EnableParent => this.EnableParent;
+        IEnableParentGetter IPlacedObjectGetter.EnableParent => this.EnableParent;
         #endregion
         #region Target
         public FormIDSetLink<IPlaced> Target_Property { get; } = new FormIDSetLink<IPlaced>();
@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.DistantLODData_Set(default(DistantLODData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        DistantLODData IPlacedObjectGetter.DistantLODData => this.DistantLODData;
+        IDistantLODDataGetter IPlacedObjectGetter.DistantLODData => this.DistantLODData;
         #endregion
         #region Charge
         public bool Charge_IsSet
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.MapMarker_Set(default(MapMarker), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        MapMarker IPlacedObjectGetter.MapMarker => this.MapMarker;
+        IMapMarkerGetter IPlacedObjectGetter.MapMarker => this.MapMarker;
         #endregion
         #region OpenByDefault
         private Boolean _OpenByDefault;
@@ -1582,7 +1582,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static PlacedObject Copy(
-            IPlacedObject item,
+            IPlacedObjectGetter item,
             PlacedObject_CopyMask copyMask = null,
             IPlacedObjectGetter def = null)
         {
@@ -2018,12 +2018,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region TeleportDestination
-        TeleportDestination TeleportDestination { get; }
+        ITeleportDestinationGetter TeleportDestination { get; }
         bool TeleportDestination_IsSet { get; }
 
         #endregion
         #region Lock
-        LockInformation Lock { get; }
+        ILockInformationGetter Lock { get; }
         bool Lock_IsSet { get; }
 
         #endregion
@@ -2043,7 +2043,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region EnableParent
-        EnableParent EnableParent { get; }
+        IEnableParentGetter EnableParent { get; }
         bool EnableParent_IsSet { get; }
 
         #endregion
@@ -2058,7 +2058,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DistantLODData
-        DistantLODData DistantLODData { get; }
+        IDistantLODDataGetter DistantLODData { get; }
         bool DistantLODData_IsSet { get; }
 
         #endregion
@@ -2093,7 +2093,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region MapMarker
-        MapMarker MapMarker { get; }
+        IMapMarkerGetter MapMarker { get; }
         bool MapMarker_IsSet { get; }
 
         #endregion
@@ -2768,8 +2768,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.TeleportDestination.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.TeleportDestination = rhsTeleportDestinationItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 TeleportDestinationCommon.CopyFieldsFrom(
                                     item: item.TeleportDestination,
@@ -2821,8 +2820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Lock.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Lock = rhsLockItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 LockInformationCommon.CopyFieldsFrom(
                                     item: item.Lock,
@@ -2942,8 +2940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.EnableParent.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.EnableParent = rhsEnableParentItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 EnableParentCommon.CopyFieldsFrom(
                                     item: item.EnableParent,
@@ -3044,8 +3041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.DistantLODData.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.DistantLODData = rhsDistantLODDataItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 DistantLODDataCommon.CopyFieldsFrom(
                                     item: item.DistantLODData,
@@ -3266,8 +3262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.MapMarker.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.MapMarker = rhsMapMarkerItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 MapMarkerCommon.CopyFieldsFrom(
                                     item: item.MapMarker,

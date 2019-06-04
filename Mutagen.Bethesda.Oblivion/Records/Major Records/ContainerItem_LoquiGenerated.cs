@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ContainerItem Copy(
-            IContainerItem item,
+            IContainerItemGetter item,
             ContainerItem_CopyMask copyMask = null,
             IContainerItemGetter def = null)
         {

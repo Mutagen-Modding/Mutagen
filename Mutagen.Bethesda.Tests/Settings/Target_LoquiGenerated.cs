@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static Target Copy(
-            ITarget item,
+            ITargetGetter item,
             Target_CopyMask copyMask = null,
             ITargetGetter def = null)
         {

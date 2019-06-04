@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Clothing Copy(
-            IClothing item,
+            IClothingGetter item,
             Clothing_CopyMask copyMask = null,
             IClothingGetter def = null)
         {

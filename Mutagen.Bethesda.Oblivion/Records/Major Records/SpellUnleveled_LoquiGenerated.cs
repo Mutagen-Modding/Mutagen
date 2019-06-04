@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SpellUnleveled Copy(
-            ISpellUnleveled item,
+            ISpellUnleveledGetter item,
             SpellUnleveled_CopyMask copyMask = null,
             ISpellUnleveledGetter def = null)
         {

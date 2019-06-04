@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda
         }
 
         public static ListGroup<T> Copy<T_CopyMask>(
-            IListGroup<T> item,
+            IListGroupGetter<T> item,
             ListGroup_CopyMask<T_CopyMask> copyMask = null,
             IListGroupGetter<T> def = null)
             where T_CopyMask : class, new()

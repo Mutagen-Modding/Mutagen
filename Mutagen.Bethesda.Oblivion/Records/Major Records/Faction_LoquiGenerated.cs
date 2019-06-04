@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Faction Copy(
-            IFaction item,
+            IFactionGetter item,
             Faction_CopyMask copyMask = null,
             IFactionGetter def = null)
         {

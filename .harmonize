@@ -2,24 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>e551235d1a9c49e54c28a8dc9a110dab40b3e89f</Sha>
+         <Sha>0c7013c28e90ddcc0950eab9cef425a6738fc391</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-20-2019 22:20:01</CommitDate>
-         <Description>IBinaryReadStream.RemainingSpan</Description>
+         <CommitDate>05-24-2019 18:59:36</CommitDate>
+         <Description>Custom Memory&lt;T&gt; implementation</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-<<<<<<< babas
-         <Sha>1532a1b15d1d764b4031416b9c1b9aef53dfeebe</Sha>
+         <Sha>57741545ae1215f9bcd8f0c6bad72ffc39d1b2e1</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>05-27-2019 02:54:13</CommitDate>
-=======
-         <Sha>2c2380dc370b1a9e6e2b74291154e358f36e5a16</Sha>
-         <Path>../Loqui</Path>
-         <CommitDate>05-27-2019 02:02:20</CommitDate>
->>>>>>> Library Updates
-         <Description>TranslationInterface system</Description>
+         <CommitDate>06-03-2019 22:42:18</CommitDate>
+         <Description>Default GetterInterfaceType swapped to IGetter.  Copy cast support</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
