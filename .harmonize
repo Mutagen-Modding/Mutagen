@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>57741545ae1215f9bcd8f0c6bad72ffc39d1b2e1</Sha>
+         <Sha>5e36531c07cf26a05c5b0230f9d1e8ca51e9876d</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>06-03-2019 22:42:18</CommitDate>
-         <Description>Default GetterInterfaceType swapped to IGetter.  Copy cast support</Description>
+         <CommitDate>06-07-2019 18:56:29</CommitDate>
+         <Description>Some dict /w hasbeenset = false support</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Generation
                 $"{this.Namespace}ListBinaryTranslation<{dict.ValueTypeGen.TypeName}>.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
-                args.Add($"items: {itemAccessor.PropertyOrDirectAccess}.Items");
+                args.Add($"items: {itemAccessor.PropertyOrDirectAccess}.Values");
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 if (listBinaryType == ListBinaryType.Trigger)
                 {

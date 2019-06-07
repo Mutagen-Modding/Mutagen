@@ -137,11 +137,7 @@ namespace Mutagen.Bethesda
             if (!string.Equals(this.ContainedRecordType, rhs.ContainedRecordType)) return false;
             if (this.GroupType != rhs.GroupType) return false;
             if (!ByteExt.EqualsFast(this.LastModified, rhs.LastModified)) return false;
-            if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
-            if (Items.HasBeenSet)
-            {
-                if (!this.Items.SequenceEqual(rhs.Items)) return false;
-            }
+            if (!this.Items.SequenceEqual(rhs.Items)) return false;
             return true;
         }
 
@@ -151,10 +147,7 @@ namespace Mutagen.Bethesda
             ret = HashHelper.GetHashCode(ContainedRecordType).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(GroupType).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(LastModified).CombineHashCode(ret);
-            if (Items.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
             return ret;
         }
 
@@ -314,11 +307,10 @@ namespace Mutagen.Bethesda
         {
             switch ((Group_FieldIndex)index)
             {
-                case Group_FieldIndex.Items:
-                    return Items.HasBeenSet;
                 case Group_FieldIndex.ContainedRecordType:
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.Items:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -1121,7 +1113,6 @@ namespace Mutagen.Bethesda.Internals
             Group_Mask<bool?> checkMask)
             where T : IMajorRecordInternal, IXmlItem, IBinaryItem, ILoquiObject<T>
         {
-            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
             return true;
         }
 
@@ -1132,7 +1123,7 @@ namespace Mutagen.Bethesda.Internals
             ret.ContainedRecordType = true;
             ret.GroupType = true;
             ret.LastModified = true;
-            ret.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, IMask<bool>>>>(item.Items.HasBeenSet, item.Items.Values.Select((i) => new MaskItemIndexed<FormKey, bool, IMask<bool>>(i.FormKey, true, i.GetHasBeenSetMask())));
+            ret.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, IMask<bool>>>>(true, item.Items.Values.Select((i) => new MaskItemIndexed<FormKey, bool, IMask<bool>>(i.FormKey, true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1170,8 +1161,7 @@ namespace Mutagen.Bethesda.Internals
                     fieldIndex: (int)Group_FieldIndex.LastModified,
                     errorMask: errorMask);
             }
-            if (item.Items.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Group_FieldIndex.Items) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.Items) ?? true))
             {
                 try
                 {
@@ -1179,7 +1169,7 @@ namespace Mutagen.Bethesda.Internals
                     KeyedDictXmlTranslation<FormKey, T>.Instance.Write(
                         node: node,
                         name: nameof(item.Items),
-                        items: item.Items.Items,
+                        items: item.Items.Values,
                         translationMask: translationMask,
                         errorMask: errorMask,
                         valTransl: (XElement subNode, T subItem, ErrorMaskBuilder dictSubMask, TranslationCrystal dictTranslMask) =>
@@ -2050,24 +2040,21 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            if (item.Items.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
-                    writer: writer,
-                    items: item.Items.Items,
-                    fieldIndex: (int)Group_FieldIndex.Items,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter r, T dictSubItem, ErrorMaskBuilder dictSubMask) =>
-                    {
-                        ((IBinaryItem)dictSubItem).BinaryTranslator.Write(
-                            item: dictSubItem,
-                            writer: r,
-                            errorMask: dictSubMask,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
-                    }
-                    );
-            }
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
+                writer: writer,
+                items: item.Items.Values,
+                fieldIndex: (int)Group_FieldIndex.Items,
+                errorMask: errorMask,
+                transl: (MutagenWriter r, T dictSubItem, ErrorMaskBuilder dictSubMask) =>
+                {
+                    ((IBinaryItem)dictSubItem).BinaryTranslator.Write(
+                        item: dictSubItem,
+                        writer: r,
+                        errorMask: dictSubMask,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
+                );
         }
 
         public void Write(
