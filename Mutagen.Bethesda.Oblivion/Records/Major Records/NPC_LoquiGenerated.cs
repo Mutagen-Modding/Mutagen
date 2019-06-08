@@ -209,9 +209,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<RankPlacement> INPC.Factions => _Factions;
+        ISetList<RankPlacement> INPC.Factions => _Factions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<RankPlacement> INPCGetter.Factions => _Factions;
+        IReadOnlySetList<RankPlacement> INPCGetter.Factions => _Factions;
         #endregion
 
         #endregion
@@ -239,9 +239,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<SpellAbstract>> INPC.Spells => _Spells;
+        ISetList<FormIDSetLink<SpellAbstract>> INPC.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<SpellAbstract>> INPCGetter.Spells => _Spells;
+        IReadOnlySetList<FormIDSetLink<SpellAbstract>> INPCGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -263,9 +263,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<ItemEntry> INPC.Items => _Items;
+        ISetList<ItemEntry> INPC.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<ItemEntry> INPCGetter.Items => _Items;
+        IReadOnlySetList<ItemEntry> INPCGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -380,9 +380,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<AIPackage>> INPC.AIPackages => _AIPackages;
+        ISetList<FormIDSetLink<AIPackage>> INPC.AIPackages => _AIPackages;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<AIPackage>> INPCGetter.AIPackages => _AIPackages;
+        IReadOnlySetList<FormIDSetLink<AIPackage>> INPCGetter.AIPackages => _AIPackages;
         #endregion
 
         #endregion
@@ -398,9 +398,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<String> INPC.Animations => _Animations;
+        ISetList<String> INPC.Animations => _Animations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<String> INPCGetter.Animations => _Animations;
+        IReadOnlySetList<String> INPCGetter.Animations => _Animations;
         #endregion
 
         #endregion
@@ -814,9 +814,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDLink<Eye>> INPC.Eyes => _Eyes;
+        ISetList<FormIDLink<Eye>> INPC.Eyes => _Eyes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDLink<Eye>> INPCGetter.Eyes => _Eyes;
+        IReadOnlySetList<FormIDLink<Eye>> INPCGetter.Eyes => _Eyes;
         #endregion
 
         #endregion
@@ -2812,12 +2812,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         new UInt16 CalcMax { get; set; }
 
-        new ISourceSetList<RankPlacement> Factions { get; }
+        new ISetList<RankPlacement> Factions { get; }
         new ItemAbstract DeathItem { get; set; }
         new Race Race { get; set; }
-        new ISourceSetList<FormIDSetLink<SpellAbstract>> Spells { get; }
+        new ISetList<FormIDSetLink<SpellAbstract>> Spells { get; }
         new Script Script { get; set; }
-        new ISourceSetList<ItemEntry> Items { get; }
+        new ISetList<ItemEntry> Items { get; }
         new Byte Aggression { get; set; }
 
         new Byte Confidence { get; set; }
@@ -2834,8 +2834,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] Fluff { get; set; }
 
-        new ISourceSetList<FormIDSetLink<AIPackage>> AIPackages { get; }
-        new ISourceSetList<String> Animations { get; }
+        new ISetList<FormIDSetLink<AIPackage>> AIPackages { get; }
+        new ISetList<String> Animations { get; }
         new Class Class { get; set; }
         new Byte Armorer { get; set; }
 
@@ -2903,7 +2903,7 @@ namespace Mutagen.Bethesda.Oblivion
         void HairLength_Set(Single item, bool hasBeenSet = true);
         void HairLength_Unset();
 
-        new ISourceSetList<FormIDLink<Eye>> Eyes { get; }
+        new ISetList<FormIDLink<Eye>> Eyes { get; }
         new Color HairColor { get; set; }
         new bool HairColor_IsSet { get; set; }
         void HairColor_Set(Color item, bool hasBeenSet = true);
@@ -2942,17 +2942,11 @@ namespace Mutagen.Bethesda.Oblivion
         INPC,
         INPCInternalGetter
     {
-        new ISourceSetList<RankPlacement> Factions { get; }
         new ItemAbstract DeathItem { get; set; }
         new Race Race { get; set; }
-        new ISourceSetList<FormIDSetLink<SpellAbstract>> Spells { get; }
         new Script Script { get; set; }
-        new ISourceSetList<ItemEntry> Items { get; }
-        new ISourceSetList<FormIDSetLink<AIPackage>> AIPackages { get; }
-        new ISourceSetList<String> Animations { get; }
         new Class Class { get; set; }
         new Hair Hair { get; set; }
-        new ISourceSetList<FormIDLink<Eye>> Eyes { get; }
         new CombatStyle CombatStyle { get; set; }
         new NPC.ACBSDataType ACBSDataTypeState { get; set; }
 
@@ -3006,7 +3000,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Factions
-        IObservableSetList<RankPlacement> Factions { get; }
+        IReadOnlySetList<RankPlacement> Factions { get; }
         #endregion
         #region DeathItem
         ItemAbstract DeathItem { get; }
@@ -3019,7 +3013,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Spells
-        IObservableSetList<FormIDSetLink<SpellAbstract>> Spells { get; }
+        IReadOnlySetList<FormIDSetLink<SpellAbstract>> Spells { get; }
         #endregion
         #region Script
         Script Script { get; }
@@ -3027,7 +3021,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        IObservableSetList<ItemEntry> Items { get; }
+        IReadOnlySetList<ItemEntry> Items { get; }
         #endregion
         #region Aggression
         Byte Aggression { get; }
@@ -3062,10 +3056,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region AIPackages
-        IObservableSetList<FormIDSetLink<AIPackage>> AIPackages { get; }
+        IReadOnlySetList<FormIDSetLink<AIPackage>> AIPackages { get; }
         #endregion
         #region Animations
-        IObservableSetList<String> Animations { get; }
+        IReadOnlySetList<String> Animations { get; }
         #endregion
         #region Class
         Class Class { get; }
@@ -3203,7 +3197,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Eyes
-        IObservableSetList<FormIDLink<Eye>> Eyes { get; }
+        IReadOnlySetList<FormIDLink<Eye>> Eyes { get; }
         #endregion
         #region HairColor
         Color HairColor { get; }

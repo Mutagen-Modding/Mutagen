@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>0c7013c28e90ddcc0950eab9cef425a6738fc391</Sha>
+         <Sha>1de6eac638439a838bcd7ab24d236a105bbeca1d</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-24-2019 18:59:36</CommitDate>
-         <Description>Custom Memory&lt;T&gt; implementation</Description>
+         <CommitDate>06-10-2019 22:20:00</CommitDate>
+         <Description>BinaryMemoryReadStream uses MemorySlice</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>5e36531c07cf26a05c5b0230f9d1e8ca51e9876d</Sha>
+         <Sha>0d70d501c0a8ce7270effb931e1d917b1e8a11f4</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>06-07-2019 18:56:29</CommitDate>
-         <Description>Some dict /w hasbeenset = false support</Description>
+         <CommitDate>06-09-2019 23:14:57</CommitDate>
+         <Description>ObjectGeneration.NotifyingInterface option</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

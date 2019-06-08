@@ -67,9 +67,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDLink<Grass>> IRegionDataGrasses.Grasses => _Grasses;
+        ISetList<FormIDLink<Grass>> IRegionDataGrasses.Grasses => _Grasses;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDLink<Grass>> IRegionDataGrassesGetter.Grasses => _Grasses;
+        IReadOnlySetList<FormIDLink<Grass>> IRegionDataGrassesGetter.Grasses => _Grasses;
         #endregion
 
         #endregion
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiClass<IRegionDataGrasses, IRegionDataGrassesGetter>,
         ILoquiClass<RegionDataGrasses, IRegionDataGrassesGetter>
     {
-        new ISourceSetList<FormIDLink<Grass>> Grasses { get; }
+        new ISetList<FormIDLink<Grass>> Grasses { get; }
         void CopyFieldsFrom(
             IRegionDataGrassesGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -624,7 +624,6 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataGrasses,
         IRegionDataGrassesInternalGetter
     {
-        new ISourceSetList<FormIDLink<Grass>> Grasses { get; }
     }
 
     public partial interface IRegionDataGrassesGetter :
@@ -633,7 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Grasses
-        IObservableSetList<FormIDLink<Grass>> Grasses { get; }
+        IReadOnlySetList<FormIDLink<Grass>> Grasses { get; }
         #endregion
 
     }

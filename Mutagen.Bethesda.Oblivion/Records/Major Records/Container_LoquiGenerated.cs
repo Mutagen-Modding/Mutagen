@@ -128,9 +128,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<ContainerItem> IContainer.Items => _Items;
+        ISetList<ContainerItem> IContainer.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<ContainerItem> IContainerGetter.Items => _Items;
+        IReadOnlySetList<ContainerItem> IContainerGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -997,7 +997,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Unset();
 
         new Script Script { get; set; }
-        new ISourceSetList<ContainerItem> Items { get; }
+        new ISetList<ContainerItem> Items { get; }
         new Container.ContainerFlag Flags { get; set; }
 
         new Single Weight { get; set; }
@@ -1017,7 +1017,6 @@ namespace Mutagen.Bethesda.Oblivion
         IContainerInternalGetter
     {
         new Script Script { get; set; }
-        new ISourceSetList<ContainerItem> Items { get; }
         new Sound OpenSound { get; set; }
         new Sound CloseSound { get; set; }
         new Container.DATADataType DATADataTypeState { get; set; }
@@ -1045,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        IObservableSetList<ContainerItem> Items { get; }
+        IReadOnlySetList<ContainerItem> Items { get; }
         #endregion
         #region Flags
         Container.ContainerFlag Flags { get; }

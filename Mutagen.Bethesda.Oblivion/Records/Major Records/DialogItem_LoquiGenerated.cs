@@ -106,9 +106,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<DialogTopic>> IDialogItem.Topics => _Topics;
+        ISetList<FormIDSetLink<DialogTopic>> IDialogItem.Topics => _Topics;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<DialogTopic>> IDialogItemGetter.Topics => _Topics;
+        IReadOnlySetList<FormIDSetLink<DialogTopic>> IDialogItemGetter.Topics => _Topics;
         #endregion
 
         #endregion
@@ -124,9 +124,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<DialogResponse> IDialogItem.Responses => _Responses;
+        ISetList<DialogResponse> IDialogItem.Responses => _Responses;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<DialogResponse> IDialogItemGetter.Responses => _Responses;
+        IReadOnlySetList<DialogResponse> IDialogItemGetter.Responses => _Responses;
         #endregion
 
         #endregion
@@ -142,9 +142,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Condition> IDialogItem.Conditions => _Conditions;
+        ISetList<Condition> IDialogItem.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Condition> IDialogItemGetter.Conditions => _Conditions;
+        IReadOnlySetList<Condition> IDialogItemGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -160,9 +160,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<DialogTopic>> IDialogItem.Choices => _Choices;
+        ISetList<FormIDSetLink<DialogTopic>> IDialogItem.Choices => _Choices;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<DialogTopic>> IDialogItemGetter.Choices => _Choices;
+        IReadOnlySetList<FormIDSetLink<DialogTopic>> IDialogItemGetter.Choices => _Choices;
         #endregion
 
         #endregion
@@ -178,9 +178,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<DialogTopic>> IDialogItem.LinkFrom => _LinkFrom;
+        ISetList<FormIDSetLink<DialogTopic>> IDialogItem.LinkFrom => _LinkFrom;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<DialogTopic>> IDialogItemGetter.LinkFrom => _LinkFrom;
+        IReadOnlySetList<FormIDSetLink<DialogTopic>> IDialogItemGetter.LinkFrom => _LinkFrom;
         #endregion
 
         #endregion
@@ -1149,11 +1149,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Quest Quest { get; set; }
         new DialogItem PreviousTopic { get; set; }
-        new ISourceSetList<FormIDSetLink<DialogTopic>> Topics { get; }
-        new ISourceSetList<DialogResponse> Responses { get; }
-        new ISourceSetList<Condition> Conditions { get; }
-        new ISourceSetList<FormIDSetLink<DialogTopic>> Choices { get; }
-        new ISourceSetList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
+        new ISetList<FormIDSetLink<DialogTopic>> Topics { get; }
+        new ISetList<DialogResponse> Responses { get; }
+        new ISetList<Condition> Conditions { get; }
+        new ISetList<FormIDSetLink<DialogTopic>> Choices { get; }
+        new ISetList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
         new ScriptFields Script { get; }
         void CopyFieldsFrom(
             IDialogItemGetter rhs,
@@ -1169,11 +1169,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Quest Quest { get; set; }
         new DialogItem PreviousTopic { get; set; }
-        new ISourceSetList<FormIDSetLink<DialogTopic>> Topics { get; }
-        new ISourceSetList<DialogResponse> Responses { get; }
-        new ISourceSetList<Condition> Conditions { get; }
-        new ISourceSetList<FormIDSetLink<DialogTopic>> Choices { get; }
-        new ISourceSetList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
         new ScriptFields Script { get; }
         new DialogItem.DATADataType DATADataTypeState { get; set; }
 
@@ -1203,19 +1198,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Topics
-        IObservableSetList<FormIDSetLink<DialogTopic>> Topics { get; }
+        IReadOnlySetList<FormIDSetLink<DialogTopic>> Topics { get; }
         #endregion
         #region Responses
-        IObservableSetList<DialogResponse> Responses { get; }
+        IReadOnlySetList<DialogResponse> Responses { get; }
         #endregion
         #region Conditions
-        IObservableSetList<Condition> Conditions { get; }
+        IReadOnlySetList<Condition> Conditions { get; }
         #endregion
         #region Choices
-        IObservableSetList<FormIDSetLink<DialogTopic>> Choices { get; }
+        IReadOnlySetList<FormIDSetLink<DialogTopic>> Choices { get; }
         #endregion
         #region LinkFrom
-        IObservableSetList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
+        IReadOnlySetList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
         #endregion
         #region Script
         IScriptFieldsGetter Script { get; }

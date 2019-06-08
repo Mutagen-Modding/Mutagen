@@ -96,9 +96,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Relation> IFaction.Relations => _Relations;
+        ISetList<Relation> IFaction.Relations => _Relations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Relation> IFactionGetter.Relations => _Relations;
+        IReadOnlySetList<Relation> IFactionGetter.Relations => _Relations;
         #endregion
 
         #endregion
@@ -166,9 +166,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Rank> IFaction.Ranks => _Ranks;
+        ISetList<Rank> IFaction.Ranks => _Ranks;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Rank> IFactionGetter.Ranks => _Ranks;
+        IReadOnlySetList<Rank> IFactionGetter.Ranks => _Ranks;
         #endregion
 
         #endregion
@@ -884,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Name_Set(String item, bool hasBeenSet = true);
         void Name_Unset();
 
-        new ISourceSetList<Relation> Relations { get; }
+        new ISetList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
         new bool Flags_IsSet { get; set; }
         void Flags_Set(Faction.FactionFlag item, bool hasBeenSet = true);
@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Oblivion
         void CrimeGoldMultiplier_Set(Single item, bool hasBeenSet = true);
         void CrimeGoldMultiplier_Unset();
 
-        new ISourceSetList<Rank> Ranks { get; }
+        new ISetList<Rank> Ranks { get; }
         void CopyFieldsFrom(
             IFactionGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -908,8 +908,6 @@ namespace Mutagen.Bethesda.Oblivion
         IFaction,
         IFactionInternalGetter
     {
-        new ISourceSetList<Relation> Relations { get; }
-        new ISourceSetList<Rank> Ranks { get; }
     }
 
     public partial interface IFactionGetter :
@@ -923,7 +921,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Relations
-        IObservableSetList<Relation> Relations { get; }
+        IReadOnlySetList<Relation> Relations { get; }
         #endregion
         #region Flags
         Faction.FactionFlag Flags { get; }
@@ -936,7 +934,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Ranks
-        IObservableSetList<Rank> Ranks { get; }
+        IReadOnlySetList<Rank> Ranks { get; }
         #endregion
 
     }

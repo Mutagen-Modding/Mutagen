@@ -368,9 +368,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<WorldspaceBlock> IWorldspace.SubCells => _SubCells;
+        ISetList<WorldspaceBlock> IWorldspace.SubCells => _SubCells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<WorldspaceBlock> IWorldspaceGetter.SubCells => _SubCells;
+        IReadOnlySetList<WorldspaceBlock> IWorldspaceGetter.SubCells => _SubCells;
         #endregion
 
         #endregion
@@ -1416,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] SubCellsTimestamp { get; set; }
 
-        new ISourceSetList<WorldspaceBlock> SubCells { get; }
+        new ISetList<WorldspaceBlock> SubCells { get; }
         new Boolean UsingOffsetLength { get; set; }
 
         void CopyFieldsFrom(
@@ -1434,7 +1434,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Worldspace Parent { get; set; }
         new Climate Climate { get; set; }
         new Water Water { get; set; }
-        new ISourceSetList<WorldspaceBlock> SubCells { get; }
     }
 
     public partial interface IWorldspaceGetter :
@@ -1512,7 +1511,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region SubCells
-        IObservableSetList<WorldspaceBlock> SubCells { get; }
+        IReadOnlySetList<WorldspaceBlock> SubCells { get; }
         #endregion
         #region UsingOffsetLength
         Boolean UsingOffsetLength { get; }

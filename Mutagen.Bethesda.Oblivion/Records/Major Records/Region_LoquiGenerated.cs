@@ -128,9 +128,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<RegionArea> IRegion.Areas => _Areas;
+        ISetList<RegionArea> IRegion.Areas => _Areas;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<RegionArea> IRegionGetter.Areas => _Areas;
+        IReadOnlySetList<RegionArea> IRegionGetter.Areas => _Areas;
         #endregion
 
         #endregion
@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion
         void MapColor_Unset();
 
         new Worldspace Worldspace { get; set; }
-        new ISourceSetList<RegionArea> Areas { get; }
+        new ISetList<RegionArea> Areas { get; }
         new RegionDataObjects Objects { get; set; }
         new bool Objects_IsSet { get; set; }
         void Objects_Set(RegionDataObjects item, bool hasBeenSet = true);
@@ -1118,7 +1118,6 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionInternalGetter
     {
         new Worldspace Worldspace { get; set; }
-        new ISourceSetList<RegionArea> Areas { get; }
     }
 
     public partial interface IRegionGetter :
@@ -1142,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Areas
-        IObservableSetList<RegionArea> Areas { get; }
+        IReadOnlySetList<RegionArea> Areas { get; }
         #endregion
         #region Objects
         IRegionDataObjectsInternalGetter Objects { get; }

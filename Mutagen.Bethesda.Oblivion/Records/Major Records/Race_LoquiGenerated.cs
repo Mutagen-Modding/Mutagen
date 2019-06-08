@@ -121,9 +121,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<Spell>> IRace.Spells => _Spells;
+        ISetList<FormIDSetLink<Spell>> IRace.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<Spell>> IRaceGetter.Spells => _Spells;
+        IReadOnlySetList<FormIDSetLink<Spell>> IRaceGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -139,16 +139,16 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<RaceRelation> IRace.Relations => _Relations;
+        ISetList<RaceRelation> IRace.Relations => _Relations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<RaceRelation> IRaceGetter.Relations => _Relations;
+        IReadOnlySetList<RaceRelation> IRaceGetter.Relations => _Relations;
         #endregion
 
         #endregion
         #region SkillBoosts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<SkillBoost> _SkillBoosts = new SourceBoundedSetList<SkillBoost>(max: 7);
-        public ISourceSetList<SkillBoost> SkillBoosts => _SkillBoosts;
+        private readonly ISourceList<SkillBoost> _SkillBoosts = new SourceBoundedList<SkillBoost>(max: 7);
+        public ISourceList<SkillBoost> SkillBoosts => _SkillBoosts;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<SkillBoost> SkillBoostsEnumerable
         {
@@ -157,9 +157,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<SkillBoost> IRace.SkillBoosts => _SkillBoosts;
+        IList<SkillBoost> IRace.SkillBoosts => _SkillBoosts;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<SkillBoost> IRaceGetter.SkillBoosts => _SkillBoosts;
+        IReadOnlyList<SkillBoost> IRaceGetter.SkillBoosts => _SkillBoosts;
         #endregion
 
         #endregion
@@ -409,9 +409,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FacePart> IRace.FaceData => _FaceData;
+        ISetList<FacePart> IRace.FaceData => _FaceData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FacePart> IRaceGetter.FaceData => _FaceData;
+        IReadOnlySetList<FacePart> IRaceGetter.FaceData => _FaceData;
         #endregion
 
         #endregion
@@ -454,9 +454,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDLink<Hair>> IRace.Hairs => _Hairs;
+        ISetList<FormIDLink<Hair>> IRace.Hairs => _Hairs;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDLink<Hair>> IRaceGetter.Hairs => _Hairs;
+        IReadOnlySetList<FormIDLink<Hair>> IRaceGetter.Hairs => _Hairs;
         #endregion
 
         #endregion
@@ -472,9 +472,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDLink<Eye>> IRace.Eyes => _Eyes;
+        ISetList<FormIDLink<Eye>> IRace.Eyes => _Eyes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDLink<Eye>> IRaceGetter.Eyes => _Eyes;
+        IReadOnlySetList<FormIDLink<Eye>> IRaceGetter.Eyes => _Eyes;
         #endregion
 
         #endregion
@@ -1831,9 +1831,9 @@ namespace Mutagen.Bethesda.Oblivion
         void Description_Set(String item, bool hasBeenSet = true);
         void Description_Unset();
 
-        new ISourceSetList<FormIDSetLink<Spell>> Spells { get; }
-        new ISourceSetList<RaceRelation> Relations { get; }
-        new ISourceSetList<SkillBoost> SkillBoosts { get; }
+        new ISetList<FormIDSetLink<Spell>> Spells { get; }
+        new ISetList<RaceRelation> Relations { get; }
+        new IList<SkillBoost> SkillBoosts { get; }
         new Byte[] Fluff { get; set; }
 
         new Single MaleHeight { get; set; }
@@ -1876,14 +1876,14 @@ namespace Mutagen.Bethesda.Oblivion
         void RaceStats_Set(RaceStatsGendered item, bool hasBeenSet = true);
         void RaceStats_Unset();
 
-        new ISourceSetList<FacePart> FaceData { get; }
+        new ISetList<FacePart> FaceData { get; }
         new GenderedBodyData BodyData { get; set; }
         new bool BodyData_IsSet { get; set; }
         void BodyData_Set(GenderedBodyData item, bool hasBeenSet = true);
         void BodyData_Unset();
 
-        new ISourceSetList<FormIDLink<Hair>> Hairs { get; }
-        new ISourceSetList<FormIDLink<Eye>> Eyes { get; }
+        new ISetList<FormIDLink<Hair>> Hairs { get; }
+        new ISetList<FormIDLink<Eye>> Eyes { get; }
         new FaceGenData FaceGenData { get; set; }
         new bool FaceGenData_IsSet { get; set; }
         void FaceGenData_Set(FaceGenData item, bool hasBeenSet = true);
@@ -1906,12 +1906,6 @@ namespace Mutagen.Bethesda.Oblivion
         IRace,
         IRaceInternalGetter
     {
-        new ISourceSetList<FormIDSetLink<Spell>> Spells { get; }
-        new ISourceSetList<RaceRelation> Relations { get; }
-        new ISourceSetList<SkillBoost> SkillBoosts { get; }
-        new ISourceSetList<FacePart> FaceData { get; }
-        new ISourceSetList<FormIDLink<Hair>> Hairs { get; }
-        new ISourceSetList<FormIDLink<Eye>> Eyes { get; }
         new Race.DATADataType DATADataTypeState { get; set; }
 
     }
@@ -1932,13 +1926,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Spells
-        IObservableSetList<FormIDSetLink<Spell>> Spells { get; }
+        IReadOnlySetList<FormIDSetLink<Spell>> Spells { get; }
         #endregion
         #region Relations
-        IObservableSetList<RaceRelation> Relations { get; }
+        IReadOnlySetList<RaceRelation> Relations { get; }
         #endregion
         #region SkillBoosts
-        IObservableSetList<SkillBoost> SkillBoosts { get; }
+        IReadOnlyList<SkillBoost> SkillBoosts { get; }
         #endregion
         #region Fluff
         Byte[] Fluff { get; }
@@ -1995,7 +1989,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region FaceData
-        IObservableSetList<FacePart> FaceData { get; }
+        IReadOnlySetList<FacePart> FaceData { get; }
         #endregion
         #region BodyData
         IGenderedBodyDataGetter BodyData { get; }
@@ -2003,10 +1997,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Hairs
-        IObservableSetList<FormIDLink<Hair>> Hairs { get; }
+        IReadOnlySetList<FormIDLink<Hair>> Hairs { get; }
         #endregion
         #region Eyes
-        IObservableSetList<FormIDLink<Eye>> Eyes { get; }
+        IReadOnlySetList<FormIDLink<Eye>> Eyes { get; }
         #endregion
         #region FaceGenData
         IFaceGenDataGetter FaceGenData { get; }
@@ -3256,7 +3250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Description_Unset();
             item.Spells.Unset();
             item.Relations.Unset();
-            item.SkillBoosts.Unset();
+            item.SkillBoosts.Clear();
             item.Fluff = default(Byte[]);
             item.MaleHeight = default(Single);
             item.FemaleHeight = default(Single);
@@ -3590,7 +3584,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
             if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
             if (checkMask.Relations.Overall.HasValue && checkMask.Relations.Overall.Value != item.Relations.HasBeenSet) return false;
-            if (checkMask.SkillBoosts.Overall.HasValue && checkMask.SkillBoosts.Overall.Value != item.SkillBoosts.HasBeenSet) return false;
             if (checkMask.Voices.Overall.HasValue && checkMask.Voices.Overall.Value != item.Voices_IsSet) return false;
             if (checkMask.Voices.Specific != null && (item.Voices == null || !item.Voices.HasBeenSet(checkMask.Voices.Specific))) return false;
             if (checkMask.DefaultHair.Overall.HasValue && checkMask.DefaultHair.Overall.Value != item.DefaultHair_IsSet) return false;
@@ -3618,7 +3611,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Description = item.Description_IsSet;
             ret.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, null);
             ret.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RaceRelation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.WithIndex().Select((i) => new MaskItemIndexed<bool, RaceRelation_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, SkillBoost_Mask<bool>>>>(item.SkillBoosts.HasBeenSet, item.SkillBoosts.WithIndex().Select((i) => new MaskItemIndexed<bool, SkillBoost_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, SkillBoost_Mask<bool>>>>(true, item.SkillBoosts.WithIndex().Select((i) => new MaskItemIndexed<bool, SkillBoost_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             ret.Fluff = true;
             ret.MaleHeight = true;
             ret.FemaleHeight = true;
@@ -4173,7 +4166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.SkillBoosts.Unset();
+                            item.SkillBoosts.Clear();
                         }
                     }
                     catch (Exception ex)

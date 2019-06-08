@@ -173,9 +173,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Condition> IAIPackage.Conditions => _Conditions;
+        ISetList<Condition> IAIPackage.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Condition> IAIPackageGetter.Conditions => _Conditions;
+        IReadOnlySetList<Condition> IAIPackageGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -962,7 +962,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Target_Set(AIPackageTarget item, bool hasBeenSet = true);
         void Target_Unset();
 
-        new ISourceSetList<Condition> Conditions { get; }
+        new ISetList<Condition> Conditions { get; }
         void CopyFieldsFrom(
             IAIPackageGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -975,7 +975,6 @@ namespace Mutagen.Bethesda.Oblivion
         IAIPackage,
         IAIPackageInternalGetter
     {
-        new ISourceSetList<Condition> Conditions { get; }
         new AIPackage.PKDTDataType PKDTDataTypeState { get; set; }
 
     }
@@ -1009,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        IObservableSetList<Condition> Conditions { get; }
+        IReadOnlySetList<Condition> Conditions { get; }
         #endregion
 
     }

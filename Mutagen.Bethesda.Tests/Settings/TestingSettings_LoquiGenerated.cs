@@ -98,8 +98,8 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region TargetGroups
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<TargetGroup> _TargetGroups = new SourceSetList<TargetGroup>();
-        public ISourceSetList<TargetGroup> TargetGroups => _TargetGroups;
+        private readonly SourceList<TargetGroup> _TargetGroups = new SourceList<TargetGroup>();
+        public ISourceList<TargetGroup> TargetGroups => _TargetGroups;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<TargetGroup> TargetGroupsEnumerable
         {
@@ -108,9 +108,9 @@ namespace Mutagen.Bethesda.Tests
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<TargetGroup> ITestingSettings.TargetGroups => _TargetGroups;
+        IList<TargetGroup> ITestingSettings.TargetGroups => _TargetGroups;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<TargetGroup> ITestingSettingsGetter.TargetGroups => _TargetGroups;
+        IReadOnlyList<TargetGroup> ITestingSettingsGetter.TargetGroups => _TargetGroups;
         #endregion
 
         #endregion
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Tests
 
         new PassthroughSettings PassthroughSettings { get; set; }
 
-        new ISourceSetList<TargetGroup> TargetGroups { get; }
+        new IList<TargetGroup> TargetGroups { get; }
         void CopyFieldsFrom(
             ITestingSettingsGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -717,7 +717,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
         #region TargetGroups
-        IObservableSetList<TargetGroup> TargetGroups { get; }
+        IReadOnlyList<TargetGroup> TargetGroups { get; }
         #endregion
 
     }
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestLocators = default(Boolean);
             item.DataFolderLocations = default(DataFolderLocations);
             item.PassthroughSettings = default(PassthroughSettings);
-            item.TargetGroups.Unset();
+            item.TargetGroups.Clear();
         }
 
         public static TestingSettings_Mask<bool> GetEqualsMask(
@@ -1343,7 +1343,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             this ITestingSettingsGetter item,
             TestingSettings_Mask<bool?> checkMask)
         {
-            if (checkMask.TargetGroups.Overall.HasValue && checkMask.TargetGroups.Overall.Value != item.TargetGroups.HasBeenSet) return false;
             return true;
         }
 
@@ -1357,7 +1356,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestLocators = true;
             ret.DataFolderLocations = new MaskItem<bool, DataFolderLocations_Mask<bool>>(true, DataFolderLocationsCommon.GetHasBeenSetMask(item.DataFolderLocations));
             ret.PassthroughSettings = new MaskItem<bool, PassthroughSettings_Mask<bool>>(true, PassthroughSettingsCommon.GetHasBeenSetMask(item.PassthroughSettings));
-            ret.TargetGroups = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, TargetGroup_Mask<bool>>>>(item.TargetGroups.HasBeenSet, item.TargetGroups.WithIndex().Select((i) => new MaskItemIndexed<bool, TargetGroup_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.TargetGroups = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, TargetGroup_Mask<bool>>>>(true, item.TargetGroups.WithIndex().Select((i) => new MaskItemIndexed<bool, TargetGroup_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1719,7 +1718,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                             }
                             else
                             {
-                                item.TargetGroups.Unset();
+                                item.TargetGroups.Clear();
                             }
                         }
                         catch (Exception ex)

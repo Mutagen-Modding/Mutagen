@@ -74,9 +74,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<LogEntry> IQuestStage.LogEntries => _LogEntries;
+        ISetList<LogEntry> IQuestStage.LogEntries => _LogEntries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<LogEntry> IQuestStageGetter.LogEntries => _LogEntries;
+        IReadOnlySetList<LogEntry> IQuestStageGetter.LogEntries => _LogEntries;
         #endregion
 
         #endregion
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new UInt16 Stage { get; set; }
 
-        new ISourceSetList<LogEntry> LogEntries { get; }
+        new ISetList<LogEntry> LogEntries { get; }
         void CopyFieldsFrom(
             IQuestStageGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region LogEntries
-        IObservableSetList<LogEntry> LogEntries { get; }
+        IReadOnlySetList<LogEntry> LogEntries { get; }
         #endregion
 
     }

@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Connections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<P3Float> _Connections = new SourceSetList<P3Float>();
-        public ISourceSetList<P3Float> Connections => _Connections;
+        private readonly SourceList<P3Float> _Connections = new SourceList<P3Float>();
+        public ISourceList<P3Float> Connections => _Connections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<P3Float> ConnectionsEnumerable
         {
@@ -88,9 +88,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<P3Float> IRoadPoint.Connections => _Connections;
+        IList<P3Float> IRoadPoint.Connections => _Connections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<P3Float> IRoadPointGetter.Connections => _Connections;
+        IReadOnlyList<P3Float> IRoadPointGetter.Connections => _Connections;
         #endregion
 
         #endregion
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] NumConnectionsFluffBytes { get; set; }
 
-        new ISourceSetList<P3Float> Connections { get; }
+        new IList<P3Float> Connections { get; }
         void CopyFieldsFrom(
             IRoadPointGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Connections
-        IObservableSetList<P3Float> Connections { get; }
+        IReadOnlyList<P3Float> Connections { get; }
         #endregion
 
     }
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Point = default(P3Float);
             item.NumConnectionsFluffBytes = default(Byte[]);
-            item.Connections.Unset();
+            item.Connections.Clear();
         }
 
         public static RoadPoint_Mask<bool> GetEqualsMask(
@@ -990,7 +990,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IRoadPointGetter item,
             RoadPoint_Mask<bool?> checkMask)
         {
-            if (checkMask.Connections.Overall.HasValue && checkMask.Connections.Overall.Value != item.Connections.HasBeenSet) return false;
             return true;
         }
 
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new RoadPoint_Mask<bool>();
             ret.Point = true;
             ret.NumConnectionsFluffBytes = true;
-            ret.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Connections.HasBeenSet, null);
+            ret.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
             return ret;
         }
 
@@ -1158,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.Connections.Unset();
+                            item.Connections.Clear();
                         }
                     }
                     catch (Exception ex)

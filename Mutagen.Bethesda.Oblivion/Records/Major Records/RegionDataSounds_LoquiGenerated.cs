@@ -93,9 +93,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<RegionSound> IRegionDataSounds.Sounds => _Sounds;
+        ISetList<RegionSound> IRegionDataSounds.Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<RegionSound> IRegionDataSoundsGetter.Sounds => _Sounds;
+        IReadOnlySetList<RegionSound> IRegionDataSoundsGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
         void MusicType_Set(MusicType item, bool hasBeenSet = true);
         void MusicType_Unset();
 
-        new ISourceSetList<RegionSound> Sounds { get; }
+        new ISetList<RegionSound> Sounds { get; }
         void CopyFieldsFrom(
             IRegionDataSoundsGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -707,7 +707,6 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataSounds,
         IRegionDataSoundsInternalGetter
     {
-        new ISourceSetList<RegionSound> Sounds { get; }
     }
 
     public partial interface IRegionDataSoundsGetter :
@@ -721,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Sounds
-        IObservableSetList<RegionSound> Sounds { get; }
+        IReadOnlySetList<RegionSound> Sounds { get; }
         #endregion
 
     }

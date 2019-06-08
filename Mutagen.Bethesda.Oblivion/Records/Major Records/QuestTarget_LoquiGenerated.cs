@@ -85,9 +85,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Condition> IQuestTarget.Conditions => _Conditions;
+        ISetList<Condition> IQuestTarget.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Condition> IQuestTargetGetter.Conditions => _Conditions;
+        IReadOnlySetList<Condition> IQuestTargetGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
         new IPlaced Target { get; set; }
         new QuestTarget.Flag Flags { get; set; }
 
-        new ISourceSetList<Condition> Conditions { get; }
+        new ISetList<Condition> Conditions { get; }
         void CopyFieldsFrom(
             IQuestTargetGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -696,7 +696,6 @@ namespace Mutagen.Bethesda.Oblivion
         IQuestTargetInternalGetter
     {
         new IPlaced Target { get; set; }
-        new ISourceSetList<Condition> Conditions { get; }
         new QuestTarget.QSTADataType QSTADataTypeState { get; set; }
 
     }
@@ -716,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        IObservableSetList<Condition> Conditions { get; }
+        IReadOnlySetList<Condition> Conditions { get; }
         #endregion
 
     }

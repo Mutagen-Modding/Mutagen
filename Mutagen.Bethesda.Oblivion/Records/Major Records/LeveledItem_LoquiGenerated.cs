@@ -120,9 +120,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<LeveledEntry<ItemAbstract>> ILeveledItem.Entries => _Entries;
+        ISetList<LeveledEntry<ItemAbstract>> ILeveledItem.Entries => _Entries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<LeveledEntry<ItemAbstract>> ILeveledItemGetter.Entries => _Entries;
+        IReadOnlySetList<LeveledEntry<ItemAbstract>> ILeveledItemGetter.Entries => _Entries;
         #endregion
 
         #endregion
@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(LeveledFlag item, bool hasBeenSet = true);
         void Flags_Unset();
 
-        new ISourceSetList<LeveledEntry<ItemAbstract>> Entries { get; }
+        new ISetList<LeveledEntry<ItemAbstract>> Entries { get; }
         void CopyFieldsFrom(
             ILeveledItemGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -801,7 +801,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILeveledItem,
         ILeveledItemInternalGetter
     {
-        new ISourceSetList<LeveledEntry<ItemAbstract>> Entries { get; }
     }
 
     public partial interface ILeveledItemGetter :
@@ -820,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Entries
-        IObservableSetList<LeveledEntry<ItemAbstract>> Entries { get; }
+        IReadOnlySetList<LeveledEntry<ItemAbstract>> Entries { get; }
         #endregion
 
     }

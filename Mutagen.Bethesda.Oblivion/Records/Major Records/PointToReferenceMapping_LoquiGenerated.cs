@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<Int16> _Points = new SourceSetList<Int16>();
-        public ISourceSetList<Int16> Points => _Points;
+        private readonly SourceList<Int16> _Points = new SourceList<Int16>();
+        public ISourceList<Int16> Points => _Points;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Int16> PointsEnumerable
         {
@@ -71,9 +71,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Int16> IPointToReferenceMapping.Points => _Points;
+        IList<Int16> IPointToReferenceMapping.Points => _Points;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Int16> IPointToReferenceMappingGetter.Points => _Points;
+        IReadOnlyList<Int16> IPointToReferenceMappingGetter.Points => _Points;
         #endregion
 
         #endregion
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiClass<PointToReferenceMapping, IPointToReferenceMappingGetter>
     {
         new IPlaced Reference { get; set; }
-        new ISourceSetList<Int16> Points { get; }
+        new IList<Int16> Points { get; }
         void CopyFieldsFrom(
             IPointToReferenceMappingGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Points
-        IObservableSetList<Int16> Points { get; }
+        IReadOnlyList<Int16> Points { get; }
         #endregion
 
     }
@@ -832,7 +832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Clear(IPointToReferenceMapping item)
         {
             item.Reference = default(IPlaced);
-            item.Points.Unset();
+            item.Points.Clear();
         }
 
         public static PointToReferenceMapping_Mask<bool> GetEqualsMask(
@@ -920,7 +920,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IPointToReferenceMappingGetter item,
             PointToReferenceMapping_Mask<bool?> checkMask)
         {
-            if (checkMask.Points.Overall.HasValue && checkMask.Points.Overall.Value != item.Points.HasBeenSet) return false;
             return true;
         }
 
@@ -928,7 +927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new PointToReferenceMapping_Mask<bool>();
             ret.Reference = true;
-            ret.Points = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Points.HasBeenSet, null);
+            ret.Points = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
             return ret;
         }
 
@@ -1033,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.Points.Unset();
+                            item.Points.Clear();
                         }
                     }
                     catch (Exception ex)

@@ -91,9 +91,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<P2Float> IRegionArea.RegionPoints => _RegionPoints;
+        ISetList<P2Float> IRegionArea.RegionPoints => _RegionPoints;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<P2Float> IRegionAreaGetter.RegionPoints => _RegionPoints;
+        IReadOnlySetList<P2Float> IRegionAreaGetter.RegionPoints => _RegionPoints;
         #endregion
 
         #endregion
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
         void EdgeFallOff_Set(UInt32 item, bool hasBeenSet = true);
         void EdgeFallOff_Unset();
 
-        new ISourceSetList<P2Float> RegionPoints { get; }
+        new ISetList<P2Float> RegionPoints { get; }
         void CopyFieldsFrom(
             IRegionAreaGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RegionPoints
-        IObservableSetList<P2Float> RegionPoints { get; }
+        IReadOnlySetList<P2Float> RegionPoints { get; }
         #endregion
 
     }

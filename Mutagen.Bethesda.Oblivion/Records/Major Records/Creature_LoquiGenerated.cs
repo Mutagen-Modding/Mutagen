@@ -122,9 +122,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<ItemEntry> ICreature.Items => _Items;
+        ISetList<ItemEntry> ICreature.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<ItemEntry> ICreatureGetter.Items => _Items;
+        IReadOnlySetList<ItemEntry> ICreatureGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -140,9 +140,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<SpellAbstract>> ICreature.Spells => _Spells;
+        ISetList<FormIDSetLink<SpellAbstract>> ICreature.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<SpellAbstract>> ICreatureGetter.Spells => _Spells;
+        IReadOnlySetList<FormIDSetLink<SpellAbstract>> ICreatureGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -158,9 +158,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<String> ICreature.Models => _Models;
+        ISetList<String> ICreature.Models => _Models;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<String> ICreatureGetter.Models => _Models;
+        IReadOnlySetList<String> ICreatureGetter.Models => _Models;
         #endregion
 
         #endregion
@@ -288,9 +288,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<RankPlacement> ICreature.Factions => _Factions;
+        ISetList<RankPlacement> ICreature.Factions => _Factions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<RankPlacement> ICreatureGetter.Factions => _Factions;
+        IReadOnlySetList<RankPlacement> ICreatureGetter.Factions => _Factions;
         #endregion
 
         #endregion
@@ -402,9 +402,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<AIPackage>> ICreature.AIPackages => _AIPackages;
+        ISetList<FormIDSetLink<AIPackage>> ICreature.AIPackages => _AIPackages;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<AIPackage>> ICreatureGetter.AIPackages => _AIPackages;
+        IReadOnlySetList<FormIDSetLink<AIPackage>> ICreatureGetter.AIPackages => _AIPackages;
         #endregion
 
         #endregion
@@ -420,9 +420,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<String> ICreature.Animations => _Animations;
+        ISetList<String> ICreature.Animations => _Animations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<String> ICreatureGetter.Animations => _Animations;
+        IReadOnlySetList<String> ICreatureGetter.Animations => _Animations;
         #endregion
 
         #endregion
@@ -786,9 +786,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<CreatureSound> ICreature.Sounds => _Sounds;
+        ISetList<CreatureSound> ICreature.Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<CreatureSound> ICreatureGetter.Sounds => _Sounds;
+        IReadOnlySetList<CreatureSound> ICreatureGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
@@ -2484,9 +2484,9 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Set(Model item, bool hasBeenSet = true);
         void Model_Unset();
 
-        new ISourceSetList<ItemEntry> Items { get; }
-        new ISourceSetList<FormIDSetLink<SpellAbstract>> Spells { get; }
-        new ISourceSetList<String> Models { get; }
+        new ISetList<ItemEntry> Items { get; }
+        new ISetList<FormIDSetLink<SpellAbstract>> Spells { get; }
+        new ISetList<String> Models { get; }
         new Byte[] NIFT { get; set; }
         new bool NIFT_IsSet { get; set; }
         void NIFT_Set(Byte[] item, bool hasBeenSet = true);
@@ -2506,7 +2506,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new UInt16 CalcMax { get; set; }
 
-        new ISourceSetList<RankPlacement> Factions { get; }
+        new ISetList<RankPlacement> Factions { get; }
         new ItemAbstract DeathItem { get; set; }
         new Script Script { get; set; }
         new Byte Aggression { get; set; }
@@ -2523,8 +2523,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte MaximumTrainingLevel { get; set; }
 
-        new ISourceSetList<FormIDSetLink<AIPackage>> AIPackages { get; }
-        new ISourceSetList<String> Animations { get; }
+        new ISetList<FormIDSetLink<AIPackage>> AIPackages { get; }
+        new ISetList<String> Animations { get; }
         new Creature.CreatureTypeEnum CreatureType { get; set; }
 
         new Byte CombatSkill { get; set; }
@@ -2587,7 +2587,7 @@ namespace Mutagen.Bethesda.Oblivion
         void BloodDecal_Unset();
 
         new Creature InheritsSoundFrom { get; set; }
-        new ISourceSetList<CreatureSound> Sounds { get; }
+        new ISetList<CreatureSound> Sounds { get; }
         void CopyFieldsFrom(
             ICreatureGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -2600,17 +2600,10 @@ namespace Mutagen.Bethesda.Oblivion
         ICreature,
         ICreatureInternalGetter
     {
-        new ISourceSetList<ItemEntry> Items { get; }
-        new ISourceSetList<FormIDSetLink<SpellAbstract>> Spells { get; }
-        new ISourceSetList<String> Models { get; }
-        new ISourceSetList<RankPlacement> Factions { get; }
         new ItemAbstract DeathItem { get; set; }
         new Script Script { get; set; }
-        new ISourceSetList<FormIDSetLink<AIPackage>> AIPackages { get; }
-        new ISourceSetList<String> Animations { get; }
         new CombatStyle CombatStyle { get; set; }
         new Creature InheritsSoundFrom { get; set; }
-        new ISourceSetList<CreatureSound> Sounds { get; }
         new Creature.ACBSDataType ACBSDataTypeState { get; set; }
 
         new Creature.AIDTDataType AIDTDataTypeState { get; set; }
@@ -2635,13 +2628,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        IObservableSetList<ItemEntry> Items { get; }
+        IReadOnlySetList<ItemEntry> Items { get; }
         #endregion
         #region Spells
-        IObservableSetList<FormIDSetLink<SpellAbstract>> Spells { get; }
+        IReadOnlySetList<FormIDSetLink<SpellAbstract>> Spells { get; }
         #endregion
         #region Models
-        IObservableSetList<String> Models { get; }
+        IReadOnlySetList<String> Models { get; }
         #endregion
         #region NIFT
         Byte[] NIFT { get; }
@@ -2677,7 +2670,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Factions
-        IObservableSetList<RankPlacement> Factions { get; }
+        IReadOnlySetList<RankPlacement> Factions { get; }
         #endregion
         #region DeathItem
         ItemAbstract DeathItem { get; }
@@ -2718,10 +2711,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region AIPackages
-        IObservableSetList<FormIDSetLink<AIPackage>> AIPackages { get; }
+        IReadOnlySetList<FormIDSetLink<AIPackage>> AIPackages { get; }
         #endregion
         #region Animations
-        IObservableSetList<String> Animations { get; }
+        IReadOnlySetList<String> Animations { get; }
         #endregion
         #region CreatureType
         Creature.CreatureTypeEnum CreatureType { get; }
@@ -2824,7 +2817,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Sounds
-        IObservableSetList<CreatureSound> Sounds { get; }
+        IReadOnlySetList<CreatureSound> Sounds { get; }
         #endregion
 
     }

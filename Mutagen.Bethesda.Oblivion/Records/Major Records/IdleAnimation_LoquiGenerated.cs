@@ -95,9 +95,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Condition> IIdleAnimation.Conditions => _Conditions;
+        ISetList<Condition> IIdleAnimation.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Condition> IIdleAnimationGetter.Conditions => _Conditions;
+        IReadOnlySetList<Condition> IIdleAnimationGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -139,9 +139,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDLink<IdleAnimation>> IIdleAnimation.RelatedIdleAnimations => _RelatedIdleAnimations;
+        ISetList<FormIDLink<IdleAnimation>> IIdleAnimation.RelatedIdleAnimations => _RelatedIdleAnimations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDLink<IdleAnimation>> IIdleAnimationGetter.RelatedIdleAnimations => _RelatedIdleAnimations;
+        IReadOnlySetList<FormIDLink<IdleAnimation>> IIdleAnimationGetter.RelatedIdleAnimations => _RelatedIdleAnimations;
         #endregion
 
         #endregion
@@ -821,13 +821,13 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Set(Model item, bool hasBeenSet = true);
         void Model_Unset();
 
-        new ISourceSetList<Condition> Conditions { get; }
+        new ISetList<Condition> Conditions { get; }
         new IdleAnimation.AnimationGroupSectionEnum AnimationGroupSection { get; set; }
         new bool AnimationGroupSection_IsSet { get; set; }
         void AnimationGroupSection_Set(IdleAnimation.AnimationGroupSectionEnum item, bool hasBeenSet = true);
         void AnimationGroupSection_Unset();
 
-        new ISourceSetList<FormIDLink<IdleAnimation>> RelatedIdleAnimations { get; }
+        new ISetList<FormIDLink<IdleAnimation>> RelatedIdleAnimations { get; }
         void CopyFieldsFrom(
             IIdleAnimationGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -840,8 +840,6 @@ namespace Mutagen.Bethesda.Oblivion
         IIdleAnimation,
         IIdleAnimationInternalGetter
     {
-        new ISourceSetList<Condition> Conditions { get; }
-        new ISourceSetList<FormIDLink<IdleAnimation>> RelatedIdleAnimations { get; }
     }
 
     public partial interface IIdleAnimationGetter :
@@ -855,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        IObservableSetList<Condition> Conditions { get; }
+        IReadOnlySetList<Condition> Conditions { get; }
         #endregion
         #region AnimationGroupSection
         IdleAnimation.AnimationGroupSectionEnum AnimationGroupSection { get; }
@@ -863,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RelatedIdleAnimations
-        IObservableSetList<FormIDLink<IdleAnimation>> RelatedIdleAnimations { get; }
+        IReadOnlySetList<FormIDLink<IdleAnimation>> RelatedIdleAnimations { get; }
         #endregion
 
     }

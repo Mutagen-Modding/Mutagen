@@ -1,6 +1,6 @@
 ﻿using Loqui.Internal;
 using Loqui.Xml;
-using Noggog.Notifying;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;

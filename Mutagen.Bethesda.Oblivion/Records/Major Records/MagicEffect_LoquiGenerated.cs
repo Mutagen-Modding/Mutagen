@@ -283,9 +283,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<EDIDLink<MagicEffect>> IMagicEffect.CounterEffects => _CounterEffects;
+        ISetList<EDIDLink<MagicEffect>> IMagicEffect.CounterEffects => _CounterEffects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<EDIDLink<MagicEffect>> IMagicEffectGetter.CounterEffects => _CounterEffects;
+        IReadOnlySetList<EDIDLink<MagicEffect>> IMagicEffectGetter.CounterEffects => _CounterEffects;
         #endregion
 
         #endregion
@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion
         new EffectShader EffectShader { get; set; }
         new MagicEffectSubData SubData { get; set; }
 
-        new ISourceSetList<EDIDLink<MagicEffect>> CounterEffects { get; }
+        new ISetList<EDIDLink<MagicEffect>> CounterEffects { get; }
         void CopyFieldsFrom(
             IMagicEffectGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -1284,7 +1284,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Light Light { get; set; }
         new EffectShader EffectShader { get; set; }
-        new ISourceSetList<EDIDLink<MagicEffect>> CounterEffects { get; }
         new MagicEffect.DATADataType DATADataTypeState { get; set; }
 
     }
@@ -1357,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region CounterEffects
-        IObservableSetList<EDIDLink<MagicEffect>> CounterEffects { get; }
+        IReadOnlySetList<EDIDLink<MagicEffect>> CounterEffects { get; }
         #endregion
 
     }

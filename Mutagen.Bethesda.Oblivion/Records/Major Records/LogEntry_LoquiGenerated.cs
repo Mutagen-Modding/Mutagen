@@ -93,9 +93,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Condition> ILogEntry.Conditions => _Conditions;
+        ISetList<Condition> ILogEntry.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Condition> ILogEntryGetter.Conditions => _Conditions;
+        IReadOnlySetList<Condition> ILogEntryGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(LogEntry.Flag item, bool hasBeenSet = true);
         void Flags_Unset();
 
-        new ISourceSetList<Condition> Conditions { get; }
+        new ISetList<Condition> Conditions { get; }
         new String Entry { get; set; }
         new bool Entry_IsSet { get; set; }
         void Entry_Set(String item, bool hasBeenSet = true);
@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        IObservableSetList<Condition> Conditions { get; }
+        IReadOnlySetList<Condition> Conditions { get; }
         #endregion
         #region Entry
         String Entry { get; }

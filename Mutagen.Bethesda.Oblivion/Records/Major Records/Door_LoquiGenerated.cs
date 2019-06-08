@@ -172,9 +172,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<Place>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
+        ISetList<FormIDSetLink<Place>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<Place>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
+        IReadOnlySetList<FormIDSetLink<Place>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
         #endregion
 
         #endregion
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(Door.DoorFlag item, bool hasBeenSet = true);
         void Flags_Unset();
 
-        new ISourceSetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
+        new ISetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
         void CopyFieldsFrom(
             IDoorGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -999,7 +999,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Sound OpenSound { get; set; }
         new Sound CloseSound { get; set; }
         new Sound LoopSound { get; set; }
-        new ISourceSetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
     }
 
     public partial interface IDoorGetter :
@@ -1043,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RandomTeleportDestinations
-        IObservableSetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
+        IReadOnlySetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
         #endregion
 
     }

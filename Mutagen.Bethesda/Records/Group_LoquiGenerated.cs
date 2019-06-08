@@ -13,6 +13,7 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Internals;
 using CSharpExt.Rx;
+using DynamicData;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -94,8 +95,8 @@ namespace Mutagen.Bethesda
         private readonly SourceSetCache<T, FormKey> _Items = new SourceSetCache<T, FormKey>((item) => item.FormKey);
         public ISourceSetCache<T, FormKey> Items => _Items;
         #region Interface Members
-        ISourceSetCache<T, FormKey> IGroup<T>.Items => _Items;
-        IObservableSetCache<T, FormKey> IGroupGetter<T>.Items => _Items;
+        ISourceCache<T, FormKey> IGroup<T>.Items => _Items;
+        IReadOnlyDictionary<FormKey, T> IGroupGetter<T>.Items => _Items;
         #endregion
 
         #endregion
@@ -653,7 +654,7 @@ namespace Mutagen.Bethesda
 
         new Byte[] LastModified { get; set; }
 
-        new ISourceSetCache<T, FormKey> Items { get; }
+        new ISourceCache<T, FormKey> Items { get; }
         void CopyFieldsFrom<T_CopyMask>(
             IGroupGetter<T> rhs,
             ErrorMaskBuilder errorMask = null,
@@ -681,7 +682,7 @@ namespace Mutagen.Bethesda
 
         #endregion
         #region Items
-        IObservableSetCache<T, FormKey> Items { get; }
+        IReadOnlyDictionary<FormKey, T> Items { get; }
         #endregion
 
     }
@@ -1009,7 +1010,7 @@ namespace Mutagen.Bethesda.Internals
         {
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Byte[]);
-            item.Items.Unset();
+            item.Items.Clear();
         }
 
         public static Group_Mask<bool> GetEqualsMask<T>(

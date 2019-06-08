@@ -147,9 +147,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<Spell>> IBirthsign.Spells => _Spells;
+        ISetList<FormIDSetLink<Spell>> IBirthsign.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<Spell>> IBirthsignGetter.Spells => _Spells;
+        IReadOnlySetList<FormIDSetLink<Spell>> IBirthsignGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -828,7 +828,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Description_Set(String item, bool hasBeenSet = true);
         void Description_Unset();
 
-        new ISourceSetList<FormIDSetLink<Spell>> Spells { get; }
+        new ISetList<FormIDSetLink<Spell>> Spells { get; }
         void CopyFieldsFrom(
             IBirthsignGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -841,7 +841,6 @@ namespace Mutagen.Bethesda.Oblivion
         IBirthsign,
         IBirthsignInternalGetter
     {
-        new ISourceSetList<FormIDSetLink<Spell>> Spells { get; }
     }
 
     public partial interface IBirthsignGetter :
@@ -865,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Spells
-        IObservableSetList<FormIDSetLink<Spell>> Spells { get; }
+        IReadOnlySetList<FormIDSetLink<Spell>> Spells { get; }
         #endregion
 
     }

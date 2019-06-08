@@ -120,9 +120,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<LeveledEntry<NPCSpawn>> ILeveledCreature.Entries => _Entries;
+        ISetList<LeveledEntry<NPCSpawn>> ILeveledCreature.Entries => _Entries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<LeveledEntry<NPCSpawn>> ILeveledCreatureGetter.Entries => _Entries;
+        IReadOnlySetList<LeveledEntry<NPCSpawn>> ILeveledCreatureGetter.Entries => _Entries;
         #endregion
 
         #endregion
@@ -834,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(LeveledFlag item, bool hasBeenSet = true);
         void Flags_Unset();
 
-        new ISourceSetList<LeveledEntry<NPCSpawn>> Entries { get; }
+        new ISetList<LeveledEntry<NPCSpawn>> Entries { get; }
         new Script Script { get; set; }
         new NPCAbstract Template { get; set; }
         void CopyFieldsFrom(
@@ -849,7 +849,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILeveledCreature,
         ILeveledCreatureInternalGetter
     {
-        new ISourceSetList<LeveledEntry<NPCSpawn>> Entries { get; }
         new Script Script { get; set; }
         new NPCAbstract Template { get; set; }
     }
@@ -870,7 +869,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Entries
-        IObservableSetList<LeveledEntry<NPCSpawn>> Entries { get; }
+        IReadOnlySetList<LeveledEntry<NPCSpawn>> Entries { get; }
         #endregion
         #region Script
         Script Script { get; }

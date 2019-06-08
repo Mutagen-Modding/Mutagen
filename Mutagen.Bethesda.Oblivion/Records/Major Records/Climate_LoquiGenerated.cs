@@ -68,9 +68,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<WeatherChance> IClimate.Weathers => _Weathers;
+        ISetList<WeatherChance> IClimate.Weathers => _Weathers;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<WeatherChance> IClimateGetter.Weathers => _Weathers;
+        IReadOnlySetList<WeatherChance> IClimateGetter.Weathers => _Weathers;
         #endregion
 
         #endregion
@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiClass<IClimate, IClimateGetter>,
         ILoquiClass<Climate, IClimateGetter>
     {
-        new ISourceSetList<WeatherChance> Weathers { get; }
+        new ISetList<WeatherChance> Weathers { get; }
         new String SunTexture { get; set; }
         new bool SunTexture_IsSet { get; set; }
         void SunTexture_Set(String item, bool hasBeenSet = true);
@@ -1093,7 +1093,6 @@ namespace Mutagen.Bethesda.Oblivion
         IClimate,
         IClimateInternalGetter
     {
-        new ISourceSetList<WeatherChance> Weathers { get; }
         new Climate.TNAMDataType TNAMDataTypeState { get; set; }
 
     }
@@ -1104,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Weathers
-        IObservableSetList<WeatherChance> Weathers { get; }
+        IReadOnlySetList<WeatherChance> Weathers { get; }
         #endregion
         #region SunTexture
         String SunTexture { get; }

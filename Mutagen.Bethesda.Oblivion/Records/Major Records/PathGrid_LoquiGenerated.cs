@@ -68,9 +68,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<PathGridPoint> IPathGrid.PointToPointConnections => _PointToPointConnections;
+        ISetList<PathGridPoint> IPathGrid.PointToPointConnections => _PointToPointConnections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<PathGridPoint> IPathGridGetter.PointToPointConnections => _PointToPointConnections;
+        IReadOnlySetList<PathGridPoint> IPathGridGetter.PointToPointConnections => _PointToPointConnections;
         #endregion
 
         #endregion
@@ -114,9 +114,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<InterCellPoint> IPathGrid.InterCellConnections => _InterCellConnections;
+        ISetList<InterCellPoint> IPathGrid.InterCellConnections => _InterCellConnections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<InterCellPoint> IPathGridGetter.InterCellConnections => _InterCellConnections;
+        IReadOnlySetList<InterCellPoint> IPathGridGetter.InterCellConnections => _InterCellConnections;
         #endregion
 
         #endregion
@@ -132,9 +132,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<PointToReferenceMapping> IPathGrid.PointToReferenceMappings => _PointToReferenceMappings;
+        ISetList<PointToReferenceMapping> IPathGrid.PointToReferenceMappings => _PointToReferenceMappings;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<PointToReferenceMapping> IPathGridGetter.PointToReferenceMappings => _PointToReferenceMappings;
+        IReadOnlySetList<PointToReferenceMapping> IPathGridGetter.PointToReferenceMappings => _PointToReferenceMappings;
         #endregion
 
         #endregion
@@ -794,14 +794,14 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiClass<IPathGrid, IPathGridGetter>,
         ILoquiClass<PathGrid, IPathGridGetter>
     {
-        new ISourceSetList<PathGridPoint> PointToPointConnections { get; }
+        new ISetList<PathGridPoint> PointToPointConnections { get; }
         new Byte[] Unknown { get; set; }
         new bool Unknown_IsSet { get; set; }
         void Unknown_Set(Byte[] item, bool hasBeenSet = true);
         void Unknown_Unset();
 
-        new ISourceSetList<InterCellPoint> InterCellConnections { get; }
-        new ISourceSetList<PointToReferenceMapping> PointToReferenceMappings { get; }
+        new ISetList<InterCellPoint> InterCellConnections { get; }
+        new ISetList<PointToReferenceMapping> PointToReferenceMappings { get; }
         void CopyFieldsFrom(
             IPathGridGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -814,9 +814,6 @@ namespace Mutagen.Bethesda.Oblivion
         IPathGrid,
         IPathGridInternalGetter
     {
-        new ISourceSetList<PathGridPoint> PointToPointConnections { get; }
-        new ISourceSetList<InterCellPoint> InterCellConnections { get; }
-        new ISourceSetList<PointToReferenceMapping> PointToReferenceMappings { get; }
     }
 
     public partial interface IPathGridGetter :
@@ -825,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region PointToPointConnections
-        IObservableSetList<PathGridPoint> PointToPointConnections { get; }
+        IReadOnlySetList<PathGridPoint> PointToPointConnections { get; }
         #endregion
         #region Unknown
         Byte[] Unknown { get; }
@@ -833,10 +830,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region InterCellConnections
-        IObservableSetList<InterCellPoint> InterCellConnections { get; }
+        IReadOnlySetList<InterCellPoint> InterCellConnections { get; }
         #endregion
         #region PointToReferenceMappings
-        IObservableSetList<PointToReferenceMapping> PointToReferenceMappings { get; }
+        IReadOnlySetList<PointToReferenceMapping> PointToReferenceMappings { get; }
         #endregion
 
     }

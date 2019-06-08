@@ -93,8 +93,8 @@ namespace Mutagen.Bethesda
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<T> _Items = new SourceSetList<T>();
-        public ISourceSetList<T> Items => _Items;
+        private readonly SourceList<T> _Items = new SourceList<T>();
+        public ISourceList<T> Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<T> ItemsEnumerable
         {
@@ -103,9 +103,9 @@ namespace Mutagen.Bethesda
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<T> IListGroup<T>.Items => _Items;
+        IList<T> IListGroup<T>.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<T> IListGroupGetter<T>.Items => _Items;
+        IReadOnlyList<T> IListGroupGetter<T>.Items => _Items;
         #endregion
 
         #endregion
@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda
 
         new Byte[] LastModified { get; set; }
 
-        new ISourceSetList<T> Items { get; }
+        new IList<T> Items { get; }
         void CopyFieldsFrom<T_CopyMask>(
             IListGroupGetter<T> rhs,
             ErrorMaskBuilder errorMask = null,
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda
 
         #endregion
         #region Items
-        IObservableSetList<T> Items { get; }
+        IReadOnlyList<T> Items { get; }
         #endregion
 
     }
@@ -1022,7 +1022,7 @@ namespace Mutagen.Bethesda.Internals
         {
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Byte[]);
-            item.Items.Unset();
+            item.Items.Clear();
         }
 
         public static ListGroup_Mask<bool> GetEqualsMask<T>(
@@ -1125,7 +1125,6 @@ namespace Mutagen.Bethesda.Internals
             ListGroup_Mask<bool?> checkMask)
             where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
-            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
             return true;
         }
 
@@ -1136,7 +1135,7 @@ namespace Mutagen.Bethesda.Internals
             ret.ContainedRecordType = true;
             ret.GroupType = true;
             ret.LastModified = true;
-            ret.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(true, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1299,7 +1298,7 @@ namespace Mutagen.Bethesda.Internals
                         }
                         else
                         {
-                            item.Items.Unset();
+                            item.Items.Clear();
                         }
                     }
                     catch (Exception ex)

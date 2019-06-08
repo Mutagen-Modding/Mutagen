@@ -175,9 +175,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDLink<Region>> ICell.Regions => _Regions;
+        ISetList<FormIDLink<Region>> ICell.Regions => _Regions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDLink<Region>> ICellGetter.Regions => _Regions;
+        IReadOnlySetList<FormIDLink<Region>> ICellGetter.Regions => _Regions;
         #endregion
 
         #endregion
@@ -379,9 +379,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<IPlaced> ICell.Persistent => _Persistent;
+        ISetList<IPlaced> ICell.Persistent => _Persistent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<IPlaced> ICellGetter.Persistent => _Persistent;
+        IReadOnlySetList<IPlaced> ICellGetter.Persistent => _Persistent;
         #endregion
 
         #endregion
@@ -412,9 +412,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<IPlaced> ICell.Temporary => _Temporary;
+        ISetList<IPlaced> ICell.Temporary => _Temporary;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<IPlaced> ICellGetter.Temporary => _Temporary;
+        IReadOnlySetList<IPlaced> ICellGetter.Temporary => _Temporary;
         #endregion
 
         #endregion
@@ -445,9 +445,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<IPlaced> ICell.VisibleWhenDistant => _VisibleWhenDistant;
+        ISetList<IPlaced> ICell.VisibleWhenDistant => _VisibleWhenDistant;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<IPlaced> ICellGetter.VisibleWhenDistant => _VisibleWhenDistant;
+        IReadOnlySetList<IPlaced> ICellGetter.VisibleWhenDistant => _VisibleWhenDistant;
         #endregion
 
         #endregion
@@ -1562,7 +1562,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Lighting_Set(CellLighting item, bool hasBeenSet = true);
         void Lighting_Unset();
 
-        new ISourceSetList<FormIDLink<Region>> Regions { get; }
+        new ISetList<FormIDLink<Region>> Regions { get; }
         new MusicType MusicType { get; set; }
         new bool MusicType_IsSet { get; set; }
         void MusicType_Set(MusicType item, bool hasBeenSet = true);
@@ -1596,13 +1596,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] PersistentTimestamp { get; set; }
 
-        new ISourceSetList<IPlaced> Persistent { get; }
+        new ISetList<IPlaced> Persistent { get; }
         new Byte[] TemporaryTimestamp { get; set; }
 
-        new ISourceSetList<IPlaced> Temporary { get; }
+        new ISetList<IPlaced> Temporary { get; }
         new Byte[] VisibleWhenDistantTimestamp { get; set; }
 
-        new ISourceSetList<IPlaced> VisibleWhenDistant { get; }
+        new ISetList<IPlaced> VisibleWhenDistant { get; }
         void CopyFieldsFrom(
             ICellGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -1615,14 +1615,10 @@ namespace Mutagen.Bethesda.Oblivion
         ICell,
         ICellInternalGetter
     {
-        new ISourceSetList<FormIDLink<Region>> Regions { get; }
         new Climate Climate { get; set; }
         new Water Water { get; set; }
         new Faction Owner { get; set; }
         new Global GlobalVariable { get; set; }
-        new ISourceSetList<IPlaced> Persistent { get; }
-        new ISourceSetList<IPlaced> Temporary { get; }
-        new ISourceSetList<IPlaced> VisibleWhenDistant { get; }
     }
 
     public partial interface ICellGetter :
@@ -1651,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Regions
-        IObservableSetList<FormIDLink<Region>> Regions { get; }
+        IReadOnlySetList<FormIDLink<Region>> Regions { get; }
         #endregion
         #region MusicType
         MusicType MusicType { get; }
@@ -1707,21 +1703,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Persistent
-        IObservableSetList<IPlaced> Persistent { get; }
+        IReadOnlySetList<IPlaced> Persistent { get; }
         #endregion
         #region TemporaryTimestamp
         Byte[] TemporaryTimestamp { get; }
 
         #endregion
         #region Temporary
-        IObservableSetList<IPlaced> Temporary { get; }
+        IReadOnlySetList<IPlaced> Temporary { get; }
         #endregion
         #region VisibleWhenDistantTimestamp
         Byte[] VisibleWhenDistantTimestamp { get; }
 
         #endregion
         #region VisibleWhenDistant
-        IObservableSetList<IPlaced> VisibleWhenDistant { get; }
+        IReadOnlySetList<IPlaced> VisibleWhenDistant { get; }
         #endregion
 
     }

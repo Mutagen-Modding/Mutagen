@@ -93,9 +93,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<BodyPart> IBodyData.BodyParts => _BodyParts;
+        ISetList<BodyPart> IBodyData.BodyParts => _BodyParts;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<BodyPart> IBodyDataGetter.BodyParts => _BodyParts;
+        IReadOnlySetList<BodyPart> IBodyDataGetter.BodyParts => _BodyParts;
         #endregion
 
         #endregion
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Set(Model item, bool hasBeenSet = true);
         void Model_Unset();
 
-        new ISourceSetList<BodyPart> BodyParts { get; }
+        new ISetList<BodyPart> BodyParts { get; }
         void CopyFieldsFrom(
             IBodyDataGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region BodyParts
-        IObservableSetList<BodyPart> BodyParts { get; }
+        IReadOnlySetList<BodyPart> BodyParts { get; }
         #endregion
 
     }

@@ -103,9 +103,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<LocalVariable> IScriptFields.LocalVariables => _LocalVariables;
+        ISetList<LocalVariable> IScriptFields.LocalVariables => _LocalVariables;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<LocalVariable> IScriptFieldsGetter.LocalVariables => _LocalVariables;
+        IReadOnlySetList<LocalVariable> IScriptFieldsGetter.LocalVariables => _LocalVariables;
         #endregion
 
         #endregion
@@ -121,9 +121,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<ScriptReference> IScriptFields.References => _References;
+        ISetList<ScriptReference> IScriptFields.References => _References;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<ScriptReference> IScriptFieldsGetter.References => _References;
+        IReadOnlySetList<ScriptReference> IScriptFieldsGetter.References => _References;
         #endregion
 
         #endregion
@@ -872,8 +872,8 @@ namespace Mutagen.Bethesda.Oblivion
         void SourceCode_Set(String item, bool hasBeenSet = true);
         void SourceCode_Unset();
 
-        new ISourceSetList<LocalVariable> LocalVariables { get; }
-        new ISourceSetList<ScriptReference> References { get; }
+        new ISetList<LocalVariable> LocalVariables { get; }
+        new ISetList<ScriptReference> References { get; }
         void CopyFieldsFrom(
             IScriptFieldsGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -902,10 +902,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region LocalVariables
-        IObservableSetList<LocalVariable> LocalVariables { get; }
+        IReadOnlySetList<LocalVariable> LocalVariables { get; }
         #endregion
         #region References
-        IObservableSetList<ScriptReference> References { get; }
+        IReadOnlySetList<ScriptReference> References { get; }
         #endregion
 
     }

@@ -9,7 +9,13 @@ namespace Mutagen.Bethesda.Binary
     {
         public long OffsetReference { get; }
 
-        public MutagenMemoryReadStream(byte[] data, long offsetReference = 0) 
+        public MutagenMemoryReadStream(byte[] data, long offsetReference = 0)
+            : base(data)
+        {
+            this.OffsetReference = offsetReference;
+        }
+
+        public MutagenMemoryReadStream(MemorySlice<byte> data, long offsetReference = 0)
             : base(data)
         {
             this.OffsetReference = offsetReference;

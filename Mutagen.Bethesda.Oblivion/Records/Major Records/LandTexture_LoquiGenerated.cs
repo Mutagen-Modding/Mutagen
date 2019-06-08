@@ -147,9 +147,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
+        ISetList<FormIDSetLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<Grass>> ILandTextureGetter.PotentialGrass => _PotentialGrass;
+        IReadOnlySetList<FormIDSetLink<Grass>> ILandTextureGetter.PotentialGrass => _PotentialGrass;
         #endregion
 
         #endregion
@@ -824,7 +824,7 @@ namespace Mutagen.Bethesda.Oblivion
         void TextureSpecularExponent_Set(Byte item, bool hasBeenSet = true);
         void TextureSpecularExponent_Unset();
 
-        new ISourceSetList<FormIDSetLink<Grass>> PotentialGrass { get; }
+        new ISetList<FormIDSetLink<Grass>> PotentialGrass { get; }
         void CopyFieldsFrom(
             ILandTextureGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -837,7 +837,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILandTexture,
         ILandTextureInternalGetter
     {
-        new ISourceSetList<FormIDSetLink<Grass>> PotentialGrass { get; }
     }
 
     public partial interface ILandTextureGetter :
@@ -861,7 +860,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region PotentialGrass
-        IObservableSetList<FormIDSetLink<Grass>> PotentialGrass { get; }
+        IReadOnlySetList<FormIDSetLink<Grass>> PotentialGrass { get; }
         #endregion
 
     }

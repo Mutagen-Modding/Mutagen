@@ -154,9 +154,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Effect> ISigilStone.Effects => _Effects;
+        ISetList<Effect> ISigilStone.Effects => _Effects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Effect> ISigilStoneGetter.Effects => _Effects;
+        IReadOnlySetList<Effect> ISigilStoneGetter.Effects => _Effects;
         #endregion
 
         #endregion
@@ -1001,7 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Icon_Unset();
 
         new Script Script { get; set; }
-        new ISourceSetList<Effect> Effects { get; }
+        new ISetList<Effect> Effects { get; }
         new Byte Uses { get; set; }
 
         new UInt32 Value { get; set; }
@@ -1021,7 +1021,6 @@ namespace Mutagen.Bethesda.Oblivion
         ISigilStoneInternalGetter
     {
         new Script Script { get; set; }
-        new ISourceSetList<Effect> Effects { get; }
         new SigilStone.DATADataType DATADataTypeState { get; set; }
 
     }
@@ -1052,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Effects
-        IObservableSetList<Effect> Effects { get; }
+        IReadOnlySetList<Effect> Effects { get; }
         #endregion
         #region Uses
         Byte Uses { get; }
