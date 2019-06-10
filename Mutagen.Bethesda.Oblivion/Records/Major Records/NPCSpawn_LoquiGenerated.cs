@@ -291,6 +291,11 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        public NPCSpawn(IMod mod)
+            : this(mod.GetNextFormKey())
+        {
+        }
+
         #endregion
 
         #region Binary Translation

@@ -535,6 +535,11 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        public AIPackage(IMod mod)
+            : this(mod.GetNextFormKey())
+        {
+        }
+
         partial void PostDuplicate(AIPackage obj, AIPackage rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
         public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)

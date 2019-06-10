@@ -386,6 +386,11 @@ namespace Mutagen.Bethesda
             CustomCtor();
         }
 
+        public MajorRecord(IMod mod)
+            : this(mod.GetNextFormKey())
+        {
+        }
+
         public abstract IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords = null);
         public virtual IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()

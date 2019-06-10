@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Fields
-        private ScriptFields _Fields_Object = new ScriptFields();
+        private readonly ScriptFields _Fields_Object = new ScriptFields();
         public bool Fields_IsSet => true;
         bool IScriptGetter.Fields_IsSet => Fields_IsSet;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -376,6 +376,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
             CustomCtor();
+        }
+
+        public Script(IMod mod)
+            : this(mod.GetNextFormKey())
+        {
         }
 
         partial void PostDuplicate(Script obj, Script rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);

@@ -282,6 +282,11 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
+        public SkyrimMajorRecord(IMod mod)
+            : this(mod.GetNextFormKey())
+        {
+        }
+
         #endregion
 
         #region Binary Translation

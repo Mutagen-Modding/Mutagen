@@ -556,6 +556,11 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        public Door(IMod mod)
+            : this(mod.GetNextFormKey())
+        {
+        }
+
         partial void PostDuplicate(Door obj, Door rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
         public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)

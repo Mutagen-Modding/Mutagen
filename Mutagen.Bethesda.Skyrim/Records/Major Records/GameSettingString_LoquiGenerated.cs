@@ -336,6 +336,11 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
+        public GameSettingString(IMod mod)
+            : this(mod.GetNextFormKey())
+        {
+        }
+
         partial void PostDuplicate(GameSettingString obj, GameSettingString rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
         public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)

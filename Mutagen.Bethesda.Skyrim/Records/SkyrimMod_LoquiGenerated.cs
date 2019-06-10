@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ModHeader
-        private ModHeader _ModHeader_Object = new ModHeader();
+        private readonly ModHeader _ModHeader_Object = new ModHeader();
         public bool ModHeader_IsSet => true;
         bool ISkyrimModGetter.ModHeader_IsSet => ModHeader_IsSet;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -71,12 +71,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<GameSetting> _GameSettings_Object = new Group<GameSetting>();
+        private readonly Group<GameSetting> _GameSettings_Object = new Group<GameSetting>();
         public Group<GameSetting> GameSettings => _GameSettings_Object;
         #endregion
         #region Globals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Global> _Globals_Object = new Group<Global>();
+        private readonly Group<Global> _Globals_Object = new Group<Global>();
         public Group<Global> Globals => _Globals_Object;
         #endregion
 

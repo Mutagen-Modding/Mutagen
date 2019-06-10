@@ -1052,6 +1052,11 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        public Weather(IMod mod)
+            : this(mod.GetNextFormKey())
+        {
+        }
+
         partial void PostDuplicate(Weather obj, Weather rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
         public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)

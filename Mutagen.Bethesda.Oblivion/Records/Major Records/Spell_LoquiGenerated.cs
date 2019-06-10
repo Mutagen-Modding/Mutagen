@@ -338,6 +338,11 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        public Spell(IMod mod)
+            : this(mod.GetNextFormKey())
+        {
+        }
+
         #endregion
 
         #region Binary Translation

@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        private ScriptFields _Script_Object = new ScriptFields();
+        private readonly ScriptFields _Script_Object = new ScriptFields();
         public bool Script_IsSet => true;
         bool IDialogItemGetter.Script_IsSet => Script_IsSet;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -657,6 +657,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
             CustomCtor();
+        }
+
+        public DialogItem(IMod mod)
+            : this(mod.GetNextFormKey())
+        {
         }
 
         partial void PostDuplicate(DialogItem obj, DialogItem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);

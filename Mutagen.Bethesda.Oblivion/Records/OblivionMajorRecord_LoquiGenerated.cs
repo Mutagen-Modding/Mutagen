@@ -303,6 +303,11 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        public OblivionMajorRecord(IMod mod)
+            : this(mod.GetNextFormKey())
+        {
+        }
+
         #endregion
 
         #region Binary Translation

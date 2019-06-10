@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MetadataSummary
-        private ScriptMetaSummary _MetadataSummary_Object = new ScriptMetaSummary();
+        private readonly ScriptMetaSummary _MetadataSummary_Object = new ScriptMetaSummary();
         public bool MetadataSummary_IsSet => true;
         bool IScriptFieldsGetter.MetadataSummary_IsSet => MetadataSummary_IsSet;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -31,6 +31,16 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
 
+            fg.AppendLine($"public {obj.Name}(IMod mod)");
+            using (new DepthWrapper(fg))
+            {
+                fg.AppendLine($": this(mod.{nameof(IMod.GetNextFormKey)}())");
+            }
+            using (new BraceWrapper(fg))
+            {
+            }
+            fg.AppendLine();
+
             if (obj.Abstract)
             {
                 if (obj.IsTopClass)
