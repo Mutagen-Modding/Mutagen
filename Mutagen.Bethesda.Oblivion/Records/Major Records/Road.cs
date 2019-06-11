@@ -26,60 +26,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame.Reader.Position -= Mutagen.Bethesda.Constants.RECORD_LENGTH;
                 return;
             }
-            var pointBytes = frame.Reader.ReadBytes(len);
+            var pointBytes = frame.Reader.ReadSpan(len);
 
             nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out len);
             switch (nextRec.TypeInt)
             {
                 case 0x52524750: // "PGRR":
-                    var connectionBytes = frame.Reader.ReadBytes(len);
-                    using (var ptByteReader = new BinaryMemoryReadStream(pointBytes))
+                    var connBytes = frame.Reader.ReadSpan(len);
+                    var connFloats = connBytes.AsFloatSpan();
+                    int numPts = pointBytes.Length / POINT_LEN;
+                    RoadPoint[] points = new RoadPoint[numPts];
+                    for (int i = 0; i < numPts; i++)
                     {
-                        using (var connectionReader = new BinaryMemoryReadStream(connectionBytes))
+                        var pt = ReadPathGridPoint(pointBytes, out var numConn);
+                        pointBytes = pointBytes.Slice(16);
+                        P3Float[] conns = new P3Float[numConn];
+                        for (int j = 0; j < numConn; j++)
                         {
-                            item.Points.AddRange(
-                                EnumerableExt.For(0, pointBytes.Length, POINT_LEN)
-                                .Select(i =>
-                                {
-                                    var pt = ReadPathGridPoint(ptByteReader, out var numConn);
-                                    pt.Connections.AddRange(
-                                        EnumerableExt.For(0, numConn)
-                                        .Select(j => new P3Float(
-                                                x: connectionReader.ReadFloat(),
-                                                y: connectionReader.ReadFloat(),
-                                                z: connectionReader.ReadFloat())));
-                                    return pt;
-                                }));
-                            if (!connectionReader.Complete)
-                            {
-                                throw new ArgumentException("Connection reader did not complete as expected.");
-                            }
+                            conns[j] = new P3Float(
+                                    x: connFloats[0],
+                                    y: connFloats[1],
+                                    z: connFloats[2]);
+                            connFloats = connFloats.Slice(3);
                         }
+                        pt.Connections.AddRange(conns);
+                        points[i] = pt;
+                    }
+                    item.Points.AddRange(points);
+                    if (connFloats.Length > 0)
+                    {
+                        throw new ArgumentException("Connection reader did not complete as expected.");
                     }
                     break;
                 default:
                     frame.Reader.Position -= Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var ptByteReader = new BinaryMemoryReadStream(pointBytes))
+                    while (pointBytes.Length > 0)
                     {
-                        while (!ptByteReader.Complete)
-                        {
-                            item.Points.Add(
-                                ReadPathGridPoint(ptByteReader, out var numConn));
-                        }
+                        item.Points.Add(
+                            ReadPathGridPoint(pointBytes, out var numConn));
+                        pointBytes = pointBytes.Slice(16);
                     }
                     break;
             }
         }
 
-        private static RoadPoint ReadPathGridPoint(IBinaryReadStream reader, out byte numConn)
+        private static RoadPoint ReadPathGridPoint(ReadOnlySpan<byte> reader, out byte numConn)
         {
             var pt = new RoadPoint();
             pt.Point = new Noggog.P3Float(
-                reader.ReadFloat(),
-                reader.ReadFloat(),
-                reader.ReadFloat());
-            numConn = reader.ReadUInt8();
-            pt.NumConnectionsFluffBytes = reader.ReadBytes(3);
+                reader.GetFloat(),
+                reader.Slice(4).GetFloat(),
+                reader.Slice(8).GetFloat());
+            numConn = reader[12];
+            pt.NumConnectionsFluffBytes = reader.Slice(13, 3).ToArray();
             return pt;
         }
 
