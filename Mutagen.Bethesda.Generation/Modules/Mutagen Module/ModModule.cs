@@ -223,6 +223,7 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInCtor(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
+            await obj.FieldCtorsGeneratedSignal;
             using (var args = new ArgsWrapper(fg,
                 $"Observable.Merge")
             {

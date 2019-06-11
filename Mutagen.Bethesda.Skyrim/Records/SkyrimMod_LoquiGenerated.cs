@@ -50,11 +50,13 @@ namespace Mutagen.Bethesda.Skyrim
         protected SkyrimMod()
         {
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
+            _hasBeenSetTracker[(int)SkyrimMod_FieldIndex.ModHeader] = true;
+            _GameSettings_Object = new Group<GameSetting>(this);
+            _Globals_Object = new Group<Global>(this);
             Observable.Merge(
                 _GameSettings_Object.Items.Connect().Transform<IMajorRecord, GameSetting, FormKey>((i) => i),
                 _Globals_Object.Items.Connect().Transform<IMajorRecord, Global, FormKey>((i) => i))
                 .PopulateInto(_majorRecords);
-            _hasBeenSetTracker[(int)SkyrimMod_FieldIndex.ModHeader] = true;
             CustomCtor();
         }
         partial void CustomCtor();
@@ -71,12 +73,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<GameSetting> _GameSettings_Object = new Group<GameSetting>();
+        private readonly Group<GameSetting> _GameSettings_Object;
         public Group<GameSetting> GameSettings => _GameSettings_Object;
         #endregion
         #region Globals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<Global> _Globals_Object = new Group<Global>();
+        private readonly Group<Global> _Globals_Object;
         public Group<Global> Globals => _Globals_Object;
         #endregion
 

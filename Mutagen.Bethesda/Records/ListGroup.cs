@@ -19,14 +19,15 @@ namespace Mutagen.Bethesda
     public partial class ListGroup<T>
         where T : ILoquiObject<T>, IXmlItem, IBinaryItem
     {
-        public static readonly ListGroup_TranslationMask<TranslationMaskStub> XmlFolderTranslationMask = new ListGroup_TranslationMask<TranslationMaskStub>(true)
-        {
-            Items = new MaskItem<bool, TranslationMaskStub>(false, default)
-        };
     }
 
     public static class ListGroupExt
     {
+        public static readonly ListGroup_TranslationMask<TranslationMaskStub> XmlFolderTranslationMask = new ListGroup_TranslationMask<TranslationMaskStub>(true)
+        {
+            Items = new MaskItem<bool, TranslationMaskStub>(false, default)
+        };
+
         public static async Task Create_Xml_Folder<T>(
             this ListGroup<T> group,
             DirectoryPath dir,
@@ -55,7 +56,7 @@ namespace Mutagen.Bethesda
                                 group,
                                 elem,
                                 errorMask,
-                                translationMask: ListGroup<T>.XmlFolderTranslationMask.GetCrystal());
+                                translationMask: XmlFolderTranslationMask.GetCrystal());
                         }
                         List<Task<T>> tasks = new List<Task<T>>();
                         //int counter = 0;
@@ -128,7 +129,7 @@ namespace Mutagen.Bethesda
                             list,
                             topNode,
                             errorMask,
-                            translationMask: ListGroup<T>.XmlFolderTranslationMask.GetCrystal());
+                            translationMask: XmlFolderTranslationMask.GetCrystal());
                         List<Task> tasks = new List<Task>();
                         int counter = 0;
                         foreach (var item in list.Items.Items)

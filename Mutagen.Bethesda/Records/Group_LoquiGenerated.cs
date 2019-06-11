@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda
         public static Group_Registration Registration => Group_Registration.Instance;
 
         #region Ctor
-        public Group()
+        protected Group()
         {
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();

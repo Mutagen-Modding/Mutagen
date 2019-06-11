@@ -18,11 +18,18 @@ using Loqui.Xml;
 
 namespace Mutagen.Bethesda
 {
-    public partial class Group<T> : IEnumerable<T>
+    public partial class Group<T> : IEnumerable<T>, IGroupCommon<T>
         where T : ILoquiObject<T>, IMajorRecordInternal, IXmlItem, IBinaryItem
     {
         private Lazy<IObservableCache<T, string>> _editorIDCache;
         public IObservableCache<T, string> ByEditorID => _editorIDCache.Value;
+
+        public IMod SourceMod { get; private set; }
+
+        public Group(IMod mod)
+        {
+            this.SourceMod = mod;
+        }
 
         partial void CustomCtor()
         {

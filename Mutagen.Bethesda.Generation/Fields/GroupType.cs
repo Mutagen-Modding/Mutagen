@@ -22,6 +22,7 @@ namespace Mutagen.Bethesda.Generation
             gen.Add(new XAttribute("Definition", nameKey.ToString()));
             gen.Add(new XAttribute("TypeToSpecify", "T"));
             dir.Add(gen);
+            this.ThisConstruction = true;
             return base.Load(convert, requireName);
         }
     }
