@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ScriptMetaSummary Copy(
-            IScriptMetaSummary item,
+            IScriptMetaSummaryGetter item,
             ScriptMetaSummary_CopyMask copyMask = null,
             IScriptMetaSummaryGetter def = null)
         {

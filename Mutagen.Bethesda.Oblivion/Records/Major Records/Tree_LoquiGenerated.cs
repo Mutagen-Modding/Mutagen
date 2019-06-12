@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model ITreeGetter.Model => this.Model;
+        IModelGetter ITreeGetter.Model => this.Model;
         #endregion
         #region Icon
         public bool Icon_IsSet
@@ -120,9 +120,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<UInt32> ITree.SpeedTreeSeeds => _SpeedTreeSeeds;
+        ISetList<UInt32> ITree.SpeedTreeSeeds => _SpeedTreeSeeds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<UInt32> ITreeGetter.SpeedTreeSeeds => _SpeedTreeSeeds;
+        IReadOnlySetList<UInt32> ITreeGetter.SpeedTreeSeeds => _SpeedTreeSeeds;
         #endregion
 
         #endregion
@@ -889,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Tree Copy(
-            ITree item,
+            ITreeGetter item,
             Tree_CopyMask copyMask = null,
             ITreeGetter def = null)
         {
@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Icon_Set(String item, bool hasBeenSet = true);
         void Icon_Unset();
 
-        new ISourceSetList<UInt32> SpeedTreeSeeds { get; }
+        new ISetList<UInt32> SpeedTreeSeeds { get; }
         new Single LeafCurvature { get; set; }
 
         new Single MinimumLeafAngle { get; set; }
@@ -1167,7 +1167,6 @@ namespace Mutagen.Bethesda.Oblivion
         ITree,
         ITreeInternalGetter
     {
-        new ISourceSetList<UInt32> SpeedTreeSeeds { get; }
         new Tree.CNAMDataType CNAMDataTypeState { get; set; }
 
         new Tree.BNAMDataType BNAMDataTypeState { get; set; }
@@ -1180,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Model
-        Model Model { get; }
+        IModelGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -1190,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region SpeedTreeSeeds
-        IObservableSetList<UInt32> SpeedTreeSeeds { get; }
+        IReadOnlySetList<UInt32> SpeedTreeSeeds { get; }
         #endregion
         #region LeafCurvature
         Single LeafCurvature { get; }
@@ -1651,8 +1650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Model = rhsModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.Model,

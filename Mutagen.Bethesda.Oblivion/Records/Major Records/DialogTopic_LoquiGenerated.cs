@@ -69,9 +69,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<Quest>> IDialogTopic.Quests => _Quests;
+        ISetList<FormIDSetLink<Quest>> IDialogTopic.Quests => _Quests;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<Quest>> IDialogTopicGetter.Quests => _Quests;
+        IReadOnlySetList<FormIDSetLink<Quest>> IDialogTopicGetter.Quests => _Quests;
         #endregion
 
         #endregion
@@ -154,9 +154,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<DialogItem> IDialogTopic.Items => _Items;
+        ISetList<DialogItem> IDialogTopic.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<DialogItem> IDialogTopicGetter.Items => _Items;
+        IReadOnlySetList<DialogItem> IDialogTopicGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static DialogTopic Copy(
-            IDialogTopic item,
+            IDialogTopicGetter item,
             DialogTopic_CopyMask copyMask = null,
             IDialogTopicGetter def = null)
         {
@@ -843,7 +843,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiClass<IDialogTopic, IDialogTopicGetter>,
         ILoquiClass<DialogTopic, IDialogTopicGetter>
     {
-        new ISourceSetList<FormIDSetLink<Quest>> Quests { get; }
+        new ISetList<FormIDSetLink<Quest>> Quests { get; }
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
         void Name_Set(String item, bool hasBeenSet = true);
@@ -856,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] Timestamp { get; set; }
 
-        new ISourceSetList<DialogItem> Items { get; }
+        new ISetList<DialogItem> Items { get; }
         void CopyFieldsFrom(
             IDialogTopicGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -869,8 +869,6 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogTopic,
         IDialogTopicInternalGetter
     {
-        new ISourceSetList<FormIDSetLink<Quest>> Quests { get; }
-        new ISourceSetList<DialogItem> Items { get; }
     }
 
     public partial interface IDialogTopicGetter :
@@ -879,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Quests
-        IObservableSetList<FormIDSetLink<Quest>> Quests { get; }
+        IReadOnlySetList<FormIDSetLink<Quest>> Quests { get; }
         #endregion
         #region Name
         String Name { get; }
@@ -896,7 +894,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        IObservableSetList<DialogItem> Items { get; }
+        IReadOnlySetList<DialogItem> Items { get; }
         #endregion
 
     }

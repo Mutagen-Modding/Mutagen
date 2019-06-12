@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IDoorGetter.Model => this.Model;
+        IModelGetter IDoorGetter.Model => this.Model;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
@@ -172,9 +172,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<Place>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
+        ISetList<FormIDSetLink<Place>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<Place>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
+        IReadOnlySetList<FormIDSetLink<Place>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
         #endregion
 
         #endregion
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Door Copy(
-            IDoor item,
+            IDoorGetter item,
             Door_CopyMask copyMask = null,
             IDoorGetter def = null)
         {
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(Door.DoorFlag item, bool hasBeenSet = true);
         void Flags_Unset();
 
-        new ISourceSetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
+        new ISetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
         void CopyFieldsFrom(
             IDoorGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -1004,7 +1004,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Sound OpenSound { get; set; }
         new Sound CloseSound { get; set; }
         new Sound LoopSound { get; set; }
-        new ISourceSetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
     }
 
     public partial interface IDoorGetter :
@@ -1018,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        Model Model { get; }
+        IModelGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -1048,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RandomTeleportDestinations
-        IObservableSetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
+        IReadOnlySetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
         #endregion
 
     }
@@ -1410,8 +1409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Model = rhsModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.Model,

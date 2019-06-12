@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RaceRelation Copy(
-            IRaceRelation item,
+            IRaceRelationGetter item,
             RaceRelation_CopyMask copyMask = null,
             IRaceRelationGetter def = null)
         {

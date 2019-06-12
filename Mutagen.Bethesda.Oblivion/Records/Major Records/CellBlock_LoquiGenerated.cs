@@ -97,9 +97,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<CellSubBlock> ICellBlock.Items => _Items;
+        ISetList<CellSubBlock> ICellBlock.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<CellSubBlock> ICellBlockGetter.Items => _Items;
+        IReadOnlySetList<CellSubBlock> ICellBlockGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static CellBlock Copy(
-            ICellBlock item,
+            ICellBlockGetter item,
             CellBlock_CopyMask copyMask = null,
             ICellBlockGetter def = null)
         {
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] LastModified { get; set; }
 
-        new ISourceSetList<CellSubBlock> Items { get; }
+        new ISetList<CellSubBlock> Items { get; }
         void CopyFieldsFrom(
             ICellBlockGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -701,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        IObservableSetList<CellSubBlock> Items { get; }
+        IReadOnlySetList<CellSubBlock> Items { get; }
         #endregion
 
     }

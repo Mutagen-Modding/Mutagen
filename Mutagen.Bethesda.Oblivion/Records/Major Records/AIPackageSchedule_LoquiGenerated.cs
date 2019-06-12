@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static AIPackageSchedule Copy(
-            IAIPackageSchedule item,
+            IAIPackageScheduleGetter item,
             AIPackageSchedule_CopyMask copyMask = null,
             IAIPackageScheduleGetter def = null)
         {

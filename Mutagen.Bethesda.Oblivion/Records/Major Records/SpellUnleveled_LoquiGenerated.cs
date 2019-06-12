@@ -116,9 +116,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Effect> ISpellUnleveled.Effects => _Effects;
+        ISetList<Effect> ISpellUnleveled.Effects => _Effects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Effect> ISpellUnleveledGetter.Effects => _Effects;
+        IReadOnlySetList<Effect> ISpellUnleveledGetter.Effects => _Effects;
         #endregion
 
         #endregion
@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SpellUnleveled Copy(
-            ISpellUnleveled item,
+            ISpellUnleveledGetter item,
             SpellUnleveled_CopyMask copyMask = null,
             ISpellUnleveledGetter def = null)
         {
@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Spell.SpellFlag Flag { get; set; }
 
-        new ISourceSetList<Effect> Effects { get; }
+        new ISetList<Effect> Effects { get; }
         void CopyFieldsFrom(
             ISpellUnleveledGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -832,7 +832,6 @@ namespace Mutagen.Bethesda.Oblivion
         ISpellUnleveled,
         ISpellUnleveledInternalGetter
     {
-        new ISourceSetList<Effect> Effects { get; }
         new SpellUnleveled.SPITDataType SPITDataTypeState { get; set; }
 
     }
@@ -859,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Effects
-        IObservableSetList<Effect> Effects { get; }
+        IReadOnlySetList<Effect> Effects { get; }
         #endregion
 
     }

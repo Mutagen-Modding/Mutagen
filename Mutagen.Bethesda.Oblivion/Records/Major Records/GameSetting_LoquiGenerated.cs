@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static GameSetting Copy(
-            IGameSetting item,
+            IGameSettingGetter item,
             GameSetting_CopyMask copyMask = null,
             IGameSettingGetter def = null)
         {

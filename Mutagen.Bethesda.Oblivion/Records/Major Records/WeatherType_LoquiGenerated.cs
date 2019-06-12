@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static WeatherType Copy(
-            IWeatherType item,
+            IWeatherTypeGetter item,
             WeatherType_CopyMask copyMask = null,
             IWeatherTypeGetter def = null)
         {

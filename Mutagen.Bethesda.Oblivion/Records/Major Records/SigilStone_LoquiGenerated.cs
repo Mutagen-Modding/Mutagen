@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model ISigilStoneGetter.Model => this.Model;
+        IModelGetter ISigilStoneGetter.Model => this.Model;
         #endregion
         #region Icon
         public bool Icon_IsSet
@@ -154,9 +154,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Effect> ISigilStone.Effects => _Effects;
+        ISetList<Effect> ISigilStone.Effects => _Effects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Effect> ISigilStoneGetter.Effects => _Effects;
+        IReadOnlySetList<Effect> ISigilStoneGetter.Effects => _Effects;
         #endregion
 
         #endregion
@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SigilStone Copy(
-            ISigilStone item,
+            ISigilStoneGetter item,
             SigilStone_CopyMask copyMask = null,
             ISigilStoneGetter def = null)
         {
@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Icon_Unset();
 
         new Script Script { get; set; }
-        new ISourceSetList<Effect> Effects { get; }
+        new ISetList<Effect> Effects { get; }
         new Byte Uses { get; set; }
 
         new UInt32 Value { get; set; }
@@ -1026,7 +1026,6 @@ namespace Mutagen.Bethesda.Oblivion
         ISigilStoneInternalGetter
     {
         new Script Script { get; set; }
-        new ISourceSetList<Effect> Effects { get; }
         new SigilStone.DATADataType DATADataTypeState { get; set; }
 
     }
@@ -1042,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        Model Model { get; }
+        IModelGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -1057,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Effects
-        IObservableSetList<Effect> Effects { get; }
+        IReadOnlySetList<Effect> Effects { get; }
         #endregion
         #region Uses
         Byte Uses { get; }
@@ -1445,8 +1444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Model = rhsModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.Model,

@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RaceStats Copy(
-            IRaceStats item,
+            IRaceStatsGetter item,
             RaceStats_CopyMask copyMask = null,
             IRaceStatsGetter def = null)
         {

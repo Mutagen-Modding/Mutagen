@@ -67,9 +67,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<WeatherChance> IRegionDataWeather.Weathers => _Weathers;
+        ISetList<WeatherChance> IRegionDataWeather.Weathers => _Weathers;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<WeatherChance> IRegionDataWeatherGetter.Weathers => _Weathers;
+        IReadOnlySetList<WeatherChance> IRegionDataWeatherGetter.Weathers => _Weathers;
         #endregion
 
         #endregion
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionDataWeather Copy(
-            IRegionDataWeather item,
+            IRegionDataWeatherGetter item,
             RegionDataWeather_CopyMask copyMask = null,
             IRegionDataWeatherGetter def = null)
         {
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiClass<IRegionDataWeather, IRegionDataWeatherGetter>,
         ILoquiClass<RegionDataWeather, IRegionDataWeatherGetter>
     {
-        new ISourceSetList<WeatherChance> Weathers { get; }
+        new ISetList<WeatherChance> Weathers { get; }
         void CopyFieldsFrom(
             IRegionDataWeatherGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -633,7 +633,6 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataWeather,
         IRegionDataWeatherInternalGetter
     {
-        new ISourceSetList<WeatherChance> Weathers { get; }
     }
 
     public partial interface IRegionDataWeatherGetter :
@@ -642,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Weathers
-        IObservableSetList<WeatherChance> Weathers { get; }
+        IReadOnlySetList<WeatherChance> Weathers { get; }
         #endregion
 
     }

@@ -54,9 +54,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Male
         public RaceStats Male { get; set; }
+        IRaceStatsGetter IRaceStatsGenderedGetter.Male => Male;
         #endregion
         #region Female
         public RaceStats Female { get; set; }
+        IRaceStatsGetter IRaceStatsGenderedGetter.Female => Female;
         #endregion
 
         IMask<bool> IEqualsMask<RaceStatsGendered>.GetEqualsMask(RaceStatsGendered rhs, EqualsMaskHelper.Include include) => RaceStatsGenderedCommon.GetEqualsMask(this, rhs, include);
@@ -394,7 +396,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RaceStatsGendered Copy(
-            IRaceStatsGendered item,
+            IRaceStatsGenderedGetter item,
             RaceStatsGendered_CopyMask copyMask = null,
             IRaceStatsGenderedGetter def = null)
         {
@@ -573,11 +575,11 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Male
-        RaceStats Male { get; }
+        IRaceStatsGetter Male { get; }
 
         #endregion
         #region Female
-        RaceStats Female { get; }
+        IRaceStatsGetter Female { get; }
 
         #endregion
 
@@ -802,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     switch (copyMask?.Male?.Overall ?? CopyOption.Reference)
                     {
                         case CopyOption.Reference:
-                            item.Male = rhs.Male;
+                            item.Male = Utility.GetGetterInterfaceReference<RaceStats>(rhs.Male);
                             break;
                         case CopyOption.CopyIn:
                             RaceStatsCommon.CopyFieldsFrom(
@@ -847,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     switch (copyMask?.Female?.Overall ?? CopyOption.Reference)
                     {
                         case CopyOption.Reference:
-                            item.Female = rhs.Female;
+                            item.Female = Utility.GetGetterInterfaceReference<RaceStats>(rhs.Female);
                             break;
                         case CopyOption.CopyIn:
                             RaceStatsCommon.CopyFieldsFrom(

@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IContainerGetter.Model => this.Model;
+        IModelGetter IContainerGetter.Model => this.Model;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
@@ -128,9 +128,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<ContainerItem> IContainer.Items => _Items;
+        ISetList<ContainerItem> IContainer.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<ContainerItem> IContainerGetter.Items => _Items;
+        IReadOnlySetList<ContainerItem> IContainerGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Container Copy(
-            IContainer item,
+            IContainerGetter item,
             Container_CopyMask copyMask = null,
             IContainerGetter def = null)
         {
@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Unset();
 
         new Script Script { get; set; }
-        new ISourceSetList<ContainerItem> Items { get; }
+        new ISetList<ContainerItem> Items { get; }
         new Container.ContainerFlag Flags { get; set; }
 
         new Single Weight { get; set; }
@@ -1022,7 +1022,6 @@ namespace Mutagen.Bethesda.Oblivion
         IContainerInternalGetter
     {
         new Script Script { get; set; }
-        new ISourceSetList<ContainerItem> Items { get; }
         new Sound OpenSound { get; set; }
         new Sound CloseSound { get; set; }
         new Container.DATADataType DATADataTypeState { get; set; }
@@ -1040,7 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        Model Model { get; }
+        IModelGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -1050,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        IObservableSetList<ContainerItem> Items { get; }
+        IReadOnlySetList<ContainerItem> Items { get; }
         #endregion
         #region Flags
         Container.ContainerFlag Flags { get; }
@@ -1445,8 +1444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Model = rhsModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.Model,

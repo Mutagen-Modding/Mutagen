@@ -67,9 +67,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<RegionDataObject> IRegionDataObjects.Objects => _Objects;
+        ISetList<RegionDataObject> IRegionDataObjects.Objects => _Objects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<RegionDataObject> IRegionDataObjectsGetter.Objects => _Objects;
+        IReadOnlySetList<RegionDataObject> IRegionDataObjectsGetter.Objects => _Objects;
         #endregion
 
         #endregion
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionDataObjects Copy(
-            IRegionDataObjects item,
+            IRegionDataObjectsGetter item,
             RegionDataObjects_CopyMask copyMask = null,
             IRegionDataObjectsGetter def = null)
         {
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiClass<IRegionDataObjects, IRegionDataObjectsGetter>,
         ILoquiClass<RegionDataObjects, IRegionDataObjectsGetter>
     {
-        new ISourceSetList<RegionDataObject> Objects { get; }
+        new ISetList<RegionDataObject> Objects { get; }
         void CopyFieldsFrom(
             IRegionDataObjectsGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -633,7 +633,6 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataObjects,
         IRegionDataObjectsInternalGetter
     {
-        new ISourceSetList<RegionDataObject> Objects { get; }
     }
 
     public partial interface IRegionDataObjectsGetter :
@@ -642,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Objects
-        IObservableSetList<RegionDataObject> Objects { get; }
+        IReadOnlySetList<RegionDataObject> Objects { get; }
         #endregion
 
     }

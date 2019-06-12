@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IBodyDataGetter.Model => this.Model;
+        IModelGetter IBodyDataGetter.Model => this.Model;
         #endregion
         #region BodyParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -93,9 +93,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<BodyPart> IBodyData.BodyParts => _BodyParts;
+        ISetList<BodyPart> IBodyData.BodyParts => _BodyParts;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<BodyPart> IBodyDataGetter.BodyParts => _BodyParts;
+        IReadOnlySetList<BodyPart> IBodyDataGetter.BodyParts => _BodyParts;
         #endregion
 
         #endregion
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static BodyData Copy(
-            IBodyData item,
+            IBodyDataGetter item,
             BodyData_CopyMask copyMask = null,
             IBodyDataGetter def = null)
         {
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Set(Model item, bool hasBeenSet = true);
         void Model_Unset();
 
-        new ISourceSetList<BodyPart> BodyParts { get; }
+        new ISetList<BodyPart> BodyParts { get; }
         void CopyFieldsFrom(
             IBodyDataGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -652,12 +652,12 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Model
-        Model Model { get; }
+        IModelGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
         #region BodyParts
-        IObservableSetList<BodyPart> BodyParts { get; }
+        IReadOnlySetList<BodyPart> BodyParts { get; }
         #endregion
 
     }
@@ -904,8 +904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Model = rhsModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.Model,

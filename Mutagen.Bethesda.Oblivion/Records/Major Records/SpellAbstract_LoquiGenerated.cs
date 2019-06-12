@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SpellAbstract Copy(
-            ISpellAbstract item,
+            ISpellAbstractGetter item,
             SpellAbstract_CopyMask copyMask = null,
             ISpellAbstractGetter def = null)
         {

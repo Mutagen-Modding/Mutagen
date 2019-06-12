@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LockInformation Copy(
-            ILockInformation item,
+            ILockInformationGetter item,
             LockInformation_CopyMask copyMask = null,
             ILockInformationGetter def = null)
         {

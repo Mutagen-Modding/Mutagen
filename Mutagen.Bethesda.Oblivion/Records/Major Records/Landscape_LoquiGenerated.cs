@@ -181,9 +181,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<BaseLayer> ILandscape.Layers => _Layers;
+        ISetList<BaseLayer> ILandscape.Layers => _Layers;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<BaseLayer> ILandscapeGetter.Layers => _Layers;
+        IReadOnlySetList<BaseLayer> ILandscapeGetter.Layers => _Layers;
         #endregion
 
         #endregion
@@ -199,9 +199,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDLink<LandTexture>> ILandscape.Textures => _Textures;
+        ISetList<FormIDLink<LandTexture>> ILandscape.Textures => _Textures;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDLink<LandTexture>> ILandscapeGetter.Textures => _Textures;
+        IReadOnlySetList<FormIDLink<LandTexture>> ILandscapeGetter.Textures => _Textures;
         #endregion
 
         #endregion
@@ -777,7 +777,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Landscape Copy(
-            ILandscape item,
+            ILandscapeGetter item,
             Landscape_CopyMask copyMask = null,
             ILandscapeGetter def = null)
         {
@@ -978,8 +978,8 @@ namespace Mutagen.Bethesda.Oblivion
         void VertexColors_Set(Byte[] item, bool hasBeenSet = true);
         void VertexColors_Unset();
 
-        new ISourceSetList<BaseLayer> Layers { get; }
-        new ISourceSetList<FormIDLink<LandTexture>> Textures { get; }
+        new ISetList<BaseLayer> Layers { get; }
+        new ISetList<FormIDLink<LandTexture>> Textures { get; }
         void CopyFieldsFrom(
             ILandscapeGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -992,8 +992,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILandscape,
         ILandscapeInternalGetter
     {
-        new ISourceSetList<BaseLayer> Layers { get; }
-        new ISourceSetList<FormIDLink<LandTexture>> Textures { get; }
     }
 
     public partial interface ILandscapeGetter :
@@ -1022,10 +1020,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Layers
-        IObservableSetList<BaseLayer> Layers { get; }
+        IReadOnlySetList<BaseLayer> Layers { get; }
         #endregion
         #region Textures
-        IObservableSetList<FormIDLink<LandTexture>> Textures { get; }
+        IReadOnlySetList<FormIDLink<LandTexture>> Textures { get; }
         #endregion
 
     }

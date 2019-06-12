@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ScriptMetaSummary MetadataSummary => _MetadataSummary_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ScriptMetaSummary IScriptFieldsGetter.MetadataSummary => this.MetadataSummary;
+        IScriptMetaSummaryGetter IScriptFieldsGetter.MetadataSummary => this.MetadataSummary;
         #endregion
         #region SourceCode
         public bool SourceCode_IsSet
@@ -103,9 +103,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<LocalVariable> IScriptFields.LocalVariables => _LocalVariables;
+        ISetList<LocalVariable> IScriptFields.LocalVariables => _LocalVariables;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<LocalVariable> IScriptFieldsGetter.LocalVariables => _LocalVariables;
+        IReadOnlySetList<LocalVariable> IScriptFieldsGetter.LocalVariables => _LocalVariables;
         #endregion
 
         #endregion
@@ -121,9 +121,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<ScriptReference> IScriptFields.References => _References;
+        ISetList<ScriptReference> IScriptFields.References => _References;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<ScriptReference> IScriptFieldsGetter.References => _References;
+        IReadOnlySetList<ScriptReference> IScriptFieldsGetter.References => _References;
         #endregion
 
         #endregion
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ScriptFields Copy(
-            IScriptFields item,
+            IScriptFieldsGetter item,
             ScriptFields_CopyMask copyMask = null,
             IScriptFieldsGetter def = null)
         {
@@ -861,6 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiClass<IScriptFields, IScriptFieldsGetter>,
         ILoquiClass<ScriptFields, IScriptFieldsGetter>
     {
+        new ScriptMetaSummary MetadataSummary { get; }
         new Byte[] CompiledScript { get; set; }
         new bool CompiledScript_IsSet { get; set; }
         void CompiledScript_Set(Byte[] item, bool hasBeenSet = true);
@@ -871,8 +872,8 @@ namespace Mutagen.Bethesda.Oblivion
         void SourceCode_Set(String item, bool hasBeenSet = true);
         void SourceCode_Unset();
 
-        new ISourceSetList<LocalVariable> LocalVariables { get; }
-        new ISourceSetList<ScriptReference> References { get; }
+        new ISetList<LocalVariable> LocalVariables { get; }
+        new ISetList<ScriptReference> References { get; }
         void CopyFieldsFrom(
             IScriptFieldsGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -886,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region MetadataSummary
-        ScriptMetaSummary MetadataSummary { get; }
+        IScriptMetaSummaryGetter MetadataSummary { get; }
         bool MetadataSummary_IsSet { get; }
 
         #endregion
@@ -901,10 +902,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region LocalVariables
-        IObservableSetList<LocalVariable> LocalVariables { get; }
+        IReadOnlySetList<LocalVariable> LocalVariables { get; }
         #endregion
         #region References
-        IObservableSetList<ScriptReference> References { get; }
+        IReadOnlySetList<ScriptReference> References { get; }
         #endregion
 
     }

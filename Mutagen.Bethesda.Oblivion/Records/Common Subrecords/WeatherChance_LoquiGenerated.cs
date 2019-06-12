@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static WeatherChance Copy(
-            IWeatherChance item,
+            IWeatherChanceGetter item,
             WeatherChance_CopyMask copyMask = null,
             IWeatherChanceGetter def = null)
         {

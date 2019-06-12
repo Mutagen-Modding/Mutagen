@@ -139,6 +139,7 @@ namespace Mutagen.Bethesda.Binary
             return true;
         }
 
+
         public bool ParseRepeatedItem(
             MutagenFrame frame,
             out IEnumerable<T> enumer,
@@ -217,7 +218,7 @@ namespace Mutagen.Bethesda.Binary
         #region Lengthed Triggering Record
         public void ParseRepeatedItem(
             MutagenFrame frame,
-            ISourceSetList<T> item,
+            IList<T> item,
             RecordType triggeringRecord,
             int lengthLength,
             BinarySubParseDelegate transl)
@@ -229,7 +230,14 @@ namespace Mutagen.Bethesda.Binary
                 lengthLength,
                 transl: transl))
             {
-                item.SetTo(enumer);
+                if (item is ISetList<T> setList)
+                {
+                    setList.SetTo(enumer);
+                }
+                else
+                {
+                    item.SetTo(enumer);
+                }
             }
             else
             {
@@ -240,7 +248,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
-            ISourceSetList<T> item,
+            IList<T> item,
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,
@@ -258,7 +266,14 @@ namespace Mutagen.Bethesda.Binary
                         errorMask: errorMask,
                         transl: transl))
                     {
-                        item.SetTo(enumer);
+                        if (item is ISetList<T> setList)
+                        {
+                            setList.SetTo(enumer);
+                        }
+                        else
+                        {
+                            item.SetTo(enumer);
+                        }
                     }
                     else
                     {
@@ -275,30 +290,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void ParseRepeatedItem(
             MutagenFrame frame,
-            int fieldIndex,
-            ISourceSetList<T> item,
-            RecordType triggeringRecord,
-            int lengthLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            BinaryMasterParseErrDelegate transl)
-        {
-            ParseRepeatedItem(
-                frame: frame,
-                fieldIndex: fieldIndex,
-                item: item,
-                triggeringRecord: triggeringRecord,
-                lengthLength: lengthLength,
-                errorMask: errorMask,
-                transl: (MutagenFrame r, out T i, ErrorMaskBuilder err) =>
-                {
-                    return transl(r, out i, masterReferences, err);
-                });
-        }
-
-        public void ParseRepeatedItem(
-            MutagenFrame frame,
-            ISourceSetList<T> item,
+            IList<T> item,
             RecordType triggeringRecord,
             int lengthLength,
             MasterReferences masterReferences,
@@ -320,7 +312,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
-            ISourceSetList<T> item,
+            IList<T> item,
             long lengthLength,
             ErrorMaskBuilder errorMask,
             BinarySubParseErrDelegate transl,
@@ -339,24 +331,8 @@ namespace Mutagen.Bethesda.Binary
 
         public void ParseRepeatedItem(
             MutagenFrame frame,
-            ISourceSetList<T> item,
-            long lengthLength,
-            BinarySubParseDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord)
-        {
-            this.ParseRepeatedItem(
-                frame: frame,
-                triggeringRecord: triggeringRecord,
-                item: item,
-                lengthLength: lengthLength,
-                transl: (MutagenFrame reader, RecordType header, out T subItem)
-                    => transl(reader, out subItem));
-        }
-
-        public void ParseRepeatedItem(
-            MutagenFrame frame,
             int fieldIndex,
-            ISourceSetList<T> item,
+            IList<T> item,
             long lengthLength,
             ErrorMaskBuilder errorMask,
             BinarySubParseRecordErrDelegate transl,
@@ -374,7 +350,14 @@ namespace Mutagen.Bethesda.Binary
                         transl: transl,
                         triggeringRecord: triggeringRecord))
                     {
-                        item.SetTo(enumer);
+                        if (item is ISetList<T> setList)
+                        {
+                            setList.SetTo(enumer);
+                        }
+                        else
+                        {
+                            item.SetTo(enumer);
+                        }
                     }
                     else
                     {
@@ -387,70 +370,6 @@ namespace Mutagen.Bethesda.Binary
                     errorMask.ReportException(ex);
                 }
             }
-        }
-
-        public void ParseRepeatedItem(
-            MutagenFrame frame,
-            ISourceSetList<T> item,
-            long lengthLength,
-            BinarySubParseRecordDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
-        {
-            if (ParseRepeatedItem(
-                frame,
-                out var enumer,
-                lengthLength,
-                transl: transl,
-                triggeringRecord: triggeringRecord))
-            {
-                item.SetTo(enumer);
-            }
-            else
-            {
-                item.Clear();
-            }
-        }
-
-        public void ParseRepeatedItem(
-            MutagenFrame frame,
-            ISourceSetList<T> item,
-            long lengthLength,
-            MasterReferences masterReferences,
-            BinaryMasterParseDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
-        {
-            this.ParseRepeatedItem(
-                frame: frame,
-                item: item,
-                lengthLength: lengthLength,
-                triggeringRecord: triggeringRecord,
-                transl: (MutagenFrame r, out T i) =>
-                {
-                    return transl(r, out i, masterReferences);
-                });
-        }
-
-        public void ParseRepeatedItem(
-            MutagenFrame frame,
-            int fieldIndex,
-            ISourceSetList<T> item,
-            long lengthLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            BinaryMasterParseErrDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
-        {
-            this.ParseRepeatedItem(
-                frame: frame,
-                fieldIndex: fieldIndex,
-                item: item,
-                lengthLength: lengthLength,
-                errorMask: errorMask,
-                triggeringRecord: triggeringRecord,
-                transl: (MutagenFrame r, out T i, ErrorMaskBuilder err) =>
-                {
-                    return transl(r, out i, masterReferences, err);
-                });
         }
         #endregion
 
@@ -506,7 +425,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
-            ISourceSetList<T> item,
+            IList<T> item,
             long lengthLength,
             ErrorMaskBuilder errorMask,
             BinarySubParseErrDelegate transl)
@@ -522,7 +441,14 @@ namespace Mutagen.Bethesda.Binary
                         errorMask: errorMask,
                         transl: transl))
                     {
-                        item.SetTo(enumer);
+                        if (item is ISetList<T> setList)
+                        {
+                            setList.SetTo(enumer);
+                        }
+                        else
+                        {
+                            item.SetTo(enumer);
+                        }
                     }
                     else
                     {
@@ -539,7 +465,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void ParseRepeatedItem(
             MutagenFrame frame,
-            ISourceSetList<T> item,
+            IList<T> item,
             long lengthLength,
             BinarySubParseDelegate transl)
         {
@@ -549,7 +475,14 @@ namespace Mutagen.Bethesda.Binary
                 lengthLength,
                 transl: transl))
             {
-                item.SetTo(enumer);
+                if (item is ISetList<T> setList)
+                {
+                    setList.SetTo(enumer);
+                }
+                else
+                {
+                    item.SetTo(enumer);
+                }
             }
             else
             {
@@ -559,28 +492,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void ParseRepeatedItem(
             MutagenFrame frame,
-            int fieldIndex,
-            ISourceSetList<T> item,
-            long lengthLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            BinaryMasterParseErrDelegate transl)
-        {
-            ParseRepeatedItem(
-                frame: frame,
-                fieldIndex: fieldIndex,
-                item: item,
-                lengthLength: lengthLength,
-                errorMask: errorMask,
-                transl: (MutagenFrame r, out T i, ErrorMaskBuilder err) =>
-                {
-                    return transl(r, out i, masterReferences, err);
-                });
-        }
-
-        public void ParseRepeatedItem(
-            MutagenFrame frame,
-            ISourceSetList<T> item,
+            IList<T> item,
             long lengthLength,
             MasterReferences masterReferences,
             BinaryMasterParseDelegate transl)
@@ -646,7 +558,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
-            ISourceSetList<T> item,
+            IList<T> item,
             int amount,
             ErrorMaskBuilder errorMask,
             BinarySubParseErrDelegate transl)
@@ -662,7 +574,14 @@ namespace Mutagen.Bethesda.Binary
                         errorMask: errorMask,
                         transl: transl))
                     {
-                        item.SetTo(enumer);
+                        if (item is ISetList<T> setList)
+                        {
+                            setList.SetTo(enumer);
+                        }
+                        else
+                        {
+                            item.SetTo(enumer);
+                        }
                     }
                     else
                     {
@@ -679,7 +598,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void ParseRepeatedItem(
             MutagenFrame frame,
-            ISourceSetList<T> item,
+            IList<T> item,
             int amount,
             BinarySubParseDelegate transl)
         {
@@ -689,108 +608,20 @@ namespace Mutagen.Bethesda.Binary
                 amount: amount,
                 transl: transl))
             {
-                item.SetTo(enumer);
+                if (item is ISetList<T> setList)
+                {
+                    setList.SetTo(enumer);
+                }
+                else
+                {
+                    item.SetTo(enumer);
+                }
             }
             else
             {
                 item.Clear();
             }
         }
-
-        public void ParseRepeatedItem(
-            MutagenFrame frame,
-            int fieldIndex,
-            ISourceSetList<T> item,
-            int amount,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            BinaryMasterParseErrDelegate transl)
-        {
-            this.ParseRepeatedItem(
-                frame: frame,
-                fieldIndex: fieldIndex,
-                item: item,
-                amount: amount,
-                errorMask: errorMask,
-                transl: (MutagenFrame r, out T i, ErrorMaskBuilder err) =>
-                {
-                    return transl(r, out i, masterReferences, err);
-                });
-        }
-
-        #region Cache Helpers
-        public void ParseRepeatedItem<K>(
-            MutagenFrame frame,
-            int fieldIndex,
-            CSharpExt.Rx.ISourceSetCache<T, K> item,
-            RecordType triggeringRecord,
-            int lengthLength,
-            ErrorMaskBuilder errorMask,
-            BinarySubParseErrDelegate transl)
-        {
-            using (errorMask.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    if (ParseRepeatedItem(
-                        frame,
-                        out var enumer,
-                        triggeringRecord,
-                        lengthLength,
-                        errorMask: errorMask,
-                        transl: transl))
-                    {
-                        item.SetTo(enumer);
-                    }
-                    else
-                    {
-                        item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
-        }
-
-        public void ParseRepeatedItem<K>(
-            MutagenFrame frame,
-            int fieldIndex,
-            CSharpExt.Rx.ISourceSetCache<T, K> item,
-            int lengthLength,
-            ErrorMaskBuilder errorMask,
-            BinarySubParseRecordErrDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
-        {
-            using (errorMask.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    if (ParseRepeatedItem(
-                        frame,
-                        out var enumer,
-                        lengthLength,
-                        errorMask: errorMask,
-                        transl: transl,
-                        triggeringRecord: triggeringRecord))
-                    {
-                        item.SetTo(enumer);
-                    }
-                    else
-                    {
-                        item.Clear();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
-        }
-        #endregion
 
         public void Write(
             MutagenWriter writer,
@@ -829,33 +660,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
-            IHasBeenSetItemGetter<IEnumerable<T>> item,
-            ErrorMaskBuilder errorMask,
-            BinarySubWriteErrDelegate transl)
-        {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                items: item.Item,
-                errorMask: errorMask,
-                transl: transl);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasBeenSetItemGetter<IEnumerable<T>> item,
-            BinarySubWriteDelegate transl)
-        {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                items: item.Item,
-                transl: transl);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IObservableSetList<T> items,
+            IReadOnlySetList<T> items,
             int fieldIndex,
             RecordType recordType,
             ErrorMaskBuilder errorMask,
@@ -882,7 +687,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
-            IObservableSetList<T> items,
+            IReadOnlySetList<T> items,
             RecordType recordType,
             BinarySubWriteDelegate transl)
         {
@@ -918,36 +723,9 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        private void Write(
-            MutagenWriter writer,
-            IObservableSetList<T> items,
-            RecordType recordType,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask,
-            BinarySubWriteErrDelegate transl)
-        {
-            using (errorMask.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    this.WriteRecordList(
-                        writer: writer,
-                        items: items,
-                        recordType: recordType,
-                        errorMask: errorMask,
-                        transl: transl);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask?.ReportException(ex);
-                }
-            }
-        }
-
         private void WriteRecordList(
             MutagenWriter writer,
-            IObservableSetList<T> items,
+            IReadOnlySetList<T> items,
             RecordType recordType,
             ErrorMaskBuilder errorMask,
             BinarySubWriteErrDelegate transl)
@@ -955,7 +733,7 @@ namespace Mutagen.Bethesda.Binary
             using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
             {
                 int i = 0;
-                foreach (var item in items.Items)
+                foreach (var item in items)
                 {
                     using (errorMask.PushIndex(i++))
                     {
@@ -975,99 +753,15 @@ namespace Mutagen.Bethesda.Binary
 
         private void WriteRecordList(
             MutagenWriter writer,
-            IObservableSetList<T> items,
+            IReadOnlySetList<T> items,
             RecordType recordType,
             BinarySubWriteDelegate transl)
         {
             using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
             {
-                foreach (var item in items.Items)
+                foreach (var item in items)
                 {
                     transl(writer, item);
-                }
-            }
-        }
-
-        public void WriteListOfRecords(
-            MutagenWriter writer,
-            IEnumerable<T> items,
-            int fieldIndex,
-            RecordType recordType,
-            ErrorMaskBuilder errorMask,
-            BinarySubWriteErrDelegate transl)
-        {
-            using (errorMask.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    this.WriteListOfRecords(
-                        writer: writer,
-                        items: items,
-                        recordType: recordType,
-                        errorMask: errorMask,
-                        transl: transl);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask?.ReportException(ex);
-                }
-            }
-        }
-
-        private void WriteListOfRecords(
-            MutagenWriter writer,
-            IEnumerable<T> items,
-            RecordType recordType,
-            ErrorMaskBuilder errorMask,
-            BinarySubWriteErrDelegate transl)
-        {
-            int i = 0;
-            foreach (var item in items)
-            {
-                using (errorMask.PushIndex(i++))
-                {
-                    try
-                    {
-                        if (IsLoqui)
-                        {
-                            transl(writer, item, errorMask);
-                        }
-                        else
-                        {
-                            using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
-                            {
-                                transl(writer, item, errorMask);
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                }
-            }
-        }
-
-        private void WriteListOfRecords(
-            MutagenWriter writer,
-            IEnumerable<T> items,
-            RecordType recordType,
-            BinarySubWriteDelegate transl)
-        {
-            foreach (var item in items)
-            {
-                if (IsLoqui)
-                {
-                    transl(writer, item);
-                }
-                else
-                {
-                    using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
-                    {
-                        transl(writer, item);
-                    }
                 }
             }
         }
@@ -1103,36 +797,6 @@ namespace Mutagen.Bethesda.Binary
         }
 
         #region Out Parameters
-        public async Task<TryGet<IEnumerable<T>>> ParseRepeatedItem(
-            MutagenFrame frame,
-            RecordType triggeringRecord,
-            int lengthLength,
-            BinarySubParseDelegate transl)
-        {
-            var ret = new List<T>();
-            while (!frame.Complete && !frame.Reader.Complete)
-            {
-                if (!HeaderTranslation.TryGetRecordType(frame.Reader, lengthLength, triggeringRecord)) break;
-                if (!IsLoqui)
-                {
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                }
-                var startingPos = frame.Position;
-                var item = await transl(frame).ConfigureAwait(false);
-                if (item.Succeeded)
-                {
-                    ret.Add(item.Value);
-                }
-
-                if (frame.Position == startingPos)
-                {
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    throw new ArgumentException($"Parsed item on the list consumed no data: {item.Value}");
-                }
-            }
-            return TryGet<IEnumerable<T>>.Succeed(ret);
-        }
-
         public async Task<TryGet<IEnumerable<T>>> ParseRepeatedItem(
             MutagenFrame frame,
             RecordType triggeringRecord,
@@ -1179,7 +843,6 @@ namespace Mutagen.Bethesda.Binary
         public async Task<TryGet<IEnumerable<T>>> ParseRepeatedItemThreaded(
             MutagenFrame frame,
             RecordType triggeringRecord,
-            int lengthLength,
             ErrorMaskBuilder errorMask,
             BinarySubParseErrDelegate transl)
         {
@@ -1210,107 +873,13 @@ namespace Mutagen.Bethesda.Binary
                 ret.Where(i => i.Succeeded)
                     .Select(i => i.Value));
         }
-
-        public async Task<TryGet<IEnumerable<T>>> ParseRepeatedItem(
-            MutagenFrame frame,
-            long lengthLength,
-            ErrorMaskBuilder errorMask,
-            BinarySubParseRecordErrDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
-        {
-            var ret = new List<T>();
-            int i = 0;
-            while (!frame.Complete)
-            {
-                using (errorMask.PushIndex(i++))
-                {
-                    try
-                    {
-                        var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
-                        if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
-                        if (!IsLoqui)
-                        {
-                            frame.Position += Constants.SUBRECORD_LENGTH;
-                        }
-                        var startingPos = frame.Position;
-                        var item = await transl(frame, nextRecord, errorMask).ConfigureAwait(false);
-                        if (item.Succeeded)
-                        {
-                            ret.Add(item.Value);
-                        }
-                        if (frame.Position == startingPos)
-                        {
-                            errorMask.ReportExceptionOrThrow(
-                                new ArgumentException($"Parsed item on the list consumed no data: {item.Value}"));
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                }
-            }
-            return TryGet<IEnumerable<T>>.Succeed(ret);
-        }
-
-        public async Task<TryGet<IEnumerable<T>>> ParseRepeatedItem(
-            MutagenFrame frame,
-            long lengthLength,
-            BinarySubParseRecordDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
-        {
-            var ret = new List<T>();
-            while (!frame.Complete)
-            {
-                var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
-                if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
-                if (!IsLoqui)
-                {
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                }
-                var startingPos = frame.Position;
-                var item = await transl(frame, nextRecord).ConfigureAwait(false);
-                if (item.Succeeded)
-                {
-                    ret.Add(item.Value);
-                }
-                if (frame.Position == startingPos)
-                {
-                    throw new ArgumentException($"Parsed item on the list consumed no data: {item.Value}");
-                }
-            }
-            return TryGet<IEnumerable<T>>.Succeed(ret);
-        }
         #endregion
 
         #region Lengthed Triggering Record
         public async Task ParseRepeatedItem(
             MutagenFrame frame,
-            ISourceSetList<T> item,
-            RecordType triggeringRecord,
-            int lengthLength,
-            BinarySubParseDelegate transl)
-        {
-            var items = await ParseRepeatedItem(
-                frame,
-                triggeringRecord,
-                lengthLength,
-                transl: transl).ConfigureAwait(false);
-            if (items.Succeeded)
-            {
-                item.SetTo(items.Value);
-            }
-            else
-            {
-                item.Clear();
-            }
-        }
-
-        public async Task ParseRepeatedItem(
-            MutagenFrame frame,
             int fieldIndex,
-            ISourceSetList<T> item,
+            IList<T> item,
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,
@@ -1327,7 +896,6 @@ namespace Mutagen.Bethesda.Binary
                         items = await ParseRepeatedItemThreaded(
                             frame,
                             triggeringRecord,
-                            lengthLength,
                             errorMask: errorMask,
                             transl: transl).ConfigureAwait(false);
                     }
@@ -1356,447 +924,7 @@ namespace Mutagen.Bethesda.Binary
                 }
             }
         }
-
-        public Task ParseRepeatedItem(
-            MutagenFrame frame,
-            int fieldIndex,
-            ISourceSetList<T> item,
-            RecordType triggeringRecord,
-            int lengthLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            BinaryMasterParseErrDelegate transl)
-        {
-            return ParseRepeatedItem(
-                frame: frame,
-                fieldIndex: fieldIndex,
-                item: item,
-                triggeringRecord: triggeringRecord,
-                lengthLength: lengthLength,
-                errorMask: errorMask,
-                transl: (MutagenFrame r, ErrorMaskBuilder err) =>
-                {
-                    return transl(r, masterReferences, err);
-                });
-        }
-
-        public Task ParseRepeatedItem(
-            MutagenFrame frame,
-            ISourceSetList<T> item,
-            RecordType triggeringRecord,
-            int lengthLength,
-            MasterReferences masterReferences,
-            BinaryMasterParseDelegate transl)
-        {
-            return ParseRepeatedItem(
-                frame: frame,
-                item: item,
-                triggeringRecord: triggeringRecord,
-                lengthLength: lengthLength,
-                transl: (MutagenFrame r) =>
-                {
-                    return transl(r, masterReferences);
-                });
-        }
         #endregion
-
-        #region Lengthed Triggering Records
-        public Task ParseRepeatedItem(
-            MutagenFrame frame,
-            int fieldIndex,
-            ISourceSetList<T> item,
-            long lengthLength,
-            ErrorMaskBuilder errorMask,
-            BinarySubParseErrDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord)
-        {
-            return this.ParseRepeatedItem(
-                frame: frame,
-                triggeringRecord: triggeringRecord,
-                fieldIndex: fieldIndex,
-                item: item,
-                lengthLength: lengthLength,
-                errorMask: errorMask,
-                transl: (MutagenFrame reader, RecordType header, ErrorMaskBuilder subErrMask)
-                    => transl(reader, subErrMask));
-        }
-
-        public Task ParseRepeatedItem(
-            MutagenFrame frame,
-            ISourceSetList<T> item,
-            long lengthLength,
-            BinarySubParseDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord)
-        {
-            return this.ParseRepeatedItem(
-                frame: frame,
-                triggeringRecord: triggeringRecord,
-                item: item,
-                lengthLength: lengthLength,
-                transl: (MutagenFrame reader, RecordType header)
-                    => transl(reader));
-        }
-
-        public async Task ParseRepeatedItem(
-            MutagenFrame frame,
-            int fieldIndex,
-            ISourceSetList<T> item,
-            long lengthLength,
-            ErrorMaskBuilder errorMask,
-            BinarySubParseRecordErrDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
-        {
-            using (errorMask.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    var items = await ParseRepeatedItem(
-                        frame,
-                        lengthLength,
-                        errorMask: errorMask,
-                        transl: transl,
-                        triggeringRecord: triggeringRecord).ConfigureAwait(false);
-                    if (items.Succeeded)
-                    {
-                        item.SetTo(items.Value);
-                    }
-                    else
-                    {
-                        item.Clear();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
-        }
-
-        public async Task ParseRepeatedItem(
-            MutagenFrame frame,
-            ISourceSetList<T> item,
-            long lengthLength,
-            BinarySubParseRecordDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
-        {
-            var items = await ParseRepeatedItem(
-                frame,
-                lengthLength,
-                transl: transl,
-                triggeringRecord: triggeringRecord).ConfigureAwait(false);
-            if (items.Succeeded)
-            {
-                item.SetTo(items.Value);
-            }
-            else
-            {
-                item.Clear();
-            }
-        }
-
-        public Task ParseRepeatedItem(
-            MutagenFrame frame,
-            ISourceSetList<T> item,
-            long lengthLength,
-            MasterReferences masterReferences,
-            BinaryMasterParseDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
-        {
-            return this.ParseRepeatedItem(
-                frame: frame,
-                item: item,
-                lengthLength: lengthLength,
-                triggeringRecord: triggeringRecord,
-                transl: (MutagenFrame r) =>
-                {
-                    return transl(r, masterReferences);
-                });
-        }
-
-        public Task ParseRepeatedItem(
-            MutagenFrame frame,
-            int fieldIndex,
-            ISourceSetList<T> item,
-            long lengthLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            BinaryMasterParseErrDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
-        {
-            return this.ParseRepeatedItem(
-                frame: frame,
-                fieldIndex: fieldIndex,
-                item: item,
-                lengthLength: lengthLength,
-                errorMask: errorMask,
-                triggeringRecord: triggeringRecord,
-                transl: (MutagenFrame r, ErrorMaskBuilder err) =>
-                {
-                    return transl(r, masterReferences, err);
-                });
-        }
-        #endregion
-
-        public async Task<TryGet<IEnumerable<T>>> ParseRepeatedItem(
-            MutagenFrame frame,
-            long lengthLength,
-            ErrorMaskBuilder errorMask,
-            BinarySubParseErrDelegate transl)
-        {
-            var ret = new List<T>();
-            int i = 0;
-            while (!frame.Complete)
-            {
-                using (errorMask.PushIndex(i++))
-                {
-                    try
-                    {
-                        var item = await transl(frame, errorMask).ConfigureAwait(false);
-                        if (item.Succeeded)
-                        {
-                            ret.Add(item.Value);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                }
-            }
-            return TryGet<IEnumerable<T>>.Succeed(ret);
-        }
-
-        public async Task<TryGet<IEnumerable<T>>> ParseRepeatedItem(
-            MutagenFrame frame,
-            long lengthLength,
-            BinarySubParseDelegate transl)
-        {
-            var ret = new List<T>();
-            while (!frame.Complete)
-            {
-                var item = await transl(frame).ConfigureAwait(false);
-                if (item.Succeeded)
-                {
-                    ret.Add(item.Value);
-                }
-            }
-            return TryGet<IEnumerable<T>>.Succeed(ret);
-        }
-
-        public async Task ParseRepeatedItem(
-            MutagenFrame frame,
-            int fieldIndex,
-            ISourceSetList<T> item,
-            long lengthLength,
-            ErrorMaskBuilder errorMask,
-            BinarySubParseErrDelegate transl)
-        {
-            using (errorMask.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    var items = await ParseRepeatedItem(
-                        frame,
-                        lengthLength,
-                        errorMask: errorMask,
-                        transl: transl).ConfigureAwait(false);
-                    if (items.Succeeded)
-                    {
-                        item.SetTo(items.Value);
-                    }
-                    else
-                    {
-                        item.Clear();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
-        }
-
-        public async Task ParseRepeatedItem(
-            MutagenFrame frame,
-            ISourceSetList<T> item,
-            long lengthLength,
-            BinarySubParseDelegate transl)
-        {
-            var items = await ParseRepeatedItem(
-                frame,
-                lengthLength,
-                transl: transl).ConfigureAwait(false);
-            if (items.Succeeded)
-            {
-                item.SetTo(items.Value);
-            }
-            else
-            {
-                item.Clear();
-            }
-        }
-
-        public Task ParseRepeatedItem(
-            MutagenFrame frame,
-            int fieldIndex,
-            ISourceSetList<T> item,
-            long lengthLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            BinaryMasterParseErrDelegate transl)
-        {
-            return ParseRepeatedItem(
-                frame: frame,
-                fieldIndex: fieldIndex,
-                item: item,
-                lengthLength: lengthLength,
-                errorMask: errorMask,
-                transl: (MutagenFrame r, ErrorMaskBuilder err) =>
-                {
-                    return transl(r, masterReferences, err);
-                });
-        }
-
-        public Task ParseRepeatedItem(
-            MutagenFrame frame,
-            ISourceSetList<T> item,
-            long lengthLength,
-            MasterReferences masterReferences,
-            BinaryMasterParseDelegate transl)
-        {
-            return ParseRepeatedItem(
-                frame: frame,
-                item: item,
-                lengthLength: lengthLength,
-                transl: (MutagenFrame r) =>
-                {
-                    return transl(r, masterReferences);
-                });
-        }
-
-        public async Task<TryGet<IEnumerable<T>>> ParseRepeatedItem(
-            MutagenFrame frame,
-            int amount,
-            ErrorMaskBuilder errorMask,
-            BinarySubParseErrDelegate transl)
-        {
-            var ret = new List<T>();
-            for (int i = 0; i < amount; i++)
-            {
-                using (errorMask.PushIndex(i))
-                {
-                    try
-                    {
-                        var item = await transl(frame, errorMask).ConfigureAwait(false);
-                        if (item.Succeeded)
-                        {
-                            ret.Add(item.Value);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                }
-            }
-            return TryGet<IEnumerable<T>>.Succeed(ret);
-        }
-
-        public async Task<TryGet<IEnumerable<T>>> ParseRepeatedItem(
-            MutagenFrame frame,
-            int amount,
-            BinarySubParseDelegate transl)
-        {
-            var ret = new List<T>();
-            for (int i = 0; i < amount; i++)
-            {
-                var item = await transl(frame).ConfigureAwait(false);
-                if (item.Succeeded)
-                {
-                    ret.Add(item.Value);
-                }
-            }
-            return TryGet<IEnumerable<T>>.Succeed(ret);
-        }
-
-        public async Task ParseRepeatedItem(
-            MutagenFrame frame,
-            int fieldIndex,
-            ISourceSetList<T> item,
-            int amount,
-            ErrorMaskBuilder errorMask,
-            BinarySubParseErrDelegate transl)
-        {
-            using (errorMask.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    var items = await ParseRepeatedItem(
-                        frame,
-                        amount: amount,
-                        errorMask: errorMask,
-                        transl: transl).ConfigureAwait(false);
-                    if (items.Succeeded)
-                    {
-                        item.SetTo(items.Value);
-                    }
-                    else
-                    {
-                        item.Clear();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
-        }
-
-        public async Task ParseRepeatedItem(
-            MutagenFrame frame,
-            ISourceSetList<T> item,
-            int amount,
-            BinarySubParseDelegate transl)
-        {
-            var items = await ParseRepeatedItem(
-                frame,
-                amount: amount,
-                transl: transl).ConfigureAwait(false);
-            if (items.Succeeded)
-            {
-                item.SetTo(items.Value);
-            }
-            else
-            {
-                item.Clear();
-            }
-        }
-
-        public Task ParseRepeatedItem(
-            MutagenFrame frame,
-            int fieldIndex,
-            ISourceSetList<T> item,
-            int amount,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            BinaryMasterParseErrDelegate transl)
-        {
-            return this.ParseRepeatedItem(
-                frame: frame,
-                fieldIndex: fieldIndex,
-                item: item,
-                amount: amount,
-                errorMask: errorMask,
-                transl: (MutagenFrame r, ErrorMaskBuilder err) =>
-                {
-                    return transl(r, masterReferences, err);
-                });
-        }
 
         #region Cache Helpers
         public async Task ParseRepeatedItem<K>(
@@ -1825,42 +953,6 @@ namespace Mutagen.Bethesda.Binary
                     else
                     {
                         item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
-        }
-
-        public async Task ParseRepeatedItem<K>(
-            MutagenFrame frame,
-            int fieldIndex,
-            CSharpExt.Rx.ISourceSetCache<T, K> item,
-            int lengthLength,
-            ErrorMaskBuilder errorMask,
-            BinarySubParseRecordErrDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
-        {
-            using (errorMask.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    var items = await ParseRepeatedItem(
-                        frame,
-                        lengthLength,
-                        errorMask: errorMask,
-                        transl: transl,
-                        triggeringRecord: triggeringRecord).ConfigureAwait(false);
-                    if (items.Succeeded)
-                    {
-                        item.SetTo(items.Value);
-                    }
-                    else
-                    {
-                        item.Clear();
                     }
                 }
                 catch (Exception ex)

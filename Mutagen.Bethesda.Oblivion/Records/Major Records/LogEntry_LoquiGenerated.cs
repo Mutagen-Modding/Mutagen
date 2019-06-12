@@ -93,9 +93,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Condition> ILogEntry.Conditions => _Conditions;
+        ISetList<Condition> ILogEntry.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Condition> ILogEntryGetter.Conditions => _Conditions;
+        IReadOnlySetList<Condition> ILogEntryGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.ResultScript_Set(default(ScriptFields), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ScriptFields ILogEntryGetter.ResultScript => this.ResultScript;
+        IScriptFieldsGetter ILogEntryGetter.ResultScript => this.ResultScript;
         #endregion
 
         IMask<bool> IEqualsMask<LogEntry>.GetEqualsMask(LogEntry rhs, EqualsMaskHelper.Include include) => LogEntryCommon.GetEqualsMask(this, rhs, include);
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LogEntry Copy(
-            ILogEntry item,
+            ILogEntryGetter item,
             LogEntry_CopyMask copyMask = null,
             ILogEntryGetter def = null)
         {
@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(LogEntry.Flag item, bool hasBeenSet = true);
         void Flags_Unset();
 
-        new ISourceSetList<Condition> Conditions { get; }
+        new ISetList<Condition> Conditions { get; }
         new String Entry { get; set; }
         new bool Entry_IsSet { get; set; }
         void Entry_Set(String item, bool hasBeenSet = true);
@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        IObservableSetList<Condition> Conditions { get; }
+        IReadOnlySetList<Condition> Conditions { get; }
         #endregion
         #region Entry
         String Entry { get; }
@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region ResultScript
-        ScriptFields ResultScript { get; }
+        IScriptFieldsGetter ResultScript { get; }
         bool ResultScript_IsSet { get; }
 
         #endregion
@@ -1210,8 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.ResultScript.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.ResultScript = rhsResultScriptItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ScriptFieldsCommon.CopyFieldsFrom(
                                     item: item.ResultScript,

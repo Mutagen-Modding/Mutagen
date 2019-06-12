@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static MapData Copy(
-            IMapData item,
+            IMapDataGetter item,
             MapData_CopyMask copyMask = null,
             IMapDataGetter def = null)
         {

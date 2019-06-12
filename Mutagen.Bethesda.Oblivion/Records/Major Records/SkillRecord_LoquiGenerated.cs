@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SkillRecord Copy(
-            ISkillRecord item,
+            ISkillRecordGetter item,
             SkillRecord_CopyMask copyMask = null,
             ISkillRecordGetter def = null)
         {

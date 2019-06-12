@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Fluff
-        private Byte[] _Fluff = new byte[4];
+        private Byte[] _Fluff = new byte[3];
         public Byte[] Fluff
         {
             get => _Fluff;
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this._Fluff = value;
                 if (value == null)
                 {
-                    this._Fluff = new byte[4];
+                    this._Fluff = new byte[3];
                 }
             }
         }
@@ -437,8 +437,13 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
+            ConditionBinaryTranslation.FillBinary_InitialParser_Custom_Public(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
             if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
+                frame: frame.SpawnWithLength(3),
                 item: out Byte[] FluffParse))
             {
                 item.Fluff = FluffParse;
@@ -485,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Condition Copy(
-            ICondition item,
+            IConditionGetter item,
             Condition_CopyMask copyMask = null,
             IConditionGetter def = null)
         {
@@ -2339,12 +2344,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ConditionBinaryTranslation Instance = new ConditionBinaryTranslation();
 
+        static partial void FillBinary_InitialParser_Custom(
+            MutagenFrame frame,
+            Condition item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_InitialParser_Custom_Public(
+            MutagenFrame frame,
+            Condition item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_InitialParser_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void WriteBinary_InitialParser_Custom(
+            MutagenWriter writer,
+            IConditionGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void WriteBinary_InitialParser(
+            MutagenWriter writer,
+            IConditionGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WriteBinary_InitialParser_Custom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
         public static void Write_Embedded(
             IConditionGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
+            ConditionBinaryTranslation.WriteBinary_InitialParser(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff);

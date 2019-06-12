@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LoadScreenLocation Copy(
-            ILoadScreenLocation item,
+            ILoadScreenLocationGetter item,
             LoadScreenLocation_CopyMask copyMask = null,
             ILoadScreenLocationGetter def = null)
         {

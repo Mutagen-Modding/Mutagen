@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.MapData_Set(default(MapData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        MapData IWorldspaceGetter.MapData => this.MapData;
+        IMapDataGetter IWorldspaceGetter.MapData => this.MapData;
         #endregion
         #region Flags
         public bool Flags_IsSet
@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Road_Set(default(Road), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Road IWorldspaceGetter.Road => this.Road;
+        IRoadInternalGetter IWorldspaceGetter.Road => this.Road;
         #endregion
         #region TopCell
         public bool TopCell_IsSet
@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.TopCell_Set(default(Cell), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Cell IWorldspaceGetter.TopCell => this.TopCell;
+        ICellInternalGetter IWorldspaceGetter.TopCell => this.TopCell;
         #endregion
         #region SubCellsTimestamp
         private Byte[] _SubCellsTimestamp = new byte[4];
@@ -368,9 +368,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<WorldspaceBlock> IWorldspace.SubCells => _SubCells;
+        ISetList<WorldspaceBlock> IWorldspace.SubCells => _SubCells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<WorldspaceBlock> IWorldspaceGetter.SubCells => _SubCells;
+        IReadOnlySetList<WorldspaceBlock> IWorldspaceGetter.SubCells => _SubCells;
         #endregion
 
         #endregion
@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Worldspace Copy(
-            IWorldspace item,
+            IWorldspaceGetter item,
             Worldspace_CopyMask copyMask = null,
             IWorldspaceGetter def = null)
         {
@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] SubCellsTimestamp { get; set; }
 
-        new ISourceSetList<WorldspaceBlock> SubCells { get; }
+        new ISetList<WorldspaceBlock> SubCells { get; }
         new Boolean UsingOffsetLength { get; set; }
 
         void CopyFieldsFrom(
@@ -1439,7 +1439,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Worldspace Parent { get; set; }
         new Climate Climate { get; set; }
         new Water Water { get; set; }
-        new ISourceSetList<WorldspaceBlock> SubCells { get; }
     }
 
     public partial interface IWorldspaceGetter :
@@ -1473,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region MapData
-        MapData MapData { get; }
+        IMapDataGetter MapData { get; }
         bool MapData_IsSet { get; }
 
         #endregion
@@ -1503,12 +1502,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Road
-        Road Road { get; }
+        IRoadInternalGetter Road { get; }
         bool Road_IsSet { get; }
 
         #endregion
         #region TopCell
-        Cell TopCell { get; }
+        ICellInternalGetter TopCell { get; }
         bool TopCell_IsSet { get; }
 
         #endregion
@@ -1517,7 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region SubCells
-        IObservableSetList<WorldspaceBlock> SubCells { get; }
+        IReadOnlySetList<WorldspaceBlock> SubCells { get; }
         #endregion
         #region UsingOffsetLength
         Boolean UsingOffsetLength { get; }
@@ -2073,8 +2072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.MapData.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.MapData = rhsMapDataItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 MapDataCommon.CopyFieldsFrom(
                                     item: item.MapData,
@@ -2276,8 +2274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Road.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Road = rhsRoadItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 RoadCommon.CopyFieldsFrom(
                                     item: item.Road,
@@ -2329,8 +2326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.TopCell.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.TopCell = rhsTopCellItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 CellCommon.CopyFieldsFrom(
                                     item: item.TopCell,

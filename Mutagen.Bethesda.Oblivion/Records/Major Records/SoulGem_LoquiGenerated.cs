@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model ISoulGemGetter.Model => this.Model;
+        IModelGetter ISoulGemGetter.Model => this.Model;
         #endregion
         #region Icon
         public bool Icon_IsSet
@@ -816,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SoulGem Copy(
-            ISoulGem item,
+            ISoulGemGetter item,
             SoulGem_CopyMask copyMask = null,
             ISoulGemGetter def = null)
         {
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        Model Model { get; }
+        IModelGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -1479,8 +1479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Model = rhsModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.Model,

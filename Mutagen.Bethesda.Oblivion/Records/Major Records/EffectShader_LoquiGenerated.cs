@@ -2008,7 +2008,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static EffectShader Copy(
-            IEffectShader item,
+            IEffectShaderGetter item,
             EffectShader_CopyMask copyMask = null,
             IEffectShaderGetter def = null)
         {

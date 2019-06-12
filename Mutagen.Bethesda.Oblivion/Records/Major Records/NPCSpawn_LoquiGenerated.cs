@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static NPCSpawn Copy(
-            INPCSpawn item,
+            INPCSpawnGetter item,
             NPCSpawn_CopyMask copyMask = null,
             INPCSpawnGetter def = null)
         {

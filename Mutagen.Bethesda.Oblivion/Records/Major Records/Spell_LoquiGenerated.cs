@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Spell Copy(
-            ISpell item,
+            ISpellGetter item,
             Spell_CopyMask copyMask = null,
             ISpellGetter def = null)
         {

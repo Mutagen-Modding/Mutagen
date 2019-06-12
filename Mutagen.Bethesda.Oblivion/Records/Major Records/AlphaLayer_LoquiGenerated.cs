@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static AlphaLayer Copy(
-            IAlphaLayer item,
+            IAlphaLayerGetter item,
             AlphaLayer_CopyMask copyMask = null,
             IAlphaLayerGetter def = null)
         {

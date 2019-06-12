@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static EnableParent Copy(
-            IEnableParent item,
+            IEnableParentGetter item,
             EnableParent_CopyMask copyMask = null,
             IEnableParentGetter def = null)
         {

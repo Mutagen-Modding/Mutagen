@@ -105,9 +105,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<WorldspaceSubBlock> IWorldspaceBlock.Items => _Items;
+        ISetList<WorldspaceSubBlock> IWorldspaceBlock.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<WorldspaceSubBlock> IWorldspaceBlockGetter.Items => _Items;
+        IReadOnlySetList<WorldspaceSubBlock> IWorldspaceBlockGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static WorldspaceBlock Copy(
-            IWorldspaceBlock item,
+            IWorldspaceBlockGetter item,
             WorldspaceBlock_CopyMask copyMask = null,
             IWorldspaceBlockGetter def = null)
         {
@@ -695,7 +695,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] LastModified { get; set; }
 
-        new ISourceSetList<WorldspaceSubBlock> Items { get; }
+        new ISetList<WorldspaceSubBlock> Items { get; }
         void CopyFieldsFrom(
             IWorldspaceBlockGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        IObservableSetList<WorldspaceSubBlock> Items { get; }
+        IReadOnlySetList<WorldspaceSubBlock> Items { get; }
         #endregion
 
     }

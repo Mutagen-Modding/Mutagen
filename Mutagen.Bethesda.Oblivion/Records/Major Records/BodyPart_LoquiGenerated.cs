@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static BodyPart Copy(
-            IBodyPart item,
+            IBodyPartGetter item,
             BodyPart_CopyMask copyMask = null,
             IBodyPartGetter def = null)
         {

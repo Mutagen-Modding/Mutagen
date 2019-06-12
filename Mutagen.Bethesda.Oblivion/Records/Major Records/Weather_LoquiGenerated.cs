@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IWeatherGetter.Model => this.Model;
+        IModelGetter IWeatherGetter.Model => this.Model;
         #endregion
         #region WeatherTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -149,9 +149,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<WeatherType> IWeather.WeatherTypes => _WeatherTypes;
+        ISetList<WeatherType> IWeather.WeatherTypes => _WeatherTypes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<WeatherType> IWeatherGetter.WeatherTypes => _WeatherTypes;
+        IReadOnlySetList<WeatherType> IWeatherGetter.WeatherTypes => _WeatherTypes;
         #endregion
 
         #endregion
@@ -539,9 +539,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<WeatherSound> IWeather.Sounds => _Sounds;
+        ISetList<WeatherSound> IWeather.Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<WeatherSound> IWeatherGetter.Sounds => _Sounds;
+        IReadOnlySetList<WeatherSound> IWeatherGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
@@ -1506,7 +1506,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Weather Copy(
-            IWeather item,
+            IWeatherGetter item,
             Weather_CopyMask copyMask = null,
             IWeatherGetter def = null)
         {
@@ -1900,7 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Set(Model item, bool hasBeenSet = true);
         void Model_Unset();
 
-        new ISourceSetList<WeatherType> WeatherTypes { get; }
+        new ISetList<WeatherType> WeatherTypes { get; }
         new Single FogDayNear { get; set; }
 
         new Single FogDayFar { get; set; }
@@ -1963,7 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Color LightningColor { get; set; }
 
-        new ISourceSetList<WeatherSound> Sounds { get; }
+        new ISetList<WeatherSound> Sounds { get; }
         void CopyFieldsFrom(
             IWeatherGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -1976,8 +1976,6 @@ namespace Mutagen.Bethesda.Oblivion
         IWeather,
         IWeatherInternalGetter
     {
-        new ISourceSetList<WeatherType> WeatherTypes { get; }
-        new ISourceSetList<WeatherSound> Sounds { get; }
         new Weather.FNAMDataType FNAMDataTypeState { get; set; }
 
         new Weather.HNAMDataType HNAMDataTypeState { get; set; }
@@ -2002,12 +2000,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        Model Model { get; }
+        IModelGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
         #region WeatherTypes
-        IObservableSetList<WeatherType> WeatherTypes { get; }
+        IReadOnlySetList<WeatherType> WeatherTypes { get; }
         #endregion
         #region FogDayNear
         Single FogDayNear { get; }
@@ -2134,7 +2132,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Sounds
-        IObservableSetList<WeatherSound> Sounds { get; }
+        IReadOnlySetList<WeatherSound> Sounds { get; }
         #endregion
 
     }
@@ -2910,8 +2908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Model = rhsModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.Model,

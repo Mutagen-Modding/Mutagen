@@ -176,287 +176,343 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ModHeader ModHeader => _ModHeader_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ModHeader IOblivionModGetter.ModHeader => this.ModHeader;
+        IModHeaderGetter IOblivionModGetter.ModHeader => this.ModHeader;
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<GameSetting> _GameSettings_Object;
         public Group<GameSetting> GameSettings => _GameSettings_Object;
+        IGroupGetter<GameSetting> IOblivionModGetter.GameSettings => _GameSettings_Object;
         #endregion
         #region Globals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Global> _Globals_Object;
         public Group<Global> Globals => _Globals_Object;
+        IGroupGetter<Global> IOblivionModGetter.Globals => _Globals_Object;
         #endregion
         #region Classes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Class> _Classes_Object;
         public Group<Class> Classes => _Classes_Object;
+        IGroupGetter<Class> IOblivionModGetter.Classes => _Classes_Object;
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Faction> _Factions_Object;
         public Group<Faction> Factions => _Factions_Object;
+        IGroupGetter<Faction> IOblivionModGetter.Factions => _Factions_Object;
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Hair> _Hairs_Object;
         public Group<Hair> Hairs => _Hairs_Object;
+        IGroupGetter<Hair> IOblivionModGetter.Hairs => _Hairs_Object;
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Eye> _Eyes_Object;
         public Group<Eye> Eyes => _Eyes_Object;
+        IGroupGetter<Eye> IOblivionModGetter.Eyes => _Eyes_Object;
         #endregion
         #region Races
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Race> _Races_Object;
         public Group<Race> Races => _Races_Object;
+        IGroupGetter<Race> IOblivionModGetter.Races => _Races_Object;
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Sound> _Sounds_Object;
         public Group<Sound> Sounds => _Sounds_Object;
+        IGroupGetter<Sound> IOblivionModGetter.Sounds => _Sounds_Object;
         #endregion
         #region Skills
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<SkillRecord> _Skills_Object;
         public Group<SkillRecord> Skills => _Skills_Object;
+        IGroupGetter<SkillRecord> IOblivionModGetter.Skills => _Skills_Object;
         #endregion
         #region MagicEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<MagicEffect> _MagicEffects_Object;
         public Group<MagicEffect> MagicEffects => _MagicEffects_Object;
+        IGroupGetter<MagicEffect> IOblivionModGetter.MagicEffects => _MagicEffects_Object;
         #endregion
         #region Scripts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Script> _Scripts_Object;
         public Group<Script> Scripts => _Scripts_Object;
+        IGroupGetter<Script> IOblivionModGetter.Scripts => _Scripts_Object;
         #endregion
         #region LandTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<LandTexture> _LandTextures_Object;
         public Group<LandTexture> LandTextures => _LandTextures_Object;
+        IGroupGetter<LandTexture> IOblivionModGetter.LandTextures => _LandTextures_Object;
         #endregion
         #region Enchantments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Enchantment> _Enchantments_Object;
         public Group<Enchantment> Enchantments => _Enchantments_Object;
+        IGroupGetter<Enchantment> IOblivionModGetter.Enchantments => _Enchantments_Object;
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<SpellUnleveled> _Spells_Object;
         public Group<SpellUnleveled> Spells => _Spells_Object;
+        IGroupGetter<SpellUnleveled> IOblivionModGetter.Spells => _Spells_Object;
         #endregion
         #region Birthsigns
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Birthsign> _Birthsigns_Object;
         public Group<Birthsign> Birthsigns => _Birthsigns_Object;
+        IGroupGetter<Birthsign> IOblivionModGetter.Birthsigns => _Birthsigns_Object;
         #endregion
         #region Activators
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Activator> _Activators_Object;
         public Group<Activator> Activators => _Activators_Object;
+        IGroupGetter<Activator> IOblivionModGetter.Activators => _Activators_Object;
         #endregion
         #region AlchemicalApparatus
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<AlchemicalApparatus> _AlchemicalApparatus_Object;
         public Group<AlchemicalApparatus> AlchemicalApparatus => _AlchemicalApparatus_Object;
+        IGroupGetter<AlchemicalApparatus> IOblivionModGetter.AlchemicalApparatus => _AlchemicalApparatus_Object;
         #endregion
         #region Armors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Armor> _Armors_Object;
         public Group<Armor> Armors => _Armors_Object;
+        IGroupGetter<Armor> IOblivionModGetter.Armors => _Armors_Object;
         #endregion
         #region Books
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Book> _Books_Object;
         public Group<Book> Books => _Books_Object;
+        IGroupGetter<Book> IOblivionModGetter.Books => _Books_Object;
         #endregion
         #region Clothes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Clothing> _Clothes_Object;
         public Group<Clothing> Clothes => _Clothes_Object;
+        IGroupGetter<Clothing> IOblivionModGetter.Clothes => _Clothes_Object;
         #endregion
         #region Containers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Container> _Containers_Object;
         public Group<Container> Containers => _Containers_Object;
+        IGroupGetter<Container> IOblivionModGetter.Containers => _Containers_Object;
         #endregion
         #region Doors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Door> _Doors_Object;
         public Group<Door> Doors => _Doors_Object;
+        IGroupGetter<Door> IOblivionModGetter.Doors => _Doors_Object;
         #endregion
         #region Ingredients
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Ingredient> _Ingredients_Object;
         public Group<Ingredient> Ingredients => _Ingredients_Object;
+        IGroupGetter<Ingredient> IOblivionModGetter.Ingredients => _Ingredients_Object;
         #endregion
         #region Lights
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Light> _Lights_Object;
         public Group<Light> Lights => _Lights_Object;
+        IGroupGetter<Light> IOblivionModGetter.Lights => _Lights_Object;
         #endregion
         #region Miscellaneous
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Miscellaneous> _Miscellaneous_Object;
         public Group<Miscellaneous> Miscellaneous => _Miscellaneous_Object;
+        IGroupGetter<Miscellaneous> IOblivionModGetter.Miscellaneous => _Miscellaneous_Object;
         #endregion
         #region Statics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Static> _Statics_Object;
         public Group<Static> Statics => _Statics_Object;
+        IGroupGetter<Static> IOblivionModGetter.Statics => _Statics_Object;
         #endregion
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Grass> _Grasses_Object;
         public Group<Grass> Grasses => _Grasses_Object;
+        IGroupGetter<Grass> IOblivionModGetter.Grasses => _Grasses_Object;
         #endregion
         #region Trees
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Tree> _Trees_Object;
         public Group<Tree> Trees => _Trees_Object;
+        IGroupGetter<Tree> IOblivionModGetter.Trees => _Trees_Object;
         #endregion
         #region Flora
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Flora> _Flora_Object;
         public Group<Flora> Flora => _Flora_Object;
+        IGroupGetter<Flora> IOblivionModGetter.Flora => _Flora_Object;
         #endregion
         #region Furnature
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Furnature> _Furnature_Object;
         public Group<Furnature> Furnature => _Furnature_Object;
+        IGroupGetter<Furnature> IOblivionModGetter.Furnature => _Furnature_Object;
         #endregion
         #region Weapons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Weapon> _Weapons_Object;
         public Group<Weapon> Weapons => _Weapons_Object;
+        IGroupGetter<Weapon> IOblivionModGetter.Weapons => _Weapons_Object;
         #endregion
         #region Ammo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Ammo> _Ammo_Object;
         public Group<Ammo> Ammo => _Ammo_Object;
+        IGroupGetter<Ammo> IOblivionModGetter.Ammo => _Ammo_Object;
         #endregion
         #region NPCs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<NPC> _NPCs_Object;
         public Group<NPC> NPCs => _NPCs_Object;
+        IGroupGetter<NPC> IOblivionModGetter.NPCs => _NPCs_Object;
         #endregion
         #region Creatures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Creature> _Creatures_Object;
         public Group<Creature> Creatures => _Creatures_Object;
+        IGroupGetter<Creature> IOblivionModGetter.Creatures => _Creatures_Object;
         #endregion
         #region LeveledCreatures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<LeveledCreature> _LeveledCreatures_Object;
         public Group<LeveledCreature> LeveledCreatures => _LeveledCreatures_Object;
+        IGroupGetter<LeveledCreature> IOblivionModGetter.LeveledCreatures => _LeveledCreatures_Object;
         #endregion
         #region SoulGems
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<SoulGem> _SoulGems_Object;
         public Group<SoulGem> SoulGems => _SoulGems_Object;
+        IGroupGetter<SoulGem> IOblivionModGetter.SoulGems => _SoulGems_Object;
         #endregion
         #region Keys
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Key> _Keys_Object;
         public Group<Key> Keys => _Keys_Object;
+        IGroupGetter<Key> IOblivionModGetter.Keys => _Keys_Object;
         #endregion
         #region Potions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Potion> _Potions_Object;
         public Group<Potion> Potions => _Potions_Object;
+        IGroupGetter<Potion> IOblivionModGetter.Potions => _Potions_Object;
         #endregion
         #region Subspaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Subspace> _Subspaces_Object;
         public Group<Subspace> Subspaces => _Subspaces_Object;
+        IGroupGetter<Subspace> IOblivionModGetter.Subspaces => _Subspaces_Object;
         #endregion
         #region SigilStones
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<SigilStone> _SigilStones_Object;
         public Group<SigilStone> SigilStones => _SigilStones_Object;
+        IGroupGetter<SigilStone> IOblivionModGetter.SigilStones => _SigilStones_Object;
         #endregion
         #region LeveledItems
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<LeveledItem> _LeveledItems_Object;
         public Group<LeveledItem> LeveledItems => _LeveledItems_Object;
+        IGroupGetter<LeveledItem> IOblivionModGetter.LeveledItems => _LeveledItems_Object;
         #endregion
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Weather> _Weathers_Object;
         public Group<Weather> Weathers => _Weathers_Object;
+        IGroupGetter<Weather> IOblivionModGetter.Weathers => _Weathers_Object;
         #endregion
         #region Climates
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Climate> _Climates_Object;
         public Group<Climate> Climates => _Climates_Object;
+        IGroupGetter<Climate> IOblivionModGetter.Climates => _Climates_Object;
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Region> _Regions_Object;
         public Group<Region> Regions => _Regions_Object;
+        IGroupGetter<Region> IOblivionModGetter.Regions => _Regions_Object;
         #endregion
         #region Cells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly ListGroup<CellBlock> _Cells_Object = new ListGroup<CellBlock>();
         public ListGroup<CellBlock> Cells => _Cells_Object;
+        IListGroupGetter<CellBlock> IOblivionModGetter.Cells => _Cells_Object;
         #endregion
         #region Worldspaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Worldspace> _Worldspaces_Object;
         public Group<Worldspace> Worldspaces => _Worldspaces_Object;
+        IGroupGetter<Worldspace> IOblivionModGetter.Worldspaces => _Worldspaces_Object;
         #endregion
         #region DialogTopics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<DialogTopic> _DialogTopics_Object;
         public Group<DialogTopic> DialogTopics => _DialogTopics_Object;
+        IGroupGetter<DialogTopic> IOblivionModGetter.DialogTopics => _DialogTopics_Object;
         #endregion
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Quest> _Quests_Object;
         public Group<Quest> Quests => _Quests_Object;
+        IGroupGetter<Quest> IOblivionModGetter.Quests => _Quests_Object;
         #endregion
         #region IdleAnimations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<IdleAnimation> _IdleAnimations_Object;
         public Group<IdleAnimation> IdleAnimations => _IdleAnimations_Object;
+        IGroupGetter<IdleAnimation> IOblivionModGetter.IdleAnimations => _IdleAnimations_Object;
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<AIPackage> _AIPackages_Object;
         public Group<AIPackage> AIPackages => _AIPackages_Object;
+        IGroupGetter<AIPackage> IOblivionModGetter.AIPackages => _AIPackages_Object;
         #endregion
         #region CombatStyles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<CombatStyle> _CombatStyles_Object;
         public Group<CombatStyle> CombatStyles => _CombatStyles_Object;
+        IGroupGetter<CombatStyle> IOblivionModGetter.CombatStyles => _CombatStyles_Object;
         #endregion
         #region LoadScreens
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<LoadScreen> _LoadScreens_Object;
         public Group<LoadScreen> LoadScreens => _LoadScreens_Object;
+        IGroupGetter<LoadScreen> IOblivionModGetter.LoadScreens => _LoadScreens_Object;
         #endregion
         #region LeveledSpells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<LeveledSpell> _LeveledSpells_Object;
         public Group<LeveledSpell> LeveledSpells => _LeveledSpells_Object;
+        IGroupGetter<LeveledSpell> IOblivionModGetter.LeveledSpells => _LeveledSpells_Object;
         #endregion
         #region AnimatedObjects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<AnimatedObject> _AnimatedObjects_Object;
         public Group<AnimatedObject> AnimatedObjects => _AnimatedObjects_Object;
+        IGroupGetter<AnimatedObject> IOblivionModGetter.AnimatedObjects => _AnimatedObjects_Object;
         #endregion
         #region Waters
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Water> _Waters_Object;
         public Group<Water> Waters => _Waters_Object;
+        IGroupGetter<Water> IOblivionModGetter.Waters => _Waters_Object;
         #endregion
         #region EffectShaders
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<EffectShader> _EffectShaders_Object;
         public Group<EffectShader> EffectShaders => _EffectShaders_Object;
+        IGroupGetter<EffectShader> IOblivionModGetter.EffectShaders => _EffectShaders_Object;
         #endregion
 
         IMask<bool> IEqualsMask<OblivionMod>.GetEqualsMask(OblivionMod rhs, EqualsMaskHelper.Include include) => OblivionModCommon.GetEqualsMask(this, rhs, include);
@@ -4993,7 +5049,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static OblivionMod Copy(
-            IOblivionMod item,
+            IOblivionModGetter item,
             OblivionMod_CopyMask copyMask = null,
             IOblivionModGetter def = null)
         {
@@ -5485,6 +5541,63 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiClass<IOblivionMod, IOblivionModGetter>,
         ILoquiClass<OblivionMod, IOblivionModGetter>
     {
+        new ModHeader ModHeader { get; }
+        new Group<GameSetting> GameSettings { get; }
+        new Group<Global> Globals { get; }
+        new Group<Class> Classes { get; }
+        new Group<Faction> Factions { get; }
+        new Group<Hair> Hairs { get; }
+        new Group<Eye> Eyes { get; }
+        new Group<Race> Races { get; }
+        new Group<Sound> Sounds { get; }
+        new Group<SkillRecord> Skills { get; }
+        new Group<MagicEffect> MagicEffects { get; }
+        new Group<Script> Scripts { get; }
+        new Group<LandTexture> LandTextures { get; }
+        new Group<Enchantment> Enchantments { get; }
+        new Group<SpellUnleveled> Spells { get; }
+        new Group<Birthsign> Birthsigns { get; }
+        new Group<Activator> Activators { get; }
+        new Group<AlchemicalApparatus> AlchemicalApparatus { get; }
+        new Group<Armor> Armors { get; }
+        new Group<Book> Books { get; }
+        new Group<Clothing> Clothes { get; }
+        new Group<Container> Containers { get; }
+        new Group<Door> Doors { get; }
+        new Group<Ingredient> Ingredients { get; }
+        new Group<Light> Lights { get; }
+        new Group<Miscellaneous> Miscellaneous { get; }
+        new Group<Static> Statics { get; }
+        new Group<Grass> Grasses { get; }
+        new Group<Tree> Trees { get; }
+        new Group<Flora> Flora { get; }
+        new Group<Furnature> Furnature { get; }
+        new Group<Weapon> Weapons { get; }
+        new Group<Ammo> Ammo { get; }
+        new Group<NPC> NPCs { get; }
+        new Group<Creature> Creatures { get; }
+        new Group<LeveledCreature> LeveledCreatures { get; }
+        new Group<SoulGem> SoulGems { get; }
+        new Group<Key> Keys { get; }
+        new Group<Potion> Potions { get; }
+        new Group<Subspace> Subspaces { get; }
+        new Group<SigilStone> SigilStones { get; }
+        new Group<LeveledItem> LeveledItems { get; }
+        new Group<Weather> Weathers { get; }
+        new Group<Climate> Climates { get; }
+        new Group<Region> Regions { get; }
+        new ListGroup<CellBlock> Cells { get; }
+        new Group<Worldspace> Worldspaces { get; }
+        new Group<DialogTopic> DialogTopics { get; }
+        new Group<Quest> Quests { get; }
+        new Group<IdleAnimation> IdleAnimations { get; }
+        new Group<AIPackage> AIPackages { get; }
+        new Group<CombatStyle> CombatStyles { get; }
+        new Group<LoadScreen> LoadScreens { get; }
+        new Group<LeveledSpell> LeveledSpells { get; }
+        new Group<AnimatedObject> AnimatedObjects { get; }
+        new Group<Water> Waters { get; }
+        new Group<EffectShader> EffectShaders { get; }
         void CopyFieldsFrom(
             IOblivionModGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -5497,177 +5610,177 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem
     {
         #region ModHeader
-        ModHeader ModHeader { get; }
+        IModHeaderGetter ModHeader { get; }
         bool ModHeader_IsSet { get; }
 
         #endregion
         #region GameSettings
-        Group<GameSetting> GameSettings { get; }
+        IGroupGetter<GameSetting> GameSettings { get; }
         #endregion
         #region Globals
-        Group<Global> Globals { get; }
+        IGroupGetter<Global> Globals { get; }
         #endregion
         #region Classes
-        Group<Class> Classes { get; }
+        IGroupGetter<Class> Classes { get; }
         #endregion
         #region Factions
-        Group<Faction> Factions { get; }
+        IGroupGetter<Faction> Factions { get; }
         #endregion
         #region Hairs
-        Group<Hair> Hairs { get; }
+        IGroupGetter<Hair> Hairs { get; }
         #endregion
         #region Eyes
-        Group<Eye> Eyes { get; }
+        IGroupGetter<Eye> Eyes { get; }
         #endregion
         #region Races
-        Group<Race> Races { get; }
+        IGroupGetter<Race> Races { get; }
         #endregion
         #region Sounds
-        Group<Sound> Sounds { get; }
+        IGroupGetter<Sound> Sounds { get; }
         #endregion
         #region Skills
-        Group<SkillRecord> Skills { get; }
+        IGroupGetter<SkillRecord> Skills { get; }
         #endregion
         #region MagicEffects
-        Group<MagicEffect> MagicEffects { get; }
+        IGroupGetter<MagicEffect> MagicEffects { get; }
         #endregion
         #region Scripts
-        Group<Script> Scripts { get; }
+        IGroupGetter<Script> Scripts { get; }
         #endregion
         #region LandTextures
-        Group<LandTexture> LandTextures { get; }
+        IGroupGetter<LandTexture> LandTextures { get; }
         #endregion
         #region Enchantments
-        Group<Enchantment> Enchantments { get; }
+        IGroupGetter<Enchantment> Enchantments { get; }
         #endregion
         #region Spells
-        Group<SpellUnleveled> Spells { get; }
+        IGroupGetter<SpellUnleveled> Spells { get; }
         #endregion
         #region Birthsigns
-        Group<Birthsign> Birthsigns { get; }
+        IGroupGetter<Birthsign> Birthsigns { get; }
         #endregion
         #region Activators
-        Group<Activator> Activators { get; }
+        IGroupGetter<Activator> Activators { get; }
         #endregion
         #region AlchemicalApparatus
-        Group<AlchemicalApparatus> AlchemicalApparatus { get; }
+        IGroupGetter<AlchemicalApparatus> AlchemicalApparatus { get; }
         #endregion
         #region Armors
-        Group<Armor> Armors { get; }
+        IGroupGetter<Armor> Armors { get; }
         #endregion
         #region Books
-        Group<Book> Books { get; }
+        IGroupGetter<Book> Books { get; }
         #endregion
         #region Clothes
-        Group<Clothing> Clothes { get; }
+        IGroupGetter<Clothing> Clothes { get; }
         #endregion
         #region Containers
-        Group<Container> Containers { get; }
+        IGroupGetter<Container> Containers { get; }
         #endregion
         #region Doors
-        Group<Door> Doors { get; }
+        IGroupGetter<Door> Doors { get; }
         #endregion
         #region Ingredients
-        Group<Ingredient> Ingredients { get; }
+        IGroupGetter<Ingredient> Ingredients { get; }
         #endregion
         #region Lights
-        Group<Light> Lights { get; }
+        IGroupGetter<Light> Lights { get; }
         #endregion
         #region Miscellaneous
-        Group<Miscellaneous> Miscellaneous { get; }
+        IGroupGetter<Miscellaneous> Miscellaneous { get; }
         #endregion
         #region Statics
-        Group<Static> Statics { get; }
+        IGroupGetter<Static> Statics { get; }
         #endregion
         #region Grasses
-        Group<Grass> Grasses { get; }
+        IGroupGetter<Grass> Grasses { get; }
         #endregion
         #region Trees
-        Group<Tree> Trees { get; }
+        IGroupGetter<Tree> Trees { get; }
         #endregion
         #region Flora
-        Group<Flora> Flora { get; }
+        IGroupGetter<Flora> Flora { get; }
         #endregion
         #region Furnature
-        Group<Furnature> Furnature { get; }
+        IGroupGetter<Furnature> Furnature { get; }
         #endregion
         #region Weapons
-        Group<Weapon> Weapons { get; }
+        IGroupGetter<Weapon> Weapons { get; }
         #endregion
         #region Ammo
-        Group<Ammo> Ammo { get; }
+        IGroupGetter<Ammo> Ammo { get; }
         #endregion
         #region NPCs
-        Group<NPC> NPCs { get; }
+        IGroupGetter<NPC> NPCs { get; }
         #endregion
         #region Creatures
-        Group<Creature> Creatures { get; }
+        IGroupGetter<Creature> Creatures { get; }
         #endregion
         #region LeveledCreatures
-        Group<LeveledCreature> LeveledCreatures { get; }
+        IGroupGetter<LeveledCreature> LeveledCreatures { get; }
         #endregion
         #region SoulGems
-        Group<SoulGem> SoulGems { get; }
+        IGroupGetter<SoulGem> SoulGems { get; }
         #endregion
         #region Keys
-        Group<Key> Keys { get; }
+        IGroupGetter<Key> Keys { get; }
         #endregion
         #region Potions
-        Group<Potion> Potions { get; }
+        IGroupGetter<Potion> Potions { get; }
         #endregion
         #region Subspaces
-        Group<Subspace> Subspaces { get; }
+        IGroupGetter<Subspace> Subspaces { get; }
         #endregion
         #region SigilStones
-        Group<SigilStone> SigilStones { get; }
+        IGroupGetter<SigilStone> SigilStones { get; }
         #endregion
         #region LeveledItems
-        Group<LeveledItem> LeveledItems { get; }
+        IGroupGetter<LeveledItem> LeveledItems { get; }
         #endregion
         #region Weathers
-        Group<Weather> Weathers { get; }
+        IGroupGetter<Weather> Weathers { get; }
         #endregion
         #region Climates
-        Group<Climate> Climates { get; }
+        IGroupGetter<Climate> Climates { get; }
         #endregion
         #region Regions
-        Group<Region> Regions { get; }
+        IGroupGetter<Region> Regions { get; }
         #endregion
         #region Cells
-        ListGroup<CellBlock> Cells { get; }
+        IListGroupGetter<CellBlock> Cells { get; }
         #endregion
         #region Worldspaces
-        Group<Worldspace> Worldspaces { get; }
+        IGroupGetter<Worldspace> Worldspaces { get; }
         #endregion
         #region DialogTopics
-        Group<DialogTopic> DialogTopics { get; }
+        IGroupGetter<DialogTopic> DialogTopics { get; }
         #endregion
         #region Quests
-        Group<Quest> Quests { get; }
+        IGroupGetter<Quest> Quests { get; }
         #endregion
         #region IdleAnimations
-        Group<IdleAnimation> IdleAnimations { get; }
+        IGroupGetter<IdleAnimation> IdleAnimations { get; }
         #endregion
         #region AIPackages
-        Group<AIPackage> AIPackages { get; }
+        IGroupGetter<AIPackage> AIPackages { get; }
         #endregion
         #region CombatStyles
-        Group<CombatStyle> CombatStyles { get; }
+        IGroupGetter<CombatStyle> CombatStyles { get; }
         #endregion
         #region LoadScreens
-        Group<LoadScreen> LoadScreens { get; }
+        IGroupGetter<LoadScreen> LoadScreens { get; }
         #endregion
         #region LeveledSpells
-        Group<LeveledSpell> LeveledSpells { get; }
+        IGroupGetter<LeveledSpell> LeveledSpells { get; }
         #endregion
         #region AnimatedObjects
-        Group<AnimatedObject> AnimatedObjects { get; }
+        IGroupGetter<AnimatedObject> AnimatedObjects { get; }
         #endregion
         #region Waters
-        Group<Water> Waters { get; }
+        IGroupGetter<Water> Waters { get; }
         #endregion
         #region EffectShaders
-        Group<EffectShader> EffectShaders { get; }
+        IGroupGetter<EffectShader> EffectShaders { get; }
         #endregion
 
     }

@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ScriptVariableReference Copy(
-            IScriptVariableReference item,
+            IScriptVariableReferenceGetter item,
             ScriptVariableReference_CopyMask copyMask = null,
             IScriptVariableReferenceGetter def = null)
         {

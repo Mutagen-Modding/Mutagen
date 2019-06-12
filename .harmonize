@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>0c7013c28e90ddcc0950eab9cef425a6738fc391</Sha>
+         <Sha>4bab7c33e70d80790995006d51a6a8961a734133</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-24-2019 18:59:36</CommitDate>
-         <Description>Custom Memory&lt;T&gt; implementation</Description>
+         <CommitDate>06-11-2019 23:29:33</CommitDate>
+         <Description>Made IReadOnlySetList covariant</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a9b53374c7218700947266e714de6365f2159ec7</Sha>
+         <Sha>77226faf22ebad30531b3ca1c2ec7c4d3c373fa9</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>06-11-2019 08:33:48</CommitDate>
-         <Description>Ctor generation made async to help reorder generation snippets</Description>
+         <CommitDate>06-12-2019 19:00:21</CommitDate>
+         <Description>Merge remote-tracking branch 'origin/master'</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

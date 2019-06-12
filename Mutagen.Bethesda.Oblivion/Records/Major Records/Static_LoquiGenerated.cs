@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IStaticGetter.Model => this.Model;
+        IModelGetter IStaticGetter.Model => this.Model;
         #endregion
 
         IMask<bool> IEqualsMask<Static>.GetEqualsMask(Static rhs, EqualsMaskHelper.Include include) => StaticCommon.GetEqualsMask(this, rhs, include);
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Static Copy(
-            IStatic item,
+            IStaticGetter item,
             Static_CopyMask copyMask = null,
             IStaticGetter def = null)
         {
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Model
-        Model Model { get; }
+        IModelGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -895,8 +895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Model = rhsModelItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 ModelCommon.CopyFieldsFrom(
                                     item: item.Model,

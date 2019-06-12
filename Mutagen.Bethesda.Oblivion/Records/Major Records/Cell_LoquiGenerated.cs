@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Lighting_Set(default(CellLighting), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        CellLighting ICellGetter.Lighting => this.Lighting;
+        ICellLightingGetter ICellGetter.Lighting => this.Lighting;
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -175,9 +175,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDLink<Region>> ICell.Regions => _Regions;
+        ISetList<FormIDLink<Region>> ICell.Regions => _Regions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDLink<Region>> ICellGetter.Regions => _Regions;
+        IReadOnlySetList<FormIDLink<Region>> ICellGetter.Regions => _Regions;
         #endregion
 
         #endregion
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.PathGrid_Set(default(PathGrid), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        PathGrid ICellGetter.PathGrid => this.PathGrid;
+        IPathGridInternalGetter ICellGetter.PathGrid => this.PathGrid;
         #endregion
         #region Landscape
         public bool Landscape_IsSet
@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Landscape_Set(default(Landscape), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Landscape ICellGetter.Landscape => this.Landscape;
+        ILandscapeInternalGetter ICellGetter.Landscape => this.Landscape;
         #endregion
         #region Timestamp
         private Byte[] _Timestamp = new byte[4];
@@ -379,9 +379,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<IPlaced> ICell.Persistent => _Persistent;
+        ISetList<IPlaced> ICell.Persistent => _Persistent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<IPlaced> ICellGetter.Persistent => _Persistent;
+        IReadOnlySetList<IPlaced> ICellGetter.Persistent => _Persistent;
         #endregion
 
         #endregion
@@ -412,9 +412,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<IPlaced> ICell.Temporary => _Temporary;
+        ISetList<IPlaced> ICell.Temporary => _Temporary;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<IPlaced> ICellGetter.Temporary => _Temporary;
+        IReadOnlySetList<IPlaced> ICellGetter.Temporary => _Temporary;
         #endregion
 
         #endregion
@@ -445,9 +445,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<IPlaced> ICell.VisibleWhenDistant => _VisibleWhenDistant;
+        ISetList<IPlaced> ICell.VisibleWhenDistant => _VisibleWhenDistant;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<IPlaced> ICellGetter.VisibleWhenDistant => _VisibleWhenDistant;
+        IReadOnlySetList<IPlaced> ICellGetter.VisibleWhenDistant => _VisibleWhenDistant;
         #endregion
 
         #endregion
@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Cell Copy(
-            ICell item,
+            ICellGetter item,
             Cell_CopyMask copyMask = null,
             ICellGetter def = null)
         {
@@ -1567,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Lighting_Set(CellLighting item, bool hasBeenSet = true);
         void Lighting_Unset();
 
-        new ISourceSetList<FormIDLink<Region>> Regions { get; }
+        new ISetList<FormIDLink<Region>> Regions { get; }
         new MusicType MusicType { get; set; }
         new bool MusicType_IsSet { get; set; }
         void MusicType_Set(MusicType item, bool hasBeenSet = true);
@@ -1601,13 +1601,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] PersistentTimestamp { get; set; }
 
-        new ISourceSetList<IPlaced> Persistent { get; }
+        new ISetList<IPlaced> Persistent { get; }
         new Byte[] TemporaryTimestamp { get; set; }
 
-        new ISourceSetList<IPlaced> Temporary { get; }
+        new ISetList<IPlaced> Temporary { get; }
         new Byte[] VisibleWhenDistantTimestamp { get; set; }
 
-        new ISourceSetList<IPlaced> VisibleWhenDistant { get; }
+        new ISetList<IPlaced> VisibleWhenDistant { get; }
         void CopyFieldsFrom(
             ICellGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -1620,14 +1620,10 @@ namespace Mutagen.Bethesda.Oblivion
         ICell,
         ICellInternalGetter
     {
-        new ISourceSetList<FormIDLink<Region>> Regions { get; }
         new Climate Climate { get; set; }
         new Water Water { get; set; }
         new Faction Owner { get; set; }
         new Global GlobalVariable { get; set; }
-        new ISourceSetList<IPlaced> Persistent { get; }
-        new ISourceSetList<IPlaced> Temporary { get; }
-        new ISourceSetList<IPlaced> VisibleWhenDistant { get; }
     }
 
     public partial interface ICellGetter :
@@ -1651,12 +1647,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Lighting
-        CellLighting Lighting { get; }
+        ICellLightingGetter Lighting { get; }
         bool Lighting_IsSet { get; }
 
         #endregion
         #region Regions
-        IObservableSetList<FormIDLink<Region>> Regions { get; }
+        IReadOnlySetList<FormIDLink<Region>> Regions { get; }
         #endregion
         #region MusicType
         MusicType MusicType { get; }
@@ -1694,12 +1690,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region PathGrid
-        PathGrid PathGrid { get; }
+        IPathGridInternalGetter PathGrid { get; }
         bool PathGrid_IsSet { get; }
 
         #endregion
         #region Landscape
-        Landscape Landscape { get; }
+        ILandscapeInternalGetter Landscape { get; }
         bool Landscape_IsSet { get; }
 
         #endregion
@@ -1712,21 +1708,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Persistent
-        IObservableSetList<IPlaced> Persistent { get; }
+        IReadOnlySetList<IPlaced> Persistent { get; }
         #endregion
         #region TemporaryTimestamp
         Byte[] TemporaryTimestamp { get; }
 
         #endregion
         #region Temporary
-        IObservableSetList<IPlaced> Temporary { get; }
+        IReadOnlySetList<IPlaced> Temporary { get; }
         #endregion
         #region VisibleWhenDistantTimestamp
         Byte[] VisibleWhenDistantTimestamp { get; }
 
         #endregion
         #region VisibleWhenDistant
-        IObservableSetList<IPlaced> VisibleWhenDistant { get; }
+        IReadOnlySetList<IPlaced> VisibleWhenDistant { get; }
         #endregion
 
     }
@@ -2313,8 +2309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Lighting.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Lighting = rhsLightingItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 CellLightingCommon.CopyFieldsFrom(
                                     item: item.Lighting,
@@ -2551,8 +2546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.PathGrid.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.PathGrid = rhsPathGridItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 PathGridCommon.CopyFieldsFrom(
                                     item: item.PathGrid,
@@ -2604,8 +2598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Landscape.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Landscape = rhsLandscapeItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 LandscapeCommon.CopyFieldsFrom(
                                     item: item.Landscape,

@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static BaseLayer Copy(
-            IBaseLayer item,
+            IBaseLayerGetter item,
             BaseLayer_CopyMask copyMask = null,
             IBaseLayerGetter def = null)
         {

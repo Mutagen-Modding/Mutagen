@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Havok_Set(default(HavokData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        HavokData ILandTextureGetter.Havok => this.Havok;
+        IHavokDataGetter ILandTextureGetter.Havok => this.Havok;
         #endregion
         #region TextureSpecularExponent
         public bool TextureSpecularExponent_IsSet
@@ -147,9 +147,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
+        ISetList<FormIDSetLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<Grass>> ILandTextureGetter.PotentialGrass => _PotentialGrass;
+        IReadOnlySetList<FormIDSetLink<Grass>> ILandTextureGetter.PotentialGrass => _PotentialGrass;
         #endregion
 
         #endregion
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LandTexture Copy(
-            ILandTexture item,
+            ILandTextureGetter item,
             LandTexture_CopyMask copyMask = null,
             ILandTextureGetter def = null)
         {
@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
         void TextureSpecularExponent_Set(Byte item, bool hasBeenSet = true);
         void TextureSpecularExponent_Unset();
 
-        new ISourceSetList<FormIDSetLink<Grass>> PotentialGrass { get; }
+        new ISetList<FormIDSetLink<Grass>> PotentialGrass { get; }
         void CopyFieldsFrom(
             ILandTextureGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -842,7 +842,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILandTexture,
         ILandTextureInternalGetter
     {
-        new ISourceSetList<FormIDSetLink<Grass>> PotentialGrass { get; }
     }
 
     public partial interface ILandTextureGetter :
@@ -856,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Havok
-        HavokData Havok { get; }
+        IHavokDataGetter Havok { get; }
         bool Havok_IsSet { get; }
 
         #endregion
@@ -866,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region PotentialGrass
-        IObservableSetList<FormIDSetLink<Grass>> PotentialGrass { get; }
+        IReadOnlySetList<FormIDSetLink<Grass>> PotentialGrass { get; }
         #endregion
 
     }
@@ -1176,8 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Havok.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Havok = rhsHavokItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 HavokDataCommon.CopyFieldsFrom(
                                     item: item.Havok,

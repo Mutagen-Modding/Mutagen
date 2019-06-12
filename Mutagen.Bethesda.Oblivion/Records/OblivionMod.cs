@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary(path, modKey, importMask: null);
         }
 
-        private IObservable<IChangeSet<IMajorRecord>> GetCellRecords(ICell cell)
+        private IObservable<IChangeSet<IMajorRecord>> GetCellRecords(Cell cell)
         {
             if (cell == null) return Observable.Empty<IChangeSet<IMajorRecord>>();
             return Observable.Merge<IChangeSet<IMajorRecord>>(
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
                     .Transform<IPlaced, IMajorRecord>(p => p));
         }
 
-        private IObservable<IChangeSet<IMajorRecord>> GetWorldspaceRecords(IWorldspace worldspace)
+        private IObservable<IChangeSet<IMajorRecord>> GetWorldspaceRecords(Worldspace worldspace)
         {
             return Observable.Merge<IChangeSet<IMajorRecord>>(
                 Observable
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
                     .MergeMany(c => GetCellRecords(c)));
         }
 
-        private IObservable<IChangeSet<IMajorRecord>> GetDialogRecords(IDialogTopic dialog)
+        private IObservable<IChangeSet<IMajorRecord>> GetDialogRecords(DialogTopic dialog)
         {
             return Observable.Merge<IChangeSet<IMajorRecord>>(
                 Observable

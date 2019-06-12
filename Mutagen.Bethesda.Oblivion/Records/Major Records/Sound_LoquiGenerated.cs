@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Data_Set(default(SoundData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        SoundData ISoundGetter.Data => this.Data;
+        ISoundDataInternalGetter ISoundGetter.Data => this.Data;
         #endregion
 
         IMask<bool> IEqualsMask<Sound>.GetEqualsMask(Sound rhs, EqualsMaskHelper.Include include) => SoundCommon.GetEqualsMask(this, rhs, include);
@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Sound Copy(
-            ISound item,
+            ISoundGetter item,
             Sound_CopyMask copyMask = null,
             ISoundGetter def = null)
         {
@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Data
-        SoundData Data { get; }
+        ISoundDataInternalGetter Data { get; }
         bool Data_IsSet { get; }
 
         #endregion
@@ -1030,8 +1030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Data.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Data = rhsDataItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 SoundDataCommon.CopyFieldsFrom(
                                     item: item.Data,

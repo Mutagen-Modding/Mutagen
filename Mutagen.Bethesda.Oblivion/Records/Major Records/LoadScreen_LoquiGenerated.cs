@@ -120,9 +120,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<LoadScreenLocation> ILoadScreen.Locations => _Locations;
+        ISetList<LoadScreenLocation> ILoadScreen.Locations => _Locations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<LoadScreenLocation> ILoadScreenGetter.Locations => _Locations;
+        IReadOnlySetList<LoadScreenLocation> ILoadScreenGetter.Locations => _Locations;
         #endregion
 
         #endregion
@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LoadScreen Copy(
-            ILoadScreen item,
+            ILoadScreenGetter item,
             LoadScreen_CopyMask copyMask = null,
             ILoadScreenGetter def = null)
         {
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Description_Set(String item, bool hasBeenSet = true);
         void Description_Unset();
 
-        new ISourceSetList<LoadScreenLocation> Locations { get; }
+        new ISetList<LoadScreenLocation> Locations { get; }
         void CopyFieldsFrom(
             ILoadScreenGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -791,7 +791,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoadScreen,
         ILoadScreenInternalGetter
     {
-        new ISourceSetList<LoadScreenLocation> Locations { get; }
     }
 
     public partial interface ILoadScreenGetter :
@@ -810,7 +809,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Locations
-        IObservableSetList<LoadScreenLocation> Locations { get; }
+        IReadOnlySetList<LoadScreenLocation> Locations { get; }
         #endregion
 
     }

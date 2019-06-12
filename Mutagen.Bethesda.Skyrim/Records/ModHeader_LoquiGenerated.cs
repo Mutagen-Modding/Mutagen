@@ -77,6 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             get => _Stats;
             set => _Stats = value ?? new ModStats();
         }
+        IModStatsGetter IModHeaderGetter.Stats => _Stats;
         #endregion
         #region TypeOffsets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -198,9 +199,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<MasterReference> IModHeader.MasterReferences => _MasterReferences;
+        ISetList<MasterReference> IModHeader.MasterReferences => _MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<MasterReference> IModHeaderGetter.MasterReferences => _MasterReferences;
+        IReadOnlySetList<MasterReference> IModHeaderGetter.MasterReferences => _MasterReferences;
         #endregion
 
         #endregion
@@ -744,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static ModHeader Copy(
-            IModHeader item,
+            IModHeaderGetter item,
             ModHeader_CopyMask copyMask = null,
             IModHeaderGetter def = null)
         {
@@ -966,7 +967,7 @@ namespace Mutagen.Bethesda.Skyrim
         void Description_Set(String item, bool hasBeenSet = true);
         void Description_Unset();
 
-        new ISourceSetList<MasterReference> MasterReferences { get; }
+        new ISetList<MasterReference> MasterReferences { get; }
         new UInt64 VestigialData { get; set; }
         new bool VestigialData_IsSet { get; set; }
         void VestigialData_Set(UInt64 item, bool hasBeenSet = true);
@@ -989,7 +990,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Stats
-        ModStats Stats { get; }
+        IModStatsGetter Stats { get; }
 
         #endregion
         #region TypeOffsets
@@ -1013,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region MasterReferences
-        IObservableSetList<MasterReference> MasterReferences { get; }
+        IReadOnlySetList<MasterReference> MasterReferences { get; }
         #endregion
         #region VestigialData
         UInt64 VestigialData { get; }
@@ -1340,7 +1341,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     switch (copyMask?.Stats?.Overall ?? CopyOption.Reference)
                     {
                         case CopyOption.Reference:
-                            item.Stats = rhs.Stats;
+                            item.Stats = Utility.GetGetterInterfaceReference<ModStats>(rhs.Stats);
                             break;
                         case CopyOption.CopyIn:
                             ModStatsCommon.CopyFieldsFrom(

@@ -118,9 +118,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<MapMarker.Type> IMapMarker.Types => _Types;
+        ISetList<MapMarker.Type> IMapMarker.Types => _Types;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<MapMarker.Type> IMapMarkerGetter.Types => _Types;
+        IReadOnlySetList<MapMarker.Type> IMapMarkerGetter.Types => _Types;
         #endregion
 
         #endregion
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static MapMarker Copy(
-            IMapMarker item,
+            IMapMarkerGetter item,
             MapMarker_CopyMask copyMask = null,
             IMapMarkerGetter def = null)
         {
@@ -689,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Name_Set(String item, bool hasBeenSet = true);
         void Name_Unset();
 
-        new ISourceSetList<MapMarker.Type> Types { get; }
+        new ISetList<MapMarker.Type> Types { get; }
         void CopyFieldsFrom(
             IMapMarkerGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Types
-        IObservableSetList<MapMarker.Type> Types { get; }
+        IReadOnlySetList<MapMarker.Type> Types { get; }
         #endregion
 
     }

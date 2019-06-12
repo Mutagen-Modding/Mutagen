@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static NPCAbstract Copy(
-            INPCAbstract item,
+            INPCAbstractGetter item,
             NPCAbstract_CopyMask copyMask = null,
             INPCAbstractGetter def = null)
         {

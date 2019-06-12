@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static GlobalFloat Copy(
-            IGlobalFloat item,
+            IGlobalFloatGetter item,
             GlobalFloat_CopyMask copyMask = null,
             IGlobalFloatGetter def = null)
         {

@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LocalVariable Copy(
-            ILocalVariable item,
+            ILocalVariableGetter item,
             LocalVariable_CopyMask copyMask = null,
             ILocalVariableGetter def = null)
         {

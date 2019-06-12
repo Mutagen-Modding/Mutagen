@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Armor Copy(
-            IArmor item,
+            IArmorGetter item,
             Armor_CopyMask copyMask = null,
             IArmorGetter def = null)
         {

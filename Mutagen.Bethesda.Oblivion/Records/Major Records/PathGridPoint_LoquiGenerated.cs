@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Connections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<Int16> _Connections = new SourceSetList<Int16>();
-        public ISourceSetList<Int16> Connections => _Connections;
+        private readonly SourceList<Int16> _Connections = new SourceList<Int16>();
+        public ISourceList<Int16> Connections => _Connections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Int16> ConnectionsEnumerable
         {
@@ -88,9 +88,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Int16> IPathGridPoint.Connections => _Connections;
+        IList<Int16> IPathGridPoint.Connections => _Connections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Int16> IPathGridPointGetter.Connections => _Connections;
+        IReadOnlyList<Int16> IPathGridPointGetter.Connections => _Connections;
         #endregion
 
         #endregion
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static PathGridPoint Copy(
-            IPathGridPoint item,
+            IPathGridPointGetter item,
             PathGridPoint_CopyMask copyMask = null,
             IPathGridPointGetter def = null)
         {
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] NumConnectionsFluffBytes { get; set; }
 
-        new ISourceSetList<Int16> Connections { get; }
+        new IList<Int16> Connections { get; }
         void CopyFieldsFrom(
             IPathGridPointGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Connections
-        IObservableSetList<Int16> Connections { get; }
+        IReadOnlyList<Int16> Connections { get; }
         #endregion
 
     }
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Point = default(P3Float);
             item.NumConnectionsFluffBytes = default(Byte[]);
-            item.Connections.Unset();
+            item.Connections.Clear();
         }
 
         public static PathGridPoint_Mask<bool> GetEqualsMask(
@@ -990,7 +990,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IPathGridPointGetter item,
             PathGridPoint_Mask<bool?> checkMask)
         {
-            if (checkMask.Connections.Overall.HasValue && checkMask.Connections.Overall.Value != item.Connections.HasBeenSet) return false;
             return true;
         }
 
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new PathGridPoint_Mask<bool>();
             ret.Point = true;
             ret.NumConnectionsFluffBytes = true;
-            ret.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Connections.HasBeenSet, null);
+            ret.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
             return ret;
         }
 
@@ -1158,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.Connections.Unset();
+                            item.Connections.Clear();
                         }
                     }
                     catch (Exception ex)

@@ -67,9 +67,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<RoadPoint> IRoad.Points => _Points;
+        ISetList<RoadPoint> IRoad.Points => _Points;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<RoadPoint> IRoadGetter.Points => _Points;
+        IReadOnlySetList<RoadPoint> IRoadGetter.Points => _Points;
         #endregion
 
         #endregion
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Road Copy(
-            IRoad item,
+            IRoadGetter item,
             Road_CopyMask copyMask = null,
             IRoadGetter def = null)
         {
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiClass<IRoad, IRoadGetter>,
         ILoquiClass<Road, IRoadGetter>
     {
-        new ISourceSetList<RoadPoint> Points { get; }
+        new ISetList<RoadPoint> Points { get; }
         void CopyFieldsFrom(
             IRoadGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -611,7 +611,6 @@ namespace Mutagen.Bethesda.Oblivion
         IRoad,
         IRoadInternalGetter
     {
-        new ISourceSetList<RoadPoint> Points { get; }
     }
 
     public partial interface IRoadGetter :
@@ -620,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Points
-        IObservableSetList<RoadPoint> Points { get; }
+        IReadOnlySetList<RoadPoint> Points { get; }
         #endregion
 
     }

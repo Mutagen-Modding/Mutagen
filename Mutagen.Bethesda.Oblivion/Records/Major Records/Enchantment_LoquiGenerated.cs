@@ -143,9 +143,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Effect> IEnchantment.Effects => _Effects;
+        ISetList<Effect> IEnchantment.Effects => _Effects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Effect> IEnchantmentGetter.Effects => _Effects;
+        IReadOnlySetList<Effect> IEnchantmentGetter.Effects => _Effects;
         #endregion
 
         #endregion
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Enchantment Copy(
-            IEnchantment item,
+            IEnchantmentGetter item,
             Enchantment_CopyMask copyMask = null,
             IEnchantmentGetter def = null)
         {
@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Enchantment.Flag Flags { get; set; }
 
-        new ISourceSetList<Effect> Effects { get; }
+        new ISetList<Effect> Effects { get; }
         void CopyFieldsFrom(
             IEnchantmentGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -888,7 +888,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEnchantment,
         IEnchantmentInternalGetter
     {
-        new ISourceSetList<Effect> Effects { get; }
         new Enchantment.ENITDataType ENITDataTypeState { get; set; }
 
     }
@@ -920,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Effects
-        IObservableSetList<Effect> Effects { get; }
+        IReadOnlySetList<Effect> Effects { get; }
         #endregion
 
     }

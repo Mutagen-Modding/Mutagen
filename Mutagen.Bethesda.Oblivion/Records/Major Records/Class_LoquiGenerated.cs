@@ -136,8 +136,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PrimaryAttributes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<ActorValue> _PrimaryAttributes = new SourceBoundedSetList<ActorValue>(max: 2);
-        public ISourceSetList<ActorValue> PrimaryAttributes => _PrimaryAttributes;
+        private readonly ISourceList<ActorValue> _PrimaryAttributes = new SourceBoundedList<ActorValue>(max: 2);
+        public ISourceList<ActorValue> PrimaryAttributes => _PrimaryAttributes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ActorValue> PrimaryAttributesEnumerable
         {
@@ -146,9 +146,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<ActorValue> IClass.PrimaryAttributes => _PrimaryAttributes;
+        IList<ActorValue> IClass.PrimaryAttributes => _PrimaryAttributes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<ActorValue> IClassGetter.PrimaryAttributes => _PrimaryAttributes;
+        IReadOnlyList<ActorValue> IClassGetter.PrimaryAttributes => _PrimaryAttributes;
         #endregion
 
         #endregion
@@ -166,8 +166,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SecondaryAttributes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<ActorValue> _SecondaryAttributes = new SourceBoundedSetList<ActorValue>(max: 7);
-        public ISourceSetList<ActorValue> SecondaryAttributes => _SecondaryAttributes;
+        private readonly ISourceList<ActorValue> _SecondaryAttributes = new SourceBoundedList<ActorValue>(max: 7);
+        public ISourceList<ActorValue> SecondaryAttributes => _SecondaryAttributes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ActorValue> SecondaryAttributesEnumerable
         {
@@ -176,9 +176,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<ActorValue> IClass.SecondaryAttributes => _SecondaryAttributes;
+        IList<ActorValue> IClass.SecondaryAttributes => _SecondaryAttributes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<ActorValue> IClassGetter.SecondaryAttributes => _SecondaryAttributes;
+        IReadOnlyList<ActorValue> IClassGetter.SecondaryAttributes => _SecondaryAttributes;
         #endregion
 
         #endregion
@@ -214,6 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
             get => _Training;
             set => _Training = value ?? new ClassTraining();
         }
+        IClassTrainingGetter IClassGetter.Training => _Training;
         #endregion
         #region DATADataTypeState
         private Class.DATADataType _DATADataTypeState;
@@ -793,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Class Copy(
-            IClass item,
+            IClassGetter item,
             Class_CopyMask copyMask = null,
             IClassGetter def = null)
         {
@@ -1013,10 +1014,10 @@ namespace Mutagen.Bethesda.Oblivion
         void Icon_Set(String item, bool hasBeenSet = true);
         void Icon_Unset();
 
-        new ISourceSetList<ActorValue> PrimaryAttributes { get; }
+        new IList<ActorValue> PrimaryAttributes { get; }
         new Class.SpecializationFlag Specialization { get; set; }
 
-        new ISourceSetList<ActorValue> SecondaryAttributes { get; }
+        new IList<ActorValue> SecondaryAttributes { get; }
         new ClassFlag Flags { get; set; }
 
         new ClassService ClassServices { get; set; }
@@ -1035,8 +1036,6 @@ namespace Mutagen.Bethesda.Oblivion
         IClass,
         IClassInternalGetter
     {
-        new ISourceSetList<ActorValue> PrimaryAttributes { get; }
-        new ISourceSetList<ActorValue> SecondaryAttributes { get; }
         new Class.DATADataType DATADataTypeState { get; set; }
 
     }
@@ -1062,14 +1061,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region PrimaryAttributes
-        IObservableSetList<ActorValue> PrimaryAttributes { get; }
+        IReadOnlyList<ActorValue> PrimaryAttributes { get; }
         #endregion
         #region Specialization
         Class.SpecializationFlag Specialization { get; }
 
         #endregion
         #region SecondaryAttributes
-        IObservableSetList<ActorValue> SecondaryAttributes { get; }
+        IReadOnlyList<ActorValue> SecondaryAttributes { get; }
         #endregion
         #region Flags
         ClassFlag Flags { get; }
@@ -1080,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Training
-        ClassTraining Training { get; }
+        IClassTrainingGetter Training { get; }
 
         #endregion
 
@@ -1608,7 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     switch (copyMask?.Training?.Overall ?? CopyOption.Reference)
                     {
                         case CopyOption.Reference:
-                            item.Training = rhs.Training;
+                            item.Training = Utility.GetGetterInterfaceReference<ClassTraining>(rhs.Training);
                             break;
                         case CopyOption.CopyIn:
                             ClassTrainingCommon.CopyFieldsFrom(
@@ -1654,9 +1653,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Description_Unset();
             item.Icon_Unset();
-            item.PrimaryAttributes.Unset();
+            item.PrimaryAttributes.Clear();
             item.Specialization = default(Class.SpecializationFlag);
-            item.SecondaryAttributes.Unset();
+            item.SecondaryAttributes.Clear();
             item.Flags = default(ClassFlag);
             item.ClassServices = default(ClassService);
             item.Training = default(ClassTraining);
@@ -1806,8 +1805,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            if (checkMask.PrimaryAttributes.Overall.HasValue && checkMask.PrimaryAttributes.Overall.Value != item.PrimaryAttributes.HasBeenSet) return false;
-            if (checkMask.SecondaryAttributes.Overall.HasValue && checkMask.SecondaryAttributes.Overall.Value != item.SecondaryAttributes.HasBeenSet) return false;
             return true;
         }
 
@@ -1817,9 +1814,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Name = item.Name_IsSet;
             ret.Description = item.Description_IsSet;
             ret.Icon = item.Icon_IsSet;
-            ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<(int, bool)>>(item.PrimaryAttributes.HasBeenSet, null);
+            ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
             ret.Specialization = true;
-            ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<(int, bool)>>(item.SecondaryAttributes.HasBeenSet, null);
+            ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
             ret.Flags = true;
             ret.ClassServices = true;
             ret.Training = new MaskItem<bool, ClassTraining_Mask<bool>>(true, ClassTrainingCommon.GetHasBeenSetMask(item.Training));
@@ -2150,7 +2147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.PrimaryAttributes.Unset();
+                            item.PrimaryAttributes.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -2205,7 +2202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.SecondaryAttributes.Unset();
+                            item.SecondaryAttributes.Clear();
                         }
                     }
                     catch (Exception ex)

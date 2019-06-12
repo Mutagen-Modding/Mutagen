@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static ModStats Copy(
-            IModStats item,
+            IModStatsGetter item,
             ModStats_CopyMask copyMask = null,
             IModStatsGetter def = null)
         {

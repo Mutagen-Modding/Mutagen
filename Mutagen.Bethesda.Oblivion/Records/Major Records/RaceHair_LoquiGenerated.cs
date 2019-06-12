@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RaceHair Copy(
-            IRaceHair item,
+            IRaceHairGetter item,
             RaceHair_CopyMask copyMask = null,
             IRaceHairGetter def = null)
         {

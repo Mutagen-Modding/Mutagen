@@ -151,9 +151,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Condition> IQuest.Conditions => _Conditions;
+        ISetList<Condition> IQuest.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Condition> IQuestGetter.Conditions => _Conditions;
+        IReadOnlySetList<Condition> IQuestGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -169,9 +169,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<QuestStage> IQuest.Stages => _Stages;
+        ISetList<QuestStage> IQuest.Stages => _Stages;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<QuestStage> IQuestGetter.Stages => _Stages;
+        IReadOnlySetList<QuestStage> IQuestGetter.Stages => _Stages;
         #endregion
 
         #endregion
@@ -187,9 +187,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<QuestTarget> IQuest.Targets => _Targets;
+        ISetList<QuestTarget> IQuest.Targets => _Targets;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<QuestTarget> IQuestGetter.Targets => _Targets;
+        IReadOnlySetList<QuestTarget> IQuestGetter.Targets => _Targets;
         #endregion
 
         #endregion
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Quest Copy(
-            IQuest item,
+            IQuestGetter item,
             Quest_CopyMask copyMask = null,
             IQuestGetter def = null)
         {
@@ -1040,9 +1040,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte Priority { get; set; }
 
-        new ISourceSetList<Condition> Conditions { get; }
-        new ISourceSetList<QuestStage> Stages { get; }
-        new ISourceSetList<QuestTarget> Targets { get; }
+        new ISetList<Condition> Conditions { get; }
+        new ISetList<QuestStage> Stages { get; }
+        new ISetList<QuestTarget> Targets { get; }
         void CopyFieldsFrom(
             IQuestGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -1056,9 +1056,6 @@ namespace Mutagen.Bethesda.Oblivion
         IQuestInternalGetter
     {
         new Script Script { get; set; }
-        new ISourceSetList<Condition> Conditions { get; }
-        new ISourceSetList<QuestStage> Stages { get; }
-        new ISourceSetList<QuestTarget> Targets { get; }
         new Quest.DATADataType DATADataTypeState { get; set; }
 
     }
@@ -1092,13 +1089,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        IObservableSetList<Condition> Conditions { get; }
+        IReadOnlySetList<Condition> Conditions { get; }
         #endregion
         #region Stages
-        IObservableSetList<QuestStage> Stages { get; }
+        IReadOnlySetList<QuestStage> Stages { get; }
         #endregion
         #region Targets
-        IObservableSetList<QuestTarget> Targets { get; }
+        IReadOnlySetList<QuestTarget> Targets { get; }
         #endregion
 
     }

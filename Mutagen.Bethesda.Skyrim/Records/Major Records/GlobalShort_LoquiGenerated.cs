@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static GlobalShort Copy(
-            IGlobalShort item,
+            IGlobalShortGetter item,
             GlobalShort_CopyMask copyMask = null,
             IGlobalShortGetter def = null)
         {

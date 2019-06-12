@@ -128,9 +128,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<RegionArea> IRegion.Areas => _Areas;
+        ISetList<RegionArea> IRegion.Areas => _Areas;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<RegionArea> IRegionGetter.Areas => _Areas;
+        IReadOnlySetList<RegionArea> IRegionGetter.Areas => _Areas;
         #endregion
 
         #endregion
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Objects_Set(default(RegionDataObjects), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RegionDataObjects IRegionGetter.Objects => this.Objects;
+        IRegionDataObjectsInternalGetter IRegionGetter.Objects => this.Objects;
         #endregion
         #region Weather
         public bool Weather_IsSet
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Weather_Set(default(RegionDataWeather), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RegionDataWeather IRegionGetter.Weather => this.Weather;
+        IRegionDataWeatherInternalGetter IRegionGetter.Weather => this.Weather;
         #endregion
         #region MapName
         public bool MapName_IsSet
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.MapName_Set(default(RegionDataMapName), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RegionDataMapName IRegionGetter.MapName => this.MapName;
+        IRegionDataMapNameInternalGetter IRegionGetter.MapName => this.MapName;
         #endregion
         #region Grasses
         public bool Grasses_IsSet
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Grasses_Set(default(RegionDataGrasses), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RegionDataGrasses IRegionGetter.Grasses => this.Grasses;
+        IRegionDataGrassesInternalGetter IRegionGetter.Grasses => this.Grasses;
         #endregion
         #region Sounds
         public bool Sounds_IsSet
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Sounds_Set(default(RegionDataSounds), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RegionDataSounds IRegionGetter.Sounds => this.Sounds;
+        IRegionDataSoundsInternalGetter IRegionGetter.Sounds => this.Sounds;
         #endregion
 
         IMask<bool> IEqualsMask<Region>.GetEqualsMask(Region rhs, EqualsMaskHelper.Include include) => RegionCommon.GetEqualsMask(this, rhs, include);
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Region Copy(
-            IRegion item,
+            IRegionGetter item,
             Region_CopyMask copyMask = null,
             IRegionGetter def = null)
         {
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion
         void MapColor_Unset();
 
         new Worldspace Worldspace { get; set; }
-        new ISourceSetList<RegionArea> Areas { get; }
+        new ISetList<RegionArea> Areas { get; }
         new RegionDataObjects Objects { get; set; }
         new bool Objects_IsSet { get; set; }
         void Objects_Set(RegionDataObjects item, bool hasBeenSet = true);
@@ -1123,7 +1123,6 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionInternalGetter
     {
         new Worldspace Worldspace { get; set; }
-        new ISourceSetList<RegionArea> Areas { get; }
     }
 
     public partial interface IRegionGetter :
@@ -1147,30 +1146,30 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Areas
-        IObservableSetList<RegionArea> Areas { get; }
+        IReadOnlySetList<RegionArea> Areas { get; }
         #endregion
         #region Objects
-        RegionDataObjects Objects { get; }
+        IRegionDataObjectsInternalGetter Objects { get; }
         bool Objects_IsSet { get; }
 
         #endregion
         #region Weather
-        RegionDataWeather Weather { get; }
+        IRegionDataWeatherInternalGetter Weather { get; }
         bool Weather_IsSet { get; }
 
         #endregion
         #region MapName
-        RegionDataMapName MapName { get; }
+        IRegionDataMapNameInternalGetter MapName { get; }
         bool MapName_IsSet { get; }
 
         #endregion
         #region Grasses
-        RegionDataGrasses Grasses { get; }
+        IRegionDataGrassesInternalGetter Grasses { get; }
         bool Grasses_IsSet { get; }
 
         #endregion
         #region Sounds
-        RegionDataSounds Sounds { get; }
+        IRegionDataSoundsInternalGetter Sounds { get; }
         bool Sounds_IsSet { get; }
 
         #endregion
@@ -1628,8 +1627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Objects.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Objects = rhsObjectsItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 RegionDataObjectsCommon.CopyFieldsFrom(
                                     item: item.Objects,
@@ -1681,8 +1679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Weather.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Weather = rhsWeatherItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 RegionDataWeatherCommon.CopyFieldsFrom(
                                     item: item.Weather,
@@ -1734,8 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.MapName.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.MapName = rhsMapNameItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 RegionDataMapNameCommon.CopyFieldsFrom(
                                     item: item.MapName,
@@ -1787,8 +1783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Grasses.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Grasses = rhsGrassesItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 RegionDataGrassesCommon.CopyFieldsFrom(
                                     item: item.Grasses,
@@ -1840,8 +1835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
                         {
                             case CopyOption.Reference:
-                                item.Sounds = rhsSoundsItem;
-                                break;
+                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
                                 RegionDataSoundsCommon.CopyFieldsFrom(
                                     item: item.Sounds,

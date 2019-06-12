@@ -92,9 +92,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<SoundItem> ICreatureSound.Sounds => _Sounds;
+        ISetList<SoundItem> ICreatureSound.Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<SoundItem> ICreatureSoundGetter.Sounds => _Sounds;
+        IReadOnlySetList<SoundItem> ICreatureSoundGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static CreatureSound Copy(
-            ICreatureSound item,
+            ICreatureSoundGetter item,
             CreatureSound_CopyMask copyMask = null,
             ICreatureSoundGetter def = null)
         {
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
         void SoundType_Set(CreatureSound.CreatureSoundType item, bool hasBeenSet = true);
         void SoundType_Unset();
 
-        new ISourceSetList<SoundItem> Sounds { get; }
+        new ISetList<SoundItem> Sounds { get; }
         void CopyFieldsFrom(
             ICreatureSoundGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Sounds
-        IObservableSetList<SoundItem> Sounds { get; }
+        IReadOnlySetList<SoundItem> Sounds { get; }
         #endregion
 
     }

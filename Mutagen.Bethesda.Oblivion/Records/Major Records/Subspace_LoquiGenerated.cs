@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Subspace Copy(
-            ISubspace item,
+            ISubspaceGetter item,
             Subspace_CopyMask copyMask = null,
             ISubspaceGetter def = null)
         {

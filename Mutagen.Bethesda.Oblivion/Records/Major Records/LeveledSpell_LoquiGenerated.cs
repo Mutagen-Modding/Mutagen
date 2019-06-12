@@ -120,9 +120,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<LeveledEntry<SpellAbstract>> ILeveledSpell.Entries => _Entries;
+        ISetList<LeveledEntry<SpellAbstract>> ILeveledSpell.Entries => _Entries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<LeveledEntry<SpellAbstract>> ILeveledSpellGetter.Entries => _Entries;
+        IReadOnlySetList<LeveledEntry<SpellAbstract>> ILeveledSpellGetter.Entries => _Entries;
         #endregion
 
         #endregion
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LeveledSpell Copy(
-            ILeveledSpell item,
+            ILeveledSpellGetter item,
             LeveledSpell_CopyMask copyMask = null,
             ILeveledSpellGetter def = null)
         {
@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(LeveledFlag item, bool hasBeenSet = true);
         void Flags_Unset();
 
-        new ISourceSetList<LeveledEntry<SpellAbstract>> Entries { get; }
+        new ISetList<LeveledEntry<SpellAbstract>> Entries { get; }
         void CopyFieldsFrom(
             ILeveledSpellGetter rhs,
             ErrorMaskBuilder errorMask = null,
@@ -780,7 +780,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILeveledSpell,
         ILeveledSpellInternalGetter
     {
-        new ISourceSetList<LeveledEntry<SpellAbstract>> Entries { get; }
     }
 
     public partial interface ILeveledSpellGetter :
@@ -799,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Entries
-        IObservableSetList<LeveledEntry<SpellAbstract>> Entries { get; }
+        IReadOnlySetList<LeveledEntry<SpellAbstract>> Entries { get; }
         #endregion
 
     }

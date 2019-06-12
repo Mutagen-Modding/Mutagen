@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static MagicEffectSubData Copy(
-            IMagicEffectSubData item,
+            IMagicEffectSubDataGetter item,
             MagicEffectSubData_CopyMask copyMask = null,
             IMagicEffectSubDataGetter def = null)
         {
