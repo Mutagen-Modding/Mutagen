@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
         public new static Weapon_Registration Registration => Weapon_Registration.Instance;
+        protected override object CommonInstance => WeaponCommon.Instance;
 
         #region Ctor
         protected Weapon()
@@ -286,30 +287,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Weapon>.GetEqualsMask(Weapon rhs, EqualsMaskHelper.Include include) => WeaponCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IWeaponGetter>.GetEqualsMask(IWeaponGetter rhs, EqualsMaskHelper.Include include) => WeaponCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Weapon>.GetEqualsMask(Weapon rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IWeaponGetter>.GetEqualsMask(IWeaponGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Weapon_Mask<bool> printMask = null)
-        {
-            return WeaponCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            WeaponCommon.ToString(this, fg, name: name, printMask: null);
+            WeaponMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Weapon_Mask<bool> GetHasBeenSetMask()
-        {
-            return WeaponCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -1071,10 +1064,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            WeaponCommon.Clear(this);
+            WeaponCommon.Instance.Clear(this);
         }
-
 
         public new static Weapon Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1290,6 +1281,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class WeaponMixIn
+    {
+        public static void Clear(this IWeaponInternal item)
+        {
+            ((WeaponCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Weapon_Mask<bool> GetEqualsMask(
+            this IWeaponGetter item,
+            IWeaponGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Weapon_Mask<bool>();
+            ((WeaponCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IWeaponInternalGetter item,
+            string name = null,
+            Weapon_Mask<bool> printMask = null)
+        {
+            return ((WeaponCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IWeaponInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Weapon_Mask<bool> printMask = null)
+        {
+            ((WeaponCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IWeaponInternalGetter item,
+            Weapon_Mask<bool?> checkMask)
+        {
+            return ((WeaponCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Weapon_Mask<bool> GetHasBeenSetMask(this IWeaponGetter item)
+        {
+            var ret = new Weapon_Mask<bool>();
+            ((WeaponCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1659,9 +1717,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class WeaponCommon
+    #region Common
+    public partial class WeaponCommon : ItemAbstractCommon
     {
+        public static readonly WeaponCommon Instance = new WeaponCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IWeapon item,
@@ -1996,8 +2055,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IWeapon item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IWeapon item)
         {
+            ClearPartial();
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
@@ -2012,23 +2074,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Health = default(UInt32);
             item.Weight = default(Single);
             item.Damage = default(UInt16);
+            base.Clear(item);
         }
 
-        public static Weapon_Mask<bool> GetEqualsMask(
-            this IWeaponGetter item,
-            IWeaponGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IItemAbstract item)
         {
-            var ret = new Weapon_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IWeapon)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (IWeapon)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IWeapon)item);
+        }
+
+        public void FillEqualsMask(
             IWeaponGetter item,
             IWeaponGetter rhs,
             Weapon_Mask<bool> ret,
@@ -2041,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
@@ -2055,21 +2119,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Health = item.Health == rhs.Health;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.Damage = item.Damage == rhs.Damage;
-            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IWeaponGetter item,
+        public string ToString(
+            IWeaponGetter item,
             string name = null,
             Weapon_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IWeaponGetter item,
+        public void ToString(
+            IWeaponGetter item,
             FileGeneration fg,
             string name = null,
             Weapon_Mask<bool> printMask = null)
@@ -2085,71 +2153,86 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {item.Script_Property}");
-                }
-                if (printMask?.Enchantment ?? true)
-                {
-                    fg.AppendLine($"Enchantment => {item.Enchantment_Property}");
-                }
-                if (printMask?.EnchantmentPoints ?? true)
-                {
-                    fg.AppendLine($"EnchantmentPoints => {item.EnchantmentPoints}");
-                }
-                if (printMask?.Type ?? true)
-                {
-                    fg.AppendLine($"Type => {item.Type}");
-                }
-                if (printMask?.Speed ?? true)
-                {
-                    fg.AppendLine($"Speed => {item.Speed}");
-                }
-                if (printMask?.Reach ?? true)
-                {
-                    fg.AppendLine($"Reach => {item.Reach}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {item.Value}");
-                }
-                if (printMask?.Health ?? true)
-                {
-                    fg.AppendLine($"Health => {item.Health}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {item.Weight}");
-                }
-                if (printMask?.Damage ?? true)
-                {
-                    fg.AppendLine($"Damage => {item.Damage}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IWeaponGetter item,
+        protected static void ToStringFields(
+            IWeaponGetter item,
+            FileGeneration fg,
+            Weapon_Mask<bool> printMask = null)
+        {
+            ItemAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Enchantment ?? true)
+            {
+                fg.AppendLine($"Enchantment => {item.Enchantment_Property}");
+            }
+            if (printMask?.EnchantmentPoints ?? true)
+            {
+                fg.AppendLine($"EnchantmentPoints => {item.EnchantmentPoints}");
+            }
+            if (printMask?.Type ?? true)
+            {
+                fg.AppendLine($"Type => {item.Type}");
+            }
+            if (printMask?.Speed ?? true)
+            {
+                fg.AppendLine($"Speed => {item.Speed}");
+            }
+            if (printMask?.Reach ?? true)
+            {
+                fg.AppendLine($"Reach => {item.Reach}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendLine($"Value => {item.Value}");
+            }
+            if (printMask?.Health ?? true)
+            {
+                fg.AppendLine($"Health => {item.Health}");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendLine($"Weight => {item.Weight}");
+            }
+            if (printMask?.Damage ?? true)
+            {
+                fg.AppendLine($"Damage => {item.Damage}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IWeaponGetter item,
             Weapon_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -2159,34 +2242,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
             if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != item.Enchantment_Property.HasBeenSet) return false;
             if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != item.EnchantmentPoints_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Weapon_Mask<bool> GetHasBeenSetMask(IWeaponGetter item)
+        public void FillHasBeenSetMask(
+            IWeaponGetter item,
+            Weapon_Mask<bool> mask)
         {
-            var ret = new Weapon_Mask<bool>();
-            ret.Name = item.Name_IsSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Icon = item.Icon_IsSet;
-            ret.Script = item.Script_Property.HasBeenSet;
-            ret.Enchantment = item.Enchantment_Property.HasBeenSet;
-            ret.EnchantmentPoints = item.EnchantmentPoints_IsSet;
-            ret.Type = true;
-            ret.Speed = true;
-            ret.Reach = true;
-            ret.Flags = true;
-            ret.Value = true;
-            ret.Health = true;
-            ret.Weight = true;
-            ret.Damage = true;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static Weapon_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Icon = item.Icon_IsSet;
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Enchantment = item.Enchantment_Property.HasBeenSet;
+            mask.EnchantmentPoints = item.EnchantmentPoints_IsSet;
+            mask.Type = true;
+            mask.Speed = true;
+            mask.Reach = true;
+            mask.Flags = true;
+            mask.Value = true;
+            mask.Health = true;
+            mask.Weight = true;
+            mask.Damage = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Weapon_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
@@ -2208,12 +2290,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static Weapon_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static Weapon_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -2231,12 +2307,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Weapon_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Weapon_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

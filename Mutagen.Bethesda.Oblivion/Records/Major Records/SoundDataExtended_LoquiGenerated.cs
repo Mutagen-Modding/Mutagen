@@ -43,6 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDataExtended_Registration.Instance;
         public new static SoundDataExtended_Registration Registration => SoundDataExtended_Registration.Instance;
+        protected override object CommonInstance => SoundDataExtendedCommon.Instance;
 
         #region Ctor
         public SoundDataExtended()
@@ -89,30 +90,22 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeFloat StartTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
 
-        IMask<bool> IEqualsMask<SoundDataExtended>.GetEqualsMask(SoundDataExtended rhs, EqualsMaskHelper.Include include) => SoundDataExtendedCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ISoundDataExtendedGetter>.GetEqualsMask(ISoundDataExtendedGetter rhs, EqualsMaskHelper.Include include) => SoundDataExtendedCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<SoundDataExtended>.GetEqualsMask(SoundDataExtended rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ISoundDataExtendedGetter>.GetEqualsMask(ISoundDataExtendedGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            SoundDataExtended_Mask<bool> printMask = null)
-        {
-            return SoundDataExtendedCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            SoundDataExtendedCommon.ToString(this, fg, name: name, printMask: null);
+            SoundDataExtendedMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new SoundDataExtended_Mask<bool> GetHasBeenSetMask()
-        {
-            return SoundDataExtendedCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -527,10 +520,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            SoundDataExtendedCommon.Clear(this);
+            SoundDataExtendedCommon.Instance.Clear(this);
         }
-
 
         public new static SoundDataExtended Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -620,6 +611,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class SoundDataExtendedMixIn
+    {
+        public static void Clear(this ISoundDataExtendedInternal item)
+        {
+            ((SoundDataExtendedCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static SoundDataExtended_Mask<bool> GetEqualsMask(
+            this ISoundDataExtendedGetter item,
+            ISoundDataExtendedGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SoundDataExtended_Mask<bool>();
+            ((SoundDataExtendedCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ISoundDataExtendedInternalGetter item,
+            string name = null,
+            SoundDataExtended_Mask<bool> printMask = null)
+        {
+            return ((SoundDataExtendedCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ISoundDataExtendedInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            SoundDataExtended_Mask<bool> printMask = null)
+        {
+            ((SoundDataExtendedCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ISoundDataExtendedInternalGetter item,
+            SoundDataExtended_Mask<bool?> checkMask)
+        {
+            return ((SoundDataExtendedCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static SoundDataExtended_Mask<bool> GetHasBeenSetMask(this ISoundDataExtendedGetter item)
+        {
+            var ret = new SoundDataExtended_Mask<bool>();
+            ((SoundDataExtendedCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -836,9 +894,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class SoundDataExtendedCommon
+    #region Common
+    public partial class SoundDataExtendedCommon : SoundDataCommon
     {
+        public static readonly SoundDataExtendedCommon Instance = new SoundDataExtendedCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ISoundDataExtended item,
@@ -908,28 +967,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ISoundDataExtended item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ISoundDataExtended item)
         {
+            ClearPartial();
             item.StaticAttenuation = default(Single);
             item.StopTime = default(Single);
             item.StartTime = default(Single);
+            base.Clear(item);
         }
 
-        public static SoundDataExtended_Mask<bool> GetEqualsMask(
-            this ISoundDataExtendedGetter item,
-            ISoundDataExtendedGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(ISoundData item)
         {
-            var ret = new SoundDataExtended_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ISoundDataExtended)item);
         }
 
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             ISoundDataExtendedGetter item,
             ISoundDataExtendedGetter rhs,
             SoundDataExtended_Mask<bool> ret,
@@ -939,21 +993,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.StaticAttenuation = item.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation);
             ret.StopTime = item.StopTime.EqualsWithin(rhs.StopTime);
             ret.StartTime = item.StartTime.EqualsWithin(rhs.StartTime);
-            SoundDataCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ISoundDataExtendedGetter item,
+        public string ToString(
+            ISoundDataExtendedGetter item,
             string name = null,
             SoundDataExtended_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ISoundDataExtendedGetter item,
+        public void ToString(
+            ISoundDataExtendedGetter item,
             FileGeneration fg,
             string name = null,
             SoundDataExtended_Mask<bool> printMask = null)
@@ -969,42 +1027,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.StaticAttenuation ?? true)
-                {
-                    fg.AppendLine($"StaticAttenuation => {item.StaticAttenuation}");
-                }
-                if (printMask?.StopTime ?? true)
-                {
-                    fg.AppendLine($"StopTime => {item.StopTime}");
-                }
-                if (printMask?.StartTime ?? true)
-                {
-                    fg.AppendLine($"StartTime => {item.StartTime}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ISoundDataExtendedGetter item,
+        protected static void ToStringFields(
+            ISoundDataExtendedGetter item,
+            FileGeneration fg,
+            SoundDataExtended_Mask<bool> printMask = null)
+        {
+            SoundDataCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.StaticAttenuation ?? true)
+            {
+                fg.AppendLine($"StaticAttenuation => {item.StaticAttenuation}");
+            }
+            if (printMask?.StopTime ?? true)
+            {
+                fg.AppendLine($"StopTime => {item.StopTime}");
+            }
+            if (printMask?.StartTime ?? true)
+            {
+                fg.AppendLine($"StartTime => {item.StartTime}");
+            }
+        }
+
+        public bool HasBeenSet(
+            ISoundDataExtendedGetter item,
             SoundDataExtended_Mask<bool?> checkMask)
         {
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static SoundDataExtended_Mask<bool> GetHasBeenSetMask(ISoundDataExtendedGetter item)
+        public void FillHasBeenSetMask(
+            ISoundDataExtendedGetter item,
+            SoundDataExtended_Mask<bool> mask)
         {
-            var ret = new SoundDataExtended_Mask<bool>();
-            ret.StaticAttenuation = true;
-            ret.StopTime = true;
-            ret.StartTime = true;
-            return ret;
-        }
-
-        public static SoundDataExtended_FieldIndex? ConvertFieldIndex(SoundData_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.StaticAttenuation = true;
+            mask.StopTime = true;
+            mask.StartTime = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static SoundDataExtended_FieldIndex ConvertFieldIndex(SoundData_FieldIndex index)

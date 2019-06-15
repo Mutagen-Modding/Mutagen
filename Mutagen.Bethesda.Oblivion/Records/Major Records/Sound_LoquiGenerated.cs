@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
         public new static Sound_Registration Registration => Sound_Registration.Instance;
+        protected override object CommonInstance => SoundCommon.Instance;
 
         #region Ctor
         protected Sound()
@@ -107,30 +108,22 @@ namespace Mutagen.Bethesda.Oblivion
         ISoundDataInternalGetter ISoundGetter.Data => this.Data;
         #endregion
 
-        IMask<bool> IEqualsMask<Sound>.GetEqualsMask(Sound rhs, EqualsMaskHelper.Include include) => SoundCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ISoundGetter>.GetEqualsMask(ISoundGetter rhs, EqualsMaskHelper.Include include) => SoundCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Sound>.GetEqualsMask(Sound rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ISoundGetter>.GetEqualsMask(ISoundGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Sound_Mask<bool> printMask = null)
-        {
-            return SoundCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            SoundCommon.ToString(this, fg, name: name, printMask: null);
+            SoundMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Sound_Mask<bool> GetHasBeenSetMask()
-        {
-            return SoundCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -666,10 +659,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            SoundCommon.Clear(this);
+            SoundCommon.Instance.Clear(this);
         }
-
 
         public new static Sound Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -758,6 +749,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class SoundMixIn
+    {
+        public static void Clear(this ISoundInternal item)
+        {
+            ((SoundCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Sound_Mask<bool> GetEqualsMask(
+            this ISoundGetter item,
+            ISoundGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Sound_Mask<bool>();
+            ((SoundCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ISoundInternalGetter item,
+            string name = null,
+            Sound_Mask<bool> printMask = null)
+        {
+            return ((SoundCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ISoundInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Sound_Mask<bool> printMask = null)
+        {
+            ((SoundCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ISoundInternalGetter item,
+            Sound_Mask<bool?> checkMask)
+        {
+            return ((SoundCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Sound_Mask<bool> GetHasBeenSetMask(this ISoundGetter item)
+        {
+            var ret = new Sound_Mask<bool>();
+            ((SoundCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -967,9 +1025,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class SoundCommon
+    #region Common
+    public partial class SoundCommon : OblivionMajorRecordCommon
     {
+        public static readonly SoundCommon Instance = new SoundCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ISound item,
@@ -1070,27 +1129,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ISound item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ISound item)
         {
+            ClearPartial();
             item.File_Unset();
             item.Data_Unset();
+            base.Clear(item);
         }
 
-        public static Sound_Mask<bool> GetEqualsMask(
-            this ISoundGetter item,
-            ISoundGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new Sound_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ISound)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (ISound)item);
+        }
+
+        public void FillEqualsMask(
             ISoundGetter item,
             ISoundGetter rhs,
             Sound_Mask<bool> ret,
@@ -1103,23 +1162,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Data_IsSet,
                 item.Data,
                 rhs.Data,
-                (loqLhs, loqRhs) => SoundDataCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ISoundGetter item,
+        public string ToString(
+            ISoundGetter item,
             string name = null,
             Sound_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ISoundGetter item,
+        public void ToString(
+            ISoundGetter item,
             FileGeneration fg,
             string name = null,
             Sound_Mask<bool> printMask = null)
@@ -1135,40 +1198,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.File ?? true)
-                {
-                    fg.AppendLine($"File => {item.File}");
-                }
-                if (printMask?.Data?.Overall ?? true)
-                {
-                    item.Data?.ToString(fg, "Data");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ISoundGetter item,
+        protected static void ToStringFields(
+            ISoundGetter item,
+            FileGeneration fg,
+            Sound_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.File ?? true)
+            {
+                fg.AppendLine($"File => {item.File}");
+            }
+            if (printMask?.Data?.Overall ?? true)
+            {
+                item.Data?.ToString(fg, "Data");
+            }
+        }
+
+        public bool HasBeenSet(
+            ISoundGetter item,
             Sound_Mask<bool?> checkMask)
         {
             if (checkMask.File.HasValue && checkMask.File.Value != item.File_IsSet) return false;
             if (checkMask.Data.Overall.HasValue && checkMask.Data.Overall.Value != item.Data_IsSet) return false;
             if (checkMask.Data.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Sound_Mask<bool> GetHasBeenSetMask(ISoundGetter item)
+        public void FillHasBeenSetMask(
+            ISoundGetter item,
+            Sound_Mask<bool> mask)
         {
-            var ret = new Sound_Mask<bool>();
-            ret.File = item.File_IsSet;
-            ret.Data = new MaskItem<bool, SoundData_Mask<bool>>(item.Data_IsSet, SoundDataCommon.GetHasBeenSetMask(item.Data));
-            return ret;
-        }
-
-        public static Sound_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.File = item.File_IsSet;
+            mask.Data = new MaskItem<bool, SoundData_Mask<bool>>(item.Data_IsSet, item.Data.GetHasBeenSetMask());
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Sound_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1188,12 +1265,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Sound_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Sound_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

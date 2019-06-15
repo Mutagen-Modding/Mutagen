@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
         public static WeatherSound_Registration Registration => WeatherSound_Registration.Instance;
+        protected object CommonInstance => WeatherSoundCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public WeatherSound()
@@ -67,30 +69,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<WeatherSound>.GetEqualsMask(WeatherSound rhs, EqualsMaskHelper.Include include) => WeatherSoundCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IWeatherSoundGetter>.GetEqualsMask(IWeatherSoundGetter rhs, EqualsMaskHelper.Include include) => WeatherSoundCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<WeatherSound>.GetEqualsMask(WeatherSound rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IWeatherSoundGetter>.GetEqualsMask(IWeatherSoundGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            WeatherSound_Mask<bool> printMask = null)
-        {
-            return WeatherSoundCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            WeatherSoundCommon.ToString(this, fg, name: name, printMask: null);
+            WeatherSoundMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public WeatherSound_Mask<bool> GetHasBeenSetMask()
-        {
-            return WeatherSoundCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -508,19 +502,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            WeatherSoundCommon.Clear(this);
+            WeatherSoundCommon.Instance.Clear(this);
         }
-
 
         public static WeatherSound Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -586,6 +571,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class WeatherSoundMixIn
+    {
+        public static void Clear(this IWeatherSound item)
+        {
+            ((WeatherSoundCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static WeatherSound_Mask<bool> GetEqualsMask(
+            this IWeatherSoundGetter item,
+            IWeatherSoundGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new WeatherSound_Mask<bool>();
+            ((WeatherSoundCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IWeatherSoundGetter item,
+            string name = null,
+            WeatherSound_Mask<bool> printMask = null)
+        {
+            return ((WeatherSoundCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IWeatherSoundGetter item,
+            FileGeneration fg,
+            string name = null,
+            WeatherSound_Mask<bool> printMask = null)
+        {
+            ((WeatherSoundCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IWeatherSoundGetter item,
+            WeatherSound_Mask<bool?> checkMask)
+        {
+            return ((WeatherSoundCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static WeatherSound_Mask<bool> GetHasBeenSetMask(this IWeatherSoundGetter item)
+        {
+            var ret = new WeatherSound_Mask<bool>();
+            ((WeatherSoundCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -786,9 +838,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class WeatherSoundCommon
+    #region Common
+    public partial class WeatherSoundCommon
     {
+        public static readonly WeatherSoundCommon Instance = new WeatherSoundCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IWeatherSound item,
@@ -835,27 +888,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IWeatherSound item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IWeatherSound item)
         {
+            ClearPartial();
             item.Sound = default(Sound);
             item.Type = default(WeatherSound.SoundType);
         }
 
-        public static WeatherSound_Mask<bool> GetEqualsMask(
-            this IWeatherSoundGetter item,
-            IWeatherSoundGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new WeatherSound_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IWeatherSoundGetter item,
             IWeatherSoundGetter rhs,
             WeatherSound_Mask<bool> ret,
@@ -866,18 +908,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Type = item.Type == rhs.Type;
         }
 
-        public static string ToString(
-            this IWeatherSoundGetter item,
+        public string ToString(
+            IWeatherSoundGetter item,
             string name = null,
             WeatherSound_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IWeatherSoundGetter item,
+        public void ToString(
+            IWeatherSoundGetter item,
             FileGeneration fg,
             string name = null,
             WeatherSound_Mask<bool> printMask = null)
@@ -893,31 +939,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Sound ?? true)
-                {
-                    fg.AppendLine($"Sound => {item.Sound_Property}");
-                }
-                if (printMask?.Type ?? true)
-                {
-                    fg.AppendLine($"Type => {item.Type}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IWeatherSoundGetter item,
+        protected static void ToStringFields(
+            IWeatherSoundGetter item,
+            FileGeneration fg,
+            WeatherSound_Mask<bool> printMask = null)
+        {
+            if (printMask?.Sound ?? true)
+            {
+                fg.AppendLine($"Sound => {item.Sound_Property}");
+            }
+            if (printMask?.Type ?? true)
+            {
+                fg.AppendLine($"Type => {item.Type}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IWeatherSoundGetter item,
             WeatherSound_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static WeatherSound_Mask<bool> GetHasBeenSetMask(IWeatherSoundGetter item)
+        public void FillHasBeenSetMask(
+            IWeatherSoundGetter item,
+            WeatherSound_Mask<bool> mask)
         {
-            var ret = new WeatherSound_Mask<bool>();
-            ret.Sound = true;
-            ret.Type = true;
-            return ret;
+            mask.Sound = true;
+            mask.Type = true;
         }
 
     }

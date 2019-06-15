@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClothingAbstract_Registration.Instance;
         public new static ClothingAbstract_Registration Registration => ClothingAbstract_Registration.Instance;
+        protected override object CommonInstance => ClothingAbstractCommon.Instance;
 
         #region Ctor
         protected ClothingAbstract()
@@ -321,30 +322,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<ClothingAbstract>.GetEqualsMask(ClothingAbstract rhs, EqualsMaskHelper.Include include) => ClothingAbstractCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IClothingAbstractGetter>.GetEqualsMask(IClothingAbstractGetter rhs, EqualsMaskHelper.Include include) => ClothingAbstractCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ClothingAbstract>.GetEqualsMask(ClothingAbstract rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IClothingAbstractGetter>.GetEqualsMask(IClothingAbstractGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            ClothingAbstract_Mask<bool> printMask = null)
-        {
-            return ClothingAbstractCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ClothingAbstractCommon.ToString(this, fg, name: name, printMask: null);
+            ClothingAbstractMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new ClothingAbstract_Mask<bool> GetHasBeenSetMask()
-        {
-            return ClothingAbstractCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -1075,10 +1068,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            ClothingAbstractCommon.Clear(this);
+            ClothingAbstractCommon.Instance.Clear(this);
         }
-
 
         protected new static void CopyInInternal_ClothingAbstract(ClothingAbstract obj, KeyValuePair<ushort, object> pair)
         {
@@ -1282,6 +1273,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class ClothingAbstractMixIn
+    {
+        public static void Clear(this IClothingAbstractInternal item)
+        {
+            ((ClothingAbstractCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static ClothingAbstract_Mask<bool> GetEqualsMask(
+            this IClothingAbstractGetter item,
+            IClothingAbstractGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ClothingAbstract_Mask<bool>();
+            ((ClothingAbstractCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IClothingAbstractInternalGetter item,
+            string name = null,
+            ClothingAbstract_Mask<bool> printMask = null)
+        {
+            return ((ClothingAbstractCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IClothingAbstractInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            ClothingAbstract_Mask<bool> printMask = null)
+        {
+            ((ClothingAbstractCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IClothingAbstractInternalGetter item,
+            ClothingAbstract_Mask<bool?> checkMask)
+        {
+            return ((ClothingAbstractCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static ClothingAbstract_Mask<bool> GetHasBeenSetMask(this IClothingAbstractGetter item)
+        {
+            var ret = new ClothingAbstract_Mask<bool>();
+            ((ClothingAbstractCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1618,42 +1676,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RecordTypeConverter MaleWorldModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 Model_Registration.MODL_HEADER,
-                new RecordType("MOD2"))
-            ,
+                new RecordType("MOD2")),
             new KeyValuePair<RecordType, RecordType>(
                 Model_Registration.MODB_HEADER,
-                new RecordType("MO2B"))
-            ,
+                new RecordType("MO2B")),
             new KeyValuePair<RecordType, RecordType>(
                 Model_Registration.MODT_HEADER,
-                new RecordType("MO2T"))
-            );
+                new RecordType("MO2T")));
         public static RecordTypeConverter FemaleBipedModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 Model_Registration.MODL_HEADER,
-                new RecordType("MOD3"))
-            ,
+                new RecordType("MOD3")),
             new KeyValuePair<RecordType, RecordType>(
                 Model_Registration.MODB_HEADER,
-                new RecordType("MO3B"))
-            ,
+                new RecordType("MO3B")),
             new KeyValuePair<RecordType, RecordType>(
                 Model_Registration.MODT_HEADER,
-                new RecordType("MO3T"))
-            );
+                new RecordType("MO3T")));
         public static RecordTypeConverter FemaleWorldModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 Model_Registration.MODL_HEADER,
-                new RecordType("MOD4"))
-            ,
+                new RecordType("MOD4")),
             new KeyValuePair<RecordType, RecordType>(
                 Model_Registration.MODB_HEADER,
-                new RecordType("MO4B"))
-            ,
+                new RecordType("MO4B")),
             new KeyValuePair<RecordType, RecordType>(
                 Model_Registration.MODT_HEADER,
-                new RecordType("MO4T"))
-            );
+                new RecordType("MO4T")));
         public const int NumStructFields = 0;
         public const int NumTypedFields = 10;
         public static readonly Type BinaryTranslation = typeof(ClothingAbstractBinaryTranslation);
@@ -1687,9 +1736,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ClothingAbstractCommon
+    #region Common
+    public partial class ClothingAbstractCommon : ItemAbstractCommon
     {
+        public static readonly ClothingAbstractCommon Instance = new ClothingAbstractCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IClothingAbstract item,
@@ -2108,8 +2158,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IClothingAbstract item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IClothingAbstract item)
         {
+            ClearPartial();
             item.Name_Unset();
             item.Script_Property.Unset();
             item.Enchantment_Property.Unset();
@@ -2122,23 +2175,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FemaleBipedModel_Unset();
             item.FemaleWorldModel_Unset();
             item.FemaleIcon_Unset();
+            base.Clear(item);
         }
 
-        public static ClothingAbstract_Mask<bool> GetEqualsMask(
-            this IClothingAbstractGetter item,
-            IClothingAbstractGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IItemAbstract item)
         {
-            var ret = new ClothingAbstract_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IClothingAbstract)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (IClothingAbstract)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IClothingAbstract)item);
+        }
+
+        public void FillEqualsMask(
             IClothingAbstractGetter item,
             IClothingAbstractGetter rhs,
             ClothingAbstract_Mask<bool> ret,
@@ -2156,14 +2211,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.MaleBipedModel_IsSet,
                 item.MaleBipedModel,
                 rhs.MaleBipedModel,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.MaleWorldModel = EqualsMaskHelper.EqualsHelper(
                 item.MaleWorldModel_IsSet,
                 rhs.MaleWorldModel_IsSet,
                 item.MaleWorldModel,
                 rhs.MaleWorldModel,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.MaleIcon = item.MaleIcon_IsSet == rhs.MaleIcon_IsSet && string.Equals(item.MaleIcon, rhs.MaleIcon);
             ret.FemaleBipedModel = EqualsMaskHelper.EqualsHelper(
@@ -2171,31 +2226,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.FemaleBipedModel_IsSet,
                 item.FemaleBipedModel,
                 rhs.FemaleBipedModel,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.FemaleWorldModel = EqualsMaskHelper.EqualsHelper(
                 item.FemaleWorldModel_IsSet,
                 rhs.FemaleWorldModel_IsSet,
                 item.FemaleWorldModel,
                 rhs.FemaleWorldModel,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.FemaleIcon = item.FemaleIcon_IsSet == rhs.FemaleIcon_IsSet && string.Equals(item.FemaleIcon, rhs.FemaleIcon);
-            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IClothingAbstractGetter item,
+        public string ToString(
+            IClothingAbstractGetter item,
             string name = null,
             ClothingAbstract_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IClothingAbstractGetter item,
+        public void ToString(
+            IClothingAbstractGetter item,
             FileGeneration fg,
             string name = null,
             ClothingAbstract_Mask<bool> printMask = null)
@@ -2211,63 +2270,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {item.Script_Property}");
-                }
-                if (printMask?.Enchantment ?? true)
-                {
-                    fg.AppendLine($"Enchantment => {item.Enchantment_Property}");
-                }
-                if (printMask?.EnchantmentPoints ?? true)
-                {
-                    fg.AppendLine($"EnchantmentPoints => {item.EnchantmentPoints}");
-                }
-                if (printMask?.BipedFlags ?? true)
-                {
-                    fg.AppendLine($"BipedFlags => {item.BipedFlags}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.MaleBipedModel?.Overall ?? true)
-                {
-                    item.MaleBipedModel?.ToString(fg, "MaleBipedModel");
-                }
-                if (printMask?.MaleWorldModel?.Overall ?? true)
-                {
-                    item.MaleWorldModel?.ToString(fg, "MaleWorldModel");
-                }
-                if (printMask?.MaleIcon ?? true)
-                {
-                    fg.AppendLine($"MaleIcon => {item.MaleIcon}");
-                }
-                if (printMask?.FemaleBipedModel?.Overall ?? true)
-                {
-                    item.FemaleBipedModel?.ToString(fg, "FemaleBipedModel");
-                }
-                if (printMask?.FemaleWorldModel?.Overall ?? true)
-                {
-                    item.FemaleWorldModel?.ToString(fg, "FemaleWorldModel");
-                }
-                if (printMask?.FemaleIcon ?? true)
-                {
-                    fg.AppendLine($"FemaleIcon => {item.FemaleIcon}");
-                }
-                if (printMask?.BMDTDataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IClothingAbstractGetter item,
+        protected static void ToStringFields(
+            IClothingAbstractGetter item,
+            FileGeneration fg,
+            ClothingAbstract_Mask<bool> printMask = null)
+        {
+            ItemAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Enchantment ?? true)
+            {
+                fg.AppendLine($"Enchantment => {item.Enchantment_Property}");
+            }
+            if (printMask?.EnchantmentPoints ?? true)
+            {
+                fg.AppendLine($"EnchantmentPoints => {item.EnchantmentPoints}");
+            }
+            if (printMask?.BipedFlags ?? true)
+            {
+                fg.AppendLine($"BipedFlags => {item.BipedFlags}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.MaleBipedModel?.Overall ?? true)
+            {
+                item.MaleBipedModel?.ToString(fg, "MaleBipedModel");
+            }
+            if (printMask?.MaleWorldModel?.Overall ?? true)
+            {
+                item.MaleWorldModel?.ToString(fg, "MaleWorldModel");
+            }
+            if (printMask?.MaleIcon ?? true)
+            {
+                fg.AppendLine($"MaleIcon => {item.MaleIcon}");
+            }
+            if (printMask?.FemaleBipedModel?.Overall ?? true)
+            {
+                item.FemaleBipedModel?.ToString(fg, "FemaleBipedModel");
+            }
+            if (printMask?.FemaleWorldModel?.Overall ?? true)
+            {
+                item.FemaleWorldModel?.ToString(fg, "FemaleWorldModel");
+            }
+            if (printMask?.FemaleIcon ?? true)
+            {
+                fg.AppendLine($"FemaleIcon => {item.FemaleIcon}");
+            }
+            if (printMask?.BMDTDataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IClothingAbstractGetter item,
             ClothingAbstract_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -2284,32 +2358,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.FemaleWorldModel.Overall.HasValue && checkMask.FemaleWorldModel.Overall.Value != item.FemaleWorldModel_IsSet) return false;
             if (checkMask.FemaleWorldModel.Specific != null && (item.FemaleWorldModel == null || !item.FemaleWorldModel.HasBeenSet(checkMask.FemaleWorldModel.Specific))) return false;
             if (checkMask.FemaleIcon.HasValue && checkMask.FemaleIcon.Value != item.FemaleIcon_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static ClothingAbstract_Mask<bool> GetHasBeenSetMask(IClothingAbstractGetter item)
+        public void FillHasBeenSetMask(
+            IClothingAbstractGetter item,
+            ClothingAbstract_Mask<bool> mask)
         {
-            var ret = new ClothingAbstract_Mask<bool>();
-            ret.Name = item.Name_IsSet;
-            ret.Script = item.Script_Property.HasBeenSet;
-            ret.Enchantment = item.Enchantment_Property.HasBeenSet;
-            ret.EnchantmentPoints = item.EnchantmentPoints_IsSet;
-            ret.BipedFlags = true;
-            ret.Flags = true;
-            ret.MaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleBipedModel_IsSet, ModelCommon.GetHasBeenSetMask(item.MaleBipedModel));
-            ret.MaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleWorldModel_IsSet, ModelCommon.GetHasBeenSetMask(item.MaleWorldModel));
-            ret.MaleIcon = item.MaleIcon_IsSet;
-            ret.FemaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleBipedModel_IsSet, ModelCommon.GetHasBeenSetMask(item.FemaleBipedModel));
-            ret.FemaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleWorldModel_IsSet, ModelCommon.GetHasBeenSetMask(item.FemaleWorldModel));
-            ret.FemaleIcon = item.FemaleIcon_IsSet;
-            ret.BMDTDataTypeState = true;
-            return ret;
-        }
-
-        public static ClothingAbstract_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Name = item.Name_IsSet;
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Enchantment = item.Enchantment_Property.HasBeenSet;
+            mask.EnchantmentPoints = item.EnchantmentPoints_IsSet;
+            mask.BipedFlags = true;
+            mask.Flags = true;
+            mask.MaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleBipedModel_IsSet, item.MaleBipedModel.GetHasBeenSetMask());
+            mask.MaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleWorldModel_IsSet, item.MaleWorldModel.GetHasBeenSetMask());
+            mask.MaleIcon = item.MaleIcon_IsSet;
+            mask.FemaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleBipedModel_IsSet, item.FemaleBipedModel.GetHasBeenSetMask());
+            mask.FemaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleWorldModel_IsSet, item.FemaleWorldModel.GetHasBeenSetMask());
+            mask.FemaleIcon = item.FemaleIcon_IsSet;
+            mask.BMDTDataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static ClothingAbstract_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
@@ -2331,12 +2404,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static ClothingAbstract_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static ClothingAbstract_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -2354,12 +2421,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static ClothingAbstract_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static ClothingAbstract_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

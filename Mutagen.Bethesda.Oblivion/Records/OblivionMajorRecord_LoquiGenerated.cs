@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMajorRecord_Registration.Instance;
         public new static OblivionMajorRecord_Registration Registration => OblivionMajorRecord_Registration.Instance;
+        protected override object CommonInstance => OblivionMajorRecordCommon.Instance;
 
         #region Ctor
         protected OblivionMajorRecord()
@@ -54,30 +55,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        IMask<bool> IEqualsMask<OblivionMajorRecord>.GetEqualsMask(OblivionMajorRecord rhs, EqualsMaskHelper.Include include) => OblivionMajorRecordCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IOblivionMajorRecordGetter>.GetEqualsMask(IOblivionMajorRecordGetter rhs, EqualsMaskHelper.Include include) => OblivionMajorRecordCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<OblivionMajorRecord>.GetEqualsMask(OblivionMajorRecord rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IOblivionMajorRecordGetter>.GetEqualsMask(IOblivionMajorRecordGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            OblivionMajorRecord_Mask<bool> printMask = null)
-        {
-            return OblivionMajorRecordCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            OblivionMajorRecordCommon.ToString(this, fg, name: name, printMask: null);
+            OblivionMajorRecordMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new OblivionMajorRecord_Mask<bool> GetHasBeenSetMask()
-        {
-            return OblivionMajorRecordCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -433,10 +426,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            OblivionMajorRecordCommon.Clear(this);
+            OblivionMajorRecordCommon.Instance.Clear(this);
         }
-
 
         protected new static void CopyInInternal_OblivionMajorRecord(OblivionMajorRecord obj, KeyValuePair<ushort, object> pair)
         {
@@ -498,6 +489,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class OblivionMajorRecordMixIn
+    {
+        public static void Clear(this IOblivionMajorRecordInternal item)
+        {
+            ((OblivionMajorRecordCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static OblivionMajorRecord_Mask<bool> GetEqualsMask(
+            this IOblivionMajorRecordGetter item,
+            IOblivionMajorRecordGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new OblivionMajorRecord_Mask<bool>();
+            ((OblivionMajorRecordCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IOblivionMajorRecordInternalGetter item,
+            string name = null,
+            OblivionMajorRecord_Mask<bool> printMask = null)
+        {
+            return ((OblivionMajorRecordCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IOblivionMajorRecordInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            OblivionMajorRecord_Mask<bool> printMask = null)
+        {
+            ((OblivionMajorRecordCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IOblivionMajorRecordInternalGetter item,
+            OblivionMajorRecord_Mask<bool?> checkMask)
+        {
+            return ((OblivionMajorRecordCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static OblivionMajorRecord_Mask<bool> GetHasBeenSetMask(this IOblivionMajorRecordGetter item)
+        {
+            var ret = new OblivionMajorRecord_Mask<bool>();
+            ((OblivionMajorRecordCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -834,9 +892,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class OblivionMajorRecordCommon
+    #region Common
+    public partial class OblivionMajorRecordCommon : MajorRecordCommon
     {
+        public static readonly OblivionMajorRecordCommon Instance = new OblivionMajorRecordCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IOblivionMajorRecord item,
@@ -872,26 +931,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IOblivionMajorRecord item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IOblivionMajorRecord item)
         {
+            ClearPartial();
             item.OblivionMajorRecordFlags = default(OblivionMajorRecord.OblivionMajorRecordFlag);
+            base.Clear(item);
         }
 
-        public static OblivionMajorRecord_Mask<bool> GetEqualsMask(
-            this IOblivionMajorRecordGetter item,
-            IOblivionMajorRecordGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IMajorRecord item)
         {
-            var ret = new OblivionMajorRecord_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IOblivionMajorRecord)item);
         }
 
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IOblivionMajorRecordGetter item,
             IOblivionMajorRecordGetter rhs,
             OblivionMajorRecord_Mask<bool> ret,
@@ -899,21 +953,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.OblivionMajorRecordFlags = item.OblivionMajorRecordFlags == rhs.OblivionMajorRecordFlags;
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IOblivionMajorRecordGetter item,
+        public string ToString(
+            IOblivionMajorRecordGetter item,
             string name = null,
             OblivionMajorRecord_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IOblivionMajorRecordGetter item,
+        public void ToString(
+            IOblivionMajorRecordGetter item,
             FileGeneration fg,
             string name = null,
             OblivionMajorRecord_Mask<bool> printMask = null)
@@ -929,32 +987,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.OblivionMajorRecordFlags ?? true)
-                {
-                    fg.AppendLine($"OblivionMajorRecordFlags => {item.OblivionMajorRecordFlags}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IOblivionMajorRecordGetter item,
+        protected static void ToStringFields(
+            IOblivionMajorRecordGetter item,
+            FileGeneration fg,
+            OblivionMajorRecord_Mask<bool> printMask = null)
+        {
+            MajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.OblivionMajorRecordFlags ?? true)
+            {
+                fg.AppendLine($"OblivionMajorRecordFlags => {item.OblivionMajorRecordFlags}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IOblivionMajorRecordGetter item,
             OblivionMajorRecord_Mask<bool?> checkMask)
         {
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static OblivionMajorRecord_Mask<bool> GetHasBeenSetMask(IOblivionMajorRecordGetter item)
+        public void FillHasBeenSetMask(
+            IOblivionMajorRecordGetter item,
+            OblivionMajorRecord_Mask<bool> mask)
         {
-            var ret = new OblivionMajorRecord_Mask<bool>();
-            ret.OblivionMajorRecordFlags = true;
-            return ret;
-        }
-
-        public static OblivionMajorRecord_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.OblivionMajorRecordFlags = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static OblivionMajorRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

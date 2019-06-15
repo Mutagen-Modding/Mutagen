@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
         public new static Armor_Registration Registration => Armor_Registration.Instance;
+        protected override object CommonInstance => ArmorCommon.Instance;
 
         #region Ctor
         protected Armor()
@@ -119,30 +120,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Armor>.GetEqualsMask(Armor rhs, EqualsMaskHelper.Include include) => ArmorCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IArmorGetter>.GetEqualsMask(IArmorGetter rhs, EqualsMaskHelper.Include include) => ArmorCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Armor>.GetEqualsMask(Armor rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IArmorGetter>.GetEqualsMask(IArmorGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Armor_Mask<bool> printMask = null)
-        {
-            return ArmorCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ArmorCommon.ToString(this, fg, name: name, printMask: null);
+            ArmorMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Armor_Mask<bool> GetHasBeenSetMask()
-        {
-            return ArmorCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -657,10 +650,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            ArmorCommon.Clear(this);
+            ArmorCommon.Instance.Clear(this);
         }
-
 
         public new static Armor Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -768,6 +759,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class ArmorMixIn
+    {
+        public static void Clear(this IArmorInternal item)
+        {
+            ((ArmorCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Armor_Mask<bool> GetEqualsMask(
+            this IArmorGetter item,
+            IArmorGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Armor_Mask<bool>();
+            ((ArmorCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IArmorInternalGetter item,
+            string name = null,
+            Armor_Mask<bool> printMask = null)
+        {
+            return ((ArmorCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IArmorInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Armor_Mask<bool> printMask = null)
+        {
+            ((ArmorCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IArmorInternalGetter item,
+            Armor_Mask<bool?> checkMask)
+        {
+            return ((ArmorCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Armor_Mask<bool> GetHasBeenSetMask(this IArmorGetter item)
+        {
+            var ret = new Armor_Mask<bool>();
+            ((ArmorCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1023,9 +1081,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ArmorCommon
+    #region Common
+    public partial class ArmorCommon : ClothingAbstractCommon
     {
+        public static readonly ArmorCommon Instance = new ArmorCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IArmor item,
@@ -1112,29 +1171,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IArmor item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IArmor item)
         {
+            ClearPartial();
             item.ArmorValue = default(Single);
             item.Value = default(UInt32);
             item.Health = default(UInt32);
             item.Weight = default(Single);
+            base.Clear(item);
         }
 
-        public static Armor_Mask<bool> GetEqualsMask(
-            this IArmorGetter item,
-            IArmorGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IClothingAbstract item)
         {
-            var ret = new Armor_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IArmor)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IItemAbstract item)
+        {
+            Clear(item: (IArmor)item);
+        }
+
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (IArmor)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IArmor)item);
+        }
+
+        public void FillEqualsMask(
             IArmorGetter item,
             IArmorGetter rhs,
             Armor_Mask<bool> ret,
@@ -1145,21 +1214,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Value = item.Value == rhs.Value;
             ret.Health = item.Health == rhs.Health;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            ClothingAbstractCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IArmorGetter item,
+        public string ToString(
+            IArmorGetter item,
             string name = null,
             Armor_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IArmorGetter item,
+        public void ToString(
+            IArmorGetter item,
             FileGeneration fg,
             string name = null,
             Armor_Mask<bool> printMask = null)
@@ -1175,51 +1248,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.ArmorValue ?? true)
-                {
-                    fg.AppendLine($"ArmorValue => {item.ArmorValue}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {item.Value}");
-                }
-                if (printMask?.Health ?? true)
-                {
-                    fg.AppendLine($"Health => {item.Health}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {item.Weight}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IArmorGetter item,
+        protected static void ToStringFields(
+            IArmorGetter item,
+            FileGeneration fg,
+            Armor_Mask<bool> printMask = null)
+        {
+            ClothingAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.ArmorValue ?? true)
+            {
+                fg.AppendLine($"ArmorValue => {item.ArmorValue}");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendLine($"Value => {item.Value}");
+            }
+            if (printMask?.Health ?? true)
+            {
+                fg.AppendLine($"Health => {item.Health}");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendLine($"Weight => {item.Weight}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IArmorGetter item,
             Armor_Mask<bool?> checkMask)
         {
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Armor_Mask<bool> GetHasBeenSetMask(IArmorGetter item)
+        public void FillHasBeenSetMask(
+            IArmorGetter item,
+            Armor_Mask<bool> mask)
         {
-            var ret = new Armor_Mask<bool>();
-            ret.ArmorValue = true;
-            ret.Value = true;
-            ret.Health = true;
-            ret.Weight = true;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static Armor_FieldIndex? ConvertFieldIndex(ClothingAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.ArmorValue = true;
+            mask.Value = true;
+            mask.Health = true;
+            mask.Weight = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Armor_FieldIndex ConvertFieldIndex(ClothingAbstract_FieldIndex index)
@@ -1267,12 +1354,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static Armor_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static Armor_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
         {
             switch (index)
@@ -1292,12 +1373,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static Armor_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static Armor_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1315,12 +1390,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Armor_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Armor_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

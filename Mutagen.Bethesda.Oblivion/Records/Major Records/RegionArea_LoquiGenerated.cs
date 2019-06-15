@@ -43,6 +43,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionArea_Registration.Instance;
         public static RegionArea_Registration Registration => RegionArea_Registration.Instance;
+        protected object CommonInstance => RegionAreaCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public RegionArea()
@@ -83,12 +85,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<P2Float> _RegionPoints = new SourceSetList<P2Float>();
         public ISourceSetList<P2Float> RegionPoints => _RegionPoints;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<P2Float> RegionPointsEnumerable
-        {
-            get => _RegionPoints.Items;
-            set => _RegionPoints.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<P2Float> IRegionArea.RegionPoints => _RegionPoints;
@@ -98,30 +94,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RegionArea>.GetEqualsMask(RegionArea rhs, EqualsMaskHelper.Include include) => RegionAreaCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IRegionAreaGetter>.GetEqualsMask(IRegionAreaGetter rhs, EqualsMaskHelper.Include include) => RegionAreaCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<RegionArea>.GetEqualsMask(RegionArea rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IRegionAreaGetter>.GetEqualsMask(IRegionAreaGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            RegionArea_Mask<bool> printMask = null)
-        {
-            return RegionAreaCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            RegionAreaCommon.ToString(this, fg, name: name, printMask: null);
+            RegionAreaMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public RegionArea_Mask<bool> GetHasBeenSetMask()
-        {
-            return RegionAreaCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -553,19 +541,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            RegionAreaCommon.Clear(this);
+            RegionAreaCommon.Instance.Clear(this);
         }
-
 
         public static RegionArea Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -633,6 +612,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class RegionAreaMixIn
+    {
+        public static void Clear(this IRegionArea item)
+        {
+            ((RegionAreaCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static RegionArea_Mask<bool> GetEqualsMask(
+            this IRegionAreaGetter item,
+            IRegionAreaGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RegionArea_Mask<bool>();
+            ((RegionAreaCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IRegionAreaGetter item,
+            string name = null,
+            RegionArea_Mask<bool> printMask = null)
+        {
+            return ((RegionAreaCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IRegionAreaGetter item,
+            FileGeneration fg,
+            string name = null,
+            RegionArea_Mask<bool> printMask = null)
+        {
+            ((RegionAreaCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IRegionAreaGetter item,
+            RegionArea_Mask<bool?> checkMask)
+        {
+            return ((RegionAreaCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static RegionArea_Mask<bool> GetHasBeenSetMask(this IRegionAreaGetter item)
+        {
+            var ret = new RegionArea_Mask<bool>();
+            ((RegionAreaCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -846,9 +892,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class RegionAreaCommon
+    #region Common
+    public partial class RegionAreaCommon
     {
+        public static readonly RegionAreaCommon Instance = new RegionAreaCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IRegionArea item,
@@ -910,27 +957,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IRegionArea item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IRegionArea item)
         {
+            ClearPartial();
             item.EdgeFallOff_Unset();
             item.RegionPoints.Unset();
         }
 
-        public static RegionArea_Mask<bool> GetEqualsMask(
-            this IRegionAreaGetter item,
-            IRegionAreaGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new RegionArea_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IRegionAreaGetter item,
             IRegionAreaGetter rhs,
             RegionArea_Mask<bool> ret,
@@ -944,18 +980,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
         }
 
-        public static string ToString(
-            this IRegionAreaGetter item,
+        public string ToString(
+            IRegionAreaGetter item,
             string name = null,
             RegionArea_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IRegionAreaGetter item,
+        public void ToString(
+            IRegionAreaGetter item,
             FileGeneration fg,
             string name = null,
             RegionArea_Mask<bool> printMask = null)
@@ -971,34 +1011,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.EdgeFallOff ?? true)
-                {
-                    fg.AppendLine($"EdgeFallOff => {item.EdgeFallOff}");
-                }
-                if (printMask?.RegionPoints?.Overall ?? true)
-                {
-                    fg.AppendLine("RegionPoints =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.RegionPoints)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($"Item => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IRegionAreaGetter item,
+        protected static void ToStringFields(
+            IRegionAreaGetter item,
+            FileGeneration fg,
+            RegionArea_Mask<bool> printMask = null)
+        {
+            if (printMask?.EdgeFallOff ?? true)
+            {
+                fg.AppendLine($"EdgeFallOff => {item.EdgeFallOff}");
+            }
+            if (printMask?.RegionPoints?.Overall ?? true)
+            {
+                fg.AppendLine("RegionPoints =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.RegionPoints)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+
+        public bool HasBeenSet(
+            IRegionAreaGetter item,
             RegionArea_Mask<bool?> checkMask)
         {
             if (checkMask.EdgeFallOff.HasValue && checkMask.EdgeFallOff.Value != item.EdgeFallOff_IsSet) return false;
@@ -1006,12 +1057,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return true;
         }
 
-        public static RegionArea_Mask<bool> GetHasBeenSetMask(IRegionAreaGetter item)
+        public void FillHasBeenSetMask(
+            IRegionAreaGetter item,
+            RegionArea_Mask<bool> mask)
         {
-            var ret = new RegionArea_Mask<bool>();
-            ret.EdgeFallOff = item.EdgeFallOff_IsSet;
-            ret.RegionPoints = new MaskItem<bool, IEnumerable<(int, bool)>>(item.RegionPoints.HasBeenSet, null);
-            return ret;
+            mask.EdgeFallOff = item.EdgeFallOff_IsSet;
+            mask.RegionPoints = new MaskItem<bool, IEnumerable<(int, bool)>>(item.RegionPoints.HasBeenSet, null);
         }
 
     }
@@ -1056,8 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             item: subItem,
                             errorMask: listSubMask);
-                    }
-                    );
+                    });
             }
         }
 

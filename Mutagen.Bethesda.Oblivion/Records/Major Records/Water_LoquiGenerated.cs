@@ -47,6 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
         public new static Water_Registration Registration => Water_Registration.Instance;
+        protected override object CommonInstance => WaterCommon.Instance;
 
         #region Ctor
         protected Water()
@@ -581,30 +582,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Water>.GetEqualsMask(Water rhs, EqualsMaskHelper.Include include) => WaterCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IWaterGetter>.GetEqualsMask(IWaterGetter rhs, EqualsMaskHelper.Include include) => WaterCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Water>.GetEqualsMask(Water rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IWaterGetter>.GetEqualsMask(IWaterGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Water_Mask<bool> printMask = null)
-        {
-            return WaterCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            WaterCommon.ToString(this, fg, name: name, printMask: null);
+            WaterMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Water_Mask<bool> GetHasBeenSetMask()
-        {
-            return WaterCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -1729,10 +1722,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            WaterCommon.Clear(this);
+            WaterCommon.Instance.Clear(this);
         }
-
 
         public new static Water Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -2113,6 +2104,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class WaterMixIn
+    {
+        public static void Clear(this IWaterInternal item)
+        {
+            ((WaterCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Water_Mask<bool> GetEqualsMask(
+            this IWaterGetter item,
+            IWaterGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Water_Mask<bool>();
+            ((WaterCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IWaterInternalGetter item,
+            string name = null,
+            Water_Mask<bool> printMask = null)
+        {
+            return ((WaterCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IWaterInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Water_Mask<bool> printMask = null)
+        {
+            ((WaterCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IWaterInternalGetter item,
+            Water_Mask<bool?> checkMask)
+        {
+            return ((WaterCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Water_Mask<bool> GetHasBeenSetMask(this IWaterGetter item)
+        {
+            var ret = new Water_Mask<bool>();
+            ((WaterCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -2698,9 +2756,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class WaterCommon
+    #region Common
+    public partial class WaterCommon : OblivionMajorRecordCommon
     {
+        public static readonly WaterCommon Instance = new WaterCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IWater item,
@@ -3352,8 +3411,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IWater item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IWater item)
         {
+            ClearPartial();
             item.Texture_Unset();
             item.Opacity_Unset();
             item.Flags_Unset();
@@ -3386,23 +3448,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.DisplacementSimulatorStartingSize = default(Single);
             item.Damage = default(UInt16);
             item.RelatedWaters_Unset();
+            base.Clear(item);
         }
 
-        public static Water_Mask<bool> GetEqualsMask(
-            this IWaterGetter item,
-            IWaterGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new Water_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IWater)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IWater)item);
+        }
+
+        public void FillEqualsMask(
             IWaterGetter item,
             IWaterGetter rhs,
             Water_Mask<bool> ret,
@@ -3445,23 +3504,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.RelatedWaters_IsSet,
                 item.RelatedWaters,
                 rhs.RelatedWaters,
-                (loqLhs, loqRhs) => RelatedWatersCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IWaterGetter item,
+        public string ToString(
+            IWaterGetter item,
             string name = null,
             Water_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IWaterGetter item,
+        public void ToString(
+            IWaterGetter item,
             FileGeneration fg,
             string name = null,
             Water_Mask<bool> printMask = null)
@@ -3477,143 +3540,158 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Texture ?? true)
-                {
-                    fg.AppendLine($"Texture => {item.Texture}");
-                }
-                if (printMask?.Opacity ?? true)
-                {
-                    fg.AppendLine($"Opacity => {item.Opacity}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.MaterialID ?? true)
-                {
-                    fg.AppendLine($"MaterialID => {item.MaterialID}");
-                }
-                if (printMask?.Sound ?? true)
-                {
-                    fg.AppendLine($"Sound => {item.Sound_Property}");
-                }
-                if (printMask?.WindVelocity ?? true)
-                {
-                    fg.AppendLine($"WindVelocity => {item.WindVelocity}");
-                }
-                if (printMask?.WindDirection ?? true)
-                {
-                    fg.AppendLine($"WindDirection => {item.WindDirection}");
-                }
-                if (printMask?.WaveAmplitude ?? true)
-                {
-                    fg.AppendLine($"WaveAmplitude => {item.WaveAmplitude}");
-                }
-                if (printMask?.WaveFrequency ?? true)
-                {
-                    fg.AppendLine($"WaveFrequency => {item.WaveFrequency}");
-                }
-                if (printMask?.SunPower ?? true)
-                {
-                    fg.AppendLine($"SunPower => {item.SunPower}");
-                }
-                if (printMask?.ReflectivityAmount ?? true)
-                {
-                    fg.AppendLine($"ReflectivityAmount => {item.ReflectivityAmount}");
-                }
-                if (printMask?.FresnelAmount ?? true)
-                {
-                    fg.AppendLine($"FresnelAmount => {item.FresnelAmount}");
-                }
-                if (printMask?.ScrollXSpeed ?? true)
-                {
-                    fg.AppendLine($"ScrollXSpeed => {item.ScrollXSpeed}");
-                }
-                if (printMask?.ScrollYSpeed ?? true)
-                {
-                    fg.AppendLine($"ScrollYSpeed => {item.ScrollYSpeed}");
-                }
-                if (printMask?.FogDistanceNearPlane ?? true)
-                {
-                    fg.AppendLine($"FogDistanceNearPlane => {item.FogDistanceNearPlane}");
-                }
-                if (printMask?.FogDistanceFarPlane ?? true)
-                {
-                    fg.AppendLine($"FogDistanceFarPlane => {item.FogDistanceFarPlane}");
-                }
-                if (printMask?.ShallowColor ?? true)
-                {
-                    fg.AppendLine($"ShallowColor => {item.ShallowColor}");
-                }
-                if (printMask?.DeepColor ?? true)
-                {
-                    fg.AppendLine($"DeepColor => {item.DeepColor}");
-                }
-                if (printMask?.ReflectionColor ?? true)
-                {
-                    fg.AppendLine($"ReflectionColor => {item.ReflectionColor}");
-                }
-                if (printMask?.TextureBlend ?? true)
-                {
-                    fg.AppendLine($"TextureBlend => {item.TextureBlend}");
-                }
-                if (printMask?.RainSimulatorForce ?? true)
-                {
-                    fg.AppendLine($"RainSimulatorForce => {item.RainSimulatorForce}");
-                }
-                if (printMask?.RainSimulatorVelocity ?? true)
-                {
-                    fg.AppendLine($"RainSimulatorVelocity => {item.RainSimulatorVelocity}");
-                }
-                if (printMask?.RainSimulatorFalloff ?? true)
-                {
-                    fg.AppendLine($"RainSimulatorFalloff => {item.RainSimulatorFalloff}");
-                }
-                if (printMask?.RainSimulatorDampner ?? true)
-                {
-                    fg.AppendLine($"RainSimulatorDampner => {item.RainSimulatorDampner}");
-                }
-                if (printMask?.RainSimulatorStartingSize ?? true)
-                {
-                    fg.AppendLine($"RainSimulatorStartingSize => {item.RainSimulatorStartingSize}");
-                }
-                if (printMask?.DisplacementSimulatorForce ?? true)
-                {
-                    fg.AppendLine($"DisplacementSimulatorForce => {item.DisplacementSimulatorForce}");
-                }
-                if (printMask?.DisplacementSimulatorVelocity ?? true)
-                {
-                    fg.AppendLine($"DisplacementSimulatorVelocity => {item.DisplacementSimulatorVelocity}");
-                }
-                if (printMask?.DisplacementSimulatorFalloff ?? true)
-                {
-                    fg.AppendLine($"DisplacementSimulatorFalloff => {item.DisplacementSimulatorFalloff}");
-                }
-                if (printMask?.DisplacementSimulatorDampner ?? true)
-                {
-                    fg.AppendLine($"DisplacementSimulatorDampner => {item.DisplacementSimulatorDampner}");
-                }
-                if (printMask?.DisplacementSimulatorStartingSize ?? true)
-                {
-                    fg.AppendLine($"DisplacementSimulatorStartingSize => {item.DisplacementSimulatorStartingSize}");
-                }
-                if (printMask?.Damage ?? true)
-                {
-                    fg.AppendLine($"Damage => {item.Damage}");
-                }
-                if (printMask?.RelatedWaters?.Overall ?? true)
-                {
-                    item.RelatedWaters?.ToString(fg, "RelatedWaters");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IWaterGetter item,
+        protected static void ToStringFields(
+            IWaterGetter item,
+            FileGeneration fg,
+            Water_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Texture ?? true)
+            {
+                fg.AppendLine($"Texture => {item.Texture}");
+            }
+            if (printMask?.Opacity ?? true)
+            {
+                fg.AppendLine($"Opacity => {item.Opacity}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.MaterialID ?? true)
+            {
+                fg.AppendLine($"MaterialID => {item.MaterialID}");
+            }
+            if (printMask?.Sound ?? true)
+            {
+                fg.AppendLine($"Sound => {item.Sound_Property}");
+            }
+            if (printMask?.WindVelocity ?? true)
+            {
+                fg.AppendLine($"WindVelocity => {item.WindVelocity}");
+            }
+            if (printMask?.WindDirection ?? true)
+            {
+                fg.AppendLine($"WindDirection => {item.WindDirection}");
+            }
+            if (printMask?.WaveAmplitude ?? true)
+            {
+                fg.AppendLine($"WaveAmplitude => {item.WaveAmplitude}");
+            }
+            if (printMask?.WaveFrequency ?? true)
+            {
+                fg.AppendLine($"WaveFrequency => {item.WaveFrequency}");
+            }
+            if (printMask?.SunPower ?? true)
+            {
+                fg.AppendLine($"SunPower => {item.SunPower}");
+            }
+            if (printMask?.ReflectivityAmount ?? true)
+            {
+                fg.AppendLine($"ReflectivityAmount => {item.ReflectivityAmount}");
+            }
+            if (printMask?.FresnelAmount ?? true)
+            {
+                fg.AppendLine($"FresnelAmount => {item.FresnelAmount}");
+            }
+            if (printMask?.ScrollXSpeed ?? true)
+            {
+                fg.AppendLine($"ScrollXSpeed => {item.ScrollXSpeed}");
+            }
+            if (printMask?.ScrollYSpeed ?? true)
+            {
+                fg.AppendLine($"ScrollYSpeed => {item.ScrollYSpeed}");
+            }
+            if (printMask?.FogDistanceNearPlane ?? true)
+            {
+                fg.AppendLine($"FogDistanceNearPlane => {item.FogDistanceNearPlane}");
+            }
+            if (printMask?.FogDistanceFarPlane ?? true)
+            {
+                fg.AppendLine($"FogDistanceFarPlane => {item.FogDistanceFarPlane}");
+            }
+            if (printMask?.ShallowColor ?? true)
+            {
+                fg.AppendLine($"ShallowColor => {item.ShallowColor}");
+            }
+            if (printMask?.DeepColor ?? true)
+            {
+                fg.AppendLine($"DeepColor => {item.DeepColor}");
+            }
+            if (printMask?.ReflectionColor ?? true)
+            {
+                fg.AppendLine($"ReflectionColor => {item.ReflectionColor}");
+            }
+            if (printMask?.TextureBlend ?? true)
+            {
+                fg.AppendLine($"TextureBlend => {item.TextureBlend}");
+            }
+            if (printMask?.RainSimulatorForce ?? true)
+            {
+                fg.AppendLine($"RainSimulatorForce => {item.RainSimulatorForce}");
+            }
+            if (printMask?.RainSimulatorVelocity ?? true)
+            {
+                fg.AppendLine($"RainSimulatorVelocity => {item.RainSimulatorVelocity}");
+            }
+            if (printMask?.RainSimulatorFalloff ?? true)
+            {
+                fg.AppendLine($"RainSimulatorFalloff => {item.RainSimulatorFalloff}");
+            }
+            if (printMask?.RainSimulatorDampner ?? true)
+            {
+                fg.AppendLine($"RainSimulatorDampner => {item.RainSimulatorDampner}");
+            }
+            if (printMask?.RainSimulatorStartingSize ?? true)
+            {
+                fg.AppendLine($"RainSimulatorStartingSize => {item.RainSimulatorStartingSize}");
+            }
+            if (printMask?.DisplacementSimulatorForce ?? true)
+            {
+                fg.AppendLine($"DisplacementSimulatorForce => {item.DisplacementSimulatorForce}");
+            }
+            if (printMask?.DisplacementSimulatorVelocity ?? true)
+            {
+                fg.AppendLine($"DisplacementSimulatorVelocity => {item.DisplacementSimulatorVelocity}");
+            }
+            if (printMask?.DisplacementSimulatorFalloff ?? true)
+            {
+                fg.AppendLine($"DisplacementSimulatorFalloff => {item.DisplacementSimulatorFalloff}");
+            }
+            if (printMask?.DisplacementSimulatorDampner ?? true)
+            {
+                fg.AppendLine($"DisplacementSimulatorDampner => {item.DisplacementSimulatorDampner}");
+            }
+            if (printMask?.DisplacementSimulatorStartingSize ?? true)
+            {
+                fg.AppendLine($"DisplacementSimulatorStartingSize => {item.DisplacementSimulatorStartingSize}");
+            }
+            if (printMask?.Damage ?? true)
+            {
+                fg.AppendLine($"Damage => {item.Damage}");
+            }
+            if (printMask?.RelatedWaters?.Overall ?? true)
+            {
+                item.RelatedWaters?.ToString(fg, "RelatedWaters");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IWaterGetter item,
             Water_Mask<bool?> checkMask)
         {
             if (checkMask.Texture.HasValue && checkMask.Texture.Value != item.Texture_IsSet) return false;
@@ -3623,52 +3701,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound_Property.HasBeenSet) return false;
             if (checkMask.RelatedWaters.Overall.HasValue && checkMask.RelatedWaters.Overall.Value != item.RelatedWaters_IsSet) return false;
             if (checkMask.RelatedWaters.Specific != null && (item.RelatedWaters == null || !item.RelatedWaters.HasBeenSet(checkMask.RelatedWaters.Specific))) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Water_Mask<bool> GetHasBeenSetMask(IWaterGetter item)
+        public void FillHasBeenSetMask(
+            IWaterGetter item,
+            Water_Mask<bool> mask)
         {
-            var ret = new Water_Mask<bool>();
-            ret.Texture = item.Texture_IsSet;
-            ret.Opacity = item.Opacity_IsSet;
-            ret.Flags = item.Flags_IsSet;
-            ret.MaterialID = item.MaterialID_IsSet;
-            ret.Sound = item.Sound_Property.HasBeenSet;
-            ret.WindVelocity = true;
-            ret.WindDirection = true;
-            ret.WaveAmplitude = true;
-            ret.WaveFrequency = true;
-            ret.SunPower = true;
-            ret.ReflectivityAmount = true;
-            ret.FresnelAmount = true;
-            ret.ScrollXSpeed = true;
-            ret.ScrollYSpeed = true;
-            ret.FogDistanceNearPlane = true;
-            ret.FogDistanceFarPlane = true;
-            ret.ShallowColor = true;
-            ret.DeepColor = true;
-            ret.ReflectionColor = true;
-            ret.TextureBlend = true;
-            ret.RainSimulatorForce = true;
-            ret.RainSimulatorVelocity = true;
-            ret.RainSimulatorFalloff = true;
-            ret.RainSimulatorDampner = true;
-            ret.RainSimulatorStartingSize = true;
-            ret.DisplacementSimulatorForce = true;
-            ret.DisplacementSimulatorVelocity = true;
-            ret.DisplacementSimulatorFalloff = true;
-            ret.DisplacementSimulatorDampner = true;
-            ret.DisplacementSimulatorStartingSize = true;
-            ret.Damage = true;
-            ret.RelatedWaters = new MaskItem<bool, RelatedWaters_Mask<bool>>(item.RelatedWaters_IsSet, RelatedWatersCommon.GetHasBeenSetMask(item.RelatedWaters));
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static Water_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Texture = item.Texture_IsSet;
+            mask.Opacity = item.Opacity_IsSet;
+            mask.Flags = item.Flags_IsSet;
+            mask.MaterialID = item.MaterialID_IsSet;
+            mask.Sound = item.Sound_Property.HasBeenSet;
+            mask.WindVelocity = true;
+            mask.WindDirection = true;
+            mask.WaveAmplitude = true;
+            mask.WaveFrequency = true;
+            mask.SunPower = true;
+            mask.ReflectivityAmount = true;
+            mask.FresnelAmount = true;
+            mask.ScrollXSpeed = true;
+            mask.ScrollYSpeed = true;
+            mask.FogDistanceNearPlane = true;
+            mask.FogDistanceFarPlane = true;
+            mask.ShallowColor = true;
+            mask.DeepColor = true;
+            mask.ReflectionColor = true;
+            mask.TextureBlend = true;
+            mask.RainSimulatorForce = true;
+            mask.RainSimulatorVelocity = true;
+            mask.RainSimulatorFalloff = true;
+            mask.RainSimulatorDampner = true;
+            mask.RainSimulatorStartingSize = true;
+            mask.DisplacementSimulatorForce = true;
+            mask.DisplacementSimulatorVelocity = true;
+            mask.DisplacementSimulatorFalloff = true;
+            mask.DisplacementSimulatorDampner = true;
+            mask.DisplacementSimulatorStartingSize = true;
+            mask.Damage = true;
+            mask.RelatedWaters = new MaskItem<bool, RelatedWaters_Mask<bool>>(item.RelatedWaters_IsSet, item.RelatedWaters.GetHasBeenSetMask());
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Water_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -3688,12 +3765,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Water_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Water_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

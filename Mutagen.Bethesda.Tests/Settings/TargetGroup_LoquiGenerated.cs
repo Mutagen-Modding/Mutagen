@@ -37,6 +37,8 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TargetGroup_Registration.Instance;
         public static TargetGroup_Registration Registration => TargetGroup_Registration.Instance;
+        protected object CommonInstance => TargetGroupCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public TargetGroup()
@@ -59,50 +61,36 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceList<Target> _Targets = new SourceList<Target>();
         public ISourceList<Target> Targets => _Targets;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<Target> TargetsEnumerable
-        {
-            get => _Targets.Items;
-            set => _Targets.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<Target> ITargetGroup.Targets => _Targets;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<Target> ITargetGroupGetter.Targets => _Targets;
+        IReadOnlyList<ITargetGetter> ITargetGroupGetter.Targets => _Targets;
         #endregion
 
         #endregion
 
-        IMask<bool> IEqualsMask<TargetGroup>.GetEqualsMask(TargetGroup rhs, EqualsMaskHelper.Include include) => TargetGroupCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ITargetGroupGetter>.GetEqualsMask(ITargetGroupGetter rhs, EqualsMaskHelper.Include include) => TargetGroupCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<TargetGroup>.GetEqualsMask(TargetGroup rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ITargetGroupGetter>.GetEqualsMask(ITargetGroupGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
         public override string ToString()
         {
-            return TargetGroupCommon.ToString(this, printMask: null);
+            return TargetGroupMixIn.ToString(item: this);
         }
 
-        public string ToString(
-            string name = null,
-            TargetGroup_Mask<bool> printMask = null)
-        {
-            return TargetGroupCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            TargetGroupCommon.ToString(this, fg, name: name, printMask: null);
+            TargetGroupMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public TargetGroup_Mask<bool> GetHasBeenSetMask()
-        {
-            return TargetGroupCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -516,19 +504,10 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            TargetGroupCommon.Clear(this);
+            TargetGroupCommon.Instance.Clear(this);
         }
-
 
         public static TargetGroup Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -586,11 +565,78 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
         #region Targets
-        IReadOnlyList<Target> Targets { get; }
+        IReadOnlyList<ITargetGetter> Targets { get; }
         #endregion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class TargetGroupMixIn
+    {
+        public static void Clear(this ITargetGroup item)
+        {
+            ((TargetGroupCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static TargetGroup_Mask<bool> GetEqualsMask(
+            this ITargetGroupGetter item,
+            ITargetGroupGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new TargetGroup_Mask<bool>();
+            ((TargetGroupCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ITargetGroupGetter item,
+            string name = null,
+            TargetGroup_Mask<bool> printMask = null)
+        {
+            return ((TargetGroupCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ITargetGroupGetter item,
+            FileGeneration fg,
+            string name = null,
+            TargetGroup_Mask<bool> printMask = null)
+        {
+            ((TargetGroupCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ITargetGroupGetter item,
+            TargetGroup_Mask<bool?> checkMask)
+        {
+            return ((TargetGroupCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static TargetGroup_Mask<bool> GetHasBeenSetMask(this ITargetGroupGetter item)
+        {
+            var ret = new TargetGroup_Mask<bool>();
+            ((TargetGroupCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -788,9 +834,10 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class TargetGroupCommon
+    #region Common
+    public partial class TargetGroupCommon
     {
+        public static readonly TargetGroupCommon Instance = new TargetGroupCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ITargetGroup item,
@@ -821,7 +868,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 errorMask?.PushIndex((int)TargetGroup_FieldIndex.Targets);
                 try
                 {
-                    item.Targets.SetToWithDefault(
+                    item.Targets.SetToWithDefault<Target, ITargetGetter>(
                         rhs: rhs.Targets,
                         def: def?.Targets,
                         converter: (r, d) =>
@@ -829,7 +876,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                             switch (copyMask?.Targets.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (Target)r;
                                 case CopyOption.MakeCopy:
                                     return Target.Copy(
                                         r,
@@ -838,8 +885,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Targets.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -855,27 +901,16 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         #endregion
 
-        public static void Clear(ITargetGroup item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ITargetGroup item)
         {
+            ClearPartial();
             item.Do = default(Boolean);
             item.Targets.Clear();
         }
 
-        public static TargetGroup_Mask<bool> GetEqualsMask(
-            this ITargetGroupGetter item,
-            ITargetGroupGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new TargetGroup_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             ITargetGroupGetter item,
             ITargetGroupGetter rhs,
             TargetGroup_Mask<bool> ret,
@@ -889,18 +924,22 @@ namespace Mutagen.Bethesda.Tests.Internals
                 include);
         }
 
-        public static string ToString(
-            this ITargetGroupGetter item,
+        public string ToString(
+            ITargetGroupGetter item,
             string name = null,
             TargetGroup_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ITargetGroupGetter item,
+        public void ToString(
+            ITargetGroupGetter item,
             FileGeneration fg,
             string name = null,
             TargetGroup_Mask<bool> printMask = null)
@@ -916,45 +955,56 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Do ?? true)
-                {
-                    fg.AppendLine($"Do => {item.Do}");
-                }
-                if (printMask?.Targets?.Overall ?? true)
-                {
-                    fg.AppendLine("Targets =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Targets)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ITargetGroupGetter item,
+        protected static void ToStringFields(
+            ITargetGroupGetter item,
+            FileGeneration fg,
+            TargetGroup_Mask<bool> printMask = null)
+        {
+            if (printMask?.Do ?? true)
+            {
+                fg.AppendLine($"Do => {item.Do}");
+            }
+            if (printMask?.Targets?.Overall ?? true)
+            {
+                fg.AppendLine("Targets =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Targets)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+
+        public bool HasBeenSet(
+            ITargetGroupGetter item,
             TargetGroup_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static TargetGroup_Mask<bool> GetHasBeenSetMask(ITargetGroupGetter item)
+        public void FillHasBeenSetMask(
+            ITargetGroupGetter item,
+            TargetGroup_Mask<bool> mask)
         {
-            var ret = new TargetGroup_Mask<bool>();
-            ret.Do = true;
-            ret.Targets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Target_Mask<bool>>>>(true, item.Targets.WithIndex().Select((i) => new MaskItemIndexed<bool, Target_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            return ret;
+            mask.Do = true;
+            mask.Targets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Target_Mask<bool>>>>(true, item.Targets.WithIndex().Select((i) => new MaskItemIndexed<bool, Target_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
 
     }
@@ -983,14 +1033,14 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)TargetGroup_FieldIndex.Targets) ?? true))
             {
-                ListXmlTranslation<Target>.Instance.Write(
+                ListXmlTranslation<ITargetGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Targets),
                     item: item.Targets,
                     fieldIndex: (int)TargetGroup_FieldIndex.Targets,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)TargetGroup_FieldIndex.Targets),
-                    transl: (XElement subNode, Target subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, ITargetGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         ((TargetXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
                             item: subItem,
@@ -998,8 +1048,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
         }
 

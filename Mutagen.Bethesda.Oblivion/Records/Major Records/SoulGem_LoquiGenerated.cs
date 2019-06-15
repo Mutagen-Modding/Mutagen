@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
         public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
+        protected override object CommonInstance => SoulGemCommon.Instance;
 
         #region Ctor
         protected SoulGem()
@@ -234,30 +235,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<SoulGem>.GetEqualsMask(SoulGem rhs, EqualsMaskHelper.Include include) => SoulGemCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ISoulGemGetter>.GetEqualsMask(ISoulGemGetter rhs, EqualsMaskHelper.Include include) => SoulGemCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<SoulGem>.GetEqualsMask(SoulGem rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ISoulGemGetter>.GetEqualsMask(ISoulGemGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            SoulGem_Mask<bool> printMask = null)
-        {
-            return SoulGemCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            SoulGemCommon.ToString(this, fg, name: name, printMask: null);
+            SoulGemMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new SoulGem_Mask<bool> GetHasBeenSetMask()
-        {
-            return SoulGemCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -951,10 +944,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            SoulGemCommon.Clear(this);
+            SoulGemCommon.Instance.Clear(this);
         }
-
 
         public new static SoulGem Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1119,6 +1110,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class SoulGemMixIn
+    {
+        public static void Clear(this ISoulGemInternal item)
+        {
+            ((SoulGemCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static SoulGem_Mask<bool> GetEqualsMask(
+            this ISoulGemGetter item,
+            ISoulGemGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SoulGem_Mask<bool>();
+            ((SoulGemCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ISoulGemInternalGetter item,
+            string name = null,
+            SoulGem_Mask<bool> printMask = null)
+        {
+            return ((SoulGemCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ISoulGemInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            SoulGem_Mask<bool> printMask = null)
+        {
+            ((SoulGemCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ISoulGemInternalGetter item,
+            SoulGem_Mask<bool?> checkMask)
+        {
+            return ((SoulGemCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static SoulGem_Mask<bool> GetHasBeenSetMask(this ISoulGemGetter item)
+        {
+            var ret = new SoulGem_Mask<bool>();
+            ((SoulGemCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1416,9 +1474,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class SoulGemCommon
+    #region Common
+    public partial class SoulGemCommon : ItemAbstractCommon
     {
+        public static readonly SoulGemCommon Instance = new SoulGemCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ISoulGem item,
@@ -1662,8 +1721,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ISoulGem item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ISoulGem item)
         {
+            ClearPartial();
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
@@ -1672,23 +1734,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Weight = default(Single);
             item.ContainedSoul_Unset();
             item.MaximumCapacity_Unset();
+            base.Clear(item);
         }
 
-        public static SoulGem_Mask<bool> GetEqualsMask(
-            this ISoulGemGetter item,
-            ISoulGemGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IItemAbstract item)
         {
-            var ret = new SoulGem_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ISoulGem)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (ISoulGem)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (ISoulGem)item);
+        }
+
+        public void FillEqualsMask(
             ISoulGemGetter item,
             ISoulGemGetter rhs,
             SoulGem_Mask<bool> ret,
@@ -1701,7 +1765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
@@ -1709,21 +1773,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.ContainedSoul = item.ContainedSoul_IsSet == rhs.ContainedSoul_IsSet && item.ContainedSoul == rhs.ContainedSoul;
             ret.MaximumCapacity = item.MaximumCapacity_IsSet == rhs.MaximumCapacity_IsSet && item.MaximumCapacity == rhs.MaximumCapacity;
-            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ISoulGemGetter item,
+        public string ToString(
+            ISoulGemGetter item,
             string name = null,
             SoulGem_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ISoulGemGetter item,
+        public void ToString(
+            ISoulGemGetter item,
             FileGeneration fg,
             string name = null,
             SoulGem_Mask<bool> printMask = null)
@@ -1739,47 +1807,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {item.Script_Property}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {item.Value}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {item.Weight}");
-                }
-                if (printMask?.ContainedSoul ?? true)
-                {
-                    fg.AppendLine($"ContainedSoul => {item.ContainedSoul}");
-                }
-                if (printMask?.MaximumCapacity ?? true)
-                {
-                    fg.AppendLine($"MaximumCapacity => {item.MaximumCapacity}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ISoulGemGetter item,
+        protected static void ToStringFields(
+            ISoulGemGetter item,
+            FileGeneration fg,
+            SoulGem_Mask<bool> printMask = null)
+        {
+            ItemAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendLine($"Value => {item.Value}");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendLine($"Weight => {item.Weight}");
+            }
+            if (printMask?.ContainedSoul ?? true)
+            {
+                fg.AppendLine($"ContainedSoul => {item.ContainedSoul}");
+            }
+            if (printMask?.MaximumCapacity ?? true)
+            {
+                fg.AppendLine($"MaximumCapacity => {item.MaximumCapacity}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            ISoulGemGetter item,
             SoulGem_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -1789,28 +1872,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
             if (checkMask.ContainedSoul.HasValue && checkMask.ContainedSoul.Value != item.ContainedSoul_IsSet) return false;
             if (checkMask.MaximumCapacity.HasValue && checkMask.MaximumCapacity.Value != item.MaximumCapacity_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static SoulGem_Mask<bool> GetHasBeenSetMask(ISoulGemGetter item)
+        public void FillHasBeenSetMask(
+            ISoulGemGetter item,
+            SoulGem_Mask<bool> mask)
         {
-            var ret = new SoulGem_Mask<bool>();
-            ret.Name = item.Name_IsSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Icon = item.Icon_IsSet;
-            ret.Script = item.Script_Property.HasBeenSet;
-            ret.Value = true;
-            ret.Weight = true;
-            ret.ContainedSoul = item.ContainedSoul_IsSet;
-            ret.MaximumCapacity = item.MaximumCapacity_IsSet;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static SoulGem_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Icon = item.Icon_IsSet;
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Value = true;
+            mask.Weight = true;
+            mask.ContainedSoul = item.ContainedSoul_IsSet;
+            mask.MaximumCapacity = item.MaximumCapacity_IsSet;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static SoulGem_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
@@ -1832,12 +1914,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static SoulGem_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static SoulGem_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1855,12 +1931,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static SoulGem_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static SoulGem_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

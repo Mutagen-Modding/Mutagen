@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionSound_Registration.Instance;
         public static RegionSound_Registration Registration => RegionSound_Registration.Instance;
+        protected object CommonInstance => RegionSoundCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public RegionSound()
@@ -79,30 +81,22 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeFloat Chance_Range = new RangeFloat(0f, 100f);
         #endregion
 
-        IMask<bool> IEqualsMask<RegionSound>.GetEqualsMask(RegionSound rhs, EqualsMaskHelper.Include include) => RegionSoundCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IRegionSoundGetter>.GetEqualsMask(IRegionSoundGetter rhs, EqualsMaskHelper.Include include) => RegionSoundCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<RegionSound>.GetEqualsMask(RegionSound rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IRegionSoundGetter>.GetEqualsMask(IRegionSoundGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            RegionSound_Mask<bool> printMask = null)
-        {
-            return RegionSoundCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            RegionSoundCommon.ToString(this, fg, name: name, printMask: null);
+            RegionSoundMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public RegionSound_Mask<bool> GetHasBeenSetMask()
-        {
-            return RegionSoundCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -532,19 +526,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            RegionSoundCommon.Clear(this);
+            RegionSoundCommon.Instance.Clear(this);
         }
-
 
         public static RegionSound Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -619,6 +604,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class RegionSoundMixIn
+    {
+        public static void Clear(this IRegionSound item)
+        {
+            ((RegionSoundCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static RegionSound_Mask<bool> GetEqualsMask(
+            this IRegionSoundGetter item,
+            IRegionSoundGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RegionSound_Mask<bool>();
+            ((RegionSoundCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IRegionSoundGetter item,
+            string name = null,
+            RegionSound_Mask<bool> printMask = null)
+        {
+            return ((RegionSoundCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IRegionSoundGetter item,
+            FileGeneration fg,
+            string name = null,
+            RegionSound_Mask<bool> printMask = null)
+        {
+            ((RegionSoundCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IRegionSoundGetter item,
+            RegionSound_Mask<bool?> checkMask)
+        {
+            return ((RegionSoundCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static RegionSound_Mask<bool> GetHasBeenSetMask(this IRegionSoundGetter item)
+        {
+            var ret = new RegionSound_Mask<bool>();
+            ((RegionSoundCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -829,9 +881,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class RegionSoundCommon
+    #region Common
+    public partial class RegionSoundCommon
     {
+        public static readonly RegionSoundCommon Instance = new RegionSoundCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IRegionSound item,
@@ -895,28 +948,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IRegionSound item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IRegionSound item)
         {
+            ClearPartial();
             item.Sound = default(Sound);
             item.Flags = default(RegionSound.Flag);
             item.Chance = default(Single);
         }
 
-        public static RegionSound_Mask<bool> GetEqualsMask(
-            this IRegionSoundGetter item,
-            IRegionSoundGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new RegionSound_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IRegionSoundGetter item,
             IRegionSoundGetter rhs,
             RegionSound_Mask<bool> ret,
@@ -928,18 +970,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Chance = item.Chance.EqualsWithin(rhs.Chance);
         }
 
-        public static string ToString(
-            this IRegionSoundGetter item,
+        public string ToString(
+            IRegionSoundGetter item,
             string name = null,
             RegionSound_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IRegionSoundGetter item,
+        public void ToString(
+            IRegionSoundGetter item,
             FileGeneration fg,
             string name = null,
             RegionSound_Mask<bool> printMask = null)
@@ -955,36 +1001,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Sound ?? true)
-                {
-                    fg.AppendLine($"Sound => {item.Sound_Property}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.Chance ?? true)
-                {
-                    fg.AppendLine($"Chance => {item.Chance}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IRegionSoundGetter item,
+        protected static void ToStringFields(
+            IRegionSoundGetter item,
+            FileGeneration fg,
+            RegionSound_Mask<bool> printMask = null)
+        {
+            if (printMask?.Sound ?? true)
+            {
+                fg.AppendLine($"Sound => {item.Sound_Property}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Chance ?? true)
+            {
+                fg.AppendLine($"Chance => {item.Chance}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IRegionSoundGetter item,
             RegionSound_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static RegionSound_Mask<bool> GetHasBeenSetMask(IRegionSoundGetter item)
+        public void FillHasBeenSetMask(
+            IRegionSoundGetter item,
+            RegionSound_Mask<bool> mask)
         {
-            var ret = new RegionSound_Mask<bool>();
-            ret.Sound = true;
-            ret.Flags = true;
-            ret.Chance = true;
-            return ret;
+            mask.Sound = true;
+            mask.Flags = true;
+            mask.Chance = true;
         }
 
     }

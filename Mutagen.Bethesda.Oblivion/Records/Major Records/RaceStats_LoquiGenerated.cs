@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceStats_Registration.Instance;
         public static RaceStats_Registration Registration => RaceStats_Registration.Instance;
+        protected object CommonInstance => RaceStatsCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public RaceStats()
@@ -116,30 +118,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<RaceStats>.GetEqualsMask(RaceStats rhs, EqualsMaskHelper.Include include) => RaceStatsCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IRaceStatsGetter>.GetEqualsMask(IRaceStatsGetter rhs, EqualsMaskHelper.Include include) => RaceStatsCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<RaceStats>.GetEqualsMask(RaceStats rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IRaceStatsGetter>.GetEqualsMask(IRaceStatsGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            RaceStats_Mask<bool> printMask = null)
-        {
-            return RaceStatsCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            RaceStatsCommon.ToString(this, fg, name: name, printMask: null);
+            RaceStatsMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public RaceStats_Mask<bool> GetHasBeenSetMask()
-        {
-            return RaceStatsCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -563,19 +557,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            RaceStatsCommon.Clear(this);
+            RaceStatsCommon.Instance.Clear(this);
         }
-
 
         public static RaceStats Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -695,6 +680,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class RaceStatsMixIn
+    {
+        public static void Clear(this IRaceStats item)
+        {
+            ((RaceStatsCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static RaceStats_Mask<bool> GetEqualsMask(
+            this IRaceStatsGetter item,
+            IRaceStatsGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RaceStats_Mask<bool>();
+            ((RaceStatsCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IRaceStatsGetter item,
+            string name = null,
+            RaceStats_Mask<bool> printMask = null)
+        {
+            return ((RaceStatsCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IRaceStatsGetter item,
+            FileGeneration fg,
+            string name = null,
+            RaceStats_Mask<bool> printMask = null)
+        {
+            ((RaceStatsCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IRaceStatsGetter item,
+            RaceStats_Mask<bool?> checkMask)
+        {
+            return ((RaceStatsCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static RaceStats_Mask<bool> GetHasBeenSetMask(this IRaceStatsGetter item)
+        {
+            var ret = new RaceStats_Mask<bool>();
+            ((RaceStatsCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -965,9 +1017,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class RaceStatsCommon
+    #region Common
+    public partial class RaceStatsCommon
     {
+        public static readonly RaceStatsCommon Instance = new RaceStatsCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IRaceStats item,
@@ -1116,8 +1169,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IRaceStats item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IRaceStats item)
         {
+            ClearPartial();
             item.Strength = default(Byte);
             item.Intelligence = default(Byte);
             item.Willpower = default(Byte);
@@ -1128,21 +1184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Luck = default(Byte);
         }
 
-        public static RaceStats_Mask<bool> GetEqualsMask(
-            this IRaceStatsGetter item,
-            IRaceStatsGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new RaceStats_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IRaceStatsGetter item,
             IRaceStatsGetter rhs,
             RaceStats_Mask<bool> ret,
@@ -1159,18 +1201,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Luck = item.Luck == rhs.Luck;
         }
 
-        public static string ToString(
-            this IRaceStatsGetter item,
+        public string ToString(
+            IRaceStatsGetter item,
             string name = null,
             RaceStats_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IRaceStatsGetter item,
+        public void ToString(
+            IRaceStatsGetter item,
             FileGeneration fg,
             string name = null,
             RaceStats_Mask<bool> printMask = null)
@@ -1186,61 +1232,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Strength ?? true)
-                {
-                    fg.AppendLine($"Strength => {item.Strength}");
-                }
-                if (printMask?.Intelligence ?? true)
-                {
-                    fg.AppendLine($"Intelligence => {item.Intelligence}");
-                }
-                if (printMask?.Willpower ?? true)
-                {
-                    fg.AppendLine($"Willpower => {item.Willpower}");
-                }
-                if (printMask?.Agility ?? true)
-                {
-                    fg.AppendLine($"Agility => {item.Agility}");
-                }
-                if (printMask?.Speed ?? true)
-                {
-                    fg.AppendLine($"Speed => {item.Speed}");
-                }
-                if (printMask?.Endurance ?? true)
-                {
-                    fg.AppendLine($"Endurance => {item.Endurance}");
-                }
-                if (printMask?.Personality ?? true)
-                {
-                    fg.AppendLine($"Personality => {item.Personality}");
-                }
-                if (printMask?.Luck ?? true)
-                {
-                    fg.AppendLine($"Luck => {item.Luck}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IRaceStatsGetter item,
+        protected static void ToStringFields(
+            IRaceStatsGetter item,
+            FileGeneration fg,
+            RaceStats_Mask<bool> printMask = null)
+        {
+            if (printMask?.Strength ?? true)
+            {
+                fg.AppendLine($"Strength => {item.Strength}");
+            }
+            if (printMask?.Intelligence ?? true)
+            {
+                fg.AppendLine($"Intelligence => {item.Intelligence}");
+            }
+            if (printMask?.Willpower ?? true)
+            {
+                fg.AppendLine($"Willpower => {item.Willpower}");
+            }
+            if (printMask?.Agility ?? true)
+            {
+                fg.AppendLine($"Agility => {item.Agility}");
+            }
+            if (printMask?.Speed ?? true)
+            {
+                fg.AppendLine($"Speed => {item.Speed}");
+            }
+            if (printMask?.Endurance ?? true)
+            {
+                fg.AppendLine($"Endurance => {item.Endurance}");
+            }
+            if (printMask?.Personality ?? true)
+            {
+                fg.AppendLine($"Personality => {item.Personality}");
+            }
+            if (printMask?.Luck ?? true)
+            {
+                fg.AppendLine($"Luck => {item.Luck}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IRaceStatsGetter item,
             RaceStats_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static RaceStats_Mask<bool> GetHasBeenSetMask(IRaceStatsGetter item)
+        public void FillHasBeenSetMask(
+            IRaceStatsGetter item,
+            RaceStats_Mask<bool> mask)
         {
-            var ret = new RaceStats_Mask<bool>();
-            ret.Strength = true;
-            ret.Intelligence = true;
-            ret.Willpower = true;
-            ret.Agility = true;
-            ret.Speed = true;
-            ret.Endurance = true;
-            ret.Personality = true;
-            ret.Luck = true;
-            return ret;
+            mask.Strength = true;
+            mask.Intelligence = true;
+            mask.Willpower = true;
+            mask.Agility = true;
+            mask.Speed = true;
+            mask.Endurance = true;
+            mask.Personality = true;
+            mask.Luck = true;
         }
 
     }

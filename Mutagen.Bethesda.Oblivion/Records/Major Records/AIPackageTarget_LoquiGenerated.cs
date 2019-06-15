@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
         public static AIPackageTarget_Registration Registration => AIPackageTarget_Registration.Instance;
+        protected object CommonInstance => AIPackageTargetCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public AIPackageTarget()
@@ -76,30 +78,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<AIPackageTarget>.GetEqualsMask(AIPackageTarget rhs, EqualsMaskHelper.Include include) => AIPackageTargetCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IAIPackageTargetGetter>.GetEqualsMask(IAIPackageTargetGetter rhs, EqualsMaskHelper.Include include) => AIPackageTargetCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<AIPackageTarget>.GetEqualsMask(AIPackageTarget rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IAIPackageTargetGetter>.GetEqualsMask(IAIPackageTargetGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            AIPackageTarget_Mask<bool> printMask = null)
-        {
-            return AIPackageTargetCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            AIPackageTargetCommon.ToString(this, fg, name: name, printMask: null);
+            AIPackageTargetMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public AIPackageTarget_Mask<bool> GetHasBeenSetMask()
-        {
-            return AIPackageTargetCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -504,19 +498,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            AIPackageTargetCommon.Clear(this);
+            AIPackageTargetCommon.Instance.Clear(this);
         }
-
 
         public static AIPackageTarget Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -591,6 +576,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class AIPackageTargetMixIn
+    {
+        public static void Clear(this IAIPackageTarget item)
+        {
+            ((AIPackageTargetCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static AIPackageTarget_Mask<bool> GetEqualsMask(
+            this IAIPackageTargetGetter item,
+            IAIPackageTargetGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new AIPackageTarget_Mask<bool>();
+            ((AIPackageTargetCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IAIPackageTargetGetter item,
+            string name = null,
+            AIPackageTarget_Mask<bool> printMask = null)
+        {
+            return ((AIPackageTargetCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IAIPackageTargetGetter item,
+            FileGeneration fg,
+            string name = null,
+            AIPackageTarget_Mask<bool> printMask = null)
+        {
+            ((AIPackageTargetCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IAIPackageTargetGetter item,
+            AIPackageTarget_Mask<bool?> checkMask)
+        {
+            return ((AIPackageTargetCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static AIPackageTarget_Mask<bool> GetHasBeenSetMask(this IAIPackageTargetGetter item)
+        {
+            var ret = new AIPackageTarget_Mask<bool>();
+            ((AIPackageTargetCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -803,9 +855,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class AIPackageTargetCommon
+    #region Common
+    public partial class AIPackageTargetCommon
     {
+        public static readonly AIPackageTargetCommon Instance = new AIPackageTargetCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IAIPackageTarget item,
@@ -869,28 +922,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IAIPackageTarget item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IAIPackageTarget item)
         {
+            ClearPartial();
             item.ObjectType = default(AIPackageTarget.ObjectTypeEnum);
             item.Object = default(Int32);
             item.Count = default(Int32);
         }
 
-        public static AIPackageTarget_Mask<bool> GetEqualsMask(
-            this IAIPackageTargetGetter item,
-            IAIPackageTargetGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new AIPackageTarget_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IAIPackageTargetGetter item,
             IAIPackageTargetGetter rhs,
             AIPackageTarget_Mask<bool> ret,
@@ -902,18 +944,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Count = item.Count == rhs.Count;
         }
 
-        public static string ToString(
-            this IAIPackageTargetGetter item,
+        public string ToString(
+            IAIPackageTargetGetter item,
             string name = null,
             AIPackageTarget_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IAIPackageTargetGetter item,
+        public void ToString(
+            IAIPackageTargetGetter item,
             FileGeneration fg,
             string name = null,
             AIPackageTarget_Mask<bool> printMask = null)
@@ -929,36 +975,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.ObjectType ?? true)
-                {
-                    fg.AppendLine($"ObjectType => {item.ObjectType}");
-                }
-                if (printMask?.Object ?? true)
-                {
-                    fg.AppendLine($"Object => {item.Object}");
-                }
-                if (printMask?.Count ?? true)
-                {
-                    fg.AppendLine($"Count => {item.Count}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IAIPackageTargetGetter item,
+        protected static void ToStringFields(
+            IAIPackageTargetGetter item,
+            FileGeneration fg,
+            AIPackageTarget_Mask<bool> printMask = null)
+        {
+            if (printMask?.ObjectType ?? true)
+            {
+                fg.AppendLine($"ObjectType => {item.ObjectType}");
+            }
+            if (printMask?.Object ?? true)
+            {
+                fg.AppendLine($"Object => {item.Object}");
+            }
+            if (printMask?.Count ?? true)
+            {
+                fg.AppendLine($"Count => {item.Count}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IAIPackageTargetGetter item,
             AIPackageTarget_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static AIPackageTarget_Mask<bool> GetHasBeenSetMask(IAIPackageTargetGetter item)
+        public void FillHasBeenSetMask(
+            IAIPackageTargetGetter item,
+            AIPackageTarget_Mask<bool> mask)
         {
-            var ret = new AIPackageTarget_Mask<bool>();
-            ret.ObjectType = true;
-            ret.Object = true;
-            ret.Count = true;
-            return ret;
+            mask.ObjectType = true;
+            mask.Object = true;
+            mask.Count = true;
         }
 
     }

@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
         public new static EffectShader_Registration Registration => EffectShader_Registration.Instance;
+        protected override object CommonInstance => EffectShaderCommon.Instance;
 
         #region Ctor
         protected EffectShader()
@@ -829,30 +830,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<EffectShader>.GetEqualsMask(EffectShader rhs, EqualsMaskHelper.Include include) => EffectShaderCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IEffectShaderGetter>.GetEqualsMask(IEffectShaderGetter rhs, EqualsMaskHelper.Include include) => EffectShaderCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<EffectShader>.GetEqualsMask(EffectShader rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IEffectShaderGetter>.GetEqualsMask(IEffectShaderGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            EffectShader_Mask<bool> printMask = null)
-        {
-            return EffectShaderCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            EffectShaderCommon.ToString(this, fg, name: name, printMask: null);
+            EffectShaderMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new EffectShader_Mask<bool> GetHasBeenSetMask()
-        {
-            return EffectShaderCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -2293,10 +2286,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            EffectShaderCommon.Clear(this);
+            EffectShaderCommon.Instance.Clear(this);
         }
-
 
         public new static EffectShader Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -2898,6 +2889,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class EffectShaderMixIn
+    {
+        public static void Clear(this IEffectShaderInternal item)
+        {
+            ((EffectShaderCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static EffectShader_Mask<bool> GetEqualsMask(
+            this IEffectShaderGetter item,
+            IEffectShaderGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new EffectShader_Mask<bool>();
+            ((EffectShaderCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IEffectShaderInternalGetter item,
+            string name = null,
+            EffectShader_Mask<bool> printMask = null)
+        {
+            return ((EffectShaderCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IEffectShaderInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            EffectShader_Mask<bool> printMask = null)
+        {
+            ((EffectShaderCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IEffectShaderInternalGetter item,
+            EffectShader_Mask<bool?> checkMask)
+        {
+            return ((EffectShaderCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static EffectShader_Mask<bool> GetHasBeenSetMask(this IEffectShaderGetter item)
+        {
+            var ret = new EffectShader_Mask<bool>();
+            ((EffectShaderCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -3790,9 +3848,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class EffectShaderCommon
+    #region Common
+    public partial class EffectShaderCommon : OblivionMajorRecordCommon
     {
+        public static readonly EffectShaderCommon Instance = new EffectShaderCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IEffectShader item,
@@ -4823,8 +4882,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IEffectShader item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IEffectShader item)
         {
+            ClearPartial();
             item.FillTexture_Unset();
             item.ParticleShaderTexture_Unset();
             item.Flags = default(EffectShader.Flag);
@@ -4883,23 +4945,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ColorKey1ColorKeyTime = default(Single);
             item.ColorKey2ColorKeyTime = default(Single);
             item.ColorKey3ColorKeyTime = default(Single);
+            base.Clear(item);
         }
 
-        public static EffectShader_Mask<bool> GetEqualsMask(
-            this IEffectShaderGetter item,
-            IEffectShaderGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new EffectShader_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IEffectShader)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IEffectShader)item);
+        }
+
+        public void FillEqualsMask(
             IEffectShaderGetter item,
             IEffectShaderGetter rhs,
             EffectShader_Mask<bool> ret,
@@ -4964,21 +5023,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ColorKey1ColorKeyTime = item.ColorKey1ColorKeyTime.EqualsWithin(rhs.ColorKey1ColorKeyTime);
             ret.ColorKey2ColorKeyTime = item.ColorKey2ColorKeyTime.EqualsWithin(rhs.ColorKey2ColorKeyTime);
             ret.ColorKey3ColorKeyTime = item.ColorKey3ColorKeyTime.EqualsWithin(rhs.ColorKey3ColorKeyTime);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IEffectShaderGetter item,
+        public string ToString(
+            IEffectShaderGetter item,
             string name = null,
             EffectShader_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IEffectShaderGetter item,
+        public void ToString(
+            IEffectShaderGetter item,
             FileGeneration fg,
             string name = null,
             EffectShader_Mask<bool> printMask = null)
@@ -4994,323 +5057,337 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.FillTexture ?? true)
-                {
-                    fg.AppendLine($"FillTexture => {item.FillTexture}");
-                }
-                if (printMask?.ParticleShaderTexture ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderTexture => {item.ParticleShaderTexture}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.MembraneShaderSourceBlendMode ?? true)
-                {
-                    fg.AppendLine($"MembraneShaderSourceBlendMode => {item.MembraneShaderSourceBlendMode}");
-                }
-                if (printMask?.MembraneShaderBlendOperation ?? true)
-                {
-                    fg.AppendLine($"MembraneShaderBlendOperation => {item.MembraneShaderBlendOperation}");
-                }
-                if (printMask?.MembraneShaderZTestFunction ?? true)
-                {
-                    fg.AppendLine($"MembraneShaderZTestFunction => {item.MembraneShaderZTestFunction}");
-                }
-                if (printMask?.FillTextureEffectColor ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectColor => {item.FillTextureEffectColor}");
-                }
-                if (printMask?.FillTextureEffectAlphaFadeInTime ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectAlphaFadeInTime => {item.FillTextureEffectAlphaFadeInTime}");
-                }
-                if (printMask?.FillTextureEffectFullAlphaTime ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectFullAlphaTime => {item.FillTextureEffectFullAlphaTime}");
-                }
-                if (printMask?.FillTextureEffectAlphaFadeOutTime ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectAlphaFadeOutTime => {item.FillTextureEffectAlphaFadeOutTime}");
-                }
-                if (printMask?.FillTextureEffectPersistentAlphaRatio ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectPersistentAlphaRatio => {item.FillTextureEffectPersistentAlphaRatio}");
-                }
-                if (printMask?.FillTextureEffectAlphaPulseAmplitude ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectAlphaPulseAmplitude => {item.FillTextureEffectAlphaPulseAmplitude}");
-                }
-                if (printMask?.FillTextureEffectAlphaPulseFrequency ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectAlphaPulseFrequency => {item.FillTextureEffectAlphaPulseFrequency}");
-                }
-                if (printMask?.FillTextureEffectTextureAnimationSpeedU ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectTextureAnimationSpeedU => {item.FillTextureEffectTextureAnimationSpeedU}");
-                }
-                if (printMask?.FillTextureEffectTextureAnimationSpeedV ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectTextureAnimationSpeedV => {item.FillTextureEffectTextureAnimationSpeedV}");
-                }
-                if (printMask?.EdgeEffectFallOff ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectFallOff => {item.EdgeEffectFallOff}");
-                }
-                if (printMask?.EdgeEffectColor ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectColor => {item.EdgeEffectColor}");
-                }
-                if (printMask?.EdgeEffectAlphaFadeInTime ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectAlphaFadeInTime => {item.EdgeEffectAlphaFadeInTime}");
-                }
-                if (printMask?.EdgeEffectFullAlphaTime ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectFullAlphaTime => {item.EdgeEffectFullAlphaTime}");
-                }
-                if (printMask?.EdgeEffectAlphaFadeOutTime ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectAlphaFadeOutTime => {item.EdgeEffectAlphaFadeOutTime}");
-                }
-                if (printMask?.EdgeEffectPersistentAlphaRatio ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectPersistentAlphaRatio => {item.EdgeEffectPersistentAlphaRatio}");
-                }
-                if (printMask?.EdgeEffectAlphaPulseAmplitude ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectAlphaPulseAmplitude => {item.EdgeEffectAlphaPulseAmplitude}");
-                }
-                if (printMask?.EdgeEffectAlphaPulseFrequency ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectAlphaPulseFrequency => {item.EdgeEffectAlphaPulseFrequency}");
-                }
-                if (printMask?.FillTextureEffectFullAlphaRatio ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectFullAlphaRatio => {item.FillTextureEffectFullAlphaRatio}");
-                }
-                if (printMask?.EdgeEffectFullAlphaRatio ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectFullAlphaRatio => {item.EdgeEffectFullAlphaRatio}");
-                }
-                if (printMask?.MembraneShaderDestBlendMode ?? true)
-                {
-                    fg.AppendLine($"MembraneShaderDestBlendMode => {item.MembraneShaderDestBlendMode}");
-                }
-                if (printMask?.ParticleShaderSourceBlendMode ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderSourceBlendMode => {item.ParticleShaderSourceBlendMode}");
-                }
-                if (printMask?.ParticleShaderBlendOperation ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderBlendOperation => {item.ParticleShaderBlendOperation}");
-                }
-                if (printMask?.ParticleShaderZTestFunction ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderZTestFunction => {item.ParticleShaderZTestFunction}");
-                }
-                if (printMask?.ParticleShaderDestBlendMode ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderDestBlendMode => {item.ParticleShaderDestBlendMode}");
-                }
-                if (printMask?.ParticleShaderParticleBirthRampUpTime ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderParticleBirthRampUpTime => {item.ParticleShaderParticleBirthRampUpTime}");
-                }
-                if (printMask?.ParticleShaderFullParticleBirthTime ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderFullParticleBirthTime => {item.ParticleShaderFullParticleBirthTime}");
-                }
-                if (printMask?.ParticleShaderParticleBirthRampDownTime ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderParticleBirthRampDownTime => {item.ParticleShaderParticleBirthRampDownTime}");
-                }
-                if (printMask?.ParticleShaderFullParticleBirthRatio ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderFullParticleBirthRatio => {item.ParticleShaderFullParticleBirthRatio}");
-                }
-                if (printMask?.ParticleShaderPersistentParticleBirthRatio ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderPersistentParticleBirthRatio => {item.ParticleShaderPersistentParticleBirthRatio}");
-                }
-                if (printMask?.ParticleShaderParticleLifetime ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderParticleLifetime => {item.ParticleShaderParticleLifetime}");
-                }
-                if (printMask?.ParticleShaderParticleLifetimePlusMinus ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderParticleLifetimePlusMinus => {item.ParticleShaderParticleLifetimePlusMinus}");
-                }
-                if (printMask?.ParticleShaderInitialSpeedAlongNormal ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderInitialSpeedAlongNormal => {item.ParticleShaderInitialSpeedAlongNormal}");
-                }
-                if (printMask?.ParticleShaderAccelerationAlongNormal ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderAccelerationAlongNormal => {item.ParticleShaderAccelerationAlongNormal}");
-                }
-                if (printMask?.ParticleShaderInitialVelocity1 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderInitialVelocity1 => {item.ParticleShaderInitialVelocity1}");
-                }
-                if (printMask?.ParticleShaderInitialVelocity2 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderInitialVelocity2 => {item.ParticleShaderInitialVelocity2}");
-                }
-                if (printMask?.ParticleShaderInitialVelocity3 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderInitialVelocity3 => {item.ParticleShaderInitialVelocity3}");
-                }
-                if (printMask?.ParticleShaderAcceleration1 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderAcceleration1 => {item.ParticleShaderAcceleration1}");
-                }
-                if (printMask?.ParticleShaderAcceleration2 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderAcceleration2 => {item.ParticleShaderAcceleration2}");
-                }
-                if (printMask?.ParticleShaderAcceleration3 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderAcceleration3 => {item.ParticleShaderAcceleration3}");
-                }
-                if (printMask?.ParticleShaderScaleKey1 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderScaleKey1 => {item.ParticleShaderScaleKey1}");
-                }
-                if (printMask?.ParticleShaderScaleKey2 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderScaleKey2 => {item.ParticleShaderScaleKey2}");
-                }
-                if (printMask?.ParticleShaderScaleKey1Time ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderScaleKey1Time => {item.ParticleShaderScaleKey1Time}");
-                }
-                if (printMask?.ParticleShaderScaleKey2Time ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderScaleKey2Time => {item.ParticleShaderScaleKey2Time}");
-                }
-                if (printMask?.ColorKey1Color ?? true)
-                {
-                    fg.AppendLine($"ColorKey1Color => {item.ColorKey1Color}");
-                }
-                if (printMask?.ColorKey2Color ?? true)
-                {
-                    fg.AppendLine($"ColorKey2Color => {item.ColorKey2Color}");
-                }
-                if (printMask?.ColorKey3Color ?? true)
-                {
-                    fg.AppendLine($"ColorKey3Color => {item.ColorKey3Color}");
-                }
-                if (printMask?.ColorKey1ColorAlpha ?? true)
-                {
-                    fg.AppendLine($"ColorKey1ColorAlpha => {item.ColorKey1ColorAlpha}");
-                }
-                if (printMask?.ColorKey2ColorAlpha ?? true)
-                {
-                    fg.AppendLine($"ColorKey2ColorAlpha => {item.ColorKey2ColorAlpha}");
-                }
-                if (printMask?.ColorKey3ColorAlpha ?? true)
-                {
-                    fg.AppendLine($"ColorKey3ColorAlpha => {item.ColorKey3ColorAlpha}");
-                }
-                if (printMask?.ColorKey1ColorKeyTime ?? true)
-                {
-                    fg.AppendLine($"ColorKey1ColorKeyTime => {item.ColorKey1ColorKeyTime}");
-                }
-                if (printMask?.ColorKey2ColorKeyTime ?? true)
-                {
-                    fg.AppendLine($"ColorKey2ColorKeyTime => {item.ColorKey2ColorKeyTime}");
-                }
-                if (printMask?.ColorKey3ColorKeyTime ?? true)
-                {
-                    fg.AppendLine($"ColorKey3ColorKeyTime => {item.ColorKey3ColorKeyTime}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IEffectShaderGetter item,
+        protected static void ToStringFields(
+            IEffectShaderGetter item,
+            FileGeneration fg,
+            EffectShader_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.FillTexture ?? true)
+            {
+                fg.AppendLine($"FillTexture => {item.FillTexture}");
+            }
+            if (printMask?.ParticleShaderTexture ?? true)
+            {
+                fg.AppendLine($"ParticleShaderTexture => {item.ParticleShaderTexture}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.MembraneShaderSourceBlendMode ?? true)
+            {
+                fg.AppendLine($"MembraneShaderSourceBlendMode => {item.MembraneShaderSourceBlendMode}");
+            }
+            if (printMask?.MembraneShaderBlendOperation ?? true)
+            {
+                fg.AppendLine($"MembraneShaderBlendOperation => {item.MembraneShaderBlendOperation}");
+            }
+            if (printMask?.MembraneShaderZTestFunction ?? true)
+            {
+                fg.AppendLine($"MembraneShaderZTestFunction => {item.MembraneShaderZTestFunction}");
+            }
+            if (printMask?.FillTextureEffectColor ?? true)
+            {
+                fg.AppendLine($"FillTextureEffectColor => {item.FillTextureEffectColor}");
+            }
+            if (printMask?.FillTextureEffectAlphaFadeInTime ?? true)
+            {
+                fg.AppendLine($"FillTextureEffectAlphaFadeInTime => {item.FillTextureEffectAlphaFadeInTime}");
+            }
+            if (printMask?.FillTextureEffectFullAlphaTime ?? true)
+            {
+                fg.AppendLine($"FillTextureEffectFullAlphaTime => {item.FillTextureEffectFullAlphaTime}");
+            }
+            if (printMask?.FillTextureEffectAlphaFadeOutTime ?? true)
+            {
+                fg.AppendLine($"FillTextureEffectAlphaFadeOutTime => {item.FillTextureEffectAlphaFadeOutTime}");
+            }
+            if (printMask?.FillTextureEffectPersistentAlphaRatio ?? true)
+            {
+                fg.AppendLine($"FillTextureEffectPersistentAlphaRatio => {item.FillTextureEffectPersistentAlphaRatio}");
+            }
+            if (printMask?.FillTextureEffectAlphaPulseAmplitude ?? true)
+            {
+                fg.AppendLine($"FillTextureEffectAlphaPulseAmplitude => {item.FillTextureEffectAlphaPulseAmplitude}");
+            }
+            if (printMask?.FillTextureEffectAlphaPulseFrequency ?? true)
+            {
+                fg.AppendLine($"FillTextureEffectAlphaPulseFrequency => {item.FillTextureEffectAlphaPulseFrequency}");
+            }
+            if (printMask?.FillTextureEffectTextureAnimationSpeedU ?? true)
+            {
+                fg.AppendLine($"FillTextureEffectTextureAnimationSpeedU => {item.FillTextureEffectTextureAnimationSpeedU}");
+            }
+            if (printMask?.FillTextureEffectTextureAnimationSpeedV ?? true)
+            {
+                fg.AppendLine($"FillTextureEffectTextureAnimationSpeedV => {item.FillTextureEffectTextureAnimationSpeedV}");
+            }
+            if (printMask?.EdgeEffectFallOff ?? true)
+            {
+                fg.AppendLine($"EdgeEffectFallOff => {item.EdgeEffectFallOff}");
+            }
+            if (printMask?.EdgeEffectColor ?? true)
+            {
+                fg.AppendLine($"EdgeEffectColor => {item.EdgeEffectColor}");
+            }
+            if (printMask?.EdgeEffectAlphaFadeInTime ?? true)
+            {
+                fg.AppendLine($"EdgeEffectAlphaFadeInTime => {item.EdgeEffectAlphaFadeInTime}");
+            }
+            if (printMask?.EdgeEffectFullAlphaTime ?? true)
+            {
+                fg.AppendLine($"EdgeEffectFullAlphaTime => {item.EdgeEffectFullAlphaTime}");
+            }
+            if (printMask?.EdgeEffectAlphaFadeOutTime ?? true)
+            {
+                fg.AppendLine($"EdgeEffectAlphaFadeOutTime => {item.EdgeEffectAlphaFadeOutTime}");
+            }
+            if (printMask?.EdgeEffectPersistentAlphaRatio ?? true)
+            {
+                fg.AppendLine($"EdgeEffectPersistentAlphaRatio => {item.EdgeEffectPersistentAlphaRatio}");
+            }
+            if (printMask?.EdgeEffectAlphaPulseAmplitude ?? true)
+            {
+                fg.AppendLine($"EdgeEffectAlphaPulseAmplitude => {item.EdgeEffectAlphaPulseAmplitude}");
+            }
+            if (printMask?.EdgeEffectAlphaPulseFrequency ?? true)
+            {
+                fg.AppendLine($"EdgeEffectAlphaPulseFrequency => {item.EdgeEffectAlphaPulseFrequency}");
+            }
+            if (printMask?.FillTextureEffectFullAlphaRatio ?? true)
+            {
+                fg.AppendLine($"FillTextureEffectFullAlphaRatio => {item.FillTextureEffectFullAlphaRatio}");
+            }
+            if (printMask?.EdgeEffectFullAlphaRatio ?? true)
+            {
+                fg.AppendLine($"EdgeEffectFullAlphaRatio => {item.EdgeEffectFullAlphaRatio}");
+            }
+            if (printMask?.MembraneShaderDestBlendMode ?? true)
+            {
+                fg.AppendLine($"MembraneShaderDestBlendMode => {item.MembraneShaderDestBlendMode}");
+            }
+            if (printMask?.ParticleShaderSourceBlendMode ?? true)
+            {
+                fg.AppendLine($"ParticleShaderSourceBlendMode => {item.ParticleShaderSourceBlendMode}");
+            }
+            if (printMask?.ParticleShaderBlendOperation ?? true)
+            {
+                fg.AppendLine($"ParticleShaderBlendOperation => {item.ParticleShaderBlendOperation}");
+            }
+            if (printMask?.ParticleShaderZTestFunction ?? true)
+            {
+                fg.AppendLine($"ParticleShaderZTestFunction => {item.ParticleShaderZTestFunction}");
+            }
+            if (printMask?.ParticleShaderDestBlendMode ?? true)
+            {
+                fg.AppendLine($"ParticleShaderDestBlendMode => {item.ParticleShaderDestBlendMode}");
+            }
+            if (printMask?.ParticleShaderParticleBirthRampUpTime ?? true)
+            {
+                fg.AppendLine($"ParticleShaderParticleBirthRampUpTime => {item.ParticleShaderParticleBirthRampUpTime}");
+            }
+            if (printMask?.ParticleShaderFullParticleBirthTime ?? true)
+            {
+                fg.AppendLine($"ParticleShaderFullParticleBirthTime => {item.ParticleShaderFullParticleBirthTime}");
+            }
+            if (printMask?.ParticleShaderParticleBirthRampDownTime ?? true)
+            {
+                fg.AppendLine($"ParticleShaderParticleBirthRampDownTime => {item.ParticleShaderParticleBirthRampDownTime}");
+            }
+            if (printMask?.ParticleShaderFullParticleBirthRatio ?? true)
+            {
+                fg.AppendLine($"ParticleShaderFullParticleBirthRatio => {item.ParticleShaderFullParticleBirthRatio}");
+            }
+            if (printMask?.ParticleShaderPersistentParticleBirthRatio ?? true)
+            {
+                fg.AppendLine($"ParticleShaderPersistentParticleBirthRatio => {item.ParticleShaderPersistentParticleBirthRatio}");
+            }
+            if (printMask?.ParticleShaderParticleLifetime ?? true)
+            {
+                fg.AppendLine($"ParticleShaderParticleLifetime => {item.ParticleShaderParticleLifetime}");
+            }
+            if (printMask?.ParticleShaderParticleLifetimePlusMinus ?? true)
+            {
+                fg.AppendLine($"ParticleShaderParticleLifetimePlusMinus => {item.ParticleShaderParticleLifetimePlusMinus}");
+            }
+            if (printMask?.ParticleShaderInitialSpeedAlongNormal ?? true)
+            {
+                fg.AppendLine($"ParticleShaderInitialSpeedAlongNormal => {item.ParticleShaderInitialSpeedAlongNormal}");
+            }
+            if (printMask?.ParticleShaderAccelerationAlongNormal ?? true)
+            {
+                fg.AppendLine($"ParticleShaderAccelerationAlongNormal => {item.ParticleShaderAccelerationAlongNormal}");
+            }
+            if (printMask?.ParticleShaderInitialVelocity1 ?? true)
+            {
+                fg.AppendLine($"ParticleShaderInitialVelocity1 => {item.ParticleShaderInitialVelocity1}");
+            }
+            if (printMask?.ParticleShaderInitialVelocity2 ?? true)
+            {
+                fg.AppendLine($"ParticleShaderInitialVelocity2 => {item.ParticleShaderInitialVelocity2}");
+            }
+            if (printMask?.ParticleShaderInitialVelocity3 ?? true)
+            {
+                fg.AppendLine($"ParticleShaderInitialVelocity3 => {item.ParticleShaderInitialVelocity3}");
+            }
+            if (printMask?.ParticleShaderAcceleration1 ?? true)
+            {
+                fg.AppendLine($"ParticleShaderAcceleration1 => {item.ParticleShaderAcceleration1}");
+            }
+            if (printMask?.ParticleShaderAcceleration2 ?? true)
+            {
+                fg.AppendLine($"ParticleShaderAcceleration2 => {item.ParticleShaderAcceleration2}");
+            }
+            if (printMask?.ParticleShaderAcceleration3 ?? true)
+            {
+                fg.AppendLine($"ParticleShaderAcceleration3 => {item.ParticleShaderAcceleration3}");
+            }
+            if (printMask?.ParticleShaderScaleKey1 ?? true)
+            {
+                fg.AppendLine($"ParticleShaderScaleKey1 => {item.ParticleShaderScaleKey1}");
+            }
+            if (printMask?.ParticleShaderScaleKey2 ?? true)
+            {
+                fg.AppendLine($"ParticleShaderScaleKey2 => {item.ParticleShaderScaleKey2}");
+            }
+            if (printMask?.ParticleShaderScaleKey1Time ?? true)
+            {
+                fg.AppendLine($"ParticleShaderScaleKey1Time => {item.ParticleShaderScaleKey1Time}");
+            }
+            if (printMask?.ParticleShaderScaleKey2Time ?? true)
+            {
+                fg.AppendLine($"ParticleShaderScaleKey2Time => {item.ParticleShaderScaleKey2Time}");
+            }
+            if (printMask?.ColorKey1Color ?? true)
+            {
+                fg.AppendLine($"ColorKey1Color => {item.ColorKey1Color}");
+            }
+            if (printMask?.ColorKey2Color ?? true)
+            {
+                fg.AppendLine($"ColorKey2Color => {item.ColorKey2Color}");
+            }
+            if (printMask?.ColorKey3Color ?? true)
+            {
+                fg.AppendLine($"ColorKey3Color => {item.ColorKey3Color}");
+            }
+            if (printMask?.ColorKey1ColorAlpha ?? true)
+            {
+                fg.AppendLine($"ColorKey1ColorAlpha => {item.ColorKey1ColorAlpha}");
+            }
+            if (printMask?.ColorKey2ColorAlpha ?? true)
+            {
+                fg.AppendLine($"ColorKey2ColorAlpha => {item.ColorKey2ColorAlpha}");
+            }
+            if (printMask?.ColorKey3ColorAlpha ?? true)
+            {
+                fg.AppendLine($"ColorKey3ColorAlpha => {item.ColorKey3ColorAlpha}");
+            }
+            if (printMask?.ColorKey1ColorKeyTime ?? true)
+            {
+                fg.AppendLine($"ColorKey1ColorKeyTime => {item.ColorKey1ColorKeyTime}");
+            }
+            if (printMask?.ColorKey2ColorKeyTime ?? true)
+            {
+                fg.AppendLine($"ColorKey2ColorKeyTime => {item.ColorKey2ColorKeyTime}");
+            }
+            if (printMask?.ColorKey3ColorKeyTime ?? true)
+            {
+                fg.AppendLine($"ColorKey3ColorKeyTime => {item.ColorKey3ColorKeyTime}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IEffectShaderGetter item,
             EffectShader_Mask<bool?> checkMask)
         {
             if (checkMask.FillTexture.HasValue && checkMask.FillTexture.Value != item.FillTexture_IsSet) return false;
             if (checkMask.ParticleShaderTexture.HasValue && checkMask.ParticleShaderTexture.Value != item.ParticleShaderTexture_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static EffectShader_Mask<bool> GetHasBeenSetMask(IEffectShaderGetter item)
+        public void FillHasBeenSetMask(
+            IEffectShaderGetter item,
+            EffectShader_Mask<bool> mask)
         {
-            var ret = new EffectShader_Mask<bool>();
-            ret.FillTexture = item.FillTexture_IsSet;
-            ret.ParticleShaderTexture = item.ParticleShaderTexture_IsSet;
-            ret.Flags = true;
-            ret.MembraneShaderSourceBlendMode = true;
-            ret.MembraneShaderBlendOperation = true;
-            ret.MembraneShaderZTestFunction = true;
-            ret.FillTextureEffectColor = true;
-            ret.FillTextureEffectAlphaFadeInTime = true;
-            ret.FillTextureEffectFullAlphaTime = true;
-            ret.FillTextureEffectAlphaFadeOutTime = true;
-            ret.FillTextureEffectPersistentAlphaRatio = true;
-            ret.FillTextureEffectAlphaPulseAmplitude = true;
-            ret.FillTextureEffectAlphaPulseFrequency = true;
-            ret.FillTextureEffectTextureAnimationSpeedU = true;
-            ret.FillTextureEffectTextureAnimationSpeedV = true;
-            ret.EdgeEffectFallOff = true;
-            ret.EdgeEffectColor = true;
-            ret.EdgeEffectAlphaFadeInTime = true;
-            ret.EdgeEffectFullAlphaTime = true;
-            ret.EdgeEffectAlphaFadeOutTime = true;
-            ret.EdgeEffectPersistentAlphaRatio = true;
-            ret.EdgeEffectAlphaPulseAmplitude = true;
-            ret.EdgeEffectAlphaPulseFrequency = true;
-            ret.FillTextureEffectFullAlphaRatio = true;
-            ret.EdgeEffectFullAlphaRatio = true;
-            ret.MembraneShaderDestBlendMode = true;
-            ret.ParticleShaderSourceBlendMode = true;
-            ret.ParticleShaderBlendOperation = true;
-            ret.ParticleShaderZTestFunction = true;
-            ret.ParticleShaderDestBlendMode = true;
-            ret.ParticleShaderParticleBirthRampUpTime = true;
-            ret.ParticleShaderFullParticleBirthTime = true;
-            ret.ParticleShaderParticleBirthRampDownTime = true;
-            ret.ParticleShaderFullParticleBirthRatio = true;
-            ret.ParticleShaderPersistentParticleBirthRatio = true;
-            ret.ParticleShaderParticleLifetime = true;
-            ret.ParticleShaderParticleLifetimePlusMinus = true;
-            ret.ParticleShaderInitialSpeedAlongNormal = true;
-            ret.ParticleShaderAccelerationAlongNormal = true;
-            ret.ParticleShaderInitialVelocity1 = true;
-            ret.ParticleShaderInitialVelocity2 = true;
-            ret.ParticleShaderInitialVelocity3 = true;
-            ret.ParticleShaderAcceleration1 = true;
-            ret.ParticleShaderAcceleration2 = true;
-            ret.ParticleShaderAcceleration3 = true;
-            ret.ParticleShaderScaleKey1 = true;
-            ret.ParticleShaderScaleKey2 = true;
-            ret.ParticleShaderScaleKey1Time = true;
-            ret.ParticleShaderScaleKey2Time = true;
-            ret.ColorKey1Color = true;
-            ret.ColorKey2Color = true;
-            ret.ColorKey3Color = true;
-            ret.ColorKey1ColorAlpha = true;
-            ret.ColorKey2ColorAlpha = true;
-            ret.ColorKey3ColorAlpha = true;
-            ret.ColorKey1ColorKeyTime = true;
-            ret.ColorKey2ColorKeyTime = true;
-            ret.ColorKey3ColorKeyTime = true;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static EffectShader_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.FillTexture = item.FillTexture_IsSet;
+            mask.ParticleShaderTexture = item.ParticleShaderTexture_IsSet;
+            mask.Flags = true;
+            mask.MembraneShaderSourceBlendMode = true;
+            mask.MembraneShaderBlendOperation = true;
+            mask.MembraneShaderZTestFunction = true;
+            mask.FillTextureEffectColor = true;
+            mask.FillTextureEffectAlphaFadeInTime = true;
+            mask.FillTextureEffectFullAlphaTime = true;
+            mask.FillTextureEffectAlphaFadeOutTime = true;
+            mask.FillTextureEffectPersistentAlphaRatio = true;
+            mask.FillTextureEffectAlphaPulseAmplitude = true;
+            mask.FillTextureEffectAlphaPulseFrequency = true;
+            mask.FillTextureEffectTextureAnimationSpeedU = true;
+            mask.FillTextureEffectTextureAnimationSpeedV = true;
+            mask.EdgeEffectFallOff = true;
+            mask.EdgeEffectColor = true;
+            mask.EdgeEffectAlphaFadeInTime = true;
+            mask.EdgeEffectFullAlphaTime = true;
+            mask.EdgeEffectAlphaFadeOutTime = true;
+            mask.EdgeEffectPersistentAlphaRatio = true;
+            mask.EdgeEffectAlphaPulseAmplitude = true;
+            mask.EdgeEffectAlphaPulseFrequency = true;
+            mask.FillTextureEffectFullAlphaRatio = true;
+            mask.EdgeEffectFullAlphaRatio = true;
+            mask.MembraneShaderDestBlendMode = true;
+            mask.ParticleShaderSourceBlendMode = true;
+            mask.ParticleShaderBlendOperation = true;
+            mask.ParticleShaderZTestFunction = true;
+            mask.ParticleShaderDestBlendMode = true;
+            mask.ParticleShaderParticleBirthRampUpTime = true;
+            mask.ParticleShaderFullParticleBirthTime = true;
+            mask.ParticleShaderParticleBirthRampDownTime = true;
+            mask.ParticleShaderFullParticleBirthRatio = true;
+            mask.ParticleShaderPersistentParticleBirthRatio = true;
+            mask.ParticleShaderParticleLifetime = true;
+            mask.ParticleShaderParticleLifetimePlusMinus = true;
+            mask.ParticleShaderInitialSpeedAlongNormal = true;
+            mask.ParticleShaderAccelerationAlongNormal = true;
+            mask.ParticleShaderInitialVelocity1 = true;
+            mask.ParticleShaderInitialVelocity2 = true;
+            mask.ParticleShaderInitialVelocity3 = true;
+            mask.ParticleShaderAcceleration1 = true;
+            mask.ParticleShaderAcceleration2 = true;
+            mask.ParticleShaderAcceleration3 = true;
+            mask.ParticleShaderScaleKey1 = true;
+            mask.ParticleShaderScaleKey2 = true;
+            mask.ParticleShaderScaleKey1Time = true;
+            mask.ParticleShaderScaleKey2Time = true;
+            mask.ColorKey1Color = true;
+            mask.ColorKey2Color = true;
+            mask.ColorKey3Color = true;
+            mask.ColorKey1ColorAlpha = true;
+            mask.ColorKey2ColorAlpha = true;
+            mask.ColorKey3ColorAlpha = true;
+            mask.ColorKey1ColorKeyTime = true;
+            mask.ColorKey2ColorKeyTime = true;
+            mask.ColorKey3ColorKeyTime = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static EffectShader_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -5330,12 +5407,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static EffectShader_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static EffectShader_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

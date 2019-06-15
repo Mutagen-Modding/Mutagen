@@ -45,6 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ItemAbstract_Registration.Instance;
         public new static ItemAbstract_Registration Registration => ItemAbstract_Registration.Instance;
+        protected override object CommonInstance => ItemAbstractCommon.Instance;
 
         #region Ctor
         protected ItemAbstract()
@@ -55,30 +56,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        IMask<bool> IEqualsMask<ItemAbstract>.GetEqualsMask(ItemAbstract rhs, EqualsMaskHelper.Include include) => ItemAbstractCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IItemAbstractGetter>.GetEqualsMask(IItemAbstractGetter rhs, EqualsMaskHelper.Include include) => ItemAbstractCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ItemAbstract>.GetEqualsMask(ItemAbstract rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IItemAbstractGetter>.GetEqualsMask(IItemAbstractGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            ItemAbstract_Mask<bool> printMask = null)
-        {
-            return ItemAbstractCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ItemAbstractCommon.ToString(this, fg, name: name, printMask: null);
+            ItemAbstractMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new ItemAbstract_Mask<bool> GetHasBeenSetMask()
-        {
-            return ItemAbstractCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -405,10 +398,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            ItemAbstractCommon.Clear(this);
+            ItemAbstractCommon.Instance.Clear(this);
         }
-
 
         protected new static void CopyInInternal_ItemAbstract(ItemAbstract obj, KeyValuePair<ushort, object> pair)
         {
@@ -461,6 +452,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class ItemAbstractMixIn
+    {
+        public static void Clear(this IItemAbstractInternal item)
+        {
+            ((ItemAbstractCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static ItemAbstract_Mask<bool> GetEqualsMask(
+            this IItemAbstractGetter item,
+            IItemAbstractGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ItemAbstract_Mask<bool>();
+            ((ItemAbstractCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IItemAbstractInternalGetter item,
+            string name = null,
+            ItemAbstract_Mask<bool> printMask = null)
+        {
+            return ((ItemAbstractCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IItemAbstractInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            ItemAbstract_Mask<bool> printMask = null)
+        {
+            ((ItemAbstractCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IItemAbstractInternalGetter item,
+            ItemAbstract_Mask<bool?> checkMask)
+        {
+            return ((ItemAbstractCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static ItemAbstract_Mask<bool> GetHasBeenSetMask(this IItemAbstractGetter item)
+        {
+            var ret = new ItemAbstract_Mask<bool>();
+            ((ItemAbstractCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -683,9 +741,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ItemAbstractCommon
+    #region Common
+    public partial class ItemAbstractCommon : OblivionMajorRecordCommon
     {
+        public static readonly ItemAbstractCommon Instance = new ItemAbstractCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IItemAbstract item,
@@ -704,46 +763,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IItemAbstract item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IItemAbstract item)
         {
+            ClearPartial();
+            base.Clear(item);
         }
 
-        public static ItemAbstract_Mask<bool> GetEqualsMask(
-            this IItemAbstractGetter item,
-            IItemAbstractGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new ItemAbstract_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IItemAbstract)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IItemAbstract)item);
+        }
+
+        public void FillEqualsMask(
             IItemAbstractGetter item,
             IItemAbstractGetter rhs,
             ItemAbstract_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IItemAbstractGetter item,
+        public string ToString(
+            IItemAbstractGetter item,
             string name = null,
             ItemAbstract_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IItemAbstractGetter item,
+        public void ToString(
+            IItemAbstractGetter item,
             FileGeneration fg,
             string name = null,
             ItemAbstract_Mask<bool> printMask = null)
@@ -759,27 +822,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IItemAbstractGetter item,
+        protected static void ToStringFields(
+            IItemAbstractGetter item,
+            FileGeneration fg,
+            ItemAbstract_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+        }
+
+        public bool HasBeenSet(
+            IItemAbstractGetter item,
             ItemAbstract_Mask<bool?> checkMask)
         {
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static ItemAbstract_Mask<bool> GetHasBeenSetMask(IItemAbstractGetter item)
+        public void FillHasBeenSetMask(
+            IItemAbstractGetter item,
+            ItemAbstract_Mask<bool> mask)
         {
-            var ret = new ItemAbstract_Mask<bool>();
-            return ret;
-        }
-
-        public static ItemAbstract_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static ItemAbstract_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -799,12 +876,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static ItemAbstract_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static ItemAbstract_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

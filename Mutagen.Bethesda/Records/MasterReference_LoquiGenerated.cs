@@ -40,6 +40,8 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
         public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
+        protected object CommonInstance => MasterReferenceCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public MasterReference()
@@ -85,30 +87,22 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        IMask<bool> IEqualsMask<MasterReference>.GetEqualsMask(MasterReference rhs, EqualsMaskHelper.Include include) => MasterReferenceCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IMasterReferenceGetter>.GetEqualsMask(IMasterReferenceGetter rhs, EqualsMaskHelper.Include include) => MasterReferenceCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<MasterReference>.GetEqualsMask(MasterReference rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IMasterReferenceGetter>.GetEqualsMask(IMasterReferenceGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            MasterReference_Mask<bool> printMask = null)
-        {
-            return MasterReferenceCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            MasterReferenceCommon.ToString(this, fg, name: name, printMask: null);
+            MasterReferenceMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public MasterReference_Mask<bool> GetHasBeenSetMask()
-        {
-            return MasterReferenceCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -541,19 +535,10 @@ namespace Mutagen.Bethesda
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            MasterReferenceCommon.Clear(this);
+            MasterReferenceCommon.Instance.Clear(this);
         }
-
 
         public static MasterReference Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -623,6 +608,73 @@ namespace Mutagen.Bethesda
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class MasterReferenceMixIn
+    {
+        public static void Clear(this IMasterReference item)
+        {
+            ((MasterReferenceCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static MasterReference_Mask<bool> GetEqualsMask(
+            this IMasterReferenceGetter item,
+            IMasterReferenceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new MasterReference_Mask<bool>();
+            ((MasterReferenceCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IMasterReferenceGetter item,
+            string name = null,
+            MasterReference_Mask<bool> printMask = null)
+        {
+            return ((MasterReferenceCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IMasterReferenceGetter item,
+            FileGeneration fg,
+            string name = null,
+            MasterReference_Mask<bool> printMask = null)
+        {
+            ((MasterReferenceCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IMasterReferenceGetter item,
+            MasterReference_Mask<bool?> checkMask)
+        {
+            return ((MasterReferenceCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static MasterReference_Mask<bool> GetHasBeenSetMask(this IMasterReferenceGetter item)
+        {
+            var ret = new MasterReference_Mask<bool>();
+            ((MasterReferenceCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -824,9 +876,10 @@ namespace Mutagen.Bethesda.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class MasterReferenceCommon
+    #region Common
+    public partial class MasterReferenceCommon
     {
+        public static readonly MasterReferenceCommon Instance = new MasterReferenceCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IMasterReference item,
@@ -886,27 +939,16 @@ namespace Mutagen.Bethesda.Internals
 
         #endregion
 
-        public static void Clear(IMasterReference item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IMasterReference item)
         {
+            ClearPartial();
             item.Master = default(ModKey);
             item.FileSize_Unset();
         }
 
-        public static MasterReference_Mask<bool> GetEqualsMask(
-            this IMasterReferenceGetter item,
-            IMasterReferenceGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new MasterReference_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IMasterReferenceGetter item,
             IMasterReferenceGetter rhs,
             MasterReference_Mask<bool> ret,
@@ -917,18 +959,22 @@ namespace Mutagen.Bethesda.Internals
             ret.FileSize = item.FileSize_IsSet == rhs.FileSize_IsSet && item.FileSize == rhs.FileSize;
         }
 
-        public static string ToString(
-            this IMasterReferenceGetter item,
+        public string ToString(
+            IMasterReferenceGetter item,
             string name = null,
             MasterReference_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IMasterReferenceGetter item,
+        public void ToString(
+            IMasterReferenceGetter item,
             FileGeneration fg,
             string name = null,
             MasterReference_Mask<bool> printMask = null)
@@ -944,32 +990,43 @@ namespace Mutagen.Bethesda.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Master ?? true)
-                {
-                    fg.AppendLine($"Master => {item.Master}");
-                }
-                if (printMask?.FileSize ?? true)
-                {
-                    fg.AppendLine($"FileSize => {item.FileSize}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IMasterReferenceGetter item,
+        protected static void ToStringFields(
+            IMasterReferenceGetter item,
+            FileGeneration fg,
+            MasterReference_Mask<bool> printMask = null)
+        {
+            if (printMask?.Master ?? true)
+            {
+                fg.AppendLine($"Master => {item.Master}");
+            }
+            if (printMask?.FileSize ?? true)
+            {
+                fg.AppendLine($"FileSize => {item.FileSize}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IMasterReferenceGetter item,
             MasterReference_Mask<bool?> checkMask)
         {
             if (checkMask.FileSize.HasValue && checkMask.FileSize.Value != item.FileSize_IsSet) return false;
             return true;
         }
 
-        public static MasterReference_Mask<bool> GetHasBeenSetMask(IMasterReferenceGetter item)
+        public void FillHasBeenSetMask(
+            IMasterReferenceGetter item,
+            MasterReference_Mask<bool> mask)
         {
-            var ret = new MasterReference_Mask<bool>();
-            ret.Master = true;
-            ret.FileSize = item.FileSize_IsSet;
-            return ret;
+            mask.Master = true;
+            mask.FileSize = item.FileSize_IsSet;
         }
 
     }

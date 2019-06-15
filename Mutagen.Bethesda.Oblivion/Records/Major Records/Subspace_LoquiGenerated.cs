@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Subspace_Registration.Instance;
         public new static Subspace_Registration Registration => Subspace_Registration.Instance;
+        protected override object CommonInstance => SubspaceCommon.Instance;
 
         #region Ctor
         protected Subspace()
@@ -107,30 +108,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Subspace>.GetEqualsMask(Subspace rhs, EqualsMaskHelper.Include include) => SubspaceCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ISubspaceGetter>.GetEqualsMask(ISubspaceGetter rhs, EqualsMaskHelper.Include include) => SubspaceCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Subspace>.GetEqualsMask(Subspace rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ISubspaceGetter>.GetEqualsMask(ISubspaceGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Subspace_Mask<bool> printMask = null)
-        {
-            return SubspaceCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            SubspaceCommon.ToString(this, fg, name: name, printMask: null);
+            SubspaceMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Subspace_Mask<bool> GetHasBeenSetMask()
-        {
-            return SubspaceCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -652,10 +645,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            SubspaceCommon.Clear(this);
+            SubspaceCommon.Instance.Clear(this);
         }
-
 
         public new static Subspace Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -754,6 +745,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class SubspaceMixIn
+    {
+        public static void Clear(this ISubspaceInternal item)
+        {
+            ((SubspaceCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Subspace_Mask<bool> GetEqualsMask(
+            this ISubspaceGetter item,
+            ISubspaceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Subspace_Mask<bool>();
+            ((SubspaceCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ISubspaceInternalGetter item,
+            string name = null,
+            Subspace_Mask<bool> printMask = null)
+        {
+            return ((SubspaceCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ISubspaceInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Subspace_Mask<bool> printMask = null)
+        {
+            ((SubspaceCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ISubspaceInternalGetter item,
+            Subspace_Mask<bool?> checkMask)
+        {
+            return ((SubspaceCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Subspace_Mask<bool> GetHasBeenSetMask(this ISubspaceGetter item)
+        {
+            var ret = new Subspace_Mask<bool>();
+            ((SubspaceCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -984,9 +1042,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class SubspaceCommon
+    #region Common
+    public partial class SubspaceCommon : OblivionMajorRecordCommon
     {
+        public static readonly SubspaceCommon Instance = new SubspaceCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ISubspace item,
@@ -1056,28 +1115,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ISubspace item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ISubspace item)
         {
+            ClearPartial();
             item.X = default(Single);
             item.Y = default(Single);
             item.Z = default(Single);
+            base.Clear(item);
         }
 
-        public static Subspace_Mask<bool> GetEqualsMask(
-            this ISubspaceGetter item,
-            ISubspaceGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new Subspace_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ISubspace)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (ISubspace)item);
+        }
+
+        public void FillEqualsMask(
             ISubspaceGetter item,
             ISubspaceGetter rhs,
             Subspace_Mask<bool> ret,
@@ -1087,21 +1146,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.X = item.X.EqualsWithin(rhs.X);
             ret.Y = item.Y.EqualsWithin(rhs.Y);
             ret.Z = item.Z.EqualsWithin(rhs.Z);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ISubspaceGetter item,
+        public string ToString(
+            ISubspaceGetter item,
             string name = null,
             Subspace_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ISubspaceGetter item,
+        public void ToString(
+            ISubspaceGetter item,
             FileGeneration fg,
             string name = null,
             Subspace_Mask<bool> printMask = null)
@@ -1117,46 +1180,60 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.X ?? true)
-                {
-                    fg.AppendLine($"X => {item.X}");
-                }
-                if (printMask?.Y ?? true)
-                {
-                    fg.AppendLine($"Y => {item.Y}");
-                }
-                if (printMask?.Z ?? true)
-                {
-                    fg.AppendLine($"Z => {item.Z}");
-                }
-                if (printMask?.DNAMDataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ISubspaceGetter item,
+        protected static void ToStringFields(
+            ISubspaceGetter item,
+            FileGeneration fg,
+            Subspace_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.X ?? true)
+            {
+                fg.AppendLine($"X => {item.X}");
+            }
+            if (printMask?.Y ?? true)
+            {
+                fg.AppendLine($"Y => {item.Y}");
+            }
+            if (printMask?.Z ?? true)
+            {
+                fg.AppendLine($"Z => {item.Z}");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            ISubspaceGetter item,
             Subspace_Mask<bool?> checkMask)
         {
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Subspace_Mask<bool> GetHasBeenSetMask(ISubspaceGetter item)
+        public void FillHasBeenSetMask(
+            ISubspaceGetter item,
+            Subspace_Mask<bool> mask)
         {
-            var ret = new Subspace_Mask<bool>();
-            ret.X = true;
-            ret.Y = true;
-            ret.Z = true;
-            ret.DNAMDataTypeState = true;
-            return ret;
-        }
-
-        public static Subspace_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.X = true;
+            mask.Y = true;
+            mask.Z = true;
+            mask.DNAMDataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Subspace_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1176,12 +1253,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Subspace_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Subspace_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

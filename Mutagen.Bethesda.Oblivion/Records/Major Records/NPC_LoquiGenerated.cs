@@ -51,6 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NPC_Registration.Instance;
         public new static NPC_Registration Registration => NPC_Registration.Instance;
+        protected override object CommonInstance => NPCCommon.Instance;
 
         #region Ctor
         protected NPC()
@@ -201,17 +202,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<RankPlacement> _Factions = new SourceSetList<RankPlacement>();
         public ISourceSetList<RankPlacement> Factions => _Factions;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<RankPlacement> FactionsEnumerable
-        {
-            get => _Factions.Items;
-            set => _Factions.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<RankPlacement> INPC.Factions => _Factions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<RankPlacement> INPCGetter.Factions => _Factions;
+        IReadOnlySetList<IRankPlacementGetter> INPCGetter.Factions => _Factions;
         #endregion
 
         #endregion
@@ -231,12 +226,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<FormIDSetLink<SpellAbstract>> _Spells = new SourceSetList<FormIDSetLink<SpellAbstract>>();
         public ISourceSetList<FormIDSetLink<SpellAbstract>> Spells => _Spells;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<FormIDSetLink<SpellAbstract>> SpellsEnumerable
-        {
-            get => _Spells.Items;
-            set => _Spells.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<FormIDSetLink<SpellAbstract>> INPC.Spells => _Spells;
@@ -255,17 +244,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<ItemEntry> _Items = new SourceSetList<ItemEntry>();
         public ISourceSetList<ItemEntry> Items => _Items;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ItemEntry> ItemsEnumerable
-        {
-            get => _Items.Items;
-            set => _Items.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<ItemEntry> INPC.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<ItemEntry> INPCGetter.Items => _Items;
+        IReadOnlySetList<IItemEntryGetter> INPCGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -372,12 +355,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<FormIDSetLink<AIPackage>> _AIPackages = new SourceSetList<FormIDSetLink<AIPackage>>();
         public ISourceSetList<FormIDSetLink<AIPackage>> AIPackages => _AIPackages;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<FormIDSetLink<AIPackage>> AIPackagesEnumerable
-        {
-            get => _AIPackages.Items;
-            set => _AIPackages.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<FormIDSetLink<AIPackage>> INPC.AIPackages => _AIPackages;
@@ -390,12 +367,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<String> _Animations = new SourceSetList<String>();
         public ISourceSetList<String> Animations => _Animations;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<String> AnimationsEnumerable
-        {
-            get => _Animations.Items;
-            set => _Animations.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<String> INPC.Animations => _Animations;
@@ -806,12 +777,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<FormIDLink<Eye>> _Eyes = new SourceSetList<FormIDLink<Eye>>();
         public ISourceSetList<FormIDLink<Eye>> Eyes => _Eyes;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<FormIDLink<Eye>> EyesEnumerable
-        {
-            get => _Eyes.Items;
-            set => _Eyes.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<FormIDLink<Eye>> INPC.Eyes => _Eyes;
@@ -1016,30 +981,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<NPC>.GetEqualsMask(NPC rhs, EqualsMaskHelper.Include include) => NPCCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<INPCGetter>.GetEqualsMask(INPCGetter rhs, EqualsMaskHelper.Include include) => NPCCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<NPC>.GetEqualsMask(NPC rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<INPCGetter>.GetEqualsMask(INPCGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            NPC_Mask<bool> printMask = null)
-        {
-            return NPCCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            NPCCommon.ToString(this, fg, name: name, printMask: null);
+            NPCMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new NPC_Mask<bool> GetHasBeenSetMask()
-        {
-            return NPCCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -1911,8 +1868,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
-                        }
-                        );
+                        });
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Factions);
                 }
                 case 0x4D414E49: // INAM
@@ -1969,8 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
-                        }
-                        );
+                        });
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Items);
                 }
                 case 0x54444941: // AIDT
@@ -2042,8 +1997,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 r,
                                 item: out listSubItem,
                                 parseWhole: false);
-                        }
-                        );
+                        });
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Animations);
                 }
                 case 0x4D414E43: // CNAM
@@ -2552,10 +2506,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            NPCCommon.Clear(this);
+            NPCCommon.Instance.Clear(this);
         }
-
 
         public new static NPC Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -3005,7 +2957,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Factions
-        IReadOnlySetList<RankPlacement> Factions { get; }
+        IReadOnlySetList<IRankPlacementGetter> Factions { get; }
         #endregion
         #region DeathItem
         ItemAbstract DeathItem { get; }
@@ -3026,7 +2978,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        IReadOnlySetList<ItemEntry> Items { get; }
+        IReadOnlySetList<IItemEntryGetter> Items { get; }
         #endregion
         #region Aggression
         Byte Aggression { get; }
@@ -3256,6 +3208,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class NPCMixIn
+    {
+        public static void Clear(this INPCInternal item)
+        {
+            ((NPCCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static NPC_Mask<bool> GetEqualsMask(
+            this INPCGetter item,
+            INPCGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new NPC_Mask<bool>();
+            ((NPCCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this INPCInternalGetter item,
+            string name = null,
+            NPC_Mask<bool> printMask = null)
+        {
+            return ((NPCCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this INPCInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            NPC_Mask<bool> printMask = null)
+        {
+            ((NPCCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this INPCInternalGetter item,
+            NPC_Mask<bool?> checkMask)
+        {
+            return ((NPCCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static NPC_Mask<bool> GetHasBeenSetMask(this INPCGetter item)
+        {
+            var ret = new NPC_Mask<bool>();
+            ((NPCCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -4278,9 +4297,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class NPCCommon
+    #region Common
+    public partial class NPCCommon : NPCAbstractCommon
     {
+        public static readonly NPCCommon Instance = new NPCCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             INPC item,
@@ -4501,7 +4521,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Factions);
                 try
                 {
-                    item.Factions.SetToWithDefault(
+                    item.Factions.SetToWithDefault<RankPlacement, IRankPlacementGetter>(
                         rhs: rhs.Factions,
                         def: def?.Factions,
                         converter: (r, d) =>
@@ -4509,7 +4529,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             switch (copyMask?.Factions.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (RankPlacement)r;
                                 case CopyOption.MakeCopy:
                                     return RankPlacement.Copy(
                                         r,
@@ -4518,8 +4538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Factions.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4612,7 +4631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetToWithDefault(
+                    item.Items.SetToWithDefault<ItemEntry, IItemEntryGetter>(
                         rhs: rhs.Items,
                         def: def?.Items,
                         converter: (r, d) =>
@@ -4620,7 +4639,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             switch (copyMask?.Items.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (ItemEntry)r;
                                 case CopyOption.MakeCopy:
                                     return ItemEntry.Copy(
                                         r,
@@ -4629,8 +4648,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Items.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5586,8 +5604,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(INPC item)
+        partial void ClearPartial();
+
+        public virtual void Clear(INPC item)
         {
+            ClearPartial();
             item.Name_Unset();
             item.Model_Unset();
             item.Flags = default(NPC.NPCFlag);
@@ -5653,23 +5674,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FaceGenGeometryAsymmetric_Unset();
             item.FaceGenTextureSymmetric_Unset();
             item.Unknown_Unset();
+            base.Clear(item);
         }
 
-        public static NPC_Mask<bool> GetEqualsMask(
-            this INPCGetter item,
-            INPCGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(INPCAbstract item)
         {
-            var ret = new NPC_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (INPC)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(INPCSpawn item)
+        {
+            Clear(item: (INPC)item);
+        }
+
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (INPC)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (INPC)item);
+        }
+
+        public void FillEqualsMask(
             INPCGetter item,
             INPCGetter rhs,
             NPC_Mask<bool> ret,
@@ -5682,7 +5710,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Flags = item.Flags == rhs.Flags;
             ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
@@ -5765,21 +5793,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.FaceGenGeometryAsymmetric = item.FaceGenGeometryAsymmetric_IsSet == rhs.FaceGenGeometryAsymmetric_IsSet && ByteExt.EqualsFast(item.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric);
             ret.FaceGenTextureSymmetric = item.FaceGenTextureSymmetric_IsSet == rhs.FaceGenTextureSymmetric_IsSet && ByteExt.EqualsFast(item.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric);
             ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && ByteExt.EqualsFast(item.Unknown, rhs.Unknown);
-            NPCAbstractCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this INPCGetter item,
+        public string ToString(
+            INPCGetter item,
             string name = null,
             NPC_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this INPCGetter item,
+        public void ToString(
+            INPCGetter item,
             FileGeneration fg,
             string name = null,
             NPC_Mask<bool> printMask = null)
@@ -5795,365 +5827,380 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.BaseSpellPoints ?? true)
-                {
-                    fg.AppendLine($"BaseSpellPoints => {item.BaseSpellPoints}");
-                }
-                if (printMask?.Fatigue ?? true)
-                {
-                    fg.AppendLine($"Fatigue => {item.Fatigue}");
-                }
-                if (printMask?.BarterGold ?? true)
-                {
-                    fg.AppendLine($"BarterGold => {item.BarterGold}");
-                }
-                if (printMask?.LevelOffset ?? true)
-                {
-                    fg.AppendLine($"LevelOffset => {item.LevelOffset}");
-                }
-                if (printMask?.CalcMin ?? true)
-                {
-                    fg.AppendLine($"CalcMin => {item.CalcMin}");
-                }
-                if (printMask?.CalcMax ?? true)
-                {
-                    fg.AppendLine($"CalcMax => {item.CalcMax}");
-                }
-                if (printMask?.Factions?.Overall ?? true)
-                {
-                    fg.AppendLine("Factions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Factions)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.DeathItem ?? true)
-                {
-                    fg.AppendLine($"DeathItem => {item.DeathItem_Property}");
-                }
-                if (printMask?.Race ?? true)
-                {
-                    fg.AppendLine($"Race => {item.Race_Property}");
-                }
-                if (printMask?.Spells?.Overall ?? true)
-                {
-                    fg.AppendLine("Spells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Spells)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($"Item => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {item.Script_Property}");
-                }
-                if (printMask?.Items?.Overall ?? true)
-                {
-                    fg.AppendLine("Items =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Items)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Aggression ?? true)
-                {
-                    fg.AppendLine($"Aggression => {item.Aggression}");
-                }
-                if (printMask?.Confidence ?? true)
-                {
-                    fg.AppendLine($"Confidence => {item.Confidence}");
-                }
-                if (printMask?.EnergyLevel ?? true)
-                {
-                    fg.AppendLine($"EnergyLevel => {item.EnergyLevel}");
-                }
-                if (printMask?.Responsibility ?? true)
-                {
-                    fg.AppendLine($"Responsibility => {item.Responsibility}");
-                }
-                if (printMask?.BuySellServices ?? true)
-                {
-                    fg.AppendLine($"BuySellServices => {item.BuySellServices}");
-                }
-                if (printMask?.Teaches ?? true)
-                {
-                    fg.AppendLine($"Teaches => {item.Teaches}");
-                }
-                if (printMask?.MaximumTrainingLevel ?? true)
-                {
-                    fg.AppendLine($"MaximumTrainingLevel => {item.MaximumTrainingLevel}");
-                }
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {item.Fluff}");
-                }
-                if (printMask?.AIPackages?.Overall ?? true)
-                {
-                    fg.AppendLine("AIPackages =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.AIPackages)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($"Item => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Animations?.Overall ?? true)
-                {
-                    fg.AppendLine("Animations =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Animations)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($"Item => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Class ?? true)
-                {
-                    fg.AppendLine($"Class => {item.Class_Property}");
-                }
-                if (printMask?.Armorer ?? true)
-                {
-                    fg.AppendLine($"Armorer => {item.Armorer}");
-                }
-                if (printMask?.Athletics ?? true)
-                {
-                    fg.AppendLine($"Athletics => {item.Athletics}");
-                }
-                if (printMask?.Blade ?? true)
-                {
-                    fg.AppendLine($"Blade => {item.Blade}");
-                }
-                if (printMask?.Block ?? true)
-                {
-                    fg.AppendLine($"Block => {item.Block}");
-                }
-                if (printMask?.Blunt ?? true)
-                {
-                    fg.AppendLine($"Blunt => {item.Blunt}");
-                }
-                if (printMask?.HandToHand ?? true)
-                {
-                    fg.AppendLine($"HandToHand => {item.HandToHand}");
-                }
-                if (printMask?.HeavyArmor ?? true)
-                {
-                    fg.AppendLine($"HeavyArmor => {item.HeavyArmor}");
-                }
-                if (printMask?.Alchemy ?? true)
-                {
-                    fg.AppendLine($"Alchemy => {item.Alchemy}");
-                }
-                if (printMask?.Alteration ?? true)
-                {
-                    fg.AppendLine($"Alteration => {item.Alteration}");
-                }
-                if (printMask?.Conjuration ?? true)
-                {
-                    fg.AppendLine($"Conjuration => {item.Conjuration}");
-                }
-                if (printMask?.Destruction ?? true)
-                {
-                    fg.AppendLine($"Destruction => {item.Destruction}");
-                }
-                if (printMask?.Illusion ?? true)
-                {
-                    fg.AppendLine($"Illusion => {item.Illusion}");
-                }
-                if (printMask?.Mysticism ?? true)
-                {
-                    fg.AppendLine($"Mysticism => {item.Mysticism}");
-                }
-                if (printMask?.Restoration ?? true)
-                {
-                    fg.AppendLine($"Restoration => {item.Restoration}");
-                }
-                if (printMask?.Acrobatics ?? true)
-                {
-                    fg.AppendLine($"Acrobatics => {item.Acrobatics}");
-                }
-                if (printMask?.LightArmor ?? true)
-                {
-                    fg.AppendLine($"LightArmor => {item.LightArmor}");
-                }
-                if (printMask?.Marksman ?? true)
-                {
-                    fg.AppendLine($"Marksman => {item.Marksman}");
-                }
-                if (printMask?.Mercantile ?? true)
-                {
-                    fg.AppendLine($"Mercantile => {item.Mercantile}");
-                }
-                if (printMask?.Security ?? true)
-                {
-                    fg.AppendLine($"Security => {item.Security}");
-                }
-                if (printMask?.Sneak ?? true)
-                {
-                    fg.AppendLine($"Sneak => {item.Sneak}");
-                }
-                if (printMask?.Speechcraft ?? true)
-                {
-                    fg.AppendLine($"Speechcraft => {item.Speechcraft}");
-                }
-                if (printMask?.Health ?? true)
-                {
-                    fg.AppendLine($"Health => {item.Health}");
-                }
-                if (printMask?.Strength ?? true)
-                {
-                    fg.AppendLine($"Strength => {item.Strength}");
-                }
-                if (printMask?.Intelligence ?? true)
-                {
-                    fg.AppendLine($"Intelligence => {item.Intelligence}");
-                }
-                if (printMask?.Willpower ?? true)
-                {
-                    fg.AppendLine($"Willpower => {item.Willpower}");
-                }
-                if (printMask?.Agility ?? true)
-                {
-                    fg.AppendLine($"Agility => {item.Agility}");
-                }
-                if (printMask?.Speed ?? true)
-                {
-                    fg.AppendLine($"Speed => {item.Speed}");
-                }
-                if (printMask?.Endurance ?? true)
-                {
-                    fg.AppendLine($"Endurance => {item.Endurance}");
-                }
-                if (printMask?.Personality ?? true)
-                {
-                    fg.AppendLine($"Personality => {item.Personality}");
-                }
-                if (printMask?.Luck ?? true)
-                {
-                    fg.AppendLine($"Luck => {item.Luck}");
-                }
-                if (printMask?.Hair ?? true)
-                {
-                    fg.AppendLine($"Hair => {item.Hair_Property}");
-                }
-                if (printMask?.HairLength ?? true)
-                {
-                    fg.AppendLine($"HairLength => {item.HairLength}");
-                }
-                if (printMask?.Eyes?.Overall ?? true)
-                {
-                    fg.AppendLine("Eyes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Eyes)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($"Item => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.HairColor ?? true)
-                {
-                    fg.AppendLine($"HairColor => {item.HairColor}");
-                }
-                if (printMask?.CombatStyle ?? true)
-                {
-                    fg.AppendLine($"CombatStyle => {item.CombatStyle_Property}");
-                }
-                if (printMask?.FaceGenGeometrySymmetric ?? true)
-                {
-                    fg.AppendLine($"FaceGenGeometrySymmetric => {item.FaceGenGeometrySymmetric}");
-                }
-                if (printMask?.FaceGenGeometryAsymmetric ?? true)
-                {
-                    fg.AppendLine($"FaceGenGeometryAsymmetric => {item.FaceGenGeometryAsymmetric}");
-                }
-                if (printMask?.FaceGenTextureSymmetric ?? true)
-                {
-                    fg.AppendLine($"FaceGenTextureSymmetric => {item.FaceGenTextureSymmetric}");
-                }
-                if (printMask?.Unknown ?? true)
-                {
-                    fg.AppendLine($"Unknown => {item.Unknown}");
-                }
-                if (printMask?.ACBSDataTypeState ?? true)
-                {
-                }
-                if (printMask?.AIDTDataTypeState ?? true)
-                {
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this INPCGetter item,
+        protected static void ToStringFields(
+            INPCGetter item,
+            FileGeneration fg,
+            NPC_Mask<bool> printMask = null)
+        {
+            NPCAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.BaseSpellPoints ?? true)
+            {
+                fg.AppendLine($"BaseSpellPoints => {item.BaseSpellPoints}");
+            }
+            if (printMask?.Fatigue ?? true)
+            {
+                fg.AppendLine($"Fatigue => {item.Fatigue}");
+            }
+            if (printMask?.BarterGold ?? true)
+            {
+                fg.AppendLine($"BarterGold => {item.BarterGold}");
+            }
+            if (printMask?.LevelOffset ?? true)
+            {
+                fg.AppendLine($"LevelOffset => {item.LevelOffset}");
+            }
+            if (printMask?.CalcMin ?? true)
+            {
+                fg.AppendLine($"CalcMin => {item.CalcMin}");
+            }
+            if (printMask?.CalcMax ?? true)
+            {
+                fg.AppendLine($"CalcMax => {item.CalcMax}");
+            }
+            if (printMask?.Factions?.Overall ?? true)
+            {
+                fg.AppendLine("Factions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Factions)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.DeathItem ?? true)
+            {
+                fg.AppendLine($"DeathItem => {item.DeathItem_Property}");
+            }
+            if (printMask?.Race ?? true)
+            {
+                fg.AppendLine($"Race => {item.Race_Property}");
+            }
+            if (printMask?.Spells?.Overall ?? true)
+            {
+                fg.AppendLine("Spells =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Spells)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Items?.Overall ?? true)
+            {
+                fg.AppendLine("Items =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Items)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Aggression ?? true)
+            {
+                fg.AppendLine($"Aggression => {item.Aggression}");
+            }
+            if (printMask?.Confidence ?? true)
+            {
+                fg.AppendLine($"Confidence => {item.Confidence}");
+            }
+            if (printMask?.EnergyLevel ?? true)
+            {
+                fg.AppendLine($"EnergyLevel => {item.EnergyLevel}");
+            }
+            if (printMask?.Responsibility ?? true)
+            {
+                fg.AppendLine($"Responsibility => {item.Responsibility}");
+            }
+            if (printMask?.BuySellServices ?? true)
+            {
+                fg.AppendLine($"BuySellServices => {item.BuySellServices}");
+            }
+            if (printMask?.Teaches ?? true)
+            {
+                fg.AppendLine($"Teaches => {item.Teaches}");
+            }
+            if (printMask?.MaximumTrainingLevel ?? true)
+            {
+                fg.AppendLine($"MaximumTrainingLevel => {item.MaximumTrainingLevel}");
+            }
+            if (printMask?.Fluff ?? true)
+            {
+                fg.AppendLine($"Fluff => {item.Fluff}");
+            }
+            if (printMask?.AIPackages?.Overall ?? true)
+            {
+                fg.AppendLine("AIPackages =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.AIPackages)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Animations?.Overall ?? true)
+            {
+                fg.AppendLine("Animations =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Animations)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Class ?? true)
+            {
+                fg.AppendLine($"Class => {item.Class_Property}");
+            }
+            if (printMask?.Armorer ?? true)
+            {
+                fg.AppendLine($"Armorer => {item.Armorer}");
+            }
+            if (printMask?.Athletics ?? true)
+            {
+                fg.AppendLine($"Athletics => {item.Athletics}");
+            }
+            if (printMask?.Blade ?? true)
+            {
+                fg.AppendLine($"Blade => {item.Blade}");
+            }
+            if (printMask?.Block ?? true)
+            {
+                fg.AppendLine($"Block => {item.Block}");
+            }
+            if (printMask?.Blunt ?? true)
+            {
+                fg.AppendLine($"Blunt => {item.Blunt}");
+            }
+            if (printMask?.HandToHand ?? true)
+            {
+                fg.AppendLine($"HandToHand => {item.HandToHand}");
+            }
+            if (printMask?.HeavyArmor ?? true)
+            {
+                fg.AppendLine($"HeavyArmor => {item.HeavyArmor}");
+            }
+            if (printMask?.Alchemy ?? true)
+            {
+                fg.AppendLine($"Alchemy => {item.Alchemy}");
+            }
+            if (printMask?.Alteration ?? true)
+            {
+                fg.AppendLine($"Alteration => {item.Alteration}");
+            }
+            if (printMask?.Conjuration ?? true)
+            {
+                fg.AppendLine($"Conjuration => {item.Conjuration}");
+            }
+            if (printMask?.Destruction ?? true)
+            {
+                fg.AppendLine($"Destruction => {item.Destruction}");
+            }
+            if (printMask?.Illusion ?? true)
+            {
+                fg.AppendLine($"Illusion => {item.Illusion}");
+            }
+            if (printMask?.Mysticism ?? true)
+            {
+                fg.AppendLine($"Mysticism => {item.Mysticism}");
+            }
+            if (printMask?.Restoration ?? true)
+            {
+                fg.AppendLine($"Restoration => {item.Restoration}");
+            }
+            if (printMask?.Acrobatics ?? true)
+            {
+                fg.AppendLine($"Acrobatics => {item.Acrobatics}");
+            }
+            if (printMask?.LightArmor ?? true)
+            {
+                fg.AppendLine($"LightArmor => {item.LightArmor}");
+            }
+            if (printMask?.Marksman ?? true)
+            {
+                fg.AppendLine($"Marksman => {item.Marksman}");
+            }
+            if (printMask?.Mercantile ?? true)
+            {
+                fg.AppendLine($"Mercantile => {item.Mercantile}");
+            }
+            if (printMask?.Security ?? true)
+            {
+                fg.AppendLine($"Security => {item.Security}");
+            }
+            if (printMask?.Sneak ?? true)
+            {
+                fg.AppendLine($"Sneak => {item.Sneak}");
+            }
+            if (printMask?.Speechcraft ?? true)
+            {
+                fg.AppendLine($"Speechcraft => {item.Speechcraft}");
+            }
+            if (printMask?.Health ?? true)
+            {
+                fg.AppendLine($"Health => {item.Health}");
+            }
+            if (printMask?.Strength ?? true)
+            {
+                fg.AppendLine($"Strength => {item.Strength}");
+            }
+            if (printMask?.Intelligence ?? true)
+            {
+                fg.AppendLine($"Intelligence => {item.Intelligence}");
+            }
+            if (printMask?.Willpower ?? true)
+            {
+                fg.AppendLine($"Willpower => {item.Willpower}");
+            }
+            if (printMask?.Agility ?? true)
+            {
+                fg.AppendLine($"Agility => {item.Agility}");
+            }
+            if (printMask?.Speed ?? true)
+            {
+                fg.AppendLine($"Speed => {item.Speed}");
+            }
+            if (printMask?.Endurance ?? true)
+            {
+                fg.AppendLine($"Endurance => {item.Endurance}");
+            }
+            if (printMask?.Personality ?? true)
+            {
+                fg.AppendLine($"Personality => {item.Personality}");
+            }
+            if (printMask?.Luck ?? true)
+            {
+                fg.AppendLine($"Luck => {item.Luck}");
+            }
+            if (printMask?.Hair ?? true)
+            {
+                fg.AppendLine($"Hair => {item.Hair_Property}");
+            }
+            if (printMask?.HairLength ?? true)
+            {
+                fg.AppendLine($"HairLength => {item.HairLength}");
+            }
+            if (printMask?.Eyes?.Overall ?? true)
+            {
+                fg.AppendLine("Eyes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Eyes)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.HairColor ?? true)
+            {
+                fg.AppendLine($"HairColor => {item.HairColor}");
+            }
+            if (printMask?.CombatStyle ?? true)
+            {
+                fg.AppendLine($"CombatStyle => {item.CombatStyle_Property}");
+            }
+            if (printMask?.FaceGenGeometrySymmetric ?? true)
+            {
+                fg.AppendLine($"FaceGenGeometrySymmetric => {item.FaceGenGeometrySymmetric}");
+            }
+            if (printMask?.FaceGenGeometryAsymmetric ?? true)
+            {
+                fg.AppendLine($"FaceGenGeometryAsymmetric => {item.FaceGenGeometryAsymmetric}");
+            }
+            if (printMask?.FaceGenTextureSymmetric ?? true)
+            {
+                fg.AppendLine($"FaceGenTextureSymmetric => {item.FaceGenTextureSymmetric}");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendLine($"Unknown => {item.Unknown}");
+            }
+            if (printMask?.ACBSDataTypeState ?? true)
+            {
+            }
+            if (printMask?.AIDTDataTypeState ?? true)
+            {
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            INPCGetter item,
             NPC_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -6177,87 +6224,86 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.FaceGenGeometryAsymmetric.HasValue && checkMask.FaceGenGeometryAsymmetric.Value != item.FaceGenGeometryAsymmetric_IsSet) return false;
             if (checkMask.FaceGenTextureSymmetric.HasValue && checkMask.FaceGenTextureSymmetric.Value != item.FaceGenTextureSymmetric_IsSet) return false;
             if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static NPC_Mask<bool> GetHasBeenSetMask(INPCGetter item)
+        public void FillHasBeenSetMask(
+            INPCGetter item,
+            NPC_Mask<bool> mask)
         {
-            var ret = new NPC_Mask<bool>();
-            ret.Name = item.Name_IsSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Flags = true;
-            ret.BaseSpellPoints = true;
-            ret.Fatigue = true;
-            ret.BarterGold = true;
-            ret.LevelOffset = true;
-            ret.CalcMin = true;
-            ret.CalcMax = true;
-            ret.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement_Mask<bool>>>>(item.Factions.HasBeenSet, item.Factions.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            ret.DeathItem = item.DeathItem_Property.HasBeenSet;
-            ret.Race = item.Race_Property.HasBeenSet;
-            ret.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, null);
-            ret.Script = item.Script_Property.HasBeenSet;
-            ret.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            ret.Aggression = true;
-            ret.Confidence = true;
-            ret.EnergyLevel = true;
-            ret.Responsibility = true;
-            ret.BuySellServices = true;
-            ret.Teaches = true;
-            ret.MaximumTrainingLevel = true;
-            ret.Fluff = true;
-            ret.AIPackages = new MaskItem<bool, IEnumerable<(int, bool)>>(item.AIPackages.HasBeenSet, null);
-            ret.Animations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Animations.HasBeenSet, null);
-            ret.Class = item.Class_Property.HasBeenSet;
-            ret.Armorer = true;
-            ret.Athletics = true;
-            ret.Blade = true;
-            ret.Block = true;
-            ret.Blunt = true;
-            ret.HandToHand = true;
-            ret.HeavyArmor = true;
-            ret.Alchemy = true;
-            ret.Alteration = true;
-            ret.Conjuration = true;
-            ret.Destruction = true;
-            ret.Illusion = true;
-            ret.Mysticism = true;
-            ret.Restoration = true;
-            ret.Acrobatics = true;
-            ret.LightArmor = true;
-            ret.Marksman = true;
-            ret.Mercantile = true;
-            ret.Security = true;
-            ret.Sneak = true;
-            ret.Speechcraft = true;
-            ret.Health = true;
-            ret.Strength = true;
-            ret.Intelligence = true;
-            ret.Willpower = true;
-            ret.Agility = true;
-            ret.Speed = true;
-            ret.Endurance = true;
-            ret.Personality = true;
-            ret.Luck = true;
-            ret.Hair = item.Hair_Property.HasBeenSet;
-            ret.HairLength = item.HairLength_IsSet;
-            ret.Eyes = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Eyes.HasBeenSet, null);
-            ret.HairColor = item.HairColor_IsSet;
-            ret.CombatStyle = item.CombatStyle_Property.HasBeenSet;
-            ret.FaceGenGeometrySymmetric = item.FaceGenGeometrySymmetric_IsSet;
-            ret.FaceGenGeometryAsymmetric = item.FaceGenGeometryAsymmetric_IsSet;
-            ret.FaceGenTextureSymmetric = item.FaceGenTextureSymmetric_IsSet;
-            ret.Unknown = item.Unknown_IsSet;
-            ret.ACBSDataTypeState = true;
-            ret.AIDTDataTypeState = true;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static NPC_FieldIndex? ConvertFieldIndex(NPCAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Flags = true;
+            mask.BaseSpellPoints = true;
+            mask.Fatigue = true;
+            mask.BarterGold = true;
+            mask.LevelOffset = true;
+            mask.CalcMin = true;
+            mask.CalcMax = true;
+            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement_Mask<bool>>>>(item.Factions.HasBeenSet, item.Factions.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.DeathItem = item.DeathItem_Property.HasBeenSet;
+            mask.Race = item.Race_Property.HasBeenSet;
+            mask.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, null);
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Aggression = true;
+            mask.Confidence = true;
+            mask.EnergyLevel = true;
+            mask.Responsibility = true;
+            mask.BuySellServices = true;
+            mask.Teaches = true;
+            mask.MaximumTrainingLevel = true;
+            mask.Fluff = true;
+            mask.AIPackages = new MaskItem<bool, IEnumerable<(int, bool)>>(item.AIPackages.HasBeenSet, null);
+            mask.Animations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Animations.HasBeenSet, null);
+            mask.Class = item.Class_Property.HasBeenSet;
+            mask.Armorer = true;
+            mask.Athletics = true;
+            mask.Blade = true;
+            mask.Block = true;
+            mask.Blunt = true;
+            mask.HandToHand = true;
+            mask.HeavyArmor = true;
+            mask.Alchemy = true;
+            mask.Alteration = true;
+            mask.Conjuration = true;
+            mask.Destruction = true;
+            mask.Illusion = true;
+            mask.Mysticism = true;
+            mask.Restoration = true;
+            mask.Acrobatics = true;
+            mask.LightArmor = true;
+            mask.Marksman = true;
+            mask.Mercantile = true;
+            mask.Security = true;
+            mask.Sneak = true;
+            mask.Speechcraft = true;
+            mask.Health = true;
+            mask.Strength = true;
+            mask.Intelligence = true;
+            mask.Willpower = true;
+            mask.Agility = true;
+            mask.Speed = true;
+            mask.Endurance = true;
+            mask.Personality = true;
+            mask.Luck = true;
+            mask.Hair = item.Hair_Property.HasBeenSet;
+            mask.HairLength = item.HairLength_IsSet;
+            mask.Eyes = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Eyes.HasBeenSet, null);
+            mask.HairColor = item.HairColor_IsSet;
+            mask.CombatStyle = item.CombatStyle_Property.HasBeenSet;
+            mask.FaceGenGeometrySymmetric = item.FaceGenGeometrySymmetric_IsSet;
+            mask.FaceGenGeometryAsymmetric = item.FaceGenGeometryAsymmetric_IsSet;
+            mask.FaceGenTextureSymmetric = item.FaceGenTextureSymmetric_IsSet;
+            mask.Unknown = item.Unknown_IsSet;
+            mask.ACBSDataTypeState = true;
+            mask.AIDTDataTypeState = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static NPC_FieldIndex ConvertFieldIndex(NPCAbstract_FieldIndex index)
@@ -6279,12 +6325,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static NPC_FieldIndex? ConvertFieldIndex(NPCSpawn_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static NPC_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
         {
             switch (index)
@@ -6304,12 +6344,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static NPC_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static NPC_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -6327,12 +6361,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static NPC_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static NPC_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
@@ -6464,14 +6492,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Factions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Factions) ?? true))
             {
-                ListXmlTranslation<RankPlacement>.Instance.Write(
+                ListXmlTranslation<IRankPlacementGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Factions),
                     item: item.Factions,
                     fieldIndex: (int)NPC_FieldIndex.Factions,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)NPC_FieldIndex.Factions),
-                    transl: (XElement subNode, RankPlacement subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IRankPlacementGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         ((RankPlacementXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
                             item: subItem,
@@ -6479,8 +6507,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
             if (item.DeathItem_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.DeathItem) ?? true))
@@ -6519,8 +6546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             item: subItem?.FormKey,
                             errorMask: listSubMask);
-                    }
-                    );
+                    });
             }
             if (item.Script_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Script) ?? true))
@@ -6535,14 +6561,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Items.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Items) ?? true))
             {
-                ListXmlTranslation<ItemEntry>.Instance.Write(
+                ListXmlTranslation<IItemEntryGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Items),
                     item: item.Items,
                     fieldIndex: (int)NPC_FieldIndex.Items,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)NPC_FieldIndex.Items),
-                    transl: (XElement subNode, ItemEntry subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IItemEntryGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         ((ItemEntryXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
                             item: subItem,
@@ -6550,8 +6576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
             if (item.AIDTDataTypeState.HasFlag(NPC.AIDTDataType.Has))
             {
@@ -6645,8 +6670,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             item: subItem?.FormKey,
                             errorMask: listSubMask);
-                    }
-                    );
+                    });
             }
             if (item.Animations.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Animations) ?? true))
@@ -6665,8 +6689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             item: subItem,
                             errorMask: listSubMask);
-                    }
-                    );
+                    });
             }
             if (item.Class_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Class) ?? true))
@@ -6988,8 +7011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             item: subItem?.FormKey,
                             errorMask: listSubMask);
-                    }
-                    );
+                    });
             }
             if (item.HairColor_IsSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.HairColor) ?? true))
@@ -11538,12 +11560,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Factions.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankPlacementGetter>.Instance.Write(
                     writer: writer,
                     items: item.Factions,
                     fieldIndex: (int)NPC_FieldIndex.Factions,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, RankPlacement subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IRankPlacementGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         ((RankPlacementBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
@@ -11551,8 +11573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
-                    }
-                    );
+                    });
             }
             if (item.DeathItem_Property.HasBeenSet)
             {
@@ -11585,8 +11606,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             header: recordTypeConverter.ConvertToCustom(NPC_Registration.SPLO_HEADER),
                             nullable: false,
                             masterReferences: masterReferences);
-                    }
-                    );
+                    });
             }
             if (item.Script_Property.HasBeenSet)
             {
@@ -11599,12 +11619,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Items.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IItemEntryGetter>.Instance.Write(
                     writer: writer,
                     items: item.Items,
                     fieldIndex: (int)NPC_FieldIndex.Items,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, ItemEntry subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IItemEntryGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         ((ItemEntryBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
@@ -11612,8 +11632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
-                    }
-                    );
+                    });
             }
             if (item.AIDTDataTypeState.HasFlag(NPC.AIDTDataType.Has))
             {
@@ -11650,8 +11669,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             header: recordTypeConverter.ConvertToCustom(NPC_Registration.PKID_HEADER),
                             nullable: false,
                             masterReferences: masterReferences);
-                    }
-                    );
+                    });
             }
             if (item.Animations.HasBeenSet)
             {
@@ -11735,8 +11753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: subWriter,
                             item: subItem,
                             masterReferences: masterReferences);
-                    }
-                    );
+                    });
             }
             if (item.HairColor_IsSet)
             {

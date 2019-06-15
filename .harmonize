@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>77226faf22ebad30531b3ca1c2ec7c4d3c373fa9</Sha>
+         <Sha>a1ce2cdb4e53c963dc36f53439f775164960643a</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>06-12-2019 19:00:21</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/master'</Description>
+         <CommitDate>06-15-2019 18:08:06</CommitDate>
+         <Description>Args/FuncWrapper extra line eliminated</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

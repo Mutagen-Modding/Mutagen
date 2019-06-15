@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingInt_Registration.Instance;
         public new static GameSettingInt_Registration Registration => GameSettingInt_Registration.Instance;
+        protected override object CommonInstance => GameSettingIntCommon.Instance;
 
         #region Ctor
         protected GameSettingInt()
@@ -80,30 +81,22 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        IMask<bool> IEqualsMask<GameSettingInt>.GetEqualsMask(GameSettingInt rhs, EqualsMaskHelper.Include include) => GameSettingIntCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IGameSettingIntGetter>.GetEqualsMask(IGameSettingIntGetter rhs, EqualsMaskHelper.Include include) => GameSettingIntCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<GameSettingInt>.GetEqualsMask(GameSettingInt rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IGameSettingIntGetter>.GetEqualsMask(IGameSettingIntGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            GameSettingInt_Mask<bool> printMask = null)
-        {
-            return GameSettingIntCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            GameSettingIntCommon.ToString(this, fg, name: name, printMask: null);
+            GameSettingIntMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new GameSettingInt_Mask<bool> GetHasBeenSetMask()
-        {
-            return GameSettingIntCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -572,10 +565,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            GameSettingIntCommon.Clear(this);
+            GameSettingIntCommon.Instance.Clear(this);
         }
-
 
         public new static GameSettingInt Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -651,6 +642,73 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class GameSettingIntMixIn
+    {
+        public static void Clear(this IGameSettingIntInternal item)
+        {
+            ((GameSettingIntCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static GameSettingInt_Mask<bool> GetEqualsMask(
+            this IGameSettingIntGetter item,
+            IGameSettingIntGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new GameSettingInt_Mask<bool>();
+            ((GameSettingIntCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IGameSettingIntInternalGetter item,
+            string name = null,
+            GameSettingInt_Mask<bool> printMask = null)
+        {
+            return ((GameSettingIntCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IGameSettingIntInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            GameSettingInt_Mask<bool> printMask = null)
+        {
+            ((GameSettingIntCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IGameSettingIntInternalGetter item,
+            GameSettingInt_Mask<bool?> checkMask)
+        {
+            return ((GameSettingIntCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static GameSettingInt_Mask<bool> GetHasBeenSetMask(this IGameSettingIntGetter item)
+        {
+            var ret = new GameSettingInt_Mask<bool>();
+            ((GameSettingIntCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -845,9 +903,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class GameSettingIntCommon
+    #region Common
+    public partial class GameSettingIntCommon : GameSettingCommon
     {
+        public static readonly GameSettingIntCommon Instance = new GameSettingIntCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IGameSettingInt item,
@@ -896,26 +955,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        public static void Clear(IGameSettingInt item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IGameSettingInt item)
         {
+            ClearPartial();
             item.Data_Unset();
+            base.Clear(item);
         }
 
-        public static GameSettingInt_Mask<bool> GetEqualsMask(
-            this IGameSettingIntGetter item,
-            IGameSettingIntGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IGameSetting item)
         {
-            var ret = new GameSettingInt_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IGameSettingInt)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(ISkyrimMajorRecord item)
+        {
+            Clear(item: (IGameSettingInt)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IGameSettingInt)item);
+        }
+
+        public void FillEqualsMask(
             IGameSettingIntGetter item,
             IGameSettingIntGetter rhs,
             GameSettingInt_Mask<bool> ret,
@@ -923,21 +987,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Data = item.Data_IsSet == rhs.Data_IsSet && item.Data == rhs.Data;
-            GameSettingCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IGameSettingIntGetter item,
+        public string ToString(
+            IGameSettingIntGetter item,
             string name = null,
             GameSettingInt_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IGameSettingIntGetter item,
+        public void ToString(
+            IGameSettingIntGetter item,
             FileGeneration fg,
             string name = null,
             GameSettingInt_Mask<bool> printMask = null)
@@ -953,33 +1021,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Data ?? true)
-                {
-                    fg.AppendLine($"Data => {item.Data}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IGameSettingIntGetter item,
+        protected static void ToStringFields(
+            IGameSettingIntGetter item,
+            FileGeneration fg,
+            GameSettingInt_Mask<bool> printMask = null)
+        {
+            GameSettingCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Data ?? true)
+            {
+                fg.AppendLine($"Data => {item.Data}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IGameSettingIntGetter item,
             GameSettingInt_Mask<bool?> checkMask)
         {
             if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static GameSettingInt_Mask<bool> GetHasBeenSetMask(IGameSettingIntGetter item)
+        public void FillHasBeenSetMask(
+            IGameSettingIntGetter item,
+            GameSettingInt_Mask<bool> mask)
         {
-            var ret = new GameSettingInt_Mask<bool>();
-            ret.Data = item.Data_IsSet;
-            return ret;
-        }
-
-        public static GameSettingInt_FieldIndex? ConvertFieldIndex(GameSetting_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Data = item.Data_IsSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static GameSettingInt_FieldIndex ConvertFieldIndex(GameSetting_FieldIndex index)
@@ -1001,12 +1083,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static GameSettingInt_FieldIndex? ConvertFieldIndex(SkyrimMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static GameSettingInt_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1024,12 +1100,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static GameSettingInt_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static GameSettingInt_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

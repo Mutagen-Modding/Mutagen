@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
         public static DialogResponse_Registration Registration => DialogResponse_Registration.Instance;
+        protected object CommonInstance => DialogResponseCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public DialogResponse()
@@ -188,30 +190,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<DialogResponse>.GetEqualsMask(DialogResponse rhs, EqualsMaskHelper.Include include) => DialogResponseCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IDialogResponseGetter>.GetEqualsMask(IDialogResponseGetter rhs, EqualsMaskHelper.Include include) => DialogResponseCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<DialogResponse>.GetEqualsMask(DialogResponse rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IDialogResponseGetter>.GetEqualsMask(IDialogResponseGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            DialogResponse_Mask<bool> printMask = null)
-        {
-            return DialogResponseCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            DialogResponseCommon.ToString(this, fg, name: name, printMask: null);
+            DialogResponseMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public DialogResponse_Mask<bool> GetHasBeenSetMask()
-        {
-            return DialogResponseCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -745,19 +739,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            DialogResponseCommon.Clear(this);
+            DialogResponseCommon.Instance.Clear(this);
         }
-
 
         public static DialogResponse Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -896,6 +881,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class DialogResponseMixIn
+    {
+        public static void Clear(this IDialogResponseInternal item)
+        {
+            ((DialogResponseCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static DialogResponse_Mask<bool> GetEqualsMask(
+            this IDialogResponseGetter item,
+            IDialogResponseGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new DialogResponse_Mask<bool>();
+            ((DialogResponseCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IDialogResponseInternalGetter item,
+            string name = null,
+            DialogResponse_Mask<bool> printMask = null)
+        {
+            return ((DialogResponseCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IDialogResponseInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            DialogResponse_Mask<bool> printMask = null)
+        {
+            ((DialogResponseCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IDialogResponseInternalGetter item,
+            DialogResponse_Mask<bool?> checkMask)
+        {
+            return ((DialogResponseCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static DialogResponse_Mask<bool> GetHasBeenSetMask(this IDialogResponseGetter item)
+        {
+            var ret = new DialogResponse_Mask<bool>();
+            ((DialogResponseCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1170,9 +1222,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class DialogResponseCommon
+    #region Common
+    public partial class DialogResponseCommon
     {
+        public static readonly DialogResponseCommon Instance = new DialogResponseCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IDialogResponse item,
@@ -1330,8 +1383,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IDialogResponse item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IDialogResponse item)
         {
+            ClearPartial();
             item.Emotion = default(EmotionType);
             item.EmotionValue = default(Int32);
             item.Fluff1 = default(Byte[]);
@@ -1341,21 +1397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ActorNotes_Unset();
         }
 
-        public static DialogResponse_Mask<bool> GetEqualsMask(
-            this IDialogResponseGetter item,
-            IDialogResponseGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new DialogResponse_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IDialogResponseGetter item,
             IDialogResponseGetter rhs,
             DialogResponse_Mask<bool> ret,
@@ -1371,18 +1413,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ActorNotes = item.ActorNotes_IsSet == rhs.ActorNotes_IsSet && string.Equals(item.ActorNotes, rhs.ActorNotes);
         }
 
-        public static string ToString(
-            this IDialogResponseGetter item,
+        public string ToString(
+            IDialogResponseGetter item,
             string name = null,
             DialogResponse_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IDialogResponseGetter item,
+        public void ToString(
+            IDialogResponseGetter item,
             FileGeneration fg,
             string name = null,
             DialogResponse_Mask<bool> printMask = null)
@@ -1398,43 +1444,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Emotion ?? true)
-                {
-                    fg.AppendLine($"Emotion => {item.Emotion}");
-                }
-                if (printMask?.EmotionValue ?? true)
-                {
-                    fg.AppendLine($"EmotionValue => {item.EmotionValue}");
-                }
-                if (printMask?.Fluff1 ?? true)
-                {
-                    fg.AppendLine($"Fluff1 => {item.Fluff1}");
-                }
-                if (printMask?.ResponseNumber ?? true)
-                {
-                    fg.AppendLine($"ResponseNumber => {item.ResponseNumber}");
-                }
-                if (printMask?.Fluff2 ?? true)
-                {
-                    fg.AppendLine($"Fluff2 => {item.Fluff2}");
-                }
-                if (printMask?.ResponseText ?? true)
-                {
-                    fg.AppendLine($"ResponseText => {item.ResponseText}");
-                }
-                if (printMask?.ActorNotes ?? true)
-                {
-                    fg.AppendLine($"ActorNotes => {item.ActorNotes}");
-                }
-                if (printMask?.TRDTDataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IDialogResponseGetter item,
+        protected static void ToStringFields(
+            IDialogResponseGetter item,
+            FileGeneration fg,
+            DialogResponse_Mask<bool> printMask = null)
+        {
+            if (printMask?.Emotion ?? true)
+            {
+                fg.AppendLine($"Emotion => {item.Emotion}");
+            }
+            if (printMask?.EmotionValue ?? true)
+            {
+                fg.AppendLine($"EmotionValue => {item.EmotionValue}");
+            }
+            if (printMask?.Fluff1 ?? true)
+            {
+                fg.AppendLine($"Fluff1 => {item.Fluff1}");
+            }
+            if (printMask?.ResponseNumber ?? true)
+            {
+                fg.AppendLine($"ResponseNumber => {item.ResponseNumber}");
+            }
+            if (printMask?.Fluff2 ?? true)
+            {
+                fg.AppendLine($"Fluff2 => {item.Fluff2}");
+            }
+            if (printMask?.ResponseText ?? true)
+            {
+                fg.AppendLine($"ResponseText => {item.ResponseText}");
+            }
+            if (printMask?.ActorNotes ?? true)
+            {
+                fg.AppendLine($"ActorNotes => {item.ActorNotes}");
+            }
+            if (printMask?.TRDTDataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IDialogResponseGetter item,
             DialogResponse_Mask<bool?> checkMask)
         {
             if (checkMask.ResponseText.HasValue && checkMask.ResponseText.Value != item.ResponseText_IsSet) return false;
@@ -1442,18 +1499,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return true;
         }
 
-        public static DialogResponse_Mask<bool> GetHasBeenSetMask(IDialogResponseGetter item)
+        public void FillHasBeenSetMask(
+            IDialogResponseGetter item,
+            DialogResponse_Mask<bool> mask)
         {
-            var ret = new DialogResponse_Mask<bool>();
-            ret.Emotion = true;
-            ret.EmotionValue = true;
-            ret.Fluff1 = true;
-            ret.ResponseNumber = true;
-            ret.Fluff2 = true;
-            ret.ResponseText = item.ResponseText_IsSet;
-            ret.ActorNotes = item.ActorNotes_IsSet;
-            ret.TRDTDataTypeState = true;
-            return ret;
+            mask.Emotion = true;
+            mask.EmotionValue = true;
+            mask.Fluff1 = true;
+            mask.ResponseNumber = true;
+            mask.Fluff2 = true;
+            mask.ResponseText = item.ResponseText_IsSet;
+            mask.ActorNotes = item.ActorNotes_IsSet;
+            mask.TRDTDataTypeState = true;
         }
 
     }

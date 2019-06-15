@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
         public static ContainerItem_Registration Registration => ContainerItem_Registration.Instance;
+        protected object CommonInstance => ContainerItemCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public ContainerItem()
@@ -67,30 +69,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<ContainerItem>.GetEqualsMask(ContainerItem rhs, EqualsMaskHelper.Include include) => ContainerItemCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IContainerItemGetter>.GetEqualsMask(IContainerItemGetter rhs, EqualsMaskHelper.Include include) => ContainerItemCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ContainerItem>.GetEqualsMask(ContainerItem rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IContainerItemGetter>.GetEqualsMask(IContainerItemGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            ContainerItem_Mask<bool> printMask = null)
-        {
-            return ContainerItemCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ContainerItemCommon.ToString(this, fg, name: name, printMask: null);
+            ContainerItemMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public ContainerItem_Mask<bool> GetHasBeenSetMask()
-        {
-            return ContainerItemCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -499,19 +493,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            ContainerItemCommon.Clear(this);
+            ContainerItemCommon.Instance.Clear(this);
         }
-
 
         public static ContainerItem Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -577,6 +562,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class ContainerItemMixIn
+    {
+        public static void Clear(this IContainerItem item)
+        {
+            ((ContainerItemCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static ContainerItem_Mask<bool> GetEqualsMask(
+            this IContainerItemGetter item,
+            IContainerItemGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ContainerItem_Mask<bool>();
+            ((ContainerItemCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IContainerItemGetter item,
+            string name = null,
+            ContainerItem_Mask<bool> printMask = null)
+        {
+            return ((ContainerItemCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IContainerItemGetter item,
+            FileGeneration fg,
+            string name = null,
+            ContainerItem_Mask<bool> printMask = null)
+        {
+            ((ContainerItemCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IContainerItemGetter item,
+            ContainerItem_Mask<bool?> checkMask)
+        {
+            return ((ContainerItemCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static ContainerItem_Mask<bool> GetHasBeenSetMask(this IContainerItemGetter item)
+        {
+            var ret = new ContainerItem_Mask<bool>();
+            ((ContainerItemCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -777,9 +829,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ContainerItemCommon
+    #region Common
+    public partial class ContainerItemCommon
     {
+        public static readonly ContainerItemCommon Instance = new ContainerItemCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IContainerItem item,
@@ -826,27 +879,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IContainerItem item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IContainerItem item)
         {
+            ClearPartial();
             item.Item = default(ItemAbstract);
             item.Count = default(UInt32);
         }
 
-        public static ContainerItem_Mask<bool> GetEqualsMask(
-            this IContainerItemGetter item,
-            IContainerItemGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new ContainerItem_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IContainerItemGetter item,
             IContainerItemGetter rhs,
             ContainerItem_Mask<bool> ret,
@@ -857,18 +899,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Count = item.Count == rhs.Count;
         }
 
-        public static string ToString(
-            this IContainerItemGetter item,
+        public string ToString(
+            IContainerItemGetter item,
             string name = null,
             ContainerItem_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IContainerItemGetter item,
+        public void ToString(
+            IContainerItemGetter item,
             FileGeneration fg,
             string name = null,
             ContainerItem_Mask<bool> printMask = null)
@@ -884,31 +930,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Item ?? true)
-                {
-                    fg.AppendLine($"Item => {item.Item_Property}");
-                }
-                if (printMask?.Count ?? true)
-                {
-                    fg.AppendLine($"Count => {item.Count}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IContainerItemGetter item,
+        protected static void ToStringFields(
+            IContainerItemGetter item,
+            FileGeneration fg,
+            ContainerItem_Mask<bool> printMask = null)
+        {
+            if (printMask?.Item ?? true)
+            {
+                fg.AppendLine($"Item => {item.Item_Property}");
+            }
+            if (printMask?.Count ?? true)
+            {
+                fg.AppendLine($"Count => {item.Count}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IContainerItemGetter item,
             ContainerItem_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static ContainerItem_Mask<bool> GetHasBeenSetMask(IContainerItemGetter item)
+        public void FillHasBeenSetMask(
+            IContainerItemGetter item,
+            ContainerItem_Mask<bool> mask)
         {
-            var ret = new ContainerItem_Mask<bool>();
-            ret.Item = true;
-            ret.Count = true;
-            return ret;
+            mask.Item = true;
+            mask.Count = true;
         }
 
     }

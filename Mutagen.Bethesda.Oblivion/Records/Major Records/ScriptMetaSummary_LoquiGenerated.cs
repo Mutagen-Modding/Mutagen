@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptMetaSummary_Registration.Instance;
         public static ScriptMetaSummary_Registration Registration => ScriptMetaSummary_Registration.Instance;
+        protected object CommonInstance => ScriptMetaSummaryCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public ScriptMetaSummary()
@@ -99,30 +101,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<ScriptMetaSummary>.GetEqualsMask(ScriptMetaSummary rhs, EqualsMaskHelper.Include include) => ScriptMetaSummaryCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IScriptMetaSummaryGetter>.GetEqualsMask(IScriptMetaSummaryGetter rhs, EqualsMaskHelper.Include include) => ScriptMetaSummaryCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ScriptMetaSummary>.GetEqualsMask(ScriptMetaSummary rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IScriptMetaSummaryGetter>.GetEqualsMask(IScriptMetaSummaryGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            ScriptMetaSummary_Mask<bool> printMask = null)
-        {
-            return ScriptMetaSummaryCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ScriptMetaSummaryCommon.ToString(this, fg, name: name, printMask: null);
+            ScriptMetaSummaryMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public ScriptMetaSummary_Mask<bool> GetHasBeenSetMask()
-        {
-            return ScriptMetaSummaryCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -573,19 +567,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            ScriptMetaSummaryCommon.Clear(this);
+            ScriptMetaSummaryCommon.Instance.Clear(this);
         }
-
 
         public static ScriptMetaSummary Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -673,6 +658,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class ScriptMetaSummaryMixIn
+    {
+        public static void Clear(this IScriptMetaSummary item)
+        {
+            ((ScriptMetaSummaryCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static ScriptMetaSummary_Mask<bool> GetEqualsMask(
+            this IScriptMetaSummaryGetter item,
+            IScriptMetaSummaryGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ScriptMetaSummary_Mask<bool>();
+            ((ScriptMetaSummaryCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IScriptMetaSummaryGetter item,
+            string name = null,
+            ScriptMetaSummary_Mask<bool> printMask = null)
+        {
+            return ((ScriptMetaSummaryCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IScriptMetaSummaryGetter item,
+            FileGeneration fg,
+            string name = null,
+            ScriptMetaSummary_Mask<bool> printMask = null)
+        {
+            ((ScriptMetaSummaryCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IScriptMetaSummaryGetter item,
+            ScriptMetaSummary_Mask<bool?> checkMask)
+        {
+            return ((ScriptMetaSummaryCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static ScriptMetaSummary_Mask<bool> GetHasBeenSetMask(this IScriptMetaSummaryGetter item)
+        {
+            var ret = new ScriptMetaSummary_Mask<bool>();
+            ((ScriptMetaSummaryCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -911,9 +963,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ScriptMetaSummaryCommon
+    #region Common
+    public partial class ScriptMetaSummaryCommon
     {
+        public static readonly ScriptMetaSummaryCommon Instance = new ScriptMetaSummaryCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IScriptMetaSummary item,
@@ -994,29 +1047,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IScriptMetaSummary item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IScriptMetaSummary item)
         {
+            ClearPartial();
             item.Fluff = default(Byte[]);
             item.RefCount = default(UInt32);
             item.VariableCount = default(UInt32);
             item.Type = default(ScriptFields.ScriptType);
         }
 
-        public static ScriptMetaSummary_Mask<bool> GetEqualsMask(
-            this IScriptMetaSummaryGetter item,
-            IScriptMetaSummaryGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new ScriptMetaSummary_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IScriptMetaSummaryGetter item,
             IScriptMetaSummaryGetter rhs,
             ScriptMetaSummary_Mask<bool> ret,
@@ -1030,18 +1072,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Type = item.Type == rhs.Type;
         }
 
-        public static string ToString(
-            this IScriptMetaSummaryGetter item,
+        public string ToString(
+            IScriptMetaSummaryGetter item,
             string name = null,
             ScriptMetaSummary_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IScriptMetaSummaryGetter item,
+        public void ToString(
+            IScriptMetaSummaryGetter item,
             FileGeneration fg,
             string name = null,
             ScriptMetaSummary_Mask<bool> printMask = null)
@@ -1057,46 +1103,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {item.Fluff}");
-                }
-                if (printMask?.RefCount ?? true)
-                {
-                    fg.AppendLine($"RefCount => {item.RefCount}");
-                }
-                if (printMask?.CompiledSize ?? true)
-                {
-                    fg.AppendLine($"CompiledSize => {item.CompiledSize}");
-                }
-                if (printMask?.VariableCount ?? true)
-                {
-                    fg.AppendLine($"VariableCount => {item.VariableCount}");
-                }
-                if (printMask?.Type ?? true)
-                {
-                    fg.AppendLine($"Type => {item.Type}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IScriptMetaSummaryGetter item,
+        protected static void ToStringFields(
+            IScriptMetaSummaryGetter item,
+            FileGeneration fg,
+            ScriptMetaSummary_Mask<bool> printMask = null)
+        {
+            if (printMask?.Fluff ?? true)
+            {
+                fg.AppendLine($"Fluff => {item.Fluff}");
+            }
+            if (printMask?.RefCount ?? true)
+            {
+                fg.AppendLine($"RefCount => {item.RefCount}");
+            }
+            if (printMask?.CompiledSize ?? true)
+            {
+                fg.AppendLine($"CompiledSize => {item.CompiledSize}");
+            }
+            if (printMask?.VariableCount ?? true)
+            {
+                fg.AppendLine($"VariableCount => {item.VariableCount}");
+            }
+            if (printMask?.Type ?? true)
+            {
+                fg.AppendLine($"Type => {item.Type}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IScriptMetaSummaryGetter item,
             ScriptMetaSummary_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static ScriptMetaSummary_Mask<bool> GetHasBeenSetMask(IScriptMetaSummaryGetter item)
+        public void FillHasBeenSetMask(
+            IScriptMetaSummaryGetter item,
+            ScriptMetaSummary_Mask<bool> mask)
         {
-            var ret = new ScriptMetaSummary_Mask<bool>();
-            ret.Fluff = true;
-            ret.RefCount = true;
-            ret.CompiledSize = true;
-            ret.VariableCount = true;
-            ret.Type = true;
-            return ret;
+            mask.Fluff = true;
+            mask.RefCount = true;
+            mask.CompiledSize = true;
+            mask.VariableCount = true;
+            mask.Type = true;
         }
 
     }

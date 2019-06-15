@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
         public static EnableParent_Registration Registration => EnableParent_Registration.Instance;
+        protected object CommonInstance => EnableParentCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public EnableParent()
@@ -67,30 +69,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<EnableParent>.GetEqualsMask(EnableParent rhs, EqualsMaskHelper.Include include) => EnableParentCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IEnableParentGetter>.GetEqualsMask(IEnableParentGetter rhs, EqualsMaskHelper.Include include) => EnableParentCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<EnableParent>.GetEqualsMask(EnableParent rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IEnableParentGetter>.GetEqualsMask(IEnableParentGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            EnableParent_Mask<bool> printMask = null)
-        {
-            return EnableParentCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            EnableParentCommon.ToString(this, fg, name: name, printMask: null);
+            EnableParentMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public EnableParent_Mask<bool> GetHasBeenSetMask()
-        {
-            return EnableParentCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -508,19 +502,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            EnableParentCommon.Clear(this);
+            EnableParentCommon.Instance.Clear(this);
         }
-
 
         public static EnableParent Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -586,6 +571,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class EnableParentMixIn
+    {
+        public static void Clear(this IEnableParent item)
+        {
+            ((EnableParentCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static EnableParent_Mask<bool> GetEqualsMask(
+            this IEnableParentGetter item,
+            IEnableParentGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new EnableParent_Mask<bool>();
+            ((EnableParentCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IEnableParentGetter item,
+            string name = null,
+            EnableParent_Mask<bool> printMask = null)
+        {
+            return ((EnableParentCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IEnableParentGetter item,
+            FileGeneration fg,
+            string name = null,
+            EnableParent_Mask<bool> printMask = null)
+        {
+            ((EnableParentCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IEnableParentGetter item,
+            EnableParent_Mask<bool?> checkMask)
+        {
+            return ((EnableParentCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static EnableParent_Mask<bool> GetHasBeenSetMask(this IEnableParentGetter item)
+        {
+            var ret = new EnableParent_Mask<bool>();
+            ((EnableParentCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -786,9 +838,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class EnableParentCommon
+    #region Common
+    public partial class EnableParentCommon
     {
+        public static readonly EnableParentCommon Instance = new EnableParentCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IEnableParent item,
@@ -835,27 +888,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IEnableParent item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IEnableParent item)
         {
+            ClearPartial();
             item.Reference = default(IPlaced);
             item.Flags = default(EnableParent.Flag);
         }
 
-        public static EnableParent_Mask<bool> GetEqualsMask(
-            this IEnableParentGetter item,
-            IEnableParentGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new EnableParent_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IEnableParentGetter item,
             IEnableParentGetter rhs,
             EnableParent_Mask<bool> ret,
@@ -866,18 +908,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = item.Flags == rhs.Flags;
         }
 
-        public static string ToString(
-            this IEnableParentGetter item,
+        public string ToString(
+            IEnableParentGetter item,
             string name = null,
             EnableParent_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IEnableParentGetter item,
+        public void ToString(
+            IEnableParentGetter item,
             FileGeneration fg,
             string name = null,
             EnableParent_Mask<bool> printMask = null)
@@ -893,31 +939,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Reference ?? true)
-                {
-                    fg.AppendLine($"Reference => {item.Reference_Property}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IEnableParentGetter item,
+        protected static void ToStringFields(
+            IEnableParentGetter item,
+            FileGeneration fg,
+            EnableParent_Mask<bool> printMask = null)
+        {
+            if (printMask?.Reference ?? true)
+            {
+                fg.AppendLine($"Reference => {item.Reference_Property}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IEnableParentGetter item,
             EnableParent_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static EnableParent_Mask<bool> GetHasBeenSetMask(IEnableParentGetter item)
+        public void FillHasBeenSetMask(
+            IEnableParentGetter item,
+            EnableParent_Mask<bool> mask)
         {
-            var ret = new EnableParent_Mask<bool>();
-            ret.Reference = true;
-            ret.Flags = true;
-            return ret;
+            mask.Reference = true;
+            mask.Flags = true;
         }
 
     }

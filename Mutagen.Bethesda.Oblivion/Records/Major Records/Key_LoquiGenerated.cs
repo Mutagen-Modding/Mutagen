@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Key_Registration.Instance;
         public new static Key_Registration Registration => Key_Registration.Instance;
+        protected override object CommonInstance => KeyCommon.Instance;
 
         #region Ctor
         protected Key()
@@ -182,30 +183,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Key>.GetEqualsMask(Key rhs, EqualsMaskHelper.Include include) => KeyCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IKeyGetter>.GetEqualsMask(IKeyGetter rhs, EqualsMaskHelper.Include include) => KeyCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Key>.GetEqualsMask(Key rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IKeyGetter>.GetEqualsMask(IKeyGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Key_Mask<bool> printMask = null)
-        {
-            return KeyCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            KeyCommon.ToString(this, fg, name: name, printMask: null);
+            KeyMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Key_Mask<bool> GetHasBeenSetMask()
-        {
-            return KeyCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -843,10 +836,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            KeyCommon.Clear(this);
+            KeyCommon.Instance.Clear(this);
         }
-
 
         public new static Key Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -985,6 +976,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class KeyMixIn
+    {
+        public static void Clear(this IKeyInternal item)
+        {
+            ((KeyCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Key_Mask<bool> GetEqualsMask(
+            this IKeyGetter item,
+            IKeyGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Key_Mask<bool>();
+            ((KeyCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IKeyInternalGetter item,
+            string name = null,
+            Key_Mask<bool> printMask = null)
+        {
+            return ((KeyCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IKeyInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Key_Mask<bool> printMask = null)
+        {
+            ((KeyCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IKeyInternalGetter item,
+            Key_Mask<bool?> checkMask)
+        {
+            return ((KeyCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Key_Mask<bool> GetHasBeenSetMask(this IKeyGetter item)
+        {
+            var ret = new Key_Mask<bool>();
+            ((KeyCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1256,9 +1314,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class KeyCommon
+    #region Common
+    public partial class KeyCommon : ItemAbstractCommon
     {
+        public static readonly KeyCommon Instance = new KeyCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IKey item,
@@ -1442,31 +1501,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IKey item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IKey item)
         {
+            ClearPartial();
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
             item.Script_Property.Unset();
             item.Value = default(UInt32);
             item.Weight = default(Single);
+            base.Clear(item);
         }
 
-        public static Key_Mask<bool> GetEqualsMask(
-            this IKeyGetter item,
-            IKeyGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IItemAbstract item)
         {
-            var ret = new Key_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IKey)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (IKey)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IKey)item);
+        }
+
+        public void FillEqualsMask(
             IKeyGetter item,
             IKeyGetter rhs,
             Key_Mask<bool> ret,
@@ -1479,27 +1543,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IKeyGetter item,
+        public string ToString(
+            IKeyGetter item,
             string name = null,
             Key_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IKeyGetter item,
+        public void ToString(
+            IKeyGetter item,
             FileGeneration fg,
             string name = null,
             Key_Mask<bool> printMask = null)
@@ -1515,39 +1583,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {item.Script_Property}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {item.Value}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {item.Weight}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IKeyGetter item,
+        protected static void ToStringFields(
+            IKeyGetter item,
+            FileGeneration fg,
+            Key_Mask<bool> printMask = null)
+        {
+            ItemAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendLine($"Value => {item.Value}");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendLine($"Weight => {item.Weight}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IKeyGetter item,
             Key_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -1555,26 +1638,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Key_Mask<bool> GetHasBeenSetMask(IKeyGetter item)
+        public void FillHasBeenSetMask(
+            IKeyGetter item,
+            Key_Mask<bool> mask)
         {
-            var ret = new Key_Mask<bool>();
-            ret.Name = item.Name_IsSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Icon = item.Icon_IsSet;
-            ret.Script = item.Script_Property.HasBeenSet;
-            ret.Value = true;
-            ret.Weight = true;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static Key_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Icon = item.Icon_IsSet;
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Value = true;
+            mask.Weight = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Key_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
@@ -1596,12 +1678,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static Key_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static Key_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1619,12 +1695,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Key_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Key_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

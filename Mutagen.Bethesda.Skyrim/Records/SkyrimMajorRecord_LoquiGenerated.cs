@@ -43,6 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
         public new static SkyrimMajorRecord_Registration Registration => SkyrimMajorRecord_Registration.Instance;
+        protected override object CommonInstance => SkyrimMajorRecordCommon.Instance;
 
         #region Ctor
         protected SkyrimMajorRecord()
@@ -53,30 +54,22 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
 
-        IMask<bool> IEqualsMask<SkyrimMajorRecord>.GetEqualsMask(SkyrimMajorRecord rhs, EqualsMaskHelper.Include include) => SkyrimMajorRecordCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ISkyrimMajorRecordGetter>.GetEqualsMask(ISkyrimMajorRecordGetter rhs, EqualsMaskHelper.Include include) => SkyrimMajorRecordCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<SkyrimMajorRecord>.GetEqualsMask(SkyrimMajorRecord rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ISkyrimMajorRecordGetter>.GetEqualsMask(ISkyrimMajorRecordGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            SkyrimMajorRecord_Mask<bool> printMask = null)
-        {
-            return SkyrimMajorRecordCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            SkyrimMajorRecordCommon.ToString(this, fg, name: name, printMask: null);
+            SkyrimMajorRecordMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new SkyrimMajorRecord_Mask<bool> GetHasBeenSetMask()
-        {
-            return SkyrimMajorRecordCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -412,10 +405,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            SkyrimMajorRecordCommon.Clear(this);
+            SkyrimMajorRecordCommon.Instance.Clear(this);
         }
-
 
         protected new static void CopyInInternal_SkyrimMajorRecord(SkyrimMajorRecord obj, KeyValuePair<ushort, object> pair)
         {
@@ -477,6 +468,73 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class SkyrimMajorRecordMixIn
+    {
+        public static void Clear(this ISkyrimMajorRecordInternal item)
+        {
+            ((SkyrimMajorRecordCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static SkyrimMajorRecord_Mask<bool> GetEqualsMask(
+            this ISkyrimMajorRecordGetter item,
+            ISkyrimMajorRecordGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SkyrimMajorRecord_Mask<bool>();
+            ((SkyrimMajorRecordCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ISkyrimMajorRecordInternalGetter item,
+            string name = null,
+            SkyrimMajorRecord_Mask<bool> printMask = null)
+        {
+            return ((SkyrimMajorRecordCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ISkyrimMajorRecordInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            SkyrimMajorRecord_Mask<bool> printMask = null)
+        {
+            ((SkyrimMajorRecordCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ISkyrimMajorRecordInternalGetter item,
+            SkyrimMajorRecord_Mask<bool?> checkMask)
+        {
+            return ((SkyrimMajorRecordCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static SkyrimMajorRecord_Mask<bool> GetHasBeenSetMask(this ISkyrimMajorRecordGetter item)
+        {
+            var ret = new SkyrimMajorRecord_Mask<bool>();
+            ((SkyrimMajorRecordCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -681,9 +739,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class SkyrimMajorRecordCommon
+    #region Common
+    public partial class SkyrimMajorRecordCommon : MajorRecordCommon
     {
+        public static readonly SkyrimMajorRecordCommon Instance = new SkyrimMajorRecordCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ISkyrimMajorRecord item,
@@ -719,26 +778,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        public static void Clear(ISkyrimMajorRecord item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ISkyrimMajorRecord item)
         {
+            ClearPartial();
             item.SkyrimMajorRecordFlags = default(SkyrimMajorRecord.SkyrimMajorRecordFlag);
+            base.Clear(item);
         }
 
-        public static SkyrimMajorRecord_Mask<bool> GetEqualsMask(
-            this ISkyrimMajorRecordGetter item,
-            ISkyrimMajorRecordGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IMajorRecord item)
         {
-            var ret = new SkyrimMajorRecord_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ISkyrimMajorRecord)item);
         }
 
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             ISkyrimMajorRecordGetter item,
             ISkyrimMajorRecordGetter rhs,
             SkyrimMajorRecord_Mask<bool> ret,
@@ -746,21 +800,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.SkyrimMajorRecordFlags = item.SkyrimMajorRecordFlags == rhs.SkyrimMajorRecordFlags;
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ISkyrimMajorRecordGetter item,
+        public string ToString(
+            ISkyrimMajorRecordGetter item,
             string name = null,
             SkyrimMajorRecord_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ISkyrimMajorRecordGetter item,
+        public void ToString(
+            ISkyrimMajorRecordGetter item,
             FileGeneration fg,
             string name = null,
             SkyrimMajorRecord_Mask<bool> printMask = null)
@@ -776,32 +834,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.SkyrimMajorRecordFlags ?? true)
-                {
-                    fg.AppendLine($"SkyrimMajorRecordFlags => {item.SkyrimMajorRecordFlags}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ISkyrimMajorRecordGetter item,
+        protected static void ToStringFields(
+            ISkyrimMajorRecordGetter item,
+            FileGeneration fg,
+            SkyrimMajorRecord_Mask<bool> printMask = null)
+        {
+            MajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.SkyrimMajorRecordFlags ?? true)
+            {
+                fg.AppendLine($"SkyrimMajorRecordFlags => {item.SkyrimMajorRecordFlags}");
+            }
+        }
+
+        public bool HasBeenSet(
+            ISkyrimMajorRecordGetter item,
             SkyrimMajorRecord_Mask<bool?> checkMask)
         {
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static SkyrimMajorRecord_Mask<bool> GetHasBeenSetMask(ISkyrimMajorRecordGetter item)
+        public void FillHasBeenSetMask(
+            ISkyrimMajorRecordGetter item,
+            SkyrimMajorRecord_Mask<bool> mask)
         {
-            var ret = new SkyrimMajorRecord_Mask<bool>();
-            ret.SkyrimMajorRecordFlags = true;
-            return ret;
-        }
-
-        public static SkyrimMajorRecord_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.SkyrimMajorRecordFlags = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static SkyrimMajorRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

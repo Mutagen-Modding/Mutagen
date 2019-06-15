@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
         public new static Spell_Registration Registration => Spell_Registration.Instance;
+        protected override object CommonInstance => SpellCommon.Instance;
 
         #region Ctor
         protected Spell()
@@ -82,30 +83,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Spell>.GetEqualsMask(Spell rhs, EqualsMaskHelper.Include include) => SpellCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ISpellGetter>.GetEqualsMask(ISpellGetter rhs, EqualsMaskHelper.Include include) => SpellCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Spell>.GetEqualsMask(Spell rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ISpellGetter>.GetEqualsMask(ISpellGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Spell_Mask<bool> printMask = null)
-        {
-            return SpellCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            SpellCommon.ToString(this, fg, name: name, printMask: null);
+            SpellMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Spell_Mask<bool> GetHasBeenSetMask()
-        {
-            return SpellCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -495,10 +488,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            SpellCommon.Clear(this);
+            SpellCommon.Instance.Clear(this);
         }
-
 
         protected new static void CopyInInternal_Spell(Spell obj, KeyValuePair<ushort, object> pair)
         {
@@ -564,6 +555,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class SpellMixIn
+    {
+        public static void Clear(this ISpellInternal item)
+        {
+            ((SpellCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Spell_Mask<bool> GetEqualsMask(
+            this ISpellGetter item,
+            ISpellGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Spell_Mask<bool>();
+            ((SpellCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ISpellInternalGetter item,
+            string name = null,
+            Spell_Mask<bool> printMask = null)
+        {
+            return ((SpellCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ISpellInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Spell_Mask<bool> printMask = null)
+        {
+            ((SpellCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ISpellInternalGetter item,
+            Spell_Mask<bool?> checkMask)
+        {
+            return ((SpellCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Spell_Mask<bool> GetHasBeenSetMask(this ISpellGetter item)
+        {
+            var ret = new Spell_Mask<bool>();
+            ((SpellCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -771,9 +829,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class SpellCommon
+    #region Common
+    public partial class SpellCommon : SpellAbstractCommon
     {
+        public static readonly SpellCommon Instance = new SpellCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ISpell item,
@@ -822,26 +881,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ISpell item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ISpell item)
         {
+            ClearPartial();
             item.Name_Unset();
+            base.Clear(item);
         }
 
-        public static Spell_Mask<bool> GetEqualsMask(
-            this ISpellGetter item,
-            ISpellGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(ISpellAbstract item)
         {
-            var ret = new Spell_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ISpell)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (ISpell)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (ISpell)item);
+        }
+
+        public void FillEqualsMask(
             ISpellGetter item,
             ISpellGetter rhs,
             Spell_Mask<bool> ret,
@@ -849,21 +913,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            SpellAbstractCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ISpellGetter item,
+        public string ToString(
+            ISpellGetter item,
             string name = null,
             Spell_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ISpellGetter item,
+        public void ToString(
+            ISpellGetter item,
             FileGeneration fg,
             string name = null,
             Spell_Mask<bool> printMask = null)
@@ -879,33 +947,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ISpellGetter item,
+        protected static void ToStringFields(
+            ISpellGetter item,
+            FileGeneration fg,
+            Spell_Mask<bool> printMask = null)
+        {
+            SpellAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+        }
+
+        public bool HasBeenSet(
+            ISpellGetter item,
             Spell_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Spell_Mask<bool> GetHasBeenSetMask(ISpellGetter item)
+        public void FillHasBeenSetMask(
+            ISpellGetter item,
+            Spell_Mask<bool> mask)
         {
-            var ret = new Spell_Mask<bool>();
-            ret.Name = item.Name_IsSet;
-            return ret;
-        }
-
-        public static Spell_FieldIndex? ConvertFieldIndex(SpellAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Name = item.Name_IsSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Spell_FieldIndex ConvertFieldIndex(SpellAbstract_FieldIndex index)
@@ -927,12 +1009,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static Spell_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static Spell_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -950,12 +1026,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Spell_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Spell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

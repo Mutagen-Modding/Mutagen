@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
         public static SkillBoost_Registration Registration => SkillBoost_Registration.Instance;
+        protected object CommonInstance => SkillBoostCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public SkillBoost()
@@ -68,30 +70,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<SkillBoost>.GetEqualsMask(SkillBoost rhs, EqualsMaskHelper.Include include) => SkillBoostCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ISkillBoostGetter>.GetEqualsMask(ISkillBoostGetter rhs, EqualsMaskHelper.Include include) => SkillBoostCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<SkillBoost>.GetEqualsMask(SkillBoost rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ISkillBoostGetter>.GetEqualsMask(ISkillBoostGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            SkillBoost_Mask<bool> printMask = null)
-        {
-            return SkillBoostCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            SkillBoostCommon.ToString(this, fg, name: name, printMask: null);
+            SkillBoostMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public SkillBoost_Mask<bool> GetHasBeenSetMask()
-        {
-            return SkillBoostCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -482,19 +476,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            SkillBoostCommon.Clear(this);
+            SkillBoostCommon.Instance.Clear(this);
         }
-
 
         public static SkillBoost Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -560,6 +545,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class SkillBoostMixIn
+    {
+        public static void Clear(this ISkillBoost item)
+        {
+            ((SkillBoostCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static SkillBoost_Mask<bool> GetEqualsMask(
+            this ISkillBoostGetter item,
+            ISkillBoostGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SkillBoost_Mask<bool>();
+            ((SkillBoostCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ISkillBoostGetter item,
+            string name = null,
+            SkillBoost_Mask<bool> printMask = null)
+        {
+            return ((SkillBoostCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ISkillBoostGetter item,
+            FileGeneration fg,
+            string name = null,
+            SkillBoost_Mask<bool> printMask = null)
+        {
+            ((SkillBoostCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ISkillBoostGetter item,
+            SkillBoost_Mask<bool?> checkMask)
+        {
+            return ((SkillBoostCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static SkillBoost_Mask<bool> GetHasBeenSetMask(this ISkillBoostGetter item)
+        {
+            var ret = new SkillBoost_Mask<bool>();
+            ((SkillBoostCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -758,9 +810,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class SkillBoostCommon
+    #region Common
+    public partial class SkillBoostCommon
     {
+        public static readonly SkillBoostCommon Instance = new SkillBoostCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ISkillBoost item,
@@ -807,27 +860,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ISkillBoost item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ISkillBoost item)
         {
+            ClearPartial();
             item.Skill = default(ActorValue);
             item.Boost = default(SByte);
         }
 
-        public static SkillBoost_Mask<bool> GetEqualsMask(
-            this ISkillBoostGetter item,
-            ISkillBoostGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new SkillBoost_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             ISkillBoostGetter item,
             ISkillBoostGetter rhs,
             SkillBoost_Mask<bool> ret,
@@ -838,18 +880,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Boost = item.Boost == rhs.Boost;
         }
 
-        public static string ToString(
-            this ISkillBoostGetter item,
+        public string ToString(
+            ISkillBoostGetter item,
             string name = null,
             SkillBoost_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ISkillBoostGetter item,
+        public void ToString(
+            ISkillBoostGetter item,
             FileGeneration fg,
             string name = null,
             SkillBoost_Mask<bool> printMask = null)
@@ -865,31 +911,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Skill ?? true)
-                {
-                    fg.AppendLine($"Skill => {item.Skill}");
-                }
-                if (printMask?.Boost ?? true)
-                {
-                    fg.AppendLine($"Boost => {item.Boost}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ISkillBoostGetter item,
+        protected static void ToStringFields(
+            ISkillBoostGetter item,
+            FileGeneration fg,
+            SkillBoost_Mask<bool> printMask = null)
+        {
+            if (printMask?.Skill ?? true)
+            {
+                fg.AppendLine($"Skill => {item.Skill}");
+            }
+            if (printMask?.Boost ?? true)
+            {
+                fg.AppendLine($"Boost => {item.Boost}");
+            }
+        }
+
+        public bool HasBeenSet(
+            ISkillBoostGetter item,
             SkillBoost_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static SkillBoost_Mask<bool> GetHasBeenSetMask(ISkillBoostGetter item)
+        public void FillHasBeenSetMask(
+            ISkillBoostGetter item,
+            SkillBoost_Mask<bool> mask)
         {
-            var ret = new SkillBoost_Mask<bool>();
-            ret.Skill = true;
-            ret.Boost = true;
-            return ret;
+            mask.Skill = true;
+            mask.Boost = true;
         }
 
     }

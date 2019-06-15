@@ -45,6 +45,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
         public static LogEntry_Registration Registration => LogEntry_Registration.Instance;
+        protected object CommonInstance => LogEntryCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public LogEntry()
@@ -85,17 +87,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<Condition> _Conditions = new SourceSetList<Condition>();
         public ISourceSetList<Condition> Conditions => _Conditions;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<Condition> ConditionsEnumerable
-        {
-            get => _Conditions.Items;
-            set => _Conditions.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Condition> ILogEntry.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<Condition> ILogEntryGetter.Conditions => _Conditions;
+        IReadOnlySetList<IConditionGetter> ILogEntryGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -153,30 +149,22 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptFieldsGetter ILogEntryGetter.ResultScript => this.ResultScript;
         #endregion
 
-        IMask<bool> IEqualsMask<LogEntry>.GetEqualsMask(LogEntry rhs, EqualsMaskHelper.Include include) => LogEntryCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ILogEntryGetter>.GetEqualsMask(ILogEntryGetter rhs, EqualsMaskHelper.Include include) => LogEntryCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<LogEntry>.GetEqualsMask(LogEntry rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ILogEntryGetter>.GetEqualsMask(ILogEntryGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            LogEntry_Mask<bool> printMask = null)
-        {
-            return LogEntryCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            LogEntryCommon.ToString(this, fg, name: name, printMask: null);
+            LogEntryMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public LogEntry_Mask<bool> GetHasBeenSetMask()
-        {
-            return LogEntryCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -544,8 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
-                        }
-                        );
+                        });
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Conditions);
                 }
                 case 0x4D414E43: // CNAM
@@ -728,19 +715,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            LogEntryCommon.Clear(this);
+            LogEntryCommon.Instance.Clear(this);
         }
-
 
         public static LogEntry Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -819,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        IReadOnlySetList<Condition> Conditions { get; }
+        IReadOnlySetList<IConditionGetter> Conditions { get; }
         #endregion
         #region Entry
         String Entry { get; }
@@ -834,6 +812,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class LogEntryMixIn
+    {
+        public static void Clear(this ILogEntry item)
+        {
+            ((LogEntryCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static LogEntry_Mask<bool> GetEqualsMask(
+            this ILogEntryGetter item,
+            ILogEntryGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new LogEntry_Mask<bool>();
+            ((LogEntryCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ILogEntryGetter item,
+            string name = null,
+            LogEntry_Mask<bool> printMask = null)
+        {
+            return ((LogEntryCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ILogEntryGetter item,
+            FileGeneration fg,
+            string name = null,
+            LogEntry_Mask<bool> printMask = null)
+        {
+            ((LogEntryCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ILogEntryGetter item,
+            LogEntry_Mask<bool?> checkMask)
+        {
+            return ((LogEntryCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static LogEntry_Mask<bool> GetHasBeenSetMask(this ILogEntryGetter item)
+        {
+            var ret = new LogEntry_Mask<bool>();
+            ((LogEntryCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1088,9 +1133,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class LogEntryCommon
+    #region Common
+    public partial class LogEntryCommon
     {
+        public static readonly LogEntryCommon Instance = new LogEntryCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ILogEntry item,
@@ -1134,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LogEntry_FieldIndex.Conditions);
                 try
                 {
-                    item.Conditions.SetToWithDefault(
+                    item.Conditions.SetToWithDefault<Condition, IConditionGetter>(
                         rhs: rhs.Conditions,
                         def: def?.Conditions,
                         converter: (r, d) =>
@@ -1142,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             switch (copyMask?.Conditions.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (Condition)r;
                                 case CopyOption.MakeCopy:
                                     return Condition.Copy(
                                         r,
@@ -1151,8 +1197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Conditions.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1250,29 +1295,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ILogEntry item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ILogEntry item)
         {
+            ClearPartial();
             item.Flags_Unset();
             item.Conditions.Unset();
             item.Entry_Unset();
             item.ResultScript_Unset();
         }
 
-        public static LogEntry_Mask<bool> GetEqualsMask(
-            this ILogEntryGetter item,
-            ILogEntryGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new LogEntry_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             ILogEntryGetter item,
             ILogEntryGetter rhs,
             LogEntry_Mask<bool> ret,
@@ -1290,22 +1324,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.ResultScript_IsSet,
                 item.ResultScript,
                 rhs.ResultScript,
-                (loqLhs, loqRhs) => ScriptFieldsCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
         }
 
-        public static string ToString(
-            this ILogEntryGetter item,
+        public string ToString(
+            ILogEntryGetter item,
             string name = null,
             LogEntry_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ILogEntryGetter item,
+        public void ToString(
+            ILogEntryGetter item,
             FileGeneration fg,
             string name = null,
             LogEntry_Mask<bool> printMask = null)
@@ -1321,42 +1359,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.Conditions?.Overall ?? true)
-                {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Conditions)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Entry ?? true)
-                {
-                    fg.AppendLine($"Entry => {item.Entry}");
-                }
-                if (printMask?.ResultScript?.Overall ?? true)
-                {
-                    item.ResultScript?.ToString(fg, "ResultScript");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ILogEntryGetter item,
+        protected static void ToStringFields(
+            ILogEntryGetter item,
+            FileGeneration fg,
+            LogEntry_Mask<bool> printMask = null)
+        {
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                fg.AppendLine("Conditions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Entry ?? true)
+            {
+                fg.AppendLine($"Entry => {item.Entry}");
+            }
+            if (printMask?.ResultScript?.Overall ?? true)
+            {
+                item.ResultScript?.ToString(fg, "ResultScript");
+            }
+        }
+
+        public bool HasBeenSet(
+            ILogEntryGetter item,
             LogEntry_Mask<bool?> checkMask)
         {
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
@@ -1367,14 +1416,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return true;
         }
 
-        public static LogEntry_Mask<bool> GetHasBeenSetMask(ILogEntryGetter item)
+        public void FillHasBeenSetMask(
+            ILogEntryGetter item,
+            LogEntry_Mask<bool> mask)
         {
-            var ret = new LogEntry_Mask<bool>();
-            ret.Flags = item.Flags_IsSet;
-            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            ret.Entry = item.Entry_IsSet;
-            ret.ResultScript = new MaskItem<bool, ScriptFields_Mask<bool>>(item.ResultScript_IsSet, ScriptFieldsCommon.GetHasBeenSetMask(item.ResultScript));
-            return ret;
+            mask.Flags = item.Flags_IsSet;
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Entry = item.Entry_IsSet;
+            mask.ResultScript = new MaskItem<bool, ScriptFields_Mask<bool>>(item.ResultScript_IsSet, item.ResultScript.GetHasBeenSetMask());
         }
 
     }
@@ -1405,14 +1454,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Conditions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Conditions) ?? true))
             {
-                ListXmlTranslation<Condition>.Instance.Write(
+                ListXmlTranslation<IConditionGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Conditions),
                     item: item.Conditions,
                     fieldIndex: (int)LogEntry_FieldIndex.Conditions,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.Conditions),
-                    transl: (XElement subNode, Condition subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         ((ConditionXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
                             item: subItem,
@@ -1420,8 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
             if (item.Entry_IsSet
                 && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Entry) ?? true))
@@ -2287,12 +2335,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Conditions.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                     writer: writer,
                     items: item.Conditions,
                     fieldIndex: (int)LogEntry_FieldIndex.Conditions,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, Condition subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IConditionGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         ((ConditionBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
@@ -2300,8 +2348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
-                    }
-                    );
+                    });
             }
             if (item.Entry_IsSet)
             {

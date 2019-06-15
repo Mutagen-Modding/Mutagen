@@ -42,6 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptVariableReference_Registration.Instance;
         public new static ScriptVariableReference_Registration Registration => ScriptVariableReference_Registration.Instance;
+        protected override object CommonInstance => ScriptVariableReferenceCommon.Instance;
 
         #region Ctor
         public ScriptVariableReference()
@@ -61,30 +62,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<ScriptVariableReference>.GetEqualsMask(ScriptVariableReference rhs, EqualsMaskHelper.Include include) => ScriptVariableReferenceCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IScriptVariableReferenceGetter>.GetEqualsMask(IScriptVariableReferenceGetter rhs, EqualsMaskHelper.Include include) => ScriptVariableReferenceCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ScriptVariableReference>.GetEqualsMask(ScriptVariableReference rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IScriptVariableReferenceGetter>.GetEqualsMask(IScriptVariableReferenceGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            ScriptVariableReference_Mask<bool> printMask = null)
-        {
-            return ScriptVariableReferenceCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ScriptVariableReferenceCommon.ToString(this, fg, name: name, printMask: null);
+            ScriptVariableReferenceMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new ScriptVariableReference_Mask<bool> GetHasBeenSetMask()
-        {
-            return ScriptVariableReferenceCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -491,10 +484,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            ScriptVariableReferenceCommon.Clear(this);
+            ScriptVariableReferenceCommon.Instance.Clear(this);
         }
-
 
         public new static ScriptVariableReference Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -552,6 +543,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class ScriptVariableReferenceMixIn
+    {
+        public static void Clear(this IScriptVariableReference item)
+        {
+            ((ScriptVariableReferenceCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static ScriptVariableReference_Mask<bool> GetEqualsMask(
+            this IScriptVariableReferenceGetter item,
+            IScriptVariableReferenceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ScriptVariableReference_Mask<bool>();
+            ((ScriptVariableReferenceCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IScriptVariableReferenceGetter item,
+            string name = null,
+            ScriptVariableReference_Mask<bool> printMask = null)
+        {
+            return ((ScriptVariableReferenceCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IScriptVariableReferenceGetter item,
+            FileGeneration fg,
+            string name = null,
+            ScriptVariableReference_Mask<bool> printMask = null)
+        {
+            ((ScriptVariableReferenceCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IScriptVariableReferenceGetter item,
+            ScriptVariableReference_Mask<bool?> checkMask)
+        {
+            return ((ScriptVariableReferenceCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static ScriptVariableReference_Mask<bool> GetHasBeenSetMask(this IScriptVariableReferenceGetter item)
+        {
+            var ret = new ScriptVariableReference_Mask<bool>();
+            ((ScriptVariableReferenceCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -740,9 +798,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ScriptVariableReferenceCommon
+    #region Common
+    public partial class ScriptVariableReferenceCommon : ScriptReferenceCommon
     {
+        public static readonly ScriptVariableReferenceCommon Instance = new ScriptVariableReferenceCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IScriptVariableReference item,
@@ -778,26 +837,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IScriptVariableReference item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IScriptVariableReference item)
         {
+            ClearPartial();
             item.VariableIndex = default(Int32);
+            base.Clear(item);
         }
 
-        public static ScriptVariableReference_Mask<bool> GetEqualsMask(
-            this IScriptVariableReferenceGetter item,
-            IScriptVariableReferenceGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IScriptReference item)
         {
-            var ret = new ScriptVariableReference_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IScriptVariableReference)item);
         }
 
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IScriptVariableReferenceGetter item,
             IScriptVariableReferenceGetter rhs,
             ScriptVariableReference_Mask<bool> ret,
@@ -805,21 +859,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.VariableIndex = item.VariableIndex == rhs.VariableIndex;
-            ScriptReferenceCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IScriptVariableReferenceGetter item,
+        public string ToString(
+            IScriptVariableReferenceGetter item,
             string name = null,
             ScriptVariableReference_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IScriptVariableReferenceGetter item,
+        public void ToString(
+            IScriptVariableReferenceGetter item,
             FileGeneration fg,
             string name = null,
             ScriptVariableReference_Mask<bool> printMask = null)
@@ -835,32 +893,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.VariableIndex ?? true)
-                {
-                    fg.AppendLine($"VariableIndex => {item.VariableIndex}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IScriptVariableReferenceGetter item,
+        protected static void ToStringFields(
+            IScriptVariableReferenceGetter item,
+            FileGeneration fg,
+            ScriptVariableReference_Mask<bool> printMask = null)
+        {
+            ScriptReferenceCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.VariableIndex ?? true)
+            {
+                fg.AppendLine($"VariableIndex => {item.VariableIndex}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IScriptVariableReferenceGetter item,
             ScriptVariableReference_Mask<bool?> checkMask)
         {
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static ScriptVariableReference_Mask<bool> GetHasBeenSetMask(IScriptVariableReferenceGetter item)
+        public void FillHasBeenSetMask(
+            IScriptVariableReferenceGetter item,
+            ScriptVariableReference_Mask<bool> mask)
         {
-            var ret = new ScriptVariableReference_Mask<bool>();
-            ret.VariableIndex = true;
-            return ret;
-        }
-
-        public static ScriptVariableReference_FieldIndex? ConvertFieldIndex(ScriptReference_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.VariableIndex = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static ScriptVariableReference_FieldIndex ConvertFieldIndex(ScriptReference_FieldIndex index)

@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ammo_Registration.Instance;
         public new static Ammo_Registration Registration => Ammo_Registration.Instance;
+        protected override object CommonInstance => AmmoCommon.Instance;
 
         #region Ctor
         protected Ammo()
@@ -244,30 +245,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Ammo>.GetEqualsMask(Ammo rhs, EqualsMaskHelper.Include include) => AmmoCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IAmmoGetter>.GetEqualsMask(IAmmoGetter rhs, EqualsMaskHelper.Include include) => AmmoCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Ammo>.GetEqualsMask(Ammo rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IAmmoGetter>.GetEqualsMask(IAmmoGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Ammo_Mask<bool> printMask = null)
-        {
-            return AmmoCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            AmmoCommon.ToString(this, fg, name: name, printMask: null);
+            AmmoMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Ammo_Mask<bool> GetHasBeenSetMask()
-        {
-            return AmmoCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -963,10 +956,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            AmmoCommon.Clear(this);
+            AmmoCommon.Instance.Clear(this);
         }
-
 
         public new static Ammo Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1145,6 +1136,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class AmmoMixIn
+    {
+        public static void Clear(this IAmmoInternal item)
+        {
+            ((AmmoCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Ammo_Mask<bool> GetEqualsMask(
+            this IAmmoGetter item,
+            IAmmoGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Ammo_Mask<bool>();
+            ((AmmoCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IAmmoInternalGetter item,
+            string name = null,
+            Ammo_Mask<bool> printMask = null)
+        {
+            return ((AmmoCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IAmmoInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Ammo_Mask<bool> printMask = null)
+        {
+            ((AmmoCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IAmmoInternalGetter item,
+            Ammo_Mask<bool?> checkMask)
+        {
+            return ((AmmoCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Ammo_Mask<bool> GetHasBeenSetMask(this IAmmoGetter item)
+        {
+            var ret = new Ammo_Mask<bool>();
+            ((AmmoCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1465,9 +1523,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class AmmoCommon
+    #region Common
+    public partial class AmmoCommon : ItemAbstractCommon
     {
+        public static readonly AmmoCommon Instance = new AmmoCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IAmmo item,
@@ -1732,8 +1791,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IAmmo item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IAmmo item)
         {
+            ClearPartial();
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
@@ -1744,23 +1806,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Value = default(UInt32);
             item.Weight = default(Single);
             item.Damage = default(UInt16);
+            base.Clear(item);
         }
 
-        public static Ammo_Mask<bool> GetEqualsMask(
-            this IAmmoGetter item,
-            IAmmoGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IItemAbstract item)
         {
-            var ret = new Ammo_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IAmmo)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (IAmmo)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IAmmo)item);
+        }
+
+        public void FillEqualsMask(
             IAmmoGetter item,
             IAmmoGetter rhs,
             Ammo_Mask<bool> ret,
@@ -1773,7 +1837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Enchantment = item.Enchantment_Property.FormKey == rhs.Enchantment_Property.FormKey;
@@ -1783,21 +1847,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.Damage = item.Damage == rhs.Damage;
-            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IAmmoGetter item,
+        public string ToString(
+            IAmmoGetter item,
             string name = null,
             Ammo_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IAmmoGetter item,
+        public void ToString(
+            IAmmoGetter item,
             FileGeneration fg,
             string name = null,
             Ammo_Mask<bool> printMask = null)
@@ -1813,55 +1881,70 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Enchantment ?? true)
-                {
-                    fg.AppendLine($"Enchantment => {item.Enchantment_Property}");
-                }
-                if (printMask?.EnchantmentPoints ?? true)
-                {
-                    fg.AppendLine($"EnchantmentPoints => {item.EnchantmentPoints}");
-                }
-                if (printMask?.Speed ?? true)
-                {
-                    fg.AppendLine($"Speed => {item.Speed}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {item.Value}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {item.Weight}");
-                }
-                if (printMask?.Damage ?? true)
-                {
-                    fg.AppendLine($"Damage => {item.Damage}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IAmmoGetter item,
+        protected static void ToStringFields(
+            IAmmoGetter item,
+            FileGeneration fg,
+            Ammo_Mask<bool> printMask = null)
+        {
+            ItemAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Enchantment ?? true)
+            {
+                fg.AppendLine($"Enchantment => {item.Enchantment_Property}");
+            }
+            if (printMask?.EnchantmentPoints ?? true)
+            {
+                fg.AppendLine($"EnchantmentPoints => {item.EnchantmentPoints}");
+            }
+            if (printMask?.Speed ?? true)
+            {
+                fg.AppendLine($"Speed => {item.Speed}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendLine($"Value => {item.Value}");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendLine($"Weight => {item.Weight}");
+            }
+            if (printMask?.Damage ?? true)
+            {
+                fg.AppendLine($"Damage => {item.Damage}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IAmmoGetter item,
             Ammo_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -1870,30 +1953,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
             if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != item.Enchantment_Property.HasBeenSet) return false;
             if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != item.EnchantmentPoints_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Ammo_Mask<bool> GetHasBeenSetMask(IAmmoGetter item)
+        public void FillHasBeenSetMask(
+            IAmmoGetter item,
+            Ammo_Mask<bool> mask)
         {
-            var ret = new Ammo_Mask<bool>();
-            ret.Name = item.Name_IsSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Icon = item.Icon_IsSet;
-            ret.Enchantment = item.Enchantment_Property.HasBeenSet;
-            ret.EnchantmentPoints = item.EnchantmentPoints_IsSet;
-            ret.Speed = true;
-            ret.Flags = true;
-            ret.Value = true;
-            ret.Weight = true;
-            ret.Damage = true;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static Ammo_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Icon = item.Icon_IsSet;
+            mask.Enchantment = item.Enchantment_Property.HasBeenSet;
+            mask.EnchantmentPoints = item.EnchantmentPoints_IsSet;
+            mask.Speed = true;
+            mask.Flags = true;
+            mask.Value = true;
+            mask.Weight = true;
+            mask.Damage = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Ammo_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
@@ -1915,12 +1997,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static Ammo_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static Ammo_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1938,12 +2014,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Ammo_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Ammo_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

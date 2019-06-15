@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
         public static LockInformation_Registration Registration => LockInformation_Registration.Instance;
+        protected object CommonInstance => LockInformationCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public LockInformation()
@@ -90,30 +92,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<LockInformation>.GetEqualsMask(LockInformation rhs, EqualsMaskHelper.Include include) => LockInformationCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ILockInformationGetter>.GetEqualsMask(ILockInformationGetter rhs, EqualsMaskHelper.Include include) => LockInformationCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<LockInformation>.GetEqualsMask(LockInformation rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ILockInformationGetter>.GetEqualsMask(ILockInformationGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            LockInformation_Mask<bool> printMask = null)
-        {
-            return LockInformationCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            LockInformationCommon.ToString(this, fg, name: name, printMask: null);
+            LockInformationMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public LockInformation_Mask<bool> GetHasBeenSetMask()
-        {
-            return LockInformationCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -554,19 +548,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            LockInformationCommon.Clear(this);
+            LockInformationCommon.Instance.Clear(this);
         }
-
 
         public static LockInformation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -650,6 +635,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class LockInformationMixIn
+    {
+        public static void Clear(this ILockInformation item)
+        {
+            ((LockInformationCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static LockInformation_Mask<bool> GetEqualsMask(
+            this ILockInformationGetter item,
+            ILockInformationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new LockInformation_Mask<bool>();
+            ((LockInformationCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ILockInformationGetter item,
+            string name = null,
+            LockInformation_Mask<bool> printMask = null)
+        {
+            return ((LockInformationCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ILockInformationGetter item,
+            FileGeneration fg,
+            string name = null,
+            LockInformation_Mask<bool> printMask = null)
+        {
+            ((LockInformationCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ILockInformationGetter item,
+            LockInformation_Mask<bool?> checkMask)
+        {
+            return ((LockInformationCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static LockInformation_Mask<bool> GetHasBeenSetMask(this ILockInformationGetter item)
+        {
+            var ret = new LockInformation_Mask<bool>();
+            ((LockInformationCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -874,9 +926,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class LockInformationCommon
+    #region Common
+    public partial class LockInformationCommon
     {
+        public static readonly LockInformationCommon Instance = new LockInformationCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ILockInformation item,
@@ -957,29 +1010,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ILockInformation item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ILockInformation item)
         {
+            ClearPartial();
             item.LockLevel = default(Byte);
             item.Fluff = default(Byte[]);
             item.Key = default(Key);
             item.Flags = default(LockInformation.Flag);
         }
 
-        public static LockInformation_Mask<bool> GetEqualsMask(
-            this ILockInformationGetter item,
-            ILockInformationGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new LockInformation_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             ILockInformationGetter item,
             ILockInformationGetter rhs,
             LockInformation_Mask<bool> ret,
@@ -992,18 +1034,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = item.Flags == rhs.Flags;
         }
 
-        public static string ToString(
-            this ILockInformationGetter item,
+        public string ToString(
+            ILockInformationGetter item,
             string name = null,
             LockInformation_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ILockInformationGetter item,
+        public void ToString(
+            ILockInformationGetter item,
             FileGeneration fg,
             string name = null,
             LockInformation_Mask<bool> printMask = null)
@@ -1019,41 +1065,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.LockLevel ?? true)
-                {
-                    fg.AppendLine($"LockLevel => {item.LockLevel}");
-                }
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {item.Fluff}");
-                }
-                if (printMask?.Key ?? true)
-                {
-                    fg.AppendLine($"Key => {item.Key_Property}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ILockInformationGetter item,
+        protected static void ToStringFields(
+            ILockInformationGetter item,
+            FileGeneration fg,
+            LockInformation_Mask<bool> printMask = null)
+        {
+            if (printMask?.LockLevel ?? true)
+            {
+                fg.AppendLine($"LockLevel => {item.LockLevel}");
+            }
+            if (printMask?.Fluff ?? true)
+            {
+                fg.AppendLine($"Fluff => {item.Fluff}");
+            }
+            if (printMask?.Key ?? true)
+            {
+                fg.AppendLine($"Key => {item.Key_Property}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+        }
+
+        public bool HasBeenSet(
+            ILockInformationGetter item,
             LockInformation_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static LockInformation_Mask<bool> GetHasBeenSetMask(ILockInformationGetter item)
+        public void FillHasBeenSetMask(
+            ILockInformationGetter item,
+            LockInformation_Mask<bool> mask)
         {
-            var ret = new LockInformation_Mask<bool>();
-            ret.LockLevel = true;
-            ret.Fluff = true;
-            ret.Key = true;
-            ret.Flags = true;
-            return ret;
+            mask.LockLevel = true;
+            mask.Fluff = true;
+            mask.Key = true;
+            mask.Flags = true;
         }
 
     }

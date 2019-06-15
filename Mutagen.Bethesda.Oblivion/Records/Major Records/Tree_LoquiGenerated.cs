@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
         public new static Tree_Registration Registration => Tree_Registration.Instance;
+        protected override object CommonInstance => TreeCommon.Instance;
 
         #region Ctor
         protected Tree()
@@ -112,12 +113,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<UInt32> _SpeedTreeSeeds = new SourceSetList<UInt32>();
         public ISourceSetList<UInt32> SpeedTreeSeeds => _SpeedTreeSeeds;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<UInt32> SpeedTreeSeedsEnumerable
-        {
-            get => _SpeedTreeSeeds.Items;
-            set => _SpeedTreeSeeds.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<UInt32> ITree.SpeedTreeSeeds => _SpeedTreeSeeds;
@@ -281,30 +276,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Tree>.GetEqualsMask(Tree rhs, EqualsMaskHelper.Include include) => TreeCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ITreeGetter>.GetEqualsMask(ITreeGetter rhs, EqualsMaskHelper.Include include) => TreeCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Tree>.GetEqualsMask(Tree rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ITreeGetter>.GetEqualsMask(ITreeGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Tree_Mask<bool> printMask = null)
-        {
-            return TreeCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            TreeCommon.ToString(this, fg, name: name, printMask: null);
+            TreeMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Tree_Mask<bool> GetHasBeenSetMask()
-        {
-            return TreeCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -1042,10 +1029,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            TreeCommon.Clear(this);
+            TreeCommon.Instance.Clear(this);
         }
-
 
         public new static Tree Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1249,6 +1234,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class TreeMixIn
+    {
+        public static void Clear(this ITreeInternal item)
+        {
+            ((TreeCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Tree_Mask<bool> GetEqualsMask(
+            this ITreeGetter item,
+            ITreeGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Tree_Mask<bool>();
+            ((TreeCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ITreeInternalGetter item,
+            string name = null,
+            Tree_Mask<bool> printMask = null)
+        {
+            return ((TreeCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ITreeInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Tree_Mask<bool> printMask = null)
+        {
+            ((TreeCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ITreeInternalGetter item,
+            Tree_Mask<bool?> checkMask)
+        {
+            return ((TreeCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Tree_Mask<bool> GetHasBeenSetMask(this ITreeGetter item)
+        {
+            var ret = new Tree_Mask<bool>();
+            ((TreeCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1617,9 +1669,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class TreeCommon
+    #region Common
+    public partial class TreeCommon : OblivionMajorRecordCommon
     {
+        public static readonly TreeCommon Instance = new TreeCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ITree item,
@@ -1909,8 +1962,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ITree item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ITree item)
         {
+            ClearPartial();
             item.Model_Unset();
             item.Icon_Unset();
             item.SpeedTreeSeeds.Unset();
@@ -1924,23 +1980,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RustleSpeed = default(Single);
             item.BillboardWidth = default(Single);
             item.BillboardHeight = default(Single);
+            base.Clear(item);
         }
 
-        public static Tree_Mask<bool> GetEqualsMask(
-            this ITreeGetter item,
-            ITreeGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new Tree_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ITree)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (ITree)item);
+        }
+
+        public void FillEqualsMask(
             ITreeGetter item,
             ITreeGetter rhs,
             Tree_Mask<bool> ret,
@@ -1952,7 +2005,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.SpeedTreeSeeds = item.SpeedTreeSeeds.CollectionEqualsHelper(
@@ -1969,21 +2022,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.RustleSpeed = item.RustleSpeed.EqualsWithin(rhs.RustleSpeed);
             ret.BillboardWidth = item.BillboardWidth.EqualsWithin(rhs.BillboardWidth);
             ret.BillboardHeight = item.BillboardHeight.EqualsWithin(rhs.BillboardHeight);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ITreeGetter item,
+        public string ToString(
+            ITreeGetter item,
             string name = null,
             Tree_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ITreeGetter item,
+        public void ToString(
+            ITreeGetter item,
             FileGeneration fg,
             string name = null,
             Tree_Mask<bool> printMask = null)
@@ -1999,118 +2056,132 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.SpeedTreeSeeds?.Overall ?? true)
-                {
-                    fg.AppendLine("SpeedTreeSeeds =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.SpeedTreeSeeds)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($"Item => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.LeafCurvature ?? true)
-                {
-                    fg.AppendLine($"LeafCurvature => {item.LeafCurvature}");
-                }
-                if (printMask?.MinimumLeafAngle ?? true)
-                {
-                    fg.AppendLine($"MinimumLeafAngle => {item.MinimumLeafAngle}");
-                }
-                if (printMask?.MaximumLeafAngle ?? true)
-                {
-                    fg.AppendLine($"MaximumLeafAngle => {item.MaximumLeafAngle}");
-                }
-                if (printMask?.BranchDimmingValue ?? true)
-                {
-                    fg.AppendLine($"BranchDimmingValue => {item.BranchDimmingValue}");
-                }
-                if (printMask?.LeafDimmingValue ?? true)
-                {
-                    fg.AppendLine($"LeafDimmingValue => {item.LeafDimmingValue}");
-                }
-                if (printMask?.ShadowRadius ?? true)
-                {
-                    fg.AppendLine($"ShadowRadius => {item.ShadowRadius}");
-                }
-                if (printMask?.RockingSpeed ?? true)
-                {
-                    fg.AppendLine($"RockingSpeed => {item.RockingSpeed}");
-                }
-                if (printMask?.RustleSpeed ?? true)
-                {
-                    fg.AppendLine($"RustleSpeed => {item.RustleSpeed}");
-                }
-                if (printMask?.BillboardWidth ?? true)
-                {
-                    fg.AppendLine($"BillboardWidth => {item.BillboardWidth}");
-                }
-                if (printMask?.BillboardHeight ?? true)
-                {
-                    fg.AppendLine($"BillboardHeight => {item.BillboardHeight}");
-                }
-                if (printMask?.CNAMDataTypeState ?? true)
-                {
-                }
-                if (printMask?.BNAMDataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ITreeGetter item,
+        protected static void ToStringFields(
+            ITreeGetter item,
+            FileGeneration fg,
+            Tree_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.SpeedTreeSeeds?.Overall ?? true)
+            {
+                fg.AppendLine("SpeedTreeSeeds =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.SpeedTreeSeeds)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.LeafCurvature ?? true)
+            {
+                fg.AppendLine($"LeafCurvature => {item.LeafCurvature}");
+            }
+            if (printMask?.MinimumLeafAngle ?? true)
+            {
+                fg.AppendLine($"MinimumLeafAngle => {item.MinimumLeafAngle}");
+            }
+            if (printMask?.MaximumLeafAngle ?? true)
+            {
+                fg.AppendLine($"MaximumLeafAngle => {item.MaximumLeafAngle}");
+            }
+            if (printMask?.BranchDimmingValue ?? true)
+            {
+                fg.AppendLine($"BranchDimmingValue => {item.BranchDimmingValue}");
+            }
+            if (printMask?.LeafDimmingValue ?? true)
+            {
+                fg.AppendLine($"LeafDimmingValue => {item.LeafDimmingValue}");
+            }
+            if (printMask?.ShadowRadius ?? true)
+            {
+                fg.AppendLine($"ShadowRadius => {item.ShadowRadius}");
+            }
+            if (printMask?.RockingSpeed ?? true)
+            {
+                fg.AppendLine($"RockingSpeed => {item.RockingSpeed}");
+            }
+            if (printMask?.RustleSpeed ?? true)
+            {
+                fg.AppendLine($"RustleSpeed => {item.RustleSpeed}");
+            }
+            if (printMask?.BillboardWidth ?? true)
+            {
+                fg.AppendLine($"BillboardWidth => {item.BillboardWidth}");
+            }
+            if (printMask?.BillboardHeight ?? true)
+            {
+                fg.AppendLine($"BillboardHeight => {item.BillboardHeight}");
+            }
+            if (printMask?.CNAMDataTypeState ?? true)
+            {
+            }
+            if (printMask?.BNAMDataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            ITreeGetter item,
             Tree_Mask<bool?> checkMask)
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
             if (checkMask.SpeedTreeSeeds.Overall.HasValue && checkMask.SpeedTreeSeeds.Overall.Value != item.SpeedTreeSeeds.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Tree_Mask<bool> GetHasBeenSetMask(ITreeGetter item)
+        public void FillHasBeenSetMask(
+            ITreeGetter item,
+            Tree_Mask<bool> mask)
         {
-            var ret = new Tree_Mask<bool>();
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Icon = item.Icon_IsSet;
-            ret.SpeedTreeSeeds = new MaskItem<bool, IEnumerable<(int, bool)>>(item.SpeedTreeSeeds.HasBeenSet, null);
-            ret.LeafCurvature = true;
-            ret.MinimumLeafAngle = true;
-            ret.MaximumLeafAngle = true;
-            ret.BranchDimmingValue = true;
-            ret.LeafDimmingValue = true;
-            ret.ShadowRadius = true;
-            ret.RockingSpeed = true;
-            ret.RustleSpeed = true;
-            ret.BillboardWidth = true;
-            ret.BillboardHeight = true;
-            ret.CNAMDataTypeState = true;
-            ret.BNAMDataTypeState = true;
-            return ret;
-        }
-
-        public static Tree_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Icon = item.Icon_IsSet;
+            mask.SpeedTreeSeeds = new MaskItem<bool, IEnumerable<(int, bool)>>(item.SpeedTreeSeeds.HasBeenSet, null);
+            mask.LeafCurvature = true;
+            mask.MinimumLeafAngle = true;
+            mask.MaximumLeafAngle = true;
+            mask.BranchDimmingValue = true;
+            mask.LeafDimmingValue = true;
+            mask.ShadowRadius = true;
+            mask.RockingSpeed = true;
+            mask.RustleSpeed = true;
+            mask.BillboardWidth = true;
+            mask.BillboardHeight = true;
+            mask.CNAMDataTypeState = true;
+            mask.BNAMDataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Tree_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -2130,12 +2201,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Tree_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Tree_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
@@ -2215,8 +2280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             item: subItem,
                             errorMask: listSubMask);
-                    }
-                    );
+                    });
             }
             if (item.CNAMDataTypeState.HasFlag(Tree.CNAMDataType.Has))
             {

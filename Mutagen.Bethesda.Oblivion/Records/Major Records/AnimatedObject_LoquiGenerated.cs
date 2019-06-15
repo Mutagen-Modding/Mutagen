@@ -45,6 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimatedObject_Registration.Instance;
         public new static AnimatedObject_Registration Registration => AnimatedObject_Registration.Instance;
+        protected override object CommonInstance => AnimatedObjectCommon.Instance;
 
         #region Ctor
         protected AnimatedObject()
@@ -88,30 +89,22 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<IdleAnimation> IAnimatedObjectGetter.IdleAnimation_Property => this.IdleAnimation_Property;
         #endregion
 
-        IMask<bool> IEqualsMask<AnimatedObject>.GetEqualsMask(AnimatedObject rhs, EqualsMaskHelper.Include include) => AnimatedObjectCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IAnimatedObjectGetter>.GetEqualsMask(IAnimatedObjectGetter rhs, EqualsMaskHelper.Include include) => AnimatedObjectCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<AnimatedObject>.GetEqualsMask(AnimatedObject rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IAnimatedObjectGetter>.GetEqualsMask(IAnimatedObjectGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            AnimatedObject_Mask<bool> printMask = null)
-        {
-            return AnimatedObjectCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            AnimatedObjectCommon.ToString(this, fg, name: name, printMask: null);
+            AnimatedObjectMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new AnimatedObject_Mask<bool> GetHasBeenSetMask()
-        {
-            return AnimatedObjectCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -643,10 +636,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            AnimatedObjectCommon.Clear(this);
+            AnimatedObjectCommon.Instance.Clear(this);
         }
-
 
         public new static AnimatedObject Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -732,6 +723,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class AnimatedObjectMixIn
+    {
+        public static void Clear(this IAnimatedObjectInternal item)
+        {
+            ((AnimatedObjectCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static AnimatedObject_Mask<bool> GetEqualsMask(
+            this IAnimatedObjectGetter item,
+            IAnimatedObjectGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new AnimatedObject_Mask<bool>();
+            ((AnimatedObjectCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IAnimatedObjectInternalGetter item,
+            string name = null,
+            AnimatedObject_Mask<bool> printMask = null)
+        {
+            return ((AnimatedObjectCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IAnimatedObjectInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            AnimatedObject_Mask<bool> printMask = null)
+        {
+            ((AnimatedObjectCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IAnimatedObjectInternalGetter item,
+            AnimatedObject_Mask<bool?> checkMask)
+        {
+            return ((AnimatedObjectCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static AnimatedObject_Mask<bool> GetHasBeenSetMask(this IAnimatedObjectGetter item)
+        {
+            var ret = new AnimatedObject_Mask<bool>();
+            ((AnimatedObjectCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -940,9 +998,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class AnimatedObjectCommon
+    #region Common
+    public partial class AnimatedObjectCommon : OblivionMajorRecordCommon
     {
+        public static readonly AnimatedObjectCommon Instance = new AnimatedObjectCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IAnimatedObject item,
@@ -1032,27 +1091,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IAnimatedObject item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IAnimatedObject item)
         {
+            ClearPartial();
             item.Model_Unset();
             item.IdleAnimation_Property.Unset();
+            base.Clear(item);
         }
 
-        public static AnimatedObject_Mask<bool> GetEqualsMask(
-            this IAnimatedObjectGetter item,
-            IAnimatedObjectGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new AnimatedObject_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IAnimatedObject)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IAnimatedObject)item);
+        }
+
+        public void FillEqualsMask(
             IAnimatedObjectGetter item,
             IAnimatedObjectGetter rhs,
             AnimatedObject_Mask<bool> ret,
@@ -1064,24 +1123,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.IdleAnimation = item.IdleAnimation_Property.FormKey == rhs.IdleAnimation_Property.FormKey;
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IAnimatedObjectGetter item,
+        public string ToString(
+            IAnimatedObjectGetter item,
             string name = null,
             AnimatedObject_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IAnimatedObjectGetter item,
+        public void ToString(
+            IAnimatedObjectGetter item,
             FileGeneration fg,
             string name = null,
             AnimatedObject_Mask<bool> printMask = null)
@@ -1097,40 +1160,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
-                if (printMask?.IdleAnimation ?? true)
-                {
-                    fg.AppendLine($"IdleAnimation => {item.IdleAnimation_Property}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IAnimatedObjectGetter item,
+        protected static void ToStringFields(
+            IAnimatedObjectGetter item,
+            FileGeneration fg,
+            AnimatedObject_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.IdleAnimation ?? true)
+            {
+                fg.AppendLine($"IdleAnimation => {item.IdleAnimation_Property}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IAnimatedObjectGetter item,
             AnimatedObject_Mask<bool?> checkMask)
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.IdleAnimation.HasValue && checkMask.IdleAnimation.Value != item.IdleAnimation_Property.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static AnimatedObject_Mask<bool> GetHasBeenSetMask(IAnimatedObjectGetter item)
+        public void FillHasBeenSetMask(
+            IAnimatedObjectGetter item,
+            AnimatedObject_Mask<bool> mask)
         {
-            var ret = new AnimatedObject_Mask<bool>();
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.IdleAnimation = item.IdleAnimation_Property.HasBeenSet;
-            return ret;
-        }
-
-        public static AnimatedObject_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.IdleAnimation = item.IdleAnimation_Property.HasBeenSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static AnimatedObject_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1150,12 +1227,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static AnimatedObject_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static AnimatedObject_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

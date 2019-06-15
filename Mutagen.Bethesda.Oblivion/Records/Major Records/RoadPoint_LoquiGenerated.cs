@@ -43,6 +43,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RoadPoint_Registration.Instance;
         public static RoadPoint_Registration Registration => RoadPoint_Registration.Instance;
+        protected object CommonInstance => RoadPointCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public RoadPoint()
@@ -80,12 +82,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceList<P3Float> _Connections = new SourceList<P3Float>();
         public ISourceList<P3Float> Connections => _Connections;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<P3Float> ConnectionsEnumerable
-        {
-            get => _Connections.Items;
-            set => _Connections.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<P3Float> IRoadPoint.Connections => _Connections;
@@ -95,30 +91,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RoadPoint>.GetEqualsMask(RoadPoint rhs, EqualsMaskHelper.Include include) => RoadPointCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IRoadPointGetter>.GetEqualsMask(IRoadPointGetter rhs, EqualsMaskHelper.Include include) => RoadPointCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<RoadPoint>.GetEqualsMask(RoadPoint rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IRoadPointGetter>.GetEqualsMask(IRoadPointGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            RoadPoint_Mask<bool> printMask = null)
-        {
-            return RoadPointCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            RoadPointCommon.ToString(this, fg, name: name, printMask: null);
+            RoadPointMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public RoadPoint_Mask<bool> GetHasBeenSetMask()
-        {
-            return RoadPointCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -529,19 +517,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            RoadPointCommon.Clear(this);
+            RoadPointCommon.Instance.Clear(this);
         }
-
 
         public static RoadPoint Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -614,6 +593,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class RoadPointMixIn
+    {
+        public static void Clear(this IRoadPoint item)
+        {
+            ((RoadPointCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static RoadPoint_Mask<bool> GetEqualsMask(
+            this IRoadPointGetter item,
+            IRoadPointGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RoadPoint_Mask<bool>();
+            ((RoadPointCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IRoadPointGetter item,
+            string name = null,
+            RoadPoint_Mask<bool> printMask = null)
+        {
+            return ((RoadPointCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IRoadPointGetter item,
+            FileGeneration fg,
+            string name = null,
+            RoadPoint_Mask<bool> printMask = null)
+        {
+            ((RoadPointCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IRoadPointGetter item,
+            RoadPoint_Mask<bool?> checkMask)
+        {
+            return ((RoadPointCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static RoadPoint_Mask<bool> GetHasBeenSetMask(this IRoadPointGetter item)
+        {
+            var ret = new RoadPoint_Mask<bool>();
+            ((RoadPointCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -825,9 +871,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class RoadPointCommon
+    #region Common
+    public partial class RoadPointCommon
     {
+        public static readonly RoadPointCommon Instance = new RoadPointCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IRoadPoint item,
@@ -893,28 +940,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IRoadPoint item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IRoadPoint item)
         {
+            ClearPartial();
             item.Point = default(P3Float);
             item.NumConnectionsFluffBytes = default(Byte[]);
             item.Connections.Clear();
         }
 
-        public static RoadPoint_Mask<bool> GetEqualsMask(
-            this IRoadPointGetter item,
-            IRoadPointGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new RoadPoint_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IRoadPointGetter item,
             IRoadPointGetter rhs,
             RoadPoint_Mask<bool> ret,
@@ -929,18 +965,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
         }
 
-        public static string ToString(
-            this IRoadPointGetter item,
+        public string ToString(
+            IRoadPointGetter item,
             string name = null,
             RoadPoint_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IRoadPointGetter item,
+        public void ToString(
+            IRoadPointGetter item,
             FileGeneration fg,
             string name = null,
             RoadPoint_Mask<bool> printMask = null)
@@ -956,50 +996,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Point ?? true)
-                {
-                    fg.AppendLine($"Point => {item.Point}");
-                }
-                if (printMask?.NumConnectionsFluffBytes ?? true)
-                {
-                    fg.AppendLine($"NumConnectionsFluffBytes => {item.NumConnectionsFluffBytes}");
-                }
-                if (printMask?.Connections?.Overall ?? true)
-                {
-                    fg.AppendLine("Connections =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Connections)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($"Item => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IRoadPointGetter item,
+        protected static void ToStringFields(
+            IRoadPointGetter item,
+            FileGeneration fg,
+            RoadPoint_Mask<bool> printMask = null)
+        {
+            if (printMask?.Point ?? true)
+            {
+                fg.AppendLine($"Point => {item.Point}");
+            }
+            if (printMask?.NumConnectionsFluffBytes ?? true)
+            {
+                fg.AppendLine($"NumConnectionsFluffBytes => {item.NumConnectionsFluffBytes}");
+            }
+            if (printMask?.Connections?.Overall ?? true)
+            {
+                fg.AppendLine("Connections =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Connections)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+
+        public bool HasBeenSet(
+            IRoadPointGetter item,
             RoadPoint_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static RoadPoint_Mask<bool> GetHasBeenSetMask(IRoadPointGetter item)
+        public void FillHasBeenSetMask(
+            IRoadPointGetter item,
+            RoadPoint_Mask<bool> mask)
         {
-            var ret = new RoadPoint_Mask<bool>();
-            ret.Point = true;
-            ret.NumConnectionsFluffBytes = true;
-            ret.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
-            return ret;
+            mask.Point = true;
+            mask.NumConnectionsFluffBytes = true;
+            mask.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
         }
 
     }
@@ -1051,8 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             item: subItem,
                             errorMask: listSubMask);
-                    }
-                    );
+                    });
             }
         }
 

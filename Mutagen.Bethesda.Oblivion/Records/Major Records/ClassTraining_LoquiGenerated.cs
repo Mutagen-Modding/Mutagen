@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
         public static ClassTraining_Registration Registration => ClassTraining_Registration.Instance;
+        protected object CommonInstance => ClassTrainingCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public ClassTraining()
@@ -87,30 +89,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<ClassTraining>.GetEqualsMask(ClassTraining rhs, EqualsMaskHelper.Include include) => ClassTrainingCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IClassTrainingGetter>.GetEqualsMask(IClassTrainingGetter rhs, EqualsMaskHelper.Include include) => ClassTrainingCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ClassTraining>.GetEqualsMask(ClassTraining rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IClassTrainingGetter>.GetEqualsMask(IClassTrainingGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            ClassTraining_Mask<bool> printMask = null)
-        {
-            return ClassTrainingCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ClassTrainingCommon.ToString(this, fg, name: name, printMask: null);
+            ClassTrainingMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public ClassTraining_Mask<bool> GetHasBeenSetMask()
-        {
-            return ClassTrainingCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -517,19 +511,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            ClassTrainingCommon.Clear(this);
+            ClassTrainingCommon.Instance.Clear(this);
         }
-
 
         public static ClassTraining Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -604,6 +589,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class ClassTrainingMixIn
+    {
+        public static void Clear(this IClassTraining item)
+        {
+            ((ClassTrainingCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static ClassTraining_Mask<bool> GetEqualsMask(
+            this IClassTrainingGetter item,
+            IClassTrainingGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ClassTraining_Mask<bool>();
+            ((ClassTrainingCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IClassTrainingGetter item,
+            string name = null,
+            ClassTraining_Mask<bool> printMask = null)
+        {
+            return ((ClassTrainingCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IClassTrainingGetter item,
+            FileGeneration fg,
+            string name = null,
+            ClassTraining_Mask<bool> printMask = null)
+        {
+            ((ClassTrainingCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IClassTrainingGetter item,
+            ClassTraining_Mask<bool?> checkMask)
+        {
+            return ((ClassTrainingCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static ClassTraining_Mask<bool> GetHasBeenSetMask(this IClassTrainingGetter item)
+        {
+            var ret = new ClassTraining_Mask<bool>();
+            ((ClassTrainingCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -814,9 +866,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ClassTrainingCommon
+    #region Common
+    public partial class ClassTrainingCommon
     {
+        public static readonly ClassTrainingCommon Instance = new ClassTrainingCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IClassTraining item,
@@ -880,28 +933,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IClassTraining item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IClassTraining item)
         {
+            ClearPartial();
             item.TrainedSkill = default(Skill);
             item.MaximumTrainingLevel = default(Byte);
             item.Fluff = default(Byte[]);
         }
 
-        public static ClassTraining_Mask<bool> GetEqualsMask(
-            this IClassTrainingGetter item,
-            IClassTrainingGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new ClassTraining_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IClassTrainingGetter item,
             IClassTrainingGetter rhs,
             ClassTraining_Mask<bool> ret,
@@ -913,18 +955,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
         }
 
-        public static string ToString(
-            this IClassTrainingGetter item,
+        public string ToString(
+            IClassTrainingGetter item,
             string name = null,
             ClassTraining_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IClassTrainingGetter item,
+        public void ToString(
+            IClassTrainingGetter item,
             FileGeneration fg,
             string name = null,
             ClassTraining_Mask<bool> printMask = null)
@@ -940,36 +986,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.TrainedSkill ?? true)
-                {
-                    fg.AppendLine($"TrainedSkill => {item.TrainedSkill}");
-                }
-                if (printMask?.MaximumTrainingLevel ?? true)
-                {
-                    fg.AppendLine($"MaximumTrainingLevel => {item.MaximumTrainingLevel}");
-                }
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {item.Fluff}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IClassTrainingGetter item,
+        protected static void ToStringFields(
+            IClassTrainingGetter item,
+            FileGeneration fg,
+            ClassTraining_Mask<bool> printMask = null)
+        {
+            if (printMask?.TrainedSkill ?? true)
+            {
+                fg.AppendLine($"TrainedSkill => {item.TrainedSkill}");
+            }
+            if (printMask?.MaximumTrainingLevel ?? true)
+            {
+                fg.AppendLine($"MaximumTrainingLevel => {item.MaximumTrainingLevel}");
+            }
+            if (printMask?.Fluff ?? true)
+            {
+                fg.AppendLine($"Fluff => {item.Fluff}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IClassTrainingGetter item,
             ClassTraining_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static ClassTraining_Mask<bool> GetHasBeenSetMask(IClassTrainingGetter item)
+        public void FillHasBeenSetMask(
+            IClassTrainingGetter item,
+            ClassTraining_Mask<bool> mask)
         {
-            var ret = new ClassTraining_Mask<bool>();
-            ret.TrainedSkill = true;
-            ret.MaximumTrainingLevel = true;
-            ret.Fluff = true;
-            return ret;
+            mask.TrainedSkill = true;
+            mask.MaximumTrainingLevel = true;
+            mask.Fluff = true;
         }
 
     }

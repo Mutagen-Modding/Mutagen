@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
         public static Rank_Registration Registration => Rank_Registration.Instance;
+        protected object CommonInstance => RankCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public Rank()
@@ -156,30 +158,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Rank>.GetEqualsMask(Rank rhs, EqualsMaskHelper.Include include) => RankCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IRankGetter>.GetEqualsMask(IRankGetter rhs, EqualsMaskHelper.Include include) => RankCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Rank>.GetEqualsMask(Rank rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IRankGetter>.GetEqualsMask(IRankGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Rank_Mask<bool> printMask = null)
-        {
-            return RankCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            RankCommon.ToString(this, fg, name: name, printMask: null);
+            RankMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public Rank_Mask<bool> GetHasBeenSetMask()
-        {
-            return RankCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -676,19 +670,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            RankCommon.Clear(this);
+            RankCommon.Instance.Clear(this);
         }
-
 
         public static Rank Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -788,6 +773,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class RankMixIn
+    {
+        public static void Clear(this IRank item)
+        {
+            ((RankCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Rank_Mask<bool> GetEqualsMask(
+            this IRankGetter item,
+            IRankGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Rank_Mask<bool>();
+            ((RankCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IRankGetter item,
+            string name = null,
+            Rank_Mask<bool> printMask = null)
+        {
+            return ((RankCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IRankGetter item,
+            FileGeneration fg,
+            string name = null,
+            Rank_Mask<bool> printMask = null)
+        {
+            ((RankCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IRankGetter item,
+            Rank_Mask<bool?> checkMask)
+        {
+            return ((RankCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Rank_Mask<bool> GetHasBeenSetMask(this IRankGetter item)
+        {
+            var ret = new Rank_Mask<bool>();
+            ((RankCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1028,9 +1080,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class RankCommon
+    #region Common
+    public partial class RankCommon
     {
+        public static readonly RankCommon Instance = new RankCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IRank item,
@@ -1163,29 +1216,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IRank item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IRank item)
         {
+            ClearPartial();
             item.RankNumber_Unset();
             item.MaleName_Unset();
             item.FemaleName_Unset();
             item.Insignia_Unset();
         }
 
-        public static Rank_Mask<bool> GetEqualsMask(
-            this IRankGetter item,
-            IRankGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Rank_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IRankGetter item,
             IRankGetter rhs,
             Rank_Mask<bool> ret,
@@ -1198,18 +1240,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Insignia = item.Insignia_IsSet == rhs.Insignia_IsSet && string.Equals(item.Insignia, rhs.Insignia);
         }
 
-        public static string ToString(
-            this IRankGetter item,
+        public string ToString(
+            IRankGetter item,
             string name = null,
             Rank_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IRankGetter item,
+        public void ToString(
+            IRankGetter item,
             FileGeneration fg,
             string name = null,
             Rank_Mask<bool> printMask = null)
@@ -1225,28 +1271,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.RankNumber ?? true)
-                {
-                    fg.AppendLine($"RankNumber => {item.RankNumber}");
-                }
-                if (printMask?.MaleName ?? true)
-                {
-                    fg.AppendLine($"MaleName => {item.MaleName}");
-                }
-                if (printMask?.FemaleName ?? true)
-                {
-                    fg.AppendLine($"FemaleName => {item.FemaleName}");
-                }
-                if (printMask?.Insignia ?? true)
-                {
-                    fg.AppendLine($"Insignia => {item.Insignia}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IRankGetter item,
+        protected static void ToStringFields(
+            IRankGetter item,
+            FileGeneration fg,
+            Rank_Mask<bool> printMask = null)
+        {
+            if (printMask?.RankNumber ?? true)
+            {
+                fg.AppendLine($"RankNumber => {item.RankNumber}");
+            }
+            if (printMask?.MaleName ?? true)
+            {
+                fg.AppendLine($"MaleName => {item.MaleName}");
+            }
+            if (printMask?.FemaleName ?? true)
+            {
+                fg.AppendLine($"FemaleName => {item.FemaleName}");
+            }
+            if (printMask?.Insignia ?? true)
+            {
+                fg.AppendLine($"Insignia => {item.Insignia}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IRankGetter item,
             Rank_Mask<bool?> checkMask)
         {
             if (checkMask.RankNumber.HasValue && checkMask.RankNumber.Value != item.RankNumber_IsSet) return false;
@@ -1256,14 +1313,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return true;
         }
 
-        public static Rank_Mask<bool> GetHasBeenSetMask(IRankGetter item)
+        public void FillHasBeenSetMask(
+            IRankGetter item,
+            Rank_Mask<bool> mask)
         {
-            var ret = new Rank_Mask<bool>();
-            ret.RankNumber = item.RankNumber_IsSet;
-            ret.MaleName = item.MaleName_IsSet;
-            ret.FemaleName = item.FemaleName_IsSet;
-            ret.Insignia = item.Insignia_IsSet;
-            return ret;
+            mask.RankNumber = item.RankNumber_IsSet;
+            mask.MaleName = item.MaleName_IsSet;
+            mask.FemaleName = item.FemaleName_IsSet;
+            mask.Insignia = item.Insignia_IsSet;
         }
 
     }

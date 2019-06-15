@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
         public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
+        protected object CommonInstance => FaceGenDataCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public FaceGenData()
@@ -136,30 +138,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<FaceGenData>.GetEqualsMask(FaceGenData rhs, EqualsMaskHelper.Include include) => FaceGenDataCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IFaceGenDataGetter>.GetEqualsMask(IFaceGenDataGetter rhs, EqualsMaskHelper.Include include) => FaceGenDataCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<FaceGenData>.GetEqualsMask(FaceGenData rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IFaceGenDataGetter>.GetEqualsMask(IFaceGenDataGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            FaceGenData_Mask<bool> printMask = null)
-        {
-            return FaceGenDataCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            FaceGenDataCommon.ToString(this, fg, name: name, printMask: null);
+            FaceGenDataMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public FaceGenData_Mask<bool> GetHasBeenSetMask()
-        {
-            return FaceGenDataCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -633,19 +627,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            FaceGenDataCommon.Clear(this);
+            FaceGenDataCommon.Instance.Clear(this);
         }
-
 
         public static FaceGenData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -732,6 +717,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class FaceGenDataMixIn
+    {
+        public static void Clear(this IFaceGenData item)
+        {
+            ((FaceGenDataCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static FaceGenData_Mask<bool> GetEqualsMask(
+            this IFaceGenDataGetter item,
+            IFaceGenDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new FaceGenData_Mask<bool>();
+            ((FaceGenDataCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IFaceGenDataGetter item,
+            string name = null,
+            FaceGenData_Mask<bool> printMask = null)
+        {
+            return ((FaceGenDataCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IFaceGenDataGetter item,
+            FileGeneration fg,
+            string name = null,
+            FaceGenData_Mask<bool> printMask = null)
+        {
+            ((FaceGenDataCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IFaceGenDataGetter item,
+            FaceGenData_Mask<bool?> checkMask)
+        {
+            return ((FaceGenDataCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static FaceGenData_Mask<bool> GetHasBeenSetMask(this IFaceGenDataGetter item)
+        {
+            var ret = new FaceGenData_Mask<bool>();
+            ((FaceGenDataCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -958,9 +1010,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class FaceGenDataCommon
+    #region Common
+    public partial class FaceGenDataCommon
     {
+        public static readonly FaceGenDataCommon Instance = new FaceGenDataCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IFaceGenData item,
@@ -1063,28 +1116,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IFaceGenData item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IFaceGenData item)
         {
+            ClearPartial();
             item.SymmetricGeometry_Unset();
             item.AsymmetricGeometry_Unset();
             item.SymmetricTexture_Unset();
         }
 
-        public static FaceGenData_Mask<bool> GetEqualsMask(
-            this IFaceGenDataGetter item,
-            IFaceGenDataGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new FaceGenData_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IFaceGenDataGetter item,
             IFaceGenDataGetter rhs,
             FaceGenData_Mask<bool> ret,
@@ -1096,18 +1138,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.SymmetricTexture = item.SymmetricTexture_IsSet == rhs.SymmetricTexture_IsSet && ByteExt.EqualsFast(item.SymmetricTexture, rhs.SymmetricTexture);
         }
 
-        public static string ToString(
-            this IFaceGenDataGetter item,
+        public string ToString(
+            IFaceGenDataGetter item,
             string name = null,
             FaceGenData_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IFaceGenDataGetter item,
+        public void ToString(
+            IFaceGenDataGetter item,
             FileGeneration fg,
             string name = null,
             FaceGenData_Mask<bool> printMask = null)
@@ -1123,24 +1169,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.SymmetricGeometry ?? true)
-                {
-                    fg.AppendLine($"SymmetricGeometry => {item.SymmetricGeometry}");
-                }
-                if (printMask?.AsymmetricGeometry ?? true)
-                {
-                    fg.AppendLine($"AsymmetricGeometry => {item.AsymmetricGeometry}");
-                }
-                if (printMask?.SymmetricTexture ?? true)
-                {
-                    fg.AppendLine($"SymmetricTexture => {item.SymmetricTexture}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IFaceGenDataGetter item,
+        protected static void ToStringFields(
+            IFaceGenDataGetter item,
+            FileGeneration fg,
+            FaceGenData_Mask<bool> printMask = null)
+        {
+            if (printMask?.SymmetricGeometry ?? true)
+            {
+                fg.AppendLine($"SymmetricGeometry => {item.SymmetricGeometry}");
+            }
+            if (printMask?.AsymmetricGeometry ?? true)
+            {
+                fg.AppendLine($"AsymmetricGeometry => {item.AsymmetricGeometry}");
+            }
+            if (printMask?.SymmetricTexture ?? true)
+            {
+                fg.AppendLine($"SymmetricTexture => {item.SymmetricTexture}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IFaceGenDataGetter item,
             FaceGenData_Mask<bool?> checkMask)
         {
             if (checkMask.SymmetricGeometry.HasValue && checkMask.SymmetricGeometry.Value != item.SymmetricGeometry_IsSet) return false;
@@ -1149,13 +1206,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return true;
         }
 
-        public static FaceGenData_Mask<bool> GetHasBeenSetMask(IFaceGenDataGetter item)
+        public void FillHasBeenSetMask(
+            IFaceGenDataGetter item,
+            FaceGenData_Mask<bool> mask)
         {
-            var ret = new FaceGenData_Mask<bool>();
-            ret.SymmetricGeometry = item.SymmetricGeometry_IsSet;
-            ret.AsymmetricGeometry = item.AsymmetricGeometry_IsSet;
-            ret.SymmetricTexture = item.SymmetricTexture_IsSet;
-            return ret;
+            mask.SymmetricGeometry = item.SymmetricGeometry_IsSet;
+            mask.AsymmetricGeometry = item.AsymmetricGeometry_IsSet;
+            mask.SymmetricTexture = item.SymmetricTexture_IsSet;
         }
 
     }

@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceRelation_Registration.Instance;
         public static RaceRelation_Registration Registration => RaceRelation_Registration.Instance;
+        protected object CommonInstance => RaceRelationCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public RaceRelation()
@@ -67,30 +69,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<RaceRelation>.GetEqualsMask(RaceRelation rhs, EqualsMaskHelper.Include include) => RaceRelationCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IRaceRelationGetter>.GetEqualsMask(IRaceRelationGetter rhs, EqualsMaskHelper.Include include) => RaceRelationCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<RaceRelation>.GetEqualsMask(RaceRelation rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IRaceRelationGetter>.GetEqualsMask(IRaceRelationGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            RaceRelation_Mask<bool> printMask = null)
-        {
-            return RaceRelationCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            RaceRelationCommon.ToString(this, fg, name: name, printMask: null);
+            RaceRelationMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public RaceRelation_Mask<bool> GetHasBeenSetMask()
-        {
-            return RaceRelationCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -499,19 +493,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            RaceRelationCommon.Clear(this);
+            RaceRelationCommon.Instance.Clear(this);
         }
-
 
         public static RaceRelation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -577,6 +562,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class RaceRelationMixIn
+    {
+        public static void Clear(this IRaceRelation item)
+        {
+            ((RaceRelationCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static RaceRelation_Mask<bool> GetEqualsMask(
+            this IRaceRelationGetter item,
+            IRaceRelationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RaceRelation_Mask<bool>();
+            ((RaceRelationCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IRaceRelationGetter item,
+            string name = null,
+            RaceRelation_Mask<bool> printMask = null)
+        {
+            return ((RaceRelationCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IRaceRelationGetter item,
+            FileGeneration fg,
+            string name = null,
+            RaceRelation_Mask<bool> printMask = null)
+        {
+            ((RaceRelationCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IRaceRelationGetter item,
+            RaceRelation_Mask<bool?> checkMask)
+        {
+            return ((RaceRelationCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static RaceRelation_Mask<bool> GetHasBeenSetMask(this IRaceRelationGetter item)
+        {
+            var ret = new RaceRelation_Mask<bool>();
+            ((RaceRelationCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -777,9 +829,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class RaceRelationCommon
+    #region Common
+    public partial class RaceRelationCommon
     {
+        public static readonly RaceRelationCommon Instance = new RaceRelationCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IRaceRelation item,
@@ -826,27 +879,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IRaceRelation item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IRaceRelation item)
         {
+            ClearPartial();
             item.Race = default(Race);
             item.Modifier = default(Int32);
         }
 
-        public static RaceRelation_Mask<bool> GetEqualsMask(
-            this IRaceRelationGetter item,
-            IRaceRelationGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new RaceRelation_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IRaceRelationGetter item,
             IRaceRelationGetter rhs,
             RaceRelation_Mask<bool> ret,
@@ -857,18 +899,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Modifier = item.Modifier == rhs.Modifier;
         }
 
-        public static string ToString(
-            this IRaceRelationGetter item,
+        public string ToString(
+            IRaceRelationGetter item,
             string name = null,
             RaceRelation_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IRaceRelationGetter item,
+        public void ToString(
+            IRaceRelationGetter item,
             FileGeneration fg,
             string name = null,
             RaceRelation_Mask<bool> printMask = null)
@@ -884,31 +930,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Race ?? true)
-                {
-                    fg.AppendLine($"Race => {item.Race_Property}");
-                }
-                if (printMask?.Modifier ?? true)
-                {
-                    fg.AppendLine($"Modifier => {item.Modifier}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IRaceRelationGetter item,
+        protected static void ToStringFields(
+            IRaceRelationGetter item,
+            FileGeneration fg,
+            RaceRelation_Mask<bool> printMask = null)
+        {
+            if (printMask?.Race ?? true)
+            {
+                fg.AppendLine($"Race => {item.Race_Property}");
+            }
+            if (printMask?.Modifier ?? true)
+            {
+                fg.AppendLine($"Modifier => {item.Modifier}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IRaceRelationGetter item,
             RaceRelation_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static RaceRelation_Mask<bool> GetHasBeenSetMask(IRaceRelationGetter item)
+        public void FillHasBeenSetMask(
+            IRaceRelationGetter item,
+            RaceRelation_Mask<bool> mask)
         {
-            var ret = new RaceRelation_Mask<bool>();
-            ret.Race = true;
-            ret.Modifier = true;
-            return ret;
+            mask.Race = true;
+            mask.Modifier = true;
         }
 
     }

@@ -47,6 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleAnimation_Registration.Instance;
         public new static IdleAnimation_Registration Registration => IdleAnimation_Registration.Instance;
+        protected override object CommonInstance => IdleAnimationCommon.Instance;
 
         #region Ctor
         protected IdleAnimation()
@@ -87,17 +88,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<Condition> _Conditions = new SourceSetList<Condition>();
         public ISourceSetList<Condition> Conditions => _Conditions;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<Condition> ConditionsEnumerable
-        {
-            get => _Conditions.Items;
-            set => _Conditions.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Condition> IIdleAnimation.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<Condition> IIdleAnimationGetter.Conditions => _Conditions;
+        IReadOnlySetList<IConditionGetter> IIdleAnimationGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -131,12 +126,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<FormIDLink<IdleAnimation>> _RelatedIdleAnimations = new SourceSetList<FormIDLink<IdleAnimation>>();
         public ISourceSetList<FormIDLink<IdleAnimation>> RelatedIdleAnimations => _RelatedIdleAnimations;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<FormIDLink<IdleAnimation>> RelatedIdleAnimationsEnumerable
-        {
-            get => _RelatedIdleAnimations.Items;
-            set => _RelatedIdleAnimations.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<FormIDLink<IdleAnimation>> IIdleAnimation.RelatedIdleAnimations => _RelatedIdleAnimations;
@@ -146,30 +135,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<IdleAnimation>.GetEqualsMask(IdleAnimation rhs, EqualsMaskHelper.Include include) => IdleAnimationCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IIdleAnimationGetter>.GetEqualsMask(IIdleAnimationGetter rhs, EqualsMaskHelper.Include include) => IdleAnimationCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IdleAnimation>.GetEqualsMask(IdleAnimation rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IIdleAnimationGetter>.GetEqualsMask(IIdleAnimationGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            IdleAnimation_Mask<bool> printMask = null)
-        {
-            return IdleAnimationCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            IdleAnimationCommon.ToString(this, fg, name: name, printMask: null);
+            IdleAnimationMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new IdleAnimation_Mask<bool> GetHasBeenSetMask()
-        {
-            return IdleAnimationCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -597,8 +578,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
-                        }
-                        );
+                        });
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
                 }
                 case 0x4D414E41: // ANAM
@@ -772,10 +752,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            IdleAnimationCommon.Clear(this);
+            IdleAnimationCommon.Instance.Clear(this);
         }
-
 
         public new static IdleAnimation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -858,7 +836,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        IReadOnlySetList<Condition> Conditions { get; }
+        IReadOnlySetList<IConditionGetter> Conditions { get; }
         #endregion
         #region AnimationGroupSection
         IdleAnimation.AnimationGroupSectionEnum AnimationGroupSection { get; }
@@ -878,6 +856,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class IdleAnimationMixIn
+    {
+        public static void Clear(this IIdleAnimationInternal item)
+        {
+            ((IdleAnimationCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static IdleAnimation_Mask<bool> GetEqualsMask(
+            this IIdleAnimationGetter item,
+            IIdleAnimationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new IdleAnimation_Mask<bool>();
+            ((IdleAnimationCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IIdleAnimationInternalGetter item,
+            string name = null,
+            IdleAnimation_Mask<bool> printMask = null)
+        {
+            return ((IdleAnimationCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IIdleAnimationInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            IdleAnimation_Mask<bool> printMask = null)
+        {
+            ((IdleAnimationCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IIdleAnimationInternalGetter item,
+            IdleAnimation_Mask<bool?> checkMask)
+        {
+            return ((IdleAnimationCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static IdleAnimation_Mask<bool> GetHasBeenSetMask(this IIdleAnimationGetter item)
+        {
+            var ret = new IdleAnimation_Mask<bool>();
+            ((IdleAnimationCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1114,9 +1159,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class IdleAnimationCommon
+    #region Common
+    public partial class IdleAnimationCommon : OblivionMajorRecordCommon
     {
+        public static readonly IdleAnimationCommon Instance = new IdleAnimationCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IIdleAnimation item,
@@ -1188,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
                 try
                 {
-                    item.Conditions.SetToWithDefault(
+                    item.Conditions.SetToWithDefault<Condition, IConditionGetter>(
                         rhs: rhs.Conditions,
                         def: def?.Conditions,
                         converter: (r, d) =>
@@ -1196,7 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             switch (copyMask?.Conditions.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (Condition)r;
                                 case CopyOption.MakeCopy:
                                     return Condition.Copy(
                                         r,
@@ -1205,8 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Conditions.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1271,29 +1316,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IIdleAnimation item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IIdleAnimation item)
         {
+            ClearPartial();
             item.Model_Unset();
             item.Conditions.Unset();
             item.AnimationGroupSection_Unset();
             item.RelatedIdleAnimations.Unset();
+            base.Clear(item);
         }
 
-        public static IdleAnimation_Mask<bool> GetEqualsMask(
-            this IIdleAnimationGetter item,
-            IIdleAnimationGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new IdleAnimation_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IIdleAnimation)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IIdleAnimation)item);
+        }
+
+        public void FillEqualsMask(
             IIdleAnimationGetter item,
             IIdleAnimationGetter rhs,
             IdleAnimation_Mask<bool> ret,
@@ -1305,7 +1350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
@@ -1316,21 +1361,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.RelatedIdleAnimations,
                 (l, r) => object.Equals(l, r),
                 include);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IIdleAnimationGetter item,
+        public string ToString(
+            IIdleAnimationGetter item,
             string name = null,
             IdleAnimation_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IIdleAnimationGetter item,
+        public void ToString(
+            IIdleAnimationGetter item,
             FileGeneration fg,
             string name = null,
             IdleAnimation_Mask<bool> printMask = null)
@@ -1346,56 +1395,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
-                if (printMask?.Conditions?.Overall ?? true)
-                {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Conditions)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.AnimationGroupSection ?? true)
-                {
-                    fg.AppendLine($"AnimationGroupSection => {item.AnimationGroupSection}");
-                }
-                if (printMask?.RelatedIdleAnimations?.Overall ?? true)
-                {
-                    fg.AppendLine("RelatedIdleAnimations =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.RelatedIdleAnimations)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($"Item => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IIdleAnimationGetter item,
+        protected static void ToStringFields(
+            IIdleAnimationGetter item,
+            FileGeneration fg,
+            IdleAnimation_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                fg.AppendLine("Conditions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.AnimationGroupSection ?? true)
+            {
+                fg.AppendLine($"AnimationGroupSection => {item.AnimationGroupSection}");
+            }
+            if (printMask?.RelatedIdleAnimations?.Overall ?? true)
+            {
+                fg.AppendLine("RelatedIdleAnimations =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.RelatedIdleAnimations)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+
+        public bool HasBeenSet(
+            IIdleAnimationGetter item,
             IdleAnimation_Mask<bool?> checkMask)
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
@@ -1403,23 +1467,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Conditions.Overall.HasValue && checkMask.Conditions.Overall.Value != item.Conditions.HasBeenSet) return false;
             if (checkMask.AnimationGroupSection.HasValue && checkMask.AnimationGroupSection.Value != item.AnimationGroupSection_IsSet) return false;
             if (checkMask.RelatedIdleAnimations.Overall.HasValue && checkMask.RelatedIdleAnimations.Overall.Value != item.RelatedIdleAnimations.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static IdleAnimation_Mask<bool> GetHasBeenSetMask(IIdleAnimationGetter item)
+        public void FillHasBeenSetMask(
+            IIdleAnimationGetter item,
+            IdleAnimation_Mask<bool> mask)
         {
-            var ret = new IdleAnimation_Mask<bool>();
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            ret.AnimationGroupSection = item.AnimationGroupSection_IsSet;
-            ret.RelatedIdleAnimations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.RelatedIdleAnimations.HasBeenSet, null);
-            return ret;
-        }
-
-        public static IdleAnimation_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.AnimationGroupSection = item.AnimationGroupSection_IsSet;
+            mask.RelatedIdleAnimations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.RelatedIdleAnimations.HasBeenSet, null);
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static IdleAnimation_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1439,12 +1502,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static IdleAnimation_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static IdleAnimation_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
@@ -1500,14 +1557,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Conditions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
             {
-                ListXmlTranslation<Condition>.Instance.Write(
+                ListXmlTranslation<IConditionGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Conditions),
                     item: item.Conditions,
                     fieldIndex: (int)IdleAnimation_FieldIndex.Conditions,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Conditions),
-                    transl: (XElement subNode, Condition subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         ((ConditionXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
                             item: subItem,
@@ -1515,8 +1572,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
             if (item.AnimationGroupSection_IsSet
                 && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationGroupSection) ?? true))
@@ -1545,8 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             item: subItem?.FormKey,
                             errorMask: listSubMask);
-                    }
-                    );
+                    });
             }
         }
 
@@ -2367,12 +2422,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Conditions.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                     writer: writer,
                     items: item.Conditions,
                     fieldIndex: (int)IdleAnimation_FieldIndex.Conditions,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, Condition subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IConditionGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         ((ConditionBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
@@ -2380,8 +2435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
-                    }
-                    );
+                    });
             }
             if (item.AnimationGroupSection_IsSet)
             {
@@ -2404,8 +2458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: subWriter,
                             item: subItem,
                             masterReferences: masterReferences);
-                    }
-                    );
+                    });
             }
         }
 

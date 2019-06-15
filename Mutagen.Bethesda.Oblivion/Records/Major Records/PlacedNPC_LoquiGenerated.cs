@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedNPC_Registration.Instance;
         public new static PlacedNPC_Registration Registration => PlacedNPC_Registration.Instance;
+        protected override object CommonInstance => PlacedNPCCommon.Instance;
 
         #region Ctor
         protected PlacedNPC()
@@ -279,30 +280,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<PlacedNPC>.GetEqualsMask(PlacedNPC rhs, EqualsMaskHelper.Include include) => PlacedNPCCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IPlacedNPCGetter>.GetEqualsMask(IPlacedNPCGetter rhs, EqualsMaskHelper.Include include) => PlacedNPCCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<PlacedNPC>.GetEqualsMask(PlacedNPC rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IPlacedNPCGetter>.GetEqualsMask(IPlacedNPCGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            PlacedNPC_Mask<bool> printMask = null)
-        {
-            return PlacedNPCCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            PlacedNPCCommon.ToString(this, fg, name: name, printMask: null);
+            PlacedNPCMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new PlacedNPC_Mask<bool> GetHasBeenSetMask()
-        {
-            return PlacedNPCCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -1105,10 +1098,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            PlacedNPCCommon.Clear(this);
+            PlacedNPCCommon.Instance.Clear(this);
         }
-
 
         public new static PlacedNPC Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1306,6 +1297,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class PlacedNPCMixIn
+    {
+        public static void Clear(this IPlacedNPCInternal item)
+        {
+            ((PlacedNPCCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static PlacedNPC_Mask<bool> GetEqualsMask(
+            this IPlacedNPCGetter item,
+            IPlacedNPCGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new PlacedNPC_Mask<bool>();
+            ((PlacedNPCCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IPlacedNPCInternalGetter item,
+            string name = null,
+            PlacedNPC_Mask<bool> printMask = null)
+        {
+            return ((PlacedNPCCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IPlacedNPCInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            PlacedNPC_Mask<bool> printMask = null)
+        {
+            ((PlacedNPCCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IPlacedNPCInternalGetter item,
+            PlacedNPC_Mask<bool?> checkMask)
+        {
+            return ((PlacedNPCCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static PlacedNPC_Mask<bool> GetHasBeenSetMask(this IPlacedNPCGetter item)
+        {
+            var ret = new PlacedNPC_Mask<bool>();
+            ((PlacedNPCCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1642,9 +1700,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class PlacedNPCCommon
+    #region Common
+    public partial class PlacedNPCCommon : OblivionMajorRecordCommon
     {
+        public static readonly PlacedNPCCommon Instance = new PlacedNPCCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IPlacedNPC item,
@@ -1978,8 +2037,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IPlacedNPC item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IPlacedNPC item)
         {
+            ClearPartial();
             item.Base_Property.Unset();
             item.XPCIFluff_Unset();
             item.FULLFluff_Unset();
@@ -1991,23 +2053,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Scale_Unset();
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
+            base.Clear(item);
         }
 
-        public static PlacedNPC_Mask<bool> GetEqualsMask(
-            this IPlacedNPCGetter item,
-            IPlacedNPCGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new PlacedNPC_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IPlacedNPC)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IPlacedNPC)item);
+        }
+
+        public void FillEqualsMask(
             IPlacedNPCGetter item,
             IPlacedNPCGetter rhs,
             PlacedNPC_Mask<bool> ret,
@@ -2022,14 +2081,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.DistantLODData_IsSet,
                 item.DistantLODData,
                 rhs.DistantLODData,
-                (loqLhs, loqRhs) => DistantLODDataCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.EnableParent = EqualsMaskHelper.EqualsHelper(
                 item.EnableParent_IsSet,
                 rhs.EnableParent_IsSet,
                 item.EnableParent,
                 rhs.EnableParent,
-                (loqLhs, loqRhs) => EnableParentCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.MerchantContainer = item.MerchantContainer_Property.FormKey == rhs.MerchantContainer_Property.FormKey;
             ret.Horse = item.Horse_Property.FormKey == rhs.Horse_Property.FormKey;
@@ -2037,21 +2096,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale.EqualsWithin(rhs.Scale);
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IPlacedNPCGetter item,
+        public string ToString(
+            IPlacedNPCGetter item,
             string name = null,
             PlacedNPC_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IPlacedNPCGetter item,
+        public void ToString(
+            IPlacedNPCGetter item,
             FileGeneration fg,
             string name = null,
             PlacedNPC_Mask<bool> printMask = null)
@@ -2067,59 +2130,74 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Base ?? true)
-                {
-                    fg.AppendLine($"Base => {item.Base_Property}");
-                }
-                if (printMask?.XPCIFluff ?? true)
-                {
-                    fg.AppendLine($"XPCIFluff => {item.XPCIFluff}");
-                }
-                if (printMask?.FULLFluff ?? true)
-                {
-                    fg.AppendLine($"FULLFluff => {item.FULLFluff}");
-                }
-                if (printMask?.DistantLODData?.Overall ?? true)
-                {
-                    item.DistantLODData?.ToString(fg, "DistantLODData");
-                }
-                if (printMask?.EnableParent?.Overall ?? true)
-                {
-                    item.EnableParent?.ToString(fg, "EnableParent");
-                }
-                if (printMask?.MerchantContainer ?? true)
-                {
-                    fg.AppendLine($"MerchantContainer => {item.MerchantContainer_Property}");
-                }
-                if (printMask?.Horse ?? true)
-                {
-                    fg.AppendLine($"Horse => {item.Horse_Property}");
-                }
-                if (printMask?.RagdollData ?? true)
-                {
-                    fg.AppendLine($"RagdollData => {item.RagdollData}");
-                }
-                if (printMask?.Scale ?? true)
-                {
-                    fg.AppendLine($"Scale => {item.Scale}");
-                }
-                if (printMask?.Position ?? true)
-                {
-                    fg.AppendLine($"Position => {item.Position}");
-                }
-                if (printMask?.Rotation ?? true)
-                {
-                    fg.AppendLine($"Rotation => {item.Rotation}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IPlacedNPCGetter item,
+        protected static void ToStringFields(
+            IPlacedNPCGetter item,
+            FileGeneration fg,
+            PlacedNPC_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Base ?? true)
+            {
+                fg.AppendLine($"Base => {item.Base_Property}");
+            }
+            if (printMask?.XPCIFluff ?? true)
+            {
+                fg.AppendLine($"XPCIFluff => {item.XPCIFluff}");
+            }
+            if (printMask?.FULLFluff ?? true)
+            {
+                fg.AppendLine($"FULLFluff => {item.FULLFluff}");
+            }
+            if (printMask?.DistantLODData?.Overall ?? true)
+            {
+                item.DistantLODData?.ToString(fg, "DistantLODData");
+            }
+            if (printMask?.EnableParent?.Overall ?? true)
+            {
+                item.EnableParent?.ToString(fg, "EnableParent");
+            }
+            if (printMask?.MerchantContainer ?? true)
+            {
+                fg.AppendLine($"MerchantContainer => {item.MerchantContainer_Property}");
+            }
+            if (printMask?.Horse ?? true)
+            {
+                fg.AppendLine($"Horse => {item.Horse_Property}");
+            }
+            if (printMask?.RagdollData ?? true)
+            {
+                fg.AppendLine($"RagdollData => {item.RagdollData}");
+            }
+            if (printMask?.Scale ?? true)
+            {
+                fg.AppendLine($"Scale => {item.Scale}");
+            }
+            if (printMask?.Position ?? true)
+            {
+                fg.AppendLine($"Position => {item.Position}");
+            }
+            if (printMask?.Rotation ?? true)
+            {
+                fg.AppendLine($"Rotation => {item.Rotation}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IPlacedNPCGetter item,
             PlacedNPC_Mask<bool?> checkMask)
         {
             if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
@@ -2133,31 +2211,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Horse.HasValue && checkMask.Horse.Value != item.Horse_Property.HasBeenSet) return false;
             if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_IsSet) return false;
             if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static PlacedNPC_Mask<bool> GetHasBeenSetMask(IPlacedNPCGetter item)
+        public void FillHasBeenSetMask(
+            IPlacedNPCGetter item,
+            PlacedNPC_Mask<bool> mask)
         {
-            var ret = new PlacedNPC_Mask<bool>();
-            ret.Base = item.Base_Property.HasBeenSet;
-            ret.XPCIFluff = item.XPCIFluff_IsSet;
-            ret.FULLFluff = item.FULLFluff_IsSet;
-            ret.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_IsSet, DistantLODDataCommon.GetHasBeenSetMask(item.DistantLODData));
-            ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_IsSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent));
-            ret.MerchantContainer = item.MerchantContainer_Property.HasBeenSet;
-            ret.Horse = item.Horse_Property.HasBeenSet;
-            ret.RagdollData = item.RagdollData_IsSet;
-            ret.Scale = item.Scale_IsSet;
-            ret.Position = true;
-            ret.Rotation = true;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static PlacedNPC_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Base = item.Base_Property.HasBeenSet;
+            mask.XPCIFluff = item.XPCIFluff_IsSet;
+            mask.FULLFluff = item.FULLFluff_IsSet;
+            mask.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_IsSet, item.DistantLODData.GetHasBeenSetMask());
+            mask.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_IsSet, item.EnableParent.GetHasBeenSetMask());
+            mask.MerchantContainer = item.MerchantContainer_Property.HasBeenSet;
+            mask.Horse = item.Horse_Property.HasBeenSet;
+            mask.RagdollData = item.RagdollData_IsSet;
+            mask.Scale = item.Scale_IsSet;
+            mask.Position = true;
+            mask.Rotation = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static PlacedNPC_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -2177,12 +2254,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static PlacedNPC_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static PlacedNPC_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

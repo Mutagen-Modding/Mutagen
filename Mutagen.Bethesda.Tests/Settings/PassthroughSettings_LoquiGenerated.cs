@@ -35,6 +35,8 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PassthroughSettings_Registration.Instance;
         public static PassthroughSettings_Registration Registration => PassthroughSettings_Registration.Instance;
+        protected object CommonInstance => PassthroughSettingsCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public PassthroughSettings()
@@ -95,35 +97,27 @@ namespace Mutagen.Bethesda.Tests
         }
         #endregion
 
-        IMask<bool> IEqualsMask<PassthroughSettings>.GetEqualsMask(PassthroughSettings rhs, EqualsMaskHelper.Include include) => PassthroughSettingsCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IPassthroughSettingsGetter>.GetEqualsMask(IPassthroughSettingsGetter rhs, EqualsMaskHelper.Include include) => PassthroughSettingsCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<PassthroughSettings>.GetEqualsMask(PassthroughSettings rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IPassthroughSettingsGetter>.GetEqualsMask(IPassthroughSettingsGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
         public override string ToString()
         {
-            return PassthroughSettingsCommon.ToString(this, printMask: null);
+            return PassthroughSettingsMixIn.ToString(item: this);
         }
 
-        public string ToString(
-            string name = null,
-            PassthroughSettings_Mask<bool> printMask = null)
-        {
-            return PassthroughSettingsCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            PassthroughSettingsCommon.ToString(this, fg, name: name, printMask: null);
+            PassthroughSettingsMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public PassthroughSettings_Mask<bool> GetHasBeenSetMask()
-        {
-            return PassthroughSettingsCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -561,19 +555,10 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            PassthroughSettingsCommon.Clear(this);
+            PassthroughSettingsCommon.Instance.Clear(this);
         }
-
 
         public static PassthroughSettings Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -674,6 +659,73 @@ namespace Mutagen.Bethesda.Tests
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class PassthroughSettingsMixIn
+    {
+        public static void Clear(this IPassthroughSettings item)
+        {
+            ((PassthroughSettingsCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static PassthroughSettings_Mask<bool> GetEqualsMask(
+            this IPassthroughSettingsGetter item,
+            IPassthroughSettingsGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new PassthroughSettings_Mask<bool>();
+            ((PassthroughSettingsCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IPassthroughSettingsGetter item,
+            string name = null,
+            PassthroughSettings_Mask<bool> printMask = null)
+        {
+            return ((PassthroughSettingsCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IPassthroughSettingsGetter item,
+            FileGeneration fg,
+            string name = null,
+            PassthroughSettings_Mask<bool> printMask = null)
+        {
+            ((PassthroughSettingsCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IPassthroughSettingsGetter item,
+            PassthroughSettings_Mask<bool?> checkMask)
+        {
+            return ((PassthroughSettingsCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static PassthroughSettings_Mask<bool> GetHasBeenSetMask(this IPassthroughSettingsGetter item)
+        {
+            var ret = new PassthroughSettings_Mask<bool>();
+            ((PassthroughSettingsCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -917,9 +969,10 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class PassthroughSettingsCommon
+    #region Common
+    public partial class PassthroughSettingsCommon
     {
+        public static readonly PassthroughSettingsCommon Instance = new PassthroughSettingsCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IPassthroughSettings item,
@@ -1034,8 +1087,11 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         #endregion
 
-        public static void Clear(IPassthroughSettings item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IPassthroughSettings item)
         {
+            ClearPartial();
             item.ReuseCaches = default(Boolean);
             item.DeleteCachesAfter = PassthroughSettings._DeleteCachesAfter_Default;
             item.TestNormal = default(Boolean);
@@ -1044,21 +1100,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestFolder = default(Boolean);
         }
 
-        public static PassthroughSettings_Mask<bool> GetEqualsMask(
-            this IPassthroughSettingsGetter item,
-            IPassthroughSettingsGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new PassthroughSettings_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IPassthroughSettingsGetter item,
             IPassthroughSettingsGetter rhs,
             PassthroughSettings_Mask<bool> ret,
@@ -1073,18 +1115,22 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestFolder = item.TestFolder == rhs.TestFolder;
         }
 
-        public static string ToString(
-            this IPassthroughSettingsGetter item,
+        public string ToString(
+            IPassthroughSettingsGetter item,
             string name = null,
             PassthroughSettings_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IPassthroughSettingsGetter item,
+        public void ToString(
+            IPassthroughSettingsGetter item,
             FileGeneration fg,
             string name = null,
             PassthroughSettings_Mask<bool> printMask = null)
@@ -1100,51 +1146,62 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.ReuseCaches ?? true)
-                {
-                    fg.AppendLine($"ReuseCaches => {item.ReuseCaches}");
-                }
-                if (printMask?.DeleteCachesAfter ?? true)
-                {
-                    fg.AppendLine($"DeleteCachesAfter => {item.DeleteCachesAfter}");
-                }
-                if (printMask?.TestNormal ?? true)
-                {
-                    fg.AppendLine($"TestNormal => {item.TestNormal}");
-                }
-                if (printMask?.TestImport ?? true)
-                {
-                    fg.AppendLine($"TestImport => {item.TestImport}");
-                }
-                if (printMask?.TestObservable ?? true)
-                {
-                    fg.AppendLine($"TestObservable => {item.TestObservable}");
-                }
-                if (printMask?.TestFolder ?? true)
-                {
-                    fg.AppendLine($"TestFolder => {item.TestFolder}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IPassthroughSettingsGetter item,
+        protected static void ToStringFields(
+            IPassthroughSettingsGetter item,
+            FileGeneration fg,
+            PassthroughSettings_Mask<bool> printMask = null)
+        {
+            if (printMask?.ReuseCaches ?? true)
+            {
+                fg.AppendLine($"ReuseCaches => {item.ReuseCaches}");
+            }
+            if (printMask?.DeleteCachesAfter ?? true)
+            {
+                fg.AppendLine($"DeleteCachesAfter => {item.DeleteCachesAfter}");
+            }
+            if (printMask?.TestNormal ?? true)
+            {
+                fg.AppendLine($"TestNormal => {item.TestNormal}");
+            }
+            if (printMask?.TestImport ?? true)
+            {
+                fg.AppendLine($"TestImport => {item.TestImport}");
+            }
+            if (printMask?.TestObservable ?? true)
+            {
+                fg.AppendLine($"TestObservable => {item.TestObservable}");
+            }
+            if (printMask?.TestFolder ?? true)
+            {
+                fg.AppendLine($"TestFolder => {item.TestFolder}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IPassthroughSettingsGetter item,
             PassthroughSettings_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static PassthroughSettings_Mask<bool> GetHasBeenSetMask(IPassthroughSettingsGetter item)
+        public void FillHasBeenSetMask(
+            IPassthroughSettingsGetter item,
+            PassthroughSettings_Mask<bool> mask)
         {
-            var ret = new PassthroughSettings_Mask<bool>();
-            ret.ReuseCaches = true;
-            ret.DeleteCachesAfter = true;
-            ret.TestNormal = true;
-            ret.TestImport = true;
-            ret.TestObservable = true;
-            ret.TestFolder = true;
-            return ret;
+            mask.ReuseCaches = true;
+            mask.DeleteCachesAfter = true;
+            mask.TestNormal = true;
+            mask.TestImport = true;
+            mask.TestObservable = true;
+            mask.TestFolder = true;
         }
 
     }

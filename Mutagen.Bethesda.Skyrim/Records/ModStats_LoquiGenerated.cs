@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
         public static ModStats_Registration Registration => ModStats_Registration.Instance;
+        protected object CommonInstance => ModStatsCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public ModStats()
@@ -76,30 +78,22 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        IMask<bool> IEqualsMask<ModStats>.GetEqualsMask(ModStats rhs, EqualsMaskHelper.Include include) => ModStatsCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IModStatsGetter>.GetEqualsMask(IModStatsGetter rhs, EqualsMaskHelper.Include include) => ModStatsCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ModStats>.GetEqualsMask(ModStats rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IModStatsGetter>.GetEqualsMask(IModStatsGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            ModStats_Mask<bool> printMask = null)
-        {
-            return ModStatsCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ModStatsCommon.ToString(this, fg, name: name, printMask: null);
+            ModStatsMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public ModStats_Mask<bool> GetHasBeenSetMask()
-        {
-            return ModStatsCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -504,19 +498,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            ModStatsCommon.Clear(this);
+            ModStatsCommon.Instance.Clear(this);
         }
-
 
         public static ModStats Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -591,6 +576,73 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class ModStatsMixIn
+    {
+        public static void Clear(this IModStats item)
+        {
+            ((ModStatsCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static ModStats_Mask<bool> GetEqualsMask(
+            this IModStatsGetter item,
+            IModStatsGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ModStats_Mask<bool>();
+            ((ModStatsCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IModStatsGetter item,
+            string name = null,
+            ModStats_Mask<bool> printMask = null)
+        {
+            return ((ModStatsCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IModStatsGetter item,
+            FileGeneration fg,
+            string name = null,
+            ModStats_Mask<bool> printMask = null)
+        {
+            ((ModStatsCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IModStatsGetter item,
+            ModStats_Mask<bool?> checkMask)
+        {
+            return ((ModStatsCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static ModStats_Mask<bool> GetHasBeenSetMask(this IModStatsGetter item)
+        {
+            var ret = new ModStats_Mask<bool>();
+            ((ModStatsCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -803,9 +855,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ModStatsCommon
+    #region Common
+    public partial class ModStatsCommon
     {
+        public static readonly ModStatsCommon Instance = new ModStatsCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IModStats item,
@@ -869,28 +922,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        public static void Clear(IModStats item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IModStats item)
         {
+            ClearPartial();
             item.Version = default(Single);
             item.NumRecords = default(Int32);
             item.NextObjectID = default(UInt32);
         }
 
-        public static ModStats_Mask<bool> GetEqualsMask(
-            this IModStatsGetter item,
-            IModStatsGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new ModStats_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IModStatsGetter item,
             IModStatsGetter rhs,
             ModStats_Mask<bool> ret,
@@ -902,18 +944,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.NextObjectID = item.NextObjectID == rhs.NextObjectID;
         }
 
-        public static string ToString(
-            this IModStatsGetter item,
+        public string ToString(
+            IModStatsGetter item,
             string name = null,
             ModStats_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IModStatsGetter item,
+        public void ToString(
+            IModStatsGetter item,
             FileGeneration fg,
             string name = null,
             ModStats_Mask<bool> printMask = null)
@@ -929,36 +975,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Version ?? true)
-                {
-                    fg.AppendLine($"Version => {item.Version}");
-                }
-                if (printMask?.NumRecords ?? true)
-                {
-                    fg.AppendLine($"NumRecords => {item.NumRecords}");
-                }
-                if (printMask?.NextObjectID ?? true)
-                {
-                    fg.AppendLine($"NextObjectID => {item.NextObjectID}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IModStatsGetter item,
+        protected static void ToStringFields(
+            IModStatsGetter item,
+            FileGeneration fg,
+            ModStats_Mask<bool> printMask = null)
+        {
+            if (printMask?.Version ?? true)
+            {
+                fg.AppendLine($"Version => {item.Version}");
+            }
+            if (printMask?.NumRecords ?? true)
+            {
+                fg.AppendLine($"NumRecords => {item.NumRecords}");
+            }
+            if (printMask?.NextObjectID ?? true)
+            {
+                fg.AppendLine($"NextObjectID => {item.NextObjectID}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IModStatsGetter item,
             ModStats_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static ModStats_Mask<bool> GetHasBeenSetMask(IModStatsGetter item)
+        public void FillHasBeenSetMask(
+            IModStatsGetter item,
+            ModStats_Mask<bool> mask)
         {
-            var ret = new ModStats_Mask<bool>();
-            ret.Version = true;
-            ret.NumRecords = true;
-            ret.NextObjectID = true;
-            return ret;
+            mask.Version = true;
+            mask.NumRecords = true;
+            mask.NextObjectID = true;
         }
 
     }

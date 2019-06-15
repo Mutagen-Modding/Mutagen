@@ -43,6 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataMapName_Registration.Instance;
         public new static RegionDataMapName_Registration Registration => RegionDataMapName_Registration.Instance;
+        protected override object CommonInstance => RegionDataMapNameCommon.Instance;
 
         #region Ctor
         public RegionDataMapName()
@@ -79,30 +80,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<RegionDataMapName>.GetEqualsMask(RegionDataMapName rhs, EqualsMaskHelper.Include include) => RegionDataMapNameCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IRegionDataMapNameGetter>.GetEqualsMask(IRegionDataMapNameGetter rhs, EqualsMaskHelper.Include include) => RegionDataMapNameCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<RegionDataMapName>.GetEqualsMask(RegionDataMapName rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IRegionDataMapNameGetter>.GetEqualsMask(IRegionDataMapNameGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            RegionDataMapName_Mask<bool> printMask = null)
-        {
-            return RegionDataMapNameCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            RegionDataMapNameCommon.ToString(this, fg, name: name, printMask: null);
+            RegionDataMapNameMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new RegionDataMapName_Mask<bool> GetHasBeenSetMask()
-        {
-            return RegionDataMapNameCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -562,10 +555,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            RegionDataMapNameCommon.Clear(this);
+            RegionDataMapNameCommon.Instance.Clear(this);
         }
-
 
         public new static RegionDataMapName Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -641,6 +632,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class RegionDataMapNameMixIn
+    {
+        public static void Clear(this IRegionDataMapNameInternal item)
+        {
+            ((RegionDataMapNameCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static RegionDataMapName_Mask<bool> GetEqualsMask(
+            this IRegionDataMapNameGetter item,
+            IRegionDataMapNameGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RegionDataMapName_Mask<bool>();
+            ((RegionDataMapNameCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IRegionDataMapNameInternalGetter item,
+            string name = null,
+            RegionDataMapName_Mask<bool> printMask = null)
+        {
+            return ((RegionDataMapNameCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IRegionDataMapNameInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            RegionDataMapName_Mask<bool> printMask = null)
+        {
+            ((RegionDataMapNameCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IRegionDataMapNameInternalGetter item,
+            RegionDataMapName_Mask<bool?> checkMask)
+        {
+            return ((RegionDataMapNameCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static RegionDataMapName_Mask<bool> GetHasBeenSetMask(this IRegionDataMapNameGetter item)
+        {
+            var ret = new RegionDataMapName_Mask<bool>();
+            ((RegionDataMapNameCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -834,9 +892,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class RegionDataMapNameCommon
+    #region Common
+    public partial class RegionDataMapNameCommon : RegionDataCommon
     {
+        public static readonly RegionDataMapNameCommon Instance = new RegionDataMapNameCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IRegionDataMapName item,
@@ -885,26 +944,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IRegionDataMapName item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IRegionDataMapName item)
         {
+            ClearPartial();
             item.MapName_Unset();
+            base.Clear(item);
         }
 
-        public static RegionDataMapName_Mask<bool> GetEqualsMask(
-            this IRegionDataMapNameGetter item,
-            IRegionDataMapNameGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IRegionData item)
         {
-            var ret = new RegionDataMapName_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IRegionDataMapName)item);
         }
 
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IRegionDataMapNameGetter item,
             IRegionDataMapNameGetter rhs,
             RegionDataMapName_Mask<bool> ret,
@@ -912,21 +966,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.MapName = item.MapName_IsSet == rhs.MapName_IsSet && string.Equals(item.MapName, rhs.MapName);
-            RegionDataCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IRegionDataMapNameGetter item,
+        public string ToString(
+            IRegionDataMapNameGetter item,
             string name = null,
             RegionDataMapName_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IRegionDataMapNameGetter item,
+        public void ToString(
+            IRegionDataMapNameGetter item,
             FileGeneration fg,
             string name = null,
             RegionDataMapName_Mask<bool> printMask = null)
@@ -942,33 +1000,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.MapName ?? true)
-                {
-                    fg.AppendLine($"MapName => {item.MapName}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IRegionDataMapNameGetter item,
+        protected static void ToStringFields(
+            IRegionDataMapNameGetter item,
+            FileGeneration fg,
+            RegionDataMapName_Mask<bool> printMask = null)
+        {
+            RegionDataCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.MapName ?? true)
+            {
+                fg.AppendLine($"MapName => {item.MapName}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IRegionDataMapNameGetter item,
             RegionDataMapName_Mask<bool?> checkMask)
         {
             if (checkMask.MapName.HasValue && checkMask.MapName.Value != item.MapName_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static RegionDataMapName_Mask<bool> GetHasBeenSetMask(IRegionDataMapNameGetter item)
+        public void FillHasBeenSetMask(
+            IRegionDataMapNameGetter item,
+            RegionDataMapName_Mask<bool> mask)
         {
-            var ret = new RegionDataMapName_Mask<bool>();
-            ret.MapName = item.MapName_IsSet;
-            return ret;
-        }
-
-        public static RegionDataMapName_FieldIndex? ConvertFieldIndex(RegionData_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.MapName = item.MapName_IsSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static RegionDataMapName_FieldIndex ConvertFieldIndex(RegionData_FieldIndex index)

@@ -39,11 +39,13 @@ namespace Mutagen.Bethesda
         ILoquiObjectSetter,
         ILinkSubContainer,
         IEquatable<ListGroup<T>>
-        where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+    where T : IXmlItem, IBinaryItem, ILoquiObject<T>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ListGroup_Registration.Instance;
         public static ListGroup_Registration Registration => ListGroup_Registration.Instance;
+        protected object CommonInstance => ListGroupCommon<T>.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public ListGroup()
@@ -95,12 +97,6 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceList<T> _Items = new SourceList<T>();
         public ISourceList<T> Items => _Items;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<T> ItemsEnumerable
-        {
-            get => _Items.Items;
-            set => _Items.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<T> IListGroup<T>.Items => _Items;
@@ -110,30 +106,22 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        IMask<bool> IEqualsMask<ListGroup<T>>.GetEqualsMask(ListGroup<T> rhs, EqualsMaskHelper.Include include) => ListGroupCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IListGroupGetter<T>>.GetEqualsMask(IListGroupGetter<T> rhs, EqualsMaskHelper.Include include) => ListGroupCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ListGroup<T>>.GetEqualsMask(ListGroup<T> rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IListGroupGetter<T>>.GetEqualsMask(IListGroupGetter<T> rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            ListGroup_Mask<bool> printMask = null)
-        {
-            return ListGroupCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ListGroupCommon.ToString(this, fg, name: name, printMask: null);
+            ListGroupMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public ListGroup_Mask<bool> GetHasBeenSetMask()
-        {
-            return ListGroupCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -458,8 +446,7 @@ namespace Mutagen.Bethesda
                                     frame: r,
                                     errorMask: listErrMask,
                                     masterReferences: masterReferences).ConfigureAwait(false);
-                            }
-                            ).ConfigureAwait(false);
+                            }).ConfigureAwait(false);
                         return TryGet<int?>.Failure;
                     }
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
@@ -560,7 +547,7 @@ namespace Mutagen.Bethesda
             where T_CopyMask : class, new()
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ListGroupCommon.CopyFieldsFrom<T, T_CopyMask>(
+            ListGroupCommon<T>.CopyFieldsFrom<T_CopyMask>(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -576,7 +563,7 @@ namespace Mutagen.Bethesda
             IListGroupGetter<T> def = null)
             where T_CopyMask : class, new()
         {
-            ListGroupCommon.CopyFieldsFrom<T, T_CopyMask>(
+            ListGroupCommon<T>.CopyFieldsFrom<T_CopyMask>(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -605,19 +592,10 @@ namespace Mutagen.Bethesda
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            ListGroupCommon.Clear(this);
+            ListGroupCommon<T>.Instance.Clear(this);
         }
-
 
         public static ListGroup<T> Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -699,6 +677,79 @@ namespace Mutagen.Bethesda
 
     #endregion
 
+    #region Common MixIn
+    public static class ListGroupMixIn
+    {
+        public static void Clear<T>(this IListGroup<T> item)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        {
+            ((ListGroupCommon<T>)item.CommonInstance).Clear(item: item);
+        }
+
+        public static ListGroup_Mask<bool> GetEqualsMask<T>(
+            this IListGroupGetter<T> item,
+            IListGroupGetter<T> rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        {
+            var ret = new ListGroup_Mask<bool>();
+            ((ListGroupCommon<T>)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString<T>(
+            this IListGroupGetter<T> item,
+            string name = null,
+            ListGroup_Mask<bool> printMask = null)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        {
+            return ((ListGroupCommon<T>)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString<T>(
+            this IListGroupGetter<T> item,
+            FileGeneration fg,
+            string name = null,
+            ListGroup_Mask<bool> printMask = null)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        {
+            ((ListGroupCommon<T>)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet<T>(
+            this IListGroupGetter<T> item,
+            ListGroup_Mask<bool?> checkMask)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        {
+            return ((ListGroupCommon<T>)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static ListGroup_Mask<bool> GetHasBeenSetMask<T>(this IListGroupGetter<T> item)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        {
+            var ret = new ListGroup_Mask<bool>();
+            ((ListGroupCommon<T>)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
+    #endregion
+
 }
 
 namespace Mutagen.Bethesda.Internals
@@ -745,7 +796,7 @@ namespace Mutagen.Bethesda.Internals
 
         public static readonly Type InternalSetterType = null;
 
-        public static readonly Type CommonType = typeof(ListGroupCommon);
+        public static readonly Type CommonType = typeof(ListGroupCommon<>);
 
         public const string FullName = "Mutagen.Bethesda.ListGroup";
 
@@ -934,17 +985,18 @@ namespace Mutagen.Bethesda.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ListGroupCommon
+    #region Common
+    public partial class ListGroupCommon<T>
+        where T : IXmlItem, IBinaryItem, ILoquiObject<T>
     {
+        public static readonly ListGroupCommon<T> Instance = new ListGroupCommon<T>();
         #region Copy Fields From
-        public static void CopyFieldsFrom<T, T_CopyMask>(
+        public static void CopyFieldsFrom<T_CopyMask>(
             IListGroup<T> item,
             IListGroupGetter<T> rhs,
             IListGroupGetter<T> def,
             ErrorMaskBuilder errorMask,
             ListGroup_CopyMask<T_CopyMask> copyMask)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
             where T_CopyMask : class, new()
         {
             if (copyMask?.GroupType ?? true)
@@ -986,7 +1038,7 @@ namespace Mutagen.Bethesda.Internals
                 errorMask?.PushIndex((int)ListGroup_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetToWithDefault(
+                    item.Items.SetToWithDefault<T, T>(
                         rhs: rhs.Items,
                         def: def?.Items,
                         converter: (r, d) =>
@@ -994,14 +1046,13 @@ namespace Mutagen.Bethesda.Internals
                             switch (copyMask?.Items.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (T)r;
                                 case CopyOption.MakeCopy:
                                     return LoquiRegistration.GetCopyFunc<T>()(r, null, d);
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Items.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1017,35 +1068,21 @@ namespace Mutagen.Bethesda.Internals
 
         #endregion
 
-        public static void Clear<T>(IListGroup<T> item)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        partial void ClearPartial();
+
+        public virtual void Clear(IListGroup<T> item)
         {
+            ClearPartial();
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Byte[]);
             item.Items.Clear();
         }
 
-        public static ListGroup_Mask<bool> GetEqualsMask<T>(
-            this IListGroupGetter<T> item,
-            IListGroupGetter<T> rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
-        {
-            var ret = new ListGroup_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask<T>(
+        public void FillEqualsMask(
             IListGroupGetter<T> item,
             IListGroupGetter<T> rhs,
             ListGroup_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             if (rhs == null) return;
             ret.ContainedRecordType = string.Equals(item.ContainedRecordType, rhs.ContainedRecordType);
@@ -1057,23 +1094,25 @@ namespace Mutagen.Bethesda.Internals
                 include);
         }
 
-        public static string ToString<T>(
-            this IListGroupGetter<T> item,
+        public string ToString(
+            IListGroupGetter<T> item,
             string name = null,
             ListGroup_Mask<bool> printMask = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString<T>(
-            this IListGroupGetter<T> item,
+        public void ToString(
+            IListGroupGetter<T> item,
             FileGeneration fg,
             string name = null,
             ListGroup_Mask<bool> printMask = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             if (name == null)
             {
@@ -1086,57 +1125,66 @@ namespace Mutagen.Bethesda.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.ContainedRecordType ?? true)
-                {
-                    fg.AppendLine($"ContainedRecordType => {item.ContainedRecordType}");
-                }
-                if (printMask?.GroupType ?? true)
-                {
-                    fg.AppendLine($"GroupType => {item.GroupType}");
-                }
-                if (printMask?.LastModified ?? true)
-                {
-                    fg.AppendLine($"LastModified => {item.LastModified}");
-                }
-                if (printMask?.Items?.Overall ?? true)
-                {
-                    fg.AppendLine("Items =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Items)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet<T>(
-            this IListGroupGetter<T> item,
+        protected static void ToStringFields(
+            IListGroupGetter<T> item,
+            FileGeneration fg,
+            ListGroup_Mask<bool> printMask = null)
+        {
+            if (printMask?.ContainedRecordType ?? true)
+            {
+                fg.AppendLine($"ContainedRecordType => {item.ContainedRecordType}");
+            }
+            if (printMask?.GroupType ?? true)
+            {
+                fg.AppendLine($"GroupType => {item.GroupType}");
+            }
+            if (printMask?.LastModified ?? true)
+            {
+                fg.AppendLine($"LastModified => {item.LastModified}");
+            }
+            if (printMask?.Items?.Overall ?? true)
+            {
+                fg.AppendLine("Items =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Items)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+
+        public bool HasBeenSet(
+            IListGroupGetter<T> item,
             ListGroup_Mask<bool?> checkMask)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             return true;
         }
 
-        public static ListGroup_Mask<bool> GetHasBeenSetMask<T>(IListGroupGetter<T> item)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        public void FillHasBeenSetMask(
+            IListGroupGetter<T> item,
+            ListGroup_Mask<bool> mask)
         {
-            var ret = new ListGroup_Mask<bool>();
-            ret.ContainedRecordType = true;
-            ret.GroupType = true;
-            ret.LastModified = true;
-            ret.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(true, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            return ret;
+            mask.ContainedRecordType = true;
+            mask.GroupType = true;
+            mask.LastModified = true;
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(true, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
 
     }
@@ -1190,17 +1238,15 @@ namespace Mutagen.Bethesda.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
         }
 
-        public static void FillPublic_Xml<T>(
+        public static void FillPublic_Xml(
             IListGroup<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             try
             {
@@ -1221,13 +1267,12 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
-        public static void FillPublicElement_Xml<T>(
+        public static void FillPublicElement_Xml(
             IListGroup<T> item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             switch (name)
             {
@@ -2079,8 +2124,7 @@ namespace Mutagen.Bethesda.Internals
                         errorMask: listErrorMask,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
-                }
-                );
+                });
         }
 
         public void Write(

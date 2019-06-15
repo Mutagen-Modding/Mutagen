@@ -48,6 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SigilStone_Registration.Instance;
         public new static SigilStone_Registration Registration => SigilStone_Registration.Instance;
+        protected override object CommonInstance => SigilStoneCommon.Instance;
 
         #region Ctor
         protected SigilStone()
@@ -146,17 +147,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<Effect> _Effects = new SourceSetList<Effect>();
         public ISourceSetList<Effect> Effects => _Effects;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<Effect> EffectsEnumerable
-        {
-            get => _Effects.Items;
-            set => _Effects.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Effect> ISigilStone.Effects => _Effects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<Effect> ISigilStoneGetter.Effects => _Effects;
+        IReadOnlySetList<IEffectInternalGetter> ISigilStoneGetter.Effects => _Effects;
         #endregion
 
         #endregion
@@ -214,30 +209,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<SigilStone>.GetEqualsMask(SigilStone rhs, EqualsMaskHelper.Include include) => SigilStoneCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ISigilStoneGetter>.GetEqualsMask(ISigilStoneGetter rhs, EqualsMaskHelper.Include include) => SigilStoneCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<SigilStone>.GetEqualsMask(SigilStone rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ISigilStoneGetter>.GetEqualsMask(ISigilStoneGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            SigilStone_Mask<bool> printMask = null)
-        {
-            return SigilStoneCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            SigilStoneCommon.ToString(this, fg, name: name, printMask: null);
+            SigilStoneMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new SigilStone_Mask<bool> GetHasBeenSetMask()
-        {
-            return SigilStoneCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -740,8 +727,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
-                        }
-                        );
+                        });
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Effects);
                 }
                 case 0x41544144: // DATA
@@ -926,10 +912,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            SigilStoneCommon.Clear(this);
+            SigilStoneCommon.Instance.Clear(this);
         }
-
 
         public new static SigilStone Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1056,7 +1040,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Effects
-        IReadOnlySetList<Effect> Effects { get; }
+        IReadOnlySetList<IEffectInternalGetter> Effects { get; }
         #endregion
         #region Uses
         Byte Uses { get; }
@@ -1084,6 +1068,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class SigilStoneMixIn
+    {
+        public static void Clear(this ISigilStoneInternal item)
+        {
+            ((SigilStoneCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static SigilStone_Mask<bool> GetEqualsMask(
+            this ISigilStoneGetter item,
+            ISigilStoneGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SigilStone_Mask<bool>();
+            ((SigilStoneCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ISigilStoneInternalGetter item,
+            string name = null,
+            SigilStone_Mask<bool> printMask = null)
+        {
+            return ((SigilStoneCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ISigilStoneInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            SigilStone_Mask<bool> printMask = null)
+        {
+            ((SigilStoneCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ISigilStoneInternalGetter item,
+            SigilStone_Mask<bool?> checkMask)
+        {
+            return ((SigilStoneCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static SigilStone_Mask<bool> GetHasBeenSetMask(this ISigilStoneGetter item)
+        {
+            var ret = new SigilStone_Mask<bool>();
+            ((SigilStoneCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1381,9 +1432,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class SigilStoneCommon
+    #region Common
+    public partial class SigilStoneCommon : ItemAbstractCommon
     {
+        public static readonly SigilStoneCommon Instance = new SigilStoneCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ISigilStone item,
@@ -1534,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Effects);
                 try
                 {
-                    item.Effects.SetToWithDefault(
+                    item.Effects.SetToWithDefault<Effect, IEffectInternalGetter>(
                         rhs: rhs.Effects,
                         def: def?.Effects,
                         converter: (r, d) =>
@@ -1542,7 +1594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             switch (copyMask?.Effects.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (Effect)r;
                                 case CopyOption.MakeCopy:
                                     return Effect.Copy(
                                         r,
@@ -1551,8 +1603,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Effects.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1619,8 +1670,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ISigilStone item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ISigilStone item)
         {
+            ClearPartial();
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
@@ -1629,23 +1683,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Uses = default(Byte);
             item.Value = default(UInt32);
             item.Weight = default(Single);
+            base.Clear(item);
         }
 
-        public static SigilStone_Mask<bool> GetEqualsMask(
-            this ISigilStoneGetter item,
-            ISigilStoneGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IItemAbstract item)
         {
-            var ret = new SigilStone_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ISigilStone)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (ISigilStone)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (ISigilStone)item);
+        }
+
+        public void FillEqualsMask(
             ISigilStoneGetter item,
             ISigilStoneGetter rhs,
             SigilStone_Mask<bool> ret,
@@ -1658,7 +1714,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
@@ -1669,21 +1725,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Uses = item.Uses == rhs.Uses;
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ISigilStoneGetter item,
+        public string ToString(
+            ISigilStoneGetter item,
             string name = null,
             SigilStone_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ISigilStoneGetter item,
+        public void ToString(
+            ISigilStoneGetter item,
             FileGeneration fg,
             string name = null,
             SigilStone_Mask<bool> printMask = null)
@@ -1699,61 +1759,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {item.Script_Property}");
-                }
-                if (printMask?.Effects?.Overall ?? true)
-                {
-                    fg.AppendLine("Effects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Effects)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Uses ?? true)
-                {
-                    fg.AppendLine($"Uses => {item.Uses}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {item.Value}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {item.Weight}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ISigilStoneGetter item,
+        protected static void ToStringFields(
+            ISigilStoneGetter item,
+            FileGeneration fg,
+            SigilStone_Mask<bool> printMask = null)
+        {
+            ItemAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Effects?.Overall ?? true)
+            {
+                fg.AppendLine("Effects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Effects)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Uses ?? true)
+            {
+                fg.AppendLine($"Uses => {item.Uses}");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendLine($"Value => {item.Value}");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendLine($"Weight => {item.Weight}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            ISigilStoneGetter item,
             SigilStone_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -1762,28 +1837,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
             if (checkMask.Effects.Overall.HasValue && checkMask.Effects.Overall.Value != item.Effects.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static SigilStone_Mask<bool> GetHasBeenSetMask(ISigilStoneGetter item)
+        public void FillHasBeenSetMask(
+            ISigilStoneGetter item,
+            SigilStone_Mask<bool> mask)
         {
-            var ret = new SigilStone_Mask<bool>();
-            ret.Name = item.Name_IsSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Icon = item.Icon_IsSet;
-            ret.Script = item.Script_Property.HasBeenSet;
-            ret.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            ret.Uses = true;
-            ret.Value = true;
-            ret.Weight = true;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static SigilStone_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Icon = item.Icon_IsSet;
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Uses = true;
+            mask.Value = true;
+            mask.Weight = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static SigilStone_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
@@ -1805,12 +1879,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static SigilStone_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static SigilStone_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1828,12 +1896,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static SigilStone_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static SigilStone_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
@@ -1919,14 +1981,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Effects.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Effects) ?? true))
             {
-                ListXmlTranslation<Effect>.Instance.Write(
+                ListXmlTranslation<IEffectInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Effects),
                     item: item.Effects,
                     fieldIndex: (int)SigilStone_FieldIndex.Effects,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SigilStone_FieldIndex.Effects),
-                    transl: (XElement subNode, Effect subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IEffectInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         ((EffectXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
                             item: subItem,
@@ -1934,8 +1996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
             if (item.DATADataTypeState.HasFlag(SigilStone.DATADataType.Has))
             {
@@ -3024,12 +3085,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Effects.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IEffectInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Effects,
                     fieldIndex: (int)SigilStone_FieldIndex.Effects,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, Effect subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IEffectInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         ((EffectBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
@@ -3037,8 +3098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
-                    }
-                    );
+                    });
             }
             if (item.DATADataTypeState.HasFlag(SigilStone.DATADataType.Has))
             {

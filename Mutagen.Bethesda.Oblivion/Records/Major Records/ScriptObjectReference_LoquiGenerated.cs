@@ -43,6 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptObjectReference_Registration.Instance;
         public new static ScriptObjectReference_Registration Registration => ScriptObjectReference_Registration.Instance;
+        protected override object CommonInstance => ScriptObjectReferenceCommon.Instance;
 
         #region Ctor
         public ScriptObjectReference()
@@ -59,30 +60,22 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<OblivionMajorRecord> IScriptObjectReferenceGetter.Reference_Property => this.Reference_Property;
         #endregion
 
-        IMask<bool> IEqualsMask<ScriptObjectReference>.GetEqualsMask(ScriptObjectReference rhs, EqualsMaskHelper.Include include) => ScriptObjectReferenceCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IScriptObjectReferenceGetter>.GetEqualsMask(IScriptObjectReferenceGetter rhs, EqualsMaskHelper.Include include) => ScriptObjectReferenceCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ScriptObjectReference>.GetEqualsMask(ScriptObjectReference rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IScriptObjectReferenceGetter>.GetEqualsMask(IScriptObjectReferenceGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            ScriptObjectReference_Mask<bool> printMask = null)
-        {
-            return ScriptObjectReferenceCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ScriptObjectReferenceCommon.ToString(this, fg, name: name, printMask: null);
+            ScriptObjectReferenceMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new ScriptObjectReference_Mask<bool> GetHasBeenSetMask()
-        {
-            return ScriptObjectReferenceCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -504,10 +497,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            ScriptObjectReferenceCommon.Clear(this);
+            ScriptObjectReferenceCommon.Instance.Clear(this);
         }
-
 
         public new static ScriptObjectReference Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -565,6 +556,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class ScriptObjectReferenceMixIn
+    {
+        public static void Clear(this IScriptObjectReference item)
+        {
+            ((ScriptObjectReferenceCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static ScriptObjectReference_Mask<bool> GetEqualsMask(
+            this IScriptObjectReferenceGetter item,
+            IScriptObjectReferenceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ScriptObjectReference_Mask<bool>();
+            ((ScriptObjectReferenceCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IScriptObjectReferenceGetter item,
+            string name = null,
+            ScriptObjectReference_Mask<bool> printMask = null)
+        {
+            return ((ScriptObjectReferenceCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IScriptObjectReferenceGetter item,
+            FileGeneration fg,
+            string name = null,
+            ScriptObjectReference_Mask<bool> printMask = null)
+        {
+            ((ScriptObjectReferenceCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IScriptObjectReferenceGetter item,
+            ScriptObjectReference_Mask<bool?> checkMask)
+        {
+            return ((ScriptObjectReferenceCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static ScriptObjectReference_Mask<bool> GetHasBeenSetMask(this IScriptObjectReferenceGetter item)
+        {
+            var ret = new ScriptObjectReference_Mask<bool>();
+            ((ScriptObjectReferenceCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -753,9 +811,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ScriptObjectReferenceCommon
+    #region Common
+    public partial class ScriptObjectReferenceCommon : ScriptReferenceCommon
     {
+        public static readonly ScriptObjectReferenceCommon Instance = new ScriptObjectReferenceCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IScriptObjectReference item,
@@ -791,26 +850,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IScriptObjectReference item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IScriptObjectReference item)
         {
+            ClearPartial();
             item.Reference = default(OblivionMajorRecord);
+            base.Clear(item);
         }
 
-        public static ScriptObjectReference_Mask<bool> GetEqualsMask(
-            this IScriptObjectReferenceGetter item,
-            IScriptObjectReferenceGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IScriptReference item)
         {
-            var ret = new ScriptObjectReference_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IScriptObjectReference)item);
         }
 
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IScriptObjectReferenceGetter item,
             IScriptObjectReferenceGetter rhs,
             ScriptObjectReference_Mask<bool> ret,
@@ -818,21 +872,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
-            ScriptReferenceCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IScriptObjectReferenceGetter item,
+        public string ToString(
+            IScriptObjectReferenceGetter item,
             string name = null,
             ScriptObjectReference_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IScriptObjectReferenceGetter item,
+        public void ToString(
+            IScriptObjectReferenceGetter item,
             FileGeneration fg,
             string name = null,
             ScriptObjectReference_Mask<bool> printMask = null)
@@ -848,32 +906,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Reference ?? true)
-                {
-                    fg.AppendLine($"Reference => {item.Reference_Property}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IScriptObjectReferenceGetter item,
+        protected static void ToStringFields(
+            IScriptObjectReferenceGetter item,
+            FileGeneration fg,
+            ScriptObjectReference_Mask<bool> printMask = null)
+        {
+            ScriptReferenceCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Reference ?? true)
+            {
+                fg.AppendLine($"Reference => {item.Reference_Property}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IScriptObjectReferenceGetter item,
             ScriptObjectReference_Mask<bool?> checkMask)
         {
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static ScriptObjectReference_Mask<bool> GetHasBeenSetMask(IScriptObjectReferenceGetter item)
+        public void FillHasBeenSetMask(
+            IScriptObjectReferenceGetter item,
+            ScriptObjectReference_Mask<bool> mask)
         {
-            var ret = new ScriptObjectReference_Mask<bool>();
-            ret.Reference = true;
-            return ret;
-        }
-
-        public static ScriptObjectReference_FieldIndex? ConvertFieldIndex(ScriptReference_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Reference = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static ScriptObjectReference_FieldIndex ConvertFieldIndex(ScriptReference_FieldIndex index)

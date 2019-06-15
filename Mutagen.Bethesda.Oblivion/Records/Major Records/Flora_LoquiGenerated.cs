@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
         public new static Flora_Registration Registration => Flora_Registration.Instance;
+        protected override object CommonInstance => FloraCommon.Instance;
 
         #region Ctor
         protected Flora()
@@ -186,30 +187,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Flora>.GetEqualsMask(Flora rhs, EqualsMaskHelper.Include include) => FloraCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IFloraGetter>.GetEqualsMask(IFloraGetter rhs, EqualsMaskHelper.Include include) => FloraCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Flora>.GetEqualsMask(Flora rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IFloraGetter>.GetEqualsMask(IFloraGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Flora_Mask<bool> printMask = null)
-        {
-            return FloraCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            FloraCommon.ToString(this, fg, name: name, printMask: null);
+            FloraMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Flora_Mask<bool> GetHasBeenSetMask()
-        {
-            return FloraCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -850,10 +843,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            FloraCommon.Clear(this);
+            FloraCommon.Instance.Clear(this);
         }
-
 
         public new static Flora Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1007,6 +998,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class FloraMixIn
+    {
+        public static void Clear(this IFloraInternal item)
+        {
+            ((FloraCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Flora_Mask<bool> GetEqualsMask(
+            this IFloraGetter item,
+            IFloraGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Flora_Mask<bool>();
+            ((FloraCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IFloraInternalGetter item,
+            string name = null,
+            Flora_Mask<bool> printMask = null)
+        {
+            return ((FloraCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IFloraInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Flora_Mask<bool> printMask = null)
+        {
+            ((FloraCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IFloraInternalGetter item,
+            Flora_Mask<bool?> checkMask)
+        {
+            return ((FloraCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Flora_Mask<bool> GetHasBeenSetMask(this IFloraGetter item)
+        {
+            var ret = new Flora_Mask<bool>();
+            ((FloraCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1302,9 +1360,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class FloraCommon
+    #region Common
+    public partial class FloraCommon : OblivionMajorRecordCommon
     {
+        public static readonly FloraCommon Instance = new FloraCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IFlora item,
@@ -1511,8 +1570,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IFlora item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IFlora item)
         {
+            ClearPartial();
             item.Name_Unset();
             item.Model_Unset();
             item.Script_Property.Unset();
@@ -1521,23 +1583,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Summer = default(Byte);
             item.Fall = default(Byte);
             item.Winter = default(Byte);
+            base.Clear(item);
         }
 
-        public static Flora_Mask<bool> GetEqualsMask(
-            this IFloraGetter item,
-            IFloraGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new Flora_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IFlora)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IFlora)item);
+        }
+
+        public void FillEqualsMask(
             IFloraGetter item,
             IFloraGetter rhs,
             Flora_Mask<bool> ret,
@@ -1550,7 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.Ingredient = item.Ingredient_Property.FormKey == rhs.Ingredient_Property.FormKey;
@@ -1558,21 +1617,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Summer = item.Summer == rhs.Summer;
             ret.Fall = item.Fall == rhs.Fall;
             ret.Winter = item.Winter == rhs.Winter;
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IFloraGetter item,
+        public string ToString(
+            IFloraGetter item,
             string name = null,
             Flora_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IFloraGetter item,
+        public void ToString(
+            IFloraGetter item,
             FileGeneration fg,
             string name = null,
             Flora_Mask<bool> printMask = null)
@@ -1588,47 +1651,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {item.Script_Property}");
-                }
-                if (printMask?.Ingredient ?? true)
-                {
-                    fg.AppendLine($"Ingredient => {item.Ingredient_Property}");
-                }
-                if (printMask?.Spring ?? true)
-                {
-                    fg.AppendLine($"Spring => {item.Spring}");
-                }
-                if (printMask?.Summer ?? true)
-                {
-                    fg.AppendLine($"Summer => {item.Summer}");
-                }
-                if (printMask?.Fall ?? true)
-                {
-                    fg.AppendLine($"Fall => {item.Fall}");
-                }
-                if (printMask?.Winter ?? true)
-                {
-                    fg.AppendLine($"Winter => {item.Winter}");
-                }
-                if (printMask?.PFPCDataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IFloraGetter item,
+        protected static void ToStringFields(
+            IFloraGetter item,
+            FileGeneration fg,
+            Flora_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Ingredient ?? true)
+            {
+                fg.AppendLine($"Ingredient => {item.Ingredient_Property}");
+            }
+            if (printMask?.Spring ?? true)
+            {
+                fg.AppendLine($"Spring => {item.Spring}");
+            }
+            if (printMask?.Summer ?? true)
+            {
+                fg.AppendLine($"Summer => {item.Summer}");
+            }
+            if (printMask?.Fall ?? true)
+            {
+                fg.AppendLine($"Fall => {item.Fall}");
+            }
+            if (printMask?.Winter ?? true)
+            {
+                fg.AppendLine($"Winter => {item.Winter}");
+            }
+            if (printMask?.PFPCDataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IFloraGetter item,
             Flora_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -1636,28 +1714,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
             if (checkMask.Ingredient.HasValue && checkMask.Ingredient.Value != item.Ingredient_Property.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Flora_Mask<bool> GetHasBeenSetMask(IFloraGetter item)
+        public void FillHasBeenSetMask(
+            IFloraGetter item,
+            Flora_Mask<bool> mask)
         {
-            var ret = new Flora_Mask<bool>();
-            ret.Name = item.Name_IsSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Script = item.Script_Property.HasBeenSet;
-            ret.Ingredient = item.Ingredient_Property.HasBeenSet;
-            ret.Spring = true;
-            ret.Summer = true;
-            ret.Fall = true;
-            ret.Winter = true;
-            ret.PFPCDataTypeState = true;
-            return ret;
-        }
-
-        public static Flora_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Ingredient = item.Ingredient_Property.HasBeenSet;
+            mask.Spring = true;
+            mask.Summer = true;
+            mask.Fall = true;
+            mask.Winter = true;
+            mask.PFPCDataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Flora_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1677,12 +1754,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Flora_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Flora_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

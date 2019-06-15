@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageLocation_Registration.Instance;
         public static AIPackageLocation_Registration Registration => AIPackageLocation_Registration.Instance;
+        protected object CommonInstance => AIPackageLocationCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public AIPackageLocation()
@@ -75,30 +77,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<AIPackageLocation>.GetEqualsMask(AIPackageLocation rhs, EqualsMaskHelper.Include include) => AIPackageLocationCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IAIPackageLocationGetter>.GetEqualsMask(IAIPackageLocationGetter rhs, EqualsMaskHelper.Include include) => AIPackageLocationCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<AIPackageLocation>.GetEqualsMask(AIPackageLocation rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IAIPackageLocationGetter>.GetEqualsMask(IAIPackageLocationGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            AIPackageLocation_Mask<bool> printMask = null)
-        {
-            return AIPackageLocationCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            AIPackageLocationCommon.ToString(this, fg, name: name, printMask: null);
+            AIPackageLocationMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public AIPackageLocation_Mask<bool> GetHasBeenSetMask()
-        {
-            return AIPackageLocationCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -532,19 +526,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            AIPackageLocationCommon.Clear(this);
+            AIPackageLocationCommon.Instance.Clear(this);
         }
-
 
         public static AIPackageLocation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -619,6 +604,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class AIPackageLocationMixIn
+    {
+        public static void Clear(this IAIPackageLocation item)
+        {
+            ((AIPackageLocationCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static AIPackageLocation_Mask<bool> GetEqualsMask(
+            this IAIPackageLocationGetter item,
+            IAIPackageLocationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new AIPackageLocation_Mask<bool>();
+            ((AIPackageLocationCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IAIPackageLocationGetter item,
+            string name = null,
+            AIPackageLocation_Mask<bool> printMask = null)
+        {
+            return ((AIPackageLocationCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IAIPackageLocationGetter item,
+            FileGeneration fg,
+            string name = null,
+            AIPackageLocation_Mask<bool> printMask = null)
+        {
+            ((AIPackageLocationCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IAIPackageLocationGetter item,
+            AIPackageLocation_Mask<bool?> checkMask)
+        {
+            return ((AIPackageLocationCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static AIPackageLocation_Mask<bool> GetHasBeenSetMask(this IAIPackageLocationGetter item)
+        {
+            var ret = new AIPackageLocation_Mask<bool>();
+            ((AIPackageLocationCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -831,9 +883,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class AIPackageLocationCommon
+    #region Common
+    public partial class AIPackageLocationCommon
     {
+        public static readonly AIPackageLocationCommon Instance = new AIPackageLocationCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IAIPackageLocation item,
@@ -897,28 +950,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IAIPackageLocation item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IAIPackageLocation item)
         {
+            ClearPartial();
             item.Type = default(AIPackageLocation.LocationType);
             item.LocationReference = default(IPlaced);
             item.Radius = default(Single);
         }
 
-        public static AIPackageLocation_Mask<bool> GetEqualsMask(
-            this IAIPackageLocationGetter item,
-            IAIPackageLocationGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new AIPackageLocation_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IAIPackageLocationGetter item,
             IAIPackageLocationGetter rhs,
             AIPackageLocation_Mask<bool> ret,
@@ -930,18 +972,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
         }
 
-        public static string ToString(
-            this IAIPackageLocationGetter item,
+        public string ToString(
+            IAIPackageLocationGetter item,
             string name = null,
             AIPackageLocation_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IAIPackageLocationGetter item,
+        public void ToString(
+            IAIPackageLocationGetter item,
             FileGeneration fg,
             string name = null,
             AIPackageLocation_Mask<bool> printMask = null)
@@ -957,36 +1003,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Type ?? true)
-                {
-                    fg.AppendLine($"Type => {item.Type}");
-                }
-                if (printMask?.LocationReference ?? true)
-                {
-                    fg.AppendLine($"LocationReference => {item.LocationReference_Property}");
-                }
-                if (printMask?.Radius ?? true)
-                {
-                    fg.AppendLine($"Radius => {item.Radius}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IAIPackageLocationGetter item,
+        protected static void ToStringFields(
+            IAIPackageLocationGetter item,
+            FileGeneration fg,
+            AIPackageLocation_Mask<bool> printMask = null)
+        {
+            if (printMask?.Type ?? true)
+            {
+                fg.AppendLine($"Type => {item.Type}");
+            }
+            if (printMask?.LocationReference ?? true)
+            {
+                fg.AppendLine($"LocationReference => {item.LocationReference_Property}");
+            }
+            if (printMask?.Radius ?? true)
+            {
+                fg.AppendLine($"Radius => {item.Radius}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IAIPackageLocationGetter item,
             AIPackageLocation_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static AIPackageLocation_Mask<bool> GetHasBeenSetMask(IAIPackageLocationGetter item)
+        public void FillHasBeenSetMask(
+            IAIPackageLocationGetter item,
+            AIPackageLocation_Mask<bool> mask)
         {
-            var ret = new AIPackageLocation_Mask<bool>();
-            ret.Type = true;
-            ret.LocationReference = true;
-            ret.Radius = true;
-            return ret;
+            mask.Type = true;
+            mask.LocationReference = true;
+            mask.Radius = true;
         }
 
     }

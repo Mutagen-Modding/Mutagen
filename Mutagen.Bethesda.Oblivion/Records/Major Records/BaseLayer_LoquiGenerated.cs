@@ -43,6 +43,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
         public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
+        protected virtual object CommonInstance => BaseLayerCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public BaseLayer()
@@ -101,30 +103,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<BaseLayer>.GetEqualsMask(BaseLayer rhs, EqualsMaskHelper.Include include) => BaseLayerCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IBaseLayerGetter>.GetEqualsMask(IBaseLayerGetter rhs, EqualsMaskHelper.Include include) => BaseLayerCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<BaseLayer>.GetEqualsMask(BaseLayer rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IBaseLayerGetter>.GetEqualsMask(IBaseLayerGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            BaseLayer_Mask<bool> printMask = null)
-        {
-            return BaseLayerCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public virtual void ToString(
             FileGeneration fg,
             string name = null)
         {
-            BaseLayerCommon.ToString(this, fg, name: name, printMask: null);
+            BaseLayerMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public BaseLayer_Mask<bool> GetHasBeenSetMask()
-        {
-            return BaseLayerCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -635,19 +629,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public virtual void Clear()
         {
-            CallClearPartial_Internal();
-            BaseLayerCommon.Clear(this);
+            BaseLayerCommon.Instance.Clear(this);
         }
-
 
         public static BaseLayer Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -741,6 +726,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class BaseLayerMixIn
+    {
+        public static void Clear(this IBaseLayerInternal item)
+        {
+            ((BaseLayerCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static BaseLayer_Mask<bool> GetEqualsMask(
+            this IBaseLayerGetter item,
+            IBaseLayerGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new BaseLayer_Mask<bool>();
+            ((BaseLayerCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IBaseLayerInternalGetter item,
+            string name = null,
+            BaseLayer_Mask<bool> printMask = null)
+        {
+            return ((BaseLayerCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IBaseLayerInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            BaseLayer_Mask<bool> printMask = null)
+        {
+            ((BaseLayerCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IBaseLayerInternalGetter item,
+            BaseLayer_Mask<bool?> checkMask)
+        {
+            return ((BaseLayerCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static BaseLayer_Mask<bool> GetHasBeenSetMask(this IBaseLayerGetter item)
+        {
+            var ret = new BaseLayer_Mask<bool>();
+            ((BaseLayerCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -978,9 +1030,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class BaseLayerCommon
+    #region Common
+    public partial class BaseLayerCommon
     {
+        public static readonly BaseLayerCommon Instance = new BaseLayerCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IBaseLayer item,
@@ -1027,27 +1080,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IBaseLayer item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IBaseLayer item)
         {
+            ClearPartial();
             item.Texture = default(LandTexture);
             item.Quadrant = default(AlphaLayer.QuadrantEnum);
         }
 
-        public static BaseLayer_Mask<bool> GetEqualsMask(
-            this IBaseLayerGetter item,
-            IBaseLayerGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new BaseLayer_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IBaseLayerGetter item,
             IBaseLayerGetter rhs,
             BaseLayer_Mask<bool> ret,
@@ -1059,18 +1101,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.LayerNumber = item.LayerNumber == rhs.LayerNumber;
         }
 
-        public static string ToString(
-            this IBaseLayerGetter item,
+        public string ToString(
+            IBaseLayerGetter item,
             string name = null,
             BaseLayer_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IBaseLayerGetter item,
+        public void ToString(
+            IBaseLayerGetter item,
             FileGeneration fg,
             string name = null,
             BaseLayer_Mask<bool> printMask = null)
@@ -1086,40 +1132,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Texture ?? true)
-                {
-                    fg.AppendLine($"Texture => {item.Texture_Property}");
-                }
-                if (printMask?.Quadrant ?? true)
-                {
-                    fg.AppendLine($"Quadrant => {item.Quadrant}");
-                }
-                if (printMask?.LayerNumber ?? true)
-                {
-                    fg.AppendLine($"LayerNumber => {item.LayerNumber}");
-                }
-                if (printMask?.BTXTDataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IBaseLayerGetter item,
+        protected static void ToStringFields(
+            IBaseLayerGetter item,
+            FileGeneration fg,
+            BaseLayer_Mask<bool> printMask = null)
+        {
+            if (printMask?.Texture ?? true)
+            {
+                fg.AppendLine($"Texture => {item.Texture_Property}");
+            }
+            if (printMask?.Quadrant ?? true)
+            {
+                fg.AppendLine($"Quadrant => {item.Quadrant}");
+            }
+            if (printMask?.LayerNumber ?? true)
+            {
+                fg.AppendLine($"LayerNumber => {item.LayerNumber}");
+            }
+            if (printMask?.BTXTDataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IBaseLayerGetter item,
             BaseLayer_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static BaseLayer_Mask<bool> GetHasBeenSetMask(IBaseLayerGetter item)
+        public void FillHasBeenSetMask(
+            IBaseLayerGetter item,
+            BaseLayer_Mask<bool> mask)
         {
-            var ret = new BaseLayer_Mask<bool>();
-            ret.Texture = true;
-            ret.Quadrant = true;
-            ret.LayerNumber = true;
-            ret.BTXTDataTypeState = true;
-            return ret;
+            mask.Texture = true;
+            mask.Quadrant = true;
+            mask.LayerNumber = true;
+            mask.BTXTDataTypeState = true;
         }
 
     }

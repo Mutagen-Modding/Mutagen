@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataObject_Registration.Instance;
         public static RegionDataObject_Registration Registration => RegionDataObject_Registration.Instance;
+        protected object CommonInstance => RegionDataObjectCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public RegionDataObject()
@@ -201,30 +203,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<RegionDataObject>.GetEqualsMask(RegionDataObject rhs, EqualsMaskHelper.Include include) => RegionDataObjectCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IRegionDataObjectGetter>.GetEqualsMask(IRegionDataObjectGetter rhs, EqualsMaskHelper.Include include) => RegionDataObjectCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<RegionDataObject>.GetEqualsMask(RegionDataObject rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IRegionDataObjectGetter>.GetEqualsMask(IRegionDataObjectGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            RegionDataObject_Mask<bool> printMask = null)
-        {
-            return RegionDataObjectCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            RegionDataObjectCommon.ToString(this, fg, name: name, printMask: null);
+            RegionDataObjectMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public RegionDataObject_Mask<bool> GetHasBeenSetMask()
-        {
-            return RegionDataObjectCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -824,19 +818,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            RegionDataObjectCommon.Clear(this);
+            RegionDataObjectCommon.Instance.Clear(this);
         }
-
 
         public static RegionDataObject Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1037,6 +1022,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class RegionDataObjectMixIn
+    {
+        public static void Clear(this IRegionDataObject item)
+        {
+            ((RegionDataObjectCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static RegionDataObject_Mask<bool> GetEqualsMask(
+            this IRegionDataObjectGetter item,
+            IRegionDataObjectGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RegionDataObject_Mask<bool>();
+            ((RegionDataObjectCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IRegionDataObjectGetter item,
+            string name = null,
+            RegionDataObject_Mask<bool> printMask = null)
+        {
+            return ((RegionDataObjectCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IRegionDataObjectGetter item,
+            FileGeneration fg,
+            string name = null,
+            RegionDataObject_Mask<bool> printMask = null)
+        {
+            ((RegionDataObjectCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IRegionDataObjectGetter item,
+            RegionDataObject_Mask<bool?> checkMask)
+        {
+            return ((RegionDataObjectCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static RegionDataObject_Mask<bool> GetHasBeenSetMask(this IRegionDataObjectGetter item)
+        {
+            var ret = new RegionDataObject_Mask<bool>();
+            ((RegionDataObjectCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1415,9 +1467,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class RegionDataObjectCommon
+    #region Common
+    public partial class RegionDataObjectCommon
     {
+        public static readonly RegionDataObjectCommon Instance = new RegionDataObjectCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IRegionDataObject item,
@@ -1719,8 +1772,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IRegionDataObject item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IRegionDataObject item)
         {
+            ClearPartial();
             item.Object = default(OblivionMajorRecord);
             item.ParentIndex = default(UInt16);
             item.Unknown1 = default(Byte[]);
@@ -1740,21 +1796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknow2n = default(Byte[]);
         }
 
-        public static RegionDataObject_Mask<bool> GetEqualsMask(
-            this IRegionDataObjectGetter item,
-            IRegionDataObjectGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new RegionDataObject_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IRegionDataObjectGetter item,
             IRegionDataObjectGetter rhs,
             RegionDataObject_Mask<bool> ret,
@@ -1780,18 +1822,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Unknow2n = ByteExt.EqualsFast(item.Unknow2n, rhs.Unknow2n);
         }
 
-        public static string ToString(
-            this IRegionDataObjectGetter item,
+        public string ToString(
+            IRegionDataObjectGetter item,
             string name = null,
             RegionDataObject_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IRegionDataObjectGetter item,
+        public void ToString(
+            IRegionDataObjectGetter item,
             FileGeneration fg,
             string name = null,
             RegionDataObject_Mask<bool> printMask = null)
@@ -1807,106 +1853,117 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Object ?? true)
-                {
-                    fg.AppendLine($"Object => {item.Object_Property}");
-                }
-                if (printMask?.ParentIndex ?? true)
-                {
-                    fg.AppendLine($"ParentIndex => {item.ParentIndex}");
-                }
-                if (printMask?.Unknown1 ?? true)
-                {
-                    fg.AppendLine($"Unknown1 => {item.Unknown1}");
-                }
-                if (printMask?.Density ?? true)
-                {
-                    fg.AppendLine($"Density => {item.Density}");
-                }
-                if (printMask?.Clustering ?? true)
-                {
-                    fg.AppendLine($"Clustering => {item.Clustering}");
-                }
-                if (printMask?.MinSlope ?? true)
-                {
-                    fg.AppendLine($"MinSlope => {item.MinSlope}");
-                }
-                if (printMask?.MaxSlope ?? true)
-                {
-                    fg.AppendLine($"MaxSlope => {item.MaxSlope}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.RadiusWrtPercent ?? true)
-                {
-                    fg.AppendLine($"RadiusWrtPercent => {item.RadiusWrtPercent}");
-                }
-                if (printMask?.Radius ?? true)
-                {
-                    fg.AppendLine($"Radius => {item.Radius}");
-                }
-                if (printMask?.MinHeight ?? true)
-                {
-                    fg.AppendLine($"MinHeight => {item.MinHeight}");
-                }
-                if (printMask?.MaxHeight ?? true)
-                {
-                    fg.AppendLine($"MaxHeight => {item.MaxHeight}");
-                }
-                if (printMask?.Sink ?? true)
-                {
-                    fg.AppendLine($"Sink => {item.Sink}");
-                }
-                if (printMask?.SinkVariance ?? true)
-                {
-                    fg.AppendLine($"SinkVariance => {item.SinkVariance}");
-                }
-                if (printMask?.SizeVariance ?? true)
-                {
-                    fg.AppendLine($"SizeVariance => {item.SizeVariance}");
-                }
-                if (printMask?.AngleVariance ?? true)
-                {
-                    fg.AppendLine($"AngleVariance => {item.AngleVariance}");
-                }
-                if (printMask?.Unknow2n ?? true)
-                {
-                    fg.AppendLine($"Unknow2n => {item.Unknow2n}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IRegionDataObjectGetter item,
+        protected static void ToStringFields(
+            IRegionDataObjectGetter item,
+            FileGeneration fg,
+            RegionDataObject_Mask<bool> printMask = null)
+        {
+            if (printMask?.Object ?? true)
+            {
+                fg.AppendLine($"Object => {item.Object_Property}");
+            }
+            if (printMask?.ParentIndex ?? true)
+            {
+                fg.AppendLine($"ParentIndex => {item.ParentIndex}");
+            }
+            if (printMask?.Unknown1 ?? true)
+            {
+                fg.AppendLine($"Unknown1 => {item.Unknown1}");
+            }
+            if (printMask?.Density ?? true)
+            {
+                fg.AppendLine($"Density => {item.Density}");
+            }
+            if (printMask?.Clustering ?? true)
+            {
+                fg.AppendLine($"Clustering => {item.Clustering}");
+            }
+            if (printMask?.MinSlope ?? true)
+            {
+                fg.AppendLine($"MinSlope => {item.MinSlope}");
+            }
+            if (printMask?.MaxSlope ?? true)
+            {
+                fg.AppendLine($"MaxSlope => {item.MaxSlope}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.RadiusWrtPercent ?? true)
+            {
+                fg.AppendLine($"RadiusWrtPercent => {item.RadiusWrtPercent}");
+            }
+            if (printMask?.Radius ?? true)
+            {
+                fg.AppendLine($"Radius => {item.Radius}");
+            }
+            if (printMask?.MinHeight ?? true)
+            {
+                fg.AppendLine($"MinHeight => {item.MinHeight}");
+            }
+            if (printMask?.MaxHeight ?? true)
+            {
+                fg.AppendLine($"MaxHeight => {item.MaxHeight}");
+            }
+            if (printMask?.Sink ?? true)
+            {
+                fg.AppendLine($"Sink => {item.Sink}");
+            }
+            if (printMask?.SinkVariance ?? true)
+            {
+                fg.AppendLine($"SinkVariance => {item.SinkVariance}");
+            }
+            if (printMask?.SizeVariance ?? true)
+            {
+                fg.AppendLine($"SizeVariance => {item.SizeVariance}");
+            }
+            if (printMask?.AngleVariance ?? true)
+            {
+                fg.AppendLine($"AngleVariance => {item.AngleVariance}");
+            }
+            if (printMask?.Unknow2n ?? true)
+            {
+                fg.AppendLine($"Unknow2n => {item.Unknow2n}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IRegionDataObjectGetter item,
             RegionDataObject_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static RegionDataObject_Mask<bool> GetHasBeenSetMask(IRegionDataObjectGetter item)
+        public void FillHasBeenSetMask(
+            IRegionDataObjectGetter item,
+            RegionDataObject_Mask<bool> mask)
         {
-            var ret = new RegionDataObject_Mask<bool>();
-            ret.Object = true;
-            ret.ParentIndex = true;
-            ret.Unknown1 = true;
-            ret.Density = true;
-            ret.Clustering = true;
-            ret.MinSlope = true;
-            ret.MaxSlope = true;
-            ret.Flags = true;
-            ret.RadiusWrtPercent = true;
-            ret.Radius = true;
-            ret.MinHeight = true;
-            ret.MaxHeight = true;
-            ret.Sink = true;
-            ret.SinkVariance = true;
-            ret.SizeVariance = true;
-            ret.AngleVariance = true;
-            ret.Unknow2n = true;
-            return ret;
+            mask.Object = true;
+            mask.ParentIndex = true;
+            mask.Unknown1 = true;
+            mask.Density = true;
+            mask.Clustering = true;
+            mask.MinSlope = true;
+            mask.MaxSlope = true;
+            mask.Flags = true;
+            mask.RadiusWrtPercent = true;
+            mask.Radius = true;
+            mask.MinHeight = true;
+            mask.MaxHeight = true;
+            mask.Sink = true;
+            mask.SinkVariance = true;
+            mask.SizeVariance = true;
+            mask.AngleVariance = true;
+            mask.Unknow2n = true;
         }
 
     }

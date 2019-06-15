@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
         public static Model_Registration Registration => Model_Registration.Instance;
+        protected object CommonInstance => ModelCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public Model()
@@ -96,30 +98,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Model>.GetEqualsMask(Model rhs, EqualsMaskHelper.Include include) => ModelCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IModelGetter>.GetEqualsMask(IModelGetter rhs, EqualsMaskHelper.Include include) => ModelCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Model>.GetEqualsMask(Model rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IModelGetter>.GetEqualsMask(IModelGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Model_Mask<bool> printMask = null)
-        {
-            return ModelCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ModelCommon.ToString(this, fg, name: name, printMask: null);
+            ModelMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public Model_Mask<bool> GetHasBeenSetMask()
-        {
-            return ModelCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -583,19 +577,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            ModelCommon.Clear(this);
+            ModelCommon.Instance.Clear(this);
         }
-
 
         public static Model Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -674,6 +659,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class ModelMixIn
+    {
+        public static void Clear(this IModel item)
+        {
+            ((ModelCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Model_Mask<bool> GetEqualsMask(
+            this IModelGetter item,
+            IModelGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Model_Mask<bool>();
+            ((ModelCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IModelGetter item,
+            string name = null,
+            Model_Mask<bool> printMask = null)
+        {
+            return ((ModelCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IModelGetter item,
+            FileGeneration fg,
+            string name = null,
+            Model_Mask<bool> printMask = null)
+        {
+            ((ModelCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IModelGetter item,
+            Model_Mask<bool?> checkMask)
+        {
+            return ((ModelCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Model_Mask<bool> GetHasBeenSetMask(this IModelGetter item)
+        {
+            var ret = new Model_Mask<bool>();
+            ((ModelCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -888,9 +940,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ModelCommon
+    #region Common
+    public partial class ModelCommon
     {
+        public static readonly ModelCommon Instance = new ModelCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IModel item,
@@ -967,28 +1020,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IModel item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IModel item)
         {
+            ClearPartial();
             item.File = default(String);
             item.BoundRadius = default(Single);
             item.Hashes_Unset();
         }
 
-        public static Model_Mask<bool> GetEqualsMask(
-            this IModelGetter item,
-            IModelGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Model_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IModelGetter item,
             IModelGetter rhs,
             Model_Mask<bool> ret,
@@ -1000,18 +1042,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Hashes = item.Hashes_IsSet == rhs.Hashes_IsSet && ByteExt.EqualsFast(item.Hashes, rhs.Hashes);
         }
 
-        public static string ToString(
-            this IModelGetter item,
+        public string ToString(
+            IModelGetter item,
             string name = null,
             Model_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IModelGetter item,
+        public void ToString(
+            IModelGetter item,
             FileGeneration fg,
             string name = null,
             Model_Mask<bool> printMask = null)
@@ -1027,37 +1073,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.File ?? true)
-                {
-                    fg.AppendLine($"File => {item.File}");
-                }
-                if (printMask?.BoundRadius ?? true)
-                {
-                    fg.AppendLine($"BoundRadius => {item.BoundRadius}");
-                }
-                if (printMask?.Hashes ?? true)
-                {
-                    fg.AppendLine($"Hashes => {item.Hashes}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IModelGetter item,
+        protected static void ToStringFields(
+            IModelGetter item,
+            FileGeneration fg,
+            Model_Mask<bool> printMask = null)
+        {
+            if (printMask?.File ?? true)
+            {
+                fg.AppendLine($"File => {item.File}");
+            }
+            if (printMask?.BoundRadius ?? true)
+            {
+                fg.AppendLine($"BoundRadius => {item.BoundRadius}");
+            }
+            if (printMask?.Hashes ?? true)
+            {
+                fg.AppendLine($"Hashes => {item.Hashes}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IModelGetter item,
             Model_Mask<bool?> checkMask)
         {
             if (checkMask.Hashes.HasValue && checkMask.Hashes.Value != item.Hashes_IsSet) return false;
             return true;
         }
 
-        public static Model_Mask<bool> GetHasBeenSetMask(IModelGetter item)
+        public void FillHasBeenSetMask(
+            IModelGetter item,
+            Model_Mask<bool> mask)
         {
-            var ret = new Model_Mask<bool>();
-            ret.File = true;
-            ret.BoundRadius = true;
-            ret.Hashes = item.Hashes_IsSet;
-            return ret;
+            mask.File = true;
+            mask.BoundRadius = true;
+            mask.Hashes = item.Hashes_IsSet;
         }
 
     }

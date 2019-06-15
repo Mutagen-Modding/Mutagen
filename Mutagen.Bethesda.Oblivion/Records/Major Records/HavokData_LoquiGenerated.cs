@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HavokData_Registration.Instance;
         public static HavokData_Registration Registration => HavokData_Registration.Instance;
+        protected object CommonInstance => HavokDataCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public HavokData()
@@ -76,30 +78,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<HavokData>.GetEqualsMask(HavokData rhs, EqualsMaskHelper.Include include) => HavokDataCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IHavokDataGetter>.GetEqualsMask(IHavokDataGetter rhs, EqualsMaskHelper.Include include) => HavokDataCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<HavokData>.GetEqualsMask(HavokData rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IHavokDataGetter>.GetEqualsMask(IHavokDataGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            HavokData_Mask<bool> printMask = null)
-        {
-            return HavokDataCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            HavokDataCommon.ToString(this, fg, name: name, printMask: null);
+            HavokDataMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public HavokData_Mask<bool> GetHasBeenSetMask()
-        {
-            return HavokDataCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -504,19 +498,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            HavokDataCommon.Clear(this);
+            HavokDataCommon.Instance.Clear(this);
         }
-
 
         public static HavokData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -591,6 +576,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class HavokDataMixIn
+    {
+        public static void Clear(this IHavokData item)
+        {
+            ((HavokDataCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static HavokData_Mask<bool> GetEqualsMask(
+            this IHavokDataGetter item,
+            IHavokDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new HavokData_Mask<bool>();
+            ((HavokDataCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IHavokDataGetter item,
+            string name = null,
+            HavokData_Mask<bool> printMask = null)
+        {
+            return ((HavokDataCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IHavokDataGetter item,
+            FileGeneration fg,
+            string name = null,
+            HavokData_Mask<bool> printMask = null)
+        {
+            ((HavokDataCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IHavokDataGetter item,
+            HavokData_Mask<bool?> checkMask)
+        {
+            return ((HavokDataCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static HavokData_Mask<bool> GetHasBeenSetMask(this IHavokDataGetter item)
+        {
+            var ret = new HavokData_Mask<bool>();
+            ((HavokDataCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -803,9 +855,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class HavokDataCommon
+    #region Common
+    public partial class HavokDataCommon
     {
+        public static readonly HavokDataCommon Instance = new HavokDataCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IHavokData item,
@@ -869,28 +922,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IHavokData item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IHavokData item)
         {
+            ClearPartial();
             item.Material = default(HavokData.MaterialType);
             item.Friction = default(Byte);
             item.Restitution = default(Byte);
         }
 
-        public static HavokData_Mask<bool> GetEqualsMask(
-            this IHavokDataGetter item,
-            IHavokDataGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new HavokData_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IHavokDataGetter item,
             IHavokDataGetter rhs,
             HavokData_Mask<bool> ret,
@@ -902,18 +944,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Restitution = item.Restitution == rhs.Restitution;
         }
 
-        public static string ToString(
-            this IHavokDataGetter item,
+        public string ToString(
+            IHavokDataGetter item,
             string name = null,
             HavokData_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IHavokDataGetter item,
+        public void ToString(
+            IHavokDataGetter item,
             FileGeneration fg,
             string name = null,
             HavokData_Mask<bool> printMask = null)
@@ -929,36 +975,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Material ?? true)
-                {
-                    fg.AppendLine($"Material => {item.Material}");
-                }
-                if (printMask?.Friction ?? true)
-                {
-                    fg.AppendLine($"Friction => {item.Friction}");
-                }
-                if (printMask?.Restitution ?? true)
-                {
-                    fg.AppendLine($"Restitution => {item.Restitution}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IHavokDataGetter item,
+        protected static void ToStringFields(
+            IHavokDataGetter item,
+            FileGeneration fg,
+            HavokData_Mask<bool> printMask = null)
+        {
+            if (printMask?.Material ?? true)
+            {
+                fg.AppendLine($"Material => {item.Material}");
+            }
+            if (printMask?.Friction ?? true)
+            {
+                fg.AppendLine($"Friction => {item.Friction}");
+            }
+            if (printMask?.Restitution ?? true)
+            {
+                fg.AppendLine($"Restitution => {item.Restitution}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IHavokDataGetter item,
             HavokData_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static HavokData_Mask<bool> GetHasBeenSetMask(IHavokDataGetter item)
+        public void FillHasBeenSetMask(
+            IHavokDataGetter item,
+            HavokData_Mask<bool> mask)
         {
-            var ret = new HavokData_Mask<bool>();
-            ret.Material = true;
-            ret.Friction = true;
-            ret.Restitution = true;
-            return ret;
+            mask.Material = true;
+            mask.Friction = true;
+            mask.Restitution = true;
         }
 
     }

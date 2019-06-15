@@ -660,7 +660,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
-            IReadOnlySetList<T> items,
+            IReadOnlyList<T> items,
             int fieldIndex,
             RecordType recordType,
             ErrorMaskBuilder errorMask,
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
-            IReadOnlySetList<T> items,
+            IReadOnlyList<T> items,
             RecordType recordType,
             BinarySubWriteDelegate transl)
         {
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Binary
 
         private void WriteRecordList(
             MutagenWriter writer,
-            IReadOnlySetList<T> items,
+            IReadOnlyList<T> items,
             RecordType recordType,
             ErrorMaskBuilder errorMask,
             BinarySubWriteErrDelegate transl)
@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Binary
 
         private void WriteRecordList(
             MutagenWriter writer,
-            IReadOnlySetList<T> items,
+            IReadOnlyList<T> items,
             RecordType recordType,
             BinarySubWriteDelegate transl)
         {

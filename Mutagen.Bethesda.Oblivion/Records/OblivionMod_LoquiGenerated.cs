@@ -46,6 +46,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
         public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
+        protected object CommonInstance => OblivionModCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         protected OblivionMod()
@@ -515,30 +517,22 @@ namespace Mutagen.Bethesda.Oblivion
         IGroupGetter<EffectShader> IOblivionModGetter.EffectShaders => _EffectShaders_Object;
         #endregion
 
-        IMask<bool> IEqualsMask<OblivionMod>.GetEqualsMask(OblivionMod rhs, EqualsMaskHelper.Include include) => OblivionModCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IOblivionModGetter>.GetEqualsMask(IOblivionModGetter rhs, EqualsMaskHelper.Include include) => OblivionModCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<OblivionMod>.GetEqualsMask(OblivionMod rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IOblivionModGetter>.GetEqualsMask(IOblivionModGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            OblivionMod_Mask<bool> printMask = null)
-        {
-            return OblivionModCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            OblivionModCommon.ToString(this, fg, name: name, printMask: null);
+            OblivionModMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public OblivionMod_Mask<bool> GetHasBeenSetMask()
-        {
-            return OblivionModCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -863,8 +857,7 @@ namespace Mutagen.Bethesda.Oblivion
                             rhs: ModHeader.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -887,8 +880,7 @@ namespace Mutagen.Bethesda.Oblivion
                             rhs: ListGroup<CellBlock>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -5325,19 +5317,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            OblivionModCommon.Clear(this);
+            OblivionModCommon.Instance.Clear(this);
         }
-
 
         public static OblivionMod Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -5785,6 +5768,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class OblivionModMixIn
+    {
+        public static void Clear(this IOblivionMod item)
+        {
+            ((OblivionModCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static OblivionMod_Mask<bool> GetEqualsMask(
+            this IOblivionModGetter item,
+            IOblivionModGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new OblivionMod_Mask<bool>();
+            ((OblivionModCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IOblivionModGetter item,
+            string name = null,
+            OblivionMod_Mask<bool> printMask = null)
+        {
+            return ((OblivionModCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IOblivionModGetter item,
+            FileGeneration fg,
+            string name = null,
+            OblivionMod_Mask<bool> printMask = null)
+        {
+            ((OblivionModCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IOblivionModGetter item,
+            OblivionMod_Mask<bool?> checkMask)
+        {
+            return ((OblivionModCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static OblivionMod_Mask<bool> GetHasBeenSetMask(this IOblivionModGetter item)
+        {
+            var ret = new OblivionMod_Mask<bool>();
+            ((OblivionModCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -6713,9 +6763,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class OblivionModCommon
+    #region Common
+    public partial class OblivionModCommon
     {
+        public static readonly OblivionModCommon Instance = new OblivionModCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IOblivionMod item,
@@ -6751,7 +6802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.GameSettings);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<GameSetting>.CopyFieldsFrom(
                         item: item.GameSettings,
                         rhs: rhs.GameSettings,
                         def: def?.GameSettings,
@@ -6773,7 +6824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Globals);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Global>.CopyFieldsFrom(
                         item: item.Globals,
                         rhs: rhs.Globals,
                         def: def?.Globals,
@@ -6795,7 +6846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Classes);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Class>.CopyFieldsFrom(
                         item: item.Classes,
                         rhs: rhs.Classes,
                         def: def?.Classes,
@@ -6817,7 +6868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Factions);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Faction>.CopyFieldsFrom(
                         item: item.Factions,
                         rhs: rhs.Factions,
                         def: def?.Factions,
@@ -6839,7 +6890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Hairs);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Hair>.CopyFieldsFrom(
                         item: item.Hairs,
                         rhs: rhs.Hairs,
                         def: def?.Hairs,
@@ -6861,7 +6912,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Eyes);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Eye>.CopyFieldsFrom(
                         item: item.Eyes,
                         rhs: rhs.Eyes,
                         def: def?.Eyes,
@@ -6883,7 +6934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Races);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Race>.CopyFieldsFrom(
                         item: item.Races,
                         rhs: rhs.Races,
                         def: def?.Races,
@@ -6905,7 +6956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Sounds);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Sound>.CopyFieldsFrom(
                         item: item.Sounds,
                         rhs: rhs.Sounds,
                         def: def?.Sounds,
@@ -6927,7 +6978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Skills);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<SkillRecord>.CopyFieldsFrom(
                         item: item.Skills,
                         rhs: rhs.Skills,
                         def: def?.Skills,
@@ -6949,7 +7000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.MagicEffects);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<MagicEffect>.CopyFieldsFrom(
                         item: item.MagicEffects,
                         rhs: rhs.MagicEffects,
                         def: def?.MagicEffects,
@@ -6971,7 +7022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Scripts);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Script>.CopyFieldsFrom(
                         item: item.Scripts,
                         rhs: rhs.Scripts,
                         def: def?.Scripts,
@@ -6993,7 +7044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LandTextures);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<LandTexture>.CopyFieldsFrom(
                         item: item.LandTextures,
                         rhs: rhs.LandTextures,
                         def: def?.LandTextures,
@@ -7015,7 +7066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Enchantments);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Enchantment>.CopyFieldsFrom(
                         item: item.Enchantments,
                         rhs: rhs.Enchantments,
                         def: def?.Enchantments,
@@ -7037,7 +7088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Spells);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<SpellUnleveled>.CopyFieldsFrom(
                         item: item.Spells,
                         rhs: rhs.Spells,
                         def: def?.Spells,
@@ -7059,7 +7110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Birthsigns);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Birthsign>.CopyFieldsFrom(
                         item: item.Birthsigns,
                         rhs: rhs.Birthsigns,
                         def: def?.Birthsigns,
@@ -7081,7 +7132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Activators);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Activator>.CopyFieldsFrom(
                         item: item.Activators,
                         rhs: rhs.Activators,
                         def: def?.Activators,
@@ -7103,7 +7154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<AlchemicalApparatus>.CopyFieldsFrom(
                         item: item.AlchemicalApparatus,
                         rhs: rhs.AlchemicalApparatus,
                         def: def?.AlchemicalApparatus,
@@ -7125,7 +7176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Armors);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Armor>.CopyFieldsFrom(
                         item: item.Armors,
                         rhs: rhs.Armors,
                         def: def?.Armors,
@@ -7147,7 +7198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Books);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Book>.CopyFieldsFrom(
                         item: item.Books,
                         rhs: rhs.Books,
                         def: def?.Books,
@@ -7169,7 +7220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Clothes);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Clothing>.CopyFieldsFrom(
                         item: item.Clothes,
                         rhs: rhs.Clothes,
                         def: def?.Clothes,
@@ -7191,7 +7242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Containers);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Container>.CopyFieldsFrom(
                         item: item.Containers,
                         rhs: rhs.Containers,
                         def: def?.Containers,
@@ -7213,7 +7264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Doors);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Door>.CopyFieldsFrom(
                         item: item.Doors,
                         rhs: rhs.Doors,
                         def: def?.Doors,
@@ -7235,7 +7286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ingredients);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Ingredient>.CopyFieldsFrom(
                         item: item.Ingredients,
                         rhs: rhs.Ingredients,
                         def: def?.Ingredients,
@@ -7257,7 +7308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Lights);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Light>.CopyFieldsFrom(
                         item: item.Lights,
                         rhs: rhs.Lights,
                         def: def?.Lights,
@@ -7279,7 +7330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Miscellaneous>.CopyFieldsFrom(
                         item: item.Miscellaneous,
                         rhs: rhs.Miscellaneous,
                         def: def?.Miscellaneous,
@@ -7301,7 +7352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Statics);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Static>.CopyFieldsFrom(
                         item: item.Statics,
                         rhs: rhs.Statics,
                         def: def?.Statics,
@@ -7323,7 +7374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Grasses);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Grass>.CopyFieldsFrom(
                         item: item.Grasses,
                         rhs: rhs.Grasses,
                         def: def?.Grasses,
@@ -7345,7 +7396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Trees);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Tree>.CopyFieldsFrom(
                         item: item.Trees,
                         rhs: rhs.Trees,
                         def: def?.Trees,
@@ -7367,7 +7418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Flora);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Flora>.CopyFieldsFrom(
                         item: item.Flora,
                         rhs: rhs.Flora,
                         def: def?.Flora,
@@ -7389,7 +7440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Furnature);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Furnature>.CopyFieldsFrom(
                         item: item.Furnature,
                         rhs: rhs.Furnature,
                         def: def?.Furnature,
@@ -7411,7 +7462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weapons);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Weapon>.CopyFieldsFrom(
                         item: item.Weapons,
                         rhs: rhs.Weapons,
                         def: def?.Weapons,
@@ -7433,7 +7484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammo);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Ammo>.CopyFieldsFrom(
                         item: item.Ammo,
                         rhs: rhs.Ammo,
                         def: def?.Ammo,
@@ -7455,7 +7506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.NPCs);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<NPC>.CopyFieldsFrom(
                         item: item.NPCs,
                         rhs: rhs.NPCs,
                         def: def?.NPCs,
@@ -7477,7 +7528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Creatures);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Creature>.CopyFieldsFrom(
                         item: item.Creatures,
                         rhs: rhs.Creatures,
                         def: def?.Creatures,
@@ -7499,7 +7550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<LeveledCreature>.CopyFieldsFrom(
                         item: item.LeveledCreatures,
                         rhs: rhs.LeveledCreatures,
                         def: def?.LeveledCreatures,
@@ -7521,7 +7572,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.SoulGems);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<SoulGem>.CopyFieldsFrom(
                         item: item.SoulGems,
                         rhs: rhs.SoulGems,
                         def: def?.SoulGems,
@@ -7543,7 +7594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Keys);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Key>.CopyFieldsFrom(
                         item: item.Keys,
                         rhs: rhs.Keys,
                         def: def?.Keys,
@@ -7565,7 +7616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Potions);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Potion>.CopyFieldsFrom(
                         item: item.Potions,
                         rhs: rhs.Potions,
                         def: def?.Potions,
@@ -7587,7 +7638,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Subspaces);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Subspace>.CopyFieldsFrom(
                         item: item.Subspaces,
                         rhs: rhs.Subspaces,
                         def: def?.Subspaces,
@@ -7609,7 +7660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.SigilStones);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<SigilStone>.CopyFieldsFrom(
                         item: item.SigilStones,
                         rhs: rhs.SigilStones,
                         def: def?.SigilStones,
@@ -7631,7 +7682,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledItems);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<LeveledItem>.CopyFieldsFrom(
                         item: item.LeveledItems,
                         rhs: rhs.LeveledItems,
                         def: def?.LeveledItems,
@@ -7653,7 +7704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weathers);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Weather>.CopyFieldsFrom(
                         item: item.Weathers,
                         rhs: rhs.Weathers,
                         def: def?.Weathers,
@@ -7675,7 +7726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Climates);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Climate>.CopyFieldsFrom(
                         item: item.Climates,
                         rhs: rhs.Climates,
                         def: def?.Climates,
@@ -7697,7 +7748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Regions);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Region>.CopyFieldsFrom(
                         item: item.Regions,
                         rhs: rhs.Regions,
                         def: def?.Regions,
@@ -7719,7 +7770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Cells);
                 try
                 {
-                    ListGroupCommon.CopyFieldsFrom(
+                    ListGroupCommon<CellBlock>.CopyFieldsFrom(
                         item: item.Cells,
                         rhs: rhs.Cells,
                         def: def?.Cells,
@@ -7741,7 +7792,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Worldspaces);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Worldspace>.CopyFieldsFrom(
                         item: item.Worldspaces,
                         rhs: rhs.Worldspaces,
                         def: def?.Worldspaces,
@@ -7763,7 +7814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.DialogTopics);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<DialogTopic>.CopyFieldsFrom(
                         item: item.DialogTopics,
                         rhs: rhs.DialogTopics,
                         def: def?.DialogTopics,
@@ -7785,7 +7836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Quests);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Quest>.CopyFieldsFrom(
                         item: item.Quests,
                         rhs: rhs.Quests,
                         def: def?.Quests,
@@ -7807,7 +7858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<IdleAnimation>.CopyFieldsFrom(
                         item: item.IdleAnimations,
                         rhs: rhs.IdleAnimations,
                         def: def?.IdleAnimations,
@@ -7829,7 +7880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<AIPackage>.CopyFieldsFrom(
                         item: item.AIPackages,
                         rhs: rhs.AIPackages,
                         def: def?.AIPackages,
@@ -7851,7 +7902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.CombatStyles);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<CombatStyle>.CopyFieldsFrom(
                         item: item.CombatStyles,
                         rhs: rhs.CombatStyles,
                         def: def?.CombatStyles,
@@ -7873,7 +7924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<LoadScreen>.CopyFieldsFrom(
                         item: item.LoadScreens,
                         rhs: rhs.LoadScreens,
                         def: def?.LoadScreens,
@@ -7895,7 +7946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<LeveledSpell>.CopyFieldsFrom(
                         item: item.LeveledSpells,
                         rhs: rhs.LeveledSpells,
                         def: def?.LeveledSpells,
@@ -7917,7 +7968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<AnimatedObject>.CopyFieldsFrom(
                         item: item.AnimatedObjects,
                         rhs: rhs.AnimatedObjects,
                         def: def?.AnimatedObjects,
@@ -7939,7 +7990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Waters);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Water>.CopyFieldsFrom(
                         item: item.Waters,
                         rhs: rhs.Waters,
                         def: def?.Waters,
@@ -7961,7 +8012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.EffectShaders);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<EffectShader>.CopyFieldsFrom(
                         item: item.EffectShaders,
                         rhs: rhs.EffectShaders,
                         def: def?.EffectShaders,
@@ -7982,25 +8033,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IOblivionMod item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IOblivionMod item)
         {
+            ClearPartial();
         }
 
-        public static OblivionMod_Mask<bool> GetEqualsMask(
-            this IOblivionModGetter item,
-            IOblivionModGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new OblivionMod_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IOblivionModGetter item,
             IOblivionModGetter rhs,
             OblivionMod_Mask<bool> ret,
@@ -8012,78 +8052,82 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.ModHeader_IsSet,
                 item.ModHeader,
                 rhs.ModHeader,
-                (loqLhs, loqRhs) => ModHeaderCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.GameSettings = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.GameSettings, rhs.GameSettings, include), include);
-            ret.Globals = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Globals, rhs.Globals, include), include);
-            ret.Classes = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Classes, rhs.Classes, include), include);
-            ret.Factions = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Factions, rhs.Factions, include), include);
-            ret.Hairs = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Hairs, rhs.Hairs, include), include);
-            ret.Eyes = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Eyes, rhs.Eyes, include), include);
-            ret.Races = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Races, rhs.Races, include), include);
-            ret.Sounds = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Sounds, rhs.Sounds, include), include);
-            ret.Skills = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Skills, rhs.Skills, include), include);
-            ret.MagicEffects = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.MagicEffects, rhs.MagicEffects, include), include);
-            ret.Scripts = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Scripts, rhs.Scripts, include), include);
-            ret.LandTextures = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.LandTextures, rhs.LandTextures, include), include);
-            ret.Enchantments = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Enchantments, rhs.Enchantments, include), include);
-            ret.Spells = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Spells, rhs.Spells, include), include);
-            ret.Birthsigns = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Birthsigns, rhs.Birthsigns, include), include);
-            ret.Activators = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Activators, rhs.Activators, include), include);
-            ret.AlchemicalApparatus = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.AlchemicalApparatus, rhs.AlchemicalApparatus, include), include);
-            ret.Armors = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Armors, rhs.Armors, include), include);
-            ret.Books = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Books, rhs.Books, include), include);
-            ret.Clothes = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Clothes, rhs.Clothes, include), include);
-            ret.Containers = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Containers, rhs.Containers, include), include);
-            ret.Doors = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Doors, rhs.Doors, include), include);
-            ret.Ingredients = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Ingredients, rhs.Ingredients, include), include);
-            ret.Lights = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Lights, rhs.Lights, include), include);
-            ret.Miscellaneous = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Miscellaneous, rhs.Miscellaneous, include), include);
-            ret.Statics = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Statics, rhs.Statics, include), include);
-            ret.Grasses = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Grasses, rhs.Grasses, include), include);
-            ret.Trees = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Trees, rhs.Trees, include), include);
-            ret.Flora = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Flora, rhs.Flora, include), include);
-            ret.Furnature = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Furnature, rhs.Furnature, include), include);
-            ret.Weapons = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Weapons, rhs.Weapons, include), include);
-            ret.Ammo = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Ammo, rhs.Ammo, include), include);
-            ret.NPCs = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.NPCs, rhs.NPCs, include), include);
-            ret.Creatures = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Creatures, rhs.Creatures, include), include);
-            ret.LeveledCreatures = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.LeveledCreatures, rhs.LeveledCreatures, include), include);
-            ret.SoulGems = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.SoulGems, rhs.SoulGems, include), include);
-            ret.Keys = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Keys, rhs.Keys, include), include);
-            ret.Potions = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Potions, rhs.Potions, include), include);
-            ret.Subspaces = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Subspaces, rhs.Subspaces, include), include);
-            ret.SigilStones = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.SigilStones, rhs.SigilStones, include), include);
-            ret.LeveledItems = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.LeveledItems, rhs.LeveledItems, include), include);
-            ret.Weathers = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Weathers, rhs.Weathers, include), include);
-            ret.Climates = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Climates, rhs.Climates, include), include);
-            ret.Regions = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Regions, rhs.Regions, include), include);
-            ret.Cells = MaskItemExt.Factory(ListGroupCommon.GetEqualsMask(item.Cells, rhs.Cells, include), include);
-            ret.Worldspaces = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Worldspaces, rhs.Worldspaces, include), include);
-            ret.DialogTopics = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.DialogTopics, rhs.DialogTopics, include), include);
-            ret.Quests = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Quests, rhs.Quests, include), include);
-            ret.IdleAnimations = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.IdleAnimations, rhs.IdleAnimations, include), include);
-            ret.AIPackages = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.AIPackages, rhs.AIPackages, include), include);
-            ret.CombatStyles = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.CombatStyles, rhs.CombatStyles, include), include);
-            ret.LoadScreens = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.LoadScreens, rhs.LoadScreens, include), include);
-            ret.LeveledSpells = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.LeveledSpells, rhs.LeveledSpells, include), include);
-            ret.AnimatedObjects = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.AnimatedObjects, rhs.AnimatedObjects, include), include);
-            ret.Waters = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Waters, rhs.Waters, include), include);
-            ret.EffectShaders = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.EffectShaders, rhs.EffectShaders, include), include);
+            ret.GameSettings = MaskItemExt.Factory(item.GameSettings.GetEqualsMask(rhs.GameSettings, include), include);
+            ret.Globals = MaskItemExt.Factory(item.Globals.GetEqualsMask(rhs.Globals, include), include);
+            ret.Classes = MaskItemExt.Factory(item.Classes.GetEqualsMask(rhs.Classes, include), include);
+            ret.Factions = MaskItemExt.Factory(item.Factions.GetEqualsMask(rhs.Factions, include), include);
+            ret.Hairs = MaskItemExt.Factory(item.Hairs.GetEqualsMask(rhs.Hairs, include), include);
+            ret.Eyes = MaskItemExt.Factory(item.Eyes.GetEqualsMask(rhs.Eyes, include), include);
+            ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
+            ret.Sounds = MaskItemExt.Factory(item.Sounds.GetEqualsMask(rhs.Sounds, include), include);
+            ret.Skills = MaskItemExt.Factory(item.Skills.GetEqualsMask(rhs.Skills, include), include);
+            ret.MagicEffects = MaskItemExt.Factory(item.MagicEffects.GetEqualsMask(rhs.MagicEffects, include), include);
+            ret.Scripts = MaskItemExt.Factory(item.Scripts.GetEqualsMask(rhs.Scripts, include), include);
+            ret.LandTextures = MaskItemExt.Factory(item.LandTextures.GetEqualsMask(rhs.LandTextures, include), include);
+            ret.Enchantments = MaskItemExt.Factory(item.Enchantments.GetEqualsMask(rhs.Enchantments, include), include);
+            ret.Spells = MaskItemExt.Factory(item.Spells.GetEqualsMask(rhs.Spells, include), include);
+            ret.Birthsigns = MaskItemExt.Factory(item.Birthsigns.GetEqualsMask(rhs.Birthsigns, include), include);
+            ret.Activators = MaskItemExt.Factory(item.Activators.GetEqualsMask(rhs.Activators, include), include);
+            ret.AlchemicalApparatus = MaskItemExt.Factory(item.AlchemicalApparatus.GetEqualsMask(rhs.AlchemicalApparatus, include), include);
+            ret.Armors = MaskItemExt.Factory(item.Armors.GetEqualsMask(rhs.Armors, include), include);
+            ret.Books = MaskItemExt.Factory(item.Books.GetEqualsMask(rhs.Books, include), include);
+            ret.Clothes = MaskItemExt.Factory(item.Clothes.GetEqualsMask(rhs.Clothes, include), include);
+            ret.Containers = MaskItemExt.Factory(item.Containers.GetEqualsMask(rhs.Containers, include), include);
+            ret.Doors = MaskItemExt.Factory(item.Doors.GetEqualsMask(rhs.Doors, include), include);
+            ret.Ingredients = MaskItemExt.Factory(item.Ingredients.GetEqualsMask(rhs.Ingredients, include), include);
+            ret.Lights = MaskItemExt.Factory(item.Lights.GetEqualsMask(rhs.Lights, include), include);
+            ret.Miscellaneous = MaskItemExt.Factory(item.Miscellaneous.GetEqualsMask(rhs.Miscellaneous, include), include);
+            ret.Statics = MaskItemExt.Factory(item.Statics.GetEqualsMask(rhs.Statics, include), include);
+            ret.Grasses = MaskItemExt.Factory(item.Grasses.GetEqualsMask(rhs.Grasses, include), include);
+            ret.Trees = MaskItemExt.Factory(item.Trees.GetEqualsMask(rhs.Trees, include), include);
+            ret.Flora = MaskItemExt.Factory(item.Flora.GetEqualsMask(rhs.Flora, include), include);
+            ret.Furnature = MaskItemExt.Factory(item.Furnature.GetEqualsMask(rhs.Furnature, include), include);
+            ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
+            ret.Ammo = MaskItemExt.Factory(item.Ammo.GetEqualsMask(rhs.Ammo, include), include);
+            ret.NPCs = MaskItemExt.Factory(item.NPCs.GetEqualsMask(rhs.NPCs, include), include);
+            ret.Creatures = MaskItemExt.Factory(item.Creatures.GetEqualsMask(rhs.Creatures, include), include);
+            ret.LeveledCreatures = MaskItemExt.Factory(item.LeveledCreatures.GetEqualsMask(rhs.LeveledCreatures, include), include);
+            ret.SoulGems = MaskItemExt.Factory(item.SoulGems.GetEqualsMask(rhs.SoulGems, include), include);
+            ret.Keys = MaskItemExt.Factory(item.Keys.GetEqualsMask(rhs.Keys, include), include);
+            ret.Potions = MaskItemExt.Factory(item.Potions.GetEqualsMask(rhs.Potions, include), include);
+            ret.Subspaces = MaskItemExt.Factory(item.Subspaces.GetEqualsMask(rhs.Subspaces, include), include);
+            ret.SigilStones = MaskItemExt.Factory(item.SigilStones.GetEqualsMask(rhs.SigilStones, include), include);
+            ret.LeveledItems = MaskItemExt.Factory(item.LeveledItems.GetEqualsMask(rhs.LeveledItems, include), include);
+            ret.Weathers = MaskItemExt.Factory(item.Weathers.GetEqualsMask(rhs.Weathers, include), include);
+            ret.Climates = MaskItemExt.Factory(item.Climates.GetEqualsMask(rhs.Climates, include), include);
+            ret.Regions = MaskItemExt.Factory(item.Regions.GetEqualsMask(rhs.Regions, include), include);
+            ret.Cells = MaskItemExt.Factory(item.Cells.GetEqualsMask(rhs.Cells, include), include);
+            ret.Worldspaces = MaskItemExt.Factory(item.Worldspaces.GetEqualsMask(rhs.Worldspaces, include), include);
+            ret.DialogTopics = MaskItemExt.Factory(item.DialogTopics.GetEqualsMask(rhs.DialogTopics, include), include);
+            ret.Quests = MaskItemExt.Factory(item.Quests.GetEqualsMask(rhs.Quests, include), include);
+            ret.IdleAnimations = MaskItemExt.Factory(item.IdleAnimations.GetEqualsMask(rhs.IdleAnimations, include), include);
+            ret.AIPackages = MaskItemExt.Factory(item.AIPackages.GetEqualsMask(rhs.AIPackages, include), include);
+            ret.CombatStyles = MaskItemExt.Factory(item.CombatStyles.GetEqualsMask(rhs.CombatStyles, include), include);
+            ret.LoadScreens = MaskItemExt.Factory(item.LoadScreens.GetEqualsMask(rhs.LoadScreens, include), include);
+            ret.LeveledSpells = MaskItemExt.Factory(item.LeveledSpells.GetEqualsMask(rhs.LeveledSpells, include), include);
+            ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
+            ret.Waters = MaskItemExt.Factory(item.Waters.GetEqualsMask(rhs.Waters, include), include);
+            ret.EffectShaders = MaskItemExt.Factory(item.EffectShaders.GetEqualsMask(rhs.EffectShaders, include), include);
         }
 
-        public static string ToString(
-            this IOblivionModGetter item,
+        public string ToString(
+            IOblivionModGetter item,
             string name = null,
             OblivionMod_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IOblivionModGetter item,
+        public void ToString(
+            IOblivionModGetter item,
             FileGeneration fg,
             string name = null,
             OblivionMod_Mask<bool> printMask = null)
@@ -8099,240 +8143,251 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.ModHeader?.Overall ?? true)
-                {
-                    item.ModHeader?.ToString(fg, "ModHeader");
-                }
-                if (printMask?.GameSettings?.Overall ?? true)
-                {
-                    item.GameSettings?.ToString(fg, "GameSettings");
-                }
-                if (printMask?.Globals?.Overall ?? true)
-                {
-                    item.Globals?.ToString(fg, "Globals");
-                }
-                if (printMask?.Classes?.Overall ?? true)
-                {
-                    item.Classes?.ToString(fg, "Classes");
-                }
-                if (printMask?.Factions?.Overall ?? true)
-                {
-                    item.Factions?.ToString(fg, "Factions");
-                }
-                if (printMask?.Hairs?.Overall ?? true)
-                {
-                    item.Hairs?.ToString(fg, "Hairs");
-                }
-                if (printMask?.Eyes?.Overall ?? true)
-                {
-                    item.Eyes?.ToString(fg, "Eyes");
-                }
-                if (printMask?.Races?.Overall ?? true)
-                {
-                    item.Races?.ToString(fg, "Races");
-                }
-                if (printMask?.Sounds?.Overall ?? true)
-                {
-                    item.Sounds?.ToString(fg, "Sounds");
-                }
-                if (printMask?.Skills?.Overall ?? true)
-                {
-                    item.Skills?.ToString(fg, "Skills");
-                }
-                if (printMask?.MagicEffects?.Overall ?? true)
-                {
-                    item.MagicEffects?.ToString(fg, "MagicEffects");
-                }
-                if (printMask?.Scripts?.Overall ?? true)
-                {
-                    item.Scripts?.ToString(fg, "Scripts");
-                }
-                if (printMask?.LandTextures?.Overall ?? true)
-                {
-                    item.LandTextures?.ToString(fg, "LandTextures");
-                }
-                if (printMask?.Enchantments?.Overall ?? true)
-                {
-                    item.Enchantments?.ToString(fg, "Enchantments");
-                }
-                if (printMask?.Spells?.Overall ?? true)
-                {
-                    item.Spells?.ToString(fg, "Spells");
-                }
-                if (printMask?.Birthsigns?.Overall ?? true)
-                {
-                    item.Birthsigns?.ToString(fg, "Birthsigns");
-                }
-                if (printMask?.Activators?.Overall ?? true)
-                {
-                    item.Activators?.ToString(fg, "Activators");
-                }
-                if (printMask?.AlchemicalApparatus?.Overall ?? true)
-                {
-                    item.AlchemicalApparatus?.ToString(fg, "AlchemicalApparatus");
-                }
-                if (printMask?.Armors?.Overall ?? true)
-                {
-                    item.Armors?.ToString(fg, "Armors");
-                }
-                if (printMask?.Books?.Overall ?? true)
-                {
-                    item.Books?.ToString(fg, "Books");
-                }
-                if (printMask?.Clothes?.Overall ?? true)
-                {
-                    item.Clothes?.ToString(fg, "Clothes");
-                }
-                if (printMask?.Containers?.Overall ?? true)
-                {
-                    item.Containers?.ToString(fg, "Containers");
-                }
-                if (printMask?.Doors?.Overall ?? true)
-                {
-                    item.Doors?.ToString(fg, "Doors");
-                }
-                if (printMask?.Ingredients?.Overall ?? true)
-                {
-                    item.Ingredients?.ToString(fg, "Ingredients");
-                }
-                if (printMask?.Lights?.Overall ?? true)
-                {
-                    item.Lights?.ToString(fg, "Lights");
-                }
-                if (printMask?.Miscellaneous?.Overall ?? true)
-                {
-                    item.Miscellaneous?.ToString(fg, "Miscellaneous");
-                }
-                if (printMask?.Statics?.Overall ?? true)
-                {
-                    item.Statics?.ToString(fg, "Statics");
-                }
-                if (printMask?.Grasses?.Overall ?? true)
-                {
-                    item.Grasses?.ToString(fg, "Grasses");
-                }
-                if (printMask?.Trees?.Overall ?? true)
-                {
-                    item.Trees?.ToString(fg, "Trees");
-                }
-                if (printMask?.Flora?.Overall ?? true)
-                {
-                    item.Flora?.ToString(fg, "Flora");
-                }
-                if (printMask?.Furnature?.Overall ?? true)
-                {
-                    item.Furnature?.ToString(fg, "Furnature");
-                }
-                if (printMask?.Weapons?.Overall ?? true)
-                {
-                    item.Weapons?.ToString(fg, "Weapons");
-                }
-                if (printMask?.Ammo?.Overall ?? true)
-                {
-                    item.Ammo?.ToString(fg, "Ammo");
-                }
-                if (printMask?.NPCs?.Overall ?? true)
-                {
-                    item.NPCs?.ToString(fg, "NPCs");
-                }
-                if (printMask?.Creatures?.Overall ?? true)
-                {
-                    item.Creatures?.ToString(fg, "Creatures");
-                }
-                if (printMask?.LeveledCreatures?.Overall ?? true)
-                {
-                    item.LeveledCreatures?.ToString(fg, "LeveledCreatures");
-                }
-                if (printMask?.SoulGems?.Overall ?? true)
-                {
-                    item.SoulGems?.ToString(fg, "SoulGems");
-                }
-                if (printMask?.Keys?.Overall ?? true)
-                {
-                    item.Keys?.ToString(fg, "Keys");
-                }
-                if (printMask?.Potions?.Overall ?? true)
-                {
-                    item.Potions?.ToString(fg, "Potions");
-                }
-                if (printMask?.Subspaces?.Overall ?? true)
-                {
-                    item.Subspaces?.ToString(fg, "Subspaces");
-                }
-                if (printMask?.SigilStones?.Overall ?? true)
-                {
-                    item.SigilStones?.ToString(fg, "SigilStones");
-                }
-                if (printMask?.LeveledItems?.Overall ?? true)
-                {
-                    item.LeveledItems?.ToString(fg, "LeveledItems");
-                }
-                if (printMask?.Weathers?.Overall ?? true)
-                {
-                    item.Weathers?.ToString(fg, "Weathers");
-                }
-                if (printMask?.Climates?.Overall ?? true)
-                {
-                    item.Climates?.ToString(fg, "Climates");
-                }
-                if (printMask?.Regions?.Overall ?? true)
-                {
-                    item.Regions?.ToString(fg, "Regions");
-                }
-                if (printMask?.Cells?.Overall ?? true)
-                {
-                    item.Cells?.ToString(fg, "Cells");
-                }
-                if (printMask?.Worldspaces?.Overall ?? true)
-                {
-                    item.Worldspaces?.ToString(fg, "Worldspaces");
-                }
-                if (printMask?.DialogTopics?.Overall ?? true)
-                {
-                    item.DialogTopics?.ToString(fg, "DialogTopics");
-                }
-                if (printMask?.Quests?.Overall ?? true)
-                {
-                    item.Quests?.ToString(fg, "Quests");
-                }
-                if (printMask?.IdleAnimations?.Overall ?? true)
-                {
-                    item.IdleAnimations?.ToString(fg, "IdleAnimations");
-                }
-                if (printMask?.AIPackages?.Overall ?? true)
-                {
-                    item.AIPackages?.ToString(fg, "AIPackages");
-                }
-                if (printMask?.CombatStyles?.Overall ?? true)
-                {
-                    item.CombatStyles?.ToString(fg, "CombatStyles");
-                }
-                if (printMask?.LoadScreens?.Overall ?? true)
-                {
-                    item.LoadScreens?.ToString(fg, "LoadScreens");
-                }
-                if (printMask?.LeveledSpells?.Overall ?? true)
-                {
-                    item.LeveledSpells?.ToString(fg, "LeveledSpells");
-                }
-                if (printMask?.AnimatedObjects?.Overall ?? true)
-                {
-                    item.AnimatedObjects?.ToString(fg, "AnimatedObjects");
-                }
-                if (printMask?.Waters?.Overall ?? true)
-                {
-                    item.Waters?.ToString(fg, "Waters");
-                }
-                if (printMask?.EffectShaders?.Overall ?? true)
-                {
-                    item.EffectShaders?.ToString(fg, "EffectShaders");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IOblivionModGetter item,
+        protected static void ToStringFields(
+            IOblivionModGetter item,
+            FileGeneration fg,
+            OblivionMod_Mask<bool> printMask = null)
+        {
+            if (printMask?.ModHeader?.Overall ?? true)
+            {
+                item.ModHeader?.ToString(fg, "ModHeader");
+            }
+            if (printMask?.GameSettings?.Overall ?? true)
+            {
+                item.GameSettings?.ToString(fg, "GameSettings");
+            }
+            if (printMask?.Globals?.Overall ?? true)
+            {
+                item.Globals?.ToString(fg, "Globals");
+            }
+            if (printMask?.Classes?.Overall ?? true)
+            {
+                item.Classes?.ToString(fg, "Classes");
+            }
+            if (printMask?.Factions?.Overall ?? true)
+            {
+                item.Factions?.ToString(fg, "Factions");
+            }
+            if (printMask?.Hairs?.Overall ?? true)
+            {
+                item.Hairs?.ToString(fg, "Hairs");
+            }
+            if (printMask?.Eyes?.Overall ?? true)
+            {
+                item.Eyes?.ToString(fg, "Eyes");
+            }
+            if (printMask?.Races?.Overall ?? true)
+            {
+                item.Races?.ToString(fg, "Races");
+            }
+            if (printMask?.Sounds?.Overall ?? true)
+            {
+                item.Sounds?.ToString(fg, "Sounds");
+            }
+            if (printMask?.Skills?.Overall ?? true)
+            {
+                item.Skills?.ToString(fg, "Skills");
+            }
+            if (printMask?.MagicEffects?.Overall ?? true)
+            {
+                item.MagicEffects?.ToString(fg, "MagicEffects");
+            }
+            if (printMask?.Scripts?.Overall ?? true)
+            {
+                item.Scripts?.ToString(fg, "Scripts");
+            }
+            if (printMask?.LandTextures?.Overall ?? true)
+            {
+                item.LandTextures?.ToString(fg, "LandTextures");
+            }
+            if (printMask?.Enchantments?.Overall ?? true)
+            {
+                item.Enchantments?.ToString(fg, "Enchantments");
+            }
+            if (printMask?.Spells?.Overall ?? true)
+            {
+                item.Spells?.ToString(fg, "Spells");
+            }
+            if (printMask?.Birthsigns?.Overall ?? true)
+            {
+                item.Birthsigns?.ToString(fg, "Birthsigns");
+            }
+            if (printMask?.Activators?.Overall ?? true)
+            {
+                item.Activators?.ToString(fg, "Activators");
+            }
+            if (printMask?.AlchemicalApparatus?.Overall ?? true)
+            {
+                item.AlchemicalApparatus?.ToString(fg, "AlchemicalApparatus");
+            }
+            if (printMask?.Armors?.Overall ?? true)
+            {
+                item.Armors?.ToString(fg, "Armors");
+            }
+            if (printMask?.Books?.Overall ?? true)
+            {
+                item.Books?.ToString(fg, "Books");
+            }
+            if (printMask?.Clothes?.Overall ?? true)
+            {
+                item.Clothes?.ToString(fg, "Clothes");
+            }
+            if (printMask?.Containers?.Overall ?? true)
+            {
+                item.Containers?.ToString(fg, "Containers");
+            }
+            if (printMask?.Doors?.Overall ?? true)
+            {
+                item.Doors?.ToString(fg, "Doors");
+            }
+            if (printMask?.Ingredients?.Overall ?? true)
+            {
+                item.Ingredients?.ToString(fg, "Ingredients");
+            }
+            if (printMask?.Lights?.Overall ?? true)
+            {
+                item.Lights?.ToString(fg, "Lights");
+            }
+            if (printMask?.Miscellaneous?.Overall ?? true)
+            {
+                item.Miscellaneous?.ToString(fg, "Miscellaneous");
+            }
+            if (printMask?.Statics?.Overall ?? true)
+            {
+                item.Statics?.ToString(fg, "Statics");
+            }
+            if (printMask?.Grasses?.Overall ?? true)
+            {
+                item.Grasses?.ToString(fg, "Grasses");
+            }
+            if (printMask?.Trees?.Overall ?? true)
+            {
+                item.Trees?.ToString(fg, "Trees");
+            }
+            if (printMask?.Flora?.Overall ?? true)
+            {
+                item.Flora?.ToString(fg, "Flora");
+            }
+            if (printMask?.Furnature?.Overall ?? true)
+            {
+                item.Furnature?.ToString(fg, "Furnature");
+            }
+            if (printMask?.Weapons?.Overall ?? true)
+            {
+                item.Weapons?.ToString(fg, "Weapons");
+            }
+            if (printMask?.Ammo?.Overall ?? true)
+            {
+                item.Ammo?.ToString(fg, "Ammo");
+            }
+            if (printMask?.NPCs?.Overall ?? true)
+            {
+                item.NPCs?.ToString(fg, "NPCs");
+            }
+            if (printMask?.Creatures?.Overall ?? true)
+            {
+                item.Creatures?.ToString(fg, "Creatures");
+            }
+            if (printMask?.LeveledCreatures?.Overall ?? true)
+            {
+                item.LeveledCreatures?.ToString(fg, "LeveledCreatures");
+            }
+            if (printMask?.SoulGems?.Overall ?? true)
+            {
+                item.SoulGems?.ToString(fg, "SoulGems");
+            }
+            if (printMask?.Keys?.Overall ?? true)
+            {
+                item.Keys?.ToString(fg, "Keys");
+            }
+            if (printMask?.Potions?.Overall ?? true)
+            {
+                item.Potions?.ToString(fg, "Potions");
+            }
+            if (printMask?.Subspaces?.Overall ?? true)
+            {
+                item.Subspaces?.ToString(fg, "Subspaces");
+            }
+            if (printMask?.SigilStones?.Overall ?? true)
+            {
+                item.SigilStones?.ToString(fg, "SigilStones");
+            }
+            if (printMask?.LeveledItems?.Overall ?? true)
+            {
+                item.LeveledItems?.ToString(fg, "LeveledItems");
+            }
+            if (printMask?.Weathers?.Overall ?? true)
+            {
+                item.Weathers?.ToString(fg, "Weathers");
+            }
+            if (printMask?.Climates?.Overall ?? true)
+            {
+                item.Climates?.ToString(fg, "Climates");
+            }
+            if (printMask?.Regions?.Overall ?? true)
+            {
+                item.Regions?.ToString(fg, "Regions");
+            }
+            if (printMask?.Cells?.Overall ?? true)
+            {
+                item.Cells?.ToString(fg, "Cells");
+            }
+            if (printMask?.Worldspaces?.Overall ?? true)
+            {
+                item.Worldspaces?.ToString(fg, "Worldspaces");
+            }
+            if (printMask?.DialogTopics?.Overall ?? true)
+            {
+                item.DialogTopics?.ToString(fg, "DialogTopics");
+            }
+            if (printMask?.Quests?.Overall ?? true)
+            {
+                item.Quests?.ToString(fg, "Quests");
+            }
+            if (printMask?.IdleAnimations?.Overall ?? true)
+            {
+                item.IdleAnimations?.ToString(fg, "IdleAnimations");
+            }
+            if (printMask?.AIPackages?.Overall ?? true)
+            {
+                item.AIPackages?.ToString(fg, "AIPackages");
+            }
+            if (printMask?.CombatStyles?.Overall ?? true)
+            {
+                item.CombatStyles?.ToString(fg, "CombatStyles");
+            }
+            if (printMask?.LoadScreens?.Overall ?? true)
+            {
+                item.LoadScreens?.ToString(fg, "LoadScreens");
+            }
+            if (printMask?.LeveledSpells?.Overall ?? true)
+            {
+                item.LeveledSpells?.ToString(fg, "LeveledSpells");
+            }
+            if (printMask?.AnimatedObjects?.Overall ?? true)
+            {
+                item.AnimatedObjects?.ToString(fg, "AnimatedObjects");
+            }
+            if (printMask?.Waters?.Overall ?? true)
+            {
+                item.Waters?.ToString(fg, "Waters");
+            }
+            if (printMask?.EffectShaders?.Overall ?? true)
+            {
+                item.EffectShaders?.ToString(fg, "EffectShaders");
+            }
+        }
+
+        public bool HasBeenSet(
+            IOblivionModGetter item,
             OblivionMod_Mask<bool?> checkMask)
         {
             if (checkMask.ModHeader.Overall.HasValue && checkMask.ModHeader.Overall.Value != item.ModHeader_IsSet) return false;
@@ -8340,67 +8395,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return true;
         }
 
-        public static OblivionMod_Mask<bool> GetHasBeenSetMask(IOblivionModGetter item)
+        public void FillHasBeenSetMask(
+            IOblivionModGetter item,
+            OblivionMod_Mask<bool> mask)
         {
-            var ret = new OblivionMod_Mask<bool>();
-            ret.ModHeader = new MaskItem<bool, ModHeader_Mask<bool>>(item.ModHeader_IsSet, ModHeaderCommon.GetHasBeenSetMask(item.ModHeader));
-            ret.GameSettings = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.GameSettings));
-            ret.Globals = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Globals));
-            ret.Classes = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Classes));
-            ret.Factions = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Factions));
-            ret.Hairs = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Hairs));
-            ret.Eyes = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Eyes));
-            ret.Races = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Races));
-            ret.Sounds = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Sounds));
-            ret.Skills = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Skills));
-            ret.MagicEffects = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.MagicEffects));
-            ret.Scripts = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Scripts));
-            ret.LandTextures = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.LandTextures));
-            ret.Enchantments = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Enchantments));
-            ret.Spells = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Spells));
-            ret.Birthsigns = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Birthsigns));
-            ret.Activators = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Activators));
-            ret.AlchemicalApparatus = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.AlchemicalApparatus));
-            ret.Armors = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Armors));
-            ret.Books = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Books));
-            ret.Clothes = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Clothes));
-            ret.Containers = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Containers));
-            ret.Doors = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Doors));
-            ret.Ingredients = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Ingredients));
-            ret.Lights = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Lights));
-            ret.Miscellaneous = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Miscellaneous));
-            ret.Statics = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Statics));
-            ret.Grasses = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Grasses));
-            ret.Trees = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Trees));
-            ret.Flora = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Flora));
-            ret.Furnature = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Furnature));
-            ret.Weapons = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Weapons));
-            ret.Ammo = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Ammo));
-            ret.NPCs = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.NPCs));
-            ret.Creatures = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Creatures));
-            ret.LeveledCreatures = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.LeveledCreatures));
-            ret.SoulGems = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.SoulGems));
-            ret.Keys = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Keys));
-            ret.Potions = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Potions));
-            ret.Subspaces = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Subspaces));
-            ret.SigilStones = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.SigilStones));
-            ret.LeveledItems = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.LeveledItems));
-            ret.Weathers = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Weathers));
-            ret.Climates = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Climates));
-            ret.Regions = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Regions));
-            ret.Cells = new MaskItem<bool, ListGroup_Mask<bool>>(true, ListGroupCommon.GetHasBeenSetMask(item.Cells));
-            ret.Worldspaces = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Worldspaces));
-            ret.DialogTopics = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.DialogTopics));
-            ret.Quests = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Quests));
-            ret.IdleAnimations = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.IdleAnimations));
-            ret.AIPackages = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.AIPackages));
-            ret.CombatStyles = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.CombatStyles));
-            ret.LoadScreens = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.LoadScreens));
-            ret.LeveledSpells = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.LeveledSpells));
-            ret.AnimatedObjects = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.AnimatedObjects));
-            ret.Waters = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Waters));
-            ret.EffectShaders = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.EffectShaders));
-            return ret;
+            mask.ModHeader = new MaskItem<bool, ModHeader_Mask<bool>>(item.ModHeader_IsSet, item.ModHeader.GetHasBeenSetMask());
+            mask.GameSettings = new MaskItem<bool, Group_Mask<bool>>(true, item.GameSettings.GetHasBeenSetMask());
+            mask.Globals = new MaskItem<bool, Group_Mask<bool>>(true, item.Globals.GetHasBeenSetMask());
+            mask.Classes = new MaskItem<bool, Group_Mask<bool>>(true, item.Classes.GetHasBeenSetMask());
+            mask.Factions = new MaskItem<bool, Group_Mask<bool>>(true, item.Factions.GetHasBeenSetMask());
+            mask.Hairs = new MaskItem<bool, Group_Mask<bool>>(true, item.Hairs.GetHasBeenSetMask());
+            mask.Eyes = new MaskItem<bool, Group_Mask<bool>>(true, item.Eyes.GetHasBeenSetMask());
+            mask.Races = new MaskItem<bool, Group_Mask<bool>>(true, item.Races.GetHasBeenSetMask());
+            mask.Sounds = new MaskItem<bool, Group_Mask<bool>>(true, item.Sounds.GetHasBeenSetMask());
+            mask.Skills = new MaskItem<bool, Group_Mask<bool>>(true, item.Skills.GetHasBeenSetMask());
+            mask.MagicEffects = new MaskItem<bool, Group_Mask<bool>>(true, item.MagicEffects.GetHasBeenSetMask());
+            mask.Scripts = new MaskItem<bool, Group_Mask<bool>>(true, item.Scripts.GetHasBeenSetMask());
+            mask.LandTextures = new MaskItem<bool, Group_Mask<bool>>(true, item.LandTextures.GetHasBeenSetMask());
+            mask.Enchantments = new MaskItem<bool, Group_Mask<bool>>(true, item.Enchantments.GetHasBeenSetMask());
+            mask.Spells = new MaskItem<bool, Group_Mask<bool>>(true, item.Spells.GetHasBeenSetMask());
+            mask.Birthsigns = new MaskItem<bool, Group_Mask<bool>>(true, item.Birthsigns.GetHasBeenSetMask());
+            mask.Activators = new MaskItem<bool, Group_Mask<bool>>(true, item.Activators.GetHasBeenSetMask());
+            mask.AlchemicalApparatus = new MaskItem<bool, Group_Mask<bool>>(true, item.AlchemicalApparatus.GetHasBeenSetMask());
+            mask.Armors = new MaskItem<bool, Group_Mask<bool>>(true, item.Armors.GetHasBeenSetMask());
+            mask.Books = new MaskItem<bool, Group_Mask<bool>>(true, item.Books.GetHasBeenSetMask());
+            mask.Clothes = new MaskItem<bool, Group_Mask<bool>>(true, item.Clothes.GetHasBeenSetMask());
+            mask.Containers = new MaskItem<bool, Group_Mask<bool>>(true, item.Containers.GetHasBeenSetMask());
+            mask.Doors = new MaskItem<bool, Group_Mask<bool>>(true, item.Doors.GetHasBeenSetMask());
+            mask.Ingredients = new MaskItem<bool, Group_Mask<bool>>(true, item.Ingredients.GetHasBeenSetMask());
+            mask.Lights = new MaskItem<bool, Group_Mask<bool>>(true, item.Lights.GetHasBeenSetMask());
+            mask.Miscellaneous = new MaskItem<bool, Group_Mask<bool>>(true, item.Miscellaneous.GetHasBeenSetMask());
+            mask.Statics = new MaskItem<bool, Group_Mask<bool>>(true, item.Statics.GetHasBeenSetMask());
+            mask.Grasses = new MaskItem<bool, Group_Mask<bool>>(true, item.Grasses.GetHasBeenSetMask());
+            mask.Trees = new MaskItem<bool, Group_Mask<bool>>(true, item.Trees.GetHasBeenSetMask());
+            mask.Flora = new MaskItem<bool, Group_Mask<bool>>(true, item.Flora.GetHasBeenSetMask());
+            mask.Furnature = new MaskItem<bool, Group_Mask<bool>>(true, item.Furnature.GetHasBeenSetMask());
+            mask.Weapons = new MaskItem<bool, Group_Mask<bool>>(true, item.Weapons.GetHasBeenSetMask());
+            mask.Ammo = new MaskItem<bool, Group_Mask<bool>>(true, item.Ammo.GetHasBeenSetMask());
+            mask.NPCs = new MaskItem<bool, Group_Mask<bool>>(true, item.NPCs.GetHasBeenSetMask());
+            mask.Creatures = new MaskItem<bool, Group_Mask<bool>>(true, item.Creatures.GetHasBeenSetMask());
+            mask.LeveledCreatures = new MaskItem<bool, Group_Mask<bool>>(true, item.LeveledCreatures.GetHasBeenSetMask());
+            mask.SoulGems = new MaskItem<bool, Group_Mask<bool>>(true, item.SoulGems.GetHasBeenSetMask());
+            mask.Keys = new MaskItem<bool, Group_Mask<bool>>(true, item.Keys.GetHasBeenSetMask());
+            mask.Potions = new MaskItem<bool, Group_Mask<bool>>(true, item.Potions.GetHasBeenSetMask());
+            mask.Subspaces = new MaskItem<bool, Group_Mask<bool>>(true, item.Subspaces.GetHasBeenSetMask());
+            mask.SigilStones = new MaskItem<bool, Group_Mask<bool>>(true, item.SigilStones.GetHasBeenSetMask());
+            mask.LeveledItems = new MaskItem<bool, Group_Mask<bool>>(true, item.LeveledItems.GetHasBeenSetMask());
+            mask.Weathers = new MaskItem<bool, Group_Mask<bool>>(true, item.Weathers.GetHasBeenSetMask());
+            mask.Climates = new MaskItem<bool, Group_Mask<bool>>(true, item.Climates.GetHasBeenSetMask());
+            mask.Regions = new MaskItem<bool, Group_Mask<bool>>(true, item.Regions.GetHasBeenSetMask());
+            mask.Cells = new MaskItem<bool, ListGroup_Mask<bool>>(true, item.Cells.GetHasBeenSetMask());
+            mask.Worldspaces = new MaskItem<bool, Group_Mask<bool>>(true, item.Worldspaces.GetHasBeenSetMask());
+            mask.DialogTopics = new MaskItem<bool, Group_Mask<bool>>(true, item.DialogTopics.GetHasBeenSetMask());
+            mask.Quests = new MaskItem<bool, Group_Mask<bool>>(true, item.Quests.GetHasBeenSetMask());
+            mask.IdleAnimations = new MaskItem<bool, Group_Mask<bool>>(true, item.IdleAnimations.GetHasBeenSetMask());
+            mask.AIPackages = new MaskItem<bool, Group_Mask<bool>>(true, item.AIPackages.GetHasBeenSetMask());
+            mask.CombatStyles = new MaskItem<bool, Group_Mask<bool>>(true, item.CombatStyles.GetHasBeenSetMask());
+            mask.LoadScreens = new MaskItem<bool, Group_Mask<bool>>(true, item.LoadScreens.GetHasBeenSetMask());
+            mask.LeveledSpells = new MaskItem<bool, Group_Mask<bool>>(true, item.LeveledSpells.GetHasBeenSetMask());
+            mask.AnimatedObjects = new MaskItem<bool, Group_Mask<bool>>(true, item.AnimatedObjects.GetHasBeenSetMask());
+            mask.Waters = new MaskItem<bool, Group_Mask<bool>>(true, item.Waters.GetHasBeenSetMask());
+            mask.EffectShaders = new MaskItem<bool, Group_Mask<bool>>(true, item.EffectShaders.GetHasBeenSetMask());
         }
 
     }
@@ -9033,8 +9088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<GameSetting>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9057,8 +9111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Global>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9081,8 +9134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Class>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9105,8 +9157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Faction>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9129,8 +9180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Hair>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9153,8 +9203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Eye>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9177,8 +9226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Race>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9201,8 +9249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Sound>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9225,8 +9272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<SkillRecord>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9249,8 +9295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<MagicEffect>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9273,8 +9318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Script>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9297,8 +9341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<LandTexture>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9321,8 +9364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Enchantment>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9345,8 +9387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<SpellUnleveled>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9369,8 +9410,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Birthsign>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9393,8 +9433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Activator>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9417,8 +9456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<AlchemicalApparatus>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9441,8 +9479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Armor>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9465,8 +9502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Book>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9489,8 +9525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Clothing>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9513,8 +9548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Container>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9537,8 +9571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Door>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9561,8 +9594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Ingredient>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9585,8 +9617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Light>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9609,8 +9640,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Miscellaneous>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9633,8 +9663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Static>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9657,8 +9686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Grass>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9681,8 +9709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Tree>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9705,8 +9732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Flora>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9729,8 +9755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Furnature>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9753,8 +9778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Weapon>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9777,8 +9801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Ammo>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9801,8 +9824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<NPC>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9825,8 +9847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Creature>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9849,8 +9870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<LeveledCreature>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9873,8 +9893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<SoulGem>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9897,8 +9916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Key>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9921,8 +9939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Potion>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9945,8 +9962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Subspace>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9969,8 +9985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<SigilStone>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -9993,8 +10008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<LeveledItem>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10017,8 +10031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Weather>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10041,8 +10054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Climate>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10065,8 +10077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Region>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10089,8 +10100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Worldspace>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10113,8 +10123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<DialogTopic>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10137,8 +10146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Quest>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10161,8 +10169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<IdleAnimation>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10185,8 +10192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<AIPackage>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10209,8 +10215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<CombatStyle>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10233,8 +10238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<LoadScreen>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10257,8 +10261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<LeveledSpell>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10281,8 +10284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<AnimatedObject>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10305,8 +10307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<Water>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -10329,8 +10330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs: Group<EffectShader>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);

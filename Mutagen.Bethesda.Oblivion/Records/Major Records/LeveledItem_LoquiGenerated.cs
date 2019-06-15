@@ -47,6 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
         public new static LeveledItem_Registration Registration => LeveledItem_Registration.Instance;
+        protected override object CommonInstance => LeveledItemCommon.Instance;
 
         #region Ctor
         protected LeveledItem()
@@ -112,45 +113,31 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<LeveledEntry<ItemAbstract>> _Entries = new SourceSetList<LeveledEntry<ItemAbstract>>();
         public ISourceSetList<LeveledEntry<ItemAbstract>> Entries => _Entries;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<LeveledEntry<ItemAbstract>> EntriesEnumerable
-        {
-            get => _Entries.Items;
-            set => _Entries.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<LeveledEntry<ItemAbstract>> ILeveledItem.Entries => _Entries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<LeveledEntry<ItemAbstract>> ILeveledItemGetter.Entries => _Entries;
+        IReadOnlySetList<ILeveledEntryGetter<ItemAbstract>> ILeveledItemGetter.Entries => _Entries;
         #endregion
 
         #endregion
 
-        IMask<bool> IEqualsMask<LeveledItem>.GetEqualsMask(LeveledItem rhs, EqualsMaskHelper.Include include) => LeveledItemCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ILeveledItemGetter>.GetEqualsMask(ILeveledItemGetter rhs, EqualsMaskHelper.Include include) => LeveledItemCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<LeveledItem>.GetEqualsMask(LeveledItem rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ILeveledItemGetter>.GetEqualsMask(ILeveledItemGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            LeveledItem_Mask<bool> printMask = null)
-        {
-            return LeveledItemCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            LeveledItemCommon.ToString(this, fg, name: name, printMask: null);
+            LeveledItemMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new LeveledItem_Mask<bool> GetHasBeenSetMask()
-        {
-            return LeveledItemCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -583,8 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
-                        }
-                        );
+                        });
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
                 }
                 case 0x41544144: // DATA
@@ -737,10 +723,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            LeveledItemCommon.Clear(this);
+            LeveledItemCommon.Instance.Clear(this);
         }
-
 
         public new static LeveledItem Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -824,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Entries
-        IReadOnlySetList<LeveledEntry<ItemAbstract>> Entries { get; }
+        IReadOnlySetList<ILeveledEntryGetter<ItemAbstract>> Entries { get; }
         #endregion
 
     }
@@ -836,6 +820,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class LeveledItemMixIn
+    {
+        public static void Clear(this ILeveledItemInternal item)
+        {
+            ((LeveledItemCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static LeveledItem_Mask<bool> GetEqualsMask(
+            this ILeveledItemGetter item,
+            ILeveledItemGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new LeveledItem_Mask<bool>();
+            ((LeveledItemCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ILeveledItemInternalGetter item,
+            string name = null,
+            LeveledItem_Mask<bool> printMask = null)
+        {
+            return ((LeveledItemCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ILeveledItemInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            LeveledItem_Mask<bool> printMask = null)
+        {
+            ((LeveledItemCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ILeveledItemInternalGetter item,
+            LeveledItem_Mask<bool?> checkMask)
+        {
+            return ((LeveledItemCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static LeveledItem_Mask<bool> GetHasBeenSetMask(this ILeveledItemGetter item)
+        {
+            var ret = new LeveledItem_Mask<bool>();
+            ((LeveledItemCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1059,9 +1110,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class LeveledItemCommon
+    #region Common
+    public partial class LeveledItemCommon : ItemAbstractCommon
     {
+        public static readonly LeveledItemCommon Instance = new LeveledItemCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ILeveledItem item,
@@ -1141,7 +1193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledItem_FieldIndex.Entries);
                 try
                 {
-                    item.Entries.SetToWithDefault(
+                    item.Entries.SetToWithDefault<LeveledEntry<ItemAbstract>, ILeveledEntryGetter<ItemAbstract>>(
                         rhs: rhs.Entries,
                         def: def?.Entries,
                         converter: (r, d) =>
@@ -1149,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             switch (copyMask?.Entries.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (LeveledEntry<ItemAbstract>)r;
                                 case CopyOption.MakeCopy:
                                     return LeveledEntry<ItemAbstract>.Copy(
                                         r,
@@ -1158,8 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Entries.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1175,28 +1226,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ILeveledItem item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ILeveledItem item)
         {
+            ClearPartial();
             item.ChanceNone_Unset();
             item.Flags_Unset();
             item.Entries.Unset();
+            base.Clear(item);
         }
 
-        public static LeveledItem_Mask<bool> GetEqualsMask(
-            this ILeveledItemGetter item,
-            ILeveledItemGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IItemAbstract item)
         {
-            var ret = new LeveledItem_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ILeveledItem)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (ILeveledItem)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (ILeveledItem)item);
+        }
+
+        public void FillEqualsMask(
             ILeveledItemGetter item,
             ILeveledItemGetter rhs,
             LeveledItem_Mask<bool> ret,
@@ -1209,21 +1265,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Entries,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ILeveledItemGetter item,
+        public string ToString(
+            ILeveledItemGetter item,
             string name = null,
             LeveledItem_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ILeveledItemGetter item,
+        public void ToString(
+            ILeveledItemGetter item,
             FileGeneration fg,
             string name = null,
             LeveledItem_Mask<bool> printMask = null)
@@ -1239,59 +1299,73 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.ChanceNone ?? true)
-                {
-                    fg.AppendLine($"ChanceNone => {item.ChanceNone}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.Entries?.Overall ?? true)
-                {
-                    fg.AppendLine("Entries =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Entries)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ILeveledItemGetter item,
+        protected static void ToStringFields(
+            ILeveledItemGetter item,
+            FileGeneration fg,
+            LeveledItem_Mask<bool> printMask = null)
+        {
+            ItemAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.ChanceNone ?? true)
+            {
+                fg.AppendLine($"ChanceNone => {item.ChanceNone}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Entries?.Overall ?? true)
+            {
+                fg.AppendLine("Entries =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Entries)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+
+        public bool HasBeenSet(
+            ILeveledItemGetter item,
             LeveledItem_Mask<bool?> checkMask)
         {
             if (checkMask.ChanceNone.HasValue && checkMask.ChanceNone.Value != item.ChanceNone_IsSet) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
             if (checkMask.Entries.Overall.HasValue && checkMask.Entries.Overall.Value != item.Entries.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static LeveledItem_Mask<bool> GetHasBeenSetMask(ILeveledItemGetter item)
+        public void FillHasBeenSetMask(
+            ILeveledItemGetter item,
+            LeveledItem_Mask<bool> mask)
         {
-            var ret = new LeveledItem_Mask<bool>();
-            ret.ChanceNone = item.ChanceNone_IsSet;
-            ret.Flags = item.Flags_IsSet;
-            ret.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry_Mask<bool>>>>(item.Entries.HasBeenSet, item.Entries.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            return ret;
-        }
-
-        public static LeveledItem_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.ChanceNone = item.ChanceNone_IsSet;
+            mask.Flags = item.Flags_IsSet;
+            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry_Mask<bool>>>>(item.Entries.HasBeenSet, item.Entries.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static LeveledItem_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
@@ -1313,12 +1387,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static LeveledItem_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static LeveledItem_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1336,12 +1404,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static LeveledItem_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static LeveledItem_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
@@ -1406,14 +1468,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Entries.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
             {
-                ListXmlTranslation<LeveledEntry<ItemAbstract>>.Instance.Write(
+                ListXmlTranslation<ILeveledEntryGetter<ItemAbstract>>.Instance.Write(
                     node: node,
                     name: nameof(item.Entries),
                     item: item.Entries,
                     fieldIndex: (int)LeveledItem_FieldIndex.Entries,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Entries),
-                    transl: (XElement subNode, LeveledEntry<ItemAbstract> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, ILeveledEntryGetter<ItemAbstract> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         ((LeveledEntryXmlTranslation<ItemAbstract>)((IXmlItem)subItem).XmlTranslator).Write(
                             item: subItem,
@@ -1421,8 +1483,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
         }
 
@@ -2129,12 +2190,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Entries.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ItemAbstract>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryGetter<ItemAbstract>>.Instance.Write(
                     writer: writer,
                     items: item.Entries,
                     fieldIndex: (int)LeveledItem_FieldIndex.Entries,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, LeveledEntry<ItemAbstract> subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, ILeveledEntryGetter<ItemAbstract> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         ((LeveledEntryBinaryTranslation<ItemAbstract>)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
@@ -2142,8 +2203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
-                    }
-                    );
+                    });
             }
             LeveledItem.SpecialWrite_Vestigial_Internal(
                 item: item,

@@ -235,7 +235,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             int blockCount = 0;
             List<Task> blockTasks = new List<Task>();
-            foreach (var block in this.SubCellsEnumerable)
+            foreach (var block in this.SubCells)
             {
                 int blockStamp = blockCount++;
                 blockTasks.Add(Task.Run(async () =>
@@ -436,12 +436,12 @@ namespace Mutagen.Bethesda.Oblivion
                             masterReferences: masterReferences,
                             errorMask: errorMask);
                     }
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Write(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IWorldspaceBlockGetter>.Instance.Write(
                         writer: writer,
                         items: obj.SubCells,
                         fieldIndex: (int)Worldspace_FieldIndex.SubCells,
                         errorMask: errorMask,
-                        transl: (MutagenWriter subWriter, WorldspaceBlock subItem, ErrorMaskBuilder listSubMask) =>
+                        transl: (MutagenWriter subWriter, IWorldspaceBlockGetter subItem, ErrorMaskBuilder listSubMask) =>
                         {
                             subItem.Write_Binary(
                                 writer: subWriter,

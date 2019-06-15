@@ -48,6 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Birthsign_Registration.Instance;
         public new static Birthsign_Registration Registration => Birthsign_Registration.Instance;
+        protected override object CommonInstance => BirthsignCommon.Instance;
 
         #region Ctor
         protected Birthsign()
@@ -139,12 +140,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<FormIDSetLink<Spell>> _Spells = new SourceSetList<FormIDSetLink<Spell>>();
         public ISourceSetList<FormIDSetLink<Spell>> Spells => _Spells;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<FormIDSetLink<Spell>> SpellsEnumerable
-        {
-            get => _Spells.Items;
-            set => _Spells.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<FormIDSetLink<Spell>> IBirthsign.Spells => _Spells;
@@ -154,30 +149,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Birthsign>.GetEqualsMask(Birthsign rhs, EqualsMaskHelper.Include include) => BirthsignCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IBirthsignGetter>.GetEqualsMask(IBirthsignGetter rhs, EqualsMaskHelper.Include include) => BirthsignCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Birthsign>.GetEqualsMask(Birthsign rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IBirthsignGetter>.GetEqualsMask(IBirthsignGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Birthsign_Mask<bool> printMask = null)
-        {
-            return BirthsignCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            BirthsignCommon.ToString(this, fg, name: name, printMask: null);
+            BirthsignMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Birthsign_Mask<bool> GetHasBeenSetMask()
-        {
-            return BirthsignCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -769,10 +756,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            BirthsignCommon.Clear(this);
+            BirthsignCommon.Instance.Clear(this);
         }
-
 
         public new static Birthsign Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -881,6 +866,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class BirthsignMixIn
+    {
+        public static void Clear(this IBirthsignInternal item)
+        {
+            ((BirthsignCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Birthsign_Mask<bool> GetEqualsMask(
+            this IBirthsignGetter item,
+            IBirthsignGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Birthsign_Mask<bool>();
+            ((BirthsignCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IBirthsignInternalGetter item,
+            string name = null,
+            Birthsign_Mask<bool> printMask = null)
+        {
+            return ((BirthsignCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IBirthsignInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Birthsign_Mask<bool> printMask = null)
+        {
+            ((BirthsignCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IBirthsignInternalGetter item,
+            Birthsign_Mask<bool?> checkMask)
+        {
+            return ((BirthsignCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Birthsign_Mask<bool> GetHasBeenSetMask(this IBirthsignGetter item)
+        {
+            var ret = new Birthsign_Mask<bool>();
+            ((BirthsignCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1115,9 +1167,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class BirthsignCommon
+    #region Common
+    public partial class BirthsignCommon : OblivionMajorRecordCommon
     {
+        public static readonly BirthsignCommon Instance = new BirthsignCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IBirthsign item,
@@ -1245,29 +1298,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IBirthsign item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IBirthsign item)
         {
+            ClearPartial();
             item.Name_Unset();
             item.Icon_Unset();
             item.Description_Unset();
             item.Spells.Unset();
+            base.Clear(item);
         }
 
-        public static Birthsign_Mask<bool> GetEqualsMask(
-            this IBirthsignGetter item,
-            IBirthsignGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new Birthsign_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IBirthsign)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IBirthsign)item);
+        }
+
+        public void FillEqualsMask(
             IBirthsignGetter item,
             IBirthsignGetter rhs,
             Birthsign_Mask<bool> ret,
@@ -1281,21 +1334,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Spells,
                 (l, r) => object.Equals(l, r),
                 include);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IBirthsignGetter item,
+        public string ToString(
+            IBirthsignGetter item,
             string name = null,
             Birthsign_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IBirthsignGetter item,
+        public void ToString(
+            IBirthsignGetter item,
             FileGeneration fg,
             string name = null,
             Birthsign_Mask<bool> printMask = null)
@@ -1311,65 +1368,79 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Description ?? true)
-                {
-                    fg.AppendLine($"Description => {item.Description}");
-                }
-                if (printMask?.Spells?.Overall ?? true)
-                {
-                    fg.AppendLine("Spells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Spells)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($"Item => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IBirthsignGetter item,
+        protected static void ToStringFields(
+            IBirthsignGetter item,
+            FileGeneration fg,
+            Birthsign_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Description ?? true)
+            {
+                fg.AppendLine($"Description => {item.Description}");
+            }
+            if (printMask?.Spells?.Overall ?? true)
+            {
+                fg.AppendLine("Spells =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Spells)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+
+        public bool HasBeenSet(
+            IBirthsignGetter item,
             Birthsign_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
             if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Birthsign_Mask<bool> GetHasBeenSetMask(IBirthsignGetter item)
+        public void FillHasBeenSetMask(
+            IBirthsignGetter item,
+            Birthsign_Mask<bool> mask)
         {
-            var ret = new Birthsign_Mask<bool>();
-            ret.Name = item.Name_IsSet;
-            ret.Icon = item.Icon_IsSet;
-            ret.Description = item.Description_IsSet;
-            ret.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, null);
-            return ret;
-        }
-
-        public static Birthsign_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Name = item.Name_IsSet;
+            mask.Icon = item.Icon_IsSet;
+            mask.Description = item.Description_IsSet;
+            mask.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, null);
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Birthsign_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1389,12 +1460,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Birthsign_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Birthsign_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
@@ -1483,8 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             item: subItem?.FormKey,
                             errorMask: listSubMask);
-                    }
-                    );
+                    });
             }
         }
 
@@ -2238,8 +2302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             header: recordTypeConverter.ConvertToCustom(Birthsign_Registration.SPLO_HEADER),
                             nullable: false,
                             masterReferences: masterReferences);
-                    }
-                    );
+                    });
             }
         }
 

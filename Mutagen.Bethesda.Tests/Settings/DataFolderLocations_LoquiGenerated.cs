@@ -35,6 +35,8 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DataFolderLocations_Registration.Instance;
         public static DataFolderLocations_Registration Registration => DataFolderLocations_Registration.Instance;
+        protected object CommonInstance => DataFolderLocationsCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public DataFolderLocations()
@@ -62,35 +64,27 @@ namespace Mutagen.Bethesda.Tests
         }
         #endregion
 
-        IMask<bool> IEqualsMask<DataFolderLocations>.GetEqualsMask(DataFolderLocations rhs, EqualsMaskHelper.Include include) => DataFolderLocationsCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IDataFolderLocationsGetter>.GetEqualsMask(IDataFolderLocationsGetter rhs, EqualsMaskHelper.Include include) => DataFolderLocationsCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<DataFolderLocations>.GetEqualsMask(DataFolderLocations rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IDataFolderLocationsGetter>.GetEqualsMask(IDataFolderLocationsGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
         public override string ToString()
         {
-            return DataFolderLocationsCommon.ToString(this, printMask: null);
+            return DataFolderLocationsMixIn.ToString(item: this);
         }
 
-        public string ToString(
-            string name = null,
-            DataFolderLocations_Mask<bool> printMask = null)
-        {
-            return DataFolderLocationsCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            DataFolderLocationsCommon.ToString(this, fg, name: name, printMask: null);
+            DataFolderLocationsMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public DataFolderLocations_Mask<bool> GetHasBeenSetMask()
-        {
-            return DataFolderLocationsCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -504,19 +498,10 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            DataFolderLocationsCommon.Clear(this);
+            DataFolderLocationsCommon.Instance.Clear(this);
         }
-
 
         public static DataFolderLocations Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -581,6 +566,73 @@ namespace Mutagen.Bethesda.Tests
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class DataFolderLocationsMixIn
+    {
+        public static void Clear(this IDataFolderLocations item)
+        {
+            ((DataFolderLocationsCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static DataFolderLocations_Mask<bool> GetEqualsMask(
+            this IDataFolderLocationsGetter item,
+            IDataFolderLocationsGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new DataFolderLocations_Mask<bool>();
+            ((DataFolderLocationsCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IDataFolderLocationsGetter item,
+            string name = null,
+            DataFolderLocations_Mask<bool> printMask = null)
+        {
+            return ((DataFolderLocationsCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IDataFolderLocationsGetter item,
+            FileGeneration fg,
+            string name = null,
+            DataFolderLocations_Mask<bool> printMask = null)
+        {
+            ((DataFolderLocationsCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IDataFolderLocationsGetter item,
+            DataFolderLocations_Mask<bool?> checkMask)
+        {
+            return ((DataFolderLocationsCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static DataFolderLocations_Mask<bool> GetHasBeenSetMask(this IDataFolderLocationsGetter item)
+        {
+            var ret = new DataFolderLocations_Mask<bool>();
+            ((DataFolderLocationsCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -776,9 +828,10 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class DataFolderLocationsCommon
+    #region Common
+    public partial class DataFolderLocationsCommon
     {
+        public static readonly DataFolderLocationsCommon Instance = new DataFolderLocationsCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IDataFolderLocations item,
@@ -825,27 +878,16 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         #endregion
 
-        public static void Clear(IDataFolderLocations item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IDataFolderLocations item)
         {
+            ClearPartial();
             item.Oblivion = default(String);
             item.Skyrim = default(String);
         }
 
-        public static DataFolderLocations_Mask<bool> GetEqualsMask(
-            this IDataFolderLocationsGetter item,
-            IDataFolderLocationsGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new DataFolderLocations_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IDataFolderLocationsGetter item,
             IDataFolderLocationsGetter rhs,
             DataFolderLocations_Mask<bool> ret,
@@ -856,18 +898,22 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Skyrim = string.Equals(item.Skyrim, rhs.Skyrim);
         }
 
-        public static string ToString(
-            this IDataFolderLocationsGetter item,
+        public string ToString(
+            IDataFolderLocationsGetter item,
             string name = null,
             DataFolderLocations_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IDataFolderLocationsGetter item,
+        public void ToString(
+            IDataFolderLocationsGetter item,
             FileGeneration fg,
             string name = null,
             DataFolderLocations_Mask<bool> printMask = null)
@@ -883,31 +929,42 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Oblivion ?? true)
-                {
-                    fg.AppendLine($"Oblivion => {item.Oblivion}");
-                }
-                if (printMask?.Skyrim ?? true)
-                {
-                    fg.AppendLine($"Skyrim => {item.Skyrim}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IDataFolderLocationsGetter item,
+        protected static void ToStringFields(
+            IDataFolderLocationsGetter item,
+            FileGeneration fg,
+            DataFolderLocations_Mask<bool> printMask = null)
+        {
+            if (printMask?.Oblivion ?? true)
+            {
+                fg.AppendLine($"Oblivion => {item.Oblivion}");
+            }
+            if (printMask?.Skyrim ?? true)
+            {
+                fg.AppendLine($"Skyrim => {item.Skyrim}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IDataFolderLocationsGetter item,
             DataFolderLocations_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static DataFolderLocations_Mask<bool> GetHasBeenSetMask(IDataFolderLocationsGetter item)
+        public void FillHasBeenSetMask(
+            IDataFolderLocationsGetter item,
+            DataFolderLocations_Mask<bool> mask)
         {
-            var ret = new DataFolderLocations_Mask<bool>();
-            ret.Oblivion = true;
-            ret.Skyrim = true;
-            return ret;
+            mask.Oblivion = true;
+            mask.Skyrim = true;
         }
 
     }

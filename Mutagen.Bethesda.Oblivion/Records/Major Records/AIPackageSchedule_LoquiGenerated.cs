@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
         public static AIPackageSchedule_Registration Registration => AIPackageSchedule_Registration.Instance;
+        protected object CommonInstance => AIPackageScheduleCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public AIPackageSchedule()
@@ -92,30 +94,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<AIPackageSchedule>.GetEqualsMask(AIPackageSchedule rhs, EqualsMaskHelper.Include include) => AIPackageScheduleCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IAIPackageScheduleGetter>.GetEqualsMask(IAIPackageScheduleGetter rhs, EqualsMaskHelper.Include include) => AIPackageScheduleCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<AIPackageSchedule>.GetEqualsMask(AIPackageSchedule rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IAIPackageScheduleGetter>.GetEqualsMask(IAIPackageScheduleGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            AIPackageSchedule_Mask<bool> printMask = null)
-        {
-            return AIPackageScheduleCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            AIPackageScheduleCommon.ToString(this, fg, name: name, printMask: null);
+            AIPackageScheduleMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public AIPackageSchedule_Mask<bool> GetHasBeenSetMask()
-        {
-            return AIPackageScheduleCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -543,19 +537,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            AIPackageScheduleCommon.Clear(this);
+            AIPackageScheduleCommon.Instance.Clear(this);
         }
-
 
         public static AIPackageSchedule Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -648,6 +633,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class AIPackageScheduleMixIn
+    {
+        public static void Clear(this IAIPackageSchedule item)
+        {
+            ((AIPackageScheduleCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static AIPackageSchedule_Mask<bool> GetEqualsMask(
+            this IAIPackageScheduleGetter item,
+            IAIPackageScheduleGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new AIPackageSchedule_Mask<bool>();
+            ((AIPackageScheduleCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IAIPackageScheduleGetter item,
+            string name = null,
+            AIPackageSchedule_Mask<bool> printMask = null)
+        {
+            return ((AIPackageScheduleCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IAIPackageScheduleGetter item,
+            FileGeneration fg,
+            string name = null,
+            AIPackageSchedule_Mask<bool> printMask = null)
+        {
+            ((AIPackageScheduleCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IAIPackageScheduleGetter item,
+            AIPackageSchedule_Mask<bool?> checkMask)
+        {
+            return ((AIPackageScheduleCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static AIPackageSchedule_Mask<bool> GetHasBeenSetMask(this IAIPackageScheduleGetter item)
+        {
+            var ret = new AIPackageSchedule_Mask<bool>();
+            ((AIPackageScheduleCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -884,9 +936,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class AIPackageScheduleCommon
+    #region Common
+    public partial class AIPackageScheduleCommon
     {
+        public static readonly AIPackageScheduleCommon Instance = new AIPackageScheduleCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IAIPackageSchedule item,
@@ -984,8 +1037,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IAIPackageSchedule item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IAIPackageSchedule item)
         {
+            ClearPartial();
             item.Month = default(Month);
             item.DayOfWeek = default(Weekday);
             item.Day = default(Byte);
@@ -993,21 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Duration = default(Int32);
         }
 
-        public static AIPackageSchedule_Mask<bool> GetEqualsMask(
-            this IAIPackageScheduleGetter item,
-            IAIPackageScheduleGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new AIPackageSchedule_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IAIPackageScheduleGetter item,
             IAIPackageScheduleGetter rhs,
             AIPackageSchedule_Mask<bool> ret,
@@ -1021,18 +1063,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Duration = item.Duration == rhs.Duration;
         }
 
-        public static string ToString(
-            this IAIPackageScheduleGetter item,
+        public string ToString(
+            IAIPackageScheduleGetter item,
             string name = null,
             AIPackageSchedule_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IAIPackageScheduleGetter item,
+        public void ToString(
+            IAIPackageScheduleGetter item,
             FileGeneration fg,
             string name = null,
             AIPackageSchedule_Mask<bool> printMask = null)
@@ -1048,46 +1094,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Month ?? true)
-                {
-                    fg.AppendLine($"Month => {item.Month}");
-                }
-                if (printMask?.DayOfWeek ?? true)
-                {
-                    fg.AppendLine($"DayOfWeek => {item.DayOfWeek}");
-                }
-                if (printMask?.Day ?? true)
-                {
-                    fg.AppendLine($"Day => {item.Day}");
-                }
-                if (printMask?.Time ?? true)
-                {
-                    fg.AppendLine($"Time => {item.Time}");
-                }
-                if (printMask?.Duration ?? true)
-                {
-                    fg.AppendLine($"Duration => {item.Duration}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IAIPackageScheduleGetter item,
+        protected static void ToStringFields(
+            IAIPackageScheduleGetter item,
+            FileGeneration fg,
+            AIPackageSchedule_Mask<bool> printMask = null)
+        {
+            if (printMask?.Month ?? true)
+            {
+                fg.AppendLine($"Month => {item.Month}");
+            }
+            if (printMask?.DayOfWeek ?? true)
+            {
+                fg.AppendLine($"DayOfWeek => {item.DayOfWeek}");
+            }
+            if (printMask?.Day ?? true)
+            {
+                fg.AppendLine($"Day => {item.Day}");
+            }
+            if (printMask?.Time ?? true)
+            {
+                fg.AppendLine($"Time => {item.Time}");
+            }
+            if (printMask?.Duration ?? true)
+            {
+                fg.AppendLine($"Duration => {item.Duration}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IAIPackageScheduleGetter item,
             AIPackageSchedule_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static AIPackageSchedule_Mask<bool> GetHasBeenSetMask(IAIPackageScheduleGetter item)
+        public void FillHasBeenSetMask(
+            IAIPackageScheduleGetter item,
+            AIPackageSchedule_Mask<bool> mask)
         {
-            var ret = new AIPackageSchedule_Mask<bool>();
-            ret.Month = true;
-            ret.DayOfWeek = true;
-            ret.Day = true;
-            ret.Time = true;
-            ret.Duration = true;
-            return ret;
+            mask.Month = true;
+            mask.DayOfWeek = true;
+            mask.Day = true;
+            mask.Time = true;
+            mask.Duration = true;
         }
 
     }

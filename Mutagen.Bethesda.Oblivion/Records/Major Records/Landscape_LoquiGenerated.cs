@@ -48,6 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Landscape_Registration.Instance;
         public new static Landscape_Registration Registration => Landscape_Registration.Instance;
+        protected override object CommonInstance => LandscapeCommon.Instance;
 
         #region Ctor
         protected Landscape()
@@ -173,17 +174,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<BaseLayer> _Layers = new SourceSetList<BaseLayer>();
         public ISourceSetList<BaseLayer> Layers => _Layers;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<BaseLayer> LayersEnumerable
-        {
-            get => _Layers.Items;
-            set => _Layers.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<BaseLayer> ILandscape.Layers => _Layers;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<BaseLayer> ILandscapeGetter.Layers => _Layers;
+        IReadOnlySetList<IBaseLayerInternalGetter> ILandscapeGetter.Layers => _Layers;
         #endregion
 
         #endregion
@@ -191,12 +186,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<FormIDLink<LandTexture>> _Textures = new SourceSetList<FormIDLink<LandTexture>>();
         public ISourceSetList<FormIDLink<LandTexture>> Textures => _Textures;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<FormIDLink<LandTexture>> TexturesEnumerable
-        {
-            get => _Textures.Items;
-            set => _Textures.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<FormIDLink<LandTexture>> ILandscape.Textures => _Textures;
@@ -206,30 +195,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Landscape>.GetEqualsMask(Landscape rhs, EqualsMaskHelper.Include include) => LandscapeCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ILandscapeGetter>.GetEqualsMask(ILandscapeGetter rhs, EqualsMaskHelper.Include include) => LandscapeCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Landscape>.GetEqualsMask(Landscape rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ILandscapeGetter>.GetEqualsMask(ILandscapeGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Landscape_Mask<bool> printMask = null)
-        {
-            return LandscapeCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            LandscapeCommon.ToString(this, fg, name: name, printMask: null);
+            LandscapeMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Landscape_Mask<bool> GetHasBeenSetMask()
-        {
-            return LandscapeCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -737,8 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 default:
                                     throw new NotImplementedException();
                             }
-                        }
-                        );
+                        });
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
                 }
                 case 0x58455456: // VTEX
@@ -903,10 +883,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            LandscapeCommon.Clear(this);
+            LandscapeCommon.Instance.Clear(this);
         }
-
 
         public new static Landscape Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1020,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Layers
-        IReadOnlySetList<BaseLayer> Layers { get; }
+        IReadOnlySetList<IBaseLayerInternalGetter> Layers { get; }
         #endregion
         #region Textures
         IReadOnlySetList<FormIDLink<LandTexture>> Textures { get; }
@@ -1035,6 +1013,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class LandscapeMixIn
+    {
+        public static void Clear(this ILandscapeInternal item)
+        {
+            ((LandscapeCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Landscape_Mask<bool> GetEqualsMask(
+            this ILandscapeGetter item,
+            ILandscapeGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Landscape_Mask<bool>();
+            ((LandscapeCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ILandscapeInternalGetter item,
+            string name = null,
+            Landscape_Mask<bool> printMask = null)
+        {
+            return ((LandscapeCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ILandscapeInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Landscape_Mask<bool> printMask = null)
+        {
+            ((LandscapeCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ILandscapeInternalGetter item,
+            Landscape_Mask<bool?> checkMask)
+        {
+            return ((LandscapeCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Landscape_Mask<bool> GetHasBeenSetMask(this ILandscapeGetter item)
+        {
+            var ret = new Landscape_Mask<bool>();
+            ((LandscapeCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1297,9 +1342,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class LandscapeCommon
+    #region Common
+    public partial class LandscapeCommon : OblivionMajorRecordCommon
     {
+        public static readonly LandscapeCommon Instance = new LandscapeCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ILandscape item,
@@ -1439,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Landscape_FieldIndex.Layers);
                 try
                 {
-                    item.Layers.SetToWithDefault(
+                    item.Layers.SetToWithDefault<BaseLayer, IBaseLayerInternalGetter>(
                         rhs: rhs.Layers,
                         def: def?.Layers,
                         converter: (r, d) =>
@@ -1447,7 +1493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             switch (copyMask?.Layers.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (BaseLayer)r;
                                 case CopyOption.MakeCopy:
                                     return BaseLayer.Copy(
                                         r,
@@ -1456,8 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Layers.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1492,31 +1537,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ILandscape item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ILandscape item)
         {
+            ClearPartial();
             item.Unknown_Unset();
             item.VertexNormals_Unset();
             item.VertexHeightMap_Unset();
             item.VertexColors_Unset();
             item.Layers.Unset();
             item.Textures.Unset();
+            base.Clear(item);
         }
 
-        public static Landscape_Mask<bool> GetEqualsMask(
-            this ILandscapeGetter item,
-            ILandscapeGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new Landscape_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ILandscape)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (ILandscape)item);
+        }
+
+        public void FillEqualsMask(
             ILandscapeGetter item,
             ILandscapeGetter rhs,
             Landscape_Mask<bool> ret,
@@ -1535,21 +1580,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Textures,
                 (l, r) => object.Equals(l, r),
                 include);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ILandscapeGetter item,
+        public string ToString(
+            ILandscapeGetter item,
             string name = null,
             Landscape_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ILandscapeGetter item,
+        public void ToString(
+            ILandscapeGetter item,
             FileGeneration fg,
             string name = null,
             Landscape_Mask<bool> printMask = null)
@@ -1565,64 +1614,79 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Unknown ?? true)
-                {
-                    fg.AppendLine($"Unknown => {item.Unknown}");
-                }
-                if (printMask?.VertexNormals ?? true)
-                {
-                    fg.AppendLine($"VertexNormals => {item.VertexNormals}");
-                }
-                if (printMask?.VertexHeightMap ?? true)
-                {
-                    fg.AppendLine($"VertexHeightMap => {item.VertexHeightMap}");
-                }
-                if (printMask?.VertexColors ?? true)
-                {
-                    fg.AppendLine($"VertexColors => {item.VertexColors}");
-                }
-                if (printMask?.Layers?.Overall ?? true)
-                {
-                    fg.AppendLine("Layers =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Layers)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Textures?.Overall ?? true)
-                {
-                    fg.AppendLine("Textures =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Textures)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($"Item => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ILandscapeGetter item,
+        protected static void ToStringFields(
+            ILandscapeGetter item,
+            FileGeneration fg,
+            Landscape_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendLine($"Unknown => {item.Unknown}");
+            }
+            if (printMask?.VertexNormals ?? true)
+            {
+                fg.AppendLine($"VertexNormals => {item.VertexNormals}");
+            }
+            if (printMask?.VertexHeightMap ?? true)
+            {
+                fg.AppendLine($"VertexHeightMap => {item.VertexHeightMap}");
+            }
+            if (printMask?.VertexColors ?? true)
+            {
+                fg.AppendLine($"VertexColors => {item.VertexColors}");
+            }
+            if (printMask?.Layers?.Overall ?? true)
+            {
+                fg.AppendLine("Layers =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Layers)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Textures?.Overall ?? true)
+            {
+                fg.AppendLine("Textures =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Textures)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+
+        public bool HasBeenSet(
+            ILandscapeGetter item,
             Landscape_Mask<bool?> checkMask)
         {
             if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
@@ -1631,25 +1695,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.VertexColors.HasValue && checkMask.VertexColors.Value != item.VertexColors_IsSet) return false;
             if (checkMask.Layers.Overall.HasValue && checkMask.Layers.Overall.Value != item.Layers.HasBeenSet) return false;
             if (checkMask.Textures.Overall.HasValue && checkMask.Textures.Overall.Value != item.Textures.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Landscape_Mask<bool> GetHasBeenSetMask(ILandscapeGetter item)
+        public void FillHasBeenSetMask(
+            ILandscapeGetter item,
+            Landscape_Mask<bool> mask)
         {
-            var ret = new Landscape_Mask<bool>();
-            ret.Unknown = item.Unknown_IsSet;
-            ret.VertexNormals = item.VertexNormals_IsSet;
-            ret.VertexHeightMap = item.VertexHeightMap_IsSet;
-            ret.VertexColors = item.VertexColors_IsSet;
-            ret.Layers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BaseLayer_Mask<bool>>>>(item.Layers.HasBeenSet, item.Layers.WithIndex().Select((i) => new MaskItemIndexed<bool, BaseLayer_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            ret.Textures = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Textures.HasBeenSet, null);
-            return ret;
-        }
-
-        public static Landscape_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Unknown = item.Unknown_IsSet;
+            mask.VertexNormals = item.VertexNormals_IsSet;
+            mask.VertexHeightMap = item.VertexHeightMap_IsSet;
+            mask.VertexColors = item.VertexColors_IsSet;
+            mask.Layers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BaseLayer_Mask<bool>>>>(item.Layers.HasBeenSet, item.Layers.WithIndex().Select((i) => new MaskItemIndexed<bool, BaseLayer_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Textures = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Textures.HasBeenSet, null);
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Landscape_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1669,12 +1732,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Landscape_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Landscape_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
@@ -1759,14 +1816,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Layers.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
             {
-                ListXmlTranslation<BaseLayer>.Instance.Write(
+                ListXmlTranslation<IBaseLayerInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Layers),
                     item: item.Layers,
                     fieldIndex: (int)Landscape_FieldIndex.Layers,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Landscape_FieldIndex.Layers),
-                    transl: (XElement subNode, BaseLayer subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IBaseLayerInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         ((BaseLayerXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
                             item: subItem,
@@ -1774,8 +1831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
             if (item.Textures.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
@@ -1794,8 +1850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             item: subItem?.FormKey,
                             errorMask: listSubMask);
-                    }
-                    );
+                    });
             }
         }
 
@@ -2732,12 +2787,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Layers.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IBaseLayerInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Layers,
                     fieldIndex: (int)Landscape_FieldIndex.Layers,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, BaseLayer subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IBaseLayerInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         ((BaseLayerBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
@@ -2745,8 +2800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
-                    }
-                    );
+                    });
             }
             if (item.Textures.HasBeenSet)
             {
@@ -2760,8 +2814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: subWriter,
                             item: subItem,
                             masterReferences: masterReferences);
-                    }
-                    );
+                    });
             }
         }
 

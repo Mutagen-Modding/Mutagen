@@ -47,6 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandTexture_Registration.Instance;
         public new static LandTexture_Registration Registration => LandTexture_Registration.Instance;
+        protected override object CommonInstance => LandTextureCommon.Instance;
 
         #region Ctor
         protected LandTexture()
@@ -139,12 +140,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<FormIDSetLink<Grass>> _PotentialGrass = new SourceSetList<FormIDSetLink<Grass>>();
         public ISourceSetList<FormIDSetLink<Grass>> PotentialGrass => _PotentialGrass;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<FormIDSetLink<Grass>> PotentialGrassEnumerable
-        {
-            get => _PotentialGrass.Items;
-            set => _PotentialGrass.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<FormIDSetLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
@@ -154,30 +149,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<LandTexture>.GetEqualsMask(LandTexture rhs, EqualsMaskHelper.Include include) => LandTextureCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ILandTextureGetter>.GetEqualsMask(ILandTextureGetter rhs, EqualsMaskHelper.Include include) => LandTextureCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<LandTexture>.GetEqualsMask(LandTexture rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ILandTextureGetter>.GetEqualsMask(ILandTextureGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            LandTexture_Mask<bool> printMask = null)
-        {
-            return LandTextureCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            LandTextureCommon.ToString(this, fg, name: name, printMask: null);
+            LandTextureMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new LandTexture_Mask<bool> GetHasBeenSetMask()
-        {
-            return LandTextureCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -765,10 +752,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            LandTextureCommon.Clear(this);
+            LandTextureCommon.Instance.Clear(this);
         }
-
 
         public new static LandTexture Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -877,6 +862,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class LandTextureMixIn
+    {
+        public static void Clear(this ILandTextureInternal item)
+        {
+            ((LandTextureCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static LandTexture_Mask<bool> GetEqualsMask(
+            this ILandTextureGetter item,
+            ILandTextureGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new LandTexture_Mask<bool>();
+            ((LandTextureCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ILandTextureInternalGetter item,
+            string name = null,
+            LandTexture_Mask<bool> printMask = null)
+        {
+            return ((LandTextureCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ILandTextureInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            LandTexture_Mask<bool> printMask = null)
+        {
+            ((LandTextureCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ILandTextureInternalGetter item,
+            LandTexture_Mask<bool?> checkMask)
+        {
+            return ((LandTextureCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static LandTexture_Mask<bool> GetHasBeenSetMask(this ILandTextureGetter item)
+        {
+            var ret = new LandTexture_Mask<bool>();
+            ((LandTextureCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1112,9 +1164,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class LandTextureCommon
+    #region Common
+    public partial class LandTextureCommon : OblivionMajorRecordCommon
     {
+        public static readonly LandTextureCommon Instance = new LandTextureCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ILandTexture item,
@@ -1264,29 +1317,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ILandTexture item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ILandTexture item)
         {
+            ClearPartial();
             item.Icon_Unset();
             item.Havok_Unset();
             item.TextureSpecularExponent_Unset();
             item.PotentialGrass.Unset();
+            base.Clear(item);
         }
 
-        public static LandTexture_Mask<bool> GetEqualsMask(
-            this ILandTextureGetter item,
-            ILandTextureGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new LandTexture_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ILandTexture)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (ILandTexture)item);
+        }
+
+        public void FillEqualsMask(
             ILandTextureGetter item,
             ILandTextureGetter rhs,
             LandTexture_Mask<bool> ret,
@@ -1299,28 +1352,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Havok_IsSet,
                 item.Havok,
                 rhs.Havok,
-                (loqLhs, loqRhs) => HavokDataCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.TextureSpecularExponent = item.TextureSpecularExponent_IsSet == rhs.TextureSpecularExponent_IsSet && item.TextureSpecularExponent == rhs.TextureSpecularExponent;
             ret.PotentialGrass = item.PotentialGrass.CollectionEqualsHelper(
                 rhs.PotentialGrass,
                 (l, r) => object.Equals(l, r),
                 include);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ILandTextureGetter item,
+        public string ToString(
+            ILandTextureGetter item,
             string name = null,
             LandTexture_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ILandTextureGetter item,
+        public void ToString(
+            ILandTextureGetter item,
             FileGeneration fg,
             string name = null,
             LandTexture_Mask<bool> printMask = null)
@@ -1336,42 +1393,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Havok?.Overall ?? true)
-                {
-                    item.Havok?.ToString(fg, "Havok");
-                }
-                if (printMask?.TextureSpecularExponent ?? true)
-                {
-                    fg.AppendLine($"TextureSpecularExponent => {item.TextureSpecularExponent}");
-                }
-                if (printMask?.PotentialGrass?.Overall ?? true)
-                {
-                    fg.AppendLine("PotentialGrass =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.PotentialGrass)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($"Item => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ILandTextureGetter item,
+        protected static void ToStringFields(
+            ILandTextureGetter item,
+            FileGeneration fg,
+            LandTexture_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Havok?.Overall ?? true)
+            {
+                item.Havok?.ToString(fg, "Havok");
+            }
+            if (printMask?.TextureSpecularExponent ?? true)
+            {
+                fg.AppendLine($"TextureSpecularExponent => {item.TextureSpecularExponent}");
+            }
+            if (printMask?.PotentialGrass?.Overall ?? true)
+            {
+                fg.AppendLine("PotentialGrass =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.PotentialGrass)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+
+        public bool HasBeenSet(
+            ILandTextureGetter item,
             LandTexture_Mask<bool?> checkMask)
         {
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
@@ -1379,23 +1451,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Havok.Specific != null && (item.Havok == null || !item.Havok.HasBeenSet(checkMask.Havok.Specific))) return false;
             if (checkMask.TextureSpecularExponent.HasValue && checkMask.TextureSpecularExponent.Value != item.TextureSpecularExponent_IsSet) return false;
             if (checkMask.PotentialGrass.Overall.HasValue && checkMask.PotentialGrass.Overall.Value != item.PotentialGrass.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static LandTexture_Mask<bool> GetHasBeenSetMask(ILandTextureGetter item)
+        public void FillHasBeenSetMask(
+            ILandTextureGetter item,
+            LandTexture_Mask<bool> mask)
         {
-            var ret = new LandTexture_Mask<bool>();
-            ret.Icon = item.Icon_IsSet;
-            ret.Havok = new MaskItem<bool, HavokData_Mask<bool>>(item.Havok_IsSet, HavokDataCommon.GetHasBeenSetMask(item.Havok));
-            ret.TextureSpecularExponent = item.TextureSpecularExponent_IsSet;
-            ret.PotentialGrass = new MaskItem<bool, IEnumerable<(int, bool)>>(item.PotentialGrass.HasBeenSet, null);
-            return ret;
-        }
-
-        public static LandTexture_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Icon = item.Icon_IsSet;
+            mask.Havok = new MaskItem<bool, HavokData_Mask<bool>>(item.Havok_IsSet, item.Havok.GetHasBeenSetMask());
+            mask.TextureSpecularExponent = item.TextureSpecularExponent_IsSet;
+            mask.PotentialGrass = new MaskItem<bool, IEnumerable<(int, bool)>>(item.PotentialGrass.HasBeenSet, null);
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static LandTexture_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1415,12 +1486,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static LandTexture_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static LandTexture_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
@@ -1510,8 +1575,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             item: subItem?.FormKey,
                             errorMask: listSubMask);
-                    }
-                    );
+                    });
             }
         }
 
@@ -2279,8 +2343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.GNAM_HEADER),
                             nullable: false,
                             masterReferences: masterReferences);
-                    }
-                    );
+                    });
             }
         }
 

@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
         public static LocalVariable_Registration Registration => LocalVariable_Registration.Instance;
+        protected object CommonInstance => LocalVariableCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public LocalVariable()
@@ -150,30 +152,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<LocalVariable>.GetEqualsMask(LocalVariable rhs, EqualsMaskHelper.Include include) => LocalVariableCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ILocalVariableGetter>.GetEqualsMask(ILocalVariableGetter rhs, EqualsMaskHelper.Include include) => LocalVariableCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<LocalVariable>.GetEqualsMask(LocalVariable rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ILocalVariableGetter>.GetEqualsMask(ILocalVariableGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            LocalVariable_Mask<bool> printMask = null)
-        {
-            return LocalVariableCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            LocalVariableCommon.ToString(this, fg, name: name, printMask: null);
+            LocalVariableMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public LocalVariable_Mask<bool> GetHasBeenSetMask()
-        {
-            return LocalVariableCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -671,19 +665,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            LocalVariableCommon.Clear(this);
+            LocalVariableCommon.Instance.Clear(this);
         }
-
 
         public static LocalVariable Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -800,6 +785,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class LocalVariableMixIn
+    {
+        public static void Clear(this ILocalVariableInternal item)
+        {
+            ((LocalVariableCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static LocalVariable_Mask<bool> GetEqualsMask(
+            this ILocalVariableGetter item,
+            ILocalVariableGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new LocalVariable_Mask<bool>();
+            ((LocalVariableCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ILocalVariableInternalGetter item,
+            string name = null,
+            LocalVariable_Mask<bool> printMask = null)
+        {
+            return ((LocalVariableCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ILocalVariableInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            LocalVariable_Mask<bool> printMask = null)
+        {
+            ((LocalVariableCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ILocalVariableInternalGetter item,
+            LocalVariable_Mask<bool?> checkMask)
+        {
+            return ((LocalVariableCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static LocalVariable_Mask<bool> GetHasBeenSetMask(this ILocalVariableGetter item)
+        {
+            var ret = new LocalVariable_Mask<bool>();
+            ((LocalVariableCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1049,9 +1101,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class LocalVariableCommon
+    #region Common
+    public partial class LocalVariableCommon
     {
+        public static readonly LocalVariableCommon Instance = new LocalVariableCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ILocalVariable item,
@@ -1162,8 +1215,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ILocalVariable item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ILocalVariable item)
         {
+            ClearPartial();
             item.Index = default(Int32);
             item.Fluff = default(Byte[]);
             item.Flags = default(Script.LocalVariableFlag);
@@ -1171,21 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
         }
 
-        public static LocalVariable_Mask<bool> GetEqualsMask(
-            this ILocalVariableGetter item,
-            ILocalVariableGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new LocalVariable_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             ILocalVariableGetter item,
             ILocalVariableGetter rhs,
             LocalVariable_Mask<bool> ret,
@@ -1199,18 +1241,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
         }
 
-        public static string ToString(
-            this ILocalVariableGetter item,
+        public string ToString(
+            ILocalVariableGetter item,
             string name = null,
             LocalVariable_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ILocalVariableGetter item,
+        public void ToString(
+            ILocalVariableGetter item,
             FileGeneration fg,
             string name = null,
             LocalVariable_Mask<bool> printMask = null)
@@ -1226,51 +1272,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Index ?? true)
-                {
-                    fg.AppendLine($"Index => {item.Index}");
-                }
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {item.Fluff}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.Fluff2 ?? true)
-                {
-                    fg.AppendLine($"Fluff2 => {item.Fluff2}");
-                }
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.SLSDDataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ILocalVariableGetter item,
+        protected static void ToStringFields(
+            ILocalVariableGetter item,
+            FileGeneration fg,
+            LocalVariable_Mask<bool> printMask = null)
+        {
+            if (printMask?.Index ?? true)
+            {
+                fg.AppendLine($"Index => {item.Index}");
+            }
+            if (printMask?.Fluff ?? true)
+            {
+                fg.AppendLine($"Fluff => {item.Fluff}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Fluff2 ?? true)
+            {
+                fg.AppendLine($"Fluff2 => {item.Fluff2}");
+            }
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.SLSDDataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            ILocalVariableGetter item,
             LocalVariable_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
             return true;
         }
 
-        public static LocalVariable_Mask<bool> GetHasBeenSetMask(ILocalVariableGetter item)
+        public void FillHasBeenSetMask(
+            ILocalVariableGetter item,
+            LocalVariable_Mask<bool> mask)
         {
-            var ret = new LocalVariable_Mask<bool>();
-            ret.Index = true;
-            ret.Fluff = true;
-            ret.Flags = true;
-            ret.Fluff2 = true;
-            ret.Name = item.Name_IsSet;
-            ret.SLSDDataTypeState = true;
-            return ret;
+            mask.Index = true;
+            mask.Fluff = true;
+            mask.Flags = true;
+            mask.Fluff2 = true;
+            mask.Name = item.Name_IsSet;
+            mask.SLSDDataTypeState = true;
         }
 
     }

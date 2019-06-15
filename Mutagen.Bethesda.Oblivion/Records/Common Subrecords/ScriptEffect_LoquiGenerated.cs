@@ -44,6 +44,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptEffect_Registration.Instance;
         public static ScriptEffect_Registration Registration => ScriptEffect_Registration.Instance;
+        protected object CommonInstance => ScriptEffectCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public ScriptEffect()
@@ -137,30 +139,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<ScriptEffect>.GetEqualsMask(ScriptEffect rhs, EqualsMaskHelper.Include include) => ScriptEffectCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IScriptEffectGetter>.GetEqualsMask(IScriptEffectGetter rhs, EqualsMaskHelper.Include include) => ScriptEffectCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ScriptEffect>.GetEqualsMask(ScriptEffect rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IScriptEffectGetter>.GetEqualsMask(IScriptEffectGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            ScriptEffect_Mask<bool> printMask = null)
-        {
-            return ScriptEffectCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ScriptEffectCommon.ToString(this, fg, name: name, printMask: null);
+            ScriptEffectMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public ScriptEffect_Mask<bool> GetHasBeenSetMask()
-        {
-            return ScriptEffectCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -710,19 +704,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            ScriptEffectCommon.Clear(this);
+            ScriptEffectCommon.Instance.Clear(this);
         }
-
 
         public static ScriptEffect Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -841,6 +826,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class ScriptEffectMixIn
+    {
+        public static void Clear(this IScriptEffectInternal item)
+        {
+            ((ScriptEffectCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static ScriptEffect_Mask<bool> GetEqualsMask(
+            this IScriptEffectGetter item,
+            IScriptEffectGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ScriptEffect_Mask<bool>();
+            ((ScriptEffectCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IScriptEffectInternalGetter item,
+            string name = null,
+            ScriptEffect_Mask<bool> printMask = null)
+        {
+            return ((ScriptEffectCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IScriptEffectInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            ScriptEffect_Mask<bool> printMask = null)
+        {
+            ((ScriptEffectCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IScriptEffectInternalGetter item,
+            ScriptEffect_Mask<bool?> checkMask)
+        {
+            return ((ScriptEffectCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static ScriptEffect_Mask<bool> GetHasBeenSetMask(this IScriptEffectGetter item)
+        {
+            var ret = new ScriptEffect_Mask<bool>();
+            ((ScriptEffectCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1090,9 +1142,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ScriptEffectCommon
+    #region Common
+    public partial class ScriptEffectCommon
     {
+        public static readonly ScriptEffectCommon Instance = new ScriptEffectCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IScriptEffect item,
@@ -1203,8 +1256,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IScriptEffect item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IScriptEffect item)
         {
+            ClearPartial();
             item.Script = default(Script);
             item.MagicSchool = default(MagicSchool);
             item.VisualEffect = default(MagicEffect);
@@ -1212,21 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
         }
 
-        public static ScriptEffect_Mask<bool> GetEqualsMask(
-            this IScriptEffectGetter item,
-            IScriptEffectGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new ScriptEffect_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IScriptEffectGetter item,
             IScriptEffectGetter rhs,
             ScriptEffect_Mask<bool> ret,
@@ -1240,18 +1282,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
         }
 
-        public static string ToString(
-            this IScriptEffectGetter item,
+        public string ToString(
+            IScriptEffectGetter item,
             string name = null,
             ScriptEffect_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IScriptEffectGetter item,
+        public void ToString(
+            IScriptEffectGetter item,
             FileGeneration fg,
             string name = null,
             ScriptEffect_Mask<bool> printMask = null)
@@ -1267,51 +1313,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {item.Script_Property}");
-                }
-                if (printMask?.MagicSchool ?? true)
-                {
-                    fg.AppendLine($"MagicSchool => {item.MagicSchool}");
-                }
-                if (printMask?.VisualEffect ?? true)
-                {
-                    fg.AppendLine($"VisualEffect => {item.VisualEffect_Property}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.SCITDataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IScriptEffectGetter item,
+        protected static void ToStringFields(
+            IScriptEffectGetter item,
+            FileGeneration fg,
+            ScriptEffect_Mask<bool> printMask = null)
+        {
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.MagicSchool ?? true)
+            {
+                fg.AppendLine($"MagicSchool => {item.MagicSchool}");
+            }
+            if (printMask?.VisualEffect ?? true)
+            {
+                fg.AppendLine($"VisualEffect => {item.VisualEffect_Property}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.SCITDataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IScriptEffectGetter item,
             ScriptEffect_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
             return true;
         }
 
-        public static ScriptEffect_Mask<bool> GetHasBeenSetMask(IScriptEffectGetter item)
+        public void FillHasBeenSetMask(
+            IScriptEffectGetter item,
+            ScriptEffect_Mask<bool> mask)
         {
-            var ret = new ScriptEffect_Mask<bool>();
-            ret.Script = true;
-            ret.MagicSchool = true;
-            ret.VisualEffect = true;
-            ret.Flags = true;
-            ret.Name = item.Name_IsSet;
-            ret.SCITDataTypeState = true;
-            return ret;
+            mask.Script = true;
+            mask.MagicSchool = true;
+            mask.VisualEffect = true;
+            mask.Flags = true;
+            mask.Name = item.Name_IsSet;
+            mask.SCITDataTypeState = true;
         }
 
     }

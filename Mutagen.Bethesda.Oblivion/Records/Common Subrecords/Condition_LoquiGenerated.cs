@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
         public static Condition_Registration Registration => Condition_Registration.Instance;
+        protected object CommonInstance => ConditionCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public Condition()
@@ -123,30 +125,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Condition>.GetEqualsMask(Condition rhs, EqualsMaskHelper.Include include) => ConditionCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IConditionGetter>.GetEqualsMask(IConditionGetter rhs, EqualsMaskHelper.Include include) => ConditionCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Condition>.GetEqualsMask(Condition rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IConditionGetter>.GetEqualsMask(IConditionGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Condition_Mask<bool> printMask = null)
-        {
-            return ConditionCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ConditionCommon.ToString(this, fg, name: name, printMask: null);
+            ConditionMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public Condition_Mask<bool> GetHasBeenSetMask()
-        {
-            return ConditionCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -619,19 +613,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            ConditionCommon.Clear(this);
+            ConditionCommon.Instance.Clear(this);
         }
-
 
         public static Condition Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -751,6 +736,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class ConditionMixIn
+    {
+        public static void Clear(this ICondition item)
+        {
+            ((ConditionCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Condition_Mask<bool> GetEqualsMask(
+            this IConditionGetter item,
+            IConditionGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Condition_Mask<bool>();
+            ((ConditionCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IConditionGetter item,
+            string name = null,
+            Condition_Mask<bool> printMask = null)
+        {
+            return ((ConditionCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IConditionGetter item,
+            FileGeneration fg,
+            string name = null,
+            Condition_Mask<bool> printMask = null)
+        {
+            ((ConditionCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IConditionGetter item,
+            Condition_Mask<bool?> checkMask)
+        {
+            return ((ConditionCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Condition_Mask<bool> GetHasBeenSetMask(this IConditionGetter item)
+        {
+            var ret = new Condition_Mask<bool>();
+            ((ConditionCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1035,9 +1087,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ConditionCommon
+    #region Common
+    public partial class ConditionCommon
     {
+        public static readonly ConditionCommon Instance = new ConditionCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ICondition item,
@@ -1186,8 +1239,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ICondition item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ICondition item)
         {
+            ClearPartial();
             item.CompareOperator = default(CompareOperator);
             item.Flags = default(Condition.Flag);
             item.Fluff = default(Byte[]);
@@ -1198,21 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThirdParameter = default(Int32);
         }
 
-        public static Condition_Mask<bool> GetEqualsMask(
-            this IConditionGetter item,
-            IConditionGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Condition_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IConditionGetter item,
             IConditionGetter rhs,
             Condition_Mask<bool> ret,
@@ -1229,18 +1271,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ThirdParameter = item.ThirdParameter == rhs.ThirdParameter;
         }
 
-        public static string ToString(
-            this IConditionGetter item,
+        public string ToString(
+            IConditionGetter item,
             string name = null,
             Condition_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IConditionGetter item,
+        public void ToString(
+            IConditionGetter item,
             FileGeneration fg,
             string name = null,
             Condition_Mask<bool> printMask = null)
@@ -1256,61 +1302,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.CompareOperator ?? true)
-                {
-                    fg.AppendLine($"CompareOperator => {item.CompareOperator}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {item.Fluff}");
-                }
-                if (printMask?.ComparisonValue ?? true)
-                {
-                    fg.AppendLine($"ComparisonValue => {item.ComparisonValue}");
-                }
-                if (printMask?.Function ?? true)
-                {
-                    fg.AppendLine($"Function => {item.Function}");
-                }
-                if (printMask?.FirstParameter ?? true)
-                {
-                    fg.AppendLine($"FirstParameter => {item.FirstParameter}");
-                }
-                if (printMask?.SecondParameter ?? true)
-                {
-                    fg.AppendLine($"SecondParameter => {item.SecondParameter}");
-                }
-                if (printMask?.ThirdParameter ?? true)
-                {
-                    fg.AppendLine($"ThirdParameter => {item.ThirdParameter}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IConditionGetter item,
+        protected static void ToStringFields(
+            IConditionGetter item,
+            FileGeneration fg,
+            Condition_Mask<bool> printMask = null)
+        {
+            if (printMask?.CompareOperator ?? true)
+            {
+                fg.AppendLine($"CompareOperator => {item.CompareOperator}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Fluff ?? true)
+            {
+                fg.AppendLine($"Fluff => {item.Fluff}");
+            }
+            if (printMask?.ComparisonValue ?? true)
+            {
+                fg.AppendLine($"ComparisonValue => {item.ComparisonValue}");
+            }
+            if (printMask?.Function ?? true)
+            {
+                fg.AppendLine($"Function => {item.Function}");
+            }
+            if (printMask?.FirstParameter ?? true)
+            {
+                fg.AppendLine($"FirstParameter => {item.FirstParameter}");
+            }
+            if (printMask?.SecondParameter ?? true)
+            {
+                fg.AppendLine($"SecondParameter => {item.SecondParameter}");
+            }
+            if (printMask?.ThirdParameter ?? true)
+            {
+                fg.AppendLine($"ThirdParameter => {item.ThirdParameter}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IConditionGetter item,
             Condition_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static Condition_Mask<bool> GetHasBeenSetMask(IConditionGetter item)
+        public void FillHasBeenSetMask(
+            IConditionGetter item,
+            Condition_Mask<bool> mask)
         {
-            var ret = new Condition_Mask<bool>();
-            ret.CompareOperator = true;
-            ret.Flags = true;
-            ret.Fluff = true;
-            ret.ComparisonValue = true;
-            ret.Function = true;
-            ret.FirstParameter = true;
-            ret.SecondParameter = true;
-            ret.ThirdParameter = true;
-            return ret;
+            mask.CompareOperator = true;
+            mask.Flags = true;
+            mask.Fluff = true;
+            mask.ComparisonValue = true;
+            mask.Function = true;
+            mask.FirstParameter = true;
+            mask.SecondParameter = true;
+            mask.ThirdParameter = true;
         }
 
     }

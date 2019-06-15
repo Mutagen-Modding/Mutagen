@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
         public new static CombatStyle_Registration Registration => CombatStyle_Registration.Instance;
+        protected override object CommonInstance => CombatStyleCommon.Instance;
 
         #region Ctor
         protected CombatStyle()
@@ -548,30 +549,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<CombatStyle>.GetEqualsMask(CombatStyle rhs, EqualsMaskHelper.Include include) => CombatStyleCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ICombatStyleGetter>.GetEqualsMask(ICombatStyleGetter rhs, EqualsMaskHelper.Include include) => CombatStyleCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<CombatStyle>.GetEqualsMask(CombatStyle rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ICombatStyleGetter>.GetEqualsMask(ICombatStyleGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            CombatStyle_Mask<bool> printMask = null)
-        {
-            return CombatStyleCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            CombatStyleCommon.ToString(this, fg, name: name, printMask: null);
+            CombatStyleMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new CombatStyle_Mask<bool> GetHasBeenSetMask()
-        {
-            return CombatStyleCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -1595,10 +1588,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            CombatStyleCommon.Clear(this);
+            CombatStyleCommon.Instance.Clear(this);
         }
-
 
         public new static CombatStyle Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -2007,6 +1998,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class CombatStyleMixIn
+    {
+        public static void Clear(this ICombatStyleInternal item)
+        {
+            ((CombatStyleCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static CombatStyle_Mask<bool> GetEqualsMask(
+            this ICombatStyleGetter item,
+            ICombatStyleGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new CombatStyle_Mask<bool>();
+            ((CombatStyleCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ICombatStyleInternalGetter item,
+            string name = null,
+            CombatStyle_Mask<bool> printMask = null)
+        {
+            return ((CombatStyleCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ICombatStyleInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            CombatStyle_Mask<bool> printMask = null)
+        {
+            ((CombatStyleCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ICombatStyleInternalGetter item,
+            CombatStyle_Mask<bool?> checkMask)
+        {
+            return ((CombatStyleCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static CombatStyle_Mask<bool> GetHasBeenSetMask(this ICombatStyleGetter item)
+        {
+            var ret = new CombatStyle_Mask<bool>();
+            ((CombatStyleCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -2647,9 +2705,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class CombatStyleCommon
+    #region Common
+    public partial class CombatStyleCommon : OblivionMajorRecordCommon
     {
+        public static readonly CombatStyleCommon Instance = new CombatStyleCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ICombatStyle item,
@@ -3332,8 +3391,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ICombatStyle item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ICombatStyle item)
         {
+            ClearPartial();
             item.DodgePercentChance = default(Byte);
             item.LeftRightPercentChance = default(Byte);
             item.DodgeLeftRightTimerMin = default(Single);
@@ -3371,23 +3433,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RushingAttackPercentChance = default(Byte);
             item.RushingAttackDistanceMult = default(Single);
             item.Advanced_Unset();
+            base.Clear(item);
         }
 
-        public static CombatStyle_Mask<bool> GetEqualsMask(
-            this ICombatStyleGetter item,
-            ICombatStyleGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new CombatStyle_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ICombatStyle)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (ICombatStyle)item);
+        }
+
+        public void FillEqualsMask(
             ICombatStyleGetter item,
             ICombatStyleGetter rhs,
             CombatStyle_Mask<bool> ret,
@@ -3435,23 +3494,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Advanced_IsSet,
                 item.Advanced,
                 rhs.Advanced,
-                (loqLhs, loqRhs) => CombatStyleAdvancedCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ICombatStyleGetter item,
+        public string ToString(
+            ICombatStyleGetter item,
             string name = null,
             CombatStyle_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ICombatStyleGetter item,
+        public void ToString(
+            ICombatStyleGetter item,
             FileGeneration fg,
             string name = null,
             CombatStyle_Mask<bool> printMask = null)
@@ -3467,218 +3530,232 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.DodgePercentChance ?? true)
-                {
-                    fg.AppendLine($"DodgePercentChance => {item.DodgePercentChance}");
-                }
-                if (printMask?.LeftRightPercentChance ?? true)
-                {
-                    fg.AppendLine($"LeftRightPercentChance => {item.LeftRightPercentChance}");
-                }
-                if (printMask?.DodgeLeftRightTimerMin ?? true)
-                {
-                    fg.AppendLine($"DodgeLeftRightTimerMin => {item.DodgeLeftRightTimerMin}");
-                }
-                if (printMask?.DodgeLeftRightTimerMax ?? true)
-                {
-                    fg.AppendLine($"DodgeLeftRightTimerMax => {item.DodgeLeftRightTimerMax}");
-                }
-                if (printMask?.DodgeForwardTimerMin ?? true)
-                {
-                    fg.AppendLine($"DodgeForwardTimerMin => {item.DodgeForwardTimerMin}");
-                }
-                if (printMask?.DodgeForwardTimerMax ?? true)
-                {
-                    fg.AppendLine($"DodgeForwardTimerMax => {item.DodgeForwardTimerMax}");
-                }
-                if (printMask?.DodgeBackTimerMin ?? true)
-                {
-                    fg.AppendLine($"DodgeBackTimerMin => {item.DodgeBackTimerMin}");
-                }
-                if (printMask?.DodgeBackTimerMax ?? true)
-                {
-                    fg.AppendLine($"DodgeBackTimerMax => {item.DodgeBackTimerMax}");
-                }
-                if (printMask?.IdleTimerMin ?? true)
-                {
-                    fg.AppendLine($"IdleTimerMin => {item.IdleTimerMin}");
-                }
-                if (printMask?.IdleTimerMax ?? true)
-                {
-                    fg.AppendLine($"IdleTimerMax => {item.IdleTimerMax}");
-                }
-                if (printMask?.BlockPercentChance ?? true)
-                {
-                    fg.AppendLine($"BlockPercentChance => {item.BlockPercentChance}");
-                }
-                if (printMask?.AttackPercentChance ?? true)
-                {
-                    fg.AppendLine($"AttackPercentChance => {item.AttackPercentChance}");
-                }
-                if (printMask?.RecoilStaggerBonusToAttack ?? true)
-                {
-                    fg.AppendLine($"RecoilStaggerBonusToAttack => {item.RecoilStaggerBonusToAttack}");
-                }
-                if (printMask?.UnconsciousBonusToAttack ?? true)
-                {
-                    fg.AppendLine($"UnconsciousBonusToAttack => {item.UnconsciousBonusToAttack}");
-                }
-                if (printMask?.HandToHandBonusToAttack ?? true)
-                {
-                    fg.AppendLine($"HandToHandBonusToAttack => {item.HandToHandBonusToAttack}");
-                }
-                if (printMask?.PowerAttackPercentChance ?? true)
-                {
-                    fg.AppendLine($"PowerAttackPercentChance => {item.PowerAttackPercentChance}");
-                }
-                if (printMask?.RecoilStaggerBonusToPowerAttack ?? true)
-                {
-                    fg.AppendLine($"RecoilStaggerBonusToPowerAttack => {item.RecoilStaggerBonusToPowerAttack}");
-                }
-                if (printMask?.UnconsciousBonusToPowerAttack ?? true)
-                {
-                    fg.AppendLine($"UnconsciousBonusToPowerAttack => {item.UnconsciousBonusToPowerAttack}");
-                }
-                if (printMask?.PowerAttackNormal ?? true)
-                {
-                    fg.AppendLine($"PowerAttackNormal => {item.PowerAttackNormal}");
-                }
-                if (printMask?.PowerAttackForward ?? true)
-                {
-                    fg.AppendLine($"PowerAttackForward => {item.PowerAttackForward}");
-                }
-                if (printMask?.PowerAttackBack ?? true)
-                {
-                    fg.AppendLine($"PowerAttackBack => {item.PowerAttackBack}");
-                }
-                if (printMask?.PowerAttackLeft ?? true)
-                {
-                    fg.AppendLine($"PowerAttackLeft => {item.PowerAttackLeft}");
-                }
-                if (printMask?.PowerAttackRight ?? true)
-                {
-                    fg.AppendLine($"PowerAttackRight => {item.PowerAttackRight}");
-                }
-                if (printMask?.HoldTimerMin ?? true)
-                {
-                    fg.AppendLine($"HoldTimerMin => {item.HoldTimerMin}");
-                }
-                if (printMask?.HoldTimerMax ?? true)
-                {
-                    fg.AppendLine($"HoldTimerMax => {item.HoldTimerMax}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.AcrobaticDodgePercentChance ?? true)
-                {
-                    fg.AppendLine($"AcrobaticDodgePercentChance => {item.AcrobaticDodgePercentChance}");
-                }
-                if (printMask?.RangeMultOptimal ?? true)
-                {
-                    fg.AppendLine($"RangeMultOptimal => {item.RangeMultOptimal}");
-                }
-                if (printMask?.RangeMultMax ?? true)
-                {
-                    fg.AppendLine($"RangeMultMax => {item.RangeMultMax}");
-                }
-                if (printMask?.SwitchDistanceMelee ?? true)
-                {
-                    fg.AppendLine($"SwitchDistanceMelee => {item.SwitchDistanceMelee}");
-                }
-                if (printMask?.SwitchDistanceRanged ?? true)
-                {
-                    fg.AppendLine($"SwitchDistanceRanged => {item.SwitchDistanceRanged}");
-                }
-                if (printMask?.BuffStandoffDistance ?? true)
-                {
-                    fg.AppendLine($"BuffStandoffDistance => {item.BuffStandoffDistance}");
-                }
-                if (printMask?.RangedStandoffDistance ?? true)
-                {
-                    fg.AppendLine($"RangedStandoffDistance => {item.RangedStandoffDistance}");
-                }
-                if (printMask?.GroupStandoffDistance ?? true)
-                {
-                    fg.AppendLine($"GroupStandoffDistance => {item.GroupStandoffDistance}");
-                }
-                if (printMask?.RushingAttackPercentChance ?? true)
-                {
-                    fg.AppendLine($"RushingAttackPercentChance => {item.RushingAttackPercentChance}");
-                }
-                if (printMask?.RushingAttackDistanceMult ?? true)
-                {
-                    fg.AppendLine($"RushingAttackDistanceMult => {item.RushingAttackDistanceMult}");
-                }
-                if (printMask?.Advanced?.Overall ?? true)
-                {
-                    item.Advanced?.ToString(fg, "Advanced");
-                }
-                if (printMask?.CSTDDataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ICombatStyleGetter item,
+        protected static void ToStringFields(
+            ICombatStyleGetter item,
+            FileGeneration fg,
+            CombatStyle_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.DodgePercentChance ?? true)
+            {
+                fg.AppendLine($"DodgePercentChance => {item.DodgePercentChance}");
+            }
+            if (printMask?.LeftRightPercentChance ?? true)
+            {
+                fg.AppendLine($"LeftRightPercentChance => {item.LeftRightPercentChance}");
+            }
+            if (printMask?.DodgeLeftRightTimerMin ?? true)
+            {
+                fg.AppendLine($"DodgeLeftRightTimerMin => {item.DodgeLeftRightTimerMin}");
+            }
+            if (printMask?.DodgeLeftRightTimerMax ?? true)
+            {
+                fg.AppendLine($"DodgeLeftRightTimerMax => {item.DodgeLeftRightTimerMax}");
+            }
+            if (printMask?.DodgeForwardTimerMin ?? true)
+            {
+                fg.AppendLine($"DodgeForwardTimerMin => {item.DodgeForwardTimerMin}");
+            }
+            if (printMask?.DodgeForwardTimerMax ?? true)
+            {
+                fg.AppendLine($"DodgeForwardTimerMax => {item.DodgeForwardTimerMax}");
+            }
+            if (printMask?.DodgeBackTimerMin ?? true)
+            {
+                fg.AppendLine($"DodgeBackTimerMin => {item.DodgeBackTimerMin}");
+            }
+            if (printMask?.DodgeBackTimerMax ?? true)
+            {
+                fg.AppendLine($"DodgeBackTimerMax => {item.DodgeBackTimerMax}");
+            }
+            if (printMask?.IdleTimerMin ?? true)
+            {
+                fg.AppendLine($"IdleTimerMin => {item.IdleTimerMin}");
+            }
+            if (printMask?.IdleTimerMax ?? true)
+            {
+                fg.AppendLine($"IdleTimerMax => {item.IdleTimerMax}");
+            }
+            if (printMask?.BlockPercentChance ?? true)
+            {
+                fg.AppendLine($"BlockPercentChance => {item.BlockPercentChance}");
+            }
+            if (printMask?.AttackPercentChance ?? true)
+            {
+                fg.AppendLine($"AttackPercentChance => {item.AttackPercentChance}");
+            }
+            if (printMask?.RecoilStaggerBonusToAttack ?? true)
+            {
+                fg.AppendLine($"RecoilStaggerBonusToAttack => {item.RecoilStaggerBonusToAttack}");
+            }
+            if (printMask?.UnconsciousBonusToAttack ?? true)
+            {
+                fg.AppendLine($"UnconsciousBonusToAttack => {item.UnconsciousBonusToAttack}");
+            }
+            if (printMask?.HandToHandBonusToAttack ?? true)
+            {
+                fg.AppendLine($"HandToHandBonusToAttack => {item.HandToHandBonusToAttack}");
+            }
+            if (printMask?.PowerAttackPercentChance ?? true)
+            {
+                fg.AppendLine($"PowerAttackPercentChance => {item.PowerAttackPercentChance}");
+            }
+            if (printMask?.RecoilStaggerBonusToPowerAttack ?? true)
+            {
+                fg.AppendLine($"RecoilStaggerBonusToPowerAttack => {item.RecoilStaggerBonusToPowerAttack}");
+            }
+            if (printMask?.UnconsciousBonusToPowerAttack ?? true)
+            {
+                fg.AppendLine($"UnconsciousBonusToPowerAttack => {item.UnconsciousBonusToPowerAttack}");
+            }
+            if (printMask?.PowerAttackNormal ?? true)
+            {
+                fg.AppendLine($"PowerAttackNormal => {item.PowerAttackNormal}");
+            }
+            if (printMask?.PowerAttackForward ?? true)
+            {
+                fg.AppendLine($"PowerAttackForward => {item.PowerAttackForward}");
+            }
+            if (printMask?.PowerAttackBack ?? true)
+            {
+                fg.AppendLine($"PowerAttackBack => {item.PowerAttackBack}");
+            }
+            if (printMask?.PowerAttackLeft ?? true)
+            {
+                fg.AppendLine($"PowerAttackLeft => {item.PowerAttackLeft}");
+            }
+            if (printMask?.PowerAttackRight ?? true)
+            {
+                fg.AppendLine($"PowerAttackRight => {item.PowerAttackRight}");
+            }
+            if (printMask?.HoldTimerMin ?? true)
+            {
+                fg.AppendLine($"HoldTimerMin => {item.HoldTimerMin}");
+            }
+            if (printMask?.HoldTimerMax ?? true)
+            {
+                fg.AppendLine($"HoldTimerMax => {item.HoldTimerMax}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.AcrobaticDodgePercentChance ?? true)
+            {
+                fg.AppendLine($"AcrobaticDodgePercentChance => {item.AcrobaticDodgePercentChance}");
+            }
+            if (printMask?.RangeMultOptimal ?? true)
+            {
+                fg.AppendLine($"RangeMultOptimal => {item.RangeMultOptimal}");
+            }
+            if (printMask?.RangeMultMax ?? true)
+            {
+                fg.AppendLine($"RangeMultMax => {item.RangeMultMax}");
+            }
+            if (printMask?.SwitchDistanceMelee ?? true)
+            {
+                fg.AppendLine($"SwitchDistanceMelee => {item.SwitchDistanceMelee}");
+            }
+            if (printMask?.SwitchDistanceRanged ?? true)
+            {
+                fg.AppendLine($"SwitchDistanceRanged => {item.SwitchDistanceRanged}");
+            }
+            if (printMask?.BuffStandoffDistance ?? true)
+            {
+                fg.AppendLine($"BuffStandoffDistance => {item.BuffStandoffDistance}");
+            }
+            if (printMask?.RangedStandoffDistance ?? true)
+            {
+                fg.AppendLine($"RangedStandoffDistance => {item.RangedStandoffDistance}");
+            }
+            if (printMask?.GroupStandoffDistance ?? true)
+            {
+                fg.AppendLine($"GroupStandoffDistance => {item.GroupStandoffDistance}");
+            }
+            if (printMask?.RushingAttackPercentChance ?? true)
+            {
+                fg.AppendLine($"RushingAttackPercentChance => {item.RushingAttackPercentChance}");
+            }
+            if (printMask?.RushingAttackDistanceMult ?? true)
+            {
+                fg.AppendLine($"RushingAttackDistanceMult => {item.RushingAttackDistanceMult}");
+            }
+            if (printMask?.Advanced?.Overall ?? true)
+            {
+                item.Advanced?.ToString(fg, "Advanced");
+            }
+            if (printMask?.CSTDDataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            ICombatStyleGetter item,
             CombatStyle_Mask<bool?> checkMask)
         {
             if (checkMask.Advanced.Overall.HasValue && checkMask.Advanced.Overall.Value != item.Advanced_IsSet) return false;
             if (checkMask.Advanced.Specific != null && (item.Advanced == null || !item.Advanced.HasBeenSet(checkMask.Advanced.Specific))) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static CombatStyle_Mask<bool> GetHasBeenSetMask(ICombatStyleGetter item)
+        public void FillHasBeenSetMask(
+            ICombatStyleGetter item,
+            CombatStyle_Mask<bool> mask)
         {
-            var ret = new CombatStyle_Mask<bool>();
-            ret.DodgePercentChance = true;
-            ret.LeftRightPercentChance = true;
-            ret.DodgeLeftRightTimerMin = true;
-            ret.DodgeLeftRightTimerMax = true;
-            ret.DodgeForwardTimerMin = true;
-            ret.DodgeForwardTimerMax = true;
-            ret.DodgeBackTimerMin = true;
-            ret.DodgeBackTimerMax = true;
-            ret.IdleTimerMin = true;
-            ret.IdleTimerMax = true;
-            ret.BlockPercentChance = true;
-            ret.AttackPercentChance = true;
-            ret.RecoilStaggerBonusToAttack = true;
-            ret.UnconsciousBonusToAttack = true;
-            ret.HandToHandBonusToAttack = true;
-            ret.PowerAttackPercentChance = true;
-            ret.RecoilStaggerBonusToPowerAttack = true;
-            ret.UnconsciousBonusToPowerAttack = true;
-            ret.PowerAttackNormal = true;
-            ret.PowerAttackForward = true;
-            ret.PowerAttackBack = true;
-            ret.PowerAttackLeft = true;
-            ret.PowerAttackRight = true;
-            ret.HoldTimerMin = true;
-            ret.HoldTimerMax = true;
-            ret.Flags = true;
-            ret.AcrobaticDodgePercentChance = true;
-            ret.RangeMultOptimal = true;
-            ret.RangeMultMax = true;
-            ret.SwitchDistanceMelee = true;
-            ret.SwitchDistanceRanged = true;
-            ret.BuffStandoffDistance = true;
-            ret.RangedStandoffDistance = true;
-            ret.GroupStandoffDistance = true;
-            ret.RushingAttackPercentChance = true;
-            ret.RushingAttackDistanceMult = true;
-            ret.Advanced = new MaskItem<bool, CombatStyleAdvanced_Mask<bool>>(item.Advanced_IsSet, CombatStyleAdvancedCommon.GetHasBeenSetMask(item.Advanced));
-            ret.CSTDDataTypeState = true;
-            return ret;
-        }
-
-        public static CombatStyle_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.DodgePercentChance = true;
+            mask.LeftRightPercentChance = true;
+            mask.DodgeLeftRightTimerMin = true;
+            mask.DodgeLeftRightTimerMax = true;
+            mask.DodgeForwardTimerMin = true;
+            mask.DodgeForwardTimerMax = true;
+            mask.DodgeBackTimerMin = true;
+            mask.DodgeBackTimerMax = true;
+            mask.IdleTimerMin = true;
+            mask.IdleTimerMax = true;
+            mask.BlockPercentChance = true;
+            mask.AttackPercentChance = true;
+            mask.RecoilStaggerBonusToAttack = true;
+            mask.UnconsciousBonusToAttack = true;
+            mask.HandToHandBonusToAttack = true;
+            mask.PowerAttackPercentChance = true;
+            mask.RecoilStaggerBonusToPowerAttack = true;
+            mask.UnconsciousBonusToPowerAttack = true;
+            mask.PowerAttackNormal = true;
+            mask.PowerAttackForward = true;
+            mask.PowerAttackBack = true;
+            mask.PowerAttackLeft = true;
+            mask.PowerAttackRight = true;
+            mask.HoldTimerMin = true;
+            mask.HoldTimerMax = true;
+            mask.Flags = true;
+            mask.AcrobaticDodgePercentChance = true;
+            mask.RangeMultOptimal = true;
+            mask.RangeMultMax = true;
+            mask.SwitchDistanceMelee = true;
+            mask.SwitchDistanceRanged = true;
+            mask.BuffStandoffDistance = true;
+            mask.RangedStandoffDistance = true;
+            mask.GroupStandoffDistance = true;
+            mask.RushingAttackPercentChance = true;
+            mask.RushingAttackDistanceMult = true;
+            mask.Advanced = new MaskItem<bool, CombatStyleAdvanced_Mask<bool>>(item.Advanced_IsSet, item.Advanced.GetHasBeenSetMask());
+            mask.CSTDDataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static CombatStyle_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -3698,12 +3775,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static CombatStyle_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static CombatStyle_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
         public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
+        protected override object CommonInstance => SkillRecordCommon.Instance;
 
         #region Ctor
         protected SkillRecord()
@@ -313,30 +314,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<SkillRecord>.GetEqualsMask(SkillRecord rhs, EqualsMaskHelper.Include include) => SkillRecordCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ISkillRecordGetter>.GetEqualsMask(ISkillRecordGetter rhs, EqualsMaskHelper.Include include) => SkillRecordCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<SkillRecord>.GetEqualsMask(SkillRecord rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ISkillRecordGetter>.GetEqualsMask(ISkillRecordGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            SkillRecord_Mask<bool> printMask = null)
-        {
-            return SkillRecordCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            SkillRecordCommon.ToString(this, fg, name: name, printMask: null);
+            SkillRecordMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new SkillRecord_Mask<bool> GetHasBeenSetMask()
-        {
-            return SkillRecordCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -1093,10 +1086,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            SkillRecordCommon.Clear(this);
+            SkillRecordCommon.Instance.Clear(this);
         }
-
 
         public new static SkillRecord Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1304,6 +1295,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class SkillRecordMixIn
+    {
+        public static void Clear(this ISkillRecordInternal item)
+        {
+            ((SkillRecordCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static SkillRecord_Mask<bool> GetEqualsMask(
+            this ISkillRecordGetter item,
+            ISkillRecordGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SkillRecord_Mask<bool>();
+            ((SkillRecordCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ISkillRecordInternalGetter item,
+            string name = null,
+            SkillRecord_Mask<bool> printMask = null)
+        {
+            return ((SkillRecordCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ISkillRecordInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            SkillRecord_Mask<bool> printMask = null)
+        {
+            ((SkillRecordCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ISkillRecordInternalGetter item,
+            SkillRecord_Mask<bool?> checkMask)
+        {
+            return ((SkillRecordCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static SkillRecord_Mask<bool> GetHasBeenSetMask(this ISkillRecordGetter item)
+        {
+            var ret = new SkillRecord_Mask<bool>();
+            ((SkillRecordCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1649,9 +1707,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class SkillRecordCommon
+    #region Common
+    public partial class SkillRecordCommon : OblivionMajorRecordCommon
     {
+        public static readonly SkillRecordCommon Instance = new SkillRecordCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ISkillRecord item,
@@ -1965,8 +2024,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ISkillRecord item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ISkillRecord item)
         {
+            ClearPartial();
             item.Skill_Unset();
             item.Description_Unset();
             item.Icon_Unset();
@@ -1979,23 +2041,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.JourneymanText_Unset();
             item.ExpertText_Unset();
             item.MasterText_Unset();
+            base.Clear(item);
         }
 
-        public static SkillRecord_Mask<bool> GetEqualsMask(
-            this ISkillRecordGetter item,
-            ISkillRecordGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new SkillRecord_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ISkillRecord)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (ISkillRecord)item);
+        }
+
+        public void FillEqualsMask(
             ISkillRecordGetter item,
             ISkillRecordGetter rhs,
             SkillRecord_Mask<bool> ret,
@@ -2014,21 +2073,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.JourneymanText = item.JourneymanText_IsSet == rhs.JourneymanText_IsSet && string.Equals(item.JourneymanText, rhs.JourneymanText);
             ret.ExpertText = item.ExpertText_IsSet == rhs.ExpertText_IsSet && string.Equals(item.ExpertText, rhs.ExpertText);
             ret.MasterText = item.MasterText_IsSet == rhs.MasterText_IsSet && string.Equals(item.MasterText, rhs.MasterText);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ISkillRecordGetter item,
+        public string ToString(
+            ISkillRecordGetter item,
             string name = null,
             SkillRecord_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ISkillRecordGetter item,
+        public void ToString(
+            ISkillRecordGetter item,
             FileGeneration fg,
             string name = null,
             SkillRecord_Mask<bool> printMask = null)
@@ -2044,63 +2107,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Skill ?? true)
-                {
-                    fg.AppendLine($"Skill => {item.Skill}");
-                }
-                if (printMask?.Description ?? true)
-                {
-                    fg.AppendLine($"Description => {item.Description}");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Action ?? true)
-                {
-                    fg.AppendLine($"Action => {item.Action}");
-                }
-                if (printMask?.Attribute ?? true)
-                {
-                    fg.AppendLine($"Attribute => {item.Attribute}");
-                }
-                if (printMask?.Specialization ?? true)
-                {
-                    fg.AppendLine($"Specialization => {item.Specialization}");
-                }
-                if (printMask?.UseValueFirst ?? true)
-                {
-                    fg.AppendLine($"UseValueFirst => {item.UseValueFirst}");
-                }
-                if (printMask?.UseValueSecond ?? true)
-                {
-                    fg.AppendLine($"UseValueSecond => {item.UseValueSecond}");
-                }
-                if (printMask?.ApprenticeText ?? true)
-                {
-                    fg.AppendLine($"ApprenticeText => {item.ApprenticeText}");
-                }
-                if (printMask?.JourneymanText ?? true)
-                {
-                    fg.AppendLine($"JourneymanText => {item.JourneymanText}");
-                }
-                if (printMask?.ExpertText ?? true)
-                {
-                    fg.AppendLine($"ExpertText => {item.ExpertText}");
-                }
-                if (printMask?.MasterText ?? true)
-                {
-                    fg.AppendLine($"MasterText => {item.MasterText}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ISkillRecordGetter item,
+        protected static void ToStringFields(
+            ISkillRecordGetter item,
+            FileGeneration fg,
+            SkillRecord_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Skill ?? true)
+            {
+                fg.AppendLine($"Skill => {item.Skill}");
+            }
+            if (printMask?.Description ?? true)
+            {
+                fg.AppendLine($"Description => {item.Description}");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Action ?? true)
+            {
+                fg.AppendLine($"Action => {item.Action}");
+            }
+            if (printMask?.Attribute ?? true)
+            {
+                fg.AppendLine($"Attribute => {item.Attribute}");
+            }
+            if (printMask?.Specialization ?? true)
+            {
+                fg.AppendLine($"Specialization => {item.Specialization}");
+            }
+            if (printMask?.UseValueFirst ?? true)
+            {
+                fg.AppendLine($"UseValueFirst => {item.UseValueFirst}");
+            }
+            if (printMask?.UseValueSecond ?? true)
+            {
+                fg.AppendLine($"UseValueSecond => {item.UseValueSecond}");
+            }
+            if (printMask?.ApprenticeText ?? true)
+            {
+                fg.AppendLine($"ApprenticeText => {item.ApprenticeText}");
+            }
+            if (printMask?.JourneymanText ?? true)
+            {
+                fg.AppendLine($"JourneymanText => {item.JourneymanText}");
+            }
+            if (printMask?.ExpertText ?? true)
+            {
+                fg.AppendLine($"ExpertText => {item.ExpertText}");
+            }
+            if (printMask?.MasterText ?? true)
+            {
+                fg.AppendLine($"MasterText => {item.MasterText}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            ISkillRecordGetter item,
             SkillRecord_Mask<bool?> checkMask)
         {
             if (checkMask.Skill.HasValue && checkMask.Skill.Value != item.Skill_IsSet) return false;
@@ -2110,32 +2188,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.JourneymanText.HasValue && checkMask.JourneymanText.Value != item.JourneymanText_IsSet) return false;
             if (checkMask.ExpertText.HasValue && checkMask.ExpertText.Value != item.ExpertText_IsSet) return false;
             if (checkMask.MasterText.HasValue && checkMask.MasterText.Value != item.MasterText_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static SkillRecord_Mask<bool> GetHasBeenSetMask(ISkillRecordGetter item)
+        public void FillHasBeenSetMask(
+            ISkillRecordGetter item,
+            SkillRecord_Mask<bool> mask)
         {
-            var ret = new SkillRecord_Mask<bool>();
-            ret.Skill = item.Skill_IsSet;
-            ret.Description = item.Description_IsSet;
-            ret.Icon = item.Icon_IsSet;
-            ret.Action = true;
-            ret.Attribute = true;
-            ret.Specialization = true;
-            ret.UseValueFirst = true;
-            ret.UseValueSecond = true;
-            ret.ApprenticeText = item.ApprenticeText_IsSet;
-            ret.JourneymanText = item.JourneymanText_IsSet;
-            ret.ExpertText = item.ExpertText_IsSet;
-            ret.MasterText = item.MasterText_IsSet;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static SkillRecord_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Skill = item.Skill_IsSet;
+            mask.Description = item.Description_IsSet;
+            mask.Icon = item.Icon_IsSet;
+            mask.Action = true;
+            mask.Attribute = true;
+            mask.Specialization = true;
+            mask.UseValueFirst = true;
+            mask.UseValueSecond = true;
+            mask.ApprenticeText = item.ApprenticeText_IsSet;
+            mask.JourneymanText = item.JourneymanText_IsSet;
+            mask.ExpertText = item.ExpertText_IsSet;
+            mask.MasterText = item.MasterText_IsSet;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static SkillRecord_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -2155,12 +2232,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static SkillRecord_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static SkillRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

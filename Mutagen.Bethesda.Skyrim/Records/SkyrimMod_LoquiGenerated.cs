@@ -45,6 +45,8 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
         public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
+        protected object CommonInstance => SkyrimModCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         protected SkyrimMod()
@@ -84,30 +86,22 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<Global> ISkyrimModGetter.Globals => _Globals_Object;
         #endregion
 
-        IMask<bool> IEqualsMask<SkyrimMod>.GetEqualsMask(SkyrimMod rhs, EqualsMaskHelper.Include include) => SkyrimModCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ISkyrimModGetter>.GetEqualsMask(ISkyrimModGetter rhs, EqualsMaskHelper.Include include) => SkyrimModCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<SkyrimMod>.GetEqualsMask(SkyrimMod rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ISkyrimModGetter>.GetEqualsMask(ISkyrimModGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            SkyrimMod_Mask<bool> printMask = null)
-        {
-            return SkyrimModCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            SkyrimModCommon.ToString(this, fg, name: name, printMask: null);
+            SkyrimModMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public SkyrimMod_Mask<bool> GetHasBeenSetMask()
-        {
-            return SkyrimModCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -324,8 +318,7 @@ namespace Mutagen.Bethesda.Skyrim
                             rhs: ModHeader.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -969,19 +962,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            SkyrimModCommon.Clear(this);
+            SkyrimModCommon.Instance.Clear(this);
         }
-
 
         public static SkyrimMod Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1051,6 +1035,73 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class SkyrimModMixIn
+    {
+        public static void Clear(this ISkyrimMod item)
+        {
+            ((SkyrimModCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static SkyrimMod_Mask<bool> GetEqualsMask(
+            this ISkyrimModGetter item,
+            ISkyrimModGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SkyrimMod_Mask<bool>();
+            ((SkyrimModCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ISkyrimModGetter item,
+            string name = null,
+            SkyrimMod_Mask<bool> printMask = null)
+        {
+            return ((SkyrimModCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ISkyrimModGetter item,
+            FileGeneration fg,
+            string name = null,
+            SkyrimMod_Mask<bool> printMask = null)
+        {
+            ((SkyrimModCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ISkyrimModGetter item,
+            SkyrimMod_Mask<bool?> checkMask)
+        {
+            return ((SkyrimModCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static SkyrimMod_Mask<bool> GetHasBeenSetMask(this ISkyrimModGetter item)
+        {
+            var ret = new SkyrimMod_Mask<bool>();
+            ((SkyrimModCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1277,9 +1328,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class SkyrimModCommon
+    #region Common
+    public partial class SkyrimModCommon
     {
+        public static readonly SkyrimModCommon Instance = new SkyrimModCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ISkyrimMod item,
@@ -1315,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<GameSetting>.CopyFieldsFrom(
                         item: item.GameSettings,
                         rhs: rhs.GameSettings,
                         def: def?.GameSettings,
@@ -1337,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom(
+                    GroupCommon<Global>.CopyFieldsFrom(
                         item: item.Globals,
                         rhs: rhs.Globals,
                         def: def?.Globals,
@@ -1358,25 +1410,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        public static void Clear(ISkyrimMod item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ISkyrimMod item)
         {
+            ClearPartial();
         }
 
-        public static SkyrimMod_Mask<bool> GetEqualsMask(
-            this ISkyrimModGetter item,
-            ISkyrimModGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new SkyrimMod_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             ISkyrimModGetter item,
             ISkyrimModGetter rhs,
             SkyrimMod_Mask<bool> ret,
@@ -1388,24 +1429,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.ModHeader_IsSet,
                 item.ModHeader,
                 rhs.ModHeader,
-                (loqLhs, loqRhs) => ModHeaderCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.GameSettings = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.GameSettings, rhs.GameSettings, include), include);
-            ret.Globals = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.Globals, rhs.Globals, include), include);
+            ret.GameSettings = MaskItemExt.Factory(item.GameSettings.GetEqualsMask(rhs.GameSettings, include), include);
+            ret.Globals = MaskItemExt.Factory(item.Globals.GetEqualsMask(rhs.Globals, include), include);
         }
 
-        public static string ToString(
-            this ISkyrimModGetter item,
+        public string ToString(
+            ISkyrimModGetter item,
             string name = null,
             SkyrimMod_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ISkyrimModGetter item,
+        public void ToString(
+            ISkyrimModGetter item,
             FileGeneration fg,
             string name = null,
             SkyrimMod_Mask<bool> printMask = null)
@@ -1421,24 +1466,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.ModHeader?.Overall ?? true)
-                {
-                    item.ModHeader?.ToString(fg, "ModHeader");
-                }
-                if (printMask?.GameSettings?.Overall ?? true)
-                {
-                    item.GameSettings?.ToString(fg, "GameSettings");
-                }
-                if (printMask?.Globals?.Overall ?? true)
-                {
-                    item.Globals?.ToString(fg, "Globals");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ISkyrimModGetter item,
+        protected static void ToStringFields(
+            ISkyrimModGetter item,
+            FileGeneration fg,
+            SkyrimMod_Mask<bool> printMask = null)
+        {
+            if (printMask?.ModHeader?.Overall ?? true)
+            {
+                item.ModHeader?.ToString(fg, "ModHeader");
+            }
+            if (printMask?.GameSettings?.Overall ?? true)
+            {
+                item.GameSettings?.ToString(fg, "GameSettings");
+            }
+            if (printMask?.Globals?.Overall ?? true)
+            {
+                item.Globals?.ToString(fg, "Globals");
+            }
+        }
+
+        public bool HasBeenSet(
+            ISkyrimModGetter item,
             SkyrimMod_Mask<bool?> checkMask)
         {
             if (checkMask.ModHeader.Overall.HasValue && checkMask.ModHeader.Overall.Value != item.ModHeader_IsSet) return false;
@@ -1446,13 +1502,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return true;
         }
 
-        public static SkyrimMod_Mask<bool> GetHasBeenSetMask(ISkyrimModGetter item)
+        public void FillHasBeenSetMask(
+            ISkyrimModGetter item,
+            SkyrimMod_Mask<bool> mask)
         {
-            var ret = new SkyrimMod_Mask<bool>();
-            ret.ModHeader = new MaskItem<bool, ModHeader_Mask<bool>>(item.ModHeader_IsSet, ModHeaderCommon.GetHasBeenSetMask(item.ModHeader));
-            ret.GameSettings = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.GameSettings));
-            ret.Globals = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Globals));
-            return ret;
+            mask.ModHeader = new MaskItem<bool, ModHeader_Mask<bool>>(item.ModHeader_IsSet, item.ModHeader.GetHasBeenSetMask());
+            mask.GameSettings = new MaskItem<bool, Group_Mask<bool>>(true, item.GameSettings.GetHasBeenSetMask());
+            mask.Globals = new MaskItem<bool, Group_Mask<bool>>(true, item.Globals.GetHasBeenSetMask());
         }
 
     }
@@ -1545,8 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             rhs: Group<GameSetting>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -1569,8 +1624,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             rhs: Group<Global>.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
-                                translationMask: translationMask)
-                            ,
+                                translationMask: translationMask),
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);

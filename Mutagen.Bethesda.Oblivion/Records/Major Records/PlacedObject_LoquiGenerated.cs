@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
         public new static PlacedObject_Registration Registration => PlacedObject_Registration.Instance;
+        protected override object CommonInstance => PlacedObjectCommon.Instance;
 
         #region Ctor
         protected PlacedObject()
@@ -568,30 +569,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<PlacedObject>.GetEqualsMask(PlacedObject rhs, EqualsMaskHelper.Include include) => PlacedObjectCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IPlacedObjectGetter>.GetEqualsMask(IPlacedObjectGetter rhs, EqualsMaskHelper.Include include) => PlacedObjectCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<PlacedObject>.GetEqualsMask(PlacedObject rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IPlacedObjectGetter>.GetEqualsMask(IPlacedObjectGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            PlacedObject_Mask<bool> printMask = null)
-        {
-            return PlacedObjectCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            PlacedObjectCommon.ToString(this, fg, name: name, printMask: null);
+            PlacedObjectMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new PlacedObject_Mask<bool> GetHasBeenSetMask()
-        {
-            return PlacedObjectCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -1773,10 +1766,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            PlacedObjectCommon.Clear(this);
+            PlacedObjectCommon.Instance.Clear(this);
         }
-
 
         public new static PlacedObject Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -2143,6 +2134,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class PlacedObjectMixIn
+    {
+        public static void Clear(this IPlacedObjectInternal item)
+        {
+            ((PlacedObjectCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static PlacedObject_Mask<bool> GetEqualsMask(
+            this IPlacedObjectGetter item,
+            IPlacedObjectGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new PlacedObject_Mask<bool>();
+            ((PlacedObjectCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IPlacedObjectInternalGetter item,
+            string name = null,
+            PlacedObject_Mask<bool> printMask = null)
+        {
+            return ((PlacedObjectCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IPlacedObjectInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            PlacedObject_Mask<bool> printMask = null)
+        {
+            ((PlacedObjectCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IPlacedObjectInternalGetter item,
+            PlacedObject_Mask<bool?> checkMask)
+        {
+            return ((PlacedObjectCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static PlacedObject_Mask<bool> GetHasBeenSetMask(this IPlacedObjectGetter item)
+        {
+            var ret = new PlacedObject_Mask<bool>();
+            ((PlacedObjectCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -2661,9 +2719,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class PlacedObjectCommon
+    #region Common
+    public partial class PlacedObjectCommon : OblivionMajorRecordCommon
     {
+        public static readonly PlacedObjectCommon Instance = new PlacedObjectCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IPlacedObject item,
@@ -3437,8 +3496,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IPlacedObject item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IPlacedObject item)
         {
+            ClearPartial();
             item.Base_Property.Unset();
             item.XPCIFluff_Unset();
             item.FULLFluff_Unset();
@@ -3464,23 +3526,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ContainedSoul_Property.Unset();
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
+            base.Clear(item);
         }
 
-        public static PlacedObject_Mask<bool> GetEqualsMask(
-            this IPlacedObjectGetter item,
-            IPlacedObjectGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new PlacedObject_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IPlacedObject)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IPlacedObject)item);
+        }
+
+        public void FillEqualsMask(
             IPlacedObjectGetter item,
             IPlacedObjectGetter rhs,
             PlacedObject_Mask<bool> ret,
@@ -3495,14 +3554,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.TeleportDestination_IsSet,
                 item.TeleportDestination,
                 rhs.TeleportDestination,
-                (loqLhs, loqRhs) => TeleportDestinationCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Lock = EqualsMaskHelper.EqualsHelper(
                 item.Lock_IsSet,
                 rhs.Lock_IsSet,
                 item.Lock,
                 rhs.Lock,
-                (loqLhs, loqRhs) => LockInformationCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Owner = item.Owner_Property.FormKey == rhs.Owner_Property.FormKey;
             ret.FactionRank = item.FactionRank_IsSet == rhs.FactionRank_IsSet && item.FactionRank == rhs.FactionRank;
@@ -3512,7 +3571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.EnableParent_IsSet,
                 item.EnableParent,
                 rhs.EnableParent,
-                (loqLhs, loqRhs) => EnableParentCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Target = item.Target_Property.FormKey == rhs.Target_Property.FormKey;
             ret.SpeedTreeSeed = item.SpeedTreeSeed_IsSet == rhs.SpeedTreeSeed_IsSet && item.SpeedTreeSeed == rhs.SpeedTreeSeed;
@@ -3521,7 +3580,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.DistantLODData_IsSet,
                 item.DistantLODData,
                 rhs.DistantLODData,
-                (loqLhs, loqRhs) => DistantLODDataCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Charge = item.Charge_IsSet == rhs.Charge_IsSet && item.Charge.EqualsWithin(rhs.Charge);
             ret.Health = item.Health_IsSet == rhs.Health_IsSet && item.Health == rhs.Health;
@@ -3534,7 +3593,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.MapMarker_IsSet,
                 item.MapMarker,
                 rhs.MapMarker,
-                (loqLhs, loqRhs) => MapMarkerCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.OpenByDefault = item.OpenByDefault == rhs.OpenByDefault;
             ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && ByteExt.EqualsFast(item.RagdollData, rhs.RagdollData);
@@ -3542,21 +3601,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ContainedSoul = item.ContainedSoul_Property.FormKey == rhs.ContainedSoul_Property.FormKey;
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IPlacedObjectGetter item,
+        public string ToString(
+            IPlacedObjectGetter item,
             string name = null,
             PlacedObject_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IPlacedObjectGetter item,
+        public void ToString(
+            IPlacedObjectGetter item,
             FileGeneration fg,
             string name = null,
             PlacedObject_Mask<bool> printMask = null)
@@ -3572,115 +3635,130 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Base ?? true)
-                {
-                    fg.AppendLine($"Base => {item.Base_Property}");
-                }
-                if (printMask?.XPCIFluff ?? true)
-                {
-                    fg.AppendLine($"XPCIFluff => {item.XPCIFluff}");
-                }
-                if (printMask?.FULLFluff ?? true)
-                {
-                    fg.AppendLine($"FULLFluff => {item.FULLFluff}");
-                }
-                if (printMask?.TeleportDestination?.Overall ?? true)
-                {
-                    item.TeleportDestination?.ToString(fg, "TeleportDestination");
-                }
-                if (printMask?.Lock?.Overall ?? true)
-                {
-                    item.Lock?.ToString(fg, "Lock");
-                }
-                if (printMask?.Owner ?? true)
-                {
-                    fg.AppendLine($"Owner => {item.Owner_Property}");
-                }
-                if (printMask?.FactionRank ?? true)
-                {
-                    fg.AppendLine($"FactionRank => {item.FactionRank}");
-                }
-                if (printMask?.GlobalVariable ?? true)
-                {
-                    fg.AppendLine($"GlobalVariable => {item.GlobalVariable_Property}");
-                }
-                if (printMask?.EnableParent?.Overall ?? true)
-                {
-                    item.EnableParent?.ToString(fg, "EnableParent");
-                }
-                if (printMask?.Target ?? true)
-                {
-                    fg.AppendLine($"Target => {item.Target_Property}");
-                }
-                if (printMask?.SpeedTreeSeed ?? true)
-                {
-                    fg.AppendLine($"SpeedTreeSeed => {item.SpeedTreeSeed}");
-                }
-                if (printMask?.DistantLODData?.Overall ?? true)
-                {
-                    item.DistantLODData?.ToString(fg, "DistantLODData");
-                }
-                if (printMask?.Charge ?? true)
-                {
-                    fg.AppendLine($"Charge => {item.Charge}");
-                }
-                if (printMask?.Health ?? true)
-                {
-                    fg.AppendLine($"Health => {item.Health}");
-                }
-                if (printMask?.LevelModifier ?? true)
-                {
-                    fg.AppendLine($"LevelModifier => {item.LevelModifier}");
-                }
-                if (printMask?.Unknown ?? true)
-                {
-                    fg.AppendLine($"Unknown => {item.Unknown_Property}");
-                }
-                if (printMask?.ActionFlags ?? true)
-                {
-                    fg.AppendLine($"ActionFlags => {item.ActionFlags}");
-                }
-                if (printMask?.Count ?? true)
-                {
-                    fg.AppendLine($"Count => {item.Count}");
-                }
-                if (printMask?.MapMarker?.Overall ?? true)
-                {
-                    item.MapMarker?.ToString(fg, "MapMarker");
-                }
-                if (printMask?.OpenByDefault ?? true)
-                {
-                    fg.AppendLine($"OpenByDefault => {item.OpenByDefault}");
-                }
-                if (printMask?.RagdollData ?? true)
-                {
-                    fg.AppendLine($"RagdollData => {item.RagdollData}");
-                }
-                if (printMask?.Scale ?? true)
-                {
-                    fg.AppendLine($"Scale => {item.Scale}");
-                }
-                if (printMask?.ContainedSoul ?? true)
-                {
-                    fg.AppendLine($"ContainedSoul => {item.ContainedSoul_Property}");
-                }
-                if (printMask?.Position ?? true)
-                {
-                    fg.AppendLine($"Position => {item.Position}");
-                }
-                if (printMask?.Rotation ?? true)
-                {
-                    fg.AppendLine($"Rotation => {item.Rotation}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IPlacedObjectGetter item,
+        protected static void ToStringFields(
+            IPlacedObjectGetter item,
+            FileGeneration fg,
+            PlacedObject_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Base ?? true)
+            {
+                fg.AppendLine($"Base => {item.Base_Property}");
+            }
+            if (printMask?.XPCIFluff ?? true)
+            {
+                fg.AppendLine($"XPCIFluff => {item.XPCIFluff}");
+            }
+            if (printMask?.FULLFluff ?? true)
+            {
+                fg.AppendLine($"FULLFluff => {item.FULLFluff}");
+            }
+            if (printMask?.TeleportDestination?.Overall ?? true)
+            {
+                item.TeleportDestination?.ToString(fg, "TeleportDestination");
+            }
+            if (printMask?.Lock?.Overall ?? true)
+            {
+                item.Lock?.ToString(fg, "Lock");
+            }
+            if (printMask?.Owner ?? true)
+            {
+                fg.AppendLine($"Owner => {item.Owner_Property}");
+            }
+            if (printMask?.FactionRank ?? true)
+            {
+                fg.AppendLine($"FactionRank => {item.FactionRank}");
+            }
+            if (printMask?.GlobalVariable ?? true)
+            {
+                fg.AppendLine($"GlobalVariable => {item.GlobalVariable_Property}");
+            }
+            if (printMask?.EnableParent?.Overall ?? true)
+            {
+                item.EnableParent?.ToString(fg, "EnableParent");
+            }
+            if (printMask?.Target ?? true)
+            {
+                fg.AppendLine($"Target => {item.Target_Property}");
+            }
+            if (printMask?.SpeedTreeSeed ?? true)
+            {
+                fg.AppendLine($"SpeedTreeSeed => {item.SpeedTreeSeed}");
+            }
+            if (printMask?.DistantLODData?.Overall ?? true)
+            {
+                item.DistantLODData?.ToString(fg, "DistantLODData");
+            }
+            if (printMask?.Charge ?? true)
+            {
+                fg.AppendLine($"Charge => {item.Charge}");
+            }
+            if (printMask?.Health ?? true)
+            {
+                fg.AppendLine($"Health => {item.Health}");
+            }
+            if (printMask?.LevelModifier ?? true)
+            {
+                fg.AppendLine($"LevelModifier => {item.LevelModifier}");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendLine($"Unknown => {item.Unknown_Property}");
+            }
+            if (printMask?.ActionFlags ?? true)
+            {
+                fg.AppendLine($"ActionFlags => {item.ActionFlags}");
+            }
+            if (printMask?.Count ?? true)
+            {
+                fg.AppendLine($"Count => {item.Count}");
+            }
+            if (printMask?.MapMarker?.Overall ?? true)
+            {
+                item.MapMarker?.ToString(fg, "MapMarker");
+            }
+            if (printMask?.OpenByDefault ?? true)
+            {
+                fg.AppendLine($"OpenByDefault => {item.OpenByDefault}");
+            }
+            if (printMask?.RagdollData ?? true)
+            {
+                fg.AppendLine($"RagdollData => {item.RagdollData}");
+            }
+            if (printMask?.Scale ?? true)
+            {
+                fg.AppendLine($"Scale => {item.Scale}");
+            }
+            if (printMask?.ContainedSoul ?? true)
+            {
+                fg.AppendLine($"ContainedSoul => {item.ContainedSoul_Property}");
+            }
+            if (printMask?.Position ?? true)
+            {
+                fg.AppendLine($"Position => {item.Position}");
+            }
+            if (printMask?.Rotation ?? true)
+            {
+                fg.AppendLine($"Rotation => {item.Rotation}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IPlacedObjectGetter item,
             PlacedObject_Mask<bool?> checkMask)
         {
             if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
@@ -3710,45 +3788,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_IsSet) return false;
             if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_IsSet) return false;
             if (checkMask.ContainedSoul.HasValue && checkMask.ContainedSoul.Value != item.ContainedSoul_Property.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static PlacedObject_Mask<bool> GetHasBeenSetMask(IPlacedObjectGetter item)
+        public void FillHasBeenSetMask(
+            IPlacedObjectGetter item,
+            PlacedObject_Mask<bool> mask)
         {
-            var ret = new PlacedObject_Mask<bool>();
-            ret.Base = item.Base_Property.HasBeenSet;
-            ret.XPCIFluff = item.XPCIFluff_IsSet;
-            ret.FULLFluff = item.FULLFluff_IsSet;
-            ret.TeleportDestination = new MaskItem<bool, TeleportDestination_Mask<bool>>(item.TeleportDestination_IsSet, TeleportDestinationCommon.GetHasBeenSetMask(item.TeleportDestination));
-            ret.Lock = new MaskItem<bool, LockInformation_Mask<bool>>(item.Lock_IsSet, LockInformationCommon.GetHasBeenSetMask(item.Lock));
-            ret.Owner = item.Owner_Property.HasBeenSet;
-            ret.FactionRank = item.FactionRank_IsSet;
-            ret.GlobalVariable = item.GlobalVariable_Property.HasBeenSet;
-            ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_IsSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent));
-            ret.Target = item.Target_Property.HasBeenSet;
-            ret.SpeedTreeSeed = item.SpeedTreeSeed_IsSet;
-            ret.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_IsSet, DistantLODDataCommon.GetHasBeenSetMask(item.DistantLODData));
-            ret.Charge = item.Charge_IsSet;
-            ret.Health = item.Health_IsSet;
-            ret.LevelModifier = item.LevelModifier_IsSet;
-            ret.Unknown = item.Unknown_Property.HasBeenSet;
-            ret.ActionFlags = item.ActionFlags_IsSet;
-            ret.Count = item.Count_IsSet;
-            ret.MapMarker = new MaskItem<bool, MapMarker_Mask<bool>>(item.MapMarker_IsSet, MapMarkerCommon.GetHasBeenSetMask(item.MapMarker));
-            ret.OpenByDefault = true;
-            ret.RagdollData = item.RagdollData_IsSet;
-            ret.Scale = item.Scale_IsSet;
-            ret.ContainedSoul = item.ContainedSoul_Property.HasBeenSet;
-            ret.Position = true;
-            ret.Rotation = true;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static PlacedObject_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Base = item.Base_Property.HasBeenSet;
+            mask.XPCIFluff = item.XPCIFluff_IsSet;
+            mask.FULLFluff = item.FULLFluff_IsSet;
+            mask.TeleportDestination = new MaskItem<bool, TeleportDestination_Mask<bool>>(item.TeleportDestination_IsSet, item.TeleportDestination.GetHasBeenSetMask());
+            mask.Lock = new MaskItem<bool, LockInformation_Mask<bool>>(item.Lock_IsSet, item.Lock.GetHasBeenSetMask());
+            mask.Owner = item.Owner_Property.HasBeenSet;
+            mask.FactionRank = item.FactionRank_IsSet;
+            mask.GlobalVariable = item.GlobalVariable_Property.HasBeenSet;
+            mask.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_IsSet, item.EnableParent.GetHasBeenSetMask());
+            mask.Target = item.Target_Property.HasBeenSet;
+            mask.SpeedTreeSeed = item.SpeedTreeSeed_IsSet;
+            mask.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_IsSet, item.DistantLODData.GetHasBeenSetMask());
+            mask.Charge = item.Charge_IsSet;
+            mask.Health = item.Health_IsSet;
+            mask.LevelModifier = item.LevelModifier_IsSet;
+            mask.Unknown = item.Unknown_Property.HasBeenSet;
+            mask.ActionFlags = item.ActionFlags_IsSet;
+            mask.Count = item.Count_IsSet;
+            mask.MapMarker = new MaskItem<bool, MapMarker_Mask<bool>>(item.MapMarker_IsSet, item.MapMarker.GetHasBeenSetMask());
+            mask.OpenByDefault = true;
+            mask.RagdollData = item.RagdollData_IsSet;
+            mask.Scale = item.Scale_IsSet;
+            mask.ContainedSoul = item.ContainedSoul_Property.HasBeenSet;
+            mask.Position = true;
+            mask.Rotation = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static PlacedObject_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -3768,12 +3845,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static PlacedObject_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static PlacedObject_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

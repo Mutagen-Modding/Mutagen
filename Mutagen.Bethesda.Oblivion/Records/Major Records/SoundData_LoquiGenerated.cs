@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundData_Registration.Instance;
         public static SoundData_Registration Registration => SoundData_Registration.Instance;
+        protected virtual object CommonInstance => SoundDataCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public SoundData()
@@ -85,30 +87,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<SoundData>.GetEqualsMask(SoundData rhs, EqualsMaskHelper.Include include) => SoundDataCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ISoundDataGetter>.GetEqualsMask(ISoundDataGetter rhs, EqualsMaskHelper.Include include) => SoundDataCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<SoundData>.GetEqualsMask(SoundData rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ISoundDataGetter>.GetEqualsMask(ISoundDataGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            SoundData_Mask<bool> printMask = null)
-        {
-            return SoundDataCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public virtual void ToString(
             FileGeneration fg,
             string name = null)
         {
-            SoundDataCommon.ToString(this, fg, name: name, printMask: null);
+            SoundDataMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public SoundData_Mask<bool> GetHasBeenSetMask()
-        {
-            return SoundDataCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -525,19 +519,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public virtual void Clear()
         {
-            CallClearPartial_Internal();
-            SoundDataCommon.Clear(this);
+            SoundDataCommon.Instance.Clear(this);
         }
-
 
         public static SoundData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -632,6 +617,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class SoundDataMixIn
+    {
+        public static void Clear(this ISoundDataInternal item)
+        {
+            ((SoundDataCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static SoundData_Mask<bool> GetEqualsMask(
+            this ISoundDataGetter item,
+            ISoundDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SoundData_Mask<bool>();
+            ((SoundDataCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ISoundDataInternalGetter item,
+            string name = null,
+            SoundData_Mask<bool> printMask = null)
+        {
+            return ((SoundDataCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ISoundDataInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            SoundData_Mask<bool> printMask = null)
+        {
+            ((SoundDataCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ISoundDataInternalGetter item,
+            SoundData_Mask<bool?> checkMask)
+        {
+            return ((SoundDataCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static SoundData_Mask<bool> GetHasBeenSetMask(this ISoundDataGetter item)
+        {
+            var ret = new SoundData_Mask<bool>();
+            ((SoundDataCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -868,9 +920,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class SoundDataCommon
+    #region Common
+    public partial class SoundDataCommon
     {
+        public static readonly SoundDataCommon Instance = new SoundDataCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ISoundData item,
@@ -951,29 +1004,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ISoundData item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ISoundData item)
         {
+            ClearPartial();
             item.MinimumAttenuationDistance = default(UInt16);
             item.MaximumAttenuationDistance = default(UInt16);
             item.FrequencyAdjustment = default(SByte);
             item.Flags = default(SoundData.Flag);
         }
 
-        public static SoundData_Mask<bool> GetEqualsMask(
-            this ISoundDataGetter item,
-            ISoundDataGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new SoundData_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             ISoundDataGetter item,
             ISoundDataGetter rhs,
             SoundData_Mask<bool> ret,
@@ -986,18 +1028,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = item.Flags == rhs.Flags;
         }
 
-        public static string ToString(
-            this ISoundDataGetter item,
+        public string ToString(
+            ISoundDataGetter item,
             string name = null,
             SoundData_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ISoundDataGetter item,
+        public void ToString(
+            ISoundDataGetter item,
             FileGeneration fg,
             string name = null,
             SoundData_Mask<bool> printMask = null)
@@ -1013,41 +1059,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.MinimumAttenuationDistance ?? true)
-                {
-                    fg.AppendLine($"MinimumAttenuationDistance => {item.MinimumAttenuationDistance}");
-                }
-                if (printMask?.MaximumAttenuationDistance ?? true)
-                {
-                    fg.AppendLine($"MaximumAttenuationDistance => {item.MaximumAttenuationDistance}");
-                }
-                if (printMask?.FrequencyAdjustment ?? true)
-                {
-                    fg.AppendLine($"FrequencyAdjustment => {item.FrequencyAdjustment}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ISoundDataGetter item,
+        protected static void ToStringFields(
+            ISoundDataGetter item,
+            FileGeneration fg,
+            SoundData_Mask<bool> printMask = null)
+        {
+            if (printMask?.MinimumAttenuationDistance ?? true)
+            {
+                fg.AppendLine($"MinimumAttenuationDistance => {item.MinimumAttenuationDistance}");
+            }
+            if (printMask?.MaximumAttenuationDistance ?? true)
+            {
+                fg.AppendLine($"MaximumAttenuationDistance => {item.MaximumAttenuationDistance}");
+            }
+            if (printMask?.FrequencyAdjustment ?? true)
+            {
+                fg.AppendLine($"FrequencyAdjustment => {item.FrequencyAdjustment}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+        }
+
+        public bool HasBeenSet(
+            ISoundDataGetter item,
             SoundData_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static SoundData_Mask<bool> GetHasBeenSetMask(ISoundDataGetter item)
+        public void FillHasBeenSetMask(
+            ISoundDataGetter item,
+            SoundData_Mask<bool> mask)
         {
-            var ret = new SoundData_Mask<bool>();
-            ret.MinimumAttenuationDistance = true;
-            ret.MaximumAttenuationDistance = true;
-            ret.FrequencyAdjustment = true;
-            ret.Flags = true;
-            return ret;
+            mask.MinimumAttenuationDistance = true;
+            mask.MaximumAttenuationDistance = true;
+            mask.FrequencyAdjustment = true;
+            mask.Flags = true;
         }
 
     }

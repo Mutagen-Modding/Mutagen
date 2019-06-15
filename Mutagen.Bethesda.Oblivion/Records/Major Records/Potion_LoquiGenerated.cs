@@ -48,6 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Potion_Registration.Instance;
         public new static Potion_Registration Registration => Potion_Registration.Instance;
+        protected override object CommonInstance => PotionCommon.Instance;
 
         #region Ctor
         protected Potion()
@@ -196,17 +197,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<Effect> _Effects = new SourceSetList<Effect>();
         public ISourceSetList<Effect> Effects => _Effects;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<Effect> EffectsEnumerable
-        {
-            get => _Effects.Items;
-            set => _Effects.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Effect> IPotion.Effects => _Effects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<Effect> IPotionGetter.Effects => _Effects;
+        IReadOnlySetList<IEffectInternalGetter> IPotionGetter.Effects => _Effects;
         #endregion
 
         #endregion
@@ -228,30 +223,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Potion>.GetEqualsMask(Potion rhs, EqualsMaskHelper.Include include) => PotionCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IPotionGetter>.GetEqualsMask(IPotionGetter rhs, EqualsMaskHelper.Include include) => PotionCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Potion>.GetEqualsMask(Potion rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IPotionGetter>.GetEqualsMask(IPotionGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Potion_Mask<bool> printMask = null)
-        {
-            return PotionCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            PotionCommon.ToString(this, fg, name: name, printMask: null);
+            PotionMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Potion_Mask<bool> GetHasBeenSetMask()
-        {
-            return PotionCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -797,8 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
-                        }
-                        );
+                        });
                     return TryGet<int?>.Succeed((int)Potion_FieldIndex.Effects);
                 }
                 default:
@@ -961,10 +947,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            PotionCommon.Clear(this);
+            PotionCommon.Instance.Clear(this);
         }
-
 
         public new static Potion Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1107,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Effects
-        IReadOnlySetList<Effect> Effects { get; }
+        IReadOnlySetList<IEffectInternalGetter> Effects { get; }
         #endregion
 
     }
@@ -1123,6 +1107,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class PotionMixIn
+    {
+        public static void Clear(this IPotionInternal item)
+        {
+            ((PotionCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Potion_Mask<bool> GetEqualsMask(
+            this IPotionGetter item,
+            IPotionGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Potion_Mask<bool>();
+            ((PotionCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IPotionInternalGetter item,
+            string name = null,
+            Potion_Mask<bool> printMask = null)
+        {
+            return ((PotionCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IPotionInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Potion_Mask<bool> printMask = null)
+        {
+            ((PotionCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IPotionInternalGetter item,
+            Potion_Mask<bool?> checkMask)
+        {
+            return ((PotionCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Potion_Mask<bool> GetHasBeenSetMask(this IPotionGetter item)
+        {
+            var ret = new Potion_Mask<bool>();
+            ((PotionCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1421,9 +1472,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class PotionCommon
+    #region Common
+    public partial class PotionCommon : ItemAbstractCommon
     {
+        public static readonly PotionCommon Instance = new PotionCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IPotion item,
@@ -1638,7 +1690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Potion_FieldIndex.Effects);
                 try
                 {
-                    item.Effects.SetToWithDefault(
+                    item.Effects.SetToWithDefault<Effect, IEffectInternalGetter>(
                         rhs: rhs.Effects,
                         def: def?.Effects,
                         converter: (r, d) =>
@@ -1646,7 +1698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             switch (copyMask?.Effects.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (Effect)r;
                                 case CopyOption.MakeCopy:
                                     return Effect.Copy(
                                         r,
@@ -1655,8 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Effects.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1672,8 +1723,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IPotion item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IPotion item)
         {
+            ClearPartial();
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
@@ -1682,23 +1736,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Value = default(UInt32);
             item.Flags = default(IngredientFlag);
             item.Effects.Unset();
+            base.Clear(item);
         }
 
-        public static Potion_Mask<bool> GetEqualsMask(
-            this IPotionGetter item,
-            IPotionGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IItemAbstract item)
         {
-            var ret = new Potion_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IPotion)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (IPotion)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IPotion)item);
+        }
+
+        public void FillEqualsMask(
             IPotionGetter item,
             IPotionGetter rhs,
             Potion_Mask<bool> ret,
@@ -1711,7 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
@@ -1722,21 +1778,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IPotionGetter item,
+        public string ToString(
+            IPotionGetter item,
             string name = null,
             Potion_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IPotionGetter item,
+        public void ToString(
+            IPotionGetter item,
             FileGeneration fg,
             string name = null,
             Potion_Mask<bool> printMask = null)
@@ -1752,61 +1812,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {item.Script_Property}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {item.Weight}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {item.Value}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.Effects?.Overall ?? true)
-                {
-                    fg.AppendLine("Effects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Effects)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.ENITDataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IPotionGetter item,
+        protected static void ToStringFields(
+            IPotionGetter item,
+            FileGeneration fg,
+            Potion_Mask<bool> printMask = null)
+        {
+            ItemAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendLine($"Weight => {item.Weight}");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendLine($"Value => {item.Value}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Effects?.Overall ?? true)
+            {
+                fg.AppendLine("Effects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Effects)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.ENITDataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IPotionGetter item,
             Potion_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -1816,28 +1891,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
             if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_IsSet) return false;
             if (checkMask.Effects.Overall.HasValue && checkMask.Effects.Overall.Value != item.Effects.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Potion_Mask<bool> GetHasBeenSetMask(IPotionGetter item)
+        public void FillHasBeenSetMask(
+            IPotionGetter item,
+            Potion_Mask<bool> mask)
         {
-            var ret = new Potion_Mask<bool>();
-            ret.Name = item.Name_IsSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Icon = item.Icon_IsSet;
-            ret.Script = item.Script_Property.HasBeenSet;
-            ret.Weight = item.Weight_IsSet;
-            ret.Value = true;
-            ret.Flags = true;
-            ret.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            ret.ENITDataTypeState = true;
-            return ret;
-        }
-
-        public static Potion_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Icon = item.Icon_IsSet;
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Weight = item.Weight_IsSet;
+            mask.Value = true;
+            mask.Flags = true;
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.ENITDataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Potion_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
@@ -1859,12 +1933,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static Potion_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static Potion_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1882,12 +1950,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Potion_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Potion_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
@@ -2004,14 +2066,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Effects.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Effects) ?? true))
             {
-                ListXmlTranslation<Effect>.Instance.Write(
+                ListXmlTranslation<IEffectInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Effects),
                     item: item.Effects,
                     fieldIndex: (int)Potion_FieldIndex.Effects,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Potion_FieldIndex.Effects),
-                    transl: (XElement subNode, Effect subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IEffectInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         ((EffectXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
                             item: subItem,
@@ -2019,8 +2081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
             if ((translationMask?.GetShouldTranslate((int)Potion_FieldIndex.ENITDataTypeState) ?? true))
             {
@@ -3098,12 +3159,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Effects.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IEffectInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Effects,
                     fieldIndex: (int)Potion_FieldIndex.Effects,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, Effect subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IEffectInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         ((EffectBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
@@ -3111,8 +3172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
-                    }
-                    );
+                    });
             }
         }
 

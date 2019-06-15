@@ -44,6 +44,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
         public static PointToReferenceMapping_Registration Registration => PointToReferenceMapping_Registration.Instance;
+        protected object CommonInstance => PointToReferenceMappingCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public PointToReferenceMapping()
@@ -63,12 +65,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceList<Int16> _Points = new SourceList<Int16>();
         public ISourceList<Int16> Points => _Points;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<Int16> PointsEnumerable
-        {
-            get => _Points.Items;
-            set => _Points.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<Int16> IPointToReferenceMapping.Points => _Points;
@@ -78,30 +74,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<PointToReferenceMapping>.GetEqualsMask(PointToReferenceMapping rhs, EqualsMaskHelper.Include include) => PointToReferenceMappingCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IPointToReferenceMappingGetter>.GetEqualsMask(IPointToReferenceMappingGetter rhs, EqualsMaskHelper.Include include) => PointToReferenceMappingCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<PointToReferenceMapping>.GetEqualsMask(PointToReferenceMapping rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IPointToReferenceMappingGetter>.GetEqualsMask(IPointToReferenceMappingGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            PointToReferenceMapping_Mask<bool> printMask = null)
-        {
-            return PointToReferenceMappingCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            PointToReferenceMappingCommon.ToString(this, fg, name: name, printMask: null);
+            PointToReferenceMappingMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public PointToReferenceMapping_Mask<bool> GetHasBeenSetMask()
-        {
-            return PointToReferenceMappingCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -501,19 +489,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            PointToReferenceMappingCommon.Clear(this);
+            PointToReferenceMappingCommon.Instance.Clear(this);
         }
-
 
         public static PointToReferenceMapping Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -577,6 +556,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class PointToReferenceMappingMixIn
+    {
+        public static void Clear(this IPointToReferenceMapping item)
+        {
+            ((PointToReferenceMappingCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static PointToReferenceMapping_Mask<bool> GetEqualsMask(
+            this IPointToReferenceMappingGetter item,
+            IPointToReferenceMappingGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new PointToReferenceMapping_Mask<bool>();
+            ((PointToReferenceMappingCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IPointToReferenceMappingGetter item,
+            string name = null,
+            PointToReferenceMapping_Mask<bool> printMask = null)
+        {
+            return ((PointToReferenceMappingCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IPointToReferenceMappingGetter item,
+            FileGeneration fg,
+            string name = null,
+            PointToReferenceMapping_Mask<bool> printMask = null)
+        {
+            ((PointToReferenceMappingCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IPointToReferenceMappingGetter item,
+            PointToReferenceMapping_Mask<bool?> checkMask)
+        {
+            return ((PointToReferenceMappingCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static PointToReferenceMapping_Mask<bool> GetHasBeenSetMask(this IPointToReferenceMappingGetter item)
+        {
+            var ret = new PointToReferenceMapping_Mask<bool>();
+            ((PointToReferenceMappingCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -778,9 +824,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class PointToReferenceMappingCommon
+    #region Common
+    public partial class PointToReferenceMappingCommon
     {
+        public static readonly PointToReferenceMappingCommon Instance = new PointToReferenceMappingCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IPointToReferenceMapping item,
@@ -829,27 +876,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IPointToReferenceMapping item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IPointToReferenceMapping item)
         {
+            ClearPartial();
             item.Reference = default(IPlaced);
             item.Points.Clear();
         }
 
-        public static PointToReferenceMapping_Mask<bool> GetEqualsMask(
-            this IPointToReferenceMappingGetter item,
-            IPointToReferenceMappingGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new PointToReferenceMapping_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IPointToReferenceMappingGetter item,
             IPointToReferenceMappingGetter rhs,
             PointToReferenceMapping_Mask<bool> ret,
@@ -863,18 +899,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
         }
 
-        public static string ToString(
-            this IPointToReferenceMappingGetter item,
+        public string ToString(
+            IPointToReferenceMappingGetter item,
             string name = null,
             PointToReferenceMapping_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IPointToReferenceMappingGetter item,
+        public void ToString(
+            IPointToReferenceMappingGetter item,
             FileGeneration fg,
             string name = null,
             PointToReferenceMapping_Mask<bool> printMask = null)
@@ -890,45 +930,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Reference ?? true)
-                {
-                    fg.AppendLine($"Reference => {item.Reference_Property}");
-                }
-                if (printMask?.Points?.Overall ?? true)
-                {
-                    fg.AppendLine("Points =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Points)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($"Item => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IPointToReferenceMappingGetter item,
+        protected static void ToStringFields(
+            IPointToReferenceMappingGetter item,
+            FileGeneration fg,
+            PointToReferenceMapping_Mask<bool> printMask = null)
+        {
+            if (printMask?.Reference ?? true)
+            {
+                fg.AppendLine($"Reference => {item.Reference_Property}");
+            }
+            if (printMask?.Points?.Overall ?? true)
+            {
+                fg.AppendLine("Points =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Points)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+
+        public bool HasBeenSet(
+            IPointToReferenceMappingGetter item,
             PointToReferenceMapping_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static PointToReferenceMapping_Mask<bool> GetHasBeenSetMask(IPointToReferenceMappingGetter item)
+        public void FillHasBeenSetMask(
+            IPointToReferenceMappingGetter item,
+            PointToReferenceMapping_Mask<bool> mask)
         {
-            var ret = new PointToReferenceMapping_Mask<bool>();
-            ret.Reference = true;
-            ret.Points = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
-            return ret;
+            mask.Reference = true;
+            mask.Points = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
         }
 
     }
@@ -971,8 +1022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             item: subItem,
                             errorMask: listSubMask);
-                    }
-                    );
+                    });
             }
         }
 

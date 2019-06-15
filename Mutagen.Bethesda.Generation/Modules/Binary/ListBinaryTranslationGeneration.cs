@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Generation
                 && allowDirectWrite;
 
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
+                $"{this.Namespace}ListBinaryTranslation<{list.SubGetterTypeName}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {itemAccessor.PropertyOrDirectAccess}");
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add((gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(list.SubTypeGeneration);
-                        gen.AppendLine($"transl: (MutagenWriter subWriter, {list.SubTypeGeneration.TypeName} subItem{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrorMask" : null)}) =>");
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {list.SubGetterTypeName} subItem{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrorMask" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             subTransl.GenerateWrite(

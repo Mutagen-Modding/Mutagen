@@ -48,6 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Quest_Registration.Instance;
         public new static Quest_Registration Registration => Quest_Registration.Instance;
+        protected override object CommonInstance => QuestCommon.Instance;
 
         #region Ctor
         protected Quest()
@@ -143,17 +144,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<Condition> _Conditions = new SourceSetList<Condition>();
         public ISourceSetList<Condition> Conditions => _Conditions;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<Condition> ConditionsEnumerable
-        {
-            get => _Conditions.Items;
-            set => _Conditions.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Condition> IQuest.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<Condition> IQuestGetter.Conditions => _Conditions;
+        IReadOnlySetList<IConditionGetter> IQuestGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -161,17 +156,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<QuestStage> _Stages = new SourceSetList<QuestStage>();
         public ISourceSetList<QuestStage> Stages => _Stages;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<QuestStage> StagesEnumerable
-        {
-            get => _Stages.Items;
-            set => _Stages.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<QuestStage> IQuest.Stages => _Stages;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<QuestStage> IQuestGetter.Stages => _Stages;
+        IReadOnlySetList<IQuestStageGetter> IQuestGetter.Stages => _Stages;
         #endregion
 
         #endregion
@@ -179,17 +168,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<QuestTarget> _Targets = new SourceSetList<QuestTarget>();
         public ISourceSetList<QuestTarget> Targets => _Targets;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<QuestTarget> TargetsEnumerable
-        {
-            get => _Targets.Items;
-            set => _Targets.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<QuestTarget> IQuest.Targets => _Targets;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<QuestTarget> IQuestGetter.Targets => _Targets;
+        IReadOnlySetList<IQuestTargetInternalGetter> IQuestGetter.Targets => _Targets;
         #endregion
 
         #endregion
@@ -211,30 +194,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Quest>.GetEqualsMask(Quest rhs, EqualsMaskHelper.Include include) => QuestCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IQuestGetter>.GetEqualsMask(IQuestGetter rhs, EqualsMaskHelper.Include include) => QuestCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Quest>.GetEqualsMask(Quest rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IQuestGetter>.GetEqualsMask(IQuestGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Quest_Mask<bool> printMask = null)
-        {
-            return QuestCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            QuestCommon.ToString(this, fg, name: name, printMask: null);
+            QuestMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Quest_Mask<bool> GetHasBeenSetMask()
-        {
-            return QuestCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -757,8 +732,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
-                        }
-                        );
+                        });
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Conditions);
                 }
                 case 0x58444E49: // INDX
@@ -777,8 +751,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
-                        }
-                        );
+                        });
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
                 }
                 case 0x41545351: // QSTA
@@ -797,8 +770,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
-                        }
-                        );
+                        });
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Targets);
                 }
                 default:
@@ -961,10 +933,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            QuestCommon.Clear(this);
+            QuestCommon.Instance.Clear(this);
         }
-
 
         public new static Quest Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1089,13 +1059,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        IReadOnlySetList<Condition> Conditions { get; }
+        IReadOnlySetList<IConditionGetter> Conditions { get; }
         #endregion
         #region Stages
-        IReadOnlySetList<QuestStage> Stages { get; }
+        IReadOnlySetList<IQuestStageGetter> Stages { get; }
         #endregion
         #region Targets
-        IReadOnlySetList<QuestTarget> Targets { get; }
+        IReadOnlySetList<IQuestTargetInternalGetter> Targets { get; }
         #endregion
 
     }
@@ -1111,6 +1081,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class QuestMixIn
+    {
+        public static void Clear(this IQuestInternal item)
+        {
+            ((QuestCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Quest_Mask<bool> GetEqualsMask(
+            this IQuestGetter item,
+            IQuestGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Quest_Mask<bool>();
+            ((QuestCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IQuestInternalGetter item,
+            string name = null,
+            Quest_Mask<bool> printMask = null)
+        {
+            return ((QuestCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IQuestInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Quest_Mask<bool> printMask = null)
+        {
+            ((QuestCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IQuestInternalGetter item,
+            Quest_Mask<bool?> checkMask)
+        {
+            return ((QuestCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Quest_Mask<bool> GetHasBeenSetMask(this IQuestGetter item)
+        {
+            var ret = new Quest_Mask<bool>();
+            ((QuestCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1410,9 +1447,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class QuestCommon
+    #region Common
+    public partial class QuestCommon : OblivionMajorRecordCommon
     {
+        public static readonly QuestCommon Instance = new QuestCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IQuest item,
@@ -1545,7 +1583,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Conditions);
                 try
                 {
-                    item.Conditions.SetToWithDefault(
+                    item.Conditions.SetToWithDefault<Condition, IConditionGetter>(
                         rhs: rhs.Conditions,
                         def: def?.Conditions,
                         converter: (r, d) =>
@@ -1553,7 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             switch (copyMask?.Conditions.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (Condition)r;
                                 case CopyOption.MakeCopy:
                                     return Condition.Copy(
                                         r,
@@ -1562,8 +1600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Conditions.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1580,7 +1617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Stages);
                 try
                 {
-                    item.Stages.SetToWithDefault(
+                    item.Stages.SetToWithDefault<QuestStage, IQuestStageGetter>(
                         rhs: rhs.Stages,
                         def: def?.Stages,
                         converter: (r, d) =>
@@ -1588,7 +1625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             switch (copyMask?.Stages.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (QuestStage)r;
                                 case CopyOption.MakeCopy:
                                     return QuestStage.Copy(
                                         r,
@@ -1597,8 +1634,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Stages.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1615,7 +1651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Targets);
                 try
                 {
-                    item.Targets.SetToWithDefault(
+                    item.Targets.SetToWithDefault<QuestTarget, IQuestTargetInternalGetter>(
                         rhs: rhs.Targets,
                         def: def?.Targets,
                         converter: (r, d) =>
@@ -1623,7 +1659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             switch (copyMask?.Targets.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (QuestTarget)r;
                                 case CopyOption.MakeCopy:
                                     return QuestTarget.Copy(
                                         r,
@@ -1632,8 +1668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Targets.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1649,8 +1684,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IQuest item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IQuest item)
         {
+            ClearPartial();
             item.Script_Property.Unset();
             item.Name_Unset();
             item.Icon_Unset();
@@ -1659,23 +1697,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Conditions.Unset();
             item.Stages.Unset();
             item.Targets.Unset();
+            base.Clear(item);
         }
 
-        public static Quest_Mask<bool> GetEqualsMask(
-            this IQuestGetter item,
-            IQuestGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new Quest_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IQuest)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IQuest)item);
+        }
+
+        public void FillEqualsMask(
             IQuestGetter item,
             IQuestGetter rhs,
             Quest_Mask<bool> ret,
@@ -1699,21 +1734,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Targets,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IQuestGetter item,
+        public string ToString(
+            IQuestGetter item,
             string name = null,
             Quest_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IQuestGetter item,
+        public void ToString(
+            IQuestGetter item,
             FileGeneration fg,
             string name = null,
             Quest_Mask<bool> printMask = null)
@@ -1729,89 +1768,104 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {item.Script_Property}");
-                }
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.Priority ?? true)
-                {
-                    fg.AppendLine($"Priority => {item.Priority}");
-                }
-                if (printMask?.Conditions?.Overall ?? true)
-                {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Conditions)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Stages?.Overall ?? true)
-                {
-                    fg.AppendLine("Stages =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Stages)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Targets?.Overall ?? true)
-                {
-                    fg.AppendLine("Targets =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Targets)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IQuestGetter item,
+        protected static void ToStringFields(
+            IQuestGetter item,
+            FileGeneration fg,
+            Quest_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Priority ?? true)
+            {
+                fg.AppendLine($"Priority => {item.Priority}");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                fg.AppendLine("Conditions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Stages?.Overall ?? true)
+            {
+                fg.AppendLine("Stages =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Stages)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Targets?.Overall ?? true)
+            {
+                fg.AppendLine("Targets =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Targets)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IQuestGetter item,
             Quest_Mask<bool?> checkMask)
         {
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
@@ -1820,28 +1874,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Conditions.Overall.HasValue && checkMask.Conditions.Overall.Value != item.Conditions.HasBeenSet) return false;
             if (checkMask.Stages.Overall.HasValue && checkMask.Stages.Overall.Value != item.Stages.HasBeenSet) return false;
             if (checkMask.Targets.Overall.HasValue && checkMask.Targets.Overall.Value != item.Targets.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Quest_Mask<bool> GetHasBeenSetMask(IQuestGetter item)
+        public void FillHasBeenSetMask(
+            IQuestGetter item,
+            Quest_Mask<bool> mask)
         {
-            var ret = new Quest_Mask<bool>();
-            ret.Script = item.Script_Property.HasBeenSet;
-            ret.Name = item.Name_IsSet;
-            ret.Icon = item.Icon_IsSet;
-            ret.Flags = true;
-            ret.Priority = true;
-            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            ret.Stages = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, QuestStage_Mask<bool>>>>(item.Stages.HasBeenSet, item.Stages.WithIndex().Select((i) => new MaskItemIndexed<bool, QuestStage_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            ret.Targets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, QuestTarget_Mask<bool>>>>(item.Targets.HasBeenSet, item.Targets.WithIndex().Select((i) => new MaskItemIndexed<bool, QuestTarget_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static Quest_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Name = item.Name_IsSet;
+            mask.Icon = item.Icon_IsSet;
+            mask.Flags = true;
+            mask.Priority = true;
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Stages = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, QuestStage_Mask<bool>>>>(item.Stages.HasBeenSet, item.Stages.WithIndex().Select((i) => new MaskItemIndexed<bool, QuestStage_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Targets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, QuestTarget_Mask<bool>>>>(item.Targets.HasBeenSet, item.Targets.WithIndex().Select((i) => new MaskItemIndexed<bool, QuestTarget_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Quest_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1861,12 +1914,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Quest_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Quest_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
@@ -1962,14 +2009,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Conditions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Conditions) ?? true))
             {
-                ListXmlTranslation<Condition>.Instance.Write(
+                ListXmlTranslation<IConditionGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Conditions),
                     item: item.Conditions,
                     fieldIndex: (int)Quest_FieldIndex.Conditions,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.Conditions),
-                    transl: (XElement subNode, Condition subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         ((ConditionXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
                             item: subItem,
@@ -1977,20 +2024,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
             if (item.Stages.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
             {
-                ListXmlTranslation<QuestStage>.Instance.Write(
+                ListXmlTranslation<IQuestStageGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Stages),
                     item: item.Stages,
                     fieldIndex: (int)Quest_FieldIndex.Stages,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.Stages),
-                    transl: (XElement subNode, QuestStage subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IQuestStageGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         ((QuestStageXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
                             item: subItem,
@@ -1998,20 +2044,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
             if (item.Targets.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Targets) ?? true))
             {
-                ListXmlTranslation<QuestTarget>.Instance.Write(
+                ListXmlTranslation<IQuestTargetInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Targets),
                     item: item.Targets,
                     fieldIndex: (int)Quest_FieldIndex.Targets,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.Targets),
-                    transl: (XElement subNode, QuestTarget subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IQuestTargetInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         ((QuestTargetXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
                             item: subItem,
@@ -2019,8 +2064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
             if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -3213,12 +3257,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Conditions.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                     writer: writer,
                     items: item.Conditions,
                     fieldIndex: (int)Quest_FieldIndex.Conditions,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, Condition subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IConditionGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         ((ConditionBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
@@ -3226,17 +3270,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
-                    }
-                    );
+                    });
             }
             if (item.Stages.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestStage>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IQuestStageGetter>.Instance.Write(
                     writer: writer,
                     items: item.Stages,
                     fieldIndex: (int)Quest_FieldIndex.Stages,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, QuestStage subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IQuestStageGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         ((QuestStageBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
@@ -3244,17 +3287,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
-                    }
-                    );
+                    });
             }
             if (item.Targets.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestTarget>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IQuestTargetInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Targets,
                     fieldIndex: (int)Quest_FieldIndex.Targets,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, QuestTarget subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IQuestTargetInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         ((QuestTargetBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
@@ -3262,8 +3304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
-                    }
-                    );
+                    });
             }
         }
 

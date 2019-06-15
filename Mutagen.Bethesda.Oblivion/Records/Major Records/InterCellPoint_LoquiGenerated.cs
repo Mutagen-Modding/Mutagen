@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InterCellPoint_Registration.Instance;
         public static InterCellPoint_Registration Registration => InterCellPoint_Registration.Instance;
+        protected object CommonInstance => InterCellPointCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public InterCellPoint()
@@ -68,30 +70,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<InterCellPoint>.GetEqualsMask(InterCellPoint rhs, EqualsMaskHelper.Include include) => InterCellPointCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IInterCellPointGetter>.GetEqualsMask(IInterCellPointGetter rhs, EqualsMaskHelper.Include include) => InterCellPointCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<InterCellPoint>.GetEqualsMask(InterCellPoint rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IInterCellPointGetter>.GetEqualsMask(IInterCellPointGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            InterCellPoint_Mask<bool> printMask = null)
-        {
-            return InterCellPointCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            InterCellPointCommon.ToString(this, fg, name: name, printMask: null);
+            InterCellPointMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public InterCellPoint_Mask<bool> GetHasBeenSetMask()
-        {
-            return InterCellPointCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -482,19 +476,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            InterCellPointCommon.Clear(this);
+            InterCellPointCommon.Instance.Clear(this);
         }
-
 
         public static InterCellPoint Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -560,6 +545,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class InterCellPointMixIn
+    {
+        public static void Clear(this IInterCellPoint item)
+        {
+            ((InterCellPointCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static InterCellPoint_Mask<bool> GetEqualsMask(
+            this IInterCellPointGetter item,
+            IInterCellPointGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new InterCellPoint_Mask<bool>();
+            ((InterCellPointCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IInterCellPointGetter item,
+            string name = null,
+            InterCellPoint_Mask<bool> printMask = null)
+        {
+            return ((InterCellPointCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IInterCellPointGetter item,
+            FileGeneration fg,
+            string name = null,
+            InterCellPoint_Mask<bool> printMask = null)
+        {
+            ((InterCellPointCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IInterCellPointGetter item,
+            InterCellPoint_Mask<bool?> checkMask)
+        {
+            return ((InterCellPointCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static InterCellPoint_Mask<bool> GetHasBeenSetMask(this IInterCellPointGetter item)
+        {
+            var ret = new InterCellPoint_Mask<bool>();
+            ((InterCellPointCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -758,9 +810,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class InterCellPointCommon
+    #region Common
+    public partial class InterCellPointCommon
     {
+        public static readonly InterCellPointCommon Instance = new InterCellPointCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IInterCellPoint item,
@@ -807,27 +860,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IInterCellPoint item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IInterCellPoint item)
         {
+            ClearPartial();
             item.PointID = default(Int32);
             item.Point = default(P3Float);
         }
 
-        public static InterCellPoint_Mask<bool> GetEqualsMask(
-            this IInterCellPointGetter item,
-            IInterCellPointGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new InterCellPoint_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IInterCellPointGetter item,
             IInterCellPointGetter rhs,
             InterCellPoint_Mask<bool> ret,
@@ -838,18 +880,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Point = item.Point.Equals(rhs.Point);
         }
 
-        public static string ToString(
-            this IInterCellPointGetter item,
+        public string ToString(
+            IInterCellPointGetter item,
             string name = null,
             InterCellPoint_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IInterCellPointGetter item,
+        public void ToString(
+            IInterCellPointGetter item,
             FileGeneration fg,
             string name = null,
             InterCellPoint_Mask<bool> printMask = null)
@@ -865,31 +911,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.PointID ?? true)
-                {
-                    fg.AppendLine($"PointID => {item.PointID}");
-                }
-                if (printMask?.Point ?? true)
-                {
-                    fg.AppendLine($"Point => {item.Point}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IInterCellPointGetter item,
+        protected static void ToStringFields(
+            IInterCellPointGetter item,
+            FileGeneration fg,
+            InterCellPoint_Mask<bool> printMask = null)
+        {
+            if (printMask?.PointID ?? true)
+            {
+                fg.AppendLine($"PointID => {item.PointID}");
+            }
+            if (printMask?.Point ?? true)
+            {
+                fg.AppendLine($"Point => {item.Point}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IInterCellPointGetter item,
             InterCellPoint_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static InterCellPoint_Mask<bool> GetHasBeenSetMask(IInterCellPointGetter item)
+        public void FillHasBeenSetMask(
+            IInterCellPointGetter item,
+            InterCellPoint_Mask<bool> mask)
         {
-            var ret = new InterCellPoint_Mask<bool>();
-            ret.PointID = true;
-            ret.Point = true;
-            return ret;
+            mask.PointID = true;
+            mask.Point = true;
         }
 
     }

@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalInt_Registration.Instance;
         public new static GlobalInt_Registration Registration => GlobalInt_Registration.Instance;
+        protected override object CommonInstance => GlobalIntCommon.Instance;
 
         #region Ctor
         protected GlobalInt()
@@ -80,30 +81,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<GlobalInt>.GetEqualsMask(GlobalInt rhs, EqualsMaskHelper.Include include) => GlobalIntCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IGlobalIntGetter>.GetEqualsMask(IGlobalIntGetter rhs, EqualsMaskHelper.Include include) => GlobalIntCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<GlobalInt>.GetEqualsMask(GlobalInt rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IGlobalIntGetter>.GetEqualsMask(IGlobalIntGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            GlobalInt_Mask<bool> printMask = null)
-        {
-            return GlobalIntCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            GlobalIntCommon.ToString(this, fg, name: name, printMask: null);
+            GlobalIntMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new GlobalInt_Mask<bool> GetHasBeenSetMask()
-        {
-            return GlobalIntCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -575,10 +568,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            GlobalIntCommon.Clear(this);
+            GlobalIntCommon.Instance.Clear(this);
         }
-
 
         public new static GlobalInt Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -654,6 +645,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class GlobalIntMixIn
+    {
+        public static void Clear(this IGlobalIntInternal item)
+        {
+            ((GlobalIntCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static GlobalInt_Mask<bool> GetEqualsMask(
+            this IGlobalIntGetter item,
+            IGlobalIntGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new GlobalInt_Mask<bool>();
+            ((GlobalIntCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IGlobalIntInternalGetter item,
+            string name = null,
+            GlobalInt_Mask<bool> printMask = null)
+        {
+            return ((GlobalIntCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IGlobalIntInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            GlobalInt_Mask<bool> printMask = null)
+        {
+            ((GlobalIntCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IGlobalIntInternalGetter item,
+            GlobalInt_Mask<bool?> checkMask)
+        {
+            return ((GlobalIntCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static GlobalInt_Mask<bool> GetHasBeenSetMask(this IGlobalIntGetter item)
+        {
+            var ret = new GlobalInt_Mask<bool>();
+            ((GlobalIntCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -848,9 +906,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class GlobalIntCommon
+    #region Common
+    public partial class GlobalIntCommon : GlobalCommon
     {
+        public static readonly GlobalIntCommon Instance = new GlobalIntCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IGlobalInt item,
@@ -899,26 +958,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IGlobalInt item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IGlobalInt item)
         {
+            ClearPartial();
             item.Data_Unset();
+            base.Clear(item);
         }
 
-        public static GlobalInt_Mask<bool> GetEqualsMask(
-            this IGlobalIntGetter item,
-            IGlobalIntGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IGlobal item)
         {
-            var ret = new GlobalInt_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IGlobalInt)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (IGlobalInt)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IGlobalInt)item);
+        }
+
+        public void FillEqualsMask(
             IGlobalIntGetter item,
             IGlobalIntGetter rhs,
             GlobalInt_Mask<bool> ret,
@@ -926,21 +990,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Data = item.Data_IsSet == rhs.Data_IsSet && item.Data == rhs.Data;
-            GlobalCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IGlobalIntGetter item,
+        public string ToString(
+            IGlobalIntGetter item,
             string name = null,
             GlobalInt_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IGlobalIntGetter item,
+        public void ToString(
+            IGlobalIntGetter item,
             FileGeneration fg,
             string name = null,
             GlobalInt_Mask<bool> printMask = null)
@@ -956,33 +1024,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Data ?? true)
-                {
-                    fg.AppendLine($"Data => {item.Data}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IGlobalIntGetter item,
+        protected static void ToStringFields(
+            IGlobalIntGetter item,
+            FileGeneration fg,
+            GlobalInt_Mask<bool> printMask = null)
+        {
+            GlobalCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Data ?? true)
+            {
+                fg.AppendLine($"Data => {item.Data}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IGlobalIntGetter item,
             GlobalInt_Mask<bool?> checkMask)
         {
             if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static GlobalInt_Mask<bool> GetHasBeenSetMask(IGlobalIntGetter item)
+        public void FillHasBeenSetMask(
+            IGlobalIntGetter item,
+            GlobalInt_Mask<bool> mask)
         {
-            var ret = new GlobalInt_Mask<bool>();
-            ret.Data = item.Data_IsSet;
-            return ret;
-        }
-
-        public static GlobalInt_FieldIndex? ConvertFieldIndex(Global_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Data = item.Data_IsSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static GlobalInt_FieldIndex ConvertFieldIndex(Global_FieldIndex index)
@@ -1004,12 +1086,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static GlobalInt_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static GlobalInt_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1027,12 +1103,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static GlobalInt_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static GlobalInt_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

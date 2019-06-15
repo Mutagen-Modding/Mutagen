@@ -43,6 +43,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionData_Registration.Instance;
         public static RegionData_Registration Registration => RegionData_Registration.Instance;
+        protected virtual object CommonInstance => RegionDataCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public RegionData()
@@ -107,30 +109,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<RegionData>.GetEqualsMask(RegionData rhs, EqualsMaskHelper.Include include) => RegionDataCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IRegionDataGetter>.GetEqualsMask(IRegionDataGetter rhs, EqualsMaskHelper.Include include) => RegionDataCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<RegionData>.GetEqualsMask(RegionData rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IRegionDataGetter>.GetEqualsMask(IRegionDataGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            RegionData_Mask<bool> printMask = null)
-        {
-            return RegionDataCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public virtual void ToString(
             FileGeneration fg,
             string name = null)
         {
-            RegionDataCommon.ToString(this, fg, name: name, printMask: null);
+            RegionDataMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public RegionData_Mask<bool> GetHasBeenSetMask()
-        {
-            return RegionDataCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -558,19 +552,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public virtual void Clear()
         {
-            CallClearPartial_Internal();
-            RegionDataCommon.Clear(this);
+            RegionDataCommon.Instance.Clear(this);
         }
-
 
         protected static void CopyInInternal_RegionData(RegionData obj, KeyValuePair<ushort, object> pair)
         {
@@ -653,6 +638,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class RegionDataMixIn
+    {
+        public static void Clear(this IRegionDataInternal item)
+        {
+            ((RegionDataCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static RegionData_Mask<bool> GetEqualsMask(
+            this IRegionDataGetter item,
+            IRegionDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RegionData_Mask<bool>();
+            ((RegionDataCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IRegionDataInternalGetter item,
+            string name = null,
+            RegionData_Mask<bool> printMask = null)
+        {
+            return ((RegionDataCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IRegionDataInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            RegionData_Mask<bool> printMask = null)
+        {
+            ((RegionDataCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IRegionDataInternalGetter item,
+            RegionData_Mask<bool?> checkMask)
+        {
+            return ((RegionDataCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static RegionData_Mask<bool> GetHasBeenSetMask(this IRegionDataGetter item)
+        {
+            var ret = new RegionData_Mask<bool>();
+            ((RegionDataCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -878,9 +930,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class RegionDataCommon
+    #region Common
+    public partial class RegionDataCommon
     {
+        public static readonly RegionDataCommon Instance = new RegionDataCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IRegionData item,
@@ -927,27 +980,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IRegionData item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IRegionData item)
         {
+            ClearPartial();
             item.Flags = default(RegionData.RegionDataFlag);
             item.Priority = default(Byte);
         }
 
-        public static RegionData_Mask<bool> GetEqualsMask(
-            this IRegionDataGetter item,
-            IRegionDataGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new RegionData_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IRegionDataGetter item,
             IRegionDataGetter rhs,
             RegionData_Mask<bool> ret,
@@ -959,18 +1001,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Priority = item.Priority == rhs.Priority;
         }
 
-        public static string ToString(
-            this IRegionDataGetter item,
+        public string ToString(
+            IRegionDataGetter item,
             string name = null,
             RegionData_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IRegionDataGetter item,
+        public void ToString(
+            IRegionDataGetter item,
             FileGeneration fg,
             string name = null,
             RegionData_Mask<bool> printMask = null)
@@ -986,40 +1032,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.DataType ?? true)
-                {
-                    fg.AppendLine($"DataType => {item.DataType}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.Priority ?? true)
-                {
-                    fg.AppendLine($"Priority => {item.Priority}");
-                }
-                if (printMask?.RDATDataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IRegionDataGetter item,
+        protected static void ToStringFields(
+            IRegionDataGetter item,
+            FileGeneration fg,
+            RegionData_Mask<bool> printMask = null)
+        {
+            if (printMask?.DataType ?? true)
+            {
+                fg.AppendLine($"DataType => {item.DataType}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Priority ?? true)
+            {
+                fg.AppendLine($"Priority => {item.Priority}");
+            }
+            if (printMask?.RDATDataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IRegionDataGetter item,
             RegionData_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static RegionData_Mask<bool> GetHasBeenSetMask(IRegionDataGetter item)
+        public void FillHasBeenSetMask(
+            IRegionDataGetter item,
+            RegionData_Mask<bool> mask)
         {
-            var ret = new RegionData_Mask<bool>();
-            ret.DataType = true;
-            ret.Flags = true;
-            ret.Priority = true;
-            ret.RDATDataTypeState = true;
-            return ret;
+            mask.DataType = true;
+            mask.Flags = true;
+            mask.Priority = true;
+            mask.RDATDataTypeState = true;
         }
 
     }

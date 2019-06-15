@@ -76,12 +76,12 @@ namespace Mutagen.Bethesda.Oblivion
                         masterReferences);
                     writer.Write((int)GroupTypeEnum.TopicChildren);
                     writer.Write(obj.Timestamp);
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.Write(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogItemInternalGetter>.Instance.Write(
                         writer: writer,
                         items: obj.Items,
                         fieldIndex: (int)DialogTopic_FieldIndex.Items,
                         errorMask: errorMask,
-                        transl: (MutagenWriter subWriter, DialogItem subItem, ErrorMaskBuilder listErrMask) =>
+                        transl: (MutagenWriter subWriter, IDialogItemInternalGetter subItem, ErrorMaskBuilder listErrMask) =>
                         {
                            subItem.Write_Binary(
                                 writer: subWriter,

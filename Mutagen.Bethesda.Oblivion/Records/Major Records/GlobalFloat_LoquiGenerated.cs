@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalFloat_Registration.Instance;
         public new static GlobalFloat_Registration Registration => GlobalFloat_Registration.Instance;
+        protected override object CommonInstance => GlobalFloatCommon.Instance;
 
         #region Ctor
         protected GlobalFloat()
@@ -80,30 +81,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<GlobalFloat>.GetEqualsMask(GlobalFloat rhs, EqualsMaskHelper.Include include) => GlobalFloatCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IGlobalFloatGetter>.GetEqualsMask(IGlobalFloatGetter rhs, EqualsMaskHelper.Include include) => GlobalFloatCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<GlobalFloat>.GetEqualsMask(GlobalFloat rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IGlobalFloatGetter>.GetEqualsMask(IGlobalFloatGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            GlobalFloat_Mask<bool> printMask = null)
-        {
-            return GlobalFloatCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            GlobalFloatCommon.ToString(this, fg, name: name, printMask: null);
+            GlobalFloatMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new GlobalFloat_Mask<bool> GetHasBeenSetMask()
-        {
-            return GlobalFloatCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -581,10 +574,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            GlobalFloatCommon.Clear(this);
+            GlobalFloatCommon.Instance.Clear(this);
         }
-
 
         public new static GlobalFloat Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -660,6 +651,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class GlobalFloatMixIn
+    {
+        public static void Clear(this IGlobalFloatInternal item)
+        {
+            ((GlobalFloatCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static GlobalFloat_Mask<bool> GetEqualsMask(
+            this IGlobalFloatGetter item,
+            IGlobalFloatGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new GlobalFloat_Mask<bool>();
+            ((GlobalFloatCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IGlobalFloatInternalGetter item,
+            string name = null,
+            GlobalFloat_Mask<bool> printMask = null)
+        {
+            return ((GlobalFloatCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IGlobalFloatInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            GlobalFloat_Mask<bool> printMask = null)
+        {
+            ((GlobalFloatCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IGlobalFloatInternalGetter item,
+            GlobalFloat_Mask<bool?> checkMask)
+        {
+            return ((GlobalFloatCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static GlobalFloat_Mask<bool> GetHasBeenSetMask(this IGlobalFloatGetter item)
+        {
+            var ret = new GlobalFloat_Mask<bool>();
+            ((GlobalFloatCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -854,9 +912,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class GlobalFloatCommon
+    #region Common
+    public partial class GlobalFloatCommon : GlobalCommon
     {
+        public static readonly GlobalFloatCommon Instance = new GlobalFloatCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IGlobalFloat item,
@@ -905,26 +964,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IGlobalFloat item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IGlobalFloat item)
         {
+            ClearPartial();
             item.Data_Unset();
+            base.Clear(item);
         }
 
-        public static GlobalFloat_Mask<bool> GetEqualsMask(
-            this IGlobalFloatGetter item,
-            IGlobalFloatGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IGlobal item)
         {
-            var ret = new GlobalFloat_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IGlobalFloat)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (IGlobalFloat)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IGlobalFloat)item);
+        }
+
+        public void FillEqualsMask(
             IGlobalFloatGetter item,
             IGlobalFloatGetter rhs,
             GlobalFloat_Mask<bool> ret,
@@ -932,21 +996,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Data = item.Data_IsSet == rhs.Data_IsSet && item.Data.EqualsWithin(rhs.Data);
-            GlobalCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IGlobalFloatGetter item,
+        public string ToString(
+            IGlobalFloatGetter item,
             string name = null,
             GlobalFloat_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IGlobalFloatGetter item,
+        public void ToString(
+            IGlobalFloatGetter item,
             FileGeneration fg,
             string name = null,
             GlobalFloat_Mask<bool> printMask = null)
@@ -962,33 +1030,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Data ?? true)
-                {
-                    fg.AppendLine($"Data => {item.Data}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IGlobalFloatGetter item,
+        protected static void ToStringFields(
+            IGlobalFloatGetter item,
+            FileGeneration fg,
+            GlobalFloat_Mask<bool> printMask = null)
+        {
+            GlobalCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Data ?? true)
+            {
+                fg.AppendLine($"Data => {item.Data}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IGlobalFloatGetter item,
             GlobalFloat_Mask<bool?> checkMask)
         {
             if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static GlobalFloat_Mask<bool> GetHasBeenSetMask(IGlobalFloatGetter item)
+        public void FillHasBeenSetMask(
+            IGlobalFloatGetter item,
+            GlobalFloat_Mask<bool> mask)
         {
-            var ret = new GlobalFloat_Mask<bool>();
-            ret.Data = item.Data_IsSet;
-            return ret;
-        }
-
-        public static GlobalFloat_FieldIndex? ConvertFieldIndex(Global_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Data = item.Data_IsSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static GlobalFloat_FieldIndex ConvertFieldIndex(Global_FieldIndex index)
@@ -1010,12 +1092,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static GlobalFloat_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static GlobalFloat_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1033,12 +1109,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static GlobalFloat_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static GlobalFloat_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

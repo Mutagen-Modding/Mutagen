@@ -45,6 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Eye_Registration.Instance;
         public new static Eye_Registration Registration => Eye_Registration.Instance;
+        protected override object CommonInstance => EyeCommon.Instance;
 
         #region Ctor
         protected Eye()
@@ -133,30 +134,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Eye>.GetEqualsMask(Eye rhs, EqualsMaskHelper.Include include) => EyeCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IEyeGetter>.GetEqualsMask(IEyeGetter rhs, EqualsMaskHelper.Include include) => EyeCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Eye>.GetEqualsMask(Eye rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IEyeGetter>.GetEqualsMask(IEyeGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Eye_Mask<bool> printMask = null)
-        {
-            return EyeCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            EyeCommon.ToString(this, fg, name: name, printMask: null);
+            EyeMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Eye_Mask<bool> GetHasBeenSetMask()
-        {
-            return EyeCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -692,10 +685,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            EyeCommon.Clear(this);
+            EyeCommon.Instance.Clear(this);
         }
-
 
         public new static Eye Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -797,6 +788,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class EyeMixIn
+    {
+        public static void Clear(this IEyeInternal item)
+        {
+            ((EyeCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Eye_Mask<bool> GetEqualsMask(
+            this IEyeGetter item,
+            IEyeGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Eye_Mask<bool>();
+            ((EyeCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IEyeInternalGetter item,
+            string name = null,
+            Eye_Mask<bool> printMask = null)
+        {
+            return ((EyeCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IEyeInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Eye_Mask<bool> printMask = null)
+        {
+            ((EyeCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IEyeInternalGetter item,
+            Eye_Mask<bool?> checkMask)
+        {
+            return ((EyeCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Eye_Mask<bool> GetHasBeenSetMask(this IEyeGetter item)
+        {
+            var ret = new Eye_Mask<bool>();
+            ((EyeCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1017,9 +1075,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class EyeCommon
+    #region Common
+    public partial class EyeCommon : OblivionMajorRecordCommon
     {
+        public static readonly EyeCommon Instance = new EyeCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IEye item,
@@ -1128,28 +1187,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IEye item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IEye item)
         {
+            ClearPartial();
             item.Name_Unset();
             item.Icon_Unset();
             item.Flags_Unset();
+            base.Clear(item);
         }
 
-        public static Eye_Mask<bool> GetEqualsMask(
-            this IEyeGetter item,
-            IEyeGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new Eye_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IEye)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IEye)item);
+        }
+
+        public void FillEqualsMask(
             IEyeGetter item,
             IEyeGetter rhs,
             Eye_Mask<bool> ret,
@@ -1159,21 +1218,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IEyeGetter item,
+        public string ToString(
+            IEyeGetter item,
             string name = null,
             Eye_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IEyeGetter item,
+        public void ToString(
+            IEyeGetter item,
             FileGeneration fg,
             string name = null,
             Eye_Mask<bool> printMask = null)
@@ -1189,45 +1252,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IEyeGetter item,
+        protected static void ToStringFields(
+            IEyeGetter item,
+            FileGeneration fg,
+            Eye_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IEyeGetter item,
             Eye_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Eye_Mask<bool> GetHasBeenSetMask(IEyeGetter item)
+        public void FillHasBeenSetMask(
+            IEyeGetter item,
+            Eye_Mask<bool> mask)
         {
-            var ret = new Eye_Mask<bool>();
-            ret.Name = item.Name_IsSet;
-            ret.Icon = item.Icon_IsSet;
-            ret.Flags = item.Flags_IsSet;
-            return ret;
-        }
-
-        public static Eye_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Name = item.Name_IsSet;
+            mask.Icon = item.Icon_IsSet;
+            mask.Flags = item.Flags_IsSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Eye_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1247,12 +1324,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Eye_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Eye_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

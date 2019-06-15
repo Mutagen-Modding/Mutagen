@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Static_Registration.Instance;
         public new static Static_Registration Registration => Static_Registration.Instance;
+        protected override object CommonInstance => StaticCommon.Instance;
 
         #region Ctor
         protected Static()
@@ -81,30 +82,22 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter IStaticGetter.Model => this.Model;
         #endregion
 
-        IMask<bool> IEqualsMask<Static>.GetEqualsMask(Static rhs, EqualsMaskHelper.Include include) => StaticCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IStaticGetter>.GetEqualsMask(IStaticGetter rhs, EqualsMaskHelper.Include include) => StaticCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Static>.GetEqualsMask(Static rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IStaticGetter>.GetEqualsMask(IStaticGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Static_Mask<bool> printMask = null)
-        {
-            return StaticCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            StaticCommon.ToString(this, fg, name: name, printMask: null);
+            StaticMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Static_Mask<bool> GetHasBeenSetMask()
-        {
-            return StaticCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -589,10 +582,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            StaticCommon.Clear(this);
+            StaticCommon.Instance.Clear(this);
         }
-
 
         public new static Static Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -668,6 +659,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class StaticMixIn
+    {
+        public static void Clear(this IStaticInternal item)
+        {
+            ((StaticCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Static_Mask<bool> GetEqualsMask(
+            this IStaticGetter item,
+            IStaticGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Static_Mask<bool>();
+            ((StaticCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IStaticInternalGetter item,
+            string name = null,
+            Static_Mask<bool> printMask = null)
+        {
+            return ((StaticCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IStaticInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Static_Mask<bool> printMask = null)
+        {
+            ((StaticCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IStaticInternalGetter item,
+            Static_Mask<bool?> checkMask)
+        {
+            return ((StaticCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Static_Mask<bool> GetHasBeenSetMask(this IStaticGetter item)
+        {
+            var ret = new Static_Mask<bool>();
+            ((StaticCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -862,9 +920,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class StaticCommon
+    #region Common
+    public partial class StaticCommon : OblivionMajorRecordCommon
     {
+        public static readonly StaticCommon Instance = new StaticCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IStatic item,
@@ -935,26 +994,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IStatic item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IStatic item)
         {
+            ClearPartial();
             item.Model_Unset();
+            base.Clear(item);
         }
 
-        public static Static_Mask<bool> GetEqualsMask(
-            this IStaticGetter item,
-            IStaticGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new Static_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IStatic)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IStatic)item);
+        }
+
+        public void FillEqualsMask(
             IStaticGetter item,
             IStaticGetter rhs,
             Static_Mask<bool> ret,
@@ -966,23 +1025,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IStaticGetter item,
+        public string ToString(
+            IStaticGetter item,
             string name = null,
             Static_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IStaticGetter item,
+        public void ToString(
+            IStaticGetter item,
             FileGeneration fg,
             string name = null,
             Static_Mask<bool> printMask = null)
@@ -998,34 +1061,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IStaticGetter item,
+        protected static void ToStringFields(
+            IStaticGetter item,
+            FileGeneration fg,
+            Static_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+        }
+
+        public bool HasBeenSet(
+            IStaticGetter item,
             Static_Mask<bool?> checkMask)
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Static_Mask<bool> GetHasBeenSetMask(IStaticGetter item)
+        public void FillHasBeenSetMask(
+            IStaticGetter item,
+            Static_Mask<bool> mask)
         {
-            var ret = new Static_Mask<bool>();
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            return ret;
-        }
-
-        public static Static_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Static_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1045,12 +1122,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Static_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Static_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

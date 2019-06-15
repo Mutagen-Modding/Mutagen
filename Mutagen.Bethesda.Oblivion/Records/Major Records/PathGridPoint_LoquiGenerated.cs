@@ -43,6 +43,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
         public static PathGridPoint_Registration Registration => PathGridPoint_Registration.Instance;
+        protected object CommonInstance => PathGridPointCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public PathGridPoint()
@@ -80,12 +82,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceList<Int16> _Connections = new SourceList<Int16>();
         public ISourceList<Int16> Connections => _Connections;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<Int16> ConnectionsEnumerable
-        {
-            get => _Connections.Items;
-            set => _Connections.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<Int16> IPathGridPoint.Connections => _Connections;
@@ -95,30 +91,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<PathGridPoint>.GetEqualsMask(PathGridPoint rhs, EqualsMaskHelper.Include include) => PathGridPointCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IPathGridPointGetter>.GetEqualsMask(IPathGridPointGetter rhs, EqualsMaskHelper.Include include) => PathGridPointCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<PathGridPoint>.GetEqualsMask(PathGridPoint rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IPathGridPointGetter>.GetEqualsMask(IPathGridPointGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            PathGridPoint_Mask<bool> printMask = null)
-        {
-            return PathGridPointCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            PathGridPointCommon.ToString(this, fg, name: name, printMask: null);
+            PathGridPointMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public PathGridPoint_Mask<bool> GetHasBeenSetMask()
-        {
-            return PathGridPointCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -529,19 +517,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            PathGridPointCommon.Clear(this);
+            PathGridPointCommon.Instance.Clear(this);
         }
-
 
         public static PathGridPoint Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -614,6 +593,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class PathGridPointMixIn
+    {
+        public static void Clear(this IPathGridPoint item)
+        {
+            ((PathGridPointCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static PathGridPoint_Mask<bool> GetEqualsMask(
+            this IPathGridPointGetter item,
+            IPathGridPointGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new PathGridPoint_Mask<bool>();
+            ((PathGridPointCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IPathGridPointGetter item,
+            string name = null,
+            PathGridPoint_Mask<bool> printMask = null)
+        {
+            return ((PathGridPointCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IPathGridPointGetter item,
+            FileGeneration fg,
+            string name = null,
+            PathGridPoint_Mask<bool> printMask = null)
+        {
+            ((PathGridPointCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IPathGridPointGetter item,
+            PathGridPoint_Mask<bool?> checkMask)
+        {
+            return ((PathGridPointCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static PathGridPoint_Mask<bool> GetHasBeenSetMask(this IPathGridPointGetter item)
+        {
+            var ret = new PathGridPoint_Mask<bool>();
+            ((PathGridPointCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -825,9 +871,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class PathGridPointCommon
+    #region Common
+    public partial class PathGridPointCommon
     {
+        public static readonly PathGridPointCommon Instance = new PathGridPointCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IPathGridPoint item,
@@ -893,28 +940,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IPathGridPoint item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IPathGridPoint item)
         {
+            ClearPartial();
             item.Point = default(P3Float);
             item.NumConnectionsFluffBytes = default(Byte[]);
             item.Connections.Clear();
         }
 
-        public static PathGridPoint_Mask<bool> GetEqualsMask(
-            this IPathGridPointGetter item,
-            IPathGridPointGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new PathGridPoint_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IPathGridPointGetter item,
             IPathGridPointGetter rhs,
             PathGridPoint_Mask<bool> ret,
@@ -929,18 +965,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
         }
 
-        public static string ToString(
-            this IPathGridPointGetter item,
+        public string ToString(
+            IPathGridPointGetter item,
             string name = null,
             PathGridPoint_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IPathGridPointGetter item,
+        public void ToString(
+            IPathGridPointGetter item,
             FileGeneration fg,
             string name = null,
             PathGridPoint_Mask<bool> printMask = null)
@@ -956,50 +996,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Point ?? true)
-                {
-                    fg.AppendLine($"Point => {item.Point}");
-                }
-                if (printMask?.NumConnectionsFluffBytes ?? true)
-                {
-                    fg.AppendLine($"NumConnectionsFluffBytes => {item.NumConnectionsFluffBytes}");
-                }
-                if (printMask?.Connections?.Overall ?? true)
-                {
-                    fg.AppendLine("Connections =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Connections)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($"Item => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IPathGridPointGetter item,
+        protected static void ToStringFields(
+            IPathGridPointGetter item,
+            FileGeneration fg,
+            PathGridPoint_Mask<bool> printMask = null)
+        {
+            if (printMask?.Point ?? true)
+            {
+                fg.AppendLine($"Point => {item.Point}");
+            }
+            if (printMask?.NumConnectionsFluffBytes ?? true)
+            {
+                fg.AppendLine($"NumConnectionsFluffBytes => {item.NumConnectionsFluffBytes}");
+            }
+            if (printMask?.Connections?.Overall ?? true)
+            {
+                fg.AppendLine("Connections =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Connections)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+
+        public bool HasBeenSet(
+            IPathGridPointGetter item,
             PathGridPoint_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static PathGridPoint_Mask<bool> GetHasBeenSetMask(IPathGridPointGetter item)
+        public void FillHasBeenSetMask(
+            IPathGridPointGetter item,
+            PathGridPoint_Mask<bool> mask)
         {
-            var ret = new PathGridPoint_Mask<bool>();
-            ret.Point = true;
-            ret.NumConnectionsFluffBytes = true;
-            ret.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
-            return ret;
+            mask.Point = true;
+            mask.NumConnectionsFluffBytes = true;
+            mask.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
         }
 
     }
@@ -1051,8 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: null,
                             item: subItem,
                             errorMask: listSubMask);
-                    }
-                    );
+                    });
             }
         }
 

@@ -48,6 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
         public new static Light_Registration Registration => Light_Registration.Instance;
+        protected override object CommonInstance => LightCommon.Instance;
 
         #region Ctor
         protected Light()
@@ -293,30 +294,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Light>.GetEqualsMask(Light rhs, EqualsMaskHelper.Include include) => LightCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ILightGetter>.GetEqualsMask(ILightGetter rhs, EqualsMaskHelper.Include include) => LightCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Light>.GetEqualsMask(Light rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ILightGetter>.GetEqualsMask(ILightGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Light_Mask<bool> printMask = null)
-        {
-            return LightCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            LightCommon.ToString(this, fg, name: name, printMask: null);
+            LightMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Light_Mask<bool> GetHasBeenSetMask()
-        {
-            return LightCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -1093,10 +1086,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            LightCommon.Clear(this);
+            LightCommon.Instance.Clear(this);
         }
-
 
         public new static Light Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1312,6 +1303,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class LightMixIn
+    {
+        public static void Clear(this ILightInternal item)
+        {
+            ((LightCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Light_Mask<bool> GetEqualsMask(
+            this ILightGetter item,
+            ILightGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Light_Mask<bool>();
+            ((LightCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ILightInternalGetter item,
+            string name = null,
+            Light_Mask<bool> printMask = null)
+        {
+            return ((LightCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ILightInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Light_Mask<bool> printMask = null)
+        {
+            ((LightCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ILightInternalGetter item,
+            Light_Mask<bool?> checkMask)
+        {
+            return ((LightCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Light_Mask<bool> GetHasBeenSetMask(this ILightGetter item)
+        {
+            var ret = new Light_Mask<bool>();
+            ((LightCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1681,9 +1739,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class LightCommon
+    #region Common
+    public partial class LightCommon : ItemAbstractCommon
     {
+        public static readonly LightCommon Instance = new LightCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ILight item,
@@ -2018,8 +2077,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ILight item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ILight item)
         {
+            ClearPartial();
             item.Model_Unset();
             item.Script_Property.Unset();
             item.Name_Unset();
@@ -2034,23 +2096,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Weight = default(Single);
             item.Fade_Unset();
             item.Sound_Property.Unset();
+            base.Clear(item);
         }
 
-        public static Light_Mask<bool> GetEqualsMask(
-            this ILightGetter item,
-            ILightGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IItemAbstract item)
         {
-            var ret = new Light_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (ILight)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (ILight)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (ILight)item);
+        }
+
+        public void FillEqualsMask(
             ILightGetter item,
             ILightGetter rhs,
             Light_Mask<bool> ret,
@@ -2062,7 +2126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
@@ -2077,21 +2141,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.Fade = item.Fade_IsSet == rhs.Fade_IsSet && item.Fade.EqualsWithin(rhs.Fade);
             ret.Sound = item.Sound_Property.FormKey == rhs.Sound_Property.FormKey;
-            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this ILightGetter item,
+        public string ToString(
+            ILightGetter item,
             string name = null,
             Light_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ILightGetter item,
+        public void ToString(
+            ILightGetter item,
             FileGeneration fg,
             string name = null,
             Light_Mask<bool> printMask = null)
@@ -2107,71 +2175,86 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {item.Script_Property}");
-                }
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Time ?? true)
-                {
-                    fg.AppendLine($"Time => {item.Time}");
-                }
-                if (printMask?.Radius ?? true)
-                {
-                    fg.AppendLine($"Radius => {item.Radius}");
-                }
-                if (printMask?.Color ?? true)
-                {
-                    fg.AppendLine($"Color => {item.Color}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.FalloffExponent ?? true)
-                {
-                    fg.AppendLine($"FalloffExponent => {item.FalloffExponent}");
-                }
-                if (printMask?.FOV ?? true)
-                {
-                    fg.AppendLine($"FOV => {item.FOV}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {item.Value}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {item.Weight}");
-                }
-                if (printMask?.Fade ?? true)
-                {
-                    fg.AppendLine($"Fade => {item.Fade}");
-                }
-                if (printMask?.Sound ?? true)
-                {
-                    fg.AppendLine($"Sound => {item.Sound_Property}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ILightGetter item,
+        protected static void ToStringFields(
+            ILightGetter item,
+            FileGeneration fg,
+            Light_Mask<bool> printMask = null)
+        {
+            ItemAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Time ?? true)
+            {
+                fg.AppendLine($"Time => {item.Time}");
+            }
+            if (printMask?.Radius ?? true)
+            {
+                fg.AppendLine($"Radius => {item.Radius}");
+            }
+            if (printMask?.Color ?? true)
+            {
+                fg.AppendLine($"Color => {item.Color}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.FalloffExponent ?? true)
+            {
+                fg.AppendLine($"FalloffExponent => {item.FalloffExponent}");
+            }
+            if (printMask?.FOV ?? true)
+            {
+                fg.AppendLine($"FOV => {item.FOV}");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendLine($"Value => {item.Value}");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendLine($"Weight => {item.Weight}");
+            }
+            if (printMask?.Fade ?? true)
+            {
+                fg.AppendLine($"Fade => {item.Fade}");
+            }
+            if (printMask?.Sound ?? true)
+            {
+                fg.AppendLine($"Sound => {item.Sound_Property}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            ILightGetter item,
             Light_Mask<bool?> checkMask)
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
@@ -2181,34 +2264,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
             if (checkMask.Fade.HasValue && checkMask.Fade.Value != item.Fade_IsSet) return false;
             if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound_Property.HasBeenSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Light_Mask<bool> GetHasBeenSetMask(ILightGetter item)
+        public void FillHasBeenSetMask(
+            ILightGetter item,
+            Light_Mask<bool> mask)
         {
-            var ret = new Light_Mask<bool>();
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Script = item.Script_Property.HasBeenSet;
-            ret.Name = item.Name_IsSet;
-            ret.Icon = item.Icon_IsSet;
-            ret.Time = true;
-            ret.Radius = true;
-            ret.Color = true;
-            ret.Flags = true;
-            ret.FalloffExponent = true;
-            ret.FOV = true;
-            ret.Value = true;
-            ret.Weight = true;
-            ret.Fade = item.Fade_IsSet;
-            ret.Sound = item.Sound_Property.HasBeenSet;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static Light_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Name = item.Name_IsSet;
+            mask.Icon = item.Icon_IsSet;
+            mask.Time = true;
+            mask.Radius = true;
+            mask.Color = true;
+            mask.Flags = true;
+            mask.FalloffExponent = true;
+            mask.FOV = true;
+            mask.Value = true;
+            mask.Weight = true;
+            mask.Fade = item.Fade_IsSet;
+            mask.Sound = item.Sound_Property.HasBeenSet;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Light_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
@@ -2230,12 +2312,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static Light_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static Light_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -2253,12 +2329,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Light_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Light_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

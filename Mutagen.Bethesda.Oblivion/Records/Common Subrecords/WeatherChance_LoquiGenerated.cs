@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherChance_Registration.Instance;
         public static WeatherChance_Registration Registration => WeatherChance_Registration.Instance;
+        protected object CommonInstance => WeatherChanceCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public WeatherChance()
@@ -67,30 +69,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<WeatherChance>.GetEqualsMask(WeatherChance rhs, EqualsMaskHelper.Include include) => WeatherChanceCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IWeatherChanceGetter>.GetEqualsMask(IWeatherChanceGetter rhs, EqualsMaskHelper.Include include) => WeatherChanceCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<WeatherChance>.GetEqualsMask(WeatherChance rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IWeatherChanceGetter>.GetEqualsMask(IWeatherChanceGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            WeatherChance_Mask<bool> printMask = null)
-        {
-            return WeatherChanceCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            WeatherChanceCommon.ToString(this, fg, name: name, printMask: null);
+            WeatherChanceMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public WeatherChance_Mask<bool> GetHasBeenSetMask()
-        {
-            return WeatherChanceCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -495,19 +489,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            WeatherChanceCommon.Clear(this);
+            WeatherChanceCommon.Instance.Clear(this);
         }
-
 
         public static WeatherChance Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -573,6 +558,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class WeatherChanceMixIn
+    {
+        public static void Clear(this IWeatherChance item)
+        {
+            ((WeatherChanceCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static WeatherChance_Mask<bool> GetEqualsMask(
+            this IWeatherChanceGetter item,
+            IWeatherChanceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new WeatherChance_Mask<bool>();
+            ((WeatherChanceCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IWeatherChanceGetter item,
+            string name = null,
+            WeatherChance_Mask<bool> printMask = null)
+        {
+            return ((WeatherChanceCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IWeatherChanceGetter item,
+            FileGeneration fg,
+            string name = null,
+            WeatherChance_Mask<bool> printMask = null)
+        {
+            ((WeatherChanceCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IWeatherChanceGetter item,
+            WeatherChance_Mask<bool?> checkMask)
+        {
+            return ((WeatherChanceCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static WeatherChance_Mask<bool> GetHasBeenSetMask(this IWeatherChanceGetter item)
+        {
+            var ret = new WeatherChance_Mask<bool>();
+            ((WeatherChanceCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -771,9 +823,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class WeatherChanceCommon
+    #region Common
+    public partial class WeatherChanceCommon
     {
+        public static readonly WeatherChanceCommon Instance = new WeatherChanceCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IWeatherChance item,
@@ -820,27 +873,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IWeatherChance item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IWeatherChance item)
         {
+            ClearPartial();
             item.Weather = default(Weather);
             item.Chance = default(Int32);
         }
 
-        public static WeatherChance_Mask<bool> GetEqualsMask(
-            this IWeatherChanceGetter item,
-            IWeatherChanceGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new WeatherChance_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IWeatherChanceGetter item,
             IWeatherChanceGetter rhs,
             WeatherChance_Mask<bool> ret,
@@ -851,18 +893,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Chance = item.Chance == rhs.Chance;
         }
 
-        public static string ToString(
-            this IWeatherChanceGetter item,
+        public string ToString(
+            IWeatherChanceGetter item,
             string name = null,
             WeatherChance_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IWeatherChanceGetter item,
+        public void ToString(
+            IWeatherChanceGetter item,
             FileGeneration fg,
             string name = null,
             WeatherChance_Mask<bool> printMask = null)
@@ -878,31 +924,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Weather ?? true)
-                {
-                    fg.AppendLine($"Weather => {item.Weather_Property}");
-                }
-                if (printMask?.Chance ?? true)
-                {
-                    fg.AppendLine($"Chance => {item.Chance}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IWeatherChanceGetter item,
+        protected static void ToStringFields(
+            IWeatherChanceGetter item,
+            FileGeneration fg,
+            WeatherChance_Mask<bool> printMask = null)
+        {
+            if (printMask?.Weather ?? true)
+            {
+                fg.AppendLine($"Weather => {item.Weather_Property}");
+            }
+            if (printMask?.Chance ?? true)
+            {
+                fg.AppendLine($"Chance => {item.Chance}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IWeatherChanceGetter item,
             WeatherChance_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static WeatherChance_Mask<bool> GetHasBeenSetMask(IWeatherChanceGetter item)
+        public void FillHasBeenSetMask(
+            IWeatherChanceGetter item,
+            WeatherChance_Mask<bool> mask)
         {
-            var ret = new WeatherChance_Mask<bool>();
-            ret.Weather = true;
-            ret.Chance = true;
-            return ret;
+            mask.Weather = true;
+            mask.Chance = true;
         }
 
     }

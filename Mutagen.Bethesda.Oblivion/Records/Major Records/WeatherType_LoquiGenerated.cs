@@ -43,6 +43,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherType_Registration.Instance;
         public static WeatherType_Registration Registration => WeatherType_Registration.Instance;
+        protected object CommonInstance => WeatherTypeCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public WeatherType()
@@ -86,30 +88,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<WeatherType>.GetEqualsMask(WeatherType rhs, EqualsMaskHelper.Include include) => WeatherTypeCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IWeatherTypeGetter>.GetEqualsMask(IWeatherTypeGetter rhs, EqualsMaskHelper.Include include) => WeatherTypeCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<WeatherType>.GetEqualsMask(WeatherType rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IWeatherTypeGetter>.GetEqualsMask(IWeatherTypeGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            WeatherType_Mask<bool> printMask = null)
-        {
-            return WeatherTypeCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            WeatherTypeCommon.ToString(this, fg, name: name, printMask: null);
+            WeatherTypeMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public WeatherType_Mask<bool> GetHasBeenSetMask()
-        {
-            return WeatherTypeCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -545,19 +539,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            WeatherTypeCommon.Clear(this);
+            WeatherTypeCommon.Instance.Clear(this);
         }
-
 
         public static WeatherType Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -641,6 +626,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class WeatherTypeMixIn
+    {
+        public static void Clear(this IWeatherType item)
+        {
+            ((WeatherTypeCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static WeatherType_Mask<bool> GetEqualsMask(
+            this IWeatherTypeGetter item,
+            IWeatherTypeGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new WeatherType_Mask<bool>();
+            ((WeatherTypeCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IWeatherTypeGetter item,
+            string name = null,
+            WeatherType_Mask<bool> printMask = null)
+        {
+            return ((WeatherTypeCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IWeatherTypeGetter item,
+            FileGeneration fg,
+            string name = null,
+            WeatherType_Mask<bool> printMask = null)
+        {
+            ((WeatherTypeCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IWeatherTypeGetter item,
+            WeatherType_Mask<bool?> checkMask)
+        {
+            return ((WeatherTypeCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static WeatherType_Mask<bool> GetHasBeenSetMask(this IWeatherTypeGetter item)
+        {
+            var ret = new WeatherType_Mask<bool>();
+            ((WeatherTypeCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -863,9 +915,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class WeatherTypeCommon
+    #region Common
+    public partial class WeatherTypeCommon
     {
+        public static readonly WeatherTypeCommon Instance = new WeatherTypeCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IWeatherType item,
@@ -946,29 +999,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IWeatherType item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IWeatherType item)
         {
+            ClearPartial();
             item.Sunrise = default(Color);
             item.Day = default(Color);
             item.Sunset = default(Color);
             item.Night = default(Color);
         }
 
-        public static WeatherType_Mask<bool> GetEqualsMask(
-            this IWeatherTypeGetter item,
-            IWeatherTypeGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new WeatherType_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IWeatherTypeGetter item,
             IWeatherTypeGetter rhs,
             WeatherType_Mask<bool> ret,
@@ -981,18 +1023,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Night = item.Night.ColorOnlyEquals(rhs.Night);
         }
 
-        public static string ToString(
-            this IWeatherTypeGetter item,
+        public string ToString(
+            IWeatherTypeGetter item,
             string name = null,
             WeatherType_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IWeatherTypeGetter item,
+        public void ToString(
+            IWeatherTypeGetter item,
             FileGeneration fg,
             string name = null,
             WeatherType_Mask<bool> printMask = null)
@@ -1008,41 +1054,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Sunrise ?? true)
-                {
-                    fg.AppendLine($"Sunrise => {item.Sunrise}");
-                }
-                if (printMask?.Day ?? true)
-                {
-                    fg.AppendLine($"Day => {item.Day}");
-                }
-                if (printMask?.Sunset ?? true)
-                {
-                    fg.AppendLine($"Sunset => {item.Sunset}");
-                }
-                if (printMask?.Night ?? true)
-                {
-                    fg.AppendLine($"Night => {item.Night}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IWeatherTypeGetter item,
+        protected static void ToStringFields(
+            IWeatherTypeGetter item,
+            FileGeneration fg,
+            WeatherType_Mask<bool> printMask = null)
+        {
+            if (printMask?.Sunrise ?? true)
+            {
+                fg.AppendLine($"Sunrise => {item.Sunrise}");
+            }
+            if (printMask?.Day ?? true)
+            {
+                fg.AppendLine($"Day => {item.Day}");
+            }
+            if (printMask?.Sunset ?? true)
+            {
+                fg.AppendLine($"Sunset => {item.Sunset}");
+            }
+            if (printMask?.Night ?? true)
+            {
+                fg.AppendLine($"Night => {item.Night}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IWeatherTypeGetter item,
             WeatherType_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static WeatherType_Mask<bool> GetHasBeenSetMask(IWeatherTypeGetter item)
+        public void FillHasBeenSetMask(
+            IWeatherTypeGetter item,
+            WeatherType_Mask<bool> mask)
         {
-            var ret = new WeatherType_Mask<bool>();
-            ret.Sunrise = true;
-            ret.Day = true;
-            ret.Sunset = true;
-            ret.Night = true;
-            return ret;
+            mask.Sunrise = true;
+            mask.Day = true;
+            mask.Sunset = true;
+            mask.Night = true;
         }
 
     }

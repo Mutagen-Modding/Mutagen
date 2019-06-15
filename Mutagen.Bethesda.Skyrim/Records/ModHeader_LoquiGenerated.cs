@@ -44,6 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
         public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
+        protected object CommonInstance => ModHeaderCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public ModHeader()
@@ -191,17 +193,11 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<MasterReference> _MasterReferences = new SourceSetList<MasterReference>();
         public ISourceSetList<MasterReference> MasterReferences => _MasterReferences;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<MasterReference> MasterReferencesEnumerable
-        {
-            get => _MasterReferences.Items;
-            set => _MasterReferences.SetTo(value);
-        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<MasterReference> IModHeader.MasterReferences => _MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<MasterReference> IModHeaderGetter.MasterReferences => _MasterReferences;
+        IReadOnlySetList<IMasterReferenceGetter> IModHeaderGetter.MasterReferences => _MasterReferences;
         #endregion
 
         #endregion
@@ -232,30 +228,22 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        IMask<bool> IEqualsMask<ModHeader>.GetEqualsMask(ModHeader rhs, EqualsMaskHelper.Include include) => ModHeaderCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IModHeaderGetter>.GetEqualsMask(IModHeaderGetter rhs, EqualsMaskHelper.Include include) => ModHeaderCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ModHeader>.GetEqualsMask(ModHeader rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IModHeaderGetter>.GetEqualsMask(IModHeaderGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            ModHeader_Mask<bool> printMask = null)
-        {
-            return ModHeaderCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ModHeaderCommon.ToString(this, fg, name: name, printMask: null);
+            ModHeaderMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public ModHeader_Mask<bool> GetHasBeenSetMask()
-        {
-            return ModHeaderCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -715,8 +703,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
-                        }
-                        );
+                        });
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }
                 case 0x41544144: // DATA
@@ -874,19 +861,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            ModHeaderCommon.Clear(this);
+            ModHeaderCommon.Instance.Clear(this);
         }
-
 
         public static ModHeader Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1014,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region MasterReferences
-        IReadOnlySetList<MasterReference> MasterReferences { get; }
+        IReadOnlySetList<IMasterReferenceGetter> MasterReferences { get; }
         #endregion
         #region VestigialData
         UInt64 VestigialData { get; }
@@ -1024,6 +1002,73 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class ModHeaderMixIn
+    {
+        public static void Clear(this IModHeader item)
+        {
+            ((ModHeaderCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static ModHeader_Mask<bool> GetEqualsMask(
+            this IModHeaderGetter item,
+            IModHeaderGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ModHeader_Mask<bool>();
+            ((ModHeaderCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IModHeaderGetter item,
+            string name = null,
+            ModHeader_Mask<bool> printMask = null)
+        {
+            return ((ModHeaderCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IModHeaderGetter item,
+            FileGeneration fg,
+            string name = null,
+            ModHeader_Mask<bool> printMask = null)
+        {
+            ((ModHeaderCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IModHeaderGetter item,
+            ModHeader_Mask<bool?> checkMask)
+        {
+            return ((ModHeaderCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static ModHeader_Mask<bool> GetHasBeenSetMask(this IModHeaderGetter item)
+        {
+            var ret = new ModHeader_Mask<bool>();
+            ((ModHeaderCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1305,9 +1350,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class ModHeaderCommon
+    #region Common
+    public partial class ModHeaderCommon
     {
+        public static readonly ModHeaderCommon Instance = new ModHeaderCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IModHeader item,
@@ -1503,7 +1549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.MasterReferences);
                 try
                 {
-                    item.MasterReferences.SetToWithDefault(
+                    item.MasterReferences.SetToWithDefault<MasterReference, IMasterReferenceGetter>(
                         rhs: rhs.MasterReferences,
                         def: def?.MasterReferences,
                         converter: (r, d) =>
@@ -1511,7 +1557,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             switch (copyMask?.MasterReferences.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return r;
+                                    return (MasterReference)r;
                                 case CopyOption.MakeCopy:
                                     return MasterReference.Copy(
                                         r,
@@ -1520,8 +1566,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.MasterReferences.Overall}. Cannot execute copy.");
                             }
-                        }
-                        );
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1567,8 +1612,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        public static void Clear(IModHeader item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IModHeader item)
         {
+            ClearPartial();
             item.Fluff = default(Byte[]);
             item.Stats = default(ModStats);
             item.TypeOffsets_Unset();
@@ -1579,21 +1627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.VestigialData_Unset();
         }
 
-        public static ModHeader_Mask<bool> GetEqualsMask(
-            this IModHeaderGetter item,
-            IModHeaderGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new ModHeader_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IModHeaderGetter item,
             IModHeaderGetter rhs,
             ModHeader_Mask<bool> ret,
@@ -1601,7 +1635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
-            ret.Stats = MaskItemExt.Factory(ModStatsCommon.GetEqualsMask(item.Stats, rhs.Stats, include), include);
+            ret.Stats = MaskItemExt.Factory(item.Stats.GetEqualsMask(rhs.Stats, include), include);
             ret.TypeOffsets = item.TypeOffsets_IsSet == rhs.TypeOffsets_IsSet && ByteExt.EqualsFast(item.TypeOffsets, rhs.TypeOffsets);
             ret.Deleted = item.Deleted_IsSet == rhs.Deleted_IsSet && ByteExt.EqualsFast(item.Deleted, rhs.Deleted);
             ret.Author = item.Author_IsSet == rhs.Author_IsSet && string.Equals(item.Author, rhs.Author);
@@ -1613,18 +1647,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.VestigialData = item.VestigialData_IsSet == rhs.VestigialData_IsSet && item.VestigialData == rhs.VestigialData;
         }
 
-        public static string ToString(
-            this IModHeaderGetter item,
+        public string ToString(
+            IModHeaderGetter item,
             string name = null,
             ModHeader_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IModHeaderGetter item,
+        public void ToString(
+            IModHeaderGetter item,
             FileGeneration fg,
             string name = null,
             ModHeader_Mask<bool> printMask = null)
@@ -1640,58 +1678,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {item.Fluff}");
-                }
-                if (printMask?.Stats?.Overall ?? true)
-                {
-                    item.Stats?.ToString(fg, "Stats");
-                }
-                if (printMask?.TypeOffsets ?? true)
-                {
-                    fg.AppendLine($"TypeOffsets => {item.TypeOffsets}");
-                }
-                if (printMask?.Deleted ?? true)
-                {
-                    fg.AppendLine($"Deleted => {item.Deleted}");
-                }
-                if (printMask?.Author ?? true)
-                {
-                    fg.AppendLine($"Author => {item.Author}");
-                }
-                if (printMask?.Description ?? true)
-                {
-                    fg.AppendLine($"Description => {item.Description}");
-                }
-                if (printMask?.MasterReferences?.Overall ?? true)
-                {
-                    fg.AppendLine("MasterReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.MasterReferences)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.VestigialData ?? true)
-                {
-                    fg.AppendLine($"VestigialData => {item.VestigialData}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IModHeaderGetter item,
+        protected static void ToStringFields(
+            IModHeaderGetter item,
+            FileGeneration fg,
+            ModHeader_Mask<bool> printMask = null)
+        {
+            if (printMask?.Fluff ?? true)
+            {
+                fg.AppendLine($"Fluff => {item.Fluff}");
+            }
+            if (printMask?.Stats?.Overall ?? true)
+            {
+                item.Stats?.ToString(fg, "Stats");
+            }
+            if (printMask?.TypeOffsets ?? true)
+            {
+                fg.AppendLine($"TypeOffsets => {item.TypeOffsets}");
+            }
+            if (printMask?.Deleted ?? true)
+            {
+                fg.AppendLine($"Deleted => {item.Deleted}");
+            }
+            if (printMask?.Author ?? true)
+            {
+                fg.AppendLine($"Author => {item.Author}");
+            }
+            if (printMask?.Description ?? true)
+            {
+                fg.AppendLine($"Description => {item.Description}");
+            }
+            if (printMask?.MasterReferences?.Overall ?? true)
+            {
+                fg.AppendLine("MasterReferences =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.MasterReferences)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.VestigialData ?? true)
+            {
+                fg.AppendLine($"VestigialData => {item.VestigialData}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IModHeaderGetter item,
             ModHeader_Mask<bool?> checkMask)
         {
             if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != item.TypeOffsets_IsSet) return false;
@@ -1703,18 +1752,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return true;
         }
 
-        public static ModHeader_Mask<bool> GetHasBeenSetMask(IModHeaderGetter item)
+        public void FillHasBeenSetMask(
+            IModHeaderGetter item,
+            ModHeader_Mask<bool> mask)
         {
-            var ret = new ModHeader_Mask<bool>();
-            ret.Fluff = true;
-            ret.Stats = new MaskItem<bool, ModStats_Mask<bool>>(true, ModStatsCommon.GetHasBeenSetMask(item.Stats));
-            ret.TypeOffsets = item.TypeOffsets_IsSet;
-            ret.Deleted = item.Deleted_IsSet;
-            ret.Author = item.Author_IsSet;
-            ret.Description = item.Description_IsSet;
-            ret.MasterReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MasterReference_Mask<bool>>>>(item.MasterReferences.HasBeenSet, item.MasterReferences.WithIndex().Select((i) => new MaskItemIndexed<bool, MasterReference_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            ret.VestigialData = item.VestigialData_IsSet;
-            return ret;
+            mask.Fluff = true;
+            mask.Stats = new MaskItem<bool, ModStats_Mask<bool>>(true, item.Stats.GetHasBeenSetMask());
+            mask.TypeOffsets = item.TypeOffsets_IsSet;
+            mask.Deleted = item.Deleted_IsSet;
+            mask.Author = item.Author_IsSet;
+            mask.Description = item.Description_IsSet;
+            mask.MasterReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MasterReference_Mask<bool>>>>(item.MasterReferences.HasBeenSet, item.MasterReferences.WithIndex().Select((i) => new MaskItemIndexed<bool, MasterReference_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.VestigialData = item.VestigialData_IsSet;
         }
 
     }
@@ -1794,14 +1843,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (item.MasterReferences.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.MasterReferences) ?? true))
             {
-                ListXmlTranslation<MasterReference>.Instance.Write(
+                ListXmlTranslation<IMasterReferenceGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.MasterReferences),
                     item: item.MasterReferences,
                     fieldIndex: (int)ModHeader_FieldIndex.MasterReferences,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)ModHeader_FieldIndex.MasterReferences),
-                    transl: (XElement subNode, MasterReference subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IMasterReferenceGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         ((MasterReferenceXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
                             item: subItem,
@@ -1809,8 +1858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
-                    }
-                    );
+                    });
             }
             if (item.VestigialData_IsSet
                 && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.VestigialData) ?? true))
@@ -2917,12 +2965,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (item.MasterReferences.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                     writer: writer,
                     items: item.MasterReferences,
                     fieldIndex: (int)ModHeader_FieldIndex.MasterReferences,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, MasterReference subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IMasterReferenceGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         ((MasterReferenceBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
                             item: subItem,
@@ -2930,8 +2978,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
-                    }
-                    );
+                    });
             }
             if (item.VestigialData_IsSet)
             {

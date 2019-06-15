@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
         public static TeleportDestination_Registration Registration => TeleportDestination_Registration.Instance;
+        protected object CommonInstance => TeleportDestinationCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public TeleportDestination()
@@ -75,30 +77,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<TeleportDestination>.GetEqualsMask(TeleportDestination rhs, EqualsMaskHelper.Include include) => TeleportDestinationCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<ITeleportDestinationGetter>.GetEqualsMask(ITeleportDestinationGetter rhs, EqualsMaskHelper.Include include) => TeleportDestinationCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<TeleportDestination>.GetEqualsMask(TeleportDestination rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<ITeleportDestinationGetter>.GetEqualsMask(ITeleportDestinationGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            TeleportDestination_Mask<bool> printMask = null)
-        {
-            return TeleportDestinationCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            TeleportDestinationCommon.ToString(this, fg, name: name, printMask: null);
+            TeleportDestinationMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public TeleportDestination_Mask<bool> GetHasBeenSetMask()
-        {
-            return TeleportDestinationCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -532,19 +526,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            TeleportDestinationCommon.Clear(this);
+            TeleportDestinationCommon.Instance.Clear(this);
         }
-
 
         public static TeleportDestination Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -619,6 +604,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class TeleportDestinationMixIn
+    {
+        public static void Clear(this ITeleportDestination item)
+        {
+            ((TeleportDestinationCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static TeleportDestination_Mask<bool> GetEqualsMask(
+            this ITeleportDestinationGetter item,
+            ITeleportDestinationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new TeleportDestination_Mask<bool>();
+            ((TeleportDestinationCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this ITeleportDestinationGetter item,
+            string name = null,
+            TeleportDestination_Mask<bool> printMask = null)
+        {
+            return ((TeleportDestinationCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this ITeleportDestinationGetter item,
+            FileGeneration fg,
+            string name = null,
+            TeleportDestination_Mask<bool> printMask = null)
+        {
+            ((TeleportDestinationCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this ITeleportDestinationGetter item,
+            TeleportDestination_Mask<bool?> checkMask)
+        {
+            return ((TeleportDestinationCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static TeleportDestination_Mask<bool> GetHasBeenSetMask(this ITeleportDestinationGetter item)
+        {
+            var ret = new TeleportDestination_Mask<bool>();
+            ((TeleportDestinationCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -831,9 +883,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class TeleportDestinationCommon
+    #region Common
+    public partial class TeleportDestinationCommon
     {
+        public static readonly TeleportDestinationCommon Instance = new TeleportDestinationCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             ITeleportDestination item,
@@ -897,28 +950,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(ITeleportDestination item)
+        partial void ClearPartial();
+
+        public virtual void Clear(ITeleportDestination item)
         {
+            ClearPartial();
             item.Destination = default(IPlaced);
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
         }
 
-        public static TeleportDestination_Mask<bool> GetEqualsMask(
-            this ITeleportDestinationGetter item,
-            ITeleportDestinationGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new TeleportDestination_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             ITeleportDestinationGetter item,
             ITeleportDestinationGetter rhs,
             TeleportDestination_Mask<bool> ret,
@@ -930,18 +972,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
         }
 
-        public static string ToString(
-            this ITeleportDestinationGetter item,
+        public string ToString(
+            ITeleportDestinationGetter item,
             string name = null,
             TeleportDestination_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this ITeleportDestinationGetter item,
+        public void ToString(
+            ITeleportDestinationGetter item,
             FileGeneration fg,
             string name = null,
             TeleportDestination_Mask<bool> printMask = null)
@@ -957,36 +1003,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Destination ?? true)
-                {
-                    fg.AppendLine($"Destination => {item.Destination_Property}");
-                }
-                if (printMask?.Position ?? true)
-                {
-                    fg.AppendLine($"Position => {item.Position}");
-                }
-                if (printMask?.Rotation ?? true)
-                {
-                    fg.AppendLine($"Rotation => {item.Rotation}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this ITeleportDestinationGetter item,
+        protected static void ToStringFields(
+            ITeleportDestinationGetter item,
+            FileGeneration fg,
+            TeleportDestination_Mask<bool> printMask = null)
+        {
+            if (printMask?.Destination ?? true)
+            {
+                fg.AppendLine($"Destination => {item.Destination_Property}");
+            }
+            if (printMask?.Position ?? true)
+            {
+                fg.AppendLine($"Position => {item.Position}");
+            }
+            if (printMask?.Rotation ?? true)
+            {
+                fg.AppendLine($"Rotation => {item.Rotation}");
+            }
+        }
+
+        public bool HasBeenSet(
+            ITeleportDestinationGetter item,
             TeleportDestination_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static TeleportDestination_Mask<bool> GetHasBeenSetMask(ITeleportDestinationGetter item)
+        public void FillHasBeenSetMask(
+            ITeleportDestinationGetter item,
+            TeleportDestination_Mask<bool> mask)
         {
-            var ret = new TeleportDestination_Mask<bool>();
-            ret.Destination = true;
-            ret.Position = true;
-            ret.Rotation = true;
-            return ret;
+            mask.Destination = true;
+            mask.Position = true;
+            mask.Rotation = true;
         }
 
     }

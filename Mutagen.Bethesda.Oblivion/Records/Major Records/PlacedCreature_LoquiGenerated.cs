@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedCreature_Registration.Instance;
         public new static PlacedCreature_Registration Registration => PlacedCreature_Registration.Instance;
+        protected override object CommonInstance => PlacedCreatureCommon.Instance;
 
         #region Ctor
         protected PlacedCreature()
@@ -222,30 +223,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<PlacedCreature>.GetEqualsMask(PlacedCreature rhs, EqualsMaskHelper.Include include) => PlacedCreatureCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IPlacedCreatureGetter>.GetEqualsMask(IPlacedCreatureGetter rhs, EqualsMaskHelper.Include include) => PlacedCreatureCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<PlacedCreature>.GetEqualsMask(PlacedCreature rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IPlacedCreatureGetter>.GetEqualsMask(IPlacedCreatureGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            PlacedCreature_Mask<bool> printMask = null)
-        {
-            return PlacedCreatureCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            PlacedCreatureCommon.ToString(this, fg, name: name, printMask: null);
+            PlacedCreatureMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new PlacedCreature_Mask<bool> GetHasBeenSetMask()
-        {
-            return PlacedCreatureCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -976,10 +969,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            PlacedCreatureCommon.Clear(this);
+            PlacedCreatureCommon.Instance.Clear(this);
         }
-
 
         public new static PlacedCreature Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1151,6 +1142,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class PlacedCreatureMixIn
+    {
+        public static void Clear(this IPlacedCreatureInternal item)
+        {
+            ((PlacedCreatureCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static PlacedCreature_Mask<bool> GetEqualsMask(
+            this IPlacedCreatureGetter item,
+            IPlacedCreatureGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new PlacedCreature_Mask<bool>();
+            ((PlacedCreatureCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IPlacedCreatureInternalGetter item,
+            string name = null,
+            PlacedCreature_Mask<bool> printMask = null)
+        {
+            return ((PlacedCreatureCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IPlacedCreatureInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            PlacedCreature_Mask<bool> printMask = null)
+        {
+            ((PlacedCreatureCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IPlacedCreatureInternalGetter item,
+            PlacedCreature_Mask<bool?> checkMask)
+        {
+            return ((PlacedCreatureCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static PlacedCreature_Mask<bool> GetHasBeenSetMask(this IPlacedCreatureGetter item)
+        {
+            var ret = new PlacedCreature_Mask<bool>();
+            ((PlacedCreatureCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1461,9 +1519,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class PlacedCreatureCommon
+    #region Common
+    public partial class PlacedCreatureCommon : OblivionMajorRecordCommon
     {
+        public static readonly PlacedCreatureCommon Instance = new PlacedCreatureCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IPlacedCreature item,
@@ -1715,8 +1774,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IPlacedCreature item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IPlacedCreature item)
         {
+            ClearPartial();
             item.Base_Property.Unset();
             item.Owner_Property.Unset();
             item.FactionRank_Unset();
@@ -1726,23 +1788,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Scale_Unset();
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
+            base.Clear(item);
         }
 
-        public static PlacedCreature_Mask<bool> GetEqualsMask(
-            this IPlacedCreatureGetter item,
-            IPlacedCreatureGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new PlacedCreature_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IPlacedCreature)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IPlacedCreature)item);
+        }
+
+        public void FillEqualsMask(
             IPlacedCreatureGetter item,
             IPlacedCreatureGetter rhs,
             PlacedCreature_Mask<bool> ret,
@@ -1758,27 +1817,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.EnableParent_IsSet,
                 item.EnableParent,
                 rhs.EnableParent,
-                (loqLhs, loqRhs) => EnableParentCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && ByteExt.EqualsFast(item.RagdollData, rhs.RagdollData);
             ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale.EqualsWithin(rhs.Scale);
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IPlacedCreatureGetter item,
+        public string ToString(
+            IPlacedCreatureGetter item,
             string name = null,
             PlacedCreature_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IPlacedCreatureGetter item,
+        public void ToString(
+            IPlacedCreatureGetter item,
             FileGeneration fg,
             string name = null,
             PlacedCreature_Mask<bool> printMask = null)
@@ -1794,51 +1857,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Base ?? true)
-                {
-                    fg.AppendLine($"Base => {item.Base_Property}");
-                }
-                if (printMask?.Owner ?? true)
-                {
-                    fg.AppendLine($"Owner => {item.Owner_Property}");
-                }
-                if (printMask?.FactionRank ?? true)
-                {
-                    fg.AppendLine($"FactionRank => {item.FactionRank}");
-                }
-                if (printMask?.GlobalVariable ?? true)
-                {
-                    fg.AppendLine($"GlobalVariable => {item.GlobalVariable_Property}");
-                }
-                if (printMask?.EnableParent?.Overall ?? true)
-                {
-                    item.EnableParent?.ToString(fg, "EnableParent");
-                }
-                if (printMask?.RagdollData ?? true)
-                {
-                    fg.AppendLine($"RagdollData => {item.RagdollData}");
-                }
-                if (printMask?.Scale ?? true)
-                {
-                    fg.AppendLine($"Scale => {item.Scale}");
-                }
-                if (printMask?.Position ?? true)
-                {
-                    fg.AppendLine($"Position => {item.Position}");
-                }
-                if (printMask?.Rotation ?? true)
-                {
-                    fg.AppendLine($"Rotation => {item.Rotation}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IPlacedCreatureGetter item,
+        protected static void ToStringFields(
+            IPlacedCreatureGetter item,
+            FileGeneration fg,
+            PlacedCreature_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Base ?? true)
+            {
+                fg.AppendLine($"Base => {item.Base_Property}");
+            }
+            if (printMask?.Owner ?? true)
+            {
+                fg.AppendLine($"Owner => {item.Owner_Property}");
+            }
+            if (printMask?.FactionRank ?? true)
+            {
+                fg.AppendLine($"FactionRank => {item.FactionRank}");
+            }
+            if (printMask?.GlobalVariable ?? true)
+            {
+                fg.AppendLine($"GlobalVariable => {item.GlobalVariable_Property}");
+            }
+            if (printMask?.EnableParent?.Overall ?? true)
+            {
+                item.EnableParent?.ToString(fg, "EnableParent");
+            }
+            if (printMask?.RagdollData ?? true)
+            {
+                fg.AppendLine($"RagdollData => {item.RagdollData}");
+            }
+            if (printMask?.Scale ?? true)
+            {
+                fg.AppendLine($"Scale => {item.Scale}");
+            }
+            if (printMask?.Position ?? true)
+            {
+                fg.AppendLine($"Position => {item.Position}");
+            }
+            if (printMask?.Rotation ?? true)
+            {
+                fg.AppendLine($"Rotation => {item.Rotation}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IPlacedCreatureGetter item,
             PlacedCreature_Mask<bool?> checkMask)
         {
             if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
@@ -1849,29 +1927,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.EnableParent.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
             if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_IsSet) return false;
             if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static PlacedCreature_Mask<bool> GetHasBeenSetMask(IPlacedCreatureGetter item)
+        public void FillHasBeenSetMask(
+            IPlacedCreatureGetter item,
+            PlacedCreature_Mask<bool> mask)
         {
-            var ret = new PlacedCreature_Mask<bool>();
-            ret.Base = item.Base_Property.HasBeenSet;
-            ret.Owner = item.Owner_Property.HasBeenSet;
-            ret.FactionRank = item.FactionRank_IsSet;
-            ret.GlobalVariable = item.GlobalVariable_Property.HasBeenSet;
-            ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_IsSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent));
-            ret.RagdollData = item.RagdollData_IsSet;
-            ret.Scale = item.Scale_IsSet;
-            ret.Position = true;
-            ret.Rotation = true;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static PlacedCreature_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Base = item.Base_Property.HasBeenSet;
+            mask.Owner = item.Owner_Property.HasBeenSet;
+            mask.FactionRank = item.FactionRank_IsSet;
+            mask.GlobalVariable = item.GlobalVariable_Property.HasBeenSet;
+            mask.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_IsSet, item.EnableParent.GetHasBeenSetMask());
+            mask.RagdollData = item.RagdollData_IsSet;
+            mask.Scale = item.Scale_IsSet;
+            mask.Position = true;
+            mask.Rotation = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static PlacedCreature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1891,12 +1968,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static PlacedCreature_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static PlacedCreature_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

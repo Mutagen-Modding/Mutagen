@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
         public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
+        protected object CommonInstance => DistantLODDataCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public DistantLODData()
@@ -76,30 +78,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<DistantLODData>.GetEqualsMask(DistantLODData rhs, EqualsMaskHelper.Include include) => DistantLODDataCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IDistantLODDataGetter>.GetEqualsMask(IDistantLODDataGetter rhs, EqualsMaskHelper.Include include) => DistantLODDataCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<DistantLODData>.GetEqualsMask(DistantLODData rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IDistantLODDataGetter>.GetEqualsMask(IDistantLODDataGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            DistantLODData_Mask<bool> printMask = null)
-        {
-            return DistantLODDataCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            DistantLODDataCommon.ToString(this, fg, name: name, printMask: null);
+            DistantLODDataMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public DistantLODData_Mask<bool> GetHasBeenSetMask()
-        {
-            return DistantLODDataCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -522,19 +516,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            DistantLODDataCommon.Clear(this);
+            DistantLODDataCommon.Instance.Clear(this);
         }
-
 
         public static DistantLODData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -609,6 +594,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class DistantLODDataMixIn
+    {
+        public static void Clear(this IDistantLODData item)
+        {
+            ((DistantLODDataCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static DistantLODData_Mask<bool> GetEqualsMask(
+            this IDistantLODDataGetter item,
+            IDistantLODDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new DistantLODData_Mask<bool>();
+            ((DistantLODDataCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IDistantLODDataGetter item,
+            string name = null,
+            DistantLODData_Mask<bool> printMask = null)
+        {
+            return ((DistantLODDataCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IDistantLODDataGetter item,
+            FileGeneration fg,
+            string name = null,
+            DistantLODData_Mask<bool> printMask = null)
+        {
+            ((DistantLODDataCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IDistantLODDataGetter item,
+            DistantLODData_Mask<bool?> checkMask)
+        {
+            return ((DistantLODDataCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static DistantLODData_Mask<bool> GetHasBeenSetMask(this IDistantLODDataGetter item)
+        {
+            var ret = new DistantLODData_Mask<bool>();
+            ((DistantLODDataCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -821,9 +873,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class DistantLODDataCommon
+    #region Common
+    public partial class DistantLODDataCommon
     {
+        public static readonly DistantLODDataCommon Instance = new DistantLODDataCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IDistantLODData item,
@@ -887,28 +940,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IDistantLODData item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IDistantLODData item)
         {
+            ClearPartial();
             item.Unknown0 = default(Single);
             item.Unknown1 = default(Single);
             item.Unknown2 = default(Single);
         }
 
-        public static DistantLODData_Mask<bool> GetEqualsMask(
-            this IDistantLODDataGetter item,
-            IDistantLODDataGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new DistantLODData_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IDistantLODDataGetter item,
             IDistantLODDataGetter rhs,
             DistantLODData_Mask<bool> ret,
@@ -920,18 +962,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
         }
 
-        public static string ToString(
-            this IDistantLODDataGetter item,
+        public string ToString(
+            IDistantLODDataGetter item,
             string name = null,
             DistantLODData_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IDistantLODDataGetter item,
+        public void ToString(
+            IDistantLODDataGetter item,
             FileGeneration fg,
             string name = null,
             DistantLODData_Mask<bool> printMask = null)
@@ -947,36 +993,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Unknown0 ?? true)
-                {
-                    fg.AppendLine($"Unknown0 => {item.Unknown0}");
-                }
-                if (printMask?.Unknown1 ?? true)
-                {
-                    fg.AppendLine($"Unknown1 => {item.Unknown1}");
-                }
-                if (printMask?.Unknown2 ?? true)
-                {
-                    fg.AppendLine($"Unknown2 => {item.Unknown2}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IDistantLODDataGetter item,
+        protected static void ToStringFields(
+            IDistantLODDataGetter item,
+            FileGeneration fg,
+            DistantLODData_Mask<bool> printMask = null)
+        {
+            if (printMask?.Unknown0 ?? true)
+            {
+                fg.AppendLine($"Unknown0 => {item.Unknown0}");
+            }
+            if (printMask?.Unknown1 ?? true)
+            {
+                fg.AppendLine($"Unknown1 => {item.Unknown1}");
+            }
+            if (printMask?.Unknown2 ?? true)
+            {
+                fg.AppendLine($"Unknown2 => {item.Unknown2}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IDistantLODDataGetter item,
             DistantLODData_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static DistantLODData_Mask<bool> GetHasBeenSetMask(IDistantLODDataGetter item)
+        public void FillHasBeenSetMask(
+            IDistantLODDataGetter item,
+            DistantLODData_Mask<bool> mask)
         {
-            var ret = new DistantLODData_Mask<bool>();
-            ret.Unknown0 = true;
-            ret.Unknown1 = true;
-            ret.Unknown2 = true;
-            return ret;
+            mask.Unknown0 = true;
+            mask.Unknown1 = true;
+            mask.Unknown2 = true;
         }
 
     }

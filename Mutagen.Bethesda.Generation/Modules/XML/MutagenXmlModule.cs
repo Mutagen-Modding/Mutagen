@@ -301,8 +301,7 @@ namespace Mutagen.Bethesda.Generation
         protected override void FillPublicElement(ObjectGeneration obj, FileGeneration fg)
         {
             using (var args = new FunctionWrapper(fg,
-                $"public static void FillPublicElement_{ModuleNickname}{obj.GetGenericTypes(MaskType.Normal)}",
-                obj.GenericTypeMaskWheres(MaskType.Normal)))
+                $"public static void FillPublicElement_{ModuleNickname}"))
             {
                 args.Add($"{obj.Interface(getter: false, internalInterface: obj.HasInternalInterface)} item");
                 args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");

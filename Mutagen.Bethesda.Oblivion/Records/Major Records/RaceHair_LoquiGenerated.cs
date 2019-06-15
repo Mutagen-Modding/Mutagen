@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceHair_Registration.Instance;
         public static RaceHair_Registration Registration => RaceHair_Registration.Instance;
+        protected object CommonInstance => RaceHairCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
         public RaceHair()
@@ -64,30 +66,22 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Hair> IRaceHairGetter.Female_Property => this.Female_Property;
         #endregion
 
-        IMask<bool> IEqualsMask<RaceHair>.GetEqualsMask(RaceHair rhs, EqualsMaskHelper.Include include) => RaceHairCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IRaceHairGetter>.GetEqualsMask(IRaceHairGetter rhs, EqualsMaskHelper.Include include) => RaceHairCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<RaceHair>.GetEqualsMask(RaceHair rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IRaceHairGetter>.GetEqualsMask(IRaceHairGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            RaceHair_Mask<bool> printMask = null)
-        {
-            return RaceHairCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            RaceHairCommon.ToString(this, fg, name: name, printMask: null);
+            RaceHairMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public RaceHair_Mask<bool> GetHasBeenSetMask()
-        {
-            return RaceHairCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -490,19 +484,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial();
-
-        protected void CallClearPartial_Internal()
-        {
-            ClearPartial();
-        }
-
         public void Clear()
         {
-            CallClearPartial_Internal();
-            RaceHairCommon.Clear(this);
+            RaceHairCommon.Instance.Clear(this);
         }
-
 
         public static RaceHair Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -568,6 +553,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class RaceHairMixIn
+    {
+        public static void Clear(this IRaceHair item)
+        {
+            ((RaceHairCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static RaceHair_Mask<bool> GetEqualsMask(
+            this IRaceHairGetter item,
+            IRaceHairGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RaceHair_Mask<bool>();
+            ((RaceHairCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IRaceHairGetter item,
+            string name = null,
+            RaceHair_Mask<bool> printMask = null)
+        {
+            return ((RaceHairCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IRaceHairGetter item,
+            FileGeneration fg,
+            string name = null,
+            RaceHair_Mask<bool> printMask = null)
+        {
+            ((RaceHairCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IRaceHairGetter item,
+            RaceHair_Mask<bool?> checkMask)
+        {
+            return ((RaceHairCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static RaceHair_Mask<bool> GetHasBeenSetMask(this IRaceHairGetter item)
+        {
+            var ret = new RaceHair_Mask<bool>();
+            ((RaceHairCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -768,9 +820,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class RaceHairCommon
+    #region Common
+    public partial class RaceHairCommon
     {
+        public static readonly RaceHairCommon Instance = new RaceHairCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IRaceHair item,
@@ -817,27 +870,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IRaceHair item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IRaceHair item)
         {
+            ClearPartial();
             item.Male = default(Hair);
             item.Female = default(Hair);
         }
 
-        public static RaceHair_Mask<bool> GetEqualsMask(
-            this IRaceHairGetter item,
-            IRaceHairGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new RaceHair_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public static void FillEqualsMask(
+        public void FillEqualsMask(
             IRaceHairGetter item,
             IRaceHairGetter rhs,
             RaceHair_Mask<bool> ret,
@@ -848,18 +890,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Female = item.Female_Property.FormKey == rhs.Female_Property.FormKey;
         }
 
-        public static string ToString(
-            this IRaceHairGetter item,
+        public string ToString(
+            IRaceHairGetter item,
             string name = null,
             RaceHair_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IRaceHairGetter item,
+        public void ToString(
+            IRaceHairGetter item,
             FileGeneration fg,
             string name = null,
             RaceHair_Mask<bool> printMask = null)
@@ -875,31 +921,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Male ?? true)
-                {
-                    fg.AppendLine($"Male => {item.Male_Property}");
-                }
-                if (printMask?.Female ?? true)
-                {
-                    fg.AppendLine($"Female => {item.Female_Property}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IRaceHairGetter item,
+        protected static void ToStringFields(
+            IRaceHairGetter item,
+            FileGeneration fg,
+            RaceHair_Mask<bool> printMask = null)
+        {
+            if (printMask?.Male ?? true)
+            {
+                fg.AppendLine($"Male => {item.Male_Property}");
+            }
+            if (printMask?.Female ?? true)
+            {
+                fg.AppendLine($"Female => {item.Female_Property}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IRaceHairGetter item,
             RaceHair_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static RaceHair_Mask<bool> GetHasBeenSetMask(IRaceHairGetter item)
+        public void FillHasBeenSetMask(
+            IRaceHairGetter item,
+            RaceHair_Mask<bool> mask)
         {
-            var ret = new RaceHair_Mask<bool>();
-            ret.Male = true;
-            ret.Female = true;
-            return ret;
+            mask.Male = true;
+            mask.Female = true;
         }
 
     }

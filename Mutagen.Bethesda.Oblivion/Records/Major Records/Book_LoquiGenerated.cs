@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
         public new static Book_Registration Registration => Book_Registration.Instance;
+        protected override object CommonInstance => BookCommon.Instance;
 
         #region Ctor
         protected Book()
@@ -264,30 +265,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Book>.GetEqualsMask(Book rhs, EqualsMaskHelper.Include include) => BookCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IBookGetter>.GetEqualsMask(IBookGetter rhs, EqualsMaskHelper.Include include) => BookCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<Book>.GetEqualsMask(Book rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IBookGetter>.GetEqualsMask(IBookGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            Book_Mask<bool> printMask = null)
-        {
-            return BookCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            BookCommon.ToString(this, fg, name: name, printMask: null);
+            BookMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new Book_Mask<bool> GetHasBeenSetMask()
-        {
-            return BookCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -1041,10 +1034,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            BookCommon.Clear(this);
+            BookCommon.Instance.Clear(this);
         }
-
 
         public new static Book Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -1237,6 +1228,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class BookMixIn
+    {
+        public static void Clear(this IBookInternal item)
+        {
+            ((BookCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static Book_Mask<bool> GetEqualsMask(
+            this IBookGetter item,
+            IBookGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Book_Mask<bool>();
+            ((BookCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IBookInternalGetter item,
+            string name = null,
+            Book_Mask<bool> printMask = null)
+        {
+            return ((BookCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IBookInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Book_Mask<bool> printMask = null)
+        {
+            ((BookCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IBookInternalGetter item,
+            Book_Mask<bool?> checkMask)
+        {
+            return ((BookCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static Book_Mask<bool> GetHasBeenSetMask(this IBookGetter item)
+        {
+            var ret = new Book_Mask<bool>();
+            ((BookCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -1571,9 +1629,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class BookCommon
+    #region Common
+    public partial class BookCommon : ItemAbstractCommon
     {
+        public static readonly BookCommon Instance = new BookCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IBook item,
@@ -1870,8 +1929,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IBook item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IBook item)
         {
+            ClearPartial();
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
@@ -1883,23 +1945,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Teaches = default(Skill);
             item.Value = default(Single);
             item.Weight = default(Single);
+            base.Clear(item);
         }
 
-        public static Book_Mask<bool> GetEqualsMask(
-            this IBookGetter item,
-            IBookGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IItemAbstract item)
         {
-            var ret = new Book_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IBook)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (IBook)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IBook)item);
+        }
+
+        public void FillEqualsMask(
             IBookGetter item,
             IBookGetter rhs,
             Book_Mask<bool> ret,
@@ -1912,7 +1976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
@@ -1923,21 +1987,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Teaches = item.Teaches == rhs.Teaches;
             ret.Value = item.Value.EqualsWithin(rhs.Value);
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IBookGetter item,
+        public string ToString(
+            IBookGetter item,
             string name = null,
             Book_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IBookGetter item,
+        public void ToString(
+            IBookGetter item,
             FileGeneration fg,
             string name = null,
             Book_Mask<bool> printMask = null)
@@ -1953,59 +2021,74 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    item.Model?.ToString(fg, "Model");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {item.Script_Property}");
-                }
-                if (printMask?.Enchantment ?? true)
-                {
-                    fg.AppendLine($"Enchantment => {item.Enchantment_Property}");
-                }
-                if (printMask?.EnchantmentPoints ?? true)
-                {
-                    fg.AppendLine($"EnchantmentPoints => {item.EnchantmentPoints}");
-                }
-                if (printMask?.Description ?? true)
-                {
-                    fg.AppendLine($"Description => {item.Description}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.Teaches ?? true)
-                {
-                    fg.AppendLine($"Teaches => {item.Teaches}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {item.Value}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {item.Weight}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IBookGetter item,
+        protected static void ToStringFields(
+            IBookGetter item,
+            FileGeneration fg,
+            Book_Mask<bool> printMask = null)
+        {
+            ItemAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Enchantment ?? true)
+            {
+                fg.AppendLine($"Enchantment => {item.Enchantment_Property}");
+            }
+            if (printMask?.EnchantmentPoints ?? true)
+            {
+                fg.AppendLine($"EnchantmentPoints => {item.EnchantmentPoints}");
+            }
+            if (printMask?.Description ?? true)
+            {
+                fg.AppendLine($"Description => {item.Description}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Teaches ?? true)
+            {
+                fg.AppendLine($"Teaches => {item.Teaches}");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendLine($"Value => {item.Value}");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendLine($"Weight => {item.Weight}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+
+        public bool HasBeenSet(
+            IBookGetter item,
             Book_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -2016,31 +2099,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != item.Enchantment_Property.HasBeenSet) return false;
             if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != item.EnchantmentPoints_IsSet) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static Book_Mask<bool> GetHasBeenSetMask(IBookGetter item)
+        public void FillHasBeenSetMask(
+            IBookGetter item,
+            Book_Mask<bool> mask)
         {
-            var ret = new Book_Mask<bool>();
-            ret.Name = item.Name_IsSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Icon = item.Icon_IsSet;
-            ret.Script = item.Script_Property.HasBeenSet;
-            ret.Enchantment = item.Enchantment_Property.HasBeenSet;
-            ret.EnchantmentPoints = item.EnchantmentPoints_IsSet;
-            ret.Description = item.Description_IsSet;
-            ret.Flags = true;
-            ret.Teaches = true;
-            ret.Value = true;
-            ret.Weight = true;
-            ret.DATADataTypeState = true;
-            return ret;
-        }
-
-        public static Book_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Icon = item.Icon_IsSet;
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Enchantment = item.Enchantment_Property.HasBeenSet;
+            mask.EnchantmentPoints = item.EnchantmentPoints_IsSet;
+            mask.Description = item.Description_IsSet;
+            mask.Flags = true;
+            mask.Teaches = true;
+            mask.Value = true;
+            mask.Weight = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static Book_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
@@ -2062,12 +2144,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static Book_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static Book_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -2085,12 +2161,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static Book_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static Book_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

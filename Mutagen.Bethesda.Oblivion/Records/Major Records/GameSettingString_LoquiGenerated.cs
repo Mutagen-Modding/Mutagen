@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingString_Registration.Instance;
         public new static GameSettingString_Registration Registration => GameSettingString_Registration.Instance;
+        protected override object CommonInstance => GameSettingStringCommon.Instance;
 
         #region Ctor
         protected GameSettingString()
@@ -80,30 +81,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<GameSettingString>.GetEqualsMask(GameSettingString rhs, EqualsMaskHelper.Include include) => GameSettingStringCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<IGameSettingStringGetter>.GetEqualsMask(IGameSettingStringGetter rhs, EqualsMaskHelper.Include include) => GameSettingStringCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<GameSettingString>.GetEqualsMask(GameSettingString rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<IGameSettingStringGetter>.GetEqualsMask(IGameSettingStringGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            GameSettingString_Mask<bool> printMask = null)
-        {
-            return GameSettingStringCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            GameSettingStringCommon.ToString(this, fg, name: name, printMask: null);
+            GameSettingStringMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new GameSettingString_Mask<bool> GetHasBeenSetMask()
-        {
-            return GameSettingStringCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -582,10 +575,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            GameSettingStringCommon.Clear(this);
+            GameSettingStringCommon.Instance.Clear(this);
         }
-
 
         public new static GameSettingString Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
@@ -661,6 +652,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class GameSettingStringMixIn
+    {
+        public static void Clear(this IGameSettingStringInternal item)
+        {
+            ((GameSettingStringCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static GameSettingString_Mask<bool> GetEqualsMask(
+            this IGameSettingStringGetter item,
+            IGameSettingStringGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new GameSettingString_Mask<bool>();
+            ((GameSettingStringCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this IGameSettingStringInternalGetter item,
+            string name = null,
+            GameSettingString_Mask<bool> printMask = null)
+        {
+            return ((GameSettingStringCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this IGameSettingStringInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            GameSettingString_Mask<bool> printMask = null)
+        {
+            ((GameSettingStringCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this IGameSettingStringInternalGetter item,
+            GameSettingString_Mask<bool?> checkMask)
+        {
+            return ((GameSettingStringCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static GameSettingString_Mask<bool> GetHasBeenSetMask(this IGameSettingStringGetter item)
+        {
+            var ret = new GameSettingString_Mask<bool>();
+            ((GameSettingStringCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -855,9 +913,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class GameSettingStringCommon
+    #region Common
+    public partial class GameSettingStringCommon : GameSettingCommon
     {
+        public static readonly GameSettingStringCommon Instance = new GameSettingStringCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             IGameSettingString item,
@@ -906,26 +965,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(IGameSettingString item)
+        partial void ClearPartial();
+
+        public virtual void Clear(IGameSettingString item)
         {
+            ClearPartial();
             item.Data_Unset();
+            base.Clear(item);
         }
 
-        public static GameSettingString_Mask<bool> GetEqualsMask(
-            this IGameSettingStringGetter item,
-            IGameSettingStringGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IGameSetting item)
         {
-            var ret = new GameSettingString_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (IGameSettingString)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IOblivionMajorRecord item)
+        {
+            Clear(item: (IGameSettingString)item);
+        }
+
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (IGameSettingString)item);
+        }
+
+        public void FillEqualsMask(
             IGameSettingStringGetter item,
             IGameSettingStringGetter rhs,
             GameSettingString_Mask<bool> ret,
@@ -933,21 +997,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Data = item.Data_IsSet == rhs.Data_IsSet && string.Equals(item.Data, rhs.Data);
-            GameSettingCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this IGameSettingStringGetter item,
+        public string ToString(
+            IGameSettingStringGetter item,
             string name = null,
             GameSettingString_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this IGameSettingStringGetter item,
+        public void ToString(
+            IGameSettingStringGetter item,
             FileGeneration fg,
             string name = null,
             GameSettingString_Mask<bool> printMask = null)
@@ -963,33 +1031,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Data ?? true)
-                {
-                    fg.AppendLine($"Data => {item.Data}");
-                }
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this IGameSettingStringGetter item,
+        protected static void ToStringFields(
+            IGameSettingStringGetter item,
+            FileGeneration fg,
+            GameSettingString_Mask<bool> printMask = null)
+        {
+            GameSettingCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Data ?? true)
+            {
+                fg.AppendLine($"Data => {item.Data}");
+            }
+        }
+
+        public bool HasBeenSet(
+            IGameSettingStringGetter item,
             GameSettingString_Mask<bool?> checkMask)
         {
             if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_IsSet) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static GameSettingString_Mask<bool> GetHasBeenSetMask(IGameSettingStringGetter item)
+        public void FillHasBeenSetMask(
+            IGameSettingStringGetter item,
+            GameSettingString_Mask<bool> mask)
         {
-            var ret = new GameSettingString_Mask<bool>();
-            ret.Data = item.Data_IsSet;
-            return ret;
-        }
-
-        public static GameSettingString_FieldIndex? ConvertFieldIndex(GameSetting_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            mask.Data = item.Data_IsSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static GameSettingString_FieldIndex ConvertFieldIndex(GameSetting_FieldIndex index)
@@ -1011,12 +1093,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static GameSettingString_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
         public static GameSettingString_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1034,12 +1110,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static GameSettingString_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static GameSettingString_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)

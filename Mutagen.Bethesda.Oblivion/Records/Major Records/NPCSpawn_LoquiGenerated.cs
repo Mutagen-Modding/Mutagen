@@ -45,6 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NPCSpawn_Registration.Instance;
         public new static NPCSpawn_Registration Registration => NPCSpawn_Registration.Instance;
+        protected override object CommonInstance => NPCSpawnCommon.Instance;
 
         #region Ctor
         protected NPCSpawn()
@@ -55,30 +56,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        IMask<bool> IEqualsMask<NPCSpawn>.GetEqualsMask(NPCSpawn rhs, EqualsMaskHelper.Include include) => NPCSpawnCommon.GetEqualsMask(this, rhs, include);
-        IMask<bool> IEqualsMask<INPCSpawnGetter>.GetEqualsMask(INPCSpawnGetter rhs, EqualsMaskHelper.Include include) => NPCSpawnCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<NPCSpawn>.GetEqualsMask(NPCSpawn rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask<INPCSpawnGetter>.GetEqualsMask(INPCSpawnGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
         #region To String
-        public string ToString(
-            string name = null,
-            NPCSpawn_Mask<bool> printMask = null)
-        {
-            return NPCSpawnCommon.ToString(this, name: name, printMask: printMask);
-        }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            NPCSpawnCommon.ToString(this, fg, name: name, printMask: null);
+            NPCSpawnMixIn.ToString(
+                item: this,
+                name: name);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new NPCSpawn_Mask<bool> GetHasBeenSetMask()
-        {
-            return NPCSpawnCommon.GetHasBeenSetMask(this);
-        }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -405,10 +398,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CallClearPartial_Internal();
-            NPCSpawnCommon.Clear(this);
+            NPCSpawnCommon.Instance.Clear(this);
         }
-
 
         protected new static void CopyInInternal_NPCSpawn(NPCSpawn obj, KeyValuePair<ushort, object> pair)
         {
@@ -461,6 +452,73 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    #endregion
+
+    #region Common MixIn
+    public static class NPCSpawnMixIn
+    {
+        public static void Clear(this INPCSpawnInternal item)
+        {
+            ((NPCSpawnCommon)item.CommonInstance).Clear(item: item);
+        }
+
+        public static NPCSpawn_Mask<bool> GetEqualsMask(
+            this INPCSpawnGetter item,
+            INPCSpawnGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new NPCSpawn_Mask<bool>();
+            ((NPCSpawnCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
+        public static string ToString(
+            this INPCSpawnInternalGetter item,
+            string name = null,
+            NPCSpawn_Mask<bool> printMask = null)
+        {
+            return ((NPCSpawnCommon)item.CommonInstance).ToString(
+                item: item,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static void ToString(
+            this INPCSpawnInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            NPCSpawn_Mask<bool> printMask = null)
+        {
+            ((NPCSpawnCommon)item.CommonInstance).ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+        }
+
+        public static bool HasBeenSet(
+            this INPCSpawnInternalGetter item,
+            NPCSpawn_Mask<bool?> checkMask)
+        {
+            return ((NPCSpawnCommon)item.CommonInstance).HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+
+        public static NPCSpawn_Mask<bool> GetHasBeenSetMask(this INPCSpawnGetter item)
+        {
+            var ret = new NPCSpawn_Mask<bool>();
+            ((NPCSpawnCommon)item.CommonInstance).FillHasBeenSetMask(
+                item: item,
+                mask: ret);
+            return ret;
+        }
+
+    }
     #endregion
 
 }
@@ -651,9 +709,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Extensions
-    public static partial class NPCSpawnCommon
+    #region Common
+    public partial class NPCSpawnCommon : OblivionMajorRecordCommon
     {
+        public static readonly NPCSpawnCommon Instance = new NPCSpawnCommon();
         #region Copy Fields From
         public static void CopyFieldsFrom(
             INPCSpawn item,
@@ -672,46 +731,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(INPCSpawn item)
+        partial void ClearPartial();
+
+        public virtual void Clear(INPCSpawn item)
         {
+            ClearPartial();
+            base.Clear(item);
         }
 
-        public static NPCSpawn_Mask<bool> GetEqualsMask(
-            this INPCSpawnGetter item,
-            INPCSpawnGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        public override void Clear(IOblivionMajorRecord item)
         {
-            var ret = new NPCSpawn_Mask<bool>();
-            FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
+            Clear(item: (INPCSpawn)item);
         }
 
-        public static void FillEqualsMask(
+        public override void Clear(IMajorRecord item)
+        {
+            Clear(item: (INPCSpawn)item);
+        }
+
+        public void FillEqualsMask(
             INPCSpawnGetter item,
             INPCSpawnGetter rhs,
             NPCSpawn_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
 
-        public static string ToString(
-            this INPCSpawnGetter item,
+        public string ToString(
+            INPCSpawnGetter item,
             string name = null,
             NPCSpawn_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
-            item.ToString(fg, name, printMask);
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
             return fg.ToString();
         }
 
-        public static void ToString(
-            this INPCSpawnGetter item,
+        public void ToString(
+            INPCSpawnGetter item,
             FileGeneration fg,
             string name = null,
             NPCSpawn_Mask<bool> printMask = null)
@@ -727,27 +790,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
             }
             fg.AppendLine("]");
         }
 
-        public static bool HasBeenSet(
-            this INPCSpawnGetter item,
+        protected static void ToStringFields(
+            INPCSpawnGetter item,
+            FileGeneration fg,
+            NPCSpawn_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+        }
+
+        public bool HasBeenSet(
+            INPCSpawnGetter item,
             NPCSpawn_Mask<bool?> checkMask)
         {
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
 
-        public static NPCSpawn_Mask<bool> GetHasBeenSetMask(INPCSpawnGetter item)
+        public void FillHasBeenSetMask(
+            INPCSpawnGetter item,
+            NPCSpawn_Mask<bool> mask)
         {
-            var ret = new NPCSpawn_Mask<bool>();
-            return ret;
-        }
-
-        public static NPCSpawn_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
         }
 
         public static NPCSpawn_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -767,12 +844,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
-        }
-
-        public static NPCSpawn_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
         }
 
         public static NPCSpawn_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
