@@ -360,5 +360,78 @@ namespace Mutagen.Bethesda.Generation
         {
             throw new NotImplementedException();
         }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg, 
+            ObjectGeneration objGen,
+            TypeGeneration typeGen, 
+            Accessor dataAccessor,
+            int passedLength,
+            DataType data = null)
+        {
+            ListType list = typeGen as ListType;
+            if (!(list.SubTypeGeneration is LoquiType loqui))
+            {
+                throw new NotImplementedException();
+            }
+            if (loqui.TargetObjectGeneration.IsTypelessStruct())
+            {
+                var typeName = this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration);
+                if (list.HasBeenSet)
+                {
+                    fg.AppendLine($"private NulledSetList<{typeName}> _{typeGen.Name} = new NulledSetList<{typeName}>();");
+                }
+                else
+                {
+                    fg.AppendLine($"private List<{typeName}> _{typeGen.Name} = new List<{typeName}>();");
+                }
+                fg.AppendLine($"public IReadOnlySetList<{loqui.TypeName(getter: true)}> {typeGen.Name} => _{typeGen.Name};");
+            }
+            else
+            {
+                if (list.HasBeenSet)
+                {
+                    fg.AppendLine($"private NulledSetList<ushort> _{typeGen.Name}Locations = new NulledSetList<ushort>();");
+                }
+                else
+                {
+                    fg.AppendLine($"private List<ushort> _{typeGen.Name}Locations = new List<ushort>();");
+                }
+                fg.AppendLine($"public IReadOnlySetList<ushort> {typeGen.Name} => _{typeGen.Name};");
+            }
+        }
+
+        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
+
+        public override async Task GenerateWrapperRecordTypeParse(
+            FileGeneration fg, 
+            ObjectGeneration objGen,
+            TypeGeneration typeGen, 
+            Accessor locationAccessor)
+        {
+            ListType list = typeGen as ListType;
+            if (!(list.SubTypeGeneration is LoquiType loqui))
+            {
+                throw new NotImplementedException();
+            }
+            if (loqui.TargetObjectGeneration.IsTypelessStruct())
+            {
+                fg.AppendLine("throw new NotImplementedException();");
+                //fg.AppendLine($"var list = new List<{this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}>();");
+                //fg.AppendLine($"var span = _data.Slice({locationAccessor});");
+                //fg.AppendLine($"while ({locationAccessor} < _data.Length)");
+                //using (new BraceWrapper(fg))
+                //{
+                //    fg.AppendLine($"var created = {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory(_data.Slice({locationAccessor}), _meta);");
+                //    fg.AppendLine($"list.Add(created.Wrapper);");
+                //    fg.AppendLine($"{locationAccessor} += created.ParsedLength;");
+                //}
+                //fg.AppendLine($"_{typeGen.Name}.WrappedList = list;");
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

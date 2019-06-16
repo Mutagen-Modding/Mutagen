@@ -1,5 +1,6 @@
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -11,20 +12,22 @@ namespace Mutagen.Bethesda.Generation
 {
     public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGeneration
     {
+        public int? ExpectedLength { get; }
         private string typeName;
         protected bool? nullable;
         public bool Nullable => nullable ?? false || typeof(T).GetName().EndsWith("?");
         public bool PreferDirectTranslation = true;
-        public Action<FileGeneration, Accessor, Accessor> customRead;
-        public Action<FileGeneration, Accessor, Accessor> customWrite;
+        public Action<FileGeneration, Accessor, Accessor> CustomRead;
+        public Action<FileGeneration, Accessor, Accessor> CustomWrite;
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             return $"{Typename(typeGen)}BinaryTranslation.Instance";
         }
 
-        public PrimitiveBinaryTranslationGeneration(string typeName = null, bool? nullable = null)
+        public PrimitiveBinaryTranslationGeneration(int? expectedLen, string typeName = null, bool? nullable = null)
         {
+            this.ExpectedLength = expectedLen;
             this.nullable = nullable;
             this.typeName = typeName ?? typeof(T).GetName().Replace("?", string.Empty);
         }
@@ -46,9 +49,9 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
-            if (customWrite != null)
+            if (CustomWrite != null)
             {
-                customWrite(fg, writerAccessor, itemAccessor);
+                CustomWrite(fg, writerAccessor, itemAccessor);
             }
             else if (data.HasTrigger || !PreferDirectTranslation)
             {
@@ -113,9 +116,9 @@ namespace Mutagen.Bethesda.Generation
                 extraArgs.Add(get.Value);
             }
 
-            if (customRead != null)
+            if (CustomRead != null)
             {
-                customRead(fg, frameAccessor, itemAccessor);
+                CustomRead(fg, frameAccessor, itemAccessor);
             }
             else if (PreferDirectTranslation)
             {
@@ -177,6 +180,66 @@ namespace Mutagen.Bethesda.Generation
                     args.Add(get.Value);
                 }
             }
+        }
+
+        protected virtual string GenerateForTypicalWrapper(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor)
+        {
+            return $"BinaryPrimitives.Read{typeGen.TypeName(getter: true)}LittleEndian({dataAccessor})";
+        }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            int currentPosition,
+            DataType dataType = null)
+        {
+            var data = typeGen.GetFieldData();
+            if (data.HasTrigger)
+            {
+                fg.AppendLine($"private int? _{typeGen.Name}Location;");
+                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+            }
+            if (data.RecordType.HasValue)
+            {
+                if (dataType != null)
+                {
+                    throw new ArgumentException();
+                }
+                dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _meta)";
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor)} : default;");
+            }
+            else
+            {
+                if (this.ExpectedLength == null)
+                {
+                    throw new NotImplementedException();
+                }
+                var posStr = dataType == null ? $"{currentPosition}" : $"_{dataType.GetFieldData().RecordType}Location + {currentPosition}";
+                if (dataType == null)
+                {
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength.Value})")};");
+                }
+                else
+                {
+
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{dataType.GetFieldData().RecordType}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{dataType.GetFieldData().RecordType}Location.Value + {currentPosition}, {this.ExpectedLength.Value})")} : default;");
+                }
+            }
+        }
+
+        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            if (!data.RecordType.HasValue)
+            {
+                return this.ExpectedLength.Value;
+            }
+            return 0;
         }
     }
 }

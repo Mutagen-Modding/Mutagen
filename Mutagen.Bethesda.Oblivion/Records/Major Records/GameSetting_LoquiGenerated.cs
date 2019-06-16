@@ -1425,6 +1425,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class GameSettingBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IGameSettingInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => GameSetting_Registration.Instance;
+        public new static GameSetting_Registration Registration => GameSetting_Registration.Instance;
+        protected override object CommonInstance => GameSettingCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => GameSettingXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GameSettingBinaryWriteTranslation.Instance;
+
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GameSettingBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MasterReferences masterReferences,
+            MetaDataConstants meta)
+            : base(
+                bytes: bytes,
+                meta: meta,
+                masterReferences: masterReferences)
+        {
+            this._meta = meta;
+        }
+
+    }
+
     #endregion
 
     #endregion

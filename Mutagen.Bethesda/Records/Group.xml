@@ -5,7 +5,7 @@
       <Where>MajorRecord</Where>
     </Generic>
     <Fields>
-      <String name="ContainedRecordType" derivative="true" binary="Custom" />
+      <CustomLogic expectedLength="4" name="ContainedRecordTypeParse" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" length="4" nullable="NotNull" />
       <Dict name="Items" lengthLength="4" asyncItems="true" hasBeenSet="False" >

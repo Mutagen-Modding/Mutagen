@@ -1683,6 +1683,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class OblivionMajorRecordBinaryWrapper :
+        MajorRecordBinaryWrapper,
+        IOblivionMajorRecordInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => OblivionMajorRecord_Registration.Instance;
+        public new static OblivionMajorRecord_Registration Registration => OblivionMajorRecord_Registration.Instance;
+        protected override object CommonInstance => OblivionMajorRecordCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionMajorRecordInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => OblivionMajorRecordXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => OblivionMajorRecordBinaryWriteTranslation.Instance;
+
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected OblivionMajorRecordBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MasterReferences masterReferences,
+            MetaDataConstants meta)
+            : base(
+                bytes: bytes,
+                meta: meta,
+                masterReferences: masterReferences)
+        {
+            this._meta = meta;
+        }
+
+    }
+
     #endregion
 
     #endregion

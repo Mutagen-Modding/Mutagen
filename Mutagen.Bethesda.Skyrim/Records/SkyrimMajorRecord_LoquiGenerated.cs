@@ -1530,6 +1530,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
+    public partial class SkyrimMajorRecordBinaryWrapper :
+        MajorRecordBinaryWrapper,
+        ISkyrimMajorRecordInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
+        public new static SkyrimMajorRecord_Registration Registration => SkyrimMajorRecord_Registration.Instance;
+        protected override object CommonInstance => SkyrimMajorRecordCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimMajorRecordInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => SkyrimMajorRecordXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SkyrimMajorRecordBinaryWriteTranslation.Instance;
+
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected SkyrimMajorRecordBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MasterReferences masterReferences,
+            MetaDataConstants meta)
+            : base(
+                bytes: bytes,
+                meta: meta,
+                masterReferences: masterReferences)
+        {
+            this._meta = meta;
+        }
+
+    }
+
     #endregion
 
     #endregion

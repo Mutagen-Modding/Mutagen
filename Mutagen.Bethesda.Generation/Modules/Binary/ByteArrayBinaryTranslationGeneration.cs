@@ -1,5 +1,6 @@
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Mutagen.Bethesda.Generation
     {
         public ByteArrayBinaryTranslationGeneration()
             : base(nullable: true,
+                  expectedLen: null,
                   typeName: "ByteArray")
         {
         }
@@ -108,6 +110,40 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"length: {data.Length.Value}");
                 }
+            }
+        }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor, 
+            int currentPosition,
+            DataType _)
+        {
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            if (data.RecordType.HasValue)
+            {
+                fg.AppendLine($"private int? _{typeGen.Name}Location;");
+                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}(_data, _{typeGen.Name}Location.Value, _meta).ToArray() : default;");
+            }
+            else
+            {
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {dataAccessor}.Span.Slice({currentPosition}, {data.Length.Value}).ToArray();");
+            }
+        }
+
+        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            if (!data.RecordType.HasValue)
+            {
+                return checked((int)data.Length.Value);
+            }
+            else
+            {
+                return 0;
             }
         }
     }

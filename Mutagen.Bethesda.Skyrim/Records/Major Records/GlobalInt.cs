@@ -1,6 +1,7 @@
 ﻿using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Noggog;
 using Noggog.Notifying;
 using ReactiveUI;
 using System;
@@ -72,6 +73,17 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     writer.Write((float)item.Data);
                 }
+            }
+        }
+
+        public partial class GlobalIntBinaryWrapper
+        {
+            public override char TypeChar => GlobalInt.TRIGGER_CHAR;
+            public override float RawFloat => (float)this.Data;
+
+            public int GetDataCustom(ReadOnlySpan<byte> span, MasterReferences masterReferences)
+            {
+                return (int)span.GetFloat();
             }
         }
     }

@@ -1899,6 +1899,88 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class GlobalShortBinaryWrapper :
+        GlobalBinaryWrapper,
+        IGlobalShortInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => GlobalShort_Registration.Instance;
+        public new static GlobalShort_Registration Registration => GlobalShort_Registration.Instance;
+        protected override object CommonInstance => GlobalShortCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalShortInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => GlobalShortXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GlobalShortBinaryWriteTranslation.Instance;
+
+        #region Data
+        private int? _DataLocation;
+        public bool Data_IsSet => _DataLocation.HasValue;
+        public Int16 Data => GetDataCustom(
+            span: HeaderTranslation.ExtractSubrecordSpan(_data, _DataLocation.Value, _meta),
+            masterReferences: _masterReferences);
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GlobalShortBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MasterReferences masterReferences,
+            MetaDataConstants meta)
+            : base(
+                bytes: bytes,
+                meta: meta,
+                masterReferences: masterReferences)
+        {
+            this._meta = meta;
+        }
+
+        public static GlobalShortBinaryWrapper GlobalShortFactory(
+            BinaryMemoryReadStream stream,
+            MasterReferences masterReferences,
+            MetaDataConstants meta)
+        {
+            var ret = new GlobalShortBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, meta),
+                masterReferences: masterReferences,
+                meta: meta);
+            var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            var offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x56544C46: // FLTV
+                {
+                    _DataLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)GlobalShort_FieldIndex.Data);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

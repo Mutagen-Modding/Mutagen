@@ -1887,6 +1887,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ModStatsBinaryWrapper : IModStatsGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
+        public static ModStats_Registration Registration => ModStats_Registration.Instance;
+        protected object CommonInstance => ModStatsCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModStatsGetter)rhs, include);
+
+        protected object XmlWriteTranslator => ModStatsXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => ModStatsBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected MetaDataConstants _meta;
+
+        public Single Version => SpanExt.GetFloat(_data.Span.Slice(0, 4));
+        public Int32 NumRecords => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        public UInt32 NextObjectID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4));
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ModStatsBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MetaDataConstants meta)
+        {
+            this._data = bytes;
+            this._meta = meta;
+        }
+
+        public static ModStatsBinaryWrapper ModStatsFactory(
+            BinaryMemoryReadStream stream,
+            MetaDataConstants meta)
+        {
+            var ret = new ModStatsBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, meta),
+                meta: meta);
+            var finalPos = stream.Position + meta.SubRecord(stream.RemainingSpan).TotalLength;
+            var offset = stream.Position + meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x12;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

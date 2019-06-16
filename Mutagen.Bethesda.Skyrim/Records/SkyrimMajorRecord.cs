@@ -29,4 +29,15 @@ namespace Mutagen.Bethesda.Skyrim
             set => this.MajorRecordFlagsRaw = (int)value;
         }
     }
+
+    namespace Internals
+    {
+        public partial class SkyrimMajorRecordBinaryWrapper
+        {
+            public SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlags
+            {
+                get => (SkyrimMajorRecord.SkyrimMajorRecordFlag)this.MajorRecordFlagsRaw;
+            }
+        }
+    }
 }

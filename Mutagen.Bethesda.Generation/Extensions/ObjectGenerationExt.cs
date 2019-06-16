@@ -195,5 +195,36 @@ namespace Mutagen.Bethesda.Generation
         {
             return objGen.GetObjectType() == ObjectType.Subrecord && !objGen.HasRecordType();
         }
+
+        public static async Task<bool> GetNeedsMasters(this ObjectGeneration objGen)
+        {
+            if (objGen.GetObjectType() == ObjectType.Group) return true;
+            foreach (var field in objGen.IterateFields())
+            {
+                if (field is FormKeyType) return true;
+                if (field is FormIDType) return true;
+                if (field is ContainerType cont)
+                {
+                    if (cont.SubTypeGeneration is LoquiType loqui
+                        && await loqui.TargetObjectGeneration.GetNeedsMasters())
+                    {
+                        return true;
+                    }
+                }
+                if (field is DictType dict)
+                {
+                    if (dict.ValueTypeGen is LoquiType loqui
+                        && await loqui.TargetObjectGeneration.GetNeedsMasters())
+                    {
+                        return true;
+                    }
+                }
+            }
+            foreach (var baseObj in objGen.BaseClassTrail())
+            {
+                if (await baseObj.GetNeedsMasters()) return true;
+            }
+            return false;
+        }
     }
 }

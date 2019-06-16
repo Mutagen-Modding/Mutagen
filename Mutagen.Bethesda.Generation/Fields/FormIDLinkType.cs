@@ -24,9 +24,10 @@ namespace Mutagen.Bethesda.Generation
         public FormIDTypeEnum FormIDType;
 
         public override bool HasProperty => true;
-
+        
         public override string TypeName(bool getter) =>  $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{loquiType.TypeName(getter)}>";
 
+        public string GetTypeName(bool getter) => $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{loquiType.TypeName(getter)}>";
         public override Type Type(bool getter) => typeof(FormID);
 
         public override async Task Load(XElement node, bool requireName = true)

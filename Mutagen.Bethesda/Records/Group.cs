@@ -26,6 +26,10 @@ namespace Mutagen.Bethesda
 
         public IMod SourceMod { get; private set; }
 
+        public Group(IModGetter getter)
+        {
+        }
+
         public Group(IMod mod)
         {
             this.SourceMod = mod;
@@ -180,7 +184,7 @@ namespace Mutagen.Bethesda
 
         public partial class GroupBinaryWriteTranslation
         {
-            static partial void WriteBinaryContainedRecordTypeCustom<T>(
+            static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
                 MutagenWriter writer,
                 IGroupGetter<T> item,
                 MasterReferences masterReferences,
@@ -195,13 +199,93 @@ namespace Mutagen.Bethesda
 
         public partial class GroupBinaryCreateTranslation<T>
         {
-            static partial void FillBinaryContainedRecordTypeCustom(
+            static partial void FillBinaryContainedRecordTypeParseCustom(
                 MutagenFrame frame,
                 Group<T> item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
             {
                 frame.Reader.Position += 4;
+            }
+        }
+
+        public partial class GroupBinaryWrapper<T>
+        {
+            private class GroupMajorRecordCacheWrapper : IReadOnlyCache<T, FormKey>
+            {
+                private readonly IReadOnlyDictionary<FormKey, int> _locs;
+                private readonly ReadOnlyMemorySlice<byte> _data;
+                private readonly MasterReferences _masters;
+                private readonly MetaDataConstants _meta;
+
+                public GroupMajorRecordCacheWrapper(
+                    IReadOnlyDictionary<FormKey, int> locs,
+                    ReadOnlyMemorySlice<byte> data,
+                    MasterReferences masters,
+                    MetaDataConstants meta)
+                {
+                    this._locs = locs;
+                    this._data = data;
+                    this._masters = masters;
+                    this._meta = meta;
+                }
+
+                public T this[FormKey key] => ConstructWrapper(this._locs[key]);
+
+                public int Count => this._locs.Count;
+
+                public IEnumerable<FormKey> Keys => this._locs.Keys;
+
+                public IEnumerable<T> Values => this.Select(kv => kv.Value);
+
+                public bool ContainsKey(FormKey key) => this._locs.ContainsKey(key);
+
+                public IEnumerator<IKeyValue<T, FormKey>> GetEnumerator()
+                {
+                    foreach (var kv in this._locs)
+                    {
+                        yield return new KeyValue<T, FormKey>(kv.Key, ConstructWrapper(kv.Value));
+                    }
+                }
+
+                IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+
+                private T ConstructWrapper(int pos)
+                {
+                     return LoquiBinaryWrapperTranslation<T>.Create(
+                        stream: new BinaryMemoryReadStream(this._data.Slice(pos)),
+                        masterReferences: this._masters,
+                        meta: _meta);
+                }
+            }
+
+            private GroupMajorRecordCacheWrapper _Items;
+            public IReadOnlyCache<T, FormKey> Items => _Items;
+
+            partial void CustomCtor(BinaryMemoryReadStream stream, int offset)
+            {
+                Dictionary<FormKey, int> locationDict = new Dictionary<FormKey, int>();
+
+                var groupMeta = _meta.Group(stream.Data.Span.Slice(stream.Position - _meta.GroupConstants.HeaderLength));
+                var finalPos = stream.Position + groupMeta.ContentLength;
+                // Parse MajorRecord locations
+                while (stream.Position < finalPos)
+                {
+                    MajorRecordMeta majorMeta = this._meta.MajorRecord(stream.RemainingSpan);
+                    if (majorMeta.RecordType != GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE)
+                    {
+                        throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
+                    }
+                    var formKey = FormKey.Factory(_masterReferences, majorMeta.FormID.Raw);
+                    locationDict.Add(formKey, stream.Position - offset);
+                    stream.Position += checked((int)majorMeta.TotalLength);
+                }
+
+                _Items = new GroupMajorRecordCacheWrapper(
+                    locs: locationDict,
+                    data: this._data,
+                    masters: this._masterReferences,
+                    meta: this._meta);
             }
         }
     }

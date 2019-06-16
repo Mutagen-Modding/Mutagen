@@ -9,6 +9,7 @@ using System.Reactive.Linq;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -65,6 +66,17 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     writer.Write((float)item.Data);
                 }
+            }
+        }
+
+        public partial class GlobalShortBinaryWrapper
+        {
+            public override char TypeChar => GlobalShort.TRIGGER_CHAR;
+            public override float RawFloat => (float)this.Data;
+
+            public short GetDataCustom(ReadOnlySpan<byte> span, MasterReferences masterReferences)
+            {
+                return (short)span.GetFloat();
             }
         }
     }

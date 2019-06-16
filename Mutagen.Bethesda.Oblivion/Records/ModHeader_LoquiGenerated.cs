@@ -3132,6 +3132,137 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ModHeaderBinaryWrapper : IModHeaderGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
+        public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
+        protected object CommonInstance => ModHeaderCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderGetter)rhs, include);
+
+        protected object XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected MetaDataConstants _meta;
+
+        public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(0, 12).ToArray();
+        public IModStatsGetter Stats { get; private set; } = new ModStats();
+        #region TypeOffsets
+        private int? _TypeOffsetsLocation;
+        public bool TypeOffsets_IsSet => _TypeOffsetsLocation.HasValue;
+        public ReadOnlySpan<Byte> TypeOffsets => _TypeOffsetsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _TypeOffsetsLocation.Value, _meta).ToArray() : default;
+        #endregion
+        #region Deleted
+        private int? _DeletedLocation;
+        public bool Deleted_IsSet => _DeletedLocation.HasValue;
+        public ReadOnlySpan<Byte> Deleted => _DeletedLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _DeletedLocation.Value, _meta).ToArray() : default;
+        #endregion
+        #region Author
+        private int? _AuthorLocation;
+        public bool Author_IsSet => _AuthorLocation.HasValue;
+        public String Author => _AuthorLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _AuthorLocation.Value, _meta)) : default;
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public bool Description_IsSet => _DescriptionLocation.HasValue;
+        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _meta)) : default;
+        #endregion
+        #region MasterReferences
+        private NulledSetList<MasterReferenceBinaryWrapper> _MasterReferences = new NulledSetList<MasterReferenceBinaryWrapper>();
+        public IReadOnlySetList<IMasterReferenceGetter> MasterReferences => _MasterReferences;
+        #endregion
+        #region VestigialData
+        private int? _VestigialDataLocation;
+        public bool VestigialData_IsSet => _VestigialDataLocation.HasValue;
+        public UInt64 VestigialData => _VestigialDataLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VestigialDataLocation.Value, _meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ModHeaderBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MetaDataConstants meta)
+        {
+            this._data = bytes;
+            this._meta = meta;
+        }
+
+        public static ModHeaderBinaryWrapper ModHeaderFactory(
+            BinaryMemoryReadStream stream,
+            MetaDataConstants meta)
+        {
+            var ret = new ModHeaderBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, meta),
+                meta: meta);
+            var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            var offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x52444548: // HEDR
+                {
+                    this.Stats = ModStatsBinaryWrapper.ModStatsFactory(
+                        stream: stream,
+                        meta: _meta);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
+                }
+                case 0x5453464F: // OFST
+                {
+                    _TypeOffsetsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
+                }
+                case 0x454C4544: // DELE
+                {
+                    _DeletedLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    _AuthorLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
+                }
+                case 0x5453414D: // MAST
+                {
+                    throw new NotImplementedException();
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
+                }
+                case 0x41544144: // DATA
+                {
+                    _VestigialDataLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.VestigialData);
+                }
+                default:
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

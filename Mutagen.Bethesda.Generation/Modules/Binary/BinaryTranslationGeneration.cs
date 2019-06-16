@@ -62,5 +62,35 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor);
+
+        public virtual void GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            int passedLength,
+            DataType data = null)
+        {
+        }
+
+        public virtual void GenerateWrapperCtor(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen)
+        {
+        }
+
+        public abstract int GetPassedAmount(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen);
+
+        public virtual async Task GenerateWrapperRecordTypeParse(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor locationAccessor)
+        {
+            fg.AppendLine($"_{typeGen.Name}Location = (ushort){locationAccessor};");
+        }
     }
 }

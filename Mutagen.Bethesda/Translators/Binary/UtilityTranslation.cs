@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,6 +48,12 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder errorMask,
             G importMask,
             RecordTypeConverter recordTypeConverter);
+
+        public delegate TryGet<int?> RecordTypeFillWrapper(
+            BinaryMemoryReadStream stream,
+            long offset,
+            RecordType type,
+            int? lastParsed);
 
         public static M MajorRecordParse<M>(
             M record,
@@ -361,6 +368,92 @@ namespace Mutagen.Bethesda
             }
             frame.SetToFinalPosition();
             return record;
+        }
+
+        public static void FillModTypesForWrapper(
+            BinaryMemoryReadStream stream,
+            MetaDataConstants meta,
+            RecordTypeFillWrapper fill)
+        {
+            int? lastParsed = null;
+            ModHeaderMeta headerMeta = meta.Header(stream.RemainingSpan);
+            fill(
+                stream: stream,
+                offset: 0,
+                type: headerMeta.RecordType,
+                lastParsed: lastParsed);
+            while (!stream.Complete)
+            {
+                GroupRecordMeta groupMeta = meta.Group(stream.RemainingSpan);
+                if (!groupMeta.IsGroup)
+                {
+                    throw new ArgumentException("Did not see GRUP header as expected.");
+                }
+                var startPos = stream.Position;
+                var parsed = fill(
+                    stream: stream,
+                    offset: 0,
+                    type: groupMeta.ContainedRecordType,
+                    lastParsed: lastParsed);
+                if (parsed.Failed) break;
+                if (startPos == stream.Position)
+                {
+                    stream.Position += checked((int)groupMeta.TotalLength);
+                }
+                lastParsed = parsed.Value;
+            }
+        }
+
+        public static void FillRecordTypesForWrapper(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            long offset,
+            MetaDataConstants meta,
+            RecordTypeFillWrapper fill)
+        {
+            int? lastParsed = null;
+            while (stream.Position < finalPos)
+            {
+                MajorRecordMeta majorMeta = meta.MajorRecord(stream.RemainingSpan);
+                var startPos = stream.Position;
+                var parsed = fill(
+                    stream: stream,
+                    offset: offset,
+                    type: majorMeta.RecordType,
+                    lastParsed: lastParsed);
+                if (parsed.Failed) break;
+                if (startPos == stream.Position)
+                {
+                    stream.Position += checked((int)majorMeta.TotalLength);
+                }
+                lastParsed = parsed.Value;
+            }
+        }
+
+        public static void FillSubrecordTypesForWrapper(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            long offset,
+            MetaDataConstants meta,
+            RecordTypeFillWrapper fill)
+        {
+            int? lastParsed = null;
+            while (stream.Position < finalPos)
+            {
+                SubRecordMeta subMeta = meta.SubRecord(stream.RemainingSpan);
+                var startPos = stream.Position;
+                var parsed = fill(
+                    stream: stream,
+                    offset: offset,
+                    type: subMeta.RecordType,
+                    lastParsed: lastParsed);
+                if (parsed.Failed) break;
+                if (startPos == stream.Position)
+                {
+                    stream.Position += checked((int)subMeta.TotalLength);
+                }
+                lastParsed = parsed.Value;
+            }
         }
     }
 

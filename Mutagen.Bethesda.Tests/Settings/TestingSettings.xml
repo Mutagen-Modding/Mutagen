@@ -17,8 +17,8 @@
       <Bool name="ReuseCaches" />
       <Bool name="DeleteCachesAfter" default="true" />
       <Bool name="TestNormal" />
+      <Bool name="TestBinaryWrapper" />
       <Bool name="TestImport" />
-      <Bool name="TestObservable" />
       <Bool name="TestFolder" />
     </Fields>
   </Object>

@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Generation
             var dictType = typeGen as DictType;
             var keyMask = this.MaskModule.GetMaskModule(dictType.KeyTypeGen.GetType()).GetErrorMaskTypeStr(dictType.KeyTypeGen);
             var valMask = this.MaskModule.GetMaskModule(dictType.ValueTypeGen.GetType()).GetErrorMaskTypeStr(dictType.ValueTypeGen);
-            return $"{TranslatorName}<{dictType.KeyTypeGen.TypeName(getter)}, {dictType.ValueTypeGen.TypeName(getter)}, {keyMask}, {valMask}>.Instance";
+            return $"{TranslatorName}<{dictType.KeyTypeGen.TypeName(getter: getter)}, {dictType.ValueTypeGen.TypeName(getter: getter)}, {keyMask}, {valMask}>.Instance";
         }
 
         public override bool IsAsync(TypeGeneration gen, bool read)
@@ -295,5 +295,17 @@ namespace Mutagen.Bethesda.Generation
         {
             throw new NotImplementedException();
         }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            int passedLength,
+            DataType data = null)
+        {
+        }
+
+        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
     }
 }

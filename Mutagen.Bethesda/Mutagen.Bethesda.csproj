@@ -27,6 +27,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\NulledSetList.cs" />
+    <Compile Include="Translators\Binary\LoquiBinaryWrapperTranslation.cs" />
     <Compile Include="Translators\Binary\MetaData.cs" />
     <Compile Include="Core\Utility.cs" />
     <Compile Include="Interfaces\IGroup.cs" />

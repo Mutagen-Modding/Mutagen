@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda
 
         public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlySpan<byte> span, MetaDataConstants meta)
         {
-            span = span.Slice(meta.MajorRecordHeaderLength);
+            span = span.Slice(meta.MajorConstants.HeaderLength);
             var subRecordMeta = meta.SubRecord(span);
             if (Constants.EditorID != subRecordMeta.RecordType)
             {

@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda
     {
         public static readonly FormID NULL = new FormID();
         public readonly uint Raw;
-        public ModID ModID => new ModID((byte)(this.Raw >> 24));
+        public ModID ModID => new ModID(ModID.GetModIDByteFromUInt(this.Raw));
         public uint ID => this.Raw & 0x00FFFFFF;
 
         public FormID(ModID modID, uint id)

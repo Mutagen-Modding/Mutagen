@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda.Generation
     public class FormIDLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<FormKey>
     {
         public FormIDLinkBinaryTranslationGeneration()
+            : base(expectedLen: 4)
         {
             this.AdditionalWriteParams.Add(AdditionalParam);
             this.AdditionalCopyInParams.Add(AdditionalParam);

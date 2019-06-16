@@ -116,5 +116,59 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
         }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen, 
+            Accessor dataAccessor,
+            int currentPosition,
+            DataType dataType)
+        {
+            var eType = typeGen as EnumType;
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+
+            var posStr = dataType == null ? $"{currentPosition}" : $"_{dataType.GetFieldData().RecordType}Location.Value + {currentPosition}";
+            var slice = $"{dataAccessor}.Span.Slice({posStr}, {eType.ByteLength})";
+
+            string getType;
+            switch (eType.ByteLength)
+            {
+                case 1:
+                    getType = $"{slice}[{posStr}]";
+                    break;
+                case 2:
+                    getType = $"BinaryPrimitives.ReadUInt16LittleEndian({slice})";
+                    break;
+                case 4:
+                    getType = $"BinaryPrimitives.ReadInt32LittleEndian({slice})";
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+            if (data.RecordType.HasValue)
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                if (dataType == null)
+                {
+                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => ({eType.TypeName(getter: true)}){getType};");
+                }
+                else
+                {
+                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => _{dataType.GetFieldData().RecordType}Location.HasValue ? ({eType.TypeName(getter: true)}){getType} : default;");
+                }
+            }
+
+        }
+
+        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            var eType = typeGen as EnumType;
+            return eType.ByteLength;
+        }
     }
 }

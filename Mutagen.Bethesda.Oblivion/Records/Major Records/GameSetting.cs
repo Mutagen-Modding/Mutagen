@@ -8,6 +8,7 @@ using ReactiveUI;
 using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Linq;
+using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -32,7 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            var majorMeta = frame.MetaData.MajorRecord(frame);
+            var majorMeta = frame.MetaData.GetMajorRecord(frame);
             var settingType = GameSettingUtility.GetGameSettingType(frame.GetSpan(checked((int)majorMeta.TotalLength)), frame.MetaData);
             if (settingType.Failed)
             {
@@ -51,6 +52,35 @@ namespace Mutagen.Bethesda.Oblivion
                     errorMask.ReportExceptionOrThrow(
                         new ArgumentException($"Unknown game type: {settingType.Value}"));
                     return null;
+            }
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class GameSettingBinaryWrapper
+        {
+            public static GameSettingBinaryWrapper GameSettingFactory(
+                BinaryMemoryReadStream stream,
+                MasterReferences masterReferences,
+                MetaDataConstants meta)
+            {
+                var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingSpan, meta);
+                if (settingType.Failed)
+                {
+                    throw new ArgumentException($"Error splitting to desired GameSetting type: {settingType.Reason}");
+                }
+                switch (settingType.Value)
+                {
+                    case GameSettingType.Float:
+                        return GameSettingFloatBinaryWrapper.GameSettingFloatFactory(stream, masterReferences, meta);
+                    case GameSettingType.Int:
+                        return GameSettingIntBinaryWrapper.GameSettingIntFactory(stream, masterReferences, meta);
+                    case GameSettingType.String:
+                        return GameSettingStringBinaryWrapper.GameSettingStringFactory(stream, masterReferences, meta);
+                    default:
+                        throw new ArgumentException($"Unknown game type: {settingType.Value}");
+                }
             }
         }
     }

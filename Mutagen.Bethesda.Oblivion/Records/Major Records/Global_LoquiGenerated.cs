@@ -1517,6 +1517,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class GlobalBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IGlobalInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
+        public new static Global_Registration Registration => Global_Registration.Instance;
+        protected override object CommonInstance => GlobalCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => GlobalXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GlobalBinaryWriteTranslation.Instance;
+
+        #region TypeChar
+        private int? _TypeCharLocation;
+        public bool TypeChar_IsSet => _TypeCharLocation.HasValue;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GlobalBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MasterReferences masterReferences,
+            MetaDataConstants meta)
+            : base(
+                bytes: bytes,
+                meta: meta,
+                masterReferences: masterReferences)
+        {
+            this._meta = meta;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4D414E46: // FNAM
+                {
+                    _TypeCharLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed(null);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

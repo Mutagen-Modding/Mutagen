@@ -1,5 +1,7 @@
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Binary;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +21,7 @@ namespace Mutagen.Bethesda.Generation
         }
 
         public StringBinaryTranslationGeneration()
-            : base(nullable: true)
+            : base(nullable: true, expectedLen: null)
         {
         }
 
@@ -132,6 +134,14 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"length: {data.Length.Value}");
                 }
             }
+        }
+
+        protected override string GenerateForTypicalWrapper(
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen, 
+            Accessor dataAccessor)
+        {
+            return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor})";
         }
     }
 }

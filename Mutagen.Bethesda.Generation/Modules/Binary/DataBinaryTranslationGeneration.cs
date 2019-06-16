@@ -58,5 +58,65 @@ namespace Mutagen.Bethesda.Generation
         {
             throw new NotImplementedException();
         }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg, 
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor, 
+            int passedLength,
+            DataType _)
+        {
+            DataType dataType = typeGen as DataType;
+            
+            fg.AppendLine($"private ushort? _{dataType.GetFieldData().RecordType}Location;");
+            fg.AppendLine($"public {objGen.ObjectName}.{dataType.EnumName} {dataType.EnumName}State {{ get; private set; }}");
+
+            var dataPassedLength = 0;
+            foreach (var field in dataType.IterateFieldsWithMeta())
+            {
+                if (!this.Module.TryGetTypeGeneration(field.Field.GetType(), out var subTypeGen)) continue;
+                using (new RegionWrapper(fg, field.Field.Name)
+                {
+                    AppendExtraLine = false,
+                    SkipIfOnlyOneLine = true
+                })
+                {
+                    var data = field.Field.GetFieldData();
+                    if (data.Binary == BinaryGenerationType.Custom)
+                    {
+                        throw new NotImplementedException();
+                    }
+                    switch (data.Binary)
+                    {
+                        case BinaryGenerationType.DoNothing:
+                        case BinaryGenerationType.NoGeneration:
+                            continue;
+                        default:
+                            break;
+                    }
+                    subTypeGen.GenerateWrapperFields(
+                        fg,
+                        objGen,
+                        field.Field,
+                        dataAccessor,
+                        dataPassedLength,
+                        data: dataType);
+                    dataPassedLength += subTypeGen.GetPassedAmount(objGen, field.Field);
+                }
+            }
+        }
+
+        public override async Task GenerateWrapperRecordTypeParse(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen, 
+            Accessor locationAccessor)
+        {
+            DataType data = typeGen as DataType;
+            fg.AppendLine($"_{data.GetFieldData().RecordType}Location = (ushort){locationAccessor};");
+        }
+
+        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
     }
 }

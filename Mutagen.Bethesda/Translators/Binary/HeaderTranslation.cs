@@ -1,6 +1,7 @@
 ﻿using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -326,6 +327,46 @@ namespace Mutagen.Bethesda.Binary
                 lengthLength: Constants.SUBRECORD_LENGTHLENGTH,
                 offset: Constants.HEADER_LENGTH + offset);
             return ret;
+        }
+
+        public static ReadOnlyMemorySlice<byte> ExtractRecordMemory(ReadOnlyMemorySlice<byte> span, int loc, MetaDataConstants meta)
+        {
+            var majorMeta = meta.MajorRecord(span.Span.Slice(loc));
+            return span.Slice(loc + majorMeta.HeaderLength, checked((int)majorMeta.RecordLength));
+        }
+
+        public static ReadOnlySpan<byte> ExtractSubrecordSpan(ReadOnlyMemorySlice<byte> span, int loc, MetaDataConstants meta)
+        {
+            var subMeta = meta.SubRecord(span.Span.Slice(loc));
+            return span.Span.Slice(loc + subMeta.HeaderLength, checked((int)subMeta.RecordLength));
+        }
+
+        public static ReadOnlySpan<byte> ExtractRecordSpan(ReadOnlyMemorySlice<byte> span, int loc, MetaDataConstants meta)
+        {
+            var majorMeta = meta.MajorRecord(span.Span.Slice(loc));
+            return span.Span.Slice(loc + majorMeta.HeaderLength, checked((int)majorMeta.RecordLength));
+        }
+
+        public static ReadOnlyMemorySlice<byte> ExtractSubrecordWrapperMemory(ReadOnlyMemorySlice<byte> span, MetaDataConstants meta)
+        {
+            var subMeta = meta.SubRecord(span.Span);
+            return span.Slice(subMeta.HeaderLength, subMeta.RecordLength);
+        }
+
+        public static ReadOnlyMemorySlice<byte> ExtractRecordWrapperMemory(ReadOnlyMemorySlice<byte> span, MetaDataConstants meta)
+        {
+            var majorMeta = meta.MajorRecord(span.Span);
+            var len = majorMeta.RecordLength;
+            len += (byte)meta.MajorConstants.LengthAfterLength;
+            return span.Slice(meta.MajorConstants.TypeAndLengthLength, checked((int)len));
+        }
+
+        public static ReadOnlyMemorySlice<byte> ExtractGroupWrapperMemory(ReadOnlyMemorySlice<byte> span, MetaDataConstants meta)
+        {
+            var groupMeta = meta.Group(span.Span);
+            var len = groupMeta.ContentLength;
+            len += (byte)meta.GroupConstants.LengthAfterLength;
+            return span.Slice(meta.GroupConstants.TypeAndLengthLength, checked((int)len));
         }
     }
 }

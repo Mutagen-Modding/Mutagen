@@ -14100,6 +14100,226 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class OblivionModBinaryWrapper : IOblivionModGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
+        public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
+        protected object CommonInstance => OblivionModCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModGetter)rhs, include);
+
+        public GameMode GameMode => GameMode.Oblivion;
+        IReadOnlyCache<T, FormKey> IModGetter.GetGroup<T>() => this.GetGroup<T>();
+        void IModGetter.WriteToBinary(
+            string path,
+            ModKey modKey)
+        {
+            this.WriteToBinary(
+                path: path,
+                modKey: modKey);
+        }
+        IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
+        IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
+        protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected MetaDataConstants _meta;
+        public ModKey ModKey { get; }
+        private MasterReferences _masterReferences;
+
+        #region ModHeader
+        public IModHeaderGetter ModHeader { get; private set; } = new ModHeader();
+        public bool ModHeader_IsSet => ModHeader != null;
+        #endregion
+        public IGroupGetter<IGameSettingInternalGetter> GameSettings { get; private set; }
+        public IGroupGetter<IGlobalInternalGetter> Globals { get; private set; }
+        public IGroupGetter<IClassInternalGetter> Classes { get; private set; }
+        public IGroupGetter<IFactionInternalGetter> Factions { get; private set; }
+        public IGroupGetter<IHairInternalGetter> Hairs { get; private set; }
+        public IGroupGetter<IEyeInternalGetter> Eyes { get; private set; }
+        public IGroupGetter<IRaceInternalGetter> Races { get; private set; }
+        public IGroupGetter<ISoundInternalGetter> Sounds { get; private set; }
+        public IGroupGetter<ISkillRecordInternalGetter> Skills { get; private set; }
+        public IGroupGetter<IMagicEffectInternalGetter> MagicEffects { get; private set; }
+        public IGroupGetter<IScriptInternalGetter> Scripts { get; private set; }
+        public IGroupGetter<ILandTextureInternalGetter> LandTextures { get; private set; }
+        public IGroupGetter<IEnchantmentInternalGetter> Enchantments { get; private set; }
+        public IGroupGetter<ISpellUnleveledInternalGetter> Spells { get; private set; }
+        public IGroupGetter<IBirthsignInternalGetter> Birthsigns { get; private set; }
+        public IGroupGetter<IActivatorInternalGetter> Activators { get; private set; }
+        public IGroupGetter<IAlchemicalApparatusInternalGetter> AlchemicalApparatus { get; private set; }
+        public IGroupGetter<IArmorInternalGetter> Armors { get; private set; }
+        public IGroupGetter<IBookInternalGetter> Books { get; private set; }
+        public IGroupGetter<IClothingInternalGetter> Clothes { get; private set; }
+        public IGroupGetter<IContainerInternalGetter> Containers { get; private set; }
+        public IGroupGetter<IDoorInternalGetter> Doors { get; private set; }
+        public IGroupGetter<IIngredientInternalGetter> Ingredients { get; private set; }
+        public IGroupGetter<ILightInternalGetter> Lights { get; private set; }
+        public IGroupGetter<IMiscellaneousInternalGetter> Miscellaneous { get; private set; }
+        public IGroupGetter<IStaticInternalGetter> Statics { get; private set; }
+        public IGroupGetter<IGrassInternalGetter> Grasses { get; private set; }
+        public IGroupGetter<ITreeInternalGetter> Trees { get; private set; }
+        public IGroupGetter<IFloraInternalGetter> Flora { get; private set; }
+        public IGroupGetter<IFurnatureInternalGetter> Furnature { get; private set; }
+        public IGroupGetter<IWeaponInternalGetter> Weapons { get; private set; }
+        public IGroupGetter<IAmmoInternalGetter> Ammo { get; private set; }
+        public IGroupGetter<INPCInternalGetter> NPCs { get; private set; }
+        public IGroupGetter<ICreatureInternalGetter> Creatures { get; private set; }
+        public IGroupGetter<ILeveledCreatureInternalGetter> LeveledCreatures { get; private set; }
+        public IGroupGetter<ISoulGemInternalGetter> SoulGems { get; private set; }
+        public IGroupGetter<IKeyInternalGetter> Keys { get; private set; }
+        public IGroupGetter<IPotionInternalGetter> Potions { get; private set; }
+        public IGroupGetter<ISubspaceInternalGetter> Subspaces { get; private set; }
+        public IGroupGetter<ISigilStoneInternalGetter> SigilStones { get; private set; }
+        public IGroupGetter<ILeveledItemInternalGetter> LeveledItems { get; private set; }
+        public IGroupGetter<IWeatherInternalGetter> Weathers { get; private set; }
+        public IGroupGetter<IClimateInternalGetter> Climates { get; private set; }
+        public IGroupGetter<IRegionInternalGetter> Regions { get; private set; }
+        public IListGroupGetter<ICellBlockGetter> Cells { get; private set; } = new ListGroup<CellBlock>();
+        public IGroupGetter<IWorldspaceInternalGetter> Worldspaces { get; private set; }
+        public IGroupGetter<IDialogTopicInternalGetter> DialogTopics { get; private set; }
+        public IGroupGetter<IQuestInternalGetter> Quests { get; private set; }
+        public IGroupGetter<IIdleAnimationInternalGetter> IdleAnimations { get; private set; }
+        public IGroupGetter<IAIPackageInternalGetter> AIPackages { get; private set; }
+        public IGroupGetter<ICombatStyleInternalGetter> CombatStyles { get; private set; }
+        public IGroupGetter<ILoadScreenInternalGetter> LoadScreens { get; private set; }
+        public IGroupGetter<ILeveledSpellInternalGetter> LeveledSpells { get; private set; }
+        public IGroupGetter<IAnimatedObjectInternalGetter> AnimatedObjects { get; private set; }
+        public IGroupGetter<IWaterInternalGetter> Waters { get; private set; }
+        public IGroupGetter<IEffectShaderInternalGetter> EffectShaders { get; private set; }
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected OblivionModBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            ModKey modKey)
+        {
+            this._data = bytes;
+            this.ModKey = modKey;
+            this._meta = MetaDataConstants.Oblivion;
+            this.GameSettings = new Group<GameSetting>(this);
+            this.Globals = new Group<Global>(this);
+            this.Classes = new Group<Class>(this);
+            this.Factions = new Group<Faction>(this);
+            this.Hairs = new Group<Hair>(this);
+            this.Eyes = new Group<Eye>(this);
+            this.Races = new Group<Race>(this);
+            this.Sounds = new Group<Sound>(this);
+            this.Skills = new Group<SkillRecord>(this);
+            this.MagicEffects = new Group<MagicEffect>(this);
+            this.Scripts = new Group<Script>(this);
+            this.LandTextures = new Group<LandTexture>(this);
+            this.Enchantments = new Group<Enchantment>(this);
+            this.Spells = new Group<SpellUnleveled>(this);
+            this.Birthsigns = new Group<Birthsign>(this);
+            this.Activators = new Group<Activator>(this);
+            this.AlchemicalApparatus = new Group<AlchemicalApparatus>(this);
+            this.Armors = new Group<Armor>(this);
+            this.Books = new Group<Book>(this);
+            this.Clothes = new Group<Clothing>(this);
+            this.Containers = new Group<Container>(this);
+            this.Doors = new Group<Door>(this);
+            this.Ingredients = new Group<Ingredient>(this);
+            this.Lights = new Group<Light>(this);
+            this.Miscellaneous = new Group<Miscellaneous>(this);
+            this.Statics = new Group<Static>(this);
+            this.Grasses = new Group<Grass>(this);
+            this.Trees = new Group<Tree>(this);
+            this.Flora = new Group<Flora>(this);
+            this.Furnature = new Group<Furnature>(this);
+            this.Weapons = new Group<Weapon>(this);
+            this.Ammo = new Group<Ammo>(this);
+            this.NPCs = new Group<NPC>(this);
+            this.Creatures = new Group<Creature>(this);
+            this.LeveledCreatures = new Group<LeveledCreature>(this);
+            this.SoulGems = new Group<SoulGem>(this);
+            this.Keys = new Group<Key>(this);
+            this.Potions = new Group<Potion>(this);
+            this.Subspaces = new Group<Subspace>(this);
+            this.SigilStones = new Group<SigilStone>(this);
+            this.LeveledItems = new Group<LeveledItem>(this);
+            this.Weathers = new Group<Weather>(this);
+            this.Climates = new Group<Climate>(this);
+            this.Regions = new Group<Region>(this);
+            this.Worldspaces = new Group<Worldspace>(this);
+            this.DialogTopics = new Group<DialogTopic>(this);
+            this.Quests = new Group<Quest>(this);
+            this.IdleAnimations = new Group<IdleAnimation>(this);
+            this.AIPackages = new Group<AIPackage>(this);
+            this.CombatStyles = new Group<CombatStyle>(this);
+            this.LoadScreens = new Group<LoadScreen>(this);
+            this.LeveledSpells = new Group<LeveledSpell>(this);
+            this.AnimatedObjects = new Group<AnimatedObject>(this);
+            this.Waters = new Group<Water>(this);
+            this.EffectShaders = new Group<EffectShader>(this);
+        }
+
+        public static OblivionModBinaryWrapper OblivionModFactory(
+            ReadOnlyMemorySlice<byte> bytes,
+            ModKey modKey)
+        {
+            var ret = new OblivionModBinaryWrapper(
+                bytes: bytes,
+                modKey: modKey);
+            var stream = new BinaryMemoryReadStream(bytes);
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillModTypesForWrapper(
+                stream: stream,
+                meta: ret._meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x34534554: // TES4
+                {
+                    this.ModHeader = ModHeaderBinaryWrapper.ModHeaderFactory(
+                        stream: stream,
+                        meta: _meta);
+                    _masterReferences = new MasterReferences(
+                        this.ModHeader.MasterReferences.Select(
+                            master => new MasterReference()
+                            {
+                                Master = master.Master,
+                                FileSize = master.FileSize,
+                                 FileSize_IsSet = master.FileSize_IsSet
+                            })
+                            .ToList(),
+                        this.ModKey);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.ModHeader);
+                }
+                case 0x54534D47: // GMST
+                {
+                    this.GameSettings = GroupBinaryWrapper<IGameSettingInternalGetter>.GroupFactory(
+                        stream: stream,
+                        masterReferences: _masterReferences,
+                        meta: _meta);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.GameSettings);
+                }
+                case 0x424F4C47: // GLOB
+                {
+                    this.Globals = GroupBinaryWrapper<IGlobalInternalGetter>.GroupFactory(
+                        stream: stream,
+                        masterReferences: _masterReferences,
+                        meta: _meta);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Globals);
+                }
+                default:
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

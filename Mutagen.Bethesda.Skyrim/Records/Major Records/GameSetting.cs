@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            var majorMeta = frame.MetaData.MajorRecord(frame);
+            var majorMeta = frame.MetaData.GetMajorRecord(frame);
             var settingType = GameSettingUtility.GetGameSettingType(frame.GetSpan(checked((int)majorMeta.TotalLength)), frame.MetaData);
             if (settingType.Failed)
             {

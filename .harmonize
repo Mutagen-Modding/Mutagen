@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>aee873340d2e4f94850f4fe4edb5d1866ec567d8</Sha>
+         <Sha>18f3cb014ca8692a74b376af3ede147121c4cef9</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>07-05-2019 18:46:07</CommitDate>
-         <Description>HashHelper for spans</Description>
+         <CommitDate>07-07-2019 15:51:22</CommitDate>
+         <Description>ReadOnlyMemorySlice</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

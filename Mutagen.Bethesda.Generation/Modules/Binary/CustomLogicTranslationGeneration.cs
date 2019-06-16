@@ -219,5 +219,55 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
         }
+
+        public void GenerateFillForWrapper(
+            FileGeneration fg,
+            TypeGeneration field,
+            Accessor dataAccessor,
+            bool doMasters)
+        {
+            var data = field.GetFieldData();
+            if (data.HasTrigger)
+            {
+                fg.AppendLine($"private int? _{field.Name}Location;");
+                fg.AppendLine($"public bool {field.Name}_IsSet => _{field.Name}Location.HasValue;");
+            }
+            using (var args = new ArgsWrapper(fg,
+                $"public {field.TypeName(getter: true)} {field.Name} => Get{field.Name}Custom"))
+            {
+                args.Add($"span: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{field.Name}Location.Value, _meta)");
+                if (doMasters)
+                {
+                    args.Add($"masterReferences: _masterReferences");
+                }
+            }
+        }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg, 
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen, 
+            Accessor dataAccessor, 
+            int passedLength, 
+            DataType data = null)
+        {
+            var fieldData = typeGen.GetFieldData();
+            if (fieldData.HasTrigger)
+            {
+                fg.AppendLine($"private int? _{typeGen.Name}Location;");
+                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+            }
+        }
+
+        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            CustomLogic custom = typeGen as CustomLogic;
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            if (!data.RecordType.HasValue)
+            {
+                return custom.ExpectedLength.Value;
+            }
+            return 0;
+        }
     }
 }

@@ -3600,6 +3600,106 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class GrassBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IGrassInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
+        public new static Grass_Registration Registration => Grass_Registration.Instance;
+        protected override object CommonInstance => GrassCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGrassInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => GrassXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GrassBinaryWriteTranslation.Instance;
+
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        private ushort? _DATALocation;
+        public Grass.DATADataType DATADataTypeState { get; private set; }
+        public Byte Density => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 0] : default;
+        public Byte MinSlope => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 1] : default;
+        public Byte MaxSlope => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 2] : default;
+        public Byte Fluff1 => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 3] : default;
+        public UInt16 UnitFromWaterAmount => _DATALocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_DATALocation.Value + 4, 2)) : default;
+        public UInt16 Fluff2 => _DATALocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_DATALocation.Value + 6, 2)) : default;
+        public Grass.UnitFromWaterType UnitFromWaterMode => _DATALocation.HasValue ? (Grass.UnitFromWaterType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_DATALocation.Value + 8, 4)) : default;
+        public Single PositionRange => _DATALocation.HasValue ? SpanExt.GetFloat(_data.Span.Slice(_DATALocation.Value + 12, 4)) : default;
+        public Single HeightRange => _DATALocation.HasValue ? SpanExt.GetFloat(_data.Span.Slice(_DATALocation.Value + 16, 4)) : default;
+        public Single ColorRange => _DATALocation.HasValue ? SpanExt.GetFloat(_data.Span.Slice(_DATALocation.Value + 20, 4)) : default;
+        public Single WavePeriod => _DATALocation.HasValue ? SpanExt.GetFloat(_data.Span.Slice(_DATALocation.Value + 24, 4)) : default;
+        public Grass.GrassFlag Flags => _DATALocation.HasValue ? (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_DATALocation.Value + 28, 4)) : default;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GrassBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MasterReferences masterReferences,
+            MetaDataConstants meta)
+            : base(
+                bytes: bytes,
+                meta: meta,
+                masterReferences: masterReferences)
+        {
+            this._meta = meta;
+        }
+
+        public static GrassBinaryWrapper GrassFactory(
+            BinaryMemoryReadStream stream,
+            MasterReferences masterReferences,
+            MetaDataConstants meta)
+        {
+            var ret = new GrassBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, meta),
+                masterReferences: masterReferences,
+                meta: meta);
+            var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            var offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        meta: _meta);
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Flags);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

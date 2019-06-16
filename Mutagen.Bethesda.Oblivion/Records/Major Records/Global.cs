@@ -3,6 +3,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,11 +20,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial class Global
     {
-        protected static readonly RecordType FNAM = new RecordType("FNAM");
+        public static readonly RecordType FNAM = new RecordType("FNAM");
 
         public abstract float RawFloat { get; set; }
         public abstract char TypeChar { get; }
-        
+
         public static Global CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -110,6 +111,68 @@ namespace Mutagen.Bethesda.Oblivion
                     item.TypeChar,
                     header: Global_Registration.FNAM_HEADER,
                     nullable: false);
+            }
+        }
+
+        public abstract partial class GlobalBinaryWrapper
+        {
+            public abstract float RawFloat { get; }
+            public abstract char TypeChar { get; }
+
+            public static GlobalBinaryWrapper GlobalFactory(
+                BinaryMemoryReadStream stream,
+                MasterReferences masterReferences,
+                MetaDataConstants meta)
+            {
+                // Skip to FNAM
+                var majorMeta = meta.MajorRecord(stream.RemainingSpan);
+                if (majorMeta.RecordType != Global_Registration.GLOB_HEADER)
+                {
+                    throw new ArgumentException();
+                }
+                int pos = majorMeta.HeaderLength;
+                var edidMeta = meta.SubRecord(stream.RemainingSpan.Slice(pos));
+                if (edidMeta.RecordType != Mutagen.Bethesda.Constants.EditorID)
+                {
+                    throw new ArgumentException();
+                }
+                pos += edidMeta.TotalLength;
+
+                // Confirm FNAM
+                var fnamMeta = meta.SubRecord(stream.RemainingSpan.Slice(pos));
+                if (!fnamMeta.RecordType.Equals(Global.FNAM))
+                {
+                    throw new ArgumentException($"Could not find FNAM.");
+                }
+                if (fnamMeta.RecordLength != 1)
+                {
+                    throw new ArgumentException($"FNAM had non 1 length: {fnamMeta.RecordLength}");
+                }
+                pos += fnamMeta.HeaderLength;
+
+                // Create proper Global subclass
+                var triggerChar = (char)stream.RemainingSpan[pos];
+                Global g;
+                switch (triggerChar)
+                {
+                    case GlobalInt.TRIGGER_CHAR:
+                        return GlobalIntBinaryWrapper.GlobalIntFactory(
+                            stream,
+                            masterReferences,
+                            meta);
+                    case GlobalShort.TRIGGER_CHAR:
+                        return GlobalShortBinaryWrapper.GlobalShortFactory(
+                            stream,
+                            masterReferences,
+                            meta);
+                    case GlobalFloat.TRIGGER_CHAR:
+                        return GlobalFloatBinaryWrapper.GlobalFloatFactory(
+                            stream,
+                            masterReferences,
+                            meta);
+                    default:
+                        throw new ArgumentException($"Unknown trigger char: {triggerChar}");
+                }
             }
         }
     }

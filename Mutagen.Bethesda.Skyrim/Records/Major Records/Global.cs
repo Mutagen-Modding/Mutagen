@@ -3,6 +3,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -111,6 +112,19 @@ namespace Mutagen.Bethesda.Skyrim
                     header: Global_Registration.FNAM_HEADER,
                     nullable: false);
             }
+        }
+
+        public abstract partial class GlobalBinaryWrapper
+        {
+            public abstract float RawFloat { get; }
+            public abstract char TypeChar { get; }
+
+            //public static GameSettingBinaryWrapper Factory(
+            //    ReadOnlyMemorySlice<byte> data,
+            //    MasterReferences masterReferences,
+            //    MetaDataConstants meta)
+            //{
+            //}
         }
     }
 }

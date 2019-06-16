@@ -2601,6 +2601,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ConditionBinaryWrapper : IConditionGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
+        public static Condition_Registration Registration => Condition_Registration.Instance;
+        protected object CommonInstance => ConditionCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGetter)rhs, include);
+
+        protected object XmlWriteTranslator => ConditionXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => ConditionBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected MetaDataConstants _meta;
+
+        public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(1, 3).ToArray();
+        public Single ComparisonValue => SpanExt.GetFloat(_data.Span.Slice(4, 4));
+        public Function Function => (Function)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
+        public Int32 FirstParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));
+        public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(16, 4));
+        public Int32 ThirdParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(20, 4));
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ConditionBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MetaDataConstants meta)
+        {
+            this._data = bytes;
+            this._meta = meta;
+        }
+
+        public static ConditionBinaryWrapper ConditionFactory(
+            BinaryMemoryReadStream stream,
+            MetaDataConstants meta)
+        {
+            var ret = new ConditionBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, meta),
+                meta: meta);
+            var finalPos = stream.Position + meta.SubRecord(stream.RemainingSpan).TotalLength;
+            var offset = stream.Position + meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x1E;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

@@ -9,6 +9,7 @@ using System.Reactive.Linq;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Noggog;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -57,13 +58,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class GlobalShortBinaryCreateTranslation
-        {
-            static partial void FillBinaryDataCustom(MutagenFrame frame, GlobalShort item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-            {
-            }
-        }
-
         public partial class GlobalShortBinaryWriteTranslation
         {
             static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalShortInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
@@ -72,6 +66,17 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     writer.Write((float)item.Data);
                 }
+            }
+        }
+
+        public partial class GlobalShortBinaryWrapper
+        {
+            public override char TypeChar => GlobalShort.TRIGGER_CHAR;
+            public override float RawFloat => (float)this.Data;
+
+            public short GetDataCustom(ReadOnlySpan<byte> span, MasterReferences masterReferences)
+            {
+                return (short)span.GetFloat();
             }
         }
     }

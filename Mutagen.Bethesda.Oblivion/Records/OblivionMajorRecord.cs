@@ -29,4 +29,15 @@ namespace Mutagen.Bethesda.Oblivion
             set => this.MajorRecordFlagsRaw = (int)value;
         }
     }
+
+    namespace Internals
+    {
+        public partial class OblivionMajorRecordBinaryWrapper
+        {
+            public OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags
+            {
+                get => (OblivionMajorRecord.OblivionMajorRecordFlag)this.MajorRecordFlagsRaw;
+            }
+        }
+    }
 }

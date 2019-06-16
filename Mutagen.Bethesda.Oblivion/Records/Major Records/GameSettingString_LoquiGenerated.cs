@@ -1871,6 +1871,86 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class GameSettingStringBinaryWrapper :
+        GameSettingBinaryWrapper,
+        IGameSettingStringInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => GameSettingString_Registration.Instance;
+        public new static GameSettingString_Registration Registration => GameSettingString_Registration.Instance;
+        protected override object CommonInstance => GameSettingStringCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingStringInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => GameSettingStringXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GameSettingStringBinaryWriteTranslation.Instance;
+
+        #region Data
+        private int? _DataLocation;
+        public bool Data_IsSet => _DataLocation.HasValue;
+        public String Data => _DataLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DataLocation.Value, _meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GameSettingStringBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MasterReferences masterReferences,
+            MetaDataConstants meta)
+            : base(
+                bytes: bytes,
+                meta: meta,
+                masterReferences: masterReferences)
+        {
+            this._meta = meta;
+        }
+
+        public static GameSettingStringBinaryWrapper GameSettingStringFactory(
+            BinaryMemoryReadStream stream,
+            MasterReferences masterReferences,
+            MetaDataConstants meta)
+        {
+            var ret = new GameSettingStringBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, meta),
+                masterReferences: masterReferences,
+                meta: meta);
+            var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            var offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    _DataLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)GameSettingString_FieldIndex.Data);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

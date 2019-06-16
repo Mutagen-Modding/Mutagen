@@ -184,6 +184,6 @@ namespace Mutagen.Bethesda.Binary
         public sbyte HeaderLength => meta.SubConstants.HeaderLength;
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
         public ushort RecordLength => BinaryPrimitives.ReadUInt16LittleEndian(this.Span.Slice(4, 2));
-        public long TotalLength => this.HeaderLength + this.RecordLength;
+        public int TotalLength => this.HeaderLength + this.RecordLength;
     }
 }

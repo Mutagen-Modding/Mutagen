@@ -1841,6 +1841,90 @@ namespace Mutagen.Bethesda.Internals
     }
     #endregion
 
+    public partial class MasterReferenceBinaryWrapper : IMasterReferenceGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
+        public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
+        protected object CommonInstance => MasterReferenceCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceGetter)rhs, include);
+
+        protected object XmlWriteTranslator => MasterReferenceXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => MasterReferenceBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected MetaDataConstants _meta;
+
+        #region Master
+        private int? _MasterLocation;
+        public bool Master_IsSet => _MasterLocation.HasValue;
+        public ModKey Master => _MasterLocation.HasValue ? ModKey.Factory(BinaryStringUtility.ToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MasterLocation.Value, _meta))) : default;
+        #endregion
+        #region FileSize
+        private int? _FileSizeLocation;
+        public bool FileSize_IsSet => _FileSizeLocation.HasValue;
+        public UInt64 FileSize => _FileSizeLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FileSizeLocation.Value, _meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected MasterReferenceBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MetaDataConstants meta)
+        {
+            this._data = bytes;
+            this._meta = meta;
+        }
+
+        public static MasterReferenceBinaryWrapper MasterReferenceFactory(
+            BinaryMemoryReadStream stream,
+            MetaDataConstants meta)
+        {
+            var ret = new MasterReferenceBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, meta),
+                meta: meta);
+            var finalPos = stream.Position + meta.SubRecord(stream.RemainingSpan).TotalLength;
+            var offset = stream.Position + meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x0 + meta.SubConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x5453414D: // MAST
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
+                    _MasterLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
+                }
+                case 0x41544144: // DATA
+                {
+                    _FileSizeLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
+                }
+                default:
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

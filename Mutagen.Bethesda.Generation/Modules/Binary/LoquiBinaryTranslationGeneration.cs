@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Generation
             var loquiGen = typeGen as LoquiType;
             if (loquiGen.CanStronglyType)
             {
-                return $"LoquiBinaryTranslation<{loquiGen.TypeName(getter)}>.Instance";
+                return $"LoquiBinaryTranslation<{loquiGen.TypeName(getter: getter)}>.Instance";
             }
             else
             {
@@ -233,6 +233,80 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
                 }
+            }
+        }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            int passedLength,
+            DataType _)
+        {
+            LoquiType loqui = typeGen as LoquiType;
+            switch (loqui.SingletonType)
+            {
+                case SingletonLevel.None:
+                    fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} {{ get; private set; }}");
+                    break;
+                case SingletonLevel.NotNull:
+                case SingletonLevel.Singleton:
+                    if (loqui.ThisConstruction)
+                    {
+                        fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} {{ get; private set; }}");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} {{ get; private set; }} = new {loqui.DirectTypeName}();");
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if (typeGen.HasBeenSet)
+            {
+                fg.AppendLine($"public bool {typeGen.Name}_IsSet => {typeGen.Name} != null;");
+            }
+        }
+
+        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
+
+        public override void GenerateWrapperCtor(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            LoquiType loqui = typeGen as LoquiType;
+            switch (loqui.SingletonType)
+            {
+                case SingletonLevel.None:
+                    break;
+                case SingletonLevel.NotNull:
+                case SingletonLevel.Singleton:
+                    if (loqui.ThisConstruction)
+                    {
+                        fg.AppendLine($"this.{typeGen.Name} = new {loqui.DirectTypeName}(this);");
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public override async Task GenerateWrapperRecordTypeParse(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor locationAccessor)
+        {
+            LoquiType loqui = typeGen as LoquiType;
+            using (var args = new ArgsWrapper(fg,
+                $"this.{typeGen.Name} = {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}{loqui.GenericTypes(getter: true)}.{loqui.TargetObjectGeneration.Name}Factory"))
+            {
+                args.Add($"stream: stream");
+                if (await loqui.TargetObjectGeneration.GetNeedsMasters())
+                {
+                    args.Add($"masterReferences: _masterReferences");
+                }
+                args.Add($"meta: _meta");
             }
         }
     }

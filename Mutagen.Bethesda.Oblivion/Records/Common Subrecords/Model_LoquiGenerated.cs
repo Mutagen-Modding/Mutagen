@@ -1996,6 +1996,100 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ModelBinaryWrapper : IModelGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
+        public static Model_Registration Registration => Model_Registration.Instance;
+        protected object CommonInstance => ModelCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModelGetter)rhs, include);
+
+        protected object XmlWriteTranslator => ModelXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected MetaDataConstants _meta;
+
+        #region File
+        private int? _FileLocation;
+        public bool File_IsSet => _FileLocation.HasValue;
+        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FileLocation.Value, _meta)) : default;
+        #endregion
+        #region BoundRadius
+        private int? _BoundRadiusLocation;
+        public bool BoundRadius_IsSet => _BoundRadiusLocation.HasValue;
+        public Single BoundRadius => _BoundRadiusLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _BoundRadiusLocation.Value, _meta)) : default;
+        #endregion
+        #region Hashes
+        private int? _HashesLocation;
+        public bool Hashes_IsSet => _HashesLocation.HasValue;
+        public ReadOnlySpan<Byte> Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _HashesLocation.Value, _meta).ToArray() : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ModelBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MetaDataConstants meta)
+        {
+            this._data = bytes;
+            this._meta = meta;
+        }
+
+        public static ModelBinaryWrapper ModelFactory(
+            BinaryMemoryReadStream stream,
+            MetaDataConstants meta)
+        {
+            var ret = new ModelBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, meta),
+                meta: meta);
+            var finalPos = stream.Position + meta.SubRecord(stream.RemainingSpan).TotalLength;
+            var offset = stream.Position + meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x0 + meta.SubConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Model_FieldIndex.File) return TryGet<int?>.Failure;
+                    _FileLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Model_FieldIndex.File);
+                }
+                case 0x42444F4D: // MODB
+                {
+                    _BoundRadiusLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Model_FieldIndex.BoundRadius);
+                }
+                case 0x54444F4D: // MODT
+                {
+                    _HashesLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Model_FieldIndex.Hashes);
+                }
+                default:
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

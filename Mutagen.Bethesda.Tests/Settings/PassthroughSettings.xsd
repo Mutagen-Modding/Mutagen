@@ -7,8 +7,8 @@
          <xs:element name="ReuseCaches" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="DeleteCachesAfter" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestNormal" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="TestBinaryWrapper" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestImport" type="ValueType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="TestObservable" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestFolder" type="ValueType" minOccurs="0" maxOccurs="1" />
       </xs:choice>
    </xs:complexType>

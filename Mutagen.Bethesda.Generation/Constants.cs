@@ -10,6 +10,7 @@ namespace Mutagen.Bethesda.Generation
     {
         public readonly static string DATA_KEY = "MutagenData";
         public readonly static string OBJECT_TYPE = "objType";
+        public readonly static string EXPECTED_LENGTH = "expectedLength";
         public readonly static string GAME_MODE = "gameMode";
     }
 }

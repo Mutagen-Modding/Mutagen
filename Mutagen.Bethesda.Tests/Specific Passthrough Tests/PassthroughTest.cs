@@ -1,4 +1,6 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Oblivion;
+using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Preprocessing;
 using Noggog;
 using Noggog.Utility;
@@ -233,12 +235,12 @@ namespace Mutagen.Bethesda.Tests
                 var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
                 var processedPath = ProcessedPath(tmp);
                 var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
-                var observableOutputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExport");
+                var binaryWrapper = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_BinaryWrapper");
+                ModKey modKey = ModKey.Factory(this.FilePath.Name);
 
                 // Do normal
                 if (Settings.TestNormal)
                 {
-                    ModKey modKey = ModKey.Factory(this.FilePath.Name);
                     var mod = await ImportBinary(orderedPath, modKey);
 
                     foreach (var record in mod.MajorRecords.Items)
@@ -263,13 +265,22 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
-                if (Settings.TestObservable)
+                if (Settings.TestBinaryWrapper)
                 {
+                    var bytes = File.ReadAllBytes(orderedPath);
+                    var wrapper = OblivionModBinaryWrapper.OblivionModFactory(
+                        new MemorySlice<byte>(bytes),
+                        modKey);
+
+                    wrapper.WriteToBinary(
+                        binaryWrapper,
+                        Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+
                     using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
                     {
                         var ret = Passthrough_Tests.AssertFilesEqual(
                             stream,
-                            observableOutputPath,
+                            binaryWrapper,
                             amountToReport: 15);
                         if (ret.Exception != null)
                         {

@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Generation
     public class FilePathBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<FilePathType>
     {
         public FilePathBinaryTranslationGeneration()
-            : base(nullable: true)
+            : base(nullable: true, expectedLen: null)
         {
         }
 
