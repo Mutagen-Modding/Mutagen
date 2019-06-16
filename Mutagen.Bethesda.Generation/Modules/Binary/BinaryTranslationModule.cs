@@ -213,7 +213,9 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task<IEnumerable<string>> RequiredUsingStatements(ObjectGeneration obj)
         {
-            return (await base.RequiredUsingStatements(obj)).And("Mutagen.Bethesda.Binary");
+            return (await base.RequiredUsingStatements(obj))
+                .And("Mutagen.Bethesda.Binary")
+                .And("System.Buffers.Binary");
         }
 
         private void ConvertFromStreamOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)

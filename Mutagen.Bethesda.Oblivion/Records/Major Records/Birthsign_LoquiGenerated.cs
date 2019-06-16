@@ -31,6 +31,7 @@ using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
+using System.Buffers.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
