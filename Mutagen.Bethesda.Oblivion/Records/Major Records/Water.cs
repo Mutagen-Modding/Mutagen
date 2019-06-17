@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class WaterBinaryTranslation
         {
-            static partial void FillBinary_OddExtraBytes_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryOddExtraBytesCustom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (frame.Remaining == 2)
                 {
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinary_BloodCustomLogic_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryBloodCustomLogicCustom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (frame.Remaining == 2)
                 {
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinary_NothingCustomLogic_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryNothingCustomLogicCustom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (frame.Remaining == 2)
                 {
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.DATADataTypeState |= Water.DATADataType.Has;
             }
 
-            static partial void FillBinary_OilCustomLogic_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryOilCustomLogicCustom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (frame.Remaining == 2)
                 {

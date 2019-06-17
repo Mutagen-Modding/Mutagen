@@ -122,12 +122,12 @@ namespace Mutagen.Bethesda.Tests
         IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static DataFolderLocations Create_Xml(
+        public static DataFolderLocations CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             DataFolderLocations_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         [DebuggerStepThrough]
-        public static DataFolderLocations Create_Xml(
+        public static DataFolderLocations CreateFromXml(
             XElement node,
             out DataFolderLocations_ErrorMask errorMask,
             bool doMasks = true,
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Tests
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static DataFolderLocations Create_Xml(
+        public static DataFolderLocations CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 foreach (var elem in node.Elements())
                 {
-                    DataFolderLocationsXmlTranslation.FillPublicElement_Xml(
+                    DataFolderLocationsXmlTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -188,80 +188,80 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static DataFolderLocations Create_Xml(
+        public static DataFolderLocations CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             DataFolderLocations_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static DataFolderLocations Create_Xml(
+        public static DataFolderLocations CreateFromXml(
             string path,
             out DataFolderLocations_ErrorMask errorMask,
             DataFolderLocations_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static DataFolderLocations Create_Xml(
+        public static DataFolderLocations CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             DataFolderLocations_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static DataFolderLocations Create_Xml(
+        public static DataFolderLocations CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             DataFolderLocations_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static DataFolderLocations Create_Xml(
+        public static DataFolderLocations CreateFromXml(
             Stream stream,
             out DataFolderLocations_ErrorMask errorMask,
             DataFolderLocations_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static DataFolderLocations Create_Xml(
+        public static DataFolderLocations CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             DataFolderLocations_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -271,18 +271,18 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Xml Copy In
-        public void CopyIn_Xml(
+        public void CopyInXml(
             XElement node,
             MissingCreate missing = MissingCreate.New)
         {
-            CopyIn_Xml_Internal(
+            CopyInXml_Internal(
                 missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: null);
         }
 
-        public virtual void CopyIn_Xml(
+        public virtual void CopyInXml(
             XElement node,
             out DataFolderLocations_ErrorMask errorMask,
             DataFolderLocations_TranslationMask translationMask = null,
@@ -290,7 +290,7 @@ namespace Mutagen.Bethesda.Tests
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyIn_Xml_Internal(
+            CopyInXml_Internal(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -298,7 +298,7 @@ namespace Mutagen.Bethesda.Tests
             errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        protected void CopyIn_Xml_Internal(
+        protected void CopyInXml_Internal(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -313,17 +313,17 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask);
         }
 
-        public void CopyIn_Xml(
+        public void CopyInXml(
             string path,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            this.CopyIn_Xml(
+            this.CopyInXml(
                 missing: missing,
                 node: node);
         }
 
-        public void CopyIn_Xml(
+        public void CopyInXml(
             string path,
             out DataFolderLocations_ErrorMask errorMask,
             DataFolderLocations_TranslationMask translationMask,
@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda.Tests
             bool doMasks = true)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            this.CopyIn_Xml(
+            this.CopyInXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
@@ -339,17 +339,17 @@ namespace Mutagen.Bethesda.Tests
                 doMasks: doMasks);
         }
 
-        public void CopyIn_Xml(
+        public void CopyInXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            this.CopyIn_Xml(
+            this.CopyInXml(
                 missing: missing,
                 node: node);
         }
 
-        public void CopyIn_Xml(
+        public void CopyInXml(
             Stream stream,
             out DataFolderLocations_ErrorMask errorMask,
             DataFolderLocations_TranslationMask translationMask,
@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Tests
             bool doMasks = true)
         {
             var node = XDocument.Load(stream).Root;
-            this.CopyIn_Xml(
+            this.CopyInXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         public readonly static DataFolderLocationsXmlTranslation Instance = new DataFolderLocationsXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IDataFolderLocationsGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IDataFolderLocations item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    DataFolderLocationsXmlTranslation.FillPublicElement_Xml(
+                    DataFolderLocationsXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IDataFolderLocations item,
             XElement node,
             string name,
@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.DataFolderLocations");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Tests.Internals
     #region Xml Write Mixins
     public static class DataFolderLocationsXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IDataFolderLocationsGetter item,
             XElement node,
             out DataFolderLocations_ErrorMask errorMask,
@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IDataFolderLocationsGetter item,
             string path,
             out DataFolderLocations_ErrorMask errorMask,
@@ -1138,7 +1138,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IDataFolderLocationsGetter item,
             string path,
             ErrorMaskBuilder errorMask,
@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IDataFolderLocationsGetter item,
             Stream stream,
             out DataFolderLocations_ErrorMask errorMask,
@@ -1175,7 +1175,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IDataFolderLocationsGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IDataFolderLocationsGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 translationMask: translationMask);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IDataFolderLocationsGetter item,
             XElement node,
             string name = null,
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 translationMask: translationMask.GetCrystal());
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IDataFolderLocationsGetter item,
             string path,
             string name = null)
@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IDataFolderLocationsGetter item,
             Stream stream,
             string name = null)

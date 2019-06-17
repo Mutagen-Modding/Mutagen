@@ -107,12 +107,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlTranslator XmlTranslator => NPCSpawnXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static NPCSpawn Create_Xml(
+        public static NPCSpawn CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             NPCSpawn_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static NPCSpawn Create_Xml(
+        public static NPCSpawn CreateFromXml(
             XElement node,
             out NPCSpawn_ErrorMask errorMask,
             bool doMasks = true,
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static NPCSpawn Create_Xml(
+        public new static NPCSpawn CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -160,80 +160,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static NPCSpawn Create_Xml(
+        public static NPCSpawn CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             NPCSpawn_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static NPCSpawn Create_Xml(
+        public static NPCSpawn CreateFromXml(
             string path,
             out NPCSpawn_ErrorMask errorMask,
             NPCSpawn_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static NPCSpawn Create_Xml(
+        public static NPCSpawn CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             NPCSpawn_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static NPCSpawn Create_Xml(
+        public static NPCSpawn CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             NPCSpawn_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static NPCSpawn Create_Xml(
+        public static NPCSpawn CreateFromXml(
             Stream stream,
             out NPCSpawn_ErrorMask errorMask,
             NPCSpawn_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static NPCSpawn Create_Xml(
+        public static NPCSpawn CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             NPCSpawn_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -242,7 +242,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             NPCSpawn item,
             XElement node,
             string name,
@@ -252,7 +252,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    OblivionMajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -803,20 +803,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static NPCSpawnXmlTranslation Instance = new NPCSpawnXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             INPCSpawnInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             INPCSpawnInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    NPCSpawnXmlTranslation.FillPublicElement_Xml(
+                    NPCSpawnXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             INPCSpawnInternal item,
             XElement node,
             string name,
@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.NPCSpawn");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class NPCSpawnXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this INPCSpawnInternalGetter item,
             XElement node,
             out NPCSpawn_ErrorMask errorMask,
@@ -949,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = NPCSpawn_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this INPCSpawnInternalGetter item,
             string path,
             out NPCSpawn_ErrorMask errorMask,
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this INPCSpawnInternalGetter item,
             Stream stream,
             out NPCSpawn_ErrorMask errorMask,
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class NPCSpawnBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this INPCSpawnInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

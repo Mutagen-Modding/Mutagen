@@ -132,12 +132,12 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static TeleportDestination Create_Xml(
+        public static TeleportDestination CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             TeleportDestination_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static TeleportDestination Create_Xml(
+        public static TeleportDestination CreateFromXml(
             XElement node,
             out TeleportDestination_ErrorMask errorMask,
             bool doMasks = true,
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static TeleportDestination Create_Xml(
+        public static TeleportDestination CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    TeleportDestinationXmlTranslation.FillPublicElement_Xml(
+                    TeleportDestinationXmlTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -198,80 +198,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static TeleportDestination Create_Xml(
+        public static TeleportDestination CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             TeleportDestination_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static TeleportDestination Create_Xml(
+        public static TeleportDestination CreateFromXml(
             string path,
             out TeleportDestination_ErrorMask errorMask,
             TeleportDestination_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static TeleportDestination Create_Xml(
+        public static TeleportDestination CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             TeleportDestination_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static TeleportDestination Create_Xml(
+        public static TeleportDestination CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             TeleportDestination_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static TeleportDestination Create_Xml(
+        public static TeleportDestination CreateFromXml(
             Stream stream,
             out TeleportDestination_ErrorMask errorMask,
             TeleportDestination_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static TeleportDestination Create_Xml(
+        public static TeleportDestination CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             TeleportDestination_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -322,11 +322,11 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
-        public static TeleportDestination Create_Binary(
+        public static TeleportDestination CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -334,14 +334,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static TeleportDestination Create_Binary(
+        public static TeleportDestination CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out TeleportDestination_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static TeleportDestination Create_Binary(
+        public static TeleportDestination CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -367,13 +367,13 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs);
+                fillStructs: FillBinaryStructs);
             return ret;
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             TeleportDestination item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static TeleportDestinationXmlTranslation Instance = new TeleportDestinationXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             ITeleportDestinationGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             ITeleportDestination item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    TeleportDestinationXmlTranslation.FillPublicElement_Xml(
+                    TeleportDestinationXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             ITeleportDestination item,
             XElement node,
             string name,
@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.TeleportDestination");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class TeleportDestinationXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITeleportDestinationGetter item,
             XElement node,
             out TeleportDestination_ErrorMask errorMask,
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITeleportDestinationGetter item,
             string path,
             out TeleportDestination_ErrorMask errorMask,
@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITeleportDestinationGetter item,
             string path,
             ErrorMaskBuilder errorMask,
@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITeleportDestinationGetter item,
             Stream stream,
             out TeleportDestination_ErrorMask errorMask,
@@ -1264,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITeleportDestinationGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1292,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITeleportDestinationGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1307,7 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITeleportDestinationGetter item,
             XElement node,
             string name = null,
@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask.GetCrystal());
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITeleportDestinationGetter item,
             string path,
             string name = null)
@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITeleportDestinationGetter item,
             Stream stream,
             string name = null)
@@ -1749,7 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class TeleportDestinationBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ITeleportDestinationGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -1766,7 +1766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ITeleportDestinationGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -1780,7 +1780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ITeleportDestinationGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)

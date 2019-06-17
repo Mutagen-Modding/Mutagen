@@ -106,12 +106,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlTranslator XmlTranslator => GlobalXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static Global Create_Xml(
+        public static Global CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Global_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Global Create_Xml(
+        public static Global CreateFromXml(
             XElement node,
             out Global_ErrorMask errorMask,
             bool doMasks = true,
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static Global Create_Xml(
+        public new static Global CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -159,80 +159,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Global Create_Xml(
+        public static Global CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             Global_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Global Create_Xml(
+        public static Global CreateFromXml(
             string path,
             out Global_ErrorMask errorMask,
             Global_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Global Create_Xml(
+        public static Global CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             Global_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Global Create_Xml(
+        public static Global CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             Global_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Global Create_Xml(
+        public static Global CreateFromXml(
             Stream stream,
             out Global_ErrorMask errorMask,
             Global_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Global Create_Xml(
+        public static Global CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             Global_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             Global item,
             XElement node,
             string name,
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    OblivionMajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override IBinaryTranslator BinaryTranslator => GlobalBinaryTranslation.Instance;
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             Global item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4D414E46: // FNAM
                 {
-                    GlobalBinaryTranslation.FillBinary_TypeChar_Custom_Public(
+                    GlobalBinaryTranslation.FillBinaryTypeCharCustomPublic(
                         frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
                         item: item,
                         masterReferences: masterReferences,
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed(null);
                 }
                 default:
-                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -803,20 +803,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static GlobalXmlTranslation Instance = new GlobalXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IGlobalInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IGlobalInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    GlobalXmlTranslation.FillPublicElement_Xml(
+                    GlobalXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IGlobalInternal item,
             XElement node,
             string name,
@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Global");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class GlobalXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGlobalInternalGetter item,
             XElement node,
             out Global_ErrorMask errorMask,
@@ -949,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = Global_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGlobalInternalGetter item,
             string path,
             out Global_ErrorMask errorMask,
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGlobalInternalGetter item,
             Stream stream,
             out Global_ErrorMask errorMask,
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1217,38 +1217,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static GlobalBinaryTranslation Instance = new GlobalBinaryTranslation();
 
-        static partial void FillBinary_TypeChar_Custom(
+        static partial void FillBinaryTypeCharCustom(
             MutagenFrame frame,
             Global item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void FillBinary_TypeChar_Custom_Public(
+        public static void FillBinaryTypeCharCustomPublic(
             MutagenFrame frame,
             Global item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            FillBinary_TypeChar_Custom(
+            FillBinaryTypeCharCustom(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void WriteBinary_TypeChar_Custom(
+        static partial void WriteBinaryTypeCharCustom(
             MutagenWriter writer,
             IGlobalInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void WriteBinary_TypeChar(
+        public static void WriteBinaryTypeChar(
             MutagenWriter writer,
             IGlobalInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            WriteBinary_TypeChar_Custom(
+            WriteBinaryTypeCharCustom(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            GlobalBinaryTranslation.WriteBinary_TypeChar(
+            GlobalBinaryTranslation.WriteBinaryTypeChar(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class GlobalBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IGlobalInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

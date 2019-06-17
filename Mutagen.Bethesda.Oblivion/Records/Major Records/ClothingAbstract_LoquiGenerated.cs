@@ -469,12 +469,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlTranslator XmlTranslator => ClothingAbstractXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static ClothingAbstract Create_Xml(
+        public static ClothingAbstract CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             ClothingAbstract_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static ClothingAbstract Create_Xml(
+        public static ClothingAbstract CreateFromXml(
             XElement node,
             out ClothingAbstract_ErrorMask errorMask,
             bool doMasks = true,
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static ClothingAbstract Create_Xml(
+        public new static ClothingAbstract CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -522,80 +522,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ClothingAbstract Create_Xml(
+        public static ClothingAbstract CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             ClothingAbstract_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static ClothingAbstract Create_Xml(
+        public static ClothingAbstract CreateFromXml(
             string path,
             out ClothingAbstract_ErrorMask errorMask,
             ClothingAbstract_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static ClothingAbstract Create_Xml(
+        public static ClothingAbstract CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             ClothingAbstract_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static ClothingAbstract Create_Xml(
+        public static ClothingAbstract CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             ClothingAbstract_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static ClothingAbstract Create_Xml(
+        public static ClothingAbstract CreateFromXml(
             Stream stream,
             out ClothingAbstract_ErrorMask errorMask,
             ClothingAbstract_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static ClothingAbstract Create_Xml(
+        public static ClothingAbstract CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             ClothingAbstract_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             ClothingAbstract item,
             XElement node,
             string name,
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.BMDTDataTypeState |= ClothingAbstract.BMDTDataType.Has;
                     break;
                 default:
-                    ItemAbstract.FillPrivateElement_Xml(
+                    ItemAbstract.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -704,20 +704,20 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override IBinaryTranslator BinaryTranslator => ClothingAbstractBinaryTranslation.Instance;
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             ClothingAbstract item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ItemAbstract.Fill_Binary_Structs(
+            ItemAbstract.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             ClothingAbstract item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -804,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
-                        item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
+                        item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
-                        item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
+                        item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                             frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter,
                             masterReferences: masterReferences,
@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
-                        item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
+                        item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                             frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter,
                             masterReferences: masterReferences,
@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
-                        item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
+                        item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                             frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter,
                             masterReferences: masterReferences,
@@ -920,7 +920,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleIcon);
                 }
                 default:
-                    return ItemAbstract.Fill_Binary_RecordTypes(
+                    return ItemAbstract.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -2394,13 +2394,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static ClothingAbstractXmlTranslation Instance = new ClothingAbstractXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IClothingAbstractInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            ItemAbstractXmlTranslation.WriteToNode_Xml(
+            ItemAbstractXmlTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2541,7 +2541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IClothingAbstractInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -2551,7 +2551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ClothingAbstractXmlTranslation.FillPublicElement_Xml(
+                    ClothingAbstractXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2566,7 +2566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IClothingAbstractInternal item,
             XElement node,
             string name,
@@ -2881,7 +2881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    ItemAbstractXmlTranslation.FillPublicElement_Xml(
+                    ItemAbstractXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -2904,7 +2904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ClothingAbstract");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -2976,7 +2976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class ClothingAbstractXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IClothingAbstractInternalGetter item,
             XElement node,
             out ClothingAbstract_ErrorMask errorMask,
@@ -2994,7 +2994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IClothingAbstractInternalGetter item,
             string path,
             out ClothingAbstract_ErrorMask errorMask,
@@ -3003,7 +3003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -3013,7 +3013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IClothingAbstractInternalGetter item,
             Stream stream,
             out ClothingAbstract_ErrorMask errorMask,
@@ -3022,7 +3022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -3890,7 +3890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class ClothingAbstractBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IClothingAbstractInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

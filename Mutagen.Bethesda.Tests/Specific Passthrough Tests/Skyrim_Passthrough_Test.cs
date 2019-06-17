@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Tests
 
         protected override async Task<IMod> ImportBinary(FilePath path, ModKey modKey)
         {
-            return await SkyrimMod.Create_Binary(path.Path, modKey);
+            return await SkyrimMod.CreateFromBinary(path.Path, modKey);
         }
     }
 }

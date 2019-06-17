@@ -353,12 +353,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlTranslator XmlTranslator => AmmoXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static Ammo Create_Xml(
+        public static Ammo CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Ammo_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Ammo Create_Xml(
+        public static Ammo CreateFromXml(
             XElement node,
             out Ammo_ErrorMask errorMask,
             bool doMasks = true,
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static Ammo Create_Xml(
+        public new static Ammo CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -403,13 +403,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    AmmoXmlTranslation.FillPublicElement_Xml(
+                    AmmoXmlTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -425,80 +425,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Ammo Create_Xml(
+        public static Ammo CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             Ammo_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Ammo Create_Xml(
+        public static Ammo CreateFromXml(
             string path,
             out Ammo_ErrorMask errorMask,
             Ammo_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Ammo Create_Xml(
+        public static Ammo CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             Ammo_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Ammo Create_Xml(
+        public static Ammo CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             Ammo_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Ammo Create_Xml(
+        public static Ammo CreateFromXml(
             Stream stream,
             out Ammo_ErrorMask errorMask,
             Ammo_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Ammo Create_Xml(
+        public static Ammo CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             Ammo_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             Ammo item,
             XElement node,
             string name,
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.DATADataTypeState |= Ammo.DATADataType.Has;
                     break;
                 default:
-                    ItemAbstract.FillPrivateElement_Xml(
+                    ItemAbstract.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -614,11 +614,11 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IBinaryTranslator BinaryTranslator => AmmoBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
-        public static Ammo Create_Binary(
+        public static Ammo CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -626,14 +626,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Ammo Create_Binary(
+        public static Ammo CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out Ammo_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -642,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static Ammo Create_Binary(
+        public new static Ammo CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -655,26 +655,26 @@ namespace Mutagen.Bethesda.Oblivion
                 recType: Ammo_Registration.AMMO_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             Ammo item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ItemAbstract.Fill_Binary_Structs(
+            ItemAbstract.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             Ammo item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -707,7 +707,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Ammo_FieldIndex.Model);
-                        item.Model = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -798,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Damage);
                 }
                 default:
-                    return ItemAbstract.Fill_Binary_RecordTypes(
+                    return ItemAbstract.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1975,13 +1975,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static AmmoXmlTranslation Instance = new AmmoXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IAmmoInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            ItemAbstractXmlTranslation.WriteToNode_Xml(
+            ItemAbstractXmlTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2096,7 +2096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IAmmoInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -2106,7 +2106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    AmmoXmlTranslation.FillPublicElement_Xml(
+                    AmmoXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2121,7 +2121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IAmmoInternal item,
             XElement node,
             string name,
@@ -2400,7 +2400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    ItemAbstractXmlTranslation.FillPublicElement_Xml(
+                    ItemAbstractXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -2423,7 +2423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Ammo");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -2495,7 +2495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class AmmoXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IAmmoInternalGetter item,
             XElement node,
             out Ammo_ErrorMask errorMask,
@@ -2513,7 +2513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = Ammo_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IAmmoInternalGetter item,
             string path,
             out Ammo_ErrorMask errorMask,
@@ -2522,7 +2522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -2532,7 +2532,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IAmmoInternalGetter item,
             Stream stream,
             out Ammo_ErrorMask errorMask,
@@ -2541,7 +2541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -3285,7 +3285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class AmmoBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IAmmoInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

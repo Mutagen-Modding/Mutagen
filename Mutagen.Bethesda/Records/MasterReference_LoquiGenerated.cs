@@ -147,12 +147,12 @@ namespace Mutagen.Bethesda
         IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static MasterReference Create_Xml(
+        public static MasterReference CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             MasterReference_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_Xml(
+        public static MasterReference CreateFromXml(
             XElement node,
             out MasterReference_ErrorMask errorMask,
             bool doMasks = true,
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static MasterReference Create_Xml(
+        public static MasterReference CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda
             {
                 foreach (var elem in node.Elements())
                 {
-                    MasterReferenceXmlTranslation.FillPublicElement_Xml(
+                    MasterReferenceXmlTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -213,80 +213,80 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static MasterReference Create_Xml(
+        public static MasterReference CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             MasterReference_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static MasterReference Create_Xml(
+        public static MasterReference CreateFromXml(
             string path,
             out MasterReference_ErrorMask errorMask,
             MasterReference_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static MasterReference Create_Xml(
+        public static MasterReference CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             MasterReference_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static MasterReference Create_Xml(
+        public static MasterReference CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             MasterReference_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static MasterReference Create_Xml(
+        public static MasterReference CreateFromXml(
             Stream stream,
             out MasterReference_ErrorMask errorMask,
             MasterReference_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static MasterReference Create_Xml(
+        public static MasterReference CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             MasterReference_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -320,11 +320,11 @@ namespace Mutagen.Bethesda
         IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
-        public static MasterReference Create_Binary(
+        public static MasterReference CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -332,14 +332,14 @@ namespace Mutagen.Bethesda
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_Binary(
+        public static MasterReference CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out MasterReference_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static MasterReference Create_Binary(
+        public static MasterReference CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -362,14 +362,14 @@ namespace Mutagen.Bethesda
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
             return ret;
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             MasterReference item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda
         {
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             MasterReference item,
             MutagenFrame frame,
             int? lastParsed,
@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Internals
     {
         public readonly static MasterReferenceXmlTranslation Instance = new MasterReferenceXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IMasterReferenceGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1008,7 +1008,7 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IMasterReference item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1018,7 +1018,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    MasterReferenceXmlTranslation.FillPublicElement_Xml(
+                    MasterReferenceXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IMasterReference item,
             XElement node,
             string name,
@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.MasterReference");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Internals
     #region Xml Write Mixins
     public static class MasterReferenceXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMasterReferenceGetter item,
             XElement node,
             out MasterReference_ErrorMask errorMask,
@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Internals
             errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMasterReferenceGetter item,
             string path,
             out MasterReference_ErrorMask errorMask,
@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMasterReferenceGetter item,
             string path,
             ErrorMaskBuilder errorMask,
@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMasterReferenceGetter item,
             Stream stream,
             out MasterReference_ErrorMask errorMask,
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMasterReferenceGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMasterReferenceGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1275,7 +1275,7 @@ namespace Mutagen.Bethesda.Internals
                 translationMask: translationMask);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMasterReferenceGetter item,
             XElement node,
             string name = null,
@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Internals
                 translationMask: translationMask.GetCrystal());
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMasterReferenceGetter item,
             string path,
             string name = null)
@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMasterReferenceGetter item,
             Stream stream,
             string name = null)
@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Internals
     #region Binary Write Mixins
     public static class MasterReferenceBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IMasterReferenceGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -1706,7 +1706,7 @@ namespace Mutagen.Bethesda.Internals
             errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IMasterReferenceGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -1720,7 +1720,7 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IMasterReferenceGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)

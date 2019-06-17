@@ -135,12 +135,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlTranslator XmlTranslator => RegionDataGrassesXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static RegionDataGrasses Create_Xml(
+        public static RegionDataGrasses CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             RegionDataGrasses_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static RegionDataGrasses Create_Xml(
+        public static RegionDataGrasses CreateFromXml(
             XElement node,
             out RegionDataGrasses_ErrorMask errorMask,
             bool doMasks = true,
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static RegionDataGrasses Create_Xml(
+        public new static RegionDataGrasses CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -185,13 +185,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    RegionDataGrassesXmlTranslation.FillPublicElement_Xml(
+                    RegionDataGrassesXmlTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -207,80 +207,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RegionDataGrasses Create_Xml(
+        public static RegionDataGrasses CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             RegionDataGrasses_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static RegionDataGrasses Create_Xml(
+        public static RegionDataGrasses CreateFromXml(
             string path,
             out RegionDataGrasses_ErrorMask errorMask,
             RegionDataGrasses_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static RegionDataGrasses Create_Xml(
+        public static RegionDataGrasses CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             RegionDataGrasses_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static RegionDataGrasses Create_Xml(
+        public static RegionDataGrasses CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             RegionDataGrasses_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static RegionDataGrasses Create_Xml(
+        public static RegionDataGrasses CreateFromXml(
             Stream stream,
             out RegionDataGrasses_ErrorMask errorMask,
             RegionDataGrasses_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static RegionDataGrasses Create_Xml(
+        public static RegionDataGrasses CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             RegionDataGrasses_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             RegionDataGrasses item,
             XElement node,
             string name,
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    RegionData.FillPrivateElement_Xml(
+                    RegionData.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -349,11 +349,11 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IBinaryTranslator BinaryTranslator => RegionDataGrassesBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
-        public static RegionDataGrasses Create_Binary(
+        public static RegionDataGrasses CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -361,14 +361,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static RegionDataGrasses Create_Binary(
+        public static RegionDataGrasses CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out RegionDataGrasses_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static RegionDataGrasses Create_Binary(
+        public new static RegionDataGrasses CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -391,27 +391,27 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
             return ret;
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             RegionDataGrasses item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            RegionData.Fill_Binary_Structs(
+            RegionData.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             RegionDataGrasses item,
             MutagenFrame frame,
             int? lastParsed,
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)RegionDataGrasses_FieldIndex.Grasses);
                 }
                 default:
-                    return RegionData.Fill_Binary_RecordTypes(
+                    return RegionData.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1009,13 +1009,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static RegionDataGrassesXmlTranslation Instance = new RegionDataGrassesXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IRegionDataGrassesInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            RegionDataXmlTranslation.WriteToNode_Xml(
+            RegionDataXmlTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1042,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IRegionDataGrassesInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1052,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    RegionDataGrassesXmlTranslation.FillPublicElement_Xml(
+                    RegionDataGrassesXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1067,7 +1067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IRegionDataGrassesInternal item,
             XElement node,
             string name,
@@ -1105,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    RegionDataXmlTranslation.FillPublicElement_Xml(
+                    RegionDataXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataGrasses");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class RegionDataGrassesXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IRegionDataGrassesInternalGetter item,
             XElement node,
             out RegionDataGrasses_ErrorMask errorMask,
@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = RegionDataGrasses_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IRegionDataGrassesInternalGetter item,
             string path,
             out RegionDataGrasses_ErrorMask errorMask,
@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IRegionDataGrassesInternalGetter item,
             Stream stream,
             out RegionDataGrasses_ErrorMask errorMask,
@@ -1216,7 +1216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1653,7 +1653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class RegionDataGrassesBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IRegionDataGrassesInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

@@ -181,12 +181,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlTranslator XmlTranslator => ArmorXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static Armor Create_Xml(
+        public static Armor CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Armor_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Armor Create_Xml(
+        public static Armor CreateFromXml(
             XElement node,
             out Armor_ErrorMask errorMask,
             bool doMasks = true,
@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static Armor Create_Xml(
+        public new static Armor CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -231,13 +231,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    ArmorXmlTranslation.FillPublicElement_Xml(
+                    ArmorXmlTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -253,80 +253,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Armor Create_Xml(
+        public static Armor CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             Armor_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Armor Create_Xml(
+        public static Armor CreateFromXml(
             string path,
             out Armor_ErrorMask errorMask,
             Armor_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Armor Create_Xml(
+        public static Armor CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             Armor_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Armor Create_Xml(
+        public static Armor CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             Armor_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Armor Create_Xml(
+        public static Armor CreateFromXml(
             Stream stream,
             out Armor_ErrorMask errorMask,
             Armor_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Armor Create_Xml(
+        public static Armor CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             Armor_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             Armor item,
             XElement node,
             string name,
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.DATADataTypeState |= Armor.DATADataType.Has;
                     break;
                 default:
-                    ClothingAbstract.FillPrivateElement_Xml(
+                    ClothingAbstract.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -410,11 +410,11 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IBinaryTranslator BinaryTranslator => ArmorBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
-        public static Armor Create_Binary(
+        public static Armor CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -422,14 +422,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Armor Create_Binary(
+        public static Armor CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out Armor_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static Armor Create_Binary(
+        public new static Armor CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -451,26 +451,26 @@ namespace Mutagen.Bethesda.Oblivion
                 recType: Armor_Registration.ARMO_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             Armor item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ClothingAbstract.Fill_Binary_Structs(
+            ClothingAbstract.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             Armor item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DATADataTypeState = DATADataType.Has;
                     }
-                    ArmorBinaryTranslation.FillBinary_ArmorValue_Custom_Public(
+                    ArmorBinaryTranslation.FillBinaryArmorValueCustomPublic(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.Weight);
                 }
                 default:
-                    return ClothingAbstract.Fill_Binary_RecordTypes(
+                    return ClothingAbstract.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1351,13 +1351,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static ArmorXmlTranslation Instance = new ArmorXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IArmorInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            ClothingAbstractXmlTranslation.WriteToNode_Xml(
+            ClothingAbstractXmlTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1412,7 +1412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IArmorInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1422,7 +1422,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ArmorXmlTranslation.FillPublicElement_Xml(
+                    ArmorXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1437,7 +1437,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IArmorInternal item,
             XElement node,
             string name,
@@ -1578,7 +1578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    ClothingAbstractXmlTranslation.FillPublicElement_Xml(
+                    ClothingAbstractXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1601,7 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Armor");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1688,7 +1688,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class ArmorXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IArmorInternalGetter item,
             XElement node,
             out Armor_ErrorMask errorMask,
@@ -1706,7 +1706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IArmorInternalGetter item,
             string path,
             out Armor_ErrorMask errorMask,
@@ -1715,7 +1715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1725,7 +1725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IArmorInternalGetter item,
             Stream stream,
             out Armor_ErrorMask errorMask,
@@ -1734,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -2125,38 +2125,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static ArmorBinaryTranslation Instance = new ArmorBinaryTranslation();
 
-        static partial void FillBinary_ArmorValue_Custom(
+        static partial void FillBinaryArmorValueCustom(
             MutagenFrame frame,
             Armor item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void FillBinary_ArmorValue_Custom_Public(
+        public static void FillBinaryArmorValueCustomPublic(
             MutagenFrame frame,
             Armor item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            FillBinary_ArmorValue_Custom(
+            FillBinaryArmorValueCustom(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void WriteBinary_ArmorValue_Custom(
+        static partial void WriteBinaryArmorValueCustom(
             MutagenWriter writer,
             IArmorInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void WriteBinary_ArmorValue(
+        public static void WriteBinaryArmorValue(
             MutagenWriter writer,
             IArmorInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            WriteBinary_ArmorValue_Custom(
+            WriteBinaryArmorValueCustom(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -2193,7 +2193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Armor_Registration.DATA_HEADER)))
                 {
-                    ArmorBinaryTranslation.WriteBinary_ArmorValue(
+                    ArmorBinaryTranslation.WriteBinaryArmorValue(
                         writer: writer,
                         item: item,
                         errorMask: errorMask,
@@ -2313,7 +2313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class ArmorBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IArmorInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

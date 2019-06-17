@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
                 });
         }
 
-        public static GameSetting Create_Binary(
+        public static GameSetting CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -42,11 +42,11 @@ namespace Mutagen.Bethesda.Oblivion
             switch (settingType.Value)
             {
                 case GameSettingType.Float:
-                    return GameSettingFloat.Create_Binary(frame, masterReferences, recordTypeConverter, errorMask);
+                    return GameSettingFloat.CreateFromBinary(frame, masterReferences, recordTypeConverter, errorMask);
                 case GameSettingType.Int:
-                    return GameSettingInt.Create_Binary(frame, masterReferences, recordTypeConverter, errorMask);
+                    return GameSettingInt.CreateFromBinary(frame, masterReferences, recordTypeConverter, errorMask);
                 case GameSettingType.String:
-                    return GameSettingString.Create_Binary(frame, masterReferences, recordTypeConverter, errorMask);
+                    return GameSettingString.CreateFromBinary(frame, masterReferences, recordTypeConverter, errorMask);
                 default:
                     errorMask.ReportExceptionOrThrow(
                         new ArgumentException($"Unknown game type: {settingType.Value}"));

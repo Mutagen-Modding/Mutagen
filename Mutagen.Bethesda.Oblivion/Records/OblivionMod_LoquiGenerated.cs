@@ -631,12 +631,12 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static OblivionMod Create_Xml(
+        public static OblivionMod CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             OblivionMod_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static OblivionMod Create_Xml(
+        public static OblivionMod CreateFromXml(
             XElement node,
             out OblivionMod_ErrorMask errorMask,
             bool doMasks = true,
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static OblivionMod Create_Xml(
+        public static OblivionMod CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -681,13 +681,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    OblivionModXmlTranslation.FillPublicElement_Xml(
+                    OblivionModXmlTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -708,80 +708,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static OblivionMod Create_Xml(
+        public static OblivionMod CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             OblivionMod_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static OblivionMod Create_Xml(
+        public static OblivionMod CreateFromXml(
             string path,
             out OblivionMod_ErrorMask errorMask,
             OblivionMod_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static OblivionMod Create_Xml(
+        public static OblivionMod CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             OblivionMod_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static OblivionMod Create_Xml(
+        public static OblivionMod CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             OblivionMod_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static OblivionMod Create_Xml(
+        public static OblivionMod CreateFromXml(
             Stream stream,
             out OblivionMod_ErrorMask errorMask,
             OblivionMod_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static OblivionMod Create_Xml(
+        public static OblivionMod CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             OblivionMod_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             OblivionMod item,
             XElement node,
             string name,
@@ -804,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.ModHeader);
                         item.ModHeader.CopyFieldsFrom(
-                            rhs: ModHeader.Create_Xml(
+                            rhs: ModHeader.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -828,7 +828,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Cells);
                         item.Cells.CopyFieldsFrom<CellBlock_CopyMask>(
-                            rhs: ListGroup<CellBlock>.Create_Xml(
+                            rhs: ListGroup<CellBlock>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -2242,22 +2242,22 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public static Task<OblivionMod> Create_Xml_Folder(
+        public static Task<OblivionMod> CreateFromXmlFolder(
             DirectoryPath dir,
             ModKey modKey)
         {
-            return Create_Xml_Folder(
+            return CreateFromXmlFolder(
                 dir: dir,
                 modKey: modKey,
                 errorMask: null);
         }
 
-        public static async Task<(OblivionMod Mod, OblivionMod_ErrorMask ErrorMask)> Create_Xml_Folder_WithErrors(
+        public static async Task<(OblivionMod Mod, OblivionMod_ErrorMask ErrorMask)> CreateFromXmlFolderWithErrors(
             DirectoryPath dir,
             ModKey modKey)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = await Create_Xml_Folder(
+            var ret = await CreateFromXmlFolder(
                 dir: dir,
                 modKey: modKey,
                 errorMask: errorMaskBuilder);
@@ -2265,293 +2265,293 @@ namespace Mutagen.Bethesda.Oblivion
             return (ret, errorMask);
         }
 
-        public static async Task<OblivionMod> Create_Xml_Folder(
+        public static async Task<OblivionMod> CreateFromXmlFolder(
             DirectoryPath dir,
             ModKey modKey,
             ErrorMaskBuilder errorMask)
         {
             var ret = new OblivionMod(modKey);
             var tasks = new List<Task>();
-            ret.ModHeader.CopyFieldsFrom(ModHeader.Create_Xml(
+            ret.ModHeader.CopyFieldsFrom(ModHeader.CreateFromXml(
                 path: Path.Combine(dir.Path, "ModHeader.xml"),
                 errorMask: errorMask,
                 translationMask: null));
-            tasks.Add(Task.Run(() => ret.GameSettings.Create_Xml_Folder<GameSetting>(
+            tasks.Add(Task.Run(() => ret.GameSettings.CreateFromXmlFolder<GameSetting>(
                 dir: dir,
                 name: nameof(GameSettings),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.GameSettings)));
-            tasks.Add(Task.Run(() => ret.Globals.Create_Xml_Folder<Global>(
+            tasks.Add(Task.Run(() => ret.Globals.CreateFromXmlFolder<Global>(
                 dir: dir,
                 name: nameof(Globals),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Globals)));
-            tasks.Add(Task.Run(() => ret.Classes.Create_Xml_Folder<Class>(
+            tasks.Add(Task.Run(() => ret.Classes.CreateFromXmlFolder<Class>(
                 dir: dir,
                 name: nameof(Classes),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Classes)));
-            tasks.Add(Task.Run(() => ret.Factions.Create_Xml_Folder<Faction>(
+            tasks.Add(Task.Run(() => ret.Factions.CreateFromXmlFolder<Faction>(
                 dir: dir,
                 name: nameof(Factions),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Factions)));
-            tasks.Add(Task.Run(() => ret.Hairs.Create_Xml_Folder<Hair>(
+            tasks.Add(Task.Run(() => ret.Hairs.CreateFromXmlFolder<Hair>(
                 dir: dir,
                 name: nameof(Hairs),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Hairs)));
-            tasks.Add(Task.Run(() => ret.Eyes.Create_Xml_Folder<Eye>(
+            tasks.Add(Task.Run(() => ret.Eyes.CreateFromXmlFolder<Eye>(
                 dir: dir,
                 name: nameof(Eyes),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Eyes)));
-            tasks.Add(Task.Run(() => ret.Races.Create_Xml_Folder<Race>(
+            tasks.Add(Task.Run(() => ret.Races.CreateFromXmlFolder<Race>(
                 dir: dir,
                 name: nameof(Races),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Races)));
-            tasks.Add(Task.Run(() => ret.Sounds.Create_Xml_Folder<Sound>(
+            tasks.Add(Task.Run(() => ret.Sounds.CreateFromXmlFolder<Sound>(
                 dir: dir,
                 name: nameof(Sounds),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Sounds)));
-            tasks.Add(Task.Run(() => ret.Skills.Create_Xml_Folder<SkillRecord>(
+            tasks.Add(Task.Run(() => ret.Skills.CreateFromXmlFolder<SkillRecord>(
                 dir: dir,
                 name: nameof(Skills),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Skills)));
-            tasks.Add(Task.Run(() => ret.MagicEffects.Create_Xml_Folder<MagicEffect>(
+            tasks.Add(Task.Run(() => ret.MagicEffects.CreateFromXmlFolder<MagicEffect>(
                 dir: dir,
                 name: nameof(MagicEffects),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.MagicEffects)));
-            tasks.Add(Task.Run(() => ret.Create_Xml_Folder_Scripts(
+            tasks.Add(Task.Run(() => ret.CreateFromXmlFolderScripts(
                 dir: dir,
                 name: nameof(Scripts),
                 index: (int)OblivionMod_FieldIndex.Scripts,
                 errorMask: errorMask)));
-            tasks.Add(Task.Run(() => ret.LandTextures.Create_Xml_Folder<LandTexture>(
+            tasks.Add(Task.Run(() => ret.LandTextures.CreateFromXmlFolder<LandTexture>(
                 dir: dir,
                 name: nameof(LandTextures),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.LandTextures)));
-            tasks.Add(Task.Run(() => ret.Enchantments.Create_Xml_Folder<Enchantment>(
+            tasks.Add(Task.Run(() => ret.Enchantments.CreateFromXmlFolder<Enchantment>(
                 dir: dir,
                 name: nameof(Enchantments),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Enchantments)));
-            tasks.Add(Task.Run(() => ret.Spells.Create_Xml_Folder<SpellUnleveled>(
+            tasks.Add(Task.Run(() => ret.Spells.CreateFromXmlFolder<SpellUnleveled>(
                 dir: dir,
                 name: nameof(Spells),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Spells)));
-            tasks.Add(Task.Run(() => ret.Birthsigns.Create_Xml_Folder<Birthsign>(
+            tasks.Add(Task.Run(() => ret.Birthsigns.CreateFromXmlFolder<Birthsign>(
                 dir: dir,
                 name: nameof(Birthsigns),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Birthsigns)));
-            tasks.Add(Task.Run(() => ret.Activators.Create_Xml_Folder<Activator>(
+            tasks.Add(Task.Run(() => ret.Activators.CreateFromXmlFolder<Activator>(
                 dir: dir,
                 name: nameof(Activators),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Activators)));
-            tasks.Add(Task.Run(() => ret.AlchemicalApparatus.Create_Xml_Folder<AlchemicalApparatus>(
+            tasks.Add(Task.Run(() => ret.AlchemicalApparatus.CreateFromXmlFolder<AlchemicalApparatus>(
                 dir: dir,
                 name: nameof(AlchemicalApparatus),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.AlchemicalApparatus)));
-            tasks.Add(Task.Run(() => ret.Armors.Create_Xml_Folder<Armor>(
+            tasks.Add(Task.Run(() => ret.Armors.CreateFromXmlFolder<Armor>(
                 dir: dir,
                 name: nameof(Armors),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Armors)));
-            tasks.Add(Task.Run(() => ret.Books.Create_Xml_Folder<Book>(
+            tasks.Add(Task.Run(() => ret.Books.CreateFromXmlFolder<Book>(
                 dir: dir,
                 name: nameof(Books),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Books)));
-            tasks.Add(Task.Run(() => ret.Clothes.Create_Xml_Folder<Clothing>(
+            tasks.Add(Task.Run(() => ret.Clothes.CreateFromXmlFolder<Clothing>(
                 dir: dir,
                 name: nameof(Clothes),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Clothes)));
-            tasks.Add(Task.Run(() => ret.Containers.Create_Xml_Folder<Container>(
+            tasks.Add(Task.Run(() => ret.Containers.CreateFromXmlFolder<Container>(
                 dir: dir,
                 name: nameof(Containers),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Containers)));
-            tasks.Add(Task.Run(() => ret.Doors.Create_Xml_Folder<Door>(
+            tasks.Add(Task.Run(() => ret.Doors.CreateFromXmlFolder<Door>(
                 dir: dir,
                 name: nameof(Doors),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Doors)));
-            tasks.Add(Task.Run(() => ret.Ingredients.Create_Xml_Folder<Ingredient>(
+            tasks.Add(Task.Run(() => ret.Ingredients.CreateFromXmlFolder<Ingredient>(
                 dir: dir,
                 name: nameof(Ingredients),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Ingredients)));
-            tasks.Add(Task.Run(() => ret.Lights.Create_Xml_Folder<Light>(
+            tasks.Add(Task.Run(() => ret.Lights.CreateFromXmlFolder<Light>(
                 dir: dir,
                 name: nameof(Lights),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Lights)));
-            tasks.Add(Task.Run(() => ret.Miscellaneous.Create_Xml_Folder<Miscellaneous>(
+            tasks.Add(Task.Run(() => ret.Miscellaneous.CreateFromXmlFolder<Miscellaneous>(
                 dir: dir,
                 name: nameof(Miscellaneous),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Miscellaneous)));
-            tasks.Add(Task.Run(() => ret.Statics.Create_Xml_Folder<Static>(
+            tasks.Add(Task.Run(() => ret.Statics.CreateFromXmlFolder<Static>(
                 dir: dir,
                 name: nameof(Statics),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Statics)));
-            tasks.Add(Task.Run(() => ret.Grasses.Create_Xml_Folder<Grass>(
+            tasks.Add(Task.Run(() => ret.Grasses.CreateFromXmlFolder<Grass>(
                 dir: dir,
                 name: nameof(Grasses),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Grasses)));
-            tasks.Add(Task.Run(() => ret.Trees.Create_Xml_Folder<Tree>(
+            tasks.Add(Task.Run(() => ret.Trees.CreateFromXmlFolder<Tree>(
                 dir: dir,
                 name: nameof(Trees),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Trees)));
-            tasks.Add(Task.Run(() => ret.Flora.Create_Xml_Folder<Flora>(
+            tasks.Add(Task.Run(() => ret.Flora.CreateFromXmlFolder<Flora>(
                 dir: dir,
                 name: nameof(Flora),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Flora)));
-            tasks.Add(Task.Run(() => ret.Furnature.Create_Xml_Folder<Furnature>(
+            tasks.Add(Task.Run(() => ret.Furnature.CreateFromXmlFolder<Furnature>(
                 dir: dir,
                 name: nameof(Furnature),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Furnature)));
-            tasks.Add(Task.Run(() => ret.Weapons.Create_Xml_Folder<Weapon>(
+            tasks.Add(Task.Run(() => ret.Weapons.CreateFromXmlFolder<Weapon>(
                 dir: dir,
                 name: nameof(Weapons),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Weapons)));
-            tasks.Add(Task.Run(() => ret.Ammo.Create_Xml_Folder<Ammo>(
+            tasks.Add(Task.Run(() => ret.Ammo.CreateFromXmlFolder<Ammo>(
                 dir: dir,
                 name: nameof(Ammo),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Ammo)));
-            tasks.Add(Task.Run(() => ret.NPCs.Create_Xml_Folder<NPC>(
+            tasks.Add(Task.Run(() => ret.NPCs.CreateFromXmlFolder<NPC>(
                 dir: dir,
                 name: nameof(NPCs),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.NPCs)));
-            tasks.Add(Task.Run(() => ret.Creatures.Create_Xml_Folder<Creature>(
+            tasks.Add(Task.Run(() => ret.Creatures.CreateFromXmlFolder<Creature>(
                 dir: dir,
                 name: nameof(Creatures),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Creatures)));
-            tasks.Add(Task.Run(() => ret.LeveledCreatures.Create_Xml_Folder<LeveledCreature>(
+            tasks.Add(Task.Run(() => ret.LeveledCreatures.CreateFromXmlFolder<LeveledCreature>(
                 dir: dir,
                 name: nameof(LeveledCreatures),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.LeveledCreatures)));
-            tasks.Add(Task.Run(() => ret.SoulGems.Create_Xml_Folder<SoulGem>(
+            tasks.Add(Task.Run(() => ret.SoulGems.CreateFromXmlFolder<SoulGem>(
                 dir: dir,
                 name: nameof(SoulGems),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.SoulGems)));
-            tasks.Add(Task.Run(() => ret.Keys.Create_Xml_Folder<Key>(
+            tasks.Add(Task.Run(() => ret.Keys.CreateFromXmlFolder<Key>(
                 dir: dir,
                 name: nameof(Keys),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Keys)));
-            tasks.Add(Task.Run(() => ret.Potions.Create_Xml_Folder<Potion>(
+            tasks.Add(Task.Run(() => ret.Potions.CreateFromXmlFolder<Potion>(
                 dir: dir,
                 name: nameof(Potions),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Potions)));
-            tasks.Add(Task.Run(() => ret.Subspaces.Create_Xml_Folder<Subspace>(
+            tasks.Add(Task.Run(() => ret.Subspaces.CreateFromXmlFolder<Subspace>(
                 dir: dir,
                 name: nameof(Subspaces),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Subspaces)));
-            tasks.Add(Task.Run(() => ret.SigilStones.Create_Xml_Folder<SigilStone>(
+            tasks.Add(Task.Run(() => ret.SigilStones.CreateFromXmlFolder<SigilStone>(
                 dir: dir,
                 name: nameof(SigilStones),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.SigilStones)));
-            tasks.Add(Task.Run(() => ret.LeveledItems.Create_Xml_Folder<LeveledItem>(
+            tasks.Add(Task.Run(() => ret.LeveledItems.CreateFromXmlFolder<LeveledItem>(
                 dir: dir,
                 name: nameof(LeveledItems),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.LeveledItems)));
-            tasks.Add(Task.Run(() => ret.Weathers.Create_Xml_Folder<Weather>(
+            tasks.Add(Task.Run(() => ret.Weathers.CreateFromXmlFolder<Weather>(
                 dir: dir,
                 name: nameof(Weathers),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Weathers)));
-            tasks.Add(Task.Run(() => ret.Climates.Create_Xml_Folder<Climate>(
+            tasks.Add(Task.Run(() => ret.Climates.CreateFromXmlFolder<Climate>(
                 dir: dir,
                 name: nameof(Climates),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Climates)));
-            tasks.Add(Task.Run(() => ret.Regions.Create_Xml_Folder<Region>(
+            tasks.Add(Task.Run(() => ret.Regions.CreateFromXmlFolder<Region>(
                 dir: dir,
                 name: nameof(Regions),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Regions)));
-            tasks.Add(Task.Run(() => ret.Cells.Create_Xml_Folder<CellBlock>(
+            tasks.Add(Task.Run(() => ret.Cells.CreateFromXmlFolder<CellBlock>(
                 dir: dir,
                 name: nameof(Cells),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Cells)));
-            tasks.Add(Task.Run(() => ret.Create_Xml_Folder_Worldspaces(
+            tasks.Add(Task.Run(() => ret.CreateFromXmlFolderWorldspaces(
                 dir: dir,
                 name: nameof(Worldspaces),
                 index: (int)OblivionMod_FieldIndex.Worldspaces,
                 errorMask: errorMask)));
-            tasks.Add(Task.Run(() => ret.DialogTopics.Create_Xml_Folder<DialogTopic>(
+            tasks.Add(Task.Run(() => ret.DialogTopics.CreateFromXmlFolder<DialogTopic>(
                 dir: dir,
                 name: nameof(DialogTopics),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.DialogTopics)));
-            tasks.Add(Task.Run(() => ret.Quests.Create_Xml_Folder<Quest>(
+            tasks.Add(Task.Run(() => ret.Quests.CreateFromXmlFolder<Quest>(
                 dir: dir,
                 name: nameof(Quests),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Quests)));
-            tasks.Add(Task.Run(() => ret.IdleAnimations.Create_Xml_Folder<IdleAnimation>(
+            tasks.Add(Task.Run(() => ret.IdleAnimations.CreateFromXmlFolder<IdleAnimation>(
                 dir: dir,
                 name: nameof(IdleAnimations),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.IdleAnimations)));
-            tasks.Add(Task.Run(() => ret.AIPackages.Create_Xml_Folder<AIPackage>(
+            tasks.Add(Task.Run(() => ret.AIPackages.CreateFromXmlFolder<AIPackage>(
                 dir: dir,
                 name: nameof(AIPackages),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.AIPackages)));
-            tasks.Add(Task.Run(() => ret.CombatStyles.Create_Xml_Folder<CombatStyle>(
+            tasks.Add(Task.Run(() => ret.CombatStyles.CreateFromXmlFolder<CombatStyle>(
                 dir: dir,
                 name: nameof(CombatStyles),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.CombatStyles)));
-            tasks.Add(Task.Run(() => ret.LoadScreens.Create_Xml_Folder<LoadScreen>(
+            tasks.Add(Task.Run(() => ret.LoadScreens.CreateFromXmlFolder<LoadScreen>(
                 dir: dir,
                 name: nameof(LoadScreens),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.LoadScreens)));
-            tasks.Add(Task.Run(() => ret.LeveledSpells.Create_Xml_Folder<LeveledSpell>(
+            tasks.Add(Task.Run(() => ret.LeveledSpells.CreateFromXmlFolder<LeveledSpell>(
                 dir: dir,
                 name: nameof(LeveledSpells),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.LeveledSpells)));
-            tasks.Add(Task.Run(() => ret.AnimatedObjects.Create_Xml_Folder<AnimatedObject>(
+            tasks.Add(Task.Run(() => ret.AnimatedObjects.CreateFromXmlFolder<AnimatedObject>(
                 dir: dir,
                 name: nameof(AnimatedObjects),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.AnimatedObjects)));
-            tasks.Add(Task.Run(() => ret.Waters.Create_Xml_Folder<Water>(
+            tasks.Add(Task.Run(() => ret.Waters.CreateFromXmlFolder<Water>(
                 dir: dir,
                 name: nameof(Waters),
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.Waters)));
-            tasks.Add(Task.Run(() => ret.EffectShaders.Create_Xml_Folder<EffectShader>(
+            tasks.Add(Task.Run(() => ret.EffectShaders.CreateFromXmlFolder<EffectShader>(
                 dir: dir,
                 name: nameof(EffectShaders),
                 errorMask: errorMask,
@@ -2565,7 +2565,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public async Task<OblivionMod_ErrorMask> Write_XmlFolder(
+        public async Task<OblivionMod_ErrorMask> WriteToXmlFolder(
             DirectoryPath dir,
             bool doMasks = true)
         {
@@ -2574,286 +2574,286 @@ namespace Mutagen.Bethesda.Oblivion
             using (new FolderCleaner(dir, FolderCleaner.CleanType.AccessTime))
             {
                 var tasks = new List<Task>();
-                tasks.Add(Task.Run(() => this.ModHeader.Write_Xml(
+                tasks.Add(Task.Run(() => this.ModHeader.WriteToXml(
                     path: Path.Combine(dir.Path, "ModHeader.xml"),
                     errorMask: errorMaskBuilder,
                     translationMask: null)));
-                tasks.Add(Task.Run(() => GameSettings.Write_Xml_Folder<GameSetting, GameSetting_ErrorMask>(
+                tasks.Add(Task.Run(() => GameSettings.WriteToXmlFolder<GameSetting, GameSetting_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(GameSettings),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.GameSettings)));
-                tasks.Add(Task.Run(() => Globals.Write_Xml_Folder<Global, Global_ErrorMask>(
+                tasks.Add(Task.Run(() => Globals.WriteToXmlFolder<Global, Global_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Globals),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Globals)));
-                tasks.Add(Task.Run(() => Classes.Write_Xml_Folder<Class, Class_ErrorMask>(
+                tasks.Add(Task.Run(() => Classes.WriteToXmlFolder<Class, Class_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Classes),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Classes)));
-                tasks.Add(Task.Run(() => Factions.Write_Xml_Folder<Faction, Faction_ErrorMask>(
+                tasks.Add(Task.Run(() => Factions.WriteToXmlFolder<Faction, Faction_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Factions),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Factions)));
-                tasks.Add(Task.Run(() => Hairs.Write_Xml_Folder<Hair, Hair_ErrorMask>(
+                tasks.Add(Task.Run(() => Hairs.WriteToXmlFolder<Hair, Hair_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Hairs),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Hairs)));
-                tasks.Add(Task.Run(() => Eyes.Write_Xml_Folder<Eye, Eye_ErrorMask>(
+                tasks.Add(Task.Run(() => Eyes.WriteToXmlFolder<Eye, Eye_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Eyes),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Eyes)));
-                tasks.Add(Task.Run(() => Races.Write_Xml_Folder<Race, Race_ErrorMask>(
+                tasks.Add(Task.Run(() => Races.WriteToXmlFolder<Race, Race_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Races),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Races)));
-                tasks.Add(Task.Run(() => Sounds.Write_Xml_Folder<Sound, Sound_ErrorMask>(
+                tasks.Add(Task.Run(() => Sounds.WriteToXmlFolder<Sound, Sound_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Sounds),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Sounds)));
-                tasks.Add(Task.Run(() => Skills.Write_Xml_Folder<SkillRecord, SkillRecord_ErrorMask>(
+                tasks.Add(Task.Run(() => Skills.WriteToXmlFolder<SkillRecord, SkillRecord_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Skills),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Skills)));
-                tasks.Add(Task.Run(() => MagicEffects.Write_Xml_Folder<MagicEffect, MagicEffect_ErrorMask>(
+                tasks.Add(Task.Run(() => MagicEffects.WriteToXmlFolder<MagicEffect, MagicEffect_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(MagicEffects),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.MagicEffects)));
-                tasks.Add(Task.Run(() =>  Write_Xml_Folder_Scripts(
+                tasks.Add(Task.Run(() =>  WriteToXmlFolderScripts(
                     dir: dir,
                     name: nameof(Scripts),
                     index: (int)OblivionMod_FieldIndex.Scripts,
                     errorMask: errorMaskBuilder)));
-                tasks.Add(Task.Run(() => LandTextures.Write_Xml_Folder<LandTexture, LandTexture_ErrorMask>(
+                tasks.Add(Task.Run(() => LandTextures.WriteToXmlFolder<LandTexture, LandTexture_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(LandTextures),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.LandTextures)));
-                tasks.Add(Task.Run(() => Enchantments.Write_Xml_Folder<Enchantment, Enchantment_ErrorMask>(
+                tasks.Add(Task.Run(() => Enchantments.WriteToXmlFolder<Enchantment, Enchantment_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Enchantments),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Enchantments)));
-                tasks.Add(Task.Run(() => Spells.Write_Xml_Folder<SpellUnleveled, SpellUnleveled_ErrorMask>(
+                tasks.Add(Task.Run(() => Spells.WriteToXmlFolder<SpellUnleveled, SpellUnleveled_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Spells),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Spells)));
-                tasks.Add(Task.Run(() => Birthsigns.Write_Xml_Folder<Birthsign, Birthsign_ErrorMask>(
+                tasks.Add(Task.Run(() => Birthsigns.WriteToXmlFolder<Birthsign, Birthsign_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Birthsigns),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Birthsigns)));
-                tasks.Add(Task.Run(() => Activators.Write_Xml_Folder<Activator, Activator_ErrorMask>(
+                tasks.Add(Task.Run(() => Activators.WriteToXmlFolder<Activator, Activator_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Activators),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Activators)));
-                tasks.Add(Task.Run(() => AlchemicalApparatus.Write_Xml_Folder<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>(
+                tasks.Add(Task.Run(() => AlchemicalApparatus.WriteToXmlFolder<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(AlchemicalApparatus),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.AlchemicalApparatus)));
-                tasks.Add(Task.Run(() => Armors.Write_Xml_Folder<Armor, Armor_ErrorMask>(
+                tasks.Add(Task.Run(() => Armors.WriteToXmlFolder<Armor, Armor_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Armors),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Armors)));
-                tasks.Add(Task.Run(() => Books.Write_Xml_Folder<Book, Book_ErrorMask>(
+                tasks.Add(Task.Run(() => Books.WriteToXmlFolder<Book, Book_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Books),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Books)));
-                tasks.Add(Task.Run(() => Clothes.Write_Xml_Folder<Clothing, Clothing_ErrorMask>(
+                tasks.Add(Task.Run(() => Clothes.WriteToXmlFolder<Clothing, Clothing_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Clothes),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Clothes)));
-                tasks.Add(Task.Run(() => Containers.Write_Xml_Folder<Container, Container_ErrorMask>(
+                tasks.Add(Task.Run(() => Containers.WriteToXmlFolder<Container, Container_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Containers),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Containers)));
-                tasks.Add(Task.Run(() => Doors.Write_Xml_Folder<Door, Door_ErrorMask>(
+                tasks.Add(Task.Run(() => Doors.WriteToXmlFolder<Door, Door_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Doors),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Doors)));
-                tasks.Add(Task.Run(() => Ingredients.Write_Xml_Folder<Ingredient, Ingredient_ErrorMask>(
+                tasks.Add(Task.Run(() => Ingredients.WriteToXmlFolder<Ingredient, Ingredient_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Ingredients),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Ingredients)));
-                tasks.Add(Task.Run(() => Lights.Write_Xml_Folder<Light, Light_ErrorMask>(
+                tasks.Add(Task.Run(() => Lights.WriteToXmlFolder<Light, Light_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Lights),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Lights)));
-                tasks.Add(Task.Run(() => Miscellaneous.Write_Xml_Folder<Miscellaneous, Miscellaneous_ErrorMask>(
+                tasks.Add(Task.Run(() => Miscellaneous.WriteToXmlFolder<Miscellaneous, Miscellaneous_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Miscellaneous),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Miscellaneous)));
-                tasks.Add(Task.Run(() => Statics.Write_Xml_Folder<Static, Static_ErrorMask>(
+                tasks.Add(Task.Run(() => Statics.WriteToXmlFolder<Static, Static_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Statics),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Statics)));
-                tasks.Add(Task.Run(() => Grasses.Write_Xml_Folder<Grass, Grass_ErrorMask>(
+                tasks.Add(Task.Run(() => Grasses.WriteToXmlFolder<Grass, Grass_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Grasses),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Grasses)));
-                tasks.Add(Task.Run(() => Trees.Write_Xml_Folder<Tree, Tree_ErrorMask>(
+                tasks.Add(Task.Run(() => Trees.WriteToXmlFolder<Tree, Tree_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Trees),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Trees)));
-                tasks.Add(Task.Run(() => Flora.Write_Xml_Folder<Flora, Flora_ErrorMask>(
+                tasks.Add(Task.Run(() => Flora.WriteToXmlFolder<Flora, Flora_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Flora),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Flora)));
-                tasks.Add(Task.Run(() => Furnature.Write_Xml_Folder<Furnature, Furnature_ErrorMask>(
+                tasks.Add(Task.Run(() => Furnature.WriteToXmlFolder<Furnature, Furnature_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Furnature),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Furnature)));
-                tasks.Add(Task.Run(() => Weapons.Write_Xml_Folder<Weapon, Weapon_ErrorMask>(
+                tasks.Add(Task.Run(() => Weapons.WriteToXmlFolder<Weapon, Weapon_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Weapons),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Weapons)));
-                tasks.Add(Task.Run(() => Ammo.Write_Xml_Folder<Ammo, Ammo_ErrorMask>(
+                tasks.Add(Task.Run(() => Ammo.WriteToXmlFolder<Ammo, Ammo_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Ammo),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Ammo)));
-                tasks.Add(Task.Run(() => NPCs.Write_Xml_Folder<NPC, NPC_ErrorMask>(
+                tasks.Add(Task.Run(() => NPCs.WriteToXmlFolder<NPC, NPC_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(NPCs),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.NPCs)));
-                tasks.Add(Task.Run(() => Creatures.Write_Xml_Folder<Creature, Creature_ErrorMask>(
+                tasks.Add(Task.Run(() => Creatures.WriteToXmlFolder<Creature, Creature_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Creatures),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Creatures)));
-                tasks.Add(Task.Run(() => LeveledCreatures.Write_Xml_Folder<LeveledCreature, LeveledCreature_ErrorMask>(
+                tasks.Add(Task.Run(() => LeveledCreatures.WriteToXmlFolder<LeveledCreature, LeveledCreature_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(LeveledCreatures),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.LeveledCreatures)));
-                tasks.Add(Task.Run(() => SoulGems.Write_Xml_Folder<SoulGem, SoulGem_ErrorMask>(
+                tasks.Add(Task.Run(() => SoulGems.WriteToXmlFolder<SoulGem, SoulGem_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(SoulGems),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.SoulGems)));
-                tasks.Add(Task.Run(() => Keys.Write_Xml_Folder<Key, Key_ErrorMask>(
+                tasks.Add(Task.Run(() => Keys.WriteToXmlFolder<Key, Key_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Keys),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Keys)));
-                tasks.Add(Task.Run(() => Potions.Write_Xml_Folder<Potion, Potion_ErrorMask>(
+                tasks.Add(Task.Run(() => Potions.WriteToXmlFolder<Potion, Potion_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Potions),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Potions)));
-                tasks.Add(Task.Run(() => Subspaces.Write_Xml_Folder<Subspace, Subspace_ErrorMask>(
+                tasks.Add(Task.Run(() => Subspaces.WriteToXmlFolder<Subspace, Subspace_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Subspaces),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Subspaces)));
-                tasks.Add(Task.Run(() => SigilStones.Write_Xml_Folder<SigilStone, SigilStone_ErrorMask>(
+                tasks.Add(Task.Run(() => SigilStones.WriteToXmlFolder<SigilStone, SigilStone_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(SigilStones),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.SigilStones)));
-                tasks.Add(Task.Run(() => LeveledItems.Write_Xml_Folder<LeveledItem, LeveledItem_ErrorMask>(
+                tasks.Add(Task.Run(() => LeveledItems.WriteToXmlFolder<LeveledItem, LeveledItem_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(LeveledItems),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.LeveledItems)));
-                tasks.Add(Task.Run(() => Weathers.Write_Xml_Folder<Weather, Weather_ErrorMask>(
+                tasks.Add(Task.Run(() => Weathers.WriteToXmlFolder<Weather, Weather_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Weathers),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Weathers)));
-                tasks.Add(Task.Run(() => Climates.Write_Xml_Folder<Climate, Climate_ErrorMask>(
+                tasks.Add(Task.Run(() => Climates.WriteToXmlFolder<Climate, Climate_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Climates),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Climates)));
-                tasks.Add(Task.Run(() => Regions.Write_Xml_Folder<Region, Region_ErrorMask>(
+                tasks.Add(Task.Run(() => Regions.WriteToXmlFolder<Region, Region_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Regions),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Regions)));
-                tasks.Add(Task.Run(() => Cells.Write_Xml_Folder(
+                tasks.Add(Task.Run(() => Cells.WriteToXmlFolder(
                     dir: dir.Path,
                     name: nameof(Cells),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Cells)));
-                tasks.Add(Task.Run(() =>  Write_Xml_Folder_Worldspaces(
+                tasks.Add(Task.Run(() =>  WriteToXmlFolderWorldspaces(
                     dir: dir,
                     name: nameof(Worldspaces),
                     index: (int)OblivionMod_FieldIndex.Worldspaces,
                     errorMask: errorMaskBuilder)));
-                tasks.Add(Task.Run(() => DialogTopics.Write_Xml_Folder<DialogTopic, DialogTopic_ErrorMask>(
+                tasks.Add(Task.Run(() => DialogTopics.WriteToXmlFolder<DialogTopic, DialogTopic_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(DialogTopics),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.DialogTopics)));
-                tasks.Add(Task.Run(() => Quests.Write_Xml_Folder<Quest, Quest_ErrorMask>(
+                tasks.Add(Task.Run(() => Quests.WriteToXmlFolder<Quest, Quest_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Quests),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Quests)));
-                tasks.Add(Task.Run(() => IdleAnimations.Write_Xml_Folder<IdleAnimation, IdleAnimation_ErrorMask>(
+                tasks.Add(Task.Run(() => IdleAnimations.WriteToXmlFolder<IdleAnimation, IdleAnimation_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(IdleAnimations),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.IdleAnimations)));
-                tasks.Add(Task.Run(() => AIPackages.Write_Xml_Folder<AIPackage, AIPackage_ErrorMask>(
+                tasks.Add(Task.Run(() => AIPackages.WriteToXmlFolder<AIPackage, AIPackage_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(AIPackages),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.AIPackages)));
-                tasks.Add(Task.Run(() => CombatStyles.Write_Xml_Folder<CombatStyle, CombatStyle_ErrorMask>(
+                tasks.Add(Task.Run(() => CombatStyles.WriteToXmlFolder<CombatStyle, CombatStyle_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(CombatStyles),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.CombatStyles)));
-                tasks.Add(Task.Run(() => LoadScreens.Write_Xml_Folder<LoadScreen, LoadScreen_ErrorMask>(
+                tasks.Add(Task.Run(() => LoadScreens.WriteToXmlFolder<LoadScreen, LoadScreen_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(LoadScreens),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.LoadScreens)));
-                tasks.Add(Task.Run(() => LeveledSpells.Write_Xml_Folder<LeveledSpell, LeveledSpell_ErrorMask>(
+                tasks.Add(Task.Run(() => LeveledSpells.WriteToXmlFolder<LeveledSpell, LeveledSpell_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(LeveledSpells),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.LeveledSpells)));
-                tasks.Add(Task.Run(() => AnimatedObjects.Write_Xml_Folder<AnimatedObject, AnimatedObject_ErrorMask>(
+                tasks.Add(Task.Run(() => AnimatedObjects.WriteToXmlFolder<AnimatedObject, AnimatedObject_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(AnimatedObjects),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.AnimatedObjects)));
-                tasks.Add(Task.Run(() => Waters.Write_Xml_Folder<Water, Water_ErrorMask>(
+                tasks.Add(Task.Run(() => Waters.WriteToXmlFolder<Water, Water_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Waters),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Waters)));
-                tasks.Add(Task.Run(() => EffectShaders.Write_Xml_Folder<EffectShader, EffectShader_ErrorMask>(
+                tasks.Add(Task.Run(() => EffectShaders.WriteToXmlFolder<EffectShader, EffectShader_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(EffectShaders),
                     errorMask: errorMaskBuilder,
@@ -2867,12 +2867,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static async Task<OblivionMod> Create_Binary(
+        public static async Task<OblivionMod> CreateFromBinary(
             MutagenFrame frame,
             ModKey modKey,
             GroupMask importMask = null)
         {
-            return await Create_Binary(
+            return await CreateFromBinary(
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
@@ -2881,14 +2881,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static async Task<(OblivionMod Object, OblivionMod_ErrorMask ErrorMask)> Create_Binary_Error(
+        public static async Task<(OblivionMod Object, OblivionMod_ErrorMask ErrorMask)> CreateFromBinary_Error(
             MutagenFrame frame,
             ModKey modKey,
             bool doMasks = true,
             GroupMask importMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = await Create_Binary(
+            var ret = await CreateFromBinary(
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
@@ -2897,7 +2897,7 @@ namespace Mutagen.Bethesda.Oblivion
             return (ret, OblivionMod_ErrorMask.Factory(errorMaskBuilder));
         }
 
-        public static async Task<OblivionMod> Create_Binary(
+        public static async Task<OblivionMod> CreateFromBinary(
             MutagenFrame frame,
             ModKey modKey,
             RecordTypeConverter recordTypeConverter,
@@ -2913,8 +2913,8 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes).ConfigureAwait(false);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
             foreach (var link in ret.Links)
             {
                 if (link.Linked) continue;
@@ -2923,7 +2923,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static async Task<OblivionMod> Create_Binary(
+        public static async Task<OblivionMod> CreateFromBinary(
             string path,
             ModKey modKey,
             GroupMask importMask = null)
@@ -2931,14 +2931,14 @@ namespace Mutagen.Bethesda.Oblivion
             using (var reader = new MutagenBinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return await Create_Binary(
+                return await CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
             }
         }
 
-        public static async Task<(OblivionMod Object, OblivionMod_ErrorMask ErrorMask)> Create_Binary_Error(
+        public static async Task<(OblivionMod Object, OblivionMod_ErrorMask ErrorMask)> CreateFromBinary_Error(
             string path,
             ModKey modKey,
             GroupMask importMask = null)
@@ -2946,14 +2946,14 @@ namespace Mutagen.Bethesda.Oblivion
             using (var reader = new MutagenBinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return await Create_Binary_Error(
+                return await CreateFromBinary_Error(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
             }
         }
 
-        public static async Task<OblivionMod> Create_Binary(
+        public static async Task<OblivionMod> CreateFromBinary(
             string path,
             ModKey modKey,
             ErrorMaskBuilder errorMask,
@@ -2962,7 +2962,7 @@ namespace Mutagen.Bethesda.Oblivion
             using (var reader = new MutagenBinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return await Create_Binary(
+                return await CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
@@ -2971,7 +2971,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static async Task<OblivionMod> Create_Binary(
+        public static async Task<OblivionMod> CreateFromBinary(
             Stream stream,
             ModKey modKey,
             GroupMask importMask = null)
@@ -2979,14 +2979,14 @@ namespace Mutagen.Bethesda.Oblivion
             using (var reader = new MutagenBinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
-                return await Create_Binary(
+                return await CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
             }
         }
 
-        public static async Task<(OblivionMod Object, OblivionMod_ErrorMask ErrorMask)> Create_Binary_Error(
+        public static async Task<(OblivionMod Object, OblivionMod_ErrorMask ErrorMask)> CreateFromBinary_Error(
             Stream stream,
             ModKey modKey,
             GroupMask importMask = null)
@@ -2994,14 +2994,14 @@ namespace Mutagen.Bethesda.Oblivion
             using (var reader = new MutagenBinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
-                return await Create_Binary_Error(
+                return await CreateFromBinary_Error(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
             }
         }
 
-        public static async Task<OblivionMod> Create_Binary(
+        public static async Task<OblivionMod> CreateFromBinary(
             Stream stream,
             ModKey modKey,
             ErrorMaskBuilder errorMask,
@@ -3010,7 +3010,7 @@ namespace Mutagen.Bethesda.Oblivion
             using (var reader = new MutagenBinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
-                return await Create_Binary(
+                return await CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
@@ -3021,7 +3021,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             OblivionMod item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -3029,7 +3029,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static async Task<TryGet<int?>> Fill_Binary_RecordTypes(
+        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
             OblivionMod item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3047,7 +3047,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.ModHeader);
-                        var tmpModHeader = ModHeader.Create_Binary(
+                        var tmpModHeader = ModHeader.CreateFromBinary(
                             frame: frame,
                             errorMask: errorMask,
                             recordTypeConverter: null,
@@ -3076,7 +3076,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.GameSettings);
-                            var tmpGameSettings = await Group<GameSetting>.Create_Binary(
+                            var tmpGameSettings = await Group<GameSetting>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3110,7 +3110,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Globals);
-                            var tmpGlobals = await Group<Global>.Create_Binary(
+                            var tmpGlobals = await Group<Global>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3144,7 +3144,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Classes);
-                            var tmpClasses = await Group<Class>.Create_Binary(
+                            var tmpClasses = await Group<Class>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3178,7 +3178,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Factions);
-                            var tmpFactions = await Group<Faction>.Create_Binary(
+                            var tmpFactions = await Group<Faction>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3212,7 +3212,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Hairs);
-                            var tmpHairs = await Group<Hair>.Create_Binary(
+                            var tmpHairs = await Group<Hair>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3246,7 +3246,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Eyes);
-                            var tmpEyes = await Group<Eye>.Create_Binary(
+                            var tmpEyes = await Group<Eye>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3280,7 +3280,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Races);
-                            var tmpRaces = await Group<Race>.Create_Binary(
+                            var tmpRaces = await Group<Race>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3314,7 +3314,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Sounds);
-                            var tmpSounds = await Group<Sound>.Create_Binary(
+                            var tmpSounds = await Group<Sound>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3348,7 +3348,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Skills);
-                            var tmpSkills = await Group<SkillRecord>.Create_Binary(
+                            var tmpSkills = await Group<SkillRecord>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3382,7 +3382,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.MagicEffects);
-                            var tmpMagicEffects = await Group<MagicEffect>.Create_Binary(
+                            var tmpMagicEffects = await Group<MagicEffect>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3416,7 +3416,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Scripts);
-                            var tmpScripts = await Group<Script>.Create_Binary(
+                            var tmpScripts = await Group<Script>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3450,7 +3450,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.LandTextures);
-                            var tmpLandTextures = await Group<LandTexture>.Create_Binary(
+                            var tmpLandTextures = await Group<LandTexture>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3484,7 +3484,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Enchantments);
-                            var tmpEnchantments = await Group<Enchantment>.Create_Binary(
+                            var tmpEnchantments = await Group<Enchantment>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3518,7 +3518,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Spells);
-                            var tmpSpells = await Group<SpellUnleveled>.Create_Binary(
+                            var tmpSpells = await Group<SpellUnleveled>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3552,7 +3552,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Birthsigns);
-                            var tmpBirthsigns = await Group<Birthsign>.Create_Binary(
+                            var tmpBirthsigns = await Group<Birthsign>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3586,7 +3586,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Activators);
-                            var tmpActivators = await Group<Activator>.Create_Binary(
+                            var tmpActivators = await Group<Activator>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3620,7 +3620,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus);
-                            var tmpAlchemicalApparatus = await Group<AlchemicalApparatus>.Create_Binary(
+                            var tmpAlchemicalApparatus = await Group<AlchemicalApparatus>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3654,7 +3654,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Armors);
-                            var tmpArmors = await Group<Armor>.Create_Binary(
+                            var tmpArmors = await Group<Armor>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3688,7 +3688,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Books);
-                            var tmpBooks = await Group<Book>.Create_Binary(
+                            var tmpBooks = await Group<Book>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3722,7 +3722,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Clothes);
-                            var tmpClothes = await Group<Clothing>.Create_Binary(
+                            var tmpClothes = await Group<Clothing>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3756,7 +3756,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Containers);
-                            var tmpContainers = await Group<Container>.Create_Binary(
+                            var tmpContainers = await Group<Container>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3790,7 +3790,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Doors);
-                            var tmpDoors = await Group<Door>.Create_Binary(
+                            var tmpDoors = await Group<Door>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3824,7 +3824,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ingredients);
-                            var tmpIngredients = await Group<Ingredient>.Create_Binary(
+                            var tmpIngredients = await Group<Ingredient>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3858,7 +3858,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Lights);
-                            var tmpLights = await Group<Light>.Create_Binary(
+                            var tmpLights = await Group<Light>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3892,7 +3892,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous);
-                            var tmpMiscellaneous = await Group<Miscellaneous>.Create_Binary(
+                            var tmpMiscellaneous = await Group<Miscellaneous>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3926,7 +3926,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Statics);
-                            var tmpStatics = await Group<Static>.Create_Binary(
+                            var tmpStatics = await Group<Static>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3960,7 +3960,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Grasses);
-                            var tmpGrasses = await Group<Grass>.Create_Binary(
+                            var tmpGrasses = await Group<Grass>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3994,7 +3994,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Trees);
-                            var tmpTrees = await Group<Tree>.Create_Binary(
+                            var tmpTrees = await Group<Tree>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4028,7 +4028,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Flora);
-                            var tmpFlora = await Group<Flora>.Create_Binary(
+                            var tmpFlora = await Group<Flora>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4062,7 +4062,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Furnature);
-                            var tmpFurnature = await Group<Furnature>.Create_Binary(
+                            var tmpFurnature = await Group<Furnature>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4096,7 +4096,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weapons);
-                            var tmpWeapons = await Group<Weapon>.Create_Binary(
+                            var tmpWeapons = await Group<Weapon>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4130,7 +4130,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammo);
-                            var tmpAmmo = await Group<Ammo>.Create_Binary(
+                            var tmpAmmo = await Group<Ammo>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4164,7 +4164,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.NPCs);
-                            var tmpNPCs = await Group<NPC>.Create_Binary(
+                            var tmpNPCs = await Group<NPC>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4198,7 +4198,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Creatures);
-                            var tmpCreatures = await Group<Creature>.Create_Binary(
+                            var tmpCreatures = await Group<Creature>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4232,7 +4232,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures);
-                            var tmpLeveledCreatures = await Group<LeveledCreature>.Create_Binary(
+                            var tmpLeveledCreatures = await Group<LeveledCreature>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4266,7 +4266,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.SoulGems);
-                            var tmpSoulGems = await Group<SoulGem>.Create_Binary(
+                            var tmpSoulGems = await Group<SoulGem>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4300,7 +4300,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Keys);
-                            var tmpKeys = await Group<Key>.Create_Binary(
+                            var tmpKeys = await Group<Key>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4334,7 +4334,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Potions);
-                            var tmpPotions = await Group<Potion>.Create_Binary(
+                            var tmpPotions = await Group<Potion>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4368,7 +4368,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Subspaces);
-                            var tmpSubspaces = await Group<Subspace>.Create_Binary(
+                            var tmpSubspaces = await Group<Subspace>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4402,7 +4402,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.SigilStones);
-                            var tmpSigilStones = await Group<SigilStone>.Create_Binary(
+                            var tmpSigilStones = await Group<SigilStone>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4436,7 +4436,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledItems);
-                            var tmpLeveledItems = await Group<LeveledItem>.Create_Binary(
+                            var tmpLeveledItems = await Group<LeveledItem>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4470,7 +4470,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weathers);
-                            var tmpWeathers = await Group<Weather>.Create_Binary(
+                            var tmpWeathers = await Group<Weather>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4504,7 +4504,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Climates);
-                            var tmpClimates = await Group<Climate>.Create_Binary(
+                            var tmpClimates = await Group<Climate>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4538,7 +4538,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Regions);
-                            var tmpRegions = await Group<Region>.Create_Binary(
+                            var tmpRegions = await Group<Region>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4572,7 +4572,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Cells);
-                            var tmpCells = await ListGroup<CellBlock>.Create_Binary(
+                            var tmpCells = await ListGroup<CellBlock>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4606,7 +4606,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Worldspaces);
-                            var tmpWorldspaces = await Group<Worldspace>.Create_Binary(
+                            var tmpWorldspaces = await Group<Worldspace>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4640,7 +4640,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.DialogTopics);
-                            var tmpDialogTopics = await Group<DialogTopic>.Create_Binary(
+                            var tmpDialogTopics = await Group<DialogTopic>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4674,7 +4674,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Quests);
-                            var tmpQuests = await Group<Quest>.Create_Binary(
+                            var tmpQuests = await Group<Quest>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4708,7 +4708,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
-                            var tmpIdleAnimations = await Group<IdleAnimation>.Create_Binary(
+                            var tmpIdleAnimations = await Group<IdleAnimation>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4742,7 +4742,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
-                            var tmpAIPackages = await Group<AIPackage>.Create_Binary(
+                            var tmpAIPackages = await Group<AIPackage>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4776,7 +4776,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.CombatStyles);
-                            var tmpCombatStyles = await Group<CombatStyle>.Create_Binary(
+                            var tmpCombatStyles = await Group<CombatStyle>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4810,7 +4810,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
-                            var tmpLoadScreens = await Group<LoadScreen>.Create_Binary(
+                            var tmpLoadScreens = await Group<LoadScreen>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4844,7 +4844,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells);
-                            var tmpLeveledSpells = await Group<LeveledSpell>.Create_Binary(
+                            var tmpLeveledSpells = await Group<LeveledSpell>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4878,7 +4878,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
-                            var tmpAnimatedObjects = await Group<AnimatedObject>.Create_Binary(
+                            var tmpAnimatedObjects = await Group<AnimatedObject>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4912,7 +4912,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.Waters);
-                            var tmpWaters = await Group<Water>.Create_Binary(
+                            var tmpWaters = await Group<Water>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4946,7 +4946,7 @@ namespace Mutagen.Bethesda.Oblivion
                         try
                         {
                             errorMask?.PushIndex((int)OblivionMod_FieldIndex.EffectShaders);
-                            var tmpEffectShaders = await Group<EffectShader>.Create_Binary(
+                            var tmpEffectShaders = await Group<EffectShader>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -8299,7 +8299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static OblivionModXmlTranslation Instance = new OblivionModXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IOblivionModGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -8878,7 +8878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IOblivionMod item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -8888,7 +8888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    OblivionModXmlTranslation.FillPublicElement_Xml(
+                    OblivionModXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -8903,7 +8903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IOblivionMod item,
             XElement node,
             string name,
@@ -8917,7 +8917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.GameSettings);
                         item.GameSettings.CopyFieldsFrom<GameSetting_CopyMask>(
-                            rhs: Group<GameSetting>.Create_Xml(
+                            rhs: Group<GameSetting>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -8941,7 +8941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Globals);
                         item.Globals.CopyFieldsFrom<Global_CopyMask>(
-                            rhs: Group<Global>.Create_Xml(
+                            rhs: Group<Global>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -8965,7 +8965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Classes);
                         item.Classes.CopyFieldsFrom<Class_CopyMask>(
-                            rhs: Group<Class>.Create_Xml(
+                            rhs: Group<Class>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -8989,7 +8989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Factions);
                         item.Factions.CopyFieldsFrom<Faction_CopyMask>(
-                            rhs: Group<Faction>.Create_Xml(
+                            rhs: Group<Faction>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9013,7 +9013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Hairs);
                         item.Hairs.CopyFieldsFrom<Hair_CopyMask>(
-                            rhs: Group<Hair>.Create_Xml(
+                            rhs: Group<Hair>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9037,7 +9037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Eyes);
                         item.Eyes.CopyFieldsFrom<Eye_CopyMask>(
-                            rhs: Group<Eye>.Create_Xml(
+                            rhs: Group<Eye>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9061,7 +9061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Races);
                         item.Races.CopyFieldsFrom<Race_CopyMask>(
-                            rhs: Group<Race>.Create_Xml(
+                            rhs: Group<Race>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9085,7 +9085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Sounds);
                         item.Sounds.CopyFieldsFrom<Sound_CopyMask>(
-                            rhs: Group<Sound>.Create_Xml(
+                            rhs: Group<Sound>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9109,7 +9109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Skills);
                         item.Skills.CopyFieldsFrom<SkillRecord_CopyMask>(
-                            rhs: Group<SkillRecord>.Create_Xml(
+                            rhs: Group<SkillRecord>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9133,7 +9133,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.MagicEffects);
                         item.MagicEffects.CopyFieldsFrom<MagicEffect_CopyMask>(
-                            rhs: Group<MagicEffect>.Create_Xml(
+                            rhs: Group<MagicEffect>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9157,7 +9157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Scripts);
                         item.Scripts.CopyFieldsFrom<Script_CopyMask>(
-                            rhs: Group<Script>.Create_Xml(
+                            rhs: Group<Script>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9181,7 +9181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.LandTextures);
                         item.LandTextures.CopyFieldsFrom<LandTexture_CopyMask>(
-                            rhs: Group<LandTexture>.Create_Xml(
+                            rhs: Group<LandTexture>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9205,7 +9205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Enchantments);
                         item.Enchantments.CopyFieldsFrom<Enchantment_CopyMask>(
-                            rhs: Group<Enchantment>.Create_Xml(
+                            rhs: Group<Enchantment>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9229,7 +9229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Spells);
                         item.Spells.CopyFieldsFrom<SpellUnleveled_CopyMask>(
-                            rhs: Group<SpellUnleveled>.Create_Xml(
+                            rhs: Group<SpellUnleveled>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9253,7 +9253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Birthsigns);
                         item.Birthsigns.CopyFieldsFrom<Birthsign_CopyMask>(
-                            rhs: Group<Birthsign>.Create_Xml(
+                            rhs: Group<Birthsign>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9277,7 +9277,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Activators);
                         item.Activators.CopyFieldsFrom<Activator_CopyMask>(
-                            rhs: Group<Activator>.Create_Xml(
+                            rhs: Group<Activator>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9301,7 +9301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus);
                         item.AlchemicalApparatus.CopyFieldsFrom<AlchemicalApparatus_CopyMask>(
-                            rhs: Group<AlchemicalApparatus>.Create_Xml(
+                            rhs: Group<AlchemicalApparatus>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9325,7 +9325,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Armors);
                         item.Armors.CopyFieldsFrom<Armor_CopyMask>(
-                            rhs: Group<Armor>.Create_Xml(
+                            rhs: Group<Armor>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9349,7 +9349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Books);
                         item.Books.CopyFieldsFrom<Book_CopyMask>(
-                            rhs: Group<Book>.Create_Xml(
+                            rhs: Group<Book>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9373,7 +9373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Clothes);
                         item.Clothes.CopyFieldsFrom<Clothing_CopyMask>(
-                            rhs: Group<Clothing>.Create_Xml(
+                            rhs: Group<Clothing>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9397,7 +9397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Containers);
                         item.Containers.CopyFieldsFrom<Container_CopyMask>(
-                            rhs: Group<Container>.Create_Xml(
+                            rhs: Group<Container>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9421,7 +9421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Doors);
                         item.Doors.CopyFieldsFrom<Door_CopyMask>(
-                            rhs: Group<Door>.Create_Xml(
+                            rhs: Group<Door>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9445,7 +9445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ingredients);
                         item.Ingredients.CopyFieldsFrom<Ingredient_CopyMask>(
-                            rhs: Group<Ingredient>.Create_Xml(
+                            rhs: Group<Ingredient>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9469,7 +9469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Lights);
                         item.Lights.CopyFieldsFrom<Light_CopyMask>(
-                            rhs: Group<Light>.Create_Xml(
+                            rhs: Group<Light>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9493,7 +9493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous);
                         item.Miscellaneous.CopyFieldsFrom<Miscellaneous_CopyMask>(
-                            rhs: Group<Miscellaneous>.Create_Xml(
+                            rhs: Group<Miscellaneous>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9517,7 +9517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Statics);
                         item.Statics.CopyFieldsFrom<Static_CopyMask>(
-                            rhs: Group<Static>.Create_Xml(
+                            rhs: Group<Static>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9541,7 +9541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Grasses);
                         item.Grasses.CopyFieldsFrom<Grass_CopyMask>(
-                            rhs: Group<Grass>.Create_Xml(
+                            rhs: Group<Grass>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9565,7 +9565,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Trees);
                         item.Trees.CopyFieldsFrom<Tree_CopyMask>(
-                            rhs: Group<Tree>.Create_Xml(
+                            rhs: Group<Tree>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9589,7 +9589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Flora);
                         item.Flora.CopyFieldsFrom<Flora_CopyMask>(
-                            rhs: Group<Flora>.Create_Xml(
+                            rhs: Group<Flora>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9613,7 +9613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Furnature);
                         item.Furnature.CopyFieldsFrom<Furnature_CopyMask>(
-                            rhs: Group<Furnature>.Create_Xml(
+                            rhs: Group<Furnature>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9637,7 +9637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weapons);
                         item.Weapons.CopyFieldsFrom<Weapon_CopyMask>(
-                            rhs: Group<Weapon>.Create_Xml(
+                            rhs: Group<Weapon>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9661,7 +9661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammo);
                         item.Ammo.CopyFieldsFrom<Ammo_CopyMask>(
-                            rhs: Group<Ammo>.Create_Xml(
+                            rhs: Group<Ammo>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9685,7 +9685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.NPCs);
                         item.NPCs.CopyFieldsFrom<NPC_CopyMask>(
-                            rhs: Group<NPC>.Create_Xml(
+                            rhs: Group<NPC>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9709,7 +9709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Creatures);
                         item.Creatures.CopyFieldsFrom<Creature_CopyMask>(
-                            rhs: Group<Creature>.Create_Xml(
+                            rhs: Group<Creature>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9733,7 +9733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures);
                         item.LeveledCreatures.CopyFieldsFrom<LeveledCreature_CopyMask>(
-                            rhs: Group<LeveledCreature>.Create_Xml(
+                            rhs: Group<LeveledCreature>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9757,7 +9757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.SoulGems);
                         item.SoulGems.CopyFieldsFrom<SoulGem_CopyMask>(
-                            rhs: Group<SoulGem>.Create_Xml(
+                            rhs: Group<SoulGem>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9781,7 +9781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Keys);
                         item.Keys.CopyFieldsFrom<Key_CopyMask>(
-                            rhs: Group<Key>.Create_Xml(
+                            rhs: Group<Key>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9805,7 +9805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Potions);
                         item.Potions.CopyFieldsFrom<Potion_CopyMask>(
-                            rhs: Group<Potion>.Create_Xml(
+                            rhs: Group<Potion>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9829,7 +9829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Subspaces);
                         item.Subspaces.CopyFieldsFrom<Subspace_CopyMask>(
-                            rhs: Group<Subspace>.Create_Xml(
+                            rhs: Group<Subspace>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9853,7 +9853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.SigilStones);
                         item.SigilStones.CopyFieldsFrom<SigilStone_CopyMask>(
-                            rhs: Group<SigilStone>.Create_Xml(
+                            rhs: Group<SigilStone>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9877,7 +9877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledItems);
                         item.LeveledItems.CopyFieldsFrom<LeveledItem_CopyMask>(
-                            rhs: Group<LeveledItem>.Create_Xml(
+                            rhs: Group<LeveledItem>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9901,7 +9901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weathers);
                         item.Weathers.CopyFieldsFrom<Weather_CopyMask>(
-                            rhs: Group<Weather>.Create_Xml(
+                            rhs: Group<Weather>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9925,7 +9925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Climates);
                         item.Climates.CopyFieldsFrom<Climate_CopyMask>(
-                            rhs: Group<Climate>.Create_Xml(
+                            rhs: Group<Climate>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9949,7 +9949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Regions);
                         item.Regions.CopyFieldsFrom<Region_CopyMask>(
-                            rhs: Group<Region>.Create_Xml(
+                            rhs: Group<Region>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9973,7 +9973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Worldspaces);
                         item.Worldspaces.CopyFieldsFrom<Worldspace_CopyMask>(
-                            rhs: Group<Worldspace>.Create_Xml(
+                            rhs: Group<Worldspace>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -9997,7 +9997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.DialogTopics);
                         item.DialogTopics.CopyFieldsFrom<DialogTopic_CopyMask>(
-                            rhs: Group<DialogTopic>.Create_Xml(
+                            rhs: Group<DialogTopic>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -10021,7 +10021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Quests);
                         item.Quests.CopyFieldsFrom<Quest_CopyMask>(
-                            rhs: Group<Quest>.Create_Xml(
+                            rhs: Group<Quest>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -10045,7 +10045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
                         item.IdleAnimations.CopyFieldsFrom<IdleAnimation_CopyMask>(
-                            rhs: Group<IdleAnimation>.Create_Xml(
+                            rhs: Group<IdleAnimation>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -10069,7 +10069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
                         item.AIPackages.CopyFieldsFrom<AIPackage_CopyMask>(
-                            rhs: Group<AIPackage>.Create_Xml(
+                            rhs: Group<AIPackage>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -10093,7 +10093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.CombatStyles);
                         item.CombatStyles.CopyFieldsFrom<CombatStyle_CopyMask>(
-                            rhs: Group<CombatStyle>.Create_Xml(
+                            rhs: Group<CombatStyle>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -10117,7 +10117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
                         item.LoadScreens.CopyFieldsFrom<LoadScreen_CopyMask>(
-                            rhs: Group<LoadScreen>.Create_Xml(
+                            rhs: Group<LoadScreen>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -10141,7 +10141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells);
                         item.LeveledSpells.CopyFieldsFrom<LeveledSpell_CopyMask>(
-                            rhs: Group<LeveledSpell>.Create_Xml(
+                            rhs: Group<LeveledSpell>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -10165,7 +10165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
                         item.AnimatedObjects.CopyFieldsFrom<AnimatedObject_CopyMask>(
-                            rhs: Group<AnimatedObject>.Create_Xml(
+                            rhs: Group<AnimatedObject>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -10189,7 +10189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.Waters);
                         item.Waters.CopyFieldsFrom<Water_CopyMask>(
-                            rhs: Group<Water>.Create_Xml(
+                            rhs: Group<Water>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -10213,7 +10213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PushIndex((int)OblivionMod_FieldIndex.EffectShaders);
                         item.EffectShaders.CopyFieldsFrom<EffectShader_CopyMask>(
-                            rhs: Group<EffectShader>.Create_Xml(
+                            rhs: Group<EffectShader>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -10250,7 +10250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.OblivionMod");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -10306,7 +10306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class OblivionModXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IOblivionModGetter item,
             XElement node,
             out OblivionMod_ErrorMask errorMask,
@@ -10324,7 +10324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IOblivionModGetter item,
             string path,
             out OblivionMod_ErrorMask errorMask,
@@ -10333,7 +10333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -10343,7 +10343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IOblivionModGetter item,
             string path,
             ErrorMaskBuilder errorMask,
@@ -10352,7 +10352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -10361,7 +10361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IOblivionModGetter item,
             Stream stream,
             out OblivionMod_ErrorMask errorMask,
@@ -10370,7 +10370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -10380,7 +10380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IOblivionModGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
@@ -10389,7 +10389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -10398,7 +10398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IOblivionModGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -10413,7 +10413,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IOblivionModGetter item,
             XElement node,
             string name = null,
@@ -10427,7 +10427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask.GetCrystal());
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IOblivionModGetter item,
             string path,
             string name = null)
@@ -10442,7 +10442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IOblivionModGetter item,
             Stream stream,
             string name = null)
@@ -13794,7 +13794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class OblivionModBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IOblivionModGetter item,
             MutagenWriter writer,
             ModKey modKey,
@@ -13813,7 +13813,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IOblivionModGetter item,
             string path,
             ModKey modKey,
@@ -13825,7 +13825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
-                    Write_Binary(
+                    WriteToBinary(
                         item: item,
                         importMask: importMask,
                         modKey: modKey,
@@ -13841,7 +13841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IOblivionModGetter item,
             string path,
             ModKey modKey,
@@ -13853,7 +13853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
-                    Write_Binary(
+                    WriteToBinary(
                         item: item,
                         importMask: importMask,
                         modKey: modKey,
@@ -13868,7 +13868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IOblivionModGetter item,
             Stream stream,
             ModKey modKey,
@@ -13878,7 +13878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary(
+                WriteToBinary(
                     item: item,
                     importMask: importMask,
                     modKey: modKey,
@@ -13888,7 +13888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IOblivionModGetter item,
             Stream stream,
             ModKey modKey,
@@ -13898,7 +13898,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary(
+                WriteToBinary(
                     item: item,
                     importMask: importMask,
                     modKey: modKey,
@@ -13907,7 +13907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IOblivionModGetter item,
             MutagenWriter writer,
             ModKey modKey,
@@ -13923,7 +13923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IOblivionModGetter item,
             MutagenWriter writer,
             ModKey modKey,
@@ -13938,7 +13938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: null);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IOblivionModGetter item,
             string path,
             ModKey modKey,
@@ -13964,7 +13964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IOblivionModGetter item,
             Stream stream,
             ModKey modKey,

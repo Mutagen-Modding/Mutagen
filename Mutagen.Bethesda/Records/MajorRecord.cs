@@ -43,13 +43,13 @@ namespace Mutagen.Bethesda
             set => this.MajorRecordFlags.SetFlag(MajorRecordFlag.Compressed, value);
         }
 
-        public static void Fill_Binary(
+        public static void FillBinary(
             MutagenFrame frame,
             MajorRecord record,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Fill_Binary_Structs(
+            FillBinaryStructs(
                 record,
                 frame,
                 masterReferences,
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda
                     frame.Reader,
                     contentLength: out var contentLength);
                 var finalPos = frame.Position + contentLength;
-                Fill_Binary_RecordTypes(
+                FillBinaryRecordTypes(
                     record,
                     frame,
                     nextRecordType,

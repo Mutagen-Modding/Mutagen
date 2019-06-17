@@ -141,12 +141,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override IXmlTranslator XmlTranslator => GlobalIntXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static GlobalInt Create_Xml(
+        public static GlobalInt CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             GlobalInt_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static GlobalInt Create_Xml(
+        public static GlobalInt CreateFromXml(
             XElement node,
             out GlobalInt_ErrorMask errorMask,
             bool doMasks = true,
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Skyrim
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public new static GlobalInt Create_Xml(
+        public new static GlobalInt CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -191,13 +191,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    GlobalIntXmlTranslation.FillPublicElement_Xml(
+                    GlobalIntXmlTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -213,80 +213,80 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static GlobalInt Create_Xml(
+        public static GlobalInt CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             GlobalInt_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static GlobalInt Create_Xml(
+        public static GlobalInt CreateFromXml(
             string path,
             out GlobalInt_ErrorMask errorMask,
             GlobalInt_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static GlobalInt Create_Xml(
+        public static GlobalInt CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             GlobalInt_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static GlobalInt Create_Xml(
+        public static GlobalInt CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             GlobalInt_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static GlobalInt Create_Xml(
+        public static GlobalInt CreateFromXml(
             Stream stream,
             out GlobalInt_ErrorMask errorMask,
             GlobalInt_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static GlobalInt Create_Xml(
+        public static GlobalInt CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             GlobalInt_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             GlobalInt item,
             XElement node,
             string name,
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Skyrim
             switch (name)
             {
                 default:
-                    Global.FillPrivateElement_Xml(
+                    Global.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -358,11 +358,11 @@ namespace Mutagen.Bethesda.Skyrim
         protected override IBinaryTranslator BinaryTranslator => GlobalIntBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
-        public static GlobalInt Create_Binary(
+        public static GlobalInt CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -370,14 +370,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static GlobalInt Create_Binary(
+        public static GlobalInt CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out GlobalInt_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public new static GlobalInt Create_Binary(
+        public new static GlobalInt CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -399,26 +399,26 @@ namespace Mutagen.Bethesda.Skyrim
                 recType: GlobalInt_Registration.GLOB_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             GlobalInt item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Global.Fill_Binary_Structs(
+            Global.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             GlobalInt item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case 0x56544C46: // FLTV
                 {
-                    GlobalIntBinaryTranslation.FillBinary_Data_Custom_Public(
+                    GlobalIntBinaryTranslation.FillBinaryDataCustomPublic(
                         frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
                         item: item,
                         masterReferences: masterReferences,
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return TryGet<int?>.Succeed((int)GlobalInt_FieldIndex.Data);
                 }
                 default:
-                    return Global.Fill_Binary_RecordTypes(
+                    return Global.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1063,13 +1063,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GlobalIntXmlTranslation Instance = new GlobalIntXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IGlobalIntInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            GlobalXmlTranslation.WriteToNode_Xml(
+            GlobalXmlTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IGlobalIntInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    GlobalIntXmlTranslation.FillPublicElement_Xml(
+                    GlobalIntXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IGlobalIntInternal item,
             XElement node,
             string name,
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 default:
-                    GlobalXmlTranslation.FillPublicElement_Xml(
+                    GlobalXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.GlobalInt");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Xml Write Mixins
     public static class GlobalIntXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGlobalIntInternalGetter item,
             XElement node,
             out GlobalInt_ErrorMask errorMask,
@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             errorMask = GlobalInt_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGlobalIntInternalGetter item,
             string path,
             out GlobalInt_ErrorMask errorMask,
@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGlobalIntInternalGetter item,
             Stream stream,
             out GlobalInt_ErrorMask errorMask,
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1571,38 +1571,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GlobalIntBinaryTranslation Instance = new GlobalIntBinaryTranslation();
 
-        static partial void FillBinary_Data_Custom(
+        static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             GlobalInt item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void FillBinary_Data_Custom_Public(
+        public static void FillBinaryDataCustomPublic(
             MutagenFrame frame,
             GlobalInt item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            FillBinary_Data_Custom(
+            FillBinaryDataCustom(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void WriteBinary_Data_Custom(
+        static partial void WriteBinaryDataCustom(
             MutagenWriter writer,
             IGlobalIntInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void WriteBinary_Data(
+        public static void WriteBinaryData(
             MutagenWriter writer,
             IGlobalIntInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            WriteBinary_Data_Custom(
+            WriteBinaryDataCustom(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -1622,7 +1622,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            GlobalIntBinaryTranslation.WriteBinary_Data(
+            GlobalIntBinaryTranslation.WriteBinaryData(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -1720,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Binary Write Mixins
     public static class GlobalIntBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IGlobalIntInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

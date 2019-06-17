@@ -300,12 +300,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlTranslator XmlTranslator => ContainerXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static Container Create_Xml(
+        public static Container CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Container_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Container Create_Xml(
+        public static Container CreateFromXml(
             XElement node,
             out Container_ErrorMask errorMask,
             bool doMasks = true,
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static Container Create_Xml(
+        public new static Container CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -350,13 +350,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    ContainerXmlTranslation.FillPublicElement_Xml(
+                    ContainerXmlTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -372,80 +372,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Container Create_Xml(
+        public static Container CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             Container_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Container Create_Xml(
+        public static Container CreateFromXml(
             string path,
             out Container_ErrorMask errorMask,
             Container_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Container Create_Xml(
+        public static Container CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             Container_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Container Create_Xml(
+        public static Container CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             Container_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Container Create_Xml(
+        public static Container CreateFromXml(
             Stream stream,
             out Container_ErrorMask errorMask,
             Container_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Container Create_Xml(
+        public static Container CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             Container_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             Container item,
             XElement node,
             string name,
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.DATADataTypeState |= Container.DATADataType.Has;
                     break;
                 default:
-                    OblivionMajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -580,11 +580,11 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IBinaryTranslator BinaryTranslator => ContainerBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
-        public static Container Create_Binary(
+        public static Container CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -592,14 +592,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Container Create_Binary(
+        public static Container CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out Container_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static Container Create_Binary(
+        public new static Container CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -621,26 +621,26 @@ namespace Mutagen.Bethesda.Oblivion
                 recType: Container_Registration.CONT_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             Container item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            OblivionMajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             Container item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Container_FieldIndex.Model);
-                        item.Model = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.CloseSound);
                 }
                 default:
-                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1833,13 +1833,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static ContainerXmlTranslation Instance = new ContainerXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IContainerInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1948,7 +1948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IContainerInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1958,7 +1958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ContainerXmlTranslation.FillPublicElement_Xml(
+                    ContainerXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1973,7 +1973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IContainerInternal item,
             XElement node,
             string name,
@@ -2164,7 +2164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -2187,7 +2187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Container");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -2244,7 +2244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class ContainerXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IContainerInternalGetter item,
             XElement node,
             out Container_ErrorMask errorMask,
@@ -2262,7 +2262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = Container_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IContainerInternalGetter item,
             string path,
             out Container_ErrorMask errorMask,
@@ -2271,7 +2271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -2281,7 +2281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IContainerInternalGetter item,
             Stream stream,
             out Container_ErrorMask errorMask,
@@ -2290,7 +2290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -3058,7 +3058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class ContainerBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IContainerInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Oblivion
             Items = new Loqui.MaskItem<Loqui.CopyOption, CellSubBlock_CopyMask>(Loqui.CopyOption.Skip, null)
         };
 
-        public async Task Write_Xml_Folder(
+        public async Task WriteToXmlFolder(
             DirectoryPath? dir,
             string name,
             XElement node,
@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var subDir = Path.Combine(dir.Value.Path, $"{this.BlockNumber}");
             Directory.CreateDirectory(subDir);
-            this.Write_Xml(
+            this.WriteToXml(
                 Path.Combine(subDir, "Group.xml"),
                 errorMask: errorMask,
                 translationMask: GroupExt.XmlFolderTranslationCrystal);
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
                 int stampedCounter = blockCounter++;
                 tasks.Add(Task.Run(() =>
                 {
-                    item.Write_Xml_Folder(
+                    item.WriteToXmlFolder(
                         path: Path.Combine(subDir, $"{stampedCounter.ToString()}.xml"),
                         errorMask: errorMask);
                 }));
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static async Task<CellBlock> Create_XmlFolder(
+        public static async Task<CellBlock> CreateFromXmlFolder(
             XElement node,
             string path,
             ErrorMaskBuilder errorMask,
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (File.Exists(groupPath))
             {
                 XElement elem = XElement.Load(groupPath);
-                CellBlockXmlTranslation.FillPublic_Xml(
+                CellBlockXmlTranslation.FillPublicXml(
                     ret,
                     elem,
                     errorMask,
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
                 })
                 .OrderBy(i => i.Index))
             {
-                tasks.Add(Task.Run(() => CellSubBlock.Create_Xml_Folder(f.File, f.Index)));
+                tasks.Add(Task.Run(() => CellSubBlock.CreateFromXmlFolder(f.File, f.Index)));
             }
             var subBlocks = await Task.WhenAll(tasks);
             ret.Items.AddRange(subBlocks);

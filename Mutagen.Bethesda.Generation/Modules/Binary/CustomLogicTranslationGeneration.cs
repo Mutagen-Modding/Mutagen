@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Generation
             if (!isAsync)
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"static partial void FillBinary_{field.Name}_Custom")
+                    $"static partial void FillBinary{field.Name}Custom")
                 {
                     SemiColon = true
                 })
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine();
 
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void FillBinary_{field.Name}_Custom_Public"))
+                    $"public static void FillBinary{field.Name}CustomPublic"))
                 {
                     args.Add($"{nameof(MutagenFrame)} frame");
                     args.Add($"{obj.ObjectName} item");
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"FillBinary_{field.Name}_Custom"))
+                        $"FillBinary{field.Name}Custom"))
                     {
                         args.Add($"frame: frame");
                         args.Add($"item: item");
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine();
             }
             using (var args = new FunctionWrapper(fg,
-                $"static partial void WriteBinary_{field.Name}_Custom")
+                $"static partial void WriteBinary{field.Name}Custom")
             {
                 SemiColon = true
             })
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
             using (var args = new FunctionWrapper(fg,
-                $"public static void WriteBinary_{field.Name}"))
+                $"public static void WriteBinary{field.Name}"))
             {
                 args.Add($"{nameof(MutagenWriter)} writer");
                 args.Add($"{obj.Interface(getter: true, internalInterface: obj.HasInternalInterface)} item");
@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"WriteBinary_{field.Name}_Custom"))
+                    $"WriteBinary{field.Name}Custom"))
                 {
                     args.Add("writer: writer");
                     args.Add("item: item");
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor)
         {
             using (var args = new ArgsWrapper(fg,
-                $"{this.Module.TranslationClass(obj)}.WriteBinary_{field.Name}"))
+                $"{this.Module.TranslationClass(obj)}.WriteBinary{field.Name}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add("item: item");
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = field.GetFieldData();
             using (var args = new ArgsWrapper(fg,
-                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Module.TranslationClass(field.ObjectGen)}.FillBinary_{field.Name}_Custom_Public"))
+                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Module.TranslationClass(field.ObjectGen)}.FillBinary{field.Name}CustomPublic"))
             {
                 args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength)" : frameAccessor)}");
                 args.Add("item: item");

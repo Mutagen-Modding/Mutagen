@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Generation
                         if (loquiGen.SingletonType == SingletonLevel.Singleton)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"var tmp{typeGen.Name} = {Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{loquiGen.TypeName}.Create_{ModNickname}"))
+                                $"var tmp{typeGen.Name} = {Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{loquiGen.TypeName}.{this.Module.CreateFromPrefix}{ModNickname}"))
                             {
                                 args.Add($"frame: {frameAccessor}");
                                 args.Add($"errorMask: {errorMaskAccessor}");
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Generation
                         else
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"{itemAccessor.DirectAccess} = {loquiGen.TargetObjectGeneration.Namespace}.{loquiGen.ObjectTypeName}.Create_{this.Module.ModuleNickname}"))
+                                $"{itemAccessor.DirectAccess} = {loquiGen.TargetObjectGeneration.Namespace}.{loquiGen.ObjectTypeName}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
                             {
                                 args.Add($"frame: {frameAccessor}");
                                 if (data?.RecordTypeConverter != null

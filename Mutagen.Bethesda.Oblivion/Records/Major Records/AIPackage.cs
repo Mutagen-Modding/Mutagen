@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class AIPackageBinaryTranslation
         {
-            static partial void FillBinary_Flags_Custom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryFlagsCustom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (frame.Remaining == 8)
                 {
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void WriteBinary_Flags_Custom(MutagenWriter writer, IAIPackageInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IAIPackageInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.Flag>.Instance.Write(
                     writer,
@@ -115,11 +115,11 @@ namespace Mutagen.Bethesda.Oblivion
                     length: 4);
             }
 
-            static partial void FillBinary_GeneralType_Custom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryGeneralTypeCustom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
             }
 
-            static partial void WriteBinary_GeneralType_Custom(MutagenWriter writer, IAIPackageInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryGeneralTypeCustom(MutagenWriter writer, IAIPackageInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
             }
         }

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a9b53374c7218700947266e714de6365f2159ec7</Sha>
+         <Sha>b4bde4b5cfb68df079bb28a335c879c02d221c59</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>06-11-2019 08:33:48</CommitDate>
-         <Description>Ctor generation made async to help reorder generation snippets</Description>
+         <CommitDate>06-19-2019 08:21:35</CommitDate>
+         <Description>Translation systems use less _ characters</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

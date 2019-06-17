@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Tests
             await modList.Import(
                 dataFolder: testingSettings.DataFolderLocations.Oblivion,
                 loadOrder: loadOrder,
-                importer: async (filePath, modKey) => TryGet<OblivionMod>.Succeed(await OblivionMod.Create_Binary(filePath.Path, modKey)));
+                importer: async (filePath, modKey) => TryGet<OblivionMod>.Succeed(await OblivionMod.CreateFromBinary(filePath.Path, modKey)));
             OblivionMod ret = new OblivionMod(new ModKey("Test", master: false));
             foreach (var mod in modList)
             {

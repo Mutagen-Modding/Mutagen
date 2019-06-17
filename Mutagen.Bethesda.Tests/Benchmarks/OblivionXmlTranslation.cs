@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             System.Console.WriteLine("Running in directory: " + Directory.GetCurrentDirectory());
             FilePath settingsPath = "../../../../TestingSettings.xml";
             System.Console.WriteLine("Settings path: " + settingsPath);
-            Settings = TestingSettings.Create_Xml(settingsPath.Path);
+            Settings = TestingSettings.CreateFromXml(settingsPath.Path);
             System.Console.WriteLine("Target settings: " + Settings.ToString());
 
             // Setup folders and paths
@@ -40,10 +40,10 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             XmlFolder.Create();
 
             // Setup
-            Mod = await OblivionMod.Create_Binary(
+            Mod = await OblivionMod.CreateFromBinary(
                 DataPath,
                 ModKey);
-            await Mod.Write_XmlFolder(XmlFolder, doMasks: false);
+            await Mod.WriteToXmlFolder(XmlFolder, doMasks: false);
         }
 
         [GlobalCleanup]
@@ -53,9 +53,9 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         }
 
         [Benchmark]
-        public Task CreateXmlFolder()
+        public Task CreateFromXmlFolder()
         {
-            return OblivionMod.Create_Xml_Folder(
+            return OblivionMod.CreateFromXmlFolder(
                 XmlFolder,
                 ModKey);
         }
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public async Task WriteXmlFolderExisting()
         {
-            await Mod.Write_XmlFolder(
+            await Mod.WriteToXmlFolder(
                 XmlFolder);
         }
     }
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             System.Console.WriteLine("Running in directory: " + Directory.GetCurrentDirectory());
             FilePath settingsPath = "../../../../TestingSettings.xml";
             System.Console.WriteLine("Settings path: " + settingsPath);
-            Settings = TestingSettings.Create_Xml(settingsPath.Path);
+            Settings = TestingSettings.CreateFromXml(settingsPath.Path);
             System.Console.WriteLine("Target settings: " + Settings.ToString());
 
             // Setup folders and paths
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             OneTimeXmlFolder.Create();
 
             // Setup
-            Mod = await OblivionMod.Create_Binary(
+            Mod = await OblivionMod.CreateFromBinary(
                 DataPath,
                 ModKey);
         }
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public async Task WriteXmlFolder()
         {
-            await Mod.Write_XmlFolder(
+            await Mod.WriteToXmlFolder(
                 OneTimeXmlFolder);
         }
     }

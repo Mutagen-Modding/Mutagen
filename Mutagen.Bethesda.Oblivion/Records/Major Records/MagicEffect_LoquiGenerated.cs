@@ -425,12 +425,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlTranslator XmlTranslator => MagicEffectXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static MagicEffect Create_Xml(
+        public static MagicEffect CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             MagicEffect_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static MagicEffect Create_Xml(
+        public static MagicEffect CreateFromXml(
             XElement node,
             out MagicEffect_ErrorMask errorMask,
             bool doMasks = true,
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static MagicEffect Create_Xml(
+        public new static MagicEffect CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -476,13 +476,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.DATADataTypeState |= MagicEffect.DATADataType.Break0;
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    MagicEffectXmlTranslation.FillPublicElement_Xml(
+                    MagicEffectXmlTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -498,80 +498,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static MagicEffect Create_Xml(
+        public static MagicEffect CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             MagicEffect_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static MagicEffect Create_Xml(
+        public static MagicEffect CreateFromXml(
             string path,
             out MagicEffect_ErrorMask errorMask,
             MagicEffect_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static MagicEffect Create_Xml(
+        public static MagicEffect CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             MagicEffect_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static MagicEffect Create_Xml(
+        public static MagicEffect CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             MagicEffect_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static MagicEffect Create_Xml(
+        public static MagicEffect CreateFromXml(
             Stream stream,
             out MagicEffect_ErrorMask errorMask,
             MagicEffect_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static MagicEffect Create_Xml(
+        public static MagicEffect CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             MagicEffect_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             MagicEffect item,
             XElement node,
             string name,
@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.DATADataTypeState |= MagicEffect.DATADataType.Has;
                     break;
                 default:
-                    OblivionMajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -714,11 +714,11 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IBinaryTranslator BinaryTranslator => MagicEffectBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
-        public static MagicEffect Create_Binary(
+        public static MagicEffect CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -726,14 +726,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static MagicEffect Create_Binary(
+        public static MagicEffect CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out MagicEffect_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -742,7 +742,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static MagicEffect Create_Binary(
+        public new static MagicEffect CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -755,26 +755,26 @@ namespace Mutagen.Bethesda.Oblivion
                 recType: MagicEffect_Registration.MGEF_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             MagicEffect item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            OblivionMajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             MagicEffect item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)MagicEffect_FieldIndex.Model);
-                        item.Model = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -941,7 +941,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)MagicEffect_FieldIndex.SubData);
-                        item.SubData = Mutagen.Bethesda.Oblivion.MagicEffectSubData.Create_Binary(
+                        item.SubData = Mutagen.Bethesda.Oblivion.MagicEffectSubData.CreateFromBinary(
                             frame: dataFrame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
                 }
                 default:
-                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -2408,13 +2408,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static MagicEffectXmlTranslation Instance = new MagicEffectXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IMagicEffectInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2592,7 +2592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IMagicEffectInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -2602,7 +2602,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    MagicEffectXmlTranslation.FillPublicElement_Xml(
+                    MagicEffectXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2617,7 +2617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IMagicEffectInternal item,
             XElement node,
             string name,
@@ -3011,7 +3011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -3034,7 +3034,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MagicEffect");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -3091,7 +3091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class MagicEffectXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMagicEffectInternalGetter item,
             XElement node,
             out MagicEffect_ErrorMask errorMask,
@@ -3109,7 +3109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = MagicEffect_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMagicEffectInternalGetter item,
             string path,
             out MagicEffect_ErrorMask errorMask,
@@ -3118,7 +3118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -3128,7 +3128,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMagicEffectInternalGetter item,
             Stream stream,
             out MagicEffect_ErrorMask errorMask,
@@ -3137,7 +3137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -4114,7 +4114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class MagicEffectBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IMagicEffectInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 var async = HasAsyncStructs(obj, self: true);
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static {Loqui.Generation.Utility.TaskReturn(async)} Fill_{ModuleNickname}_Structs"))
+                    $"protected static {Loqui.Generation.Utility.TaskReturn(async)} Fill{ModuleNickname}Structs"))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenFrame frame");
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{Loqui.Generation.Utility.Await(async)}{obj.BaseClass.Name}.Fill_{ModuleNickname}_Structs"))
+                            $"{Loqui.Generation.Utility.Await(async)}{obj.BaseClass.Name}.Fill{ModuleNickname}Structs"))
                         {
                             args.Add("item: item");
                             args.Add("frame: frame");
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static {Loqui.Generation.Utility.TaskWrap("TryGet<int?>", HasAsyncRecords(obj, self: true))} Fill_{ModuleNickname}_RecordTypes"))
+                    $"protected static {Loqui.Generation.Utility.TaskWrap("TryGet<int?>", HasAsyncRecords(obj, self: true))} Fill{ModuleNickname}RecordTypes"))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenFrame frame");
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Generation
                             if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"return {Loqui.Generation.Utility.Await(HasAsyncRecords(obj, self: false))}{obj.BaseClass.Name}.Fill_{ModuleNickname}_RecordTypes"))
+                                    $"return {Loqui.Generation.Utility.Await(HasAsyncRecords(obj, self: false))}{obj.BaseClass.Name}.Fill{ModuleNickname}RecordTypes"))
                                 {
                                     args.Add("item: item");
                                     args.Add("frame: frame");
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Generation
             if (data.CustomBinaryEnd == CustomEnd.Normal)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"static partial void CustomBinaryEnd_Import"))
+                    $"static partial void CustomBinaryEndImport"))
                 {
                     args.Add("MutagenFrame frame");
                     args.Add($"{obj.ObjectName} obj");
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void CustomBinaryEnd_Import_Public"))
+                    $"public static void CustomBinaryEndImportPublic"))
                 {
                     args.Add("MutagenFrame frame");
                     args.Add($"{obj.ObjectName} obj");
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"CustomBinaryEnd_Import"))
+                        $"CustomBinaryEndImport"))
                     {
                         args.Add("frame: frame");
                         args.Add($"obj: obj");
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
             using (var args = new ArgsWrapper(fg,
-                $"static partial void CustomBinaryEnd_Export"))
+                $"static partial void CustomBinaryEndExport"))
             {
                 args.Add("MutagenWriter writer");
                 args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} obj");
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"ErrorMaskBuilder errorMask");
             }
             using (var args = new FunctionWrapper(fg,
-                $"public static void CustomBinaryEnd_ExportInternal"))
+                $"public static void CustomBinaryEndExportInternal"))
             {
                 args.Add("MutagenWriter writer");
                 args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} obj");
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"CustomBinaryEnd_Export"))
+                    $"CustomBinaryEndExport"))
                 {
                     args.Add($"writer: writer");
                     args.Add($"obj: obj");
@@ -895,8 +895,8 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"recType: {obj.GetTriggeringSource()}");
                     args.Add($"recordTypeConverter: recordTypeConverter");
                     args.Add($"masterReferences: masterReferences");
-                    args.Add($"fillStructs: Fill_Binary_Structs");
-                    args.Add($"fillTyped: Fill_Binary_RecordTypes");
+                    args.Add($"fillStructs: FillBinaryStructs");
+                    args.Add($"fillTyped: FillBinaryRecordTypes");
                 }
                 if (data.CustomBinaryEnd != CustomEnd.Off)
                 {
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg))
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationClass(obj)}.CustomBinaryEnd_Import{(await this.AsyncImport(obj) ? null : "_Public")}"))
+                            $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationClass(obj)}.CustomBinaryEndImport{(await this.AsyncImport(obj) ? null : "Public")}"))
                         {
                             args.Add("frame: frame");
                             args.Add("obj: ret");
@@ -1018,10 +1018,10 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("masterReferences: masterReferences");
                             args.Add("errorMask: errorMask");
                             args.Add("recordTypeConverter: recordTypeConverter");
-                            args.Add($"fillStructs: Fill_{ModuleNickname}_Structs");
+                            args.Add($"fillStructs: Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj))
                             {
-                                args.Add($"fillTyped: Fill_{ModuleNickname}_RecordTypes");
+                                args.Add($"fillTyped: Fill{ModuleNickname}RecordTypes");
                             }
                         }
                         break;
@@ -1035,10 +1035,10 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("masterReferences: masterReferences");
                             args.Add("errorMask: errorMask");
                             args.Add("recordTypeConverter: recordTypeConverter");
-                            args.Add($"fillStructs: Fill_{ModuleNickname}_Structs");
+                            args.Add($"fillStructs: Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj))
                             {
-                                args.Add($"fillTyped: Fill_{ModuleNickname}_RecordTypes");
+                                args.Add($"fillTyped: Fill{ModuleNickname}RecordTypes");
                             }
                         }
                         break;
@@ -1053,10 +1053,10 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("masterReferences: masterReferences");
                             args.Add("errorMask: errorMask");
                             args.Add("recordTypeConverter: recordTypeConverter");
-                            args.Add($"fillStructs: Fill_{ModuleNickname}_Structs");
+                            args.Add($"fillStructs: Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj))
                             {
-                                args.Add($"fillTyped: Fill_{ModuleNickname}_RecordTypes");
+                                args.Add($"fillTyped: Fill{ModuleNickname}RecordTypes");
                             }
                         }
                         break;
@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Generation
                 if (data.CustomBinaryEnd != CustomEnd.Off)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}CustomBinaryEnd_Import"))
+                        $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}CustomBinaryEndImport"))
                     {
                         args.Add("frame: frame");
                         args.Add("obj: ret");
@@ -1165,7 +1165,7 @@ namespace Mutagen.Bethesda.Generation
             if (data.CustomBinaryEnd != CustomEnd.Off)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"CustomBinaryEnd_ExportInternal"))
+                    $"CustomBinaryEndExportInternal"))
                 {
                     args.Add("writer: writer");
                     args.Add("obj: item");
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Generation
                                         if (subData.Binary == BinaryGenerationType.Custom)
                                         {
                                             using (var args = new ArgsWrapper(fg,
-                                                $"{TranslationClass(obj)}.WriteBinary_{subField.Field.Name}"))
+                                                $"{TranslationClass(obj)}.WriteBinary{subField.Field.Name}"))
                                             {
                                                 args.Add("writer: writer");
                                                 args.Add("item: item");

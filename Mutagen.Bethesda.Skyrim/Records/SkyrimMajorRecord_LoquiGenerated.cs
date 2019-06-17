@@ -107,12 +107,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override IXmlTranslator XmlTranslator => SkyrimMajorRecordXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static SkyrimMajorRecord Create_Xml(
+        public static SkyrimMajorRecord CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             SkyrimMajorRecord_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static SkyrimMajorRecord Create_Xml(
+        public static SkyrimMajorRecord CreateFromXml(
             XElement node,
             out SkyrimMajorRecord_ErrorMask errorMask,
             bool doMasks = true,
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public new static SkyrimMajorRecord Create_Xml(
+        public new static SkyrimMajorRecord CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -160,80 +160,80 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SkyrimMajorRecord Create_Xml(
+        public static SkyrimMajorRecord CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             SkyrimMajorRecord_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static SkyrimMajorRecord Create_Xml(
+        public static SkyrimMajorRecord CreateFromXml(
             string path,
             out SkyrimMajorRecord_ErrorMask errorMask,
             SkyrimMajorRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static SkyrimMajorRecord Create_Xml(
+        public static SkyrimMajorRecord CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             SkyrimMajorRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static SkyrimMajorRecord Create_Xml(
+        public static SkyrimMajorRecord CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             SkyrimMajorRecord_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static SkyrimMajorRecord Create_Xml(
+        public static SkyrimMajorRecord CreateFromXml(
             Stream stream,
             out SkyrimMajorRecord_ErrorMask errorMask,
             SkyrimMajorRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static SkyrimMajorRecord Create_Xml(
+        public static SkyrimMajorRecord CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             SkyrimMajorRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -242,7 +242,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             SkyrimMajorRecord item,
             XElement node,
             string name,
@@ -252,7 +252,7 @@ namespace Mutagen.Bethesda.Skyrim
             switch (name)
             {
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    MajorRecord.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -291,13 +291,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         protected override IBinaryTranslator BinaryTranslator => SkyrimMajorRecordBinaryTranslation.Instance;
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             SkyrimMajorRecord item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            MajorRecord.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -832,13 +832,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static SkyrimMajorRecordXmlTranslation Instance = new SkyrimMajorRecordXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             ISkyrimMajorRecordInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordXmlTranslation.WriteToNode_Xml(
+            MajorRecordXmlTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             ISkyrimMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    SkyrimMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    SkyrimMajorRecordXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             ISkyrimMajorRecordInternal item,
             XElement node,
             string name,
@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 default:
-                    MajorRecordXmlTranslation.FillPublicElement_Xml(
+                    MajorRecordXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.SkyrimMajorRecord");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -980,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Xml Write Mixins
     public static class SkyrimMajorRecordXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISkyrimMajorRecordInternalGetter item,
             XElement node,
             out SkyrimMajorRecord_ErrorMask errorMask,
@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISkyrimMajorRecordInternalGetter item,
             string path,
             out SkyrimMajorRecord_ErrorMask errorMask,
@@ -1007,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1017,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISkyrimMajorRecordInternalGetter item,
             Stream stream,
             out SkyrimMajorRecord_ErrorMask errorMask,
@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1377,7 +1377,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Binary Write Mixins
     public static class SkyrimMajorRecordBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ISkyrimMajorRecordInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

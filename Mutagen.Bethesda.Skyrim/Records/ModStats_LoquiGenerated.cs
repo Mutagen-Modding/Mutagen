@@ -133,12 +133,12 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static ModStats Create_Xml(
+        public static ModStats CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             ModStats_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static ModStats Create_Xml(
+        public static ModStats CreateFromXml(
             XElement node,
             out ModStats_ErrorMask errorMask,
             bool doMasks = true,
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Skyrim
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ModStats Create_Xml(
+        public static ModStats CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 foreach (var elem in node.Elements())
                 {
-                    ModStatsXmlTranslation.FillPublicElement_Xml(
+                    ModStatsXmlTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -199,80 +199,80 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ModStats Create_Xml(
+        public static ModStats CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             ModStats_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static ModStats Create_Xml(
+        public static ModStats CreateFromXml(
             string path,
             out ModStats_ErrorMask errorMask,
             ModStats_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static ModStats Create_Xml(
+        public static ModStats CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             ModStats_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static ModStats Create_Xml(
+        public static ModStats CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             ModStats_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static ModStats Create_Xml(
+        public static ModStats CreateFromXml(
             Stream stream,
             out ModStats_ErrorMask errorMask,
             ModStats_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static ModStats Create_Xml(
+        public static ModStats CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             ModStats_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -306,11 +306,11 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
         #region Binary Create
         [DebuggerStepThrough]
-        public static ModStats Create_Binary(
+        public static ModStats CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -318,14 +318,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static ModStats Create_Binary(
+        public static ModStats CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out ModStats_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -334,7 +334,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ModStats Create_Binary(
+        public static ModStats CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -351,13 +351,13 @@ namespace Mutagen.Bethesda.Skyrim
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs);
+                fillStructs: FillBinaryStructs);
             return ret;
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             ModStats item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ModStatsXmlTranslation Instance = new ModStatsXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IModStatsGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1005,7 +1005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IModStats item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ModStatsXmlTranslation.FillPublicElement_Xml(
+                    ModStatsXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1030,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IModStats item,
             XElement node,
             string name,
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ModStats");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Xml Write Mixins
     public static class ModStatsXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModStatsGetter item,
             XElement node,
             out ModStats_ErrorMask errorMask,
@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModStatsGetter item,
             string path,
             out ModStats_ErrorMask errorMask,
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModStatsGetter item,
             string path,
             ErrorMaskBuilder errorMask,
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModStatsGetter item,
             Stream stream,
             out ModStats_ErrorMask errorMask,
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModStatsGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModStatsGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModStatsGetter item,
             XElement node,
             string name = null,
@@ -1312,7 +1312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask.GetCrystal());
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModStatsGetter item,
             string path,
             string name = null)
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModStatsGetter item,
             Stream stream,
             string name = null)
@@ -1735,7 +1735,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Binary Write Mixins
     public static class ModStatsBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IModStatsGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IModStatsGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -1766,7 +1766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IModStatsGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)

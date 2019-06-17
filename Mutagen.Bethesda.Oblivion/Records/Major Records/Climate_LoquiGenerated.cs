@@ -359,12 +359,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlTranslator XmlTranslator => ClimateXmlTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static Climate Create_Xml(
+        public static Climate CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Climate_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Climate Create_Xml(
+        public static Climate CreateFromXml(
             XElement node,
             out Climate_ErrorMask errorMask,
             bool doMasks = true,
@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static Climate Create_Xml(
+        public new static Climate CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -409,13 +409,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    ClimateXmlTranslation.FillPublicElement_Xml(
+                    ClimateXmlTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -431,80 +431,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Climate Create_Xml(
+        public static Climate CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             Climate_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Climate Create_Xml(
+        public static Climate CreateFromXml(
             string path,
             out Climate_ErrorMask errorMask,
             Climate_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Climate Create_Xml(
+        public static Climate CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             Climate_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Climate Create_Xml(
+        public static Climate CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             Climate_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Climate Create_Xml(
+        public static Climate CreateFromXml(
             Stream stream,
             out Climate_ErrorMask errorMask,
             Climate_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Climate Create_Xml(
+        public static Climate CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             Climate_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             Climate item,
             XElement node,
             string name,
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.TNAMDataTypeState |= Climate.TNAMDataType.Has;
                     break;
                 default:
-                    OblivionMajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -627,11 +627,11 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IBinaryTranslator BinaryTranslator => ClimateBinaryTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
-        public static Climate Create_Binary(
+        public static Climate CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -639,14 +639,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Climate Create_Binary(
+        public static Climate CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out Climate_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static Climate Create_Binary(
+        public new static Climate CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -668,26 +668,26 @@ namespace Mutagen.Bethesda.Oblivion
                 recType: Climate_Registration.CLMT_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             Climate item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            OblivionMajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             Climate item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -756,7 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.Model);
-                        item.Model = Mutagen.Bethesda.Oblivion.Model.Create_Binary(
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -781,33 +781,33 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.TNAMDataTypeState = TNAMDataType.Has;
                     }
-                    ClimateBinaryTranslation.FillBinary_SunriseBegin_Custom_Public(
+                    ClimateBinaryTranslation.FillBinarySunriseBeginCustomPublic(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);
-                    ClimateBinaryTranslation.FillBinary_SunriseEnd_Custom_Public(
+                    ClimateBinaryTranslation.FillBinarySunriseEndCustomPublic(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);
-                    ClimateBinaryTranslation.FillBinary_SunsetBegin_Custom_Public(
+                    ClimateBinaryTranslation.FillBinarySunsetBeginCustomPublic(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);
-                    ClimateBinaryTranslation.FillBinary_SunsetEnd_Custom_Public(
+                    ClimateBinaryTranslation.FillBinarySunsetEndCustomPublic(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);
                     item.Volatility = dataFrame.ReadUInt8();
-                    ClimateBinaryTranslation.FillBinary_Phase_Custom_Public(
+                    ClimateBinaryTranslation.FillBinaryPhaseCustomPublic(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);
-                    ClimateBinaryTranslation.FillBinary_PhaseLength_Custom_Public(
+                    ClimateBinaryTranslation.FillBinaryPhaseLengthCustomPublic(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
@@ -815,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
                 }
                 default:
-                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -2028,13 +2028,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static ClimateXmlTranslation Instance = new ClimateXmlTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IClimateInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2168,7 +2168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IClimateInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -2178,7 +2178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ClimateXmlTranslation.FillPublicElement_Xml(
+                    ClimateXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2193,7 +2193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IClimateInternal item,
             XElement node,
             string name,
@@ -2519,7 +2519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -2542,7 +2542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Climate");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -2599,7 +2599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class ClimateXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IClimateInternalGetter item,
             XElement node,
             out Climate_ErrorMask errorMask,
@@ -2617,7 +2617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IClimateInternalGetter item,
             string path,
             out Climate_ErrorMask errorMask,
@@ -2626,7 +2626,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -2636,7 +2636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IClimateInternalGetter item,
             Stream stream,
             out Climate_ErrorMask errorMask,
@@ -2645,7 +2645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -3315,228 +3315,228 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static ClimateBinaryTranslation Instance = new ClimateBinaryTranslation();
 
-        static partial void FillBinary_SunriseBegin_Custom(
+        static partial void FillBinarySunriseBeginCustom(
             MutagenFrame frame,
             Climate item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void FillBinary_SunriseBegin_Custom_Public(
+        public static void FillBinarySunriseBeginCustomPublic(
             MutagenFrame frame,
             Climate item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            FillBinary_SunriseBegin_Custom(
+            FillBinarySunriseBeginCustom(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void WriteBinary_SunriseBegin_Custom(
+        static partial void WriteBinarySunriseBeginCustom(
             MutagenWriter writer,
             IClimateInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void WriteBinary_SunriseBegin(
+        public static void WriteBinarySunriseBegin(
             MutagenWriter writer,
             IClimateInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            WriteBinary_SunriseBegin_Custom(
+            WriteBinarySunriseBeginCustom(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void FillBinary_SunriseEnd_Custom(
+        static partial void FillBinarySunriseEndCustom(
             MutagenFrame frame,
             Climate item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void FillBinary_SunriseEnd_Custom_Public(
+        public static void FillBinarySunriseEndCustomPublic(
             MutagenFrame frame,
             Climate item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            FillBinary_SunriseEnd_Custom(
+            FillBinarySunriseEndCustom(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void WriteBinary_SunriseEnd_Custom(
+        static partial void WriteBinarySunriseEndCustom(
             MutagenWriter writer,
             IClimateInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void WriteBinary_SunriseEnd(
+        public static void WriteBinarySunriseEnd(
             MutagenWriter writer,
             IClimateInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            WriteBinary_SunriseEnd_Custom(
+            WriteBinarySunriseEndCustom(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void FillBinary_SunsetBegin_Custom(
+        static partial void FillBinarySunsetBeginCustom(
             MutagenFrame frame,
             Climate item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void FillBinary_SunsetBegin_Custom_Public(
+        public static void FillBinarySunsetBeginCustomPublic(
             MutagenFrame frame,
             Climate item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            FillBinary_SunsetBegin_Custom(
+            FillBinarySunsetBeginCustom(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void WriteBinary_SunsetBegin_Custom(
+        static partial void WriteBinarySunsetBeginCustom(
             MutagenWriter writer,
             IClimateInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void WriteBinary_SunsetBegin(
+        public static void WriteBinarySunsetBegin(
             MutagenWriter writer,
             IClimateInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            WriteBinary_SunsetBegin_Custom(
+            WriteBinarySunsetBeginCustom(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void FillBinary_SunsetEnd_Custom(
+        static partial void FillBinarySunsetEndCustom(
             MutagenFrame frame,
             Climate item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void FillBinary_SunsetEnd_Custom_Public(
+        public static void FillBinarySunsetEndCustomPublic(
             MutagenFrame frame,
             Climate item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            FillBinary_SunsetEnd_Custom(
+            FillBinarySunsetEndCustom(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void WriteBinary_SunsetEnd_Custom(
+        static partial void WriteBinarySunsetEndCustom(
             MutagenWriter writer,
             IClimateInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void WriteBinary_SunsetEnd(
+        public static void WriteBinarySunsetEnd(
             MutagenWriter writer,
             IClimateInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            WriteBinary_SunsetEnd_Custom(
+            WriteBinarySunsetEndCustom(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void FillBinary_Phase_Custom(
+        static partial void FillBinaryPhaseCustom(
             MutagenFrame frame,
             Climate item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void FillBinary_Phase_Custom_Public(
+        public static void FillBinaryPhaseCustomPublic(
             MutagenFrame frame,
             Climate item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            FillBinary_Phase_Custom(
+            FillBinaryPhaseCustom(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void WriteBinary_Phase_Custom(
+        static partial void WriteBinaryPhaseCustom(
             MutagenWriter writer,
             IClimateInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void WriteBinary_Phase(
+        public static void WriteBinaryPhase(
             MutagenWriter writer,
             IClimateInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            WriteBinary_Phase_Custom(
+            WriteBinaryPhaseCustom(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void FillBinary_PhaseLength_Custom(
+        static partial void FillBinaryPhaseLengthCustom(
             MutagenFrame frame,
             Climate item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void FillBinary_PhaseLength_Custom_Public(
+        public static void FillBinaryPhaseLengthCustomPublic(
             MutagenFrame frame,
             Climate item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            FillBinary_PhaseLength_Custom(
+            FillBinaryPhaseLengthCustom(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        static partial void WriteBinary_PhaseLength_Custom(
+        static partial void WriteBinaryPhaseLengthCustom(
             MutagenWriter writer,
             IClimateInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void WriteBinary_PhaseLength(
+        public static void WriteBinaryPhaseLength(
             MutagenWriter writer,
             IClimateInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            WriteBinary_PhaseLength_Custom(
+            WriteBinaryPhaseLengthCustom(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -3617,33 +3617,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Climate_Registration.TNAM_HEADER)))
                 {
-                    ClimateBinaryTranslation.WriteBinary_SunriseBegin(
+                    ClimateBinaryTranslation.WriteBinarySunriseBegin(
                         writer: writer,
                         item: item,
                         errorMask: errorMask,
                         masterReferences: masterReferences);
-                    ClimateBinaryTranslation.WriteBinary_SunriseEnd(
+                    ClimateBinaryTranslation.WriteBinarySunriseEnd(
                         writer: writer,
                         item: item,
                         errorMask: errorMask,
                         masterReferences: masterReferences);
-                    ClimateBinaryTranslation.WriteBinary_SunsetBegin(
+                    ClimateBinaryTranslation.WriteBinarySunsetBegin(
                         writer: writer,
                         item: item,
                         errorMask: errorMask,
                         masterReferences: masterReferences);
-                    ClimateBinaryTranslation.WriteBinary_SunsetEnd(
+                    ClimateBinaryTranslation.WriteBinarySunsetEnd(
                         writer: writer,
                         item: item,
                         errorMask: errorMask,
                         masterReferences: masterReferences);
                     writer.Write(item.Volatility);
-                    ClimateBinaryTranslation.WriteBinary_Phase(
+                    ClimateBinaryTranslation.WriteBinaryPhase(
                         writer: writer,
                         item: item,
                         errorMask: errorMask,
                         masterReferences: masterReferences);
-                    ClimateBinaryTranslation.WriteBinary_PhaseLength(
+                    ClimateBinaryTranslation.WriteBinaryPhaseLength(
                         writer: writer,
                         item: item,
                         errorMask: errorMask,
@@ -3728,7 +3728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class ClimateBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IClimateInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

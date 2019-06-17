@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda
         };
         public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
 
-        public static async Task Create_Xml_Folder<T>(
+        public static async Task CreateFromXmlFolder<T>(
             this Group<T> group,
             DirectoryPath dir,
             string name,
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda
                         {
                             throw new ArgumentException("XML file did not have \"Group\" top node.");
                         }
-                        GroupXmlTranslation<T>.FillPublic_Xml(
+                        GroupXmlTranslation<T>.FillPublicXml(
                             group,
                             elem,
                             errorMask,
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static async Task Write_Xml_Folder<T, T_ErrMask>(
+        public static async Task WriteToXmlFolder<T, T_ErrMask>(
             this Group<T> group,
             DirectoryPath dir,
             string name,
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda
                 {
                     if (group.Items.Count == 0) return;
                     XElement topNode = new XElement("Group");
-                    GroupXmlTranslation<T>.WriteToNode_Xml(
+                    GroupXmlTranslation<T>.WriteToNodeXml(
                         group,
                         topNode,
                         errorMask,
@@ -148,24 +148,13 @@ namespace Mutagen.Bethesda
                     List<Task> tasks = new List<Task>();
                     foreach (var item in group.Items.Items)
                     {
-                        //using (errorMask.PushIndex(counter))
-                        //{
-                        //    try
-                        //    {
                         tasks.Add(
-                            item.Write_Xml_Folder(
+                            item.WriteToXmlFolder(
                                 node: items,
                                 name: name,
                                 counter: counter++,
                                 dir: dir,
                                 errorMask: errorMask));
-                        //    }
-                        //    catch (Exception ex)
-                        //    when (errorMask != null)
-                        //    {
-                        //        errorMask.ReportException(ex);
-                        //    }
-                        //}
                     }
                     await Task.WhenAll(tasks);
                     if (items.HasElements)
@@ -186,7 +175,7 @@ namespace Mutagen.Bethesda
     {
         public partial class GroupBinaryTranslation<T>
         {
-            static partial void FillBinary_ContainedRecordType_Custom(
+            static partial void FillBinaryContainedRecordTypeCustom(
                 MutagenFrame frame,
                 Group<T> item,
                 MasterReferences masterReferences,
@@ -195,7 +184,7 @@ namespace Mutagen.Bethesda
                 frame.Reader.Position += 4;
             }
 
-            static partial void WriteBinary_ContainedRecordType_Custom(
+            static partial void WriteBinaryContainedRecordTypeCustom(
                 MutagenWriter writer,
                 IGroupGetter<T> item,
                 MasterReferences masterReferences,

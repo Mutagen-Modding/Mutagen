@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Skyrim
         public abstract float RawFloat { get; set; }
         public abstract char TypeChar { get; }
 
-        public static Global Create_Binary(
+        public static Global CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             // Fill with major record fields
             frame.Reader.Position = initialPos + 8;
-            SkyrimMajorRecord.Fill_Binary(
+            SkyrimMajorRecord.FillBinary(
                 frame,
                 g,
                 masterReferences,
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class GlobalBinaryTranslation
         {
-            static partial void WriteBinary_TypeChar_Custom(
+            static partial void WriteBinaryTypeCharCustom(
                 MutagenWriter writer,
                 IGlobalInternalGetter item,
                 MasterReferences masterReferences,
