@@ -674,47 +674,7 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
         }
-
-        private void GenerateDataStateSubscriptions(ObjectGeneration obj, FileGeneration fg)
-        {
-            foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
-            {
-                if (!(field is DataType dataType)) continue;
-                List<TypeGeneration> affectedFields = new List<TypeGeneration>();
-                foreach (var subField in dataType.IterateFieldsWithMeta())
-                {
-                    if (!subField.EncounteredBreaks.Any()
-                        && subField.Range == null)
-                    {
-                        continue;
-                    }
-                    affectedFields.Add(subField.Field);
-                }
-                if (affectedFields.Count == 0) continue;
-                fg.AppendLine($"if (ret.{dataType.StateName} != default({dataType.EnumName}))");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine("CompositeDisposable structUnsubber = new CompositeDisposable();");
-                    fg.AppendLine("Action unsubAction = () =>");
-                    using (new BraceWrapper(fg) { AppendSemicolon = true })
-                    {
-                        fg.AppendLine("structUnsubber.Dispose();");
-                        fg.AppendLine($"ret.{dataType.StateName} = default({dataType.EnumName});");
-                    }
-                    foreach (var subField in affectedFields)
-                    {
-                        fg.AppendLine($"structUnsubber.Add(");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"ret.WhenAny(x => x.{subField.Name})");
-                            fg.AppendLine($".Skip(1)");
-                            fg.AppendLine($".Subscribe(unsubAction));");
-                        }
-                    }
-                }
-            }
-        }
-
+        
         public static void GenerateModLinking(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
@@ -1063,7 +1023,6 @@ namespace Mutagen.Bethesda.Generation
                     default:
                         throw new NotImplementedException();
                 }
-                GenerateDataStateSubscriptions(obj, fg);
                 GenerateStructStateSubscriptions(obj, fg);
                 GenerateModLinking(obj, fg);
                 if (data.CustomBinaryEnd != CustomEnd.Off)

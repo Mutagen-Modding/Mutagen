@@ -458,27 +458,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
-            if (ret.SCITDataTypeState != default(SCITDataType))
-            {
-                CompositeDisposable structUnsubber = new CompositeDisposable();
-                Action unsubAction = () =>
-                {
-                    structUnsubber.Dispose();
-                    ret.SCITDataTypeState = default(SCITDataType);
-                };
-                structUnsubber.Add(
-                    ret.WhenAny(x => x.MagicSchool)
-                    .Skip(1)
-                    .Subscribe(unsubAction));
-                structUnsubber.Add(
-                    ret.WhenAny(x => x.VisualEffect)
-                    .Skip(1)
-                    .Subscribe(unsubAction));
-                structUnsubber.Add(
-                    ret.WhenAny(x => x.Flags)
-                    .Skip(1)
-                    .Subscribe(unsubAction));
-            }
             return ret;
         }
 
