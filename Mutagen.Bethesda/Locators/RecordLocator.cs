@@ -162,6 +162,11 @@ namespace Mutagen.Bethesda
         private static void SkipHeader(
             IMutagenReadStream reader)
         {
+            if (reader.Length < 8)
+            {
+                reader.Position = reader.Length;
+                return;
+            }
             reader.Position += 4;
             var headerLen = reader.ReadUInt32();
             reader.Position += 12;
