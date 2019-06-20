@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public ISourceCache<T, FormKey> GetGroup<T>()
-            where T : IMajorRecord
+            where T : IMajorRecordInternalGetter
         {
             var t = typeof(T);
             if (t.Equals(typeof(GameSetting)))

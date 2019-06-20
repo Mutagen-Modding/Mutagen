@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Binary
         public override int ExpectedLength => 4;
 
         public void ParseInto<T>(MutagenFrame frame, EDIDSetLink<T> item)
-            where T : MajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             if (Parse(frame, ExpectedLength, out RecordType val))
             {
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public void ParseInto<T>(MutagenFrame frame, EDIDLink<T> item)
-            where T : MajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             if (Parse(frame, ExpectedLength, out RecordType val))
             {
@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             out EDIDLink<T> item,
             MasterReferences masterReferences)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             if (!frame.TryCheckUpcomingRead(4, out var ex))
             {
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             out EDIDSetLink<T> item,
             MasterReferences masterReferences)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             if (!frame.TryCheckUpcomingRead(4, out var ex))
             {
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public void Write<T>(MutagenWriter writer, IEDIDLink<T> item)
-            where T : MajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             this.WriteValue(
                 writer,
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Binary
         public void Write<T>(
             MutagenWriter writer,
             EDIDSetLink<T> item)
-            where T : MajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             if (!item.HasBeenSet) return;
             this.Write(
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Binary
             IEDIDLink<T> item,
             RecordType header,
             bool nullable = false)
-            where T : MajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             this.Write(
                 writer,
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Binary
             EDIDSetLink<T> item,
             RecordType header,
             bool nullable = false)
-            where T : MajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             if (!item.HasBeenSet) return;
             this.Write(
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Binary
             IEDIDLink<T> item,
             RecordType header,
             bool nullable)
-            where T : MajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             this.Write(
                 writer,
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Binary
             EDIDLink<T> item,
             MasterReferences masterReferences,
             bool nullable = false)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             Int32BinaryTranslation.Instance.Write(
                 writer,

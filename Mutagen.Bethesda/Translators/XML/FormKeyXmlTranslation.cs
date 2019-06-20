@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda
         public readonly static FormKeyXmlTranslation Instance = new FormKeyXmlTranslation();
 
         public void ParseInto<T>(XElement node, int fieldIndex, FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             using (errorMask.PushIndex(fieldIndex))
             {
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda
         }
 
         public void ParseInto<T>(XElement node, int fieldIndex, FormIDLink<T> item, ErrorMaskBuilder errorMask)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             using (errorMask.PushIndex(fieldIndex))
             {
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda
         }
 
         public void ParseInto<T>(XElement node, int fieldIndex, EDIDLink<T> item, ErrorMaskBuilder errorMask)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             using (errorMask.PushIndex(fieldIndex))
             {
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda
         }
 
         public void ParseInto<T>(XElement node, int fieldIndex, EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             using (errorMask.PushIndex(fieldIndex))
             {
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda
             XElement node, 
             out FormIDLink<T> item, 
             ErrorMaskBuilder errorMask)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             if (Parse(node, out FormKey id, errorMask))
             {
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda
             out FormIDLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             return this.Parse(
                 node: node,
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda
             XElement node, 
             out FormIDSetLink<T> item,
             ErrorMaskBuilder errorMask)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             if (Parse(node, out FormKey id, errorMask))
             {
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda
             out FormIDSetLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             return this.Parse(
                 node: node,
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda
             XElement node, 
             out EDIDLink<T> item,
             ErrorMaskBuilder errorMask)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             if (Parse(node, out FormKey id, errorMask))
             {
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda
             out EDIDLink<T> item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             return this.Parse(
                 node: node,
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda
             XElement node,
             out EDIDSetLink<T> item,
             ErrorMaskBuilder errorMask)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             if (Parse(node, out FormKey id, errorMask))
             {
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda
             out EDIDSetLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : class, IMajorRecord
+            where T : class, IMajorRecordInternalGetter
         {
             return this.Parse(
                 node: node,

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public interface IOwner : IMajorRecord
+    public interface IOwner : IMajorRecordInternalGetter
     {
     }
 }

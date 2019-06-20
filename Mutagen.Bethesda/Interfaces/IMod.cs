@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda
     {
         ISourceList<MasterReference> MasterReferences { get; }
         IObservableCache<IMajorRecord, FormKey> MajorRecords { get; }
-        ISourceCache<T, FormKey> GetGroup<T>() where T : IMajorRecord;
+        ISourceCache<T, FormKey> GetGroup<T>() where T : IMajorRecordInternalGetter;
         void Write_Binary(
             string path,
             ModKey modKey);

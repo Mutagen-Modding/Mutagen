@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Generation
 
             using (var args = new FunctionWrapper(fg,
                 "public ISourceCache<T, FormKey> GetGroup<T>",
-                wheres: "where T : IMajorRecord"))
+                wheres: $"where T : {nameof(IMajorRecordInternalGetter)}"))
             {
             }
             using (new BraceWrapper(fg))

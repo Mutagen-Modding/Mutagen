@@ -22,14 +22,14 @@ namespace Mutagen.Bethesda
     }
 
     public interface ILink<T> : ILink
-        where T : IMajorRecord
+        where T : IMajorRecordInternalGetter
     {
         T Item { get; set; }
         void Unset();
     }
 
     public interface ISetLink<T> : ILink<T>
-        where T : IMajorRecord
+        where T : IMajorRecordInternalGetter
     {
         bool HasBeenSet { get; set; }
     }

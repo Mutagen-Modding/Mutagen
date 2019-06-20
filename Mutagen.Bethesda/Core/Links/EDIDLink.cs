@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public class EDIDLink<T> : FormIDLink<T>, IEDIDLink<T>
-       where T : class, IMajorRecord
+       where T : class, IMajorRecordInternalGetter
     {
         public static readonly RecordType UNLINKED = new RecordType("\0\0\0\0");
         private IDisposable edidSub;

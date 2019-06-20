@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public class FormIDSetLink<T> : LoquiNotifyingObject, IFormIDSetLink<T>, IEquatable<ILink<T>>
-       where T : class, IMajorRecord
+       where T : class, IMajorRecordInternalGetter
     {
         private bool _HasBeenSet;
         public bool HasBeenSet

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public interface IEDIDLink<T> : ILink<T>
-       where T : IMajorRecord
+       where T : IMajorRecordInternalGetter
     {
         RecordType EDID { get; }
     }
 
     public interface IEDIDSetLink<T> : IEDIDLink<T>, ISetLink<T>
-       where T : IMajorRecord
+       where T : IMajorRecordInternalGetter
     {
     }
 }
