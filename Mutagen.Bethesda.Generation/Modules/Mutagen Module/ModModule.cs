@@ -19,10 +19,15 @@ namespace Mutagen.Bethesda.Generation
                 "CSharpExt.Rx"
             };
         }
-
+        
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectData().ObjectType != ObjectType.Mod) return;
+            if (!obj.Node.TryGetAttribute<GameMode>(Mutagen.Bethesda.Generation.Constants.GAME_MODE, out var gameMode))
+            {
+                throw new ArgumentException("Mod object must specify game mode enum.");
+            }
+            fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{gameMode};");
             fg.AppendLine($"private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);");
             fg.AppendLine($"public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;");
             fg.AppendLine($"public IMajorRecord this[FormKey id]");

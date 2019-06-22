@@ -11,6 +11,7 @@ namespace Mutagen.Bethesda
 {
     public interface IMod : ILinkContainer
     {
+        GameMode GameMode { get; }
         ISourceList<MasterReference> MasterReferences { get; }
         IObservableCache<IMajorRecord, FormKey> MajorRecords { get; }
         ISourceCache<T, FormKey> GetGroup<T>() where T : IMajorRecordInternalGetter;

@@ -36,14 +36,14 @@ namespace System
             }
         }
 
-        public static sbyte GetOffset(this ObjectType objType)
+        public static sbyte GetOffset(this ObjectType objType, GameMode mode)
         {
             switch (objType)
             {
                 case ObjectType.Subrecord:
                     return Constants.SUBRECORD_HEADER_OFFSET;
                 case ObjectType.Record:
-                    return Constants.RECORD_META_OFFSET;
+                    return Constants.Get(mode).RecordMetaLengthAfterRecordLength;
                 case ObjectType.Group:
                     return Constants.GRUP_HEADER_OFFSET;
                 case ObjectType.Mod:

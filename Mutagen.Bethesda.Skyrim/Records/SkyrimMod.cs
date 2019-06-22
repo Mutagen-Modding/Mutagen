@@ -21,7 +21,11 @@ using Mutagen.Bethesda.Skyrim.Internals;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SkyrimMod : IMod, ILinkContainer
+    partial interface ISkyrimModGetter : IMod, ILinkContainer
+    {
+    }
+
+    public partial class SkyrimMod
     {
         public ISourceList<MasterReference> MasterReferences => this.ModHeader.MasterReferences;
         public ModKey ModKey { get; }

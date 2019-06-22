@@ -160,7 +160,8 @@ namespace Mutagen.Bethesda
         }
 
         private static void SkipHeader(
-            IMutagenReadStream reader)
+            IMutagenReadStream reader,
+            Constants constants)
         {
             if (reader.Length < 8)
             {
@@ -169,7 +170,7 @@ namespace Mutagen.Bethesda
             }
             reader.Position += 4;
             var headerLen = reader.ReadUInt32();
-            reader.Position += 12;
+            reader.Position += constants.ModHeaderFluffLength;
             reader.Position += headerLen;
         }
 
@@ -183,7 +184,7 @@ namespace Mutagen.Bethesda
             {
                 AdditionalCriteria = additionalCriteria,
             };
-            SkipHeader(reader);
+            SkipHeader(reader, ret.Constants);
 
             HashSet<RecordType> remainingTypes = ((interest?.InterestingTypes?.Count ?? 0) <= 0) ? null : new HashSet<RecordType>(interest.InterestingTypes);
             Stack<long> grupPositions = new Stack<long>();
@@ -236,7 +237,7 @@ namespace Mutagen.Bethesda
                 return null;
             }
 
-            reader.Position += 4;
+            reader.Position += fileLocs.Constants.GrupMetaLengthAfterType;
 
             using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + grupLength - 20))
             {
@@ -275,7 +276,7 @@ namespace Mutagen.Bethesda
                         reader.Position -= 8;
                         if (!fileLocs.AdditionalCriteria(reader, targetRec, recLength))
                         {
-                            reader.Position = pos + 12 + recLength;
+                            reader.Position = pos + fileLocs.Constants.RecordMetaLengthAfterRecordLength + recLength;
                             continue;
                         }
                         reader.Position = pos;
@@ -289,7 +290,7 @@ namespace Mutagen.Bethesda
                             id: formID,
                             record: targetRec,
                             parentGrupLocations: parentGroupLocations,
-                            section: new RangeInt64(recordLocation, recordLocation + recLength + Constants.RECORD_LENGTH + Constants.RECORD_META_OFFSET - 1));
+                            section: new RangeInt64(recordLocation, recordLocation + recLength + Constants.RECORD_LENGTH + fileLocs.Constants.RecordMetaLengthAfterRecordLength - 1));
                         parentGroupLocations.Pop();
                     }
                     reader.Position += 4 + recLength;
@@ -458,9 +459,11 @@ namespace Mutagen.Bethesda
 
         #region Base GRUP Iterator
         public static IEnumerable<KeyValuePair<RecordType, long>> IterateBaseGroupLocations(
-            IMutagenReadStream reader)
+            IMutagenReadStream reader,
+            GameMode mode)
         {
-            SkipHeader(reader);
+            Constants constants = Constants.Get(mode);
+            SkipHeader(reader, constants);
             while (!reader.Complete)
             {
                 var grupLoc = reader.Position;

@@ -119,7 +119,8 @@ namespace Mutagen.Bethesda.Tests
                     {
                         ModRecordSorter.Sort(
                             streamCreator: () => File.OpenRead(uncompressedPath),
-                            outputStream: outStream);
+                            outputStream: outStream,
+                            gameMode: this.Target.GameMode);
                     }
                 }
                 catch (Exception)
