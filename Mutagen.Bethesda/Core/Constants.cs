@@ -26,19 +26,22 @@ namespace Mutagen.Bethesda
         public static readonly RecordType EditorID = new RecordType("EDID");
         public static readonly RecordType GRUP = new RecordType("GRUP");
 
-        public byte ModHeaderFluffLength { get; private set; }
-        public byte GrupMetaLengthAfterType { get; private set; }
+        public sbyte ModHeaderFluffLength { get; private set; }
+        public sbyte GrupMetaLengthAfterType { get; private set; }
+        public sbyte RecordMetaLengthAfterRecordLength { get; private set; }
 
         public static readonly Constants Oblivion = new Constants()
         {
             ModHeaderFluffLength = 12,
             GrupMetaLengthAfterType = 4,
+            RecordMetaLengthAfterRecordLength = 12,
         };
 
         public static readonly Constants Skyrim = new Constants()
         {
             ModHeaderFluffLength = 16,
             GrupMetaLengthAfterType = 8,
+            RecordMetaLengthAfterRecordLength = 16,
         };
 
         public static Constants Get(GameMode mode)
