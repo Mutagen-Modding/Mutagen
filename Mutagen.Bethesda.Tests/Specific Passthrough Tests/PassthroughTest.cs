@@ -5,6 +5,7 @@ using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -17,6 +18,7 @@ namespace Mutagen.Bethesda.Tests
         public FilePath FilePath { get; set; }
         public byte NumMasters { get; }
         public PassthroughSettings Settings { get; }
+        public Target Target { get; }
         public string ExportFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
         public string ObservableExportFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExport");
         public string UncompressedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Uncompressed");
@@ -32,6 +34,7 @@ namespace Mutagen.Bethesda.Tests
             this.Nickname = target.Path;
             this.NumMasters = target.NumMasters;
             this.Settings = settings.PassthroughSettings;
+            this.Target = target;
         }
 
         public abstract ModRecordAligner.AlignmentRules GetAlignmentRules();
@@ -75,6 +78,16 @@ namespace Mutagen.Bethesda.Tests
             var preprocessedPath = alignedPath;
             var processedPath = ProcessedPath(tmp);
 
+            Mutagen.Bethesda.RecordInterest interest = null;
+            if (this.Target.Interest != null)
+            {
+                interest = new Mutagen.Bethesda.RecordInterest(
+                    this.Target.Interest.InterestingTypes
+                        .Select(i => new RecordType(i)),
+                    this.Target.Interest.UninterestingTypes
+                        .Select(i => new RecordType(i)));
+            }
+
             if (!Settings.ReuseCaches || !File.Exists(uncompressedPath))
             {
                 try
@@ -84,7 +97,8 @@ namespace Mutagen.Bethesda.Tests
                         ModDecompressor.Decompress(
                             streamCreator: () => File.OpenRead(this.FilePath.Path),
                             gameMode: this.GameMode,
-                            outputStream: outStream);
+                            outputStream: outStream,
+                            interest: interest);
                     }
                 }
                 catch (Exception)

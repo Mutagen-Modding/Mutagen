@@ -14,6 +14,7 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.PassthroughSettings_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.DataFolderLocations_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.TargetGroup_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.RecordInterest_Registration.Instance);
         }
     }
 }
