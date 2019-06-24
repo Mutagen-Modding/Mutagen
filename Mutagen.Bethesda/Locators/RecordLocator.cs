@@ -22,14 +22,14 @@ namespace Mutagen.Bethesda
             public List<long> GrupLocations = new List<long>();
             public FormID LastParsed;
             public long LastLoc;
-            public Constants Constants { get; }
+            public MetaData MetaData { get; }
             public GameMode GameMode { get; }
             public Func<IMutagenReadStream, RecordType, uint, bool> AdditionalCriteria;
 
             public FileLocationConstructor(GameMode mode)
             {
                 this.GameMode = mode;
-                this.Constants = Constants.Get(mode);
+                this.MetaData = MetaData.Get(mode);
             }
 
             public void Add(
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda
 
         private static void SkipHeader(
             IMutagenReadStream reader,
-            Constants constants)
+            MetaData meta)
         {
             if (reader.Length < 8)
             {
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda
             }
             reader.Position += 4;
             var headerLen = reader.ReadUInt32();
-            reader.Position += constants.ModHeaderFluffLength;
+            reader.Position += meta.ModHeaderFluffLength;
             reader.Position += headerLen;
         }
 
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda
             {
                 AdditionalCriteria = additionalCriteria,
             };
-            SkipHeader(reader, ret.Constants);
+            SkipHeader(reader, ret.MetaData);
 
             HashSet<RecordType> remainingTypes = ((interest?.InterestingTypes?.Count ?? 0) <= 0) ? null : new HashSet<RecordType>(interest.InterestingTypes);
             Stack<long> grupPositions = new Stack<long>();
@@ -237,9 +237,9 @@ namespace Mutagen.Bethesda
                 return null;
             }
 
-            reader.Position += fileLocs.Constants.GrupMetaLengthAfterType;
+            reader.Position += fileLocs.MetaData.GrupMetaLengthAfterType;
 
-            using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + grupLength - 20))
+            using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + grupLength - fileLocs.MetaData.GrupHeaderLength))
             {
                 while (!frame.Complete)
                 {
@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda
                         reader.Position -= 8;
                         if (!fileLocs.AdditionalCriteria(reader, targetRec, recLength))
                         {
-                            reader.Position = pos + fileLocs.Constants.RecordMetaLengthAfterRecordLength + recLength;
+                            reader.Position = pos + fileLocs.MetaData.RecordMetaLengthAfterRecordLength + recLength;
                             continue;
                         }
                         reader.Position = pos;
@@ -290,7 +290,7 @@ namespace Mutagen.Bethesda
                             id: formID,
                             record: targetRec,
                             parentGrupLocations: parentGroupLocations,
-                            section: new RangeInt64(recordLocation, recordLocation + recLength + Constants.RECORD_LENGTH + fileLocs.Constants.RecordMetaLengthAfterRecordLength - 1));
+                            section: new RangeInt64(recordLocation, recordLocation + recLength + Constants.RECORD_LENGTH + fileLocs.MetaData.RecordMetaLengthAfterRecordLength - 1));
                         parentGroupLocations.Pop();
                     }
                     reader.Position += 4 + recLength;
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda
             RecordInterest interest,
             Stack<long> parentGroupLocations)
         {
-            frame.Reader.Position += Constants.GRUP_LENGTH;
+            frame.Reader.Position += fileLocs.MetaData.GrupHeaderLength;
             while (!frame.Complete)
             {
                 var grupLoc = frame.Position;
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda
             RecordInterest interest,
             Stack<long> parentGroupLocations)
         {
-            frame.Reader.Position += Constants.GRUP_LENGTH;
+            frame.Reader.Position += fileLocs.MetaData.GrupHeaderLength;
             while (!frame.Complete)
             {
                 var grupLoc = frame.Position;
@@ -462,15 +462,15 @@ namespace Mutagen.Bethesda
             IMutagenReadStream reader,
             GameMode mode)
         {
-            Constants constants = Constants.Get(mode);
-            SkipHeader(reader, constants);
+            MetaData meta = MetaData.Get(mode);
+            SkipHeader(reader, meta);
             while (!reader.Complete)
             {
                 var grupLoc = reader.Position;
                 var grup = HeaderTranslation.ReadNextRecordType(reader);
                 if (grup != Constants.GRUP)
                 {
-                    throw new DataMisalignedException("Group was not read in where expected: 0x" + (reader.Position - 4).ToString("X"));
+                    throw new DataMisalignedException("Group was not read in where expected: 0x" + (reader.Position - Constants.HEADER_LENGTH).ToString("X"));
                 }
                 var grupLength = reader.ReadUInt32();
                 var recType = HeaderTranslation.ReadNextRecordType(reader);
@@ -481,8 +481,10 @@ namespace Mutagen.Bethesda
 
         public static IEnumerable<(FormID FormID, long Position)> ParseTopLevelGRUP(
             IMutagenReadStream reader,
+            GameMode gameMode,
             bool checkOverallGrupType = true)
         {
+            var meta = MetaData.Get(gameMode);
             var grupLoc = reader.Position;
             var grup = HeaderTranslation.ReadNextRecordType(reader);
             if (!grup.Equals(Constants.GRUP))
@@ -493,9 +495,9 @@ namespace Mutagen.Bethesda
             var grupRec = HeaderTranslation.ReadNextRecordType(reader);
             var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(MutagenFrame.ByLength(reader, 4));
 
-            reader.Position += 4;
+            reader.Position += meta.GrupMetaLengthAfterType;
 
-            using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + grupLength - 20))
+            using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + grupLength - meta.GrupHeaderLength))
             {
                 while (!frame.Complete)
                 {

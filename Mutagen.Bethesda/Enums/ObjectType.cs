@@ -43,7 +43,7 @@ namespace System
                 case ObjectType.Subrecord:
                     return Constants.SUBRECORD_HEADER_OFFSET;
                 case ObjectType.Record:
-                    return Constants.Get(mode).RecordMetaLengthAfterRecordLength;
+                    return MetaData.Get(mode).RecordMetaLengthAfterRecordLength;
                 case ObjectType.Group:
                     return Constants.GRUP_HEADER_OFFSET;
                 case ObjectType.Mod:

@@ -27,6 +27,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\MetaData.cs" />
     <Compile Include="Core\Utility.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
     <Compile Include="Preprocessing\BinaryFileProcessor.cs" />

@@ -18,6 +18,7 @@ namespace Mutagen.Bethesda.Preprocessing
             Stream outputStream,
             GameMode gameMode)
         {
+            var meta = MetaData.Get(gameMode);
             using (var inputStream = new MutagenBinaryReadStream(streamCreator()))
             {
                 using (var locatorStream = new MutagenBinaryReadStream(streamCreator()))
@@ -40,9 +41,9 @@ namespace Mutagen.Bethesda.Preprocessing
                                 Dictionary<FormID, List<byte[]>> storage = new Dictionary<FormID, List<byte[]>>();
                                 using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(grupLen))
                                 {
-                                    inputStream.WriteTo(writer.BaseStream, Constants.GRUP_LENGTH);
+                                    inputStream.WriteTo(writer.BaseStream, meta.GrupHeaderLength);
                                     locatorStream.Position = grupLoc.Value;
-                                    foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream))
+                                    foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream, gameMode))
                                     {
                                         var type = HeaderTranslation.GetNextRecordType(inputStream, out var len);
                                         storage.TryCreateValue(rec.FormID).Add(inputStream.ReadBytes(len + Constants.RECORD_HEADER_LENGTH));
