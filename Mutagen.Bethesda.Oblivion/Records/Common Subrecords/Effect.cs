@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         static partial void SpecialWrite_EffectInitial(
-            IEffectGetter item,
+            IEffectInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask)
         {

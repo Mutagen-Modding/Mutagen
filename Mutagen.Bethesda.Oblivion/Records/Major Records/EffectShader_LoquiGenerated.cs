@@ -38,11 +38,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class EffectShader :
         OblivionMajorRecord,
-        IEffectShader,
         IEffectShaderInternal,
-        ILoquiObject<EffectShader>,
-        ILoquiObjectSetter,
-        IEquatable<EffectShader>
+        ILoquiObjectSetter<EffectShader>,
+        IEquatable<EffectShader>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
@@ -831,8 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<EffectShader>.GetEqualsMask(EffectShader rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IEffectShaderGetter>.GetEqualsMask(IEffectShaderGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEffectShaderInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -846,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -1004,7 +1002,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => EffectShaderXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => EffectShaderXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static EffectShader Create_Xml(
@@ -1064,7 +1062,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    EffectShaderXmlTranslation.FillPublicElement_Xml(
+                    EffectShaderXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1290,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => EffectShaderBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => EffectShaderBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static EffectShader Create_Binary(
@@ -1993,7 +1991,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public EffectShader Copy(
             EffectShader_CopyMask copyMask = null,
-            IEffectShaderGetter def = null)
+            EffectShader def = null)
         {
             return EffectShader.Copy(
                 this,
@@ -2002,9 +2000,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static EffectShader Copy(
-            IEffectShaderGetter item,
+            EffectShader item,
             EffectShader_CopyMask copyMask = null,
-            IEffectShaderGetter def = null)
+            EffectShader def = null)
         {
             EffectShader ret;
             if (item.GetType().Equals(typeof(EffectShader)))
@@ -2023,9 +2021,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static EffectShader Copy_ToLoqui(
-            IEffectShaderGetter item,
+            EffectShader item,
             EffectShader_CopyMask copyMask = null,
-            IEffectShaderGetter def = null)
+            EffectShader def = null)
         {
             EffectShader ret;
             if (item.GetType().Equals(typeof(EffectShader)))
@@ -2043,10 +2041,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IEffectShaderGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -2054,9 +2052,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IEffectShaderGetter rhs,
+            EffectShader rhs,
             EffectShader_CopyMask copyMask,
-            IEffectShaderGetter def = null)
+            EffectShader def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -2067,10 +2065,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IEffectShaderGetter rhs,
+            EffectShader rhs,
             out EffectShader_ErrorMask errorMask,
             EffectShader_CopyMask copyMask = null,
-            IEffectShaderGetter def = null,
+            EffectShader def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -2084,10 +2082,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IEffectShaderGetter rhs,
+            EffectShader rhs,
             ErrorMaskBuilder errorMask,
             EffectShader_CopyMask copyMask = null,
-            IEffectShaderGetter def = null)
+            EffectShader def = null)
         {
             EffectShaderCommon.CopyFieldsFrom(
                 item: this,
@@ -2496,17 +2494,16 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IEffectShader :
         IEffectShaderGetter,
         IOblivionMajorRecord,
-        ILoquiClass<IEffectShader, IEffectShaderGetter>,
-        ILoquiClass<EffectShader, IEffectShaderGetter>
+        ILoquiObjectSetter<IEffectShaderInternal>
     {
         new String FillTexture { get; set; }
         new bool FillTexture_IsSet { get; set; }
-        void FillTexture_Set(String item, bool hasBeenSet = true);
+        void FillTexture_Set(String value, bool hasBeenSet = true);
         void FillTexture_Unset();
 
         new String ParticleShaderTexture { get; set; }
         new bool ParticleShaderTexture_IsSet { get; set; }
-        void ParticleShaderTexture_Set(String item, bool hasBeenSet = true);
+        void ParticleShaderTexture_Set(String value, bool hasBeenSet = true);
         void ParticleShaderTexture_Unset();
 
         new EffectShader.Flag Flags { get; set; }
@@ -2622,10 +2619,10 @@ namespace Mutagen.Bethesda.Oblivion
         new Single ColorKey3ColorKeyTime { get; set; }
 
         void CopyFieldsFrom(
-            IEffectShaderGetter rhs,
+            EffectShader rhs,
             ErrorMaskBuilder errorMask = null,
             EffectShader_CopyMask copyMask = null,
-            IEffectShaderGetter def = null);
+            EffectShader def = null);
     }
 
     public partial interface IEffectShaderInternal :
@@ -2639,6 +2636,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IEffectShaderGetter :
         IOblivionMajorRecordGetter,
+        ILoquiObject<IEffectShaderInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -2901,17 +2899,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static EffectShader_Mask<bool> GetEqualsMask(
-            this IEffectShaderGetter item,
-            IEffectShaderGetter rhs,
+            this IEffectShaderInternalGetter item,
+            IEffectShaderInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new EffectShader_Mask<bool>();
-            ((EffectShaderCommon)item.CommonInstance).FillEqualsMask(
+            return ((EffectShaderCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -2947,7 +2942,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static EffectShader_Mask<bool> GetHasBeenSetMask(this IEffectShaderGetter item)
+        public static EffectShader_Mask<bool> GetHasBeenSetMask(this IEffectShaderInternalGetter item)
         {
             var ret = new EffectShader_Mask<bool>();
             ((EffectShaderCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -3810,7 +3805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(EffectShaderXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(EffectShaderXmlWriteTranslation);
         public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType ICO2_HEADER = new RecordType("ICO2");
@@ -3818,7 +3813,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = EFSH_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
-        public static readonly Type BinaryTranslation = typeof(EffectShaderBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(EffectShaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -3853,11 +3848,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class EffectShaderCommon : OblivionMajorRecordCommon
     {
         public static readonly EffectShaderCommon Instance = new EffectShaderCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IEffectShader item,
-            IEffectShaderGetter rhs,
-            IEffectShaderGetter def,
+            EffectShader item,
+            EffectShader rhs,
+            EffectShader def,
             ErrorMaskBuilder errorMask,
             EffectShader_CopyMask copyMask)
         {
@@ -4885,7 +4881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IEffectShader item)
+        public virtual void Clear(IEffectShaderInternal item)
         {
             ClearPartial();
             item.FillTexture_Unset();
@@ -4949,19 +4945,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (IEffectShader)item);
+            Clear(item: (IEffectShaderInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IEffectShader)item);
+            Clear(item: (IEffectShaderInternal)item);
+        }
+
+        public EffectShader_Mask<bool> GetEqualsMask(
+            IEffectShaderInternalGetter item,
+            IEffectShaderInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new EffectShader_Mask<bool>();
+            ((EffectShaderCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IEffectShaderGetter item,
-            IEffectShaderGetter rhs,
+            IEffectShaderInternalGetter item,
+            IEffectShaderInternalGetter rhs,
             EffectShader_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -5028,7 +5038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            IEffectShaderGetter item,
+            IEffectShaderInternalGetter item,
             string name = null,
             EffectShader_Mask<bool> printMask = null)
         {
@@ -5042,18 +5052,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            IEffectShaderGetter item,
+            IEffectShaderInternalGetter item,
             FileGeneration fg,
             string name = null,
             EffectShader_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(EffectShader)} =>");
+                fg.AppendLine($"EffectShader =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(EffectShader)}) =>");
+                fg.AppendLine($"{name} (EffectShader) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -5067,7 +5077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            IEffectShaderGetter item,
+            IEffectShaderInternalGetter item,
             FileGeneration fg,
             EffectShader_Mask<bool> printMask = null)
         {
@@ -5313,7 +5323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            IEffectShaderGetter item,
+            IEffectShaderInternalGetter item,
             EffectShader_Mask<bool?> checkMask)
         {
             if (checkMask.FillTexture.HasValue && checkMask.FillTexture.Value != item.FillTexture_IsSet) return false;
@@ -5324,7 +5334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            IEffectShaderGetter item,
+            IEffectShaderInternalGetter item,
             EffectShader_Mask<bool> mask)
         {
             mask.FillTexture = item.FillTexture_IsSet;
@@ -5432,11 +5442,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class EffectShaderXmlTranslation :
-        OblivionMajorRecordXmlTranslation,
-        IXmlTranslator
+    public partial class EffectShaderXmlWriteTranslation :
+        OblivionMajorRecordXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static EffectShaderXmlTranslation Instance = new EffectShaderXmlTranslation();
+        public new readonly static EffectShaderXmlWriteTranslation Instance = new EffectShaderXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IEffectShaderInternalGetter item,
@@ -5444,7 +5454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -5994,6 +6004,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IEffectShaderInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.EffectShader");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.EffectShader");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IEffectShaderInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IEffectShaderInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IEffectShaderInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class EffectShaderXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
+    {
+        public new readonly static EffectShaderXmlCreateTranslation Instance = new EffectShaderXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IEffectShaderInternal item,
             XElement node,
@@ -6004,7 +6085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    EffectShaderXmlTranslation.FillPublicElement_Xml(
+                    EffectShaderXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -7565,7 +7646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -7573,71 +7654,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            IEffectShaderInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.EffectShader");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.EffectShader");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IEffectShaderInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IEffectShaderInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IEffectShaderInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -7654,7 +7670,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((EffectShaderXmlTranslation)item.XmlTranslator).Write(
+            ((EffectShaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -9534,11 +9550,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class EffectShaderBinaryTranslation :
-        OblivionMajorRecordBinaryTranslation,
-        IBinaryTranslator
+    public partial class EffectShaderBinaryWriteTranslation :
+        OblivionMajorRecordBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static EffectShaderBinaryTranslation Instance = new EffectShaderBinaryTranslation();
+        public new readonly static EffectShaderBinaryWriteTranslation Instance = new EffectShaderBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IEffectShaderInternalGetter item,
@@ -9546,7 +9562,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
@@ -9560,7 +9576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -9848,6 +9864,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class EffectShaderBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    {
+        public new readonly static EffectShaderBinaryCreateTranslation Instance = new EffectShaderBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class EffectShaderBinaryTranslationMixIn
     {
@@ -9859,7 +9881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((EffectShaderBinaryTranslation)item.BinaryTranslator).Write(
+            ((EffectShaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

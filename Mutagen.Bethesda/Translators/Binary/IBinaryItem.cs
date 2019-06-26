@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public interface IBinaryTranslator
+    public interface IBinaryWriteTranslator
     {
         void Write(
             MutagenWriter writer,
@@ -17,6 +17,6 @@ namespace Mutagen.Bethesda.Binary
 
     public interface IBinaryItem
     {
-        IBinaryTranslator BinaryTranslator { get; }
+        IBinaryWriteTranslator BinaryWriteTranslator { get; }
     }
 }

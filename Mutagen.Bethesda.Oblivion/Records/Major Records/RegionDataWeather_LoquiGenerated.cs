@@ -37,12 +37,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionDataWeather :
         RegionData,
-        IRegionDataWeather,
         IRegionDataWeatherInternal,
-        ILoquiObject<RegionDataWeather>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<RegionDataWeather>,
         ILinkSubContainer,
-        IEquatable<RegionDataWeather>
+        IEquatable<RegionDataWeather>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataWeather_Registration.Instance;
@@ -70,8 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RegionDataWeather>.GetEqualsMask(RegionDataWeather rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IRegionDataWeatherGetter>.GetEqualsMask(IRegionDataWeatherGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataWeatherInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -85,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -120,7 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => RegionDataWeatherXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => RegionDataWeatherXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static RegionDataWeather Create_Xml(
@@ -179,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    RegionDataWeatherXmlTranslation.FillPublicElement_Xml(
+                    RegionDataWeatherXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -334,7 +332,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => RegionDataWeatherBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => RegionDataWeatherBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static RegionDataWeather Create_Binary(
@@ -447,7 +445,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public RegionDataWeather Copy(
             RegionDataWeather_CopyMask copyMask = null,
-            IRegionDataWeatherGetter def = null)
+            RegionDataWeather def = null)
         {
             return RegionDataWeather.Copy(
                 this,
@@ -456,9 +454,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionDataWeather Copy(
-            IRegionDataWeatherGetter item,
+            RegionDataWeather item,
             RegionDataWeather_CopyMask copyMask = null,
-            IRegionDataWeatherGetter def = null)
+            RegionDataWeather def = null)
         {
             RegionDataWeather ret;
             if (item.GetType().Equals(typeof(RegionDataWeather)))
@@ -477,9 +475,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionDataWeather Copy_ToLoqui(
-            IRegionDataWeatherGetter item,
+            RegionDataWeather item,
             RegionDataWeather_CopyMask copyMask = null,
-            IRegionDataWeatherGetter def = null)
+            RegionDataWeather def = null)
         {
             RegionDataWeather ret;
             if (item.GetType().Equals(typeof(RegionDataWeather)))
@@ -497,10 +495,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IRegionDataGetter rhs)
+        public override void CopyFieldsFrom(RegionData rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IRegionDataWeatherGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -508,9 +506,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRegionDataWeatherGetter rhs,
+            RegionDataWeather rhs,
             RegionDataWeather_CopyMask copyMask,
-            IRegionDataWeatherGetter def = null)
+            RegionDataWeather def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -521,10 +519,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRegionDataWeatherGetter rhs,
+            RegionDataWeather rhs,
             out RegionDataWeather_ErrorMask errorMask,
             RegionDataWeather_CopyMask copyMask = null,
-            IRegionDataWeatherGetter def = null,
+            RegionDataWeather def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -538,10 +536,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRegionDataWeatherGetter rhs,
+            RegionDataWeather rhs,
             ErrorMaskBuilder errorMask,
             RegionDataWeather_CopyMask copyMask = null,
-            IRegionDataWeatherGetter def = null)
+            RegionDataWeather def = null)
         {
             RegionDataWeatherCommon.CopyFieldsFrom(
                 item: this,
@@ -602,15 +600,14 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataWeather :
         IRegionDataWeatherGetter,
         IRegionData,
-        ILoquiClass<IRegionDataWeather, IRegionDataWeatherGetter>,
-        ILoquiClass<RegionDataWeather, IRegionDataWeatherGetter>
+        ILoquiObjectSetter<IRegionDataWeatherInternal>
     {
         new ISetList<WeatherChance> Weathers { get; }
         void CopyFieldsFrom(
-            IRegionDataWeatherGetter rhs,
+            RegionDataWeather rhs,
             ErrorMaskBuilder errorMask = null,
             RegionDataWeather_CopyMask copyMask = null,
-            IRegionDataWeatherGetter def = null);
+            RegionDataWeather def = null);
     }
 
     public partial interface IRegionDataWeatherInternal :
@@ -622,6 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IRegionDataWeatherGetter :
         IRegionDataGetter,
+        ILoquiObject<IRegionDataWeatherInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -649,17 +647,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionDataWeather_Mask<bool> GetEqualsMask(
-            this IRegionDataWeatherGetter item,
-            IRegionDataWeatherGetter rhs,
+            this IRegionDataWeatherInternalGetter item,
+            IRegionDataWeatherInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RegionDataWeather_Mask<bool>();
-            ((RegionDataWeatherCommon)item.CommonInstance).FillEqualsMask(
+            return ((RegionDataWeatherCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -695,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static RegionDataWeather_Mask<bool> GetHasBeenSetMask(this IRegionDataWeatherGetter item)
+        public static RegionDataWeather_Mask<bool> GetHasBeenSetMask(this IRegionDataWeatherInternalGetter item)
         {
             var ret = new RegionDataWeather_Mask<bool>();
             ((RegionDataWeatherCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -861,13 +856,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(RegionDataWeatherXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(RegionDataWeatherXmlWriteTranslation);
         public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
         public static readonly RecordType RDWT_HEADER = new RecordType("RDWT");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = RDAT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
-        public static readonly Type BinaryTranslation = typeof(RegionDataWeatherBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(RegionDataWeatherBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -902,11 +897,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RegionDataWeatherCommon : RegionDataCommon
     {
         public static readonly RegionDataWeatherCommon Instance = new RegionDataWeatherCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IRegionDataWeather item,
-            IRegionDataWeatherGetter rhs,
-            IRegionDataWeatherGetter def,
+            RegionDataWeather item,
+            RegionDataWeather rhs,
+            RegionDataWeather def,
             ErrorMaskBuilder errorMask,
             RegionDataWeather_CopyMask copyMask)
         {
@@ -921,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataWeather_FieldIndex.Weathers);
                 try
                 {
-                    item.Weathers.SetToWithDefault<WeatherChance, IWeatherChanceGetter>(
+                    item.Weathers.SetToWithDefault<WeatherChance, WeatherChance>(
                         rhs: rhs.Weathers,
                         def: def?.Weathers,
                         converter: (r, d) =>
@@ -956,21 +952,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IRegionDataWeather item)
+        public virtual void Clear(IRegionDataWeatherInternal item)
         {
             ClearPartial();
             item.Weathers.Unset();
             base.Clear(item);
         }
 
-        public override void Clear(IRegionData item)
+        public override void Clear(IRegionDataInternal item)
         {
-            Clear(item: (IRegionDataWeather)item);
+            Clear(item: (IRegionDataWeatherInternal)item);
+        }
+
+        public RegionDataWeather_Mask<bool> GetEqualsMask(
+            IRegionDataWeatherInternalGetter item,
+            IRegionDataWeatherInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RegionDataWeather_Mask<bool>();
+            ((RegionDataWeatherCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IRegionDataWeatherGetter item,
-            IRegionDataWeatherGetter rhs,
+            IRegionDataWeatherInternalGetter item,
+            IRegionDataWeatherInternalGetter rhs,
             RegionDataWeather_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -983,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            IRegionDataWeatherGetter item,
+            IRegionDataWeatherInternalGetter item,
             string name = null,
             RegionDataWeather_Mask<bool> printMask = null)
         {
@@ -997,18 +1007,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            IRegionDataWeatherGetter item,
+            IRegionDataWeatherInternalGetter item,
             FileGeneration fg,
             string name = null,
             RegionDataWeather_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(RegionDataWeather)} =>");
+                fg.AppendLine($"RegionDataWeather =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(RegionDataWeather)}) =>");
+                fg.AppendLine($"{name} (RegionDataWeather) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1022,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            IRegionDataWeatherGetter item,
+            IRegionDataWeatherInternalGetter item,
             FileGeneration fg,
             RegionDataWeather_Mask<bool> printMask = null)
         {
@@ -1051,7 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            IRegionDataWeatherGetter item,
+            IRegionDataWeatherInternalGetter item,
             RegionDataWeather_Mask<bool?> checkMask)
         {
             if (checkMask.Weathers.Overall.HasValue && checkMask.Weathers.Overall.Value != item.Weathers.HasBeenSet) return false;
@@ -1061,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            IRegionDataWeatherGetter item,
+            IRegionDataWeatherInternalGetter item,
             RegionDataWeather_Mask<bool> mask)
         {
             mask.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherChance_Mask<bool>>>>(item.Weathers.HasBeenSet, item.Weathers.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherChance_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
@@ -1092,11 +1102,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class RegionDataWeatherXmlTranslation :
-        RegionDataXmlTranslation,
-        IXmlTranslator
+    public partial class RegionDataWeatherXmlWriteTranslation :
+        RegionDataXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static RegionDataWeatherXmlTranslation Instance = new RegionDataWeatherXmlTranslation();
+        public new readonly static RegionDataWeatherXmlWriteTranslation Instance = new RegionDataWeatherXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IRegionDataWeatherInternalGetter item,
@@ -1104,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            RegionDataXmlTranslation.WriteToNode_Xml(
+            RegionDataXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1121,86 +1131,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)RegionDataWeather_FieldIndex.Weathers),
                     transl: (XElement subNode, IWeatherChanceGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((WeatherChanceXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                        ((WeatherChanceXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
                     });
-            }
-        }
-
-        public static void FillPublic_Xml(
-            IRegionDataWeatherInternal item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RegionDataWeatherXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            IRegionDataWeatherInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Weathers":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataWeather_FieldIndex.Weathers);
-                        if (ListXmlTranslation<WeatherChance>.Instance.Parse(
-                            node: node,
-                            enumer: out var WeathersItem,
-                            transl: LoquiXmlTranslation<WeatherChance>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Weathers.SetTo(WeathersItem);
-                        }
-                        else
-                        {
-                            item.Weathers.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    RegionDataXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
             }
         }
 
@@ -1256,6 +1193,85 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class RegionDataWeatherXmlCreateTranslation : RegionDataXmlCreateTranslation
+    {
+        public new readonly static RegionDataWeatherXmlCreateTranslation Instance = new RegionDataWeatherXmlCreateTranslation();
+
+        public static void FillPublic_Xml(
+            IRegionDataWeatherInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RegionDataWeatherXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            IRegionDataWeatherInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Weathers":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataWeather_FieldIndex.Weathers);
+                        if (ListXmlTranslation<WeatherChance>.Instance.Parse(
+                            node: node,
+                            enumer: out var WeathersItem,
+                            transl: LoquiXmlTranslation<WeatherChance>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Weathers.SetTo(WeathersItem);
+                        }
+                        else
+                        {
+                            item.Weathers.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    RegionDataXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+
+    }
+
     #region Xml Write Mixins
     public static class RegionDataWeatherXmlTranslationMixIn
     {
@@ -1268,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RegionDataWeatherXmlTranslation)item.XmlTranslator).Write(
+            ((RegionDataWeatherXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1660,11 +1676,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class RegionDataWeatherBinaryTranslation :
-        RegionDataBinaryTranslation,
-        IBinaryTranslator
+    public partial class RegionDataWeatherBinaryWriteTranslation :
+        RegionDataBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static RegionDataWeatherBinaryTranslation Instance = new RegionDataWeatherBinaryTranslation();
+        public new readonly static RegionDataWeatherBinaryWriteTranslation Instance = new RegionDataWeatherBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
             IRegionDataWeatherInternalGetter item,
@@ -1673,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            RegionDataBinaryTranslation.Write_RecordTypes(
+            RegionDataBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1689,7 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IWeatherChanceGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((WeatherChanceBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
+                        ((WeatherChanceBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
                             item: subItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
@@ -1706,7 +1722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            RegionDataBinaryTranslation.Write_Embedded(
+            RegionDataBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
@@ -1751,6 +1767,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class RegionDataWeatherBinaryCreateTranslation : RegionDataBinaryCreateTranslation
+    {
+        public new readonly static RegionDataWeatherBinaryCreateTranslation Instance = new RegionDataWeatherBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class RegionDataWeatherBinaryTranslationMixIn
     {
@@ -1762,7 +1784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RegionDataWeatherBinaryTranslation)item.BinaryTranslator).Write(
+            ((RegionDataWeatherBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

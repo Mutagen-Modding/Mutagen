@@ -36,13 +36,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Weapon :
         ItemAbstract,
-        IWeapon,
         IWeaponInternal,
-        ILoquiObject<Weapon>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<Weapon>,
         INamed,
         ILinkSubContainer,
-        IEquatable<Weapon>
+        IEquatable<Weapon>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
@@ -99,9 +98,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         public void Model_Set(
             Model value,
-            bool markSet = true)
+            bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)Weapon_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)Weapon_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
         public void Model_Unset()
         {
@@ -137,16 +136,20 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Script
-        public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        public IFormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Script> IWeaponGetter.Script_Property => this.Script_Property;
+        IFormIDSetLink<Script> IWeapon.Script_Property => this.Script_Property;
+        IScriptInternalGetter IWeaponGetter.Script => this.Script_Property.Item;
+        IFormIDSetLinkGetter<Script> IWeaponGetter.Script_Property => this.Script_Property;
         #endregion
         #region Enchantment
-        public FormIDSetLink<Enchantment> Enchantment_Property { get; } = new FormIDSetLink<Enchantment>();
+        public IFormIDSetLink<Enchantment> Enchantment_Property { get; } = new FormIDSetLink<Enchantment>();
         public Enchantment Enchantment { get => Enchantment_Property.Item; set => Enchantment_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Enchantment> IWeaponGetter.Enchantment_Property => this.Enchantment_Property;
+        IFormIDSetLink<Enchantment> IWeapon.Enchantment_Property => this.Enchantment_Property;
+        IEnchantmentInternalGetter IWeaponGetter.Enchantment => this.Enchantment_Property.Item;
+        IFormIDSetLinkGetter<Enchantment> IWeaponGetter.Enchantment_Property => this.Enchantment_Property;
         #endregion
         #region EnchantmentPoints
         public bool EnchantmentPoints_IsSet
@@ -288,8 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Weapon>.GetEqualsMask(Weapon rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IWeaponGetter>.GetEqualsMask(IWeaponGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeaponInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -303,7 +305,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -401,7 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => WeaponXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => WeaponXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Weapon Create_Xml(
@@ -460,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    WeaponXmlTranslation.FillPublicElement_Xml(
+                    WeaponXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -671,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => WeaponBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => WeaponBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Weapon Create_Binary(
@@ -903,7 +905,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Weapon Copy(
             Weapon_CopyMask copyMask = null,
-            IWeaponGetter def = null)
+            Weapon def = null)
         {
             return Weapon.Copy(
                 this,
@@ -912,9 +914,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Weapon Copy(
-            IWeaponGetter item,
+            Weapon item,
             Weapon_CopyMask copyMask = null,
-            IWeaponGetter def = null)
+            Weapon def = null)
         {
             Weapon ret;
             if (item.GetType().Equals(typeof(Weapon)))
@@ -933,9 +935,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Weapon Copy_ToLoqui(
-            IWeaponGetter item,
+            Weapon item,
             Weapon_CopyMask copyMask = null,
-            IWeaponGetter def = null)
+            Weapon def = null)
         {
             Weapon ret;
             if (item.GetType().Equals(typeof(Weapon)))
@@ -953,10 +955,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IWeaponGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -964,9 +966,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWeaponGetter rhs,
+            Weapon rhs,
             Weapon_CopyMask copyMask,
-            IWeaponGetter def = null)
+            Weapon def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -977,10 +979,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWeaponGetter rhs,
+            Weapon rhs,
             out Weapon_ErrorMask errorMask,
             Weapon_CopyMask copyMask = null,
-            IWeaponGetter def = null,
+            Weapon def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -994,10 +996,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWeaponGetter rhs,
+            Weapon rhs,
             ErrorMaskBuilder errorMask,
             Weapon_CopyMask copyMask = null,
-            IWeaponGetter def = null)
+            Weapon def = null)
         {
             WeaponCommon.CopyFieldsFrom(
                 item: this,
@@ -1022,10 +1024,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Icon = (String)obj;
                     break;
                 case Weapon_FieldIndex.Script:
-                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
+                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
                     break;
                 case Weapon_FieldIndex.Enchantment:
-                    this.Enchantment_Property.Set((FormIDSetLink<Enchantment>)obj);
+                    this.Enchantment_Property.Set((IFormIDSetLink<Enchantment>)obj);
                     break;
                 case Weapon_FieldIndex.EnchantmentPoints:
                     this.EnchantmentPoints = (UInt16)obj;
@@ -1096,10 +1098,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Icon = (String)pair.Value;
                     break;
                 case Weapon_FieldIndex.Script:
-                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
+                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
                     break;
                 case Weapon_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Set((FormIDSetLink<Enchantment>)pair.Value);
+                    obj.Enchantment_Property.Set((IFormIDSetLink<Enchantment>)pair.Value);
                     break;
                 case Weapon_FieldIndex.EnchantmentPoints:
                     obj.EnchantmentPoints = (UInt16)pair.Value;
@@ -1142,29 +1144,30 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWeapon :
         IWeaponGetter,
         IItemAbstract,
-        ILoquiClass<IWeapon, IWeaponGetter>,
-        ILoquiClass<Weapon, IWeaponGetter>
+        ILoquiObjectSetter<IWeaponInternal>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
-        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Set(String value, bool hasBeenSet = true);
         void Name_Unset();
 
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }
-        void Model_Set(Model item, bool hasBeenSet = true);
+        void Model_Set(Model value, bool hasBeenSet = true);
         void Model_Unset();
 
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }
-        void Icon_Set(String item, bool hasBeenSet = true);
+        void Icon_Set(String value, bool hasBeenSet = true);
         void Icon_Unset();
 
         new Script Script { get; set; }
+        new IFormIDSetLink<Script> Script_Property { get; }
         new Enchantment Enchantment { get; set; }
+        new IFormIDSetLink<Enchantment> Enchantment_Property { get; }
         new UInt16 EnchantmentPoints { get; set; }
         new bool EnchantmentPoints_IsSet { get; set; }
-        void EnchantmentPoints_Set(UInt16 item, bool hasBeenSet = true);
+        void EnchantmentPoints_Set(UInt16 value, bool hasBeenSet = true);
         void EnchantmentPoints_Unset();
 
         new Weapon.WeaponType Type { get; set; }
@@ -1184,10 +1187,10 @@ namespace Mutagen.Bethesda.Oblivion
         new UInt16 Damage { get; set; }
 
         void CopyFieldsFrom(
-            IWeaponGetter rhs,
+            Weapon rhs,
             ErrorMaskBuilder errorMask = null,
             Weapon_CopyMask copyMask = null,
-            IWeaponGetter def = null);
+            Weapon def = null);
     }
 
     public partial interface IWeaponInternal :
@@ -1196,13 +1199,16 @@ namespace Mutagen.Bethesda.Oblivion
         IWeaponInternalGetter
     {
         new Script Script { get; set; }
+        new IFormIDSetLink<Script> Script_Property { get; }
         new Enchantment Enchantment { get; set; }
+        new IFormIDSetLink<Enchantment> Enchantment_Property { get; }
         new Weapon.DATADataType DATADataTypeState { get; set; }
 
     }
 
     public partial interface IWeaponGetter :
         IItemAbstractGetter,
+        ILoquiObject<IWeaponInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -1222,13 +1228,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        Script Script { get; }
-        FormIDSetLink<Script> Script_Property { get; }
+        IScriptInternalGetter Script { get; }
+        IFormIDSetLinkGetter<Script> Script_Property { get; }
 
         #endregion
         #region Enchantment
-        Enchantment Enchantment { get; }
-        FormIDSetLink<Enchantment> Enchantment_Property { get; }
+        IEnchantmentInternalGetter Enchantment { get; }
+        IFormIDSetLinkGetter<Enchantment> Enchantment_Property { get; }
 
         #endregion
         #region EnchantmentPoints
@@ -1293,17 +1299,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Weapon_Mask<bool> GetEqualsMask(
-            this IWeaponGetter item,
-            IWeaponGetter rhs,
+            this IWeaponInternalGetter item,
+            IWeaponInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Weapon_Mask<bool>();
-            ((WeaponCommon)item.CommonInstance).FillEqualsMask(
+            return ((WeaponCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -1339,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static Weapon_Mask<bool> GetHasBeenSetMask(this IWeaponGetter item)
+        public static Weapon_Mask<bool> GetHasBeenSetMask(this IWeaponInternalGetter item)
         {
             var ret = new Weapon_Mask<bool>();
             ((WeaponCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -1647,9 +1650,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weapon_FieldIndex.Icon:
                     return typeof(String);
                 case Weapon_FieldIndex.Script:
-                    return typeof(FormIDSetLink<Script>);
+                    return typeof(IFormIDSetLink<Script>);
                 case Weapon_FieldIndex.Enchantment:
-                    return typeof(FormIDSetLink<Enchantment>);
+                    return typeof(IFormIDSetLink<Enchantment>);
                 case Weapon_FieldIndex.EnchantmentPoints:
                     return typeof(UInt16);
                 case Weapon_FieldIndex.Type:
@@ -1675,7 +1678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(WeaponXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(WeaponXmlWriteTranslation);
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
@@ -1687,7 +1690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = WEAP_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 6;
-        public static readonly Type BinaryTranslation = typeof(WeaponBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(WeaponBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1722,11 +1725,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class WeaponCommon : ItemAbstractCommon
     {
         public static readonly WeaponCommon Instance = new WeaponCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IWeapon item,
-            IWeaponGetter rhs,
-            IWeaponGetter def,
+            Weapon item,
+            Weapon rhs,
+            Weapon def,
             ErrorMaskBuilder errorMask,
             Weapon_CopyMask copyMask)
         {
@@ -1804,7 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     else
                     {
                         item.Model_Set(
-                            item: default(Model),
+                            value: default(Model),
                             hasBeenSet: false);
                     }
                 }
@@ -2058,7 +2062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IWeapon item)
+        public virtual void Clear(IWeaponInternal item)
         {
             ClearPartial();
             item.Name_Unset();
@@ -2078,24 +2082,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IItemAbstract item)
+        public override void Clear(IItemAbstractInternal item)
         {
-            Clear(item: (IWeapon)item);
+            Clear(item: (IWeaponInternal)item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (IWeapon)item);
+            Clear(item: (IWeaponInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IWeapon)item);
+            Clear(item: (IWeaponInternal)item);
+        }
+
+        public Weapon_Mask<bool> GetEqualsMask(
+            IWeaponInternalGetter item,
+            IWeaponInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Weapon_Mask<bool>();
+            ((WeaponCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IWeaponGetter item,
-            IWeaponGetter rhs,
+            IWeaponInternalGetter item,
+            IWeaponInternalGetter rhs,
             Weapon_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -2124,7 +2142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            IWeaponGetter item,
+            IWeaponInternalGetter item,
             string name = null,
             Weapon_Mask<bool> printMask = null)
         {
@@ -2138,18 +2156,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            IWeaponGetter item,
+            IWeaponInternalGetter item,
             FileGeneration fg,
             string name = null,
             Weapon_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Weapon)} =>");
+                fg.AppendLine($"Weapon =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Weapon)}) =>");
+                fg.AppendLine($"{name} (Weapon) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -2163,7 +2181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            IWeaponGetter item,
+            IWeaponInternalGetter item,
             FileGeneration fg,
             Weapon_Mask<bool> printMask = null)
         {
@@ -2233,7 +2251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            IWeaponGetter item,
+            IWeaponInternalGetter item,
             Weapon_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -2249,7 +2267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            IWeaponGetter item,
+            IWeaponInternalGetter item,
             Weapon_Mask<bool> mask)
         {
             mask.Name = item.Name_IsSet;
@@ -2332,11 +2350,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class WeaponXmlTranslation :
-        ItemAbstractXmlTranslation,
-        IXmlTranslator
+    public partial class WeaponXmlWriteTranslation :
+        ItemAbstractXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static WeaponXmlTranslation Instance = new WeaponXmlTranslation();
+        public new readonly static WeaponXmlWriteTranslation Instance = new WeaponXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IWeaponInternalGetter item,
@@ -2344,7 +2362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            ItemAbstractXmlTranslation.WriteToNode_Xml(
+            ItemAbstractXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2362,7 +2380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
             {
-                ((ModelXmlTranslation)((IXmlItem)item.Model).XmlTranslator).Write(
+                ((ModelXmlWriteTranslation)((IXmlItem)item.Model).XmlWriteTranslator).Write(
                     item: item.Model,
                     node: node,
                     name: nameof(item.Model),
@@ -2496,6 +2514,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IWeaponInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Weapon");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Weapon");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWeaponInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IItemAbstractInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWeaponInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWeaponInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWeaponInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class WeaponXmlCreateTranslation : ItemAbstractXmlCreateTranslation
+    {
+        public new readonly static WeaponXmlCreateTranslation Instance = new WeaponXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IWeaponInternal item,
             XElement node,
@@ -2506,7 +2610,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    WeaponXmlTranslation.FillPublicElement_Xml(
+                    WeaponXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2885,7 +2989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    ItemAbstractXmlTranslation.FillPublicElement_Xml(
+                    ItemAbstractXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2893,86 +2997,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            IWeaponInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Weapon");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Weapon");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IWeaponInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IItemAbstractInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IWeaponInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IWeaponInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IWeaponInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -2989,7 +3013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WeaponXmlTranslation)item.XmlTranslator).Write(
+            ((WeaponXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -3693,11 +3717,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class WeaponBinaryTranslation :
-        ItemAbstractBinaryTranslation,
-        IBinaryTranslator
+    public partial class WeaponBinaryWriteTranslation :
+        ItemAbstractBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static WeaponBinaryTranslation Instance = new WeaponBinaryTranslation();
+        public new readonly static WeaponBinaryWriteTranslation Instance = new WeaponBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IWeaponInternalGetter item,
@@ -3705,7 +3729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
@@ -3719,7 +3743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3735,7 +3759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Model_IsSet)
             {
-                ((ModelBinaryTranslation)((IBinaryItem)item.Model).BinaryTranslator).Write(
+                ((ModelBinaryWriteTranslation)((IBinaryItem)item.Model).BinaryWriteTranslator).Write(
                     item: item.Model,
                     writer: writer,
                     errorMask: errorMask,
@@ -3892,6 +3916,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class WeaponBinaryCreateTranslation : ItemAbstractBinaryCreateTranslation
+    {
+        public new readonly static WeaponBinaryCreateTranslation Instance = new WeaponBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class WeaponBinaryTranslationMixIn
     {
@@ -3903,7 +3933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WeaponBinaryTranslation)item.BinaryTranslator).Write(
+            ((WeaponBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

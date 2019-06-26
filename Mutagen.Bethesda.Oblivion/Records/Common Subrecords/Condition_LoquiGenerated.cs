@@ -35,9 +35,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Condition :
         LoquiNotifyingObject,
         ICondition,
-        ILoquiObject<Condition>,
-        ILoquiObjectSetter,
-        IEquatable<Condition>
+        ILoquiObjectSetter<Condition>,
+        IEquatable<Condition>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
@@ -126,8 +126,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Condition>.GetEqualsMask(Condition rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IConditionGetter>.GetEqualsMask(IConditionGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -141,7 +140,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -181,8 +180,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => ConditionXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => ConditionXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static Condition Create_Xml(
@@ -235,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    ConditionXmlTranslation.FillPublicElement_Xml(
+                    ConditionXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -355,8 +354,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => ConditionBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => ConditionBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static Condition Create_Binary(
@@ -432,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ConditionBinaryTranslation.FillBinary_InitialParser_Custom_Public(
+            ConditionBinaryCreateTranslation.FillBinary_InitialParser_Custom_Public(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
@@ -476,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Condition Copy(
             Condition_CopyMask copyMask = null,
-            IConditionGetter def = null)
+            Condition def = null)
         {
             return Condition.Copy(
                 this,
@@ -485,9 +484,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Condition Copy(
-            IConditionGetter item,
+            Condition item,
             Condition_CopyMask copyMask = null,
-            IConditionGetter def = null)
+            Condition def = null)
         {
             Condition ret;
             if (item.GetType().Equals(typeof(Condition)))
@@ -506,9 +505,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Condition Copy_ToLoqui(
-            IConditionGetter item,
+            Condition item,
             Condition_CopyMask copyMask = null,
-            IConditionGetter def = null)
+            Condition def = null)
         {
             Condition ret;
             if (item.GetType().Equals(typeof(Condition)))
@@ -526,10 +525,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IConditionGetter rhs)
+        public void CopyFieldsFrom(Condition rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IConditionGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -537,9 +536,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IConditionGetter rhs,
+            Condition rhs,
             Condition_CopyMask copyMask,
-            IConditionGetter def = null)
+            Condition def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -550,10 +549,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IConditionGetter rhs,
+            Condition rhs,
             out Condition_ErrorMask errorMask,
             Condition_CopyMask copyMask = null,
-            IConditionGetter def = null,
+            Condition def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -567,10 +566,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IConditionGetter rhs,
+            Condition rhs,
             ErrorMaskBuilder errorMask,
             Condition_CopyMask copyMask = null,
-            IConditionGetter def = null)
+            Condition def = null)
         {
             ConditionCommon.CopyFieldsFrom(
                 item: this,
@@ -671,8 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ICondition :
         IConditionGetter,
-        ILoquiClass<ICondition, IConditionGetter>,
-        ILoquiClass<Condition, IConditionGetter>
+        ILoquiObjectSetter<ICondition>
     {
         new CompareOperator CompareOperator { get; set; }
 
@@ -691,14 +689,15 @@ namespace Mutagen.Bethesda.Oblivion
         new Int32 ThirdParameter { get; set; }
 
         void CopyFieldsFrom(
-            IConditionGetter rhs,
+            Condition rhs,
             ErrorMaskBuilder errorMask = null,
             Condition_CopyMask copyMask = null,
-            IConditionGetter def = null);
+            Condition def = null);
     }
 
     public partial interface IConditionGetter :
         ILoquiObject,
+        ILoquiObject<IConditionGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -752,13 +751,10 @@ namespace Mutagen.Bethesda.Oblivion
             IConditionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Condition_Mask<bool>();
-            ((ConditionCommon)item.CommonInstance).FillEqualsMask(
+            return ((ConditionCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -1040,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(ConditionXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(ConditionXmlWriteTranslation);
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1057,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         });
         public const int NumStructFields = 8;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(ConditionBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(ConditionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1092,11 +1088,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ConditionCommon
     {
         public static readonly ConditionCommon Instance = new ConditionCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ICondition item,
-            IConditionGetter rhs,
-            IConditionGetter def,
+            Condition item,
+            Condition rhs,
+            Condition def,
             ErrorMaskBuilder errorMask,
             Condition_CopyMask copyMask)
         {
@@ -1255,6 +1252,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThirdParameter = default(Int32);
         }
 
+        public Condition_Mask<bool> GetEqualsMask(
+            IConditionGetter item,
+            IConditionGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Condition_Mask<bool>();
+            ((ConditionCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IConditionGetter item,
             IConditionGetter rhs,
@@ -1294,11 +1305,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Condition)} =>");
+                fg.AppendLine($"Condition =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Condition)}) =>");
+                fg.AppendLine($"{name} (Condition) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1376,9 +1387,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class ConditionXmlTranslation : IXmlTranslator
+    public partial class ConditionXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static ConditionXmlTranslation Instance = new ConditionXmlTranslation();
+        public readonly static ConditionXmlWriteTranslation Instance = new ConditionXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IConditionGetter item,
@@ -1460,6 +1471,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IConditionGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Condition");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Condition");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IConditionGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IConditionGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IConditionGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class ConditionXmlCreateTranslation
+    {
+        public readonly static ConditionXmlCreateTranslation Instance = new ConditionXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             ICondition item,
             XElement node,
@@ -1470,7 +1551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ConditionXmlTranslation.FillPublicElement_Xml(
+                    ConditionXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1707,70 +1788,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IConditionGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Condition");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Condition");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IConditionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IConditionGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IConditionGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1785,7 +1802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ConditionXmlTranslation)item.XmlTranslator).Write(
+            ((ConditionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1875,7 +1892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((ConditionXmlTranslation)item.XmlTranslator).Write(
+            ((ConditionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1889,7 +1906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             Condition_TranslationMask translationMask = null)
         {
-            ((ConditionXmlTranslation)item.XmlTranslator).Write(
+            ((ConditionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1903,7 +1920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((ConditionXmlTranslation)item.XmlTranslator).Write(
+            ((ConditionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1918,7 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((ConditionXmlTranslation)item.XmlTranslator).Write(
+            ((ConditionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2398,28 +2415,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class ConditionBinaryTranslation : IBinaryTranslator
+    public partial class ConditionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ConditionBinaryTranslation Instance = new ConditionBinaryTranslation();
-
-        static partial void FillBinary_InitialParser_Custom(
-            MutagenFrame frame,
-            Condition item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void FillBinary_InitialParser_Custom_Public(
-            MutagenFrame frame,
-            Condition item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            FillBinary_InitialParser_Custom(
-                frame: frame,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
+        public readonly static ConditionBinaryWriteTranslation Instance = new ConditionBinaryWriteTranslation();
 
         static partial void WriteBinary_InitialParser_Custom(
             MutagenWriter writer,
@@ -2446,7 +2444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            ConditionBinaryTranslation.WriteBinary_InitialParser(
+            ConditionBinaryWriteTranslation.WriteBinary_InitialParser(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -2503,6 +2501,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class ConditionBinaryCreateTranslation
+    {
+        public readonly static ConditionBinaryCreateTranslation Instance = new ConditionBinaryCreateTranslation();
+
+        static partial void FillBinary_InitialParser_Custom(
+            MutagenFrame frame,
+            Condition item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_InitialParser_Custom_Public(
+            MutagenFrame frame,
+            Condition item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_InitialParser_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+    }
+
     #region Binary Write Mixins
     public static class ConditionBinaryTranslationMixIn
     {
@@ -2514,7 +2537,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ConditionBinaryTranslation)item.BinaryTranslator).Write(
+            ((ConditionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2529,7 +2552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((ConditionBinaryTranslation)item.BinaryTranslator).Write(
+            ((ConditionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2542,7 +2565,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((ConditionBinaryTranslation)item.BinaryTranslator).Write(
+            ((ConditionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

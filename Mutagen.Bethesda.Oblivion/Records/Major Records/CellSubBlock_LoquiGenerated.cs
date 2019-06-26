@@ -37,10 +37,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class CellSubBlock :
         LoquiNotifyingObject,
         ICellSubBlock,
-        ILoquiObject<CellSubBlock>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<CellSubBlock>,
         ILinkSubContainer,
-        IEquatable<CellSubBlock>
+        IEquatable<CellSubBlock>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
@@ -101,8 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<CellSubBlock>.GetEqualsMask(CellSubBlock rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<ICellSubBlockGetter>.GetEqualsMask(ICellSubBlockGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellSubBlockGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -116,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -155,8 +154,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => CellSubBlockXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => CellSubBlockXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static CellSubBlock Create_Xml(
@@ -209,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    CellSubBlockXmlTranslation.FillPublicElement_Xml(
+                    CellSubBlockXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -353,8 +352,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => CellSubBlockBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => CellSubBlockBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static async Task<CellSubBlock> Create_Binary(
@@ -473,7 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public CellSubBlock Copy(
             CellSubBlock_CopyMask copyMask = null,
-            ICellSubBlockGetter def = null)
+            CellSubBlock def = null)
         {
             return CellSubBlock.Copy(
                 this,
@@ -482,9 +481,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static CellSubBlock Copy(
-            ICellSubBlockGetter item,
+            CellSubBlock item,
             CellSubBlock_CopyMask copyMask = null,
-            ICellSubBlockGetter def = null)
+            CellSubBlock def = null)
         {
             CellSubBlock ret;
             if (item.GetType().Equals(typeof(CellSubBlock)))
@@ -503,9 +502,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static CellSubBlock Copy_ToLoqui(
-            ICellSubBlockGetter item,
+            CellSubBlock item,
             CellSubBlock_CopyMask copyMask = null,
-            ICellSubBlockGetter def = null)
+            CellSubBlock def = null)
         {
             CellSubBlock ret;
             if (item.GetType().Equals(typeof(CellSubBlock)))
@@ -523,10 +522,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(ICellSubBlockGetter rhs)
+        public void CopyFieldsFrom(CellSubBlock rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ICellSubBlockGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -534,9 +533,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ICellSubBlockGetter rhs,
+            CellSubBlock rhs,
             CellSubBlock_CopyMask copyMask,
-            ICellSubBlockGetter def = null)
+            CellSubBlock def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -547,10 +546,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ICellSubBlockGetter rhs,
+            CellSubBlock rhs,
             out CellSubBlock_ErrorMask errorMask,
             CellSubBlock_CopyMask copyMask = null,
-            ICellSubBlockGetter def = null,
+            CellSubBlock def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -564,10 +563,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ICellSubBlockGetter rhs,
+            CellSubBlock rhs,
             ErrorMaskBuilder errorMask,
             CellSubBlock_CopyMask copyMask = null,
-            ICellSubBlockGetter def = null)
+            CellSubBlock def = null)
         {
             CellSubBlockCommon.CopyFieldsFrom(
                 item: this,
@@ -644,8 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ICellSubBlock :
         ICellSubBlockGetter,
-        ILoquiClass<ICellSubBlock, ICellSubBlockGetter>,
-        ILoquiClass<CellSubBlock, ICellSubBlockGetter>
+        ILoquiObjectSetter<ICellSubBlock>
     {
         new Int32 BlockNumber { get; set; }
 
@@ -655,14 +653,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         new ISetList<Cell> Items { get; }
         void CopyFieldsFrom(
-            ICellSubBlockGetter rhs,
+            CellSubBlock rhs,
             ErrorMaskBuilder errorMask = null,
             CellSubBlock_CopyMask copyMask = null,
-            ICellSubBlockGetter def = null);
+            CellSubBlock def = null);
     }
 
     public partial interface ICellSubBlockGetter :
         ILoquiObject,
+        ILoquiObject<ICellSubBlockGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -699,13 +698,10 @@ namespace Mutagen.Bethesda.Oblivion
             ICellSubBlockGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new CellSubBlock_Mask<bool>();
-            ((CellSubBlockCommon)item.CommonInstance).FillEqualsMask(
+            return ((CellSubBlockCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -941,13 +937,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(CellSubBlockXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(CellSubBlockXmlWriteTranslation);
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 1;
-        public static readonly Type BinaryTranslation = typeof(CellSubBlockBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(CellSubBlockBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -982,11 +978,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class CellSubBlockCommon
     {
         public static readonly CellSubBlockCommon Instance = new CellSubBlockCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ICellSubBlock item,
-            ICellSubBlockGetter rhs,
-            ICellSubBlockGetter def,
+            CellSubBlock item,
+            CellSubBlock rhs,
+            CellSubBlock def,
             ErrorMaskBuilder errorMask,
             CellSubBlock_CopyMask copyMask)
         {
@@ -1046,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CellSubBlock_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetToWithDefault<Cell, ICellInternalGetter>(
+                    item.Items.SetToWithDefault<Cell, Cell>(
                         rhs: rhs.Items,
                         def: def?.Items,
                         converter: (r, d) =>
@@ -1090,6 +1087,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Unset();
         }
 
+        public CellSubBlock_Mask<bool> GetEqualsMask(
+            ICellSubBlockGetter item,
+            ICellSubBlockGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new CellSubBlock_Mask<bool>();
+            ((CellSubBlockCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             ICellSubBlockGetter item,
             ICellSubBlockGetter rhs,
@@ -1128,11 +1139,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(CellSubBlock)} =>");
+                fg.AppendLine($"CellSubBlock =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(CellSubBlock)}) =>");
+                fg.AppendLine($"{name} (CellSubBlock) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1205,9 +1216,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class CellSubBlockXmlTranslation : IXmlTranslator
+    public partial class CellSubBlockXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static CellSubBlockXmlTranslation Instance = new CellSubBlockXmlTranslation();
+        public readonly static CellSubBlockXmlWriteTranslation Instance = new CellSubBlockXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             ICellSubBlockGetter item,
@@ -1254,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)CellSubBlock_FieldIndex.Items),
                     transl: (XElement subNode, ICellInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((CellXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                        ((CellXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -1263,6 +1274,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     });
             }
         }
+
+        public void Write(
+            XElement node,
+            ICellSubBlockGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.CellSubBlock");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CellSubBlock");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ICellSubBlockGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            ICellSubBlockGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (ICellSubBlockGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class CellSubBlockXmlCreateTranslation
+    {
+        public readonly static CellSubBlockXmlCreateTranslation Instance = new CellSubBlockXmlCreateTranslation();
 
         public static void FillPublic_Xml(
             ICellSubBlock item,
@@ -1274,7 +1355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    CellSubBlockXmlTranslation.FillPublicElement_Xml(
+                    CellSubBlockXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1409,70 +1490,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            ICellSubBlockGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.CellSubBlock");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CellSubBlock");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ICellSubBlockGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            ICellSubBlockGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (ICellSubBlockGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1487,7 +1504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((CellSubBlockXmlTranslation)item.XmlTranslator).Write(
+            ((CellSubBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1577,7 +1594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((CellSubBlockXmlTranslation)item.XmlTranslator).Write(
+            ((CellSubBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1591,7 +1608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             CellSubBlock_TranslationMask translationMask = null)
         {
-            ((CellSubBlockXmlTranslation)item.XmlTranslator).Write(
+            ((CellSubBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1605,7 +1622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((CellSubBlockXmlTranslation)item.XmlTranslator).Write(
+            ((CellSubBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1620,7 +1637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((CellSubBlockXmlTranslation)item.XmlTranslator).Write(
+            ((CellSubBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2070,9 +2087,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class CellSubBlockBinaryTranslation : IBinaryTranslator
+    public partial class CellSubBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CellSubBlockBinaryTranslation Instance = new CellSubBlockBinaryTranslation();
+        public readonly static CellSubBlockBinaryWriteTranslation Instance = new CellSubBlockBinaryWriteTranslation();
 
         public static void Write_Embedded(
             ICellSubBlockGetter item,
@@ -2106,7 +2123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, ICellInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((CellBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
+                        ((CellBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
                             item: subItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
@@ -2159,6 +2176,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class CellSubBlockBinaryCreateTranslation
+    {
+        public readonly static CellSubBlockBinaryCreateTranslation Instance = new CellSubBlockBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class CellSubBlockBinaryTranslationMixIn
     {
@@ -2170,7 +2193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((CellSubBlockBinaryTranslation)item.BinaryTranslator).Write(
+            ((CellSubBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2185,7 +2208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((CellSubBlockBinaryTranslation)item.BinaryTranslator).Write(
+            ((CellSubBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2198,7 +2221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((CellSubBlockBinaryTranslation)item.BinaryTranslator).Write(
+            ((CellSubBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

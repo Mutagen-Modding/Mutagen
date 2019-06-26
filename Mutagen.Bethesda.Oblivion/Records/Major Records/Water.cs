@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class WaterBinaryTranslation
+        public partial class WaterBinaryCreateTranslation
         {
             static partial void FillBinary_OddExtraBytes_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {

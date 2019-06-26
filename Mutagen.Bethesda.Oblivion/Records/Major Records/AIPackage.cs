@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class AIPackageBinaryTranslation
+        public partial class AIPackageBinaryCreateTranslation
         {
             static partial void FillBinary_Flags_Custom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
@@ -102,7 +102,10 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Odd length for general AI field: {frame.Remaining}");
                 }
             }
+        }
 
+        public partial class AIPackageBinaryWriteTranslation
+        {
             static partial void WriteBinary_Flags_Custom(MutagenWriter writer, IAIPackageInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.Flag>.Instance.Write(
@@ -113,14 +116,6 @@ namespace Mutagen.Bethesda.Oblivion
                     writer,
                     item.GeneralType,
                     length: 4);
-            }
-
-            static partial void FillBinary_GeneralType_Custom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-            {
-            }
-
-            static partial void WriteBinary_GeneralType_Custom(MutagenWriter writer, IAIPackageInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-            {
             }
         }
     }

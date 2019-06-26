@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var path = Path.Combine(dir.Path, $"Group.xml");
                         if (File.Exists(path))
                         {
-                            GroupXmlTranslation<Worldspace>.FillPublic_Xml(
+                            GroupXmlCreateTranslation<Worldspace>.FillPublic_Xml(
                                 this.Worldspaces,
                                 XElement.Load(path),
                                 errorMask,
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Oblivion
             var path = Path.Combine(dir.Path, $"Group.xml");
             if (File.Exists(path))
             {
-                GroupXmlTranslation<Script>.FillPublic_Xml(
+                GroupXmlCreateTranslation<Script>.FillPublic_Xml(
                     this.Scripts,
                     XElement.Load(path),
                     errorMask,

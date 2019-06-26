@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CombatStyle");
             }
-            CombatStyleXmlTranslation.WriteToNode_Xml(
+            CombatStyleXmlWriteTranslation.WriteToNode_Xml(
                 item: this,
                 node: elem,
                 errorMask: errorMask,
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class CombatStyleBinaryTranslation
+        public partial class CombatStyleBinaryCreateTranslation
         {
             static partial void FillBinary_SecondaryFlags_Custom(MutagenFrame frame, CombatStyle item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
@@ -80,7 +80,10 @@ namespace Mutagen.Bethesda.Oblivion
                 var otherFlag = (CombatStyle.Flag)(flags << 8);
                 item.Flags = item.Flags | otherFlag;
             }
+        }
 
+        public partial class CombatStyleBinaryWriteTranslation
+        {
             static partial void WriteBinary_SecondaryFlags_Custom(MutagenWriter writer, ICombatStyleInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 int flags = (int)item.Flags;

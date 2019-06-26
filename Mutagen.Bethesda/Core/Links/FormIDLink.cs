@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda
         public bool Linked => this.Item != null;
         public FormKey? UnlinkedForm { get; private set; }
         public FormKey FormKey => LinkExt.GetFormKey(this);
-        Type ILink.TargetType => typeof(T);
+        Type ILinkGetter.TargetType => typeof(T);
         FormKey ILink.FormKey
         {
             get => this.FormKey;

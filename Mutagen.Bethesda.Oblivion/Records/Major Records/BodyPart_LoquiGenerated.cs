@@ -35,9 +35,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class BodyPart :
         LoquiNotifyingObject,
         IBodyPart,
-        ILoquiObject<BodyPart>,
-        ILoquiObjectSetter,
-        IEquatable<BodyPart>
+        ILoquiObjectSetter<BodyPart>,
+        IEquatable<BodyPart>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPart_Registration.Instance;
@@ -107,8 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<BodyPart>.GetEqualsMask(BodyPart rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IBodyPartGetter>.GetEqualsMask(IBodyPartGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyPartGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -122,7 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -164,8 +163,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => BodyPartXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => BodyPartXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static BodyPart Create_Xml(
@@ -218,7 +217,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    BodyPartXmlTranslation.FillPublicElement_Xml(
+                    BodyPartXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -332,8 +331,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => BodyPartBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => BodyPartBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static BodyPart Create_Binary(
@@ -448,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public BodyPart Copy(
             BodyPart_CopyMask copyMask = null,
-            IBodyPartGetter def = null)
+            BodyPart def = null)
         {
             return BodyPart.Copy(
                 this,
@@ -457,9 +456,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static BodyPart Copy(
-            IBodyPartGetter item,
+            BodyPart item,
             BodyPart_CopyMask copyMask = null,
-            IBodyPartGetter def = null)
+            BodyPart def = null)
         {
             BodyPart ret;
             if (item.GetType().Equals(typeof(BodyPart)))
@@ -478,9 +477,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static BodyPart Copy_ToLoqui(
-            IBodyPartGetter item,
+            BodyPart item,
             BodyPart_CopyMask copyMask = null,
-            IBodyPartGetter def = null)
+            BodyPart def = null)
         {
             BodyPart ret;
             if (item.GetType().Equals(typeof(BodyPart)))
@@ -498,10 +497,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IBodyPartGetter rhs)
+        public void CopyFieldsFrom(BodyPart rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IBodyPartGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -509,9 +508,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IBodyPartGetter rhs,
+            BodyPart rhs,
             BodyPart_CopyMask copyMask,
-            IBodyPartGetter def = null)
+            BodyPart def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -522,10 +521,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IBodyPartGetter rhs,
+            BodyPart rhs,
             out BodyPart_ErrorMask errorMask,
             BodyPart_CopyMask copyMask = null,
-            IBodyPartGetter def = null,
+            BodyPart def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -539,10 +538,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IBodyPartGetter rhs,
+            BodyPart rhs,
             ErrorMaskBuilder errorMask,
             BodyPart_CopyMask copyMask = null,
-            IBodyPartGetter def = null)
+            BodyPart def = null)
         {
             BodyPartCommon.CopyFieldsFrom(
                 item: this,
@@ -607,28 +606,28 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IBodyPart :
         IBodyPartGetter,
-        ILoquiClass<IBodyPart, IBodyPartGetter>,
-        ILoquiClass<BodyPart, IBodyPartGetter>
+        ILoquiObjectSetter<IBodyPart>
     {
         new Race.BodyIndex Index { get; set; }
         new bool Index_IsSet { get; set; }
-        void Index_Set(Race.BodyIndex item, bool hasBeenSet = true);
+        void Index_Set(Race.BodyIndex value, bool hasBeenSet = true);
         void Index_Unset();
 
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }
-        void Icon_Set(String item, bool hasBeenSet = true);
+        void Icon_Set(String value, bool hasBeenSet = true);
         void Icon_Unset();
 
         void CopyFieldsFrom(
-            IBodyPartGetter rhs,
+            BodyPart rhs,
             ErrorMaskBuilder errorMask = null,
             BodyPart_CopyMask copyMask = null,
-            IBodyPartGetter def = null);
+            BodyPart def = null);
     }
 
     public partial interface IBodyPartGetter :
         ILoquiObject,
+        ILoquiObject<IBodyPartGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -660,13 +659,10 @@ namespace Mutagen.Bethesda.Oblivion
             IBodyPartGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BodyPart_Mask<bool>();
-            ((BodyPartCommon)item.CommonInstance).FillEqualsMask(
+            return ((BodyPartCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -876,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(BodyPartXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(BodyPartXmlWriteTranslation);
         public static readonly RecordType INDX_HEADER = new RecordType("INDX");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -893,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
-        public static readonly Type BinaryTranslation = typeof(BodyPartBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(BodyPartBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -928,11 +924,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class BodyPartCommon
     {
         public static readonly BodyPartCommon Instance = new BodyPartCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IBodyPart item,
-            IBodyPartGetter rhs,
-            IBodyPartGetter def,
+            BodyPart item,
+            BodyPart rhs,
+            BodyPart def,
             ErrorMaskBuilder errorMask,
             BodyPart_CopyMask copyMask)
         {
@@ -1009,6 +1006,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon_Unset();
         }
 
+        public BodyPart_Mask<bool> GetEqualsMask(
+            IBodyPartGetter item,
+            IBodyPartGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new BodyPart_Mask<bool>();
+            ((BodyPartCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IBodyPartGetter item,
             IBodyPartGetter rhs,
@@ -1042,11 +1053,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(BodyPart)} =>");
+                fg.AppendLine($"BodyPart =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(BodyPart)}) =>");
+                fg.AppendLine($"{name} (BodyPart) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1096,9 +1107,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class BodyPartXmlTranslation : IXmlTranslator
+    public partial class BodyPartXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static BodyPartXmlTranslation Instance = new BodyPartXmlTranslation();
+        public readonly static BodyPartXmlWriteTranslation Instance = new BodyPartXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IBodyPartGetter item,
@@ -1128,6 +1139,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IBodyPartGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BodyPart");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BodyPart");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IBodyPartGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IBodyPartGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IBodyPartGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class BodyPartXmlCreateTranslation
+    {
+        public readonly static BodyPartXmlCreateTranslation Instance = new BodyPartXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IBodyPart item,
             XElement node,
@@ -1138,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    BodyPartXmlTranslation.FillPublicElement_Xml(
+                    BodyPartXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1219,70 +1300,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IBodyPartGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BodyPart");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BodyPart");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IBodyPartGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IBodyPartGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IBodyPartGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1297,7 +1314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((BodyPartXmlTranslation)item.XmlTranslator).Write(
+            ((BodyPartXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1387,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((BodyPartXmlTranslation)item.XmlTranslator).Write(
+            ((BodyPartXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1401,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             BodyPart_TranslationMask translationMask = null)
         {
-            ((BodyPartXmlTranslation)item.XmlTranslator).Write(
+            ((BodyPartXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1415,7 +1432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((BodyPartXmlTranslation)item.XmlTranslator).Write(
+            ((BodyPartXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1430,7 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((BodyPartXmlTranslation)item.XmlTranslator).Write(
+            ((BodyPartXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1748,9 +1765,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class BodyPartBinaryTranslation : IBinaryTranslator
+    public partial class BodyPartBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BodyPartBinaryTranslation Instance = new BodyPartBinaryTranslation();
+        public readonly static BodyPartBinaryWriteTranslation Instance = new BodyPartBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
             IBodyPartGetter item,
@@ -1810,6 +1827,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class BodyPartBinaryCreateTranslation
+    {
+        public readonly static BodyPartBinaryCreateTranslation Instance = new BodyPartBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class BodyPartBinaryTranslationMixIn
     {
@@ -1821,7 +1844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((BodyPartBinaryTranslation)item.BinaryTranslator).Write(
+            ((BodyPartBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1836,7 +1859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((BodyPartBinaryTranslation)item.BinaryTranslator).Write(
+            ((BodyPartBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1849,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((BodyPartBinaryTranslation)item.BinaryTranslator).Write(
+            ((BodyPartBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

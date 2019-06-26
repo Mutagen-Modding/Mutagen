@@ -38,13 +38,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Birthsign :
         OblivionMajorRecord,
-        IBirthsign,
         IBirthsignInternal,
-        ILoquiObject<Birthsign>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<Birthsign>,
         INamed,
         ILinkSubContainer,
-        IEquatable<Birthsign>
+        IEquatable<Birthsign>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Birthsign_Registration.Instance;
@@ -139,19 +138,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<FormIDSetLink<Spell>> _Spells = new SourceSetList<FormIDSetLink<Spell>>();
-        public ISourceSetList<FormIDSetLink<Spell>> Spells => _Spells;
+        private readonly SourceSetList<IFormIDSetLink<Spell>> _Spells = new SourceSetList<IFormIDSetLink<Spell>>();
+        public ISourceSetList<IFormIDSetLink<Spell>> Spells => _Spells;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<FormIDSetLink<Spell>> IBirthsign.Spells => _Spells;
+        ISetList<IFormIDSetLink<Spell>> IBirthsign.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<FormIDSetLink<Spell>> IBirthsignGetter.Spells => _Spells;
+        IReadOnlySetList<IFormIDSetLink<Spell>> IBirthsignGetter.Spells => _Spells;
         #endregion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Birthsign>.GetEqualsMask(Birthsign rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IBirthsignGetter>.GetEqualsMask(IBirthsignGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBirthsignInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -165,7 +163,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -227,7 +225,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => BirthsignXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => BirthsignXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Birthsign Create_Xml(
@@ -286,7 +284,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    BirthsignXmlTranslation.FillPublicElement_Xml(
+                    BirthsignXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -478,7 +476,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => BirthsignBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => BirthsignBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Birthsign Create_Binary(
@@ -603,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLink<Spell>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Birthsign_Registration.SPLO_HEADER,
                         masterReferences: masterReferences,
@@ -628,7 +626,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Birthsign Copy(
             Birthsign_CopyMask copyMask = null,
-            IBirthsignGetter def = null)
+            Birthsign def = null)
         {
             return Birthsign.Copy(
                 this,
@@ -637,9 +635,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Birthsign Copy(
-            IBirthsignGetter item,
+            Birthsign item,
             Birthsign_CopyMask copyMask = null,
-            IBirthsignGetter def = null)
+            Birthsign def = null)
         {
             Birthsign ret;
             if (item.GetType().Equals(typeof(Birthsign)))
@@ -658,9 +656,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Birthsign Copy_ToLoqui(
-            IBirthsignGetter item,
+            Birthsign item,
             Birthsign_CopyMask copyMask = null,
-            IBirthsignGetter def = null)
+            Birthsign def = null)
         {
             Birthsign ret;
             if (item.GetType().Equals(typeof(Birthsign)))
@@ -678,10 +676,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IBirthsignGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -689,9 +687,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IBirthsignGetter rhs,
+            Birthsign rhs,
             Birthsign_CopyMask copyMask,
-            IBirthsignGetter def = null)
+            Birthsign def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -702,10 +700,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IBirthsignGetter rhs,
+            Birthsign rhs,
             out Birthsign_ErrorMask errorMask,
             Birthsign_CopyMask copyMask = null,
-            IBirthsignGetter def = null,
+            Birthsign def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -719,10 +717,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IBirthsignGetter rhs,
+            Birthsign rhs,
             ErrorMaskBuilder errorMask,
             Birthsign_CopyMask copyMask = null,
-            IBirthsignGetter def = null)
+            Birthsign def = null)
         {
             BirthsignCommon.CopyFieldsFrom(
                 item: this,
@@ -747,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case Birthsign_FieldIndex.Spells:
-                    this._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)obj);
+                    this._Spells.SetTo((IEnumerable<IFormIDSetLink<Spell>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -788,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case Birthsign_FieldIndex.Spells:
-                    obj._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)pair.Value);
+                    obj._Spells.SetTo((IEnumerable<IFormIDSetLink<Spell>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -801,30 +799,29 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IBirthsign :
         IBirthsignGetter,
         IOblivionMajorRecord,
-        ILoquiClass<IBirthsign, IBirthsignGetter>,
-        ILoquiClass<Birthsign, IBirthsignGetter>
+        ILoquiObjectSetter<IBirthsignInternal>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
-        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Set(String value, bool hasBeenSet = true);
         void Name_Unset();
 
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }
-        void Icon_Set(String item, bool hasBeenSet = true);
+        void Icon_Set(String value, bool hasBeenSet = true);
         void Icon_Unset();
 
         new String Description { get; set; }
         new bool Description_IsSet { get; set; }
-        void Description_Set(String item, bool hasBeenSet = true);
+        void Description_Set(String value, bool hasBeenSet = true);
         void Description_Unset();
 
-        new ISetList<FormIDSetLink<Spell>> Spells { get; }
+        new ISetList<IFormIDSetLink<Spell>> Spells { get; }
         void CopyFieldsFrom(
-            IBirthsignGetter rhs,
+            Birthsign rhs,
             ErrorMaskBuilder errorMask = null,
             Birthsign_CopyMask copyMask = null,
-            IBirthsignGetter def = null);
+            Birthsign def = null);
     }
 
     public partial interface IBirthsignInternal :
@@ -836,6 +833,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IBirthsignGetter :
         IOblivionMajorRecordGetter,
+        ILoquiObject<IBirthsignInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -855,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Spells
-        IReadOnlySetList<FormIDSetLink<Spell>> Spells { get; }
+        IReadOnlySetList<IFormIDSetLink<Spell>> Spells { get; }
         #endregion
 
     }
@@ -878,17 +876,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Birthsign_Mask<bool> GetEqualsMask(
-            this IBirthsignGetter item,
-            IBirthsignGetter rhs,
+            this IBirthsignInternalGetter item,
+            IBirthsignInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Birthsign_Mask<bool>();
-            ((BirthsignCommon)item.CommonInstance).FillEqualsMask(
+            return ((BirthsignCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -924,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static Birthsign_Mask<bool> GetHasBeenSetMask(this IBirthsignGetter item)
+        public static Birthsign_Mask<bool> GetHasBeenSetMask(this IBirthsignInternalGetter item)
         {
             var ret = new Birthsign_Mask<bool>();
             ((BirthsignCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -1122,13 +1117,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Birthsign_FieldIndex.Description:
                     return typeof(String);
                 case Birthsign_FieldIndex.Spells:
-                    return typeof(SourceSetList<FormIDSetLink<Spell>>);
+                    return typeof(SourceSetList<IFormIDSetLink<Spell>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(BirthsignXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(BirthsignXmlWriteTranslation);
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
@@ -1137,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = BSGN_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
-        public static readonly Type BinaryTranslation = typeof(BirthsignBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(BirthsignBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1172,11 +1167,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class BirthsignCommon : OblivionMajorRecordCommon
     {
         public static readonly BirthsignCommon Instance = new BirthsignCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IBirthsign item,
-            IBirthsignGetter rhs,
-            IBirthsignGetter def,
+            Birthsign item,
+            Birthsign rhs,
+            Birthsign def,
             ErrorMaskBuilder errorMask,
             Birthsign_CopyMask copyMask)
         {
@@ -1301,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IBirthsign item)
+        public virtual void Clear(IBirthsignInternal item)
         {
             ClearPartial();
             item.Name_Unset();
@@ -1311,19 +1307,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (IBirthsign)item);
+            Clear(item: (IBirthsignInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IBirthsign)item);
+            Clear(item: (IBirthsignInternal)item);
+        }
+
+        public Birthsign_Mask<bool> GetEqualsMask(
+            IBirthsignInternalGetter item,
+            IBirthsignInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Birthsign_Mask<bool>();
+            ((BirthsignCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IBirthsignGetter item,
-            IBirthsignGetter rhs,
+            IBirthsignInternalGetter item,
+            IBirthsignInternalGetter rhs,
             Birthsign_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -1339,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            IBirthsignGetter item,
+            IBirthsignInternalGetter item,
             string name = null,
             Birthsign_Mask<bool> printMask = null)
         {
@@ -1353,18 +1363,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            IBirthsignGetter item,
+            IBirthsignInternalGetter item,
             FileGeneration fg,
             string name = null,
             Birthsign_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Birthsign)} =>");
+                fg.AppendLine($"Birthsign =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Birthsign)}) =>");
+                fg.AppendLine($"{name} (Birthsign) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1378,7 +1388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            IBirthsignGetter item,
+            IBirthsignInternalGetter item,
             FileGeneration fg,
             Birthsign_Mask<bool> printMask = null)
         {
@@ -1419,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            IBirthsignGetter item,
+            IBirthsignInternalGetter item,
             Birthsign_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -1432,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            IBirthsignGetter item,
+            IBirthsignInternalGetter item,
             Birthsign_Mask<bool> mask)
         {
             mask.Name = item.Name_IsSet;
@@ -1485,11 +1495,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class BirthsignXmlTranslation :
-        OblivionMajorRecordXmlTranslation,
-        IXmlTranslator
+    public partial class BirthsignXmlWriteTranslation :
+        OblivionMajorRecordXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static BirthsignXmlTranslation Instance = new BirthsignXmlTranslation();
+        public new readonly static BirthsignXmlWriteTranslation Instance = new BirthsignXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IBirthsignInternalGetter item,
@@ -1497,7 +1507,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1535,14 +1545,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Spells.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Birthsign_FieldIndex.Spells) ?? true))
             {
-                ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Write(
+                ListXmlTranslation<IFormIDSetLink<Spell>>.Instance.Write(
                     node: node,
                     name: nameof(item.Spells),
                     item: item.Spells,
                     fieldIndex: (int)Birthsign_FieldIndex.Spells,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Birthsign_FieldIndex.Spells),
-                    transl: (XElement subNode, FormIDSetLink<Spell> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDSetLink<Spell> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -1552,6 +1562,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     });
             }
         }
+
+        public void Write(
+            XElement node,
+            IBirthsignInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Birthsign");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Birthsign");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IBirthsignInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IBirthsignInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IBirthsignInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class BirthsignXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
+    {
+        public new readonly static BirthsignXmlCreateTranslation Instance = new BirthsignXmlCreateTranslation();
 
         public static void FillPublic_Xml(
             IBirthsignInternal item,
@@ -1563,7 +1644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    BirthsignXmlTranslation.FillPublicElement_Xml(
+                    BirthsignXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1669,7 +1750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Birthsign_FieldIndex.Spells);
-                        if (ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormIDSetLink<Spell>>.Instance.Parse(
                             node: node,
                             enumer: out var SpellsItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -1694,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1702,71 +1783,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            IBirthsignInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Birthsign");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Birthsign");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IBirthsignInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IBirthsignInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IBirthsignInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -1783,7 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((BirthsignXmlTranslation)item.XmlTranslator).Write(
+            ((BirthsignXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2247,11 +2263,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class BirthsignBinaryTranslation :
-        OblivionMajorRecordBinaryTranslation,
-        IBinaryTranslator
+    public partial class BirthsignBinaryWriteTranslation :
+        OblivionMajorRecordBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static BirthsignBinaryTranslation Instance = new BirthsignBinaryTranslation();
+        public new readonly static BirthsignBinaryWriteTranslation Instance = new BirthsignBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
             IBirthsignInternalGetter item,
@@ -2260,7 +2276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2292,10 +2308,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Spells.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLink<Spell>>.Instance.Write(
                     writer: writer,
                     items: item.Spells,
-                    transl: (MutagenWriter subWriter, FormIDSetLink<Spell> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDSetLink<Spell> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
@@ -2319,7 +2335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Birthsign_Registration.BSGN_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryTranslation.Write_Embedded(
+                OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -2380,6 +2396,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class BirthsignBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    {
+        public new readonly static BirthsignBinaryCreateTranslation Instance = new BirthsignBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class BirthsignBinaryTranslationMixIn
     {
@@ -2391,7 +2413,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((BirthsignBinaryTranslation)item.BinaryTranslator).Write(
+            ((BirthsignBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

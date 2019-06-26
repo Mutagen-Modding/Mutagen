@@ -37,12 +37,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionDataSounds :
         RegionData,
-        IRegionDataSounds,
         IRegionDataSoundsInternal,
-        ILoquiObject<RegionDataSounds>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<RegionDataSounds>,
         ILinkSubContainer,
-        IEquatable<RegionDataSounds>
+        IEquatable<RegionDataSounds>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataSounds_Registration.Instance;
@@ -96,8 +95,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RegionDataSounds>.GetEqualsMask(RegionDataSounds rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IRegionDataSoundsGetter>.GetEqualsMask(IRegionDataSoundsGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataSoundsInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -111,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -155,7 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => RegionDataSoundsXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => RegionDataSoundsXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static RegionDataSounds Create_Xml(
@@ -214,7 +212,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    RegionDataSoundsXmlTranslation.FillPublicElement_Xml(
+                    RegionDataSoundsXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -382,7 +380,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => RegionDataSoundsBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => RegionDataSoundsBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static RegionDataSounds Create_Binary(
@@ -510,7 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public RegionDataSounds Copy(
             RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null)
+            RegionDataSounds def = null)
         {
             return RegionDataSounds.Copy(
                 this,
@@ -519,9 +517,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionDataSounds Copy(
-            IRegionDataSoundsGetter item,
+            RegionDataSounds item,
             RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null)
+            RegionDataSounds def = null)
         {
             RegionDataSounds ret;
             if (item.GetType().Equals(typeof(RegionDataSounds)))
@@ -540,9 +538,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionDataSounds Copy_ToLoqui(
-            IRegionDataSoundsGetter item,
+            RegionDataSounds item,
             RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null)
+            RegionDataSounds def = null)
         {
             RegionDataSounds ret;
             if (item.GetType().Equals(typeof(RegionDataSounds)))
@@ -560,10 +558,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IRegionDataGetter rhs)
+        public override void CopyFieldsFrom(RegionData rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IRegionDataSoundsGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -571,9 +569,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRegionDataSoundsGetter rhs,
+            RegionDataSounds rhs,
             RegionDataSounds_CopyMask copyMask,
-            IRegionDataSoundsGetter def = null)
+            RegionDataSounds def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -584,10 +582,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRegionDataSoundsGetter rhs,
+            RegionDataSounds rhs,
             out RegionDataSounds_ErrorMask errorMask,
             RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null,
+            RegionDataSounds def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -601,10 +599,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRegionDataSoundsGetter rhs,
+            RegionDataSounds rhs,
             ErrorMaskBuilder errorMask,
             RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null)
+            RegionDataSounds def = null)
         {
             RegionDataSoundsCommon.CopyFieldsFrom(
                 item: this,
@@ -671,20 +669,19 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataSounds :
         IRegionDataSoundsGetter,
         IRegionData,
-        ILoquiClass<IRegionDataSounds, IRegionDataSoundsGetter>,
-        ILoquiClass<RegionDataSounds, IRegionDataSoundsGetter>
+        ILoquiObjectSetter<IRegionDataSoundsInternal>
     {
         new MusicType MusicType { get; set; }
         new bool MusicType_IsSet { get; set; }
-        void MusicType_Set(MusicType item, bool hasBeenSet = true);
+        void MusicType_Set(MusicType value, bool hasBeenSet = true);
         void MusicType_Unset();
 
         new ISetList<RegionSound> Sounds { get; }
         void CopyFieldsFrom(
-            IRegionDataSoundsGetter rhs,
+            RegionDataSounds rhs,
             ErrorMaskBuilder errorMask = null,
             RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null);
+            RegionDataSounds def = null);
     }
 
     public partial interface IRegionDataSoundsInternal :
@@ -696,6 +693,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IRegionDataSoundsGetter :
         IRegionDataGetter,
+        ILoquiObject<IRegionDataSoundsInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -728,17 +726,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionDataSounds_Mask<bool> GetEqualsMask(
-            this IRegionDataSoundsGetter item,
-            IRegionDataSoundsGetter rhs,
+            this IRegionDataSoundsInternalGetter item,
+            IRegionDataSoundsInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RegionDataSounds_Mask<bool>();
-            ((RegionDataSoundsCommon)item.CommonInstance).FillEqualsMask(
+            return ((RegionDataSoundsCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -774,7 +769,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static RegionDataSounds_Mask<bool> GetHasBeenSetMask(this IRegionDataSoundsGetter item)
+        public static RegionDataSounds_Mask<bool> GetHasBeenSetMask(this IRegionDataSoundsInternalGetter item)
         {
             var ret = new RegionDataSounds_Mask<bool>();
             ((RegionDataSoundsCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -954,14 +949,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(RegionDataSoundsXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(RegionDataSoundsXmlWriteTranslation);
         public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
         public static readonly RecordType RDMD_HEADER = new RecordType("RDMD");
         public static readonly RecordType RDSD_HEADER = new RecordType("RDSD");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = RDAT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
-        public static readonly Type BinaryTranslation = typeof(RegionDataSoundsBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(RegionDataSoundsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -996,11 +991,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RegionDataSoundsCommon : RegionDataCommon
     {
         public static readonly RegionDataSoundsCommon Instance = new RegionDataSoundsCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IRegionDataSounds item,
-            IRegionDataSoundsGetter rhs,
-            IRegionDataSoundsGetter def,
+            RegionDataSounds item,
+            RegionDataSounds rhs,
+            RegionDataSounds def,
             ErrorMaskBuilder errorMask,
             RegionDataSounds_CopyMask copyMask)
         {
@@ -1045,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataSounds_FieldIndex.Sounds);
                 try
                 {
-                    item.Sounds.SetToWithDefault<RegionSound, IRegionSoundGetter>(
+                    item.Sounds.SetToWithDefault<RegionSound, RegionSound>(
                         rhs: rhs.Sounds,
                         def: def?.Sounds,
                         converter: (r, d) =>
@@ -1080,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IRegionDataSounds item)
+        public virtual void Clear(IRegionDataSoundsInternal item)
         {
             ClearPartial();
             item.MusicType_Unset();
@@ -1088,14 +1084,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IRegionData item)
+        public override void Clear(IRegionDataInternal item)
         {
-            Clear(item: (IRegionDataSounds)item);
+            Clear(item: (IRegionDataSoundsInternal)item);
+        }
+
+        public RegionDataSounds_Mask<bool> GetEqualsMask(
+            IRegionDataSoundsInternalGetter item,
+            IRegionDataSoundsInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RegionDataSounds_Mask<bool>();
+            ((RegionDataSoundsCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IRegionDataSoundsGetter item,
-            IRegionDataSoundsGetter rhs,
+            IRegionDataSoundsInternalGetter item,
+            IRegionDataSoundsInternalGetter rhs,
             RegionDataSounds_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -1109,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            IRegionDataSoundsGetter item,
+            IRegionDataSoundsInternalGetter item,
             string name = null,
             RegionDataSounds_Mask<bool> printMask = null)
         {
@@ -1123,18 +1133,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            IRegionDataSoundsGetter item,
+            IRegionDataSoundsInternalGetter item,
             FileGeneration fg,
             string name = null,
             RegionDataSounds_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(RegionDataSounds)} =>");
+                fg.AppendLine($"RegionDataSounds =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(RegionDataSounds)}) =>");
+                fg.AppendLine($"{name} (RegionDataSounds) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1148,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            IRegionDataSoundsGetter item,
+            IRegionDataSoundsInternalGetter item,
             FileGeneration fg,
             RegionDataSounds_Mask<bool> printMask = null)
         {
@@ -1181,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            IRegionDataSoundsGetter item,
+            IRegionDataSoundsInternalGetter item,
             RegionDataSounds_Mask<bool?> checkMask)
         {
             if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != item.MusicType_IsSet) return false;
@@ -1192,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            IRegionDataSoundsGetter item,
+            IRegionDataSoundsInternalGetter item,
             RegionDataSounds_Mask<bool> mask)
         {
             mask.MusicType = item.MusicType_IsSet;
@@ -1224,11 +1234,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class RegionDataSoundsXmlTranslation :
-        RegionDataXmlTranslation,
-        IXmlTranslator
+    public partial class RegionDataSoundsXmlWriteTranslation :
+        RegionDataXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static RegionDataSoundsXmlTranslation Instance = new RegionDataSoundsXmlTranslation();
+        public new readonly static RegionDataSoundsXmlWriteTranslation Instance = new RegionDataSoundsXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IRegionDataSoundsInternalGetter item,
@@ -1236,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            RegionDataXmlTranslation.WriteToNode_Xml(
+            RegionDataXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1263,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)RegionDataSounds_FieldIndex.Sounds),
                     transl: (XElement subNode, IRegionSoundGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((RegionSoundXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                        ((RegionSoundXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -1272,6 +1282,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     });
             }
         }
+
+        public void Write(
+            XElement node,
+            IRegionDataSoundsInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionDataSounds");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataSounds");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IRegionDataSoundsInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IRegionDataInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IRegionDataSoundsInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class RegionDataSoundsXmlCreateTranslation : RegionDataXmlCreateTranslation
+    {
+        public new readonly static RegionDataSoundsXmlCreateTranslation Instance = new RegionDataSoundsXmlCreateTranslation();
 
         public static void FillPublic_Xml(
             IRegionDataSoundsInternal item,
@@ -1283,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    RegionDataSoundsXmlTranslation.FillPublicElement_Xml(
+                    RegionDataSoundsXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1362,7 +1428,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    RegionDataXmlTranslation.FillPublicElement_Xml(
+                    RegionDataXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1370,56 +1436,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            IRegionDataSoundsInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionDataSounds");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataSounds");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IRegionDataSoundsInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IRegionDataInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IRegionDataSoundsInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -1436,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RegionDataSoundsXmlTranslation)item.XmlTranslator).Write(
+            ((RegionDataSoundsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1855,11 +1871,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class RegionDataSoundsBinaryTranslation :
-        RegionDataBinaryTranslation,
-        IBinaryTranslator
+    public partial class RegionDataSoundsBinaryWriteTranslation :
+        RegionDataBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static RegionDataSoundsBinaryTranslation Instance = new RegionDataSoundsBinaryTranslation();
+        public new readonly static RegionDataSoundsBinaryWriteTranslation Instance = new RegionDataSoundsBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
             IRegionDataSoundsInternalGetter item,
@@ -1868,7 +1884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            RegionDataBinaryTranslation.Write_RecordTypes(
+            RegionDataBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1893,7 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IRegionSoundGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((RegionSoundBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
+                        ((RegionSoundBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
                             item: subItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
@@ -1910,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            RegionDataBinaryTranslation.Write_Embedded(
+            RegionDataBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
@@ -1955,6 +1971,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class RegionDataSoundsBinaryCreateTranslation : RegionDataBinaryCreateTranslation
+    {
+        public new readonly static RegionDataSoundsBinaryCreateTranslation Instance = new RegionDataSoundsBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class RegionDataSoundsBinaryTranslationMixIn
     {
@@ -1966,7 +1988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RegionDataSoundsBinaryTranslation)item.BinaryTranslator).Write(
+            ((RegionDataSoundsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

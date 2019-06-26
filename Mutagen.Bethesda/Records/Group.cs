@@ -19,7 +19,7 @@ using Loqui.Xml;
 namespace Mutagen.Bethesda
 {
     public partial class Group<T> : IEnumerable<T>, IGroupCommon<T>
-        where T : ILoquiObject<T>, IMajorRecordInternal, IXmlItem, IBinaryItem
+        where T : IMajorRecordInternal, IXmlItem, IBinaryItem
     {
         private Lazy<IObservableCache<T, string>> _editorIDCache;
         public IObservableCache<T, string> ByEditorID => _editorIDCache.Value;
@@ -61,9 +61,9 @@ namespace Mutagen.Bethesda
 
     public static class GroupExt
     {
-        public static readonly Group_TranslationMask<TranslationMaskStub> XmlFolderTranslationMask = new Group_TranslationMask<TranslationMaskStub>(true)
+        public static readonly Group_TranslationMask<MajorRecord_TranslationMask> XmlFolderTranslationMask = new Group_TranslationMask<MajorRecord_TranslationMask>(true)
         {
-            Items = new MaskItem<bool, TranslationMaskStub>(false, default)
+            Items = new MaskItem<bool, MajorRecord_TranslationMask>(false, default)
         };
         public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
 
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda
                         {
                             throw new ArgumentException("XML file did not have \"Group\" top node.");
                         }
-                        GroupXmlTranslation<T>.FillPublic_Xml(
+                        GroupXmlCreateTranslation<T>.FillPublic_Xml(
                             group,
                             elem,
                             errorMask,
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda
                 {
                     if (group.Items.Count == 0) return;
                     XElement topNode = new XElement("Group");
-                    GroupXmlTranslation<T>.WriteToNode_Xml(
+                    GroupXmlWriteTranslation<T>.WriteToNode_Xml(
                         group,
                         topNode,
                         errorMask,
@@ -184,16 +184,9 @@ namespace Mutagen.Bethesda
 
     namespace Internals
     {
-        public partial class GroupBinaryTranslation<T>
+        public partial class GroupBinaryWriteTranslation<T>
         {
-            static partial void FillBinary_ContainedRecordType_Custom(
-                MutagenFrame frame,
-                Group<T> item,
-                MasterReferences masterReferences,
-                ErrorMaskBuilder errorMask)
-            {
-                frame.Reader.Position += 4;
-            }
+            public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)LoquiRegistration.GetRegister(typeof(T)).ClassType.GetField(Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER).GetValue(null);
 
             static partial void WriteBinary_ContainedRecordType_Custom(
                 MutagenWriter writer,
@@ -203,7 +196,19 @@ namespace Mutagen.Bethesda
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer,
-                    Group<T>.GRUP_RECORD_TYPE.TypeInt);
+                    GRUP_RECORD_TYPE.TypeInt);
+            }
+        }
+
+        public partial class GroupBinaryCreateTranslation<T>
+        {
+            static partial void FillBinary_ContainedRecordType_Custom(
+                MutagenFrame frame,
+                Group<T> item,
+                MasterReferences masterReferences,
+                ErrorMaskBuilder errorMask)
+            {
+                frame.Reader.Position += 4;
             }
         }
     }

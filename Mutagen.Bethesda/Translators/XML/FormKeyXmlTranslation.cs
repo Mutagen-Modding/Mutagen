@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda
     {
         public readonly static FormKeyXmlTranslation Instance = new FormKeyXmlTranslation();
 
-        public void ParseInto<T>(XElement node, int fieldIndex, FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement node, int fieldIndex, IFormIDSetLink<T> item, ErrorMaskBuilder errorMask)
             where T : class, IMajorRecordInternalGetter
         {
             using (errorMask.PushIndex(fieldIndex))
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void ParseInto<T>(XElement node, int fieldIndex, FormIDLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement node, int fieldIndex, IFormIDLink<T> item, ErrorMaskBuilder errorMask)
             where T : class, IMajorRecordInternalGetter
         {
             using (errorMask.PushIndex(fieldIndex))
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void ParseInto<T>(XElement node, int fieldIndex, EDIDLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement node, int fieldIndex, IEDIDLink<T> item, ErrorMaskBuilder errorMask)
             where T : class, IMajorRecordInternalGetter
         {
             using (errorMask.PushIndex(fieldIndex))
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void ParseInto<T>(XElement node, int fieldIndex, EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement node, int fieldIndex, IEDIDSetLink<T> item, ErrorMaskBuilder errorMask)
             where T : class, IMajorRecordInternalGetter
         {
             using (errorMask.PushIndex(fieldIndex))
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda
 
         public bool Parse<T>(
             XElement node, 
-            out FormIDLink<T> item, 
+            out IFormIDLink<T> item, 
             ErrorMaskBuilder errorMask)
             where T : class, IMajorRecordInternalGetter
         {
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda
 
         public bool Parse<T>(
             XElement node,
-            out FormIDLink<T> item, 
+            out IFormIDLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
             where T : class, IMajorRecordInternalGetter
@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda
 
         public bool Parse<T>(
             XElement node, 
-            out FormIDSetLink<T> item,
+            out IFormIDSetLink<T> item,
             ErrorMaskBuilder errorMask)
             where T : class, IMajorRecordInternalGetter
         {
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda
 
         public bool Parse<T>(
             XElement node, 
-            out FormIDSetLink<T> item, 
+            out IFormIDSetLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
             where T : class, IMajorRecordInternalGetter
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda
 
         public bool Parse<T>(
             XElement node, 
-            out EDIDLink<T> item,
+            out IEDIDLink<T> item,
             ErrorMaskBuilder errorMask)
             where T : class, IMajorRecordInternalGetter
         {
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda
 
         public bool Parse<T>(
             XElement node, 
-            out EDIDLink<T> item,
+            out IEDIDLink<T> item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
             where T : class, IMajorRecordInternalGetter
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda
 
         public bool Parse<T>(
             XElement node,
-            out EDIDSetLink<T> item,
+            out IEDIDSetLink<T> item,
             ErrorMaskBuilder errorMask)
             where T : class, IMajorRecordInternalGetter
         {
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda
 
         public bool Parse<T>(
             XElement node, 
-            out EDIDSetLink<T> item, 
+            out IEDIDSetLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
             where T : class, IMajorRecordInternalGetter

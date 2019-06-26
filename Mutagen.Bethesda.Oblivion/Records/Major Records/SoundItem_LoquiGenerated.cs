@@ -35,10 +35,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SoundItem :
         LoquiNotifyingObject,
         ISoundItem,
-        ILoquiObject<SoundItem>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<SoundItem>,
         ILinkSubContainer,
-        IEquatable<SoundItem>
+        IEquatable<SoundItem>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundItem_Registration.Instance;
@@ -56,10 +56,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        public FormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
+        public IFormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
         public Sound Sound { get => Sound_Property.Item; set => Sound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Sound> ISoundItemGetter.Sound_Property => this.Sound_Property;
+        IFormIDSetLink<Sound> ISoundItem.Sound_Property => this.Sound_Property;
+        ISoundInternalGetter ISoundItemGetter.Sound => this.Sound_Property.Item;
+        IFormIDSetLinkGetter<Sound> ISoundItemGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region Chance
         public bool Chance_IsSet
@@ -88,8 +90,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<SoundItem>.GetEqualsMask(SoundItem rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<ISoundItemGetter>.GetEqualsMask(ISoundItemGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundItemGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -103,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -145,8 +146,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => SoundItemXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => SoundItemXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static SoundItem Create_Xml(
@@ -199,7 +200,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    SoundItemXmlTranslation.FillPublicElement_Xml(
+                    SoundItemXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -334,8 +335,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => SoundItemBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => SoundItemBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static SoundItem Create_Binary(
@@ -434,7 +435,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public SoundItem Copy(
             SoundItem_CopyMask copyMask = null,
-            ISoundItemGetter def = null)
+            SoundItem def = null)
         {
             return SoundItem.Copy(
                 this,
@@ -443,9 +444,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SoundItem Copy(
-            ISoundItemGetter item,
+            SoundItem item,
             SoundItem_CopyMask copyMask = null,
-            ISoundItemGetter def = null)
+            SoundItem def = null)
         {
             SoundItem ret;
             if (item.GetType().Equals(typeof(SoundItem)))
@@ -464,9 +465,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SoundItem Copy_ToLoqui(
-            ISoundItemGetter item,
+            SoundItem item,
             SoundItem_CopyMask copyMask = null,
-            ISoundItemGetter def = null)
+            SoundItem def = null)
         {
             SoundItem ret;
             if (item.GetType().Equals(typeof(SoundItem)))
@@ -484,10 +485,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(ISoundItemGetter rhs)
+        public void CopyFieldsFrom(SoundItem rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ISoundItemGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -495,9 +496,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISoundItemGetter rhs,
+            SoundItem rhs,
             SoundItem_CopyMask copyMask,
-            ISoundItemGetter def = null)
+            SoundItem def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -508,10 +509,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISoundItemGetter rhs,
+            SoundItem rhs,
             out SoundItem_ErrorMask errorMask,
             SoundItem_CopyMask copyMask = null,
-            ISoundItemGetter def = null,
+            SoundItem def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -525,10 +526,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISoundItemGetter rhs,
+            SoundItem rhs,
             ErrorMaskBuilder errorMask,
             SoundItem_CopyMask copyMask = null,
-            ISoundItemGetter def = null)
+            SoundItem def = null)
         {
             SoundItemCommon.CopyFieldsFrom(
                 item: this,
@@ -544,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SoundItem_FieldIndex.Sound:
-                    this.Sound_Property.Set((FormIDSetLink<Sound>)obj);
+                    this.Sound_Property.Set((IFormIDSetLink<Sound>)obj);
                     break;
                 case SoundItem_FieldIndex.Chance:
                     this.Chance = (Byte)obj;
@@ -578,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SoundItem_FieldIndex.Sound:
-                    obj.Sound_Property.Set((FormIDSetLink<Sound>)pair.Value);
+                    obj.Sound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
                     break;
                 case SoundItem_FieldIndex.Chance:
                     obj.Chance = (Byte)pair.Value;
@@ -593,30 +594,31 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ISoundItem :
         ISoundItemGetter,
-        ILoquiClass<ISoundItem, ISoundItemGetter>,
-        ILoquiClass<SoundItem, ISoundItemGetter>
+        ILoquiObjectSetter<ISoundItem>
     {
         new Sound Sound { get; set; }
+        new IFormIDSetLink<Sound> Sound_Property { get; }
         new Byte Chance { get; set; }
         new bool Chance_IsSet { get; set; }
-        void Chance_Set(Byte item, bool hasBeenSet = true);
+        void Chance_Set(Byte value, bool hasBeenSet = true);
         void Chance_Unset();
 
         void CopyFieldsFrom(
-            ISoundItemGetter rhs,
+            SoundItem rhs,
             ErrorMaskBuilder errorMask = null,
             SoundItem_CopyMask copyMask = null,
-            ISoundItemGetter def = null);
+            SoundItem def = null);
     }
 
     public partial interface ISoundItemGetter :
         ILoquiObject,
+        ILoquiObject<ISoundItemGetter>,
         IXmlItem,
         IBinaryItem
     {
         #region Sound
-        Sound Sound { get; }
-        FormIDSetLink<Sound> Sound_Property { get; }
+        ISoundInternalGetter Sound { get; }
+        IFormIDSetLinkGetter<Sound> Sound_Property { get; }
 
         #endregion
         #region Chance
@@ -642,13 +644,10 @@ namespace Mutagen.Bethesda.Oblivion
             ISoundItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SoundItem_Mask<bool>();
-            ((SoundItemCommon)item.CommonInstance).FillEqualsMask(
+            return ((SoundItemCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -850,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SoundItem_FieldIndex.Sound:
-                    return typeof(FormIDSetLink<Sound>);
+                    return typeof(IFormIDSetLink<Sound>);
                 case SoundItem_FieldIndex.Chance:
                     return typeof(Byte);
                 default:
@@ -858,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(SoundItemXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(SoundItemXmlWriteTranslation);
         public static readonly RecordType CSDI_HEADER = new RecordType("CSDI");
         public static readonly RecordType CSDC_HEADER = new RecordType("CSDC");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -875,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
-        public static readonly Type BinaryTranslation = typeof(SoundItemBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(SoundItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -910,11 +909,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SoundItemCommon
     {
         public static readonly SoundItemCommon Instance = new SoundItemCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ISoundItem item,
-            ISoundItemGetter rhs,
-            ISoundItemGetter def,
+            SoundItem item,
+            SoundItem rhs,
+            SoundItem def,
             ErrorMaskBuilder errorMask,
             SoundItem_CopyMask copyMask)
         {
@@ -980,6 +980,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance_Unset();
         }
 
+        public SoundItem_Mask<bool> GetEqualsMask(
+            ISoundItemGetter item,
+            ISoundItemGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SoundItem_Mask<bool>();
+            ((SoundItemCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             ISoundItemGetter item,
             ISoundItemGetter rhs,
@@ -1013,11 +1027,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(SoundItem)} =>");
+                fg.AppendLine($"SoundItem =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(SoundItem)}) =>");
+                fg.AppendLine($"{name} (SoundItem) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1067,9 +1081,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class SoundItemXmlTranslation : IXmlTranslator
+    public partial class SoundItemXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static SoundItemXmlTranslation Instance = new SoundItemXmlTranslation();
+        public readonly static SoundItemXmlWriteTranslation Instance = new SoundItemXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             ISoundItemGetter item,
@@ -1096,78 +1110,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Chance,
                     fieldIndex: (int)SoundItem_FieldIndex.Chance,
                     errorMask: errorMask);
-            }
-        }
-
-        public static void FillPublic_Xml(
-            ISoundItem item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    SoundItemXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            ISoundItem item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Sound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Sound_Property,
-                        fieldIndex: (int)SoundItem_FieldIndex.Sound,
-                        errorMask: errorMask);
-                    break;
-                case "Chance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SoundItem_FieldIndex.Chance);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte ChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Chance = ChanceParse;
-                        }
-                        else
-                        {
-                            item.Chance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -1237,6 +1179,84 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class SoundItemXmlCreateTranslation
+    {
+        public readonly static SoundItemXmlCreateTranslation Instance = new SoundItemXmlCreateTranslation();
+
+        public static void FillPublic_Xml(
+            ISoundItem item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    SoundItemXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            ISoundItem item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Sound":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Sound_Property,
+                        fieldIndex: (int)SoundItem_FieldIndex.Sound,
+                        errorMask: errorMask);
+                    break;
+                case "Chance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoundItem_FieldIndex.Chance);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte ChanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Chance = ChanceParse;
+                        }
+                        else
+                        {
+                            item.Chance = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+
     #region Xml Write Mixins
     public static class SoundItemXmlTranslationMixIn
     {
@@ -1249,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SoundItemXmlTranslation)item.XmlTranslator).Write(
+            ((SoundItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1339,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((SoundItemXmlTranslation)item.XmlTranslator).Write(
+            ((SoundItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1353,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             SoundItem_TranslationMask translationMask = null)
         {
-            ((SoundItemXmlTranslation)item.XmlTranslator).Write(
+            ((SoundItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1367,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((SoundItemXmlTranslation)item.XmlTranslator).Write(
+            ((SoundItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1382,7 +1402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((SoundItemXmlTranslation)item.XmlTranslator).Write(
+            ((SoundItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1700,9 +1720,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class SoundItemBinaryTranslation : IBinaryTranslator
+    public partial class SoundItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SoundItemBinaryTranslation Instance = new SoundItemBinaryTranslation();
+        public readonly static SoundItemBinaryWriteTranslation Instance = new SoundItemBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
             ISoundItemGetter item,
@@ -1762,6 +1782,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class SoundItemBinaryCreateTranslation
+    {
+        public readonly static SoundItemBinaryCreateTranslation Instance = new SoundItemBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class SoundItemBinaryTranslationMixIn
     {
@@ -1773,7 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SoundItemBinaryTranslation)item.BinaryTranslator).Write(
+            ((SoundItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1788,7 +1814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((SoundItemBinaryTranslation)item.BinaryTranslator).Write(
+            ((SoundItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1801,7 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((SoundItemBinaryTranslation)item.BinaryTranslator).Write(
+            ((SoundItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

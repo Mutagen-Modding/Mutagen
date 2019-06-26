@@ -35,9 +35,9 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ModStats :
         LoquiNotifyingObject,
         IModStats,
-        ILoquiObject<ModStats>,
-        ILoquiObjectSetter,
-        IEquatable<ModStats>
+        ILoquiObjectSetter<ModStats>,
+        IEquatable<ModStats>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
@@ -79,8 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        IMask<bool> IEqualsMask<ModStats>.GetEqualsMask(ModStats rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IModStatsGetter>.GetEqualsMask(IModStatsGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModStatsGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -94,7 +93,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -124,8 +123,8 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => ModStatsXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => ModStatsXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static ModStats Create_Xml(
@@ -178,7 +177,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 foreach (var elem in node.Elements())
                 {
-                    ModStatsXmlTranslation.FillPublicElement_Xml(
+                    ModStatsXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -297,8 +296,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => ModStatsBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => ModStatsBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static ModStats Create_Binary(
@@ -376,7 +375,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public ModStats Copy(
             ModStats_CopyMask copyMask = null,
-            IModStatsGetter def = null)
+            ModStats def = null)
         {
             return ModStats.Copy(
                 this,
@@ -385,9 +384,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static ModStats Copy(
-            IModStatsGetter item,
+            ModStats item,
             ModStats_CopyMask copyMask = null,
-            IModStatsGetter def = null)
+            ModStats def = null)
         {
             ModStats ret;
             if (item.GetType().Equals(typeof(ModStats)))
@@ -406,9 +405,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static ModStats Copy_ToLoqui(
-            IModStatsGetter item,
+            ModStats item,
             ModStats_CopyMask copyMask = null,
-            IModStatsGetter def = null)
+            ModStats def = null)
         {
             ModStats ret;
             if (item.GetType().Equals(typeof(ModStats)))
@@ -426,10 +425,10 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public void CopyFieldsFrom(IModStatsGetter rhs)
+        public void CopyFieldsFrom(ModStats rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IModStatsGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -437,9 +436,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            IModStatsGetter rhs,
+            ModStats rhs,
             ModStats_CopyMask copyMask,
-            IModStatsGetter def = null)
+            ModStats def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -450,10 +449,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            IModStatsGetter rhs,
+            ModStats rhs,
             out ModStats_ErrorMask errorMask,
             ModStats_CopyMask copyMask = null,
-            IModStatsGetter def = null,
+            ModStats def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -467,10 +466,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            IModStatsGetter rhs,
+            ModStats rhs,
             ErrorMaskBuilder errorMask,
             ModStats_CopyMask copyMask = null,
-            IModStatsGetter def = null)
+            ModStats def = null)
         {
             ModStatsCommon.CopyFieldsFrom(
                 item: this,
@@ -541,8 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IModStats :
         IModStatsGetter,
-        ILoquiClass<IModStats, IModStatsGetter>,
-        ILoquiClass<ModStats, IModStatsGetter>
+        ILoquiObjectSetter<IModStats>
     {
         new Single Version { get; set; }
 
@@ -551,14 +549,15 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32 NextObjectID { get; set; }
 
         void CopyFieldsFrom(
-            IModStatsGetter rhs,
+            ModStats rhs,
             ErrorMaskBuilder errorMask = null,
             ModStats_CopyMask copyMask = null,
-            IModStatsGetter def = null);
+            ModStats def = null);
     }
 
     public partial interface IModStatsGetter :
         ILoquiObject,
+        ILoquiObject<IModStatsGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -592,13 +591,10 @@ namespace Mutagen.Bethesda.Skyrim
             IModStatsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ModStats_Mask<bool>();
-            ((ModStatsCommon)item.CommonInstance).FillEqualsMask(
+            return ((ModStatsCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -820,12 +816,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(ModStatsXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(ModStatsXmlWriteTranslation);
         public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = HEDR_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(ModStatsBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(ModStatsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -860,11 +856,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ModStatsCommon
     {
         public static readonly ModStatsCommon Instance = new ModStatsCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IModStats item,
-            IModStatsGetter rhs,
-            IModStatsGetter def,
+            ModStats item,
+            ModStats rhs,
+            ModStats def,
             ErrorMaskBuilder errorMask,
             ModStats_CopyMask copyMask)
         {
@@ -933,6 +930,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NextObjectID = default(UInt32);
         }
 
+        public ModStats_Mask<bool> GetEqualsMask(
+            IModStatsGetter item,
+            IModStatsGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ModStats_Mask<bool>();
+            ((ModStatsCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IModStatsGetter item,
             IModStatsGetter rhs,
@@ -967,11 +978,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(ModStats)} =>");
+                fg.AppendLine($"ModStats =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(ModStats)}) =>");
+                fg.AppendLine($"{name} (ModStats) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1024,9 +1035,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class ModStatsXmlTranslation : IXmlTranslator
+    public partial class ModStatsXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static ModStatsXmlTranslation Instance = new ModStatsXmlTranslation();
+        public readonly static ModStatsXmlWriteTranslation Instance = new ModStatsXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IModStatsGetter item,
@@ -1063,6 +1074,76 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IModStatsGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ModStats");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ModStats");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IModStatsGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IModStatsGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IModStatsGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class ModStatsXmlCreateTranslation
+    {
+        public readonly static ModStatsXmlCreateTranslation Instance = new ModStatsXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IModStats item,
             XElement node,
@@ -1073,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ModStatsXmlTranslation.FillPublicElement_Xml(
+                    ModStatsXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1180,70 +1261,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IModStatsGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ModStats");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ModStats");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IModStatsGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IModStatsGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IModStatsGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1258,7 +1275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ModStatsXmlTranslation)item.XmlTranslator).Write(
+            ((ModStatsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1348,7 +1365,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((ModStatsXmlTranslation)item.XmlTranslator).Write(
+            ((ModStatsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1362,7 +1379,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null,
             ModStats_TranslationMask translationMask = null)
         {
-            ((ModStatsXmlTranslation)item.XmlTranslator).Write(
+            ((ModStatsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1376,7 +1393,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((ModStatsXmlTranslation)item.XmlTranslator).Write(
+            ((ModStatsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1391,7 +1408,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((ModStatsXmlTranslation)item.XmlTranslator).Write(
+            ((ModStatsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1736,9 +1753,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Binary Translation
-    public partial class ModStatsBinaryTranslation : IBinaryTranslator
+    public partial class ModStatsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ModStatsBinaryTranslation Instance = new ModStatsBinaryTranslation();
+        public readonly static ModStatsBinaryWriteTranslation Instance = new ModStatsBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IModStatsGetter item,
@@ -1790,6 +1807,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public partial class ModStatsBinaryCreateTranslation
+    {
+        public readonly static ModStatsBinaryCreateTranslation Instance = new ModStatsBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class ModStatsBinaryTranslationMixIn
     {
@@ -1801,7 +1824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ModStatsBinaryTranslation)item.BinaryTranslator).Write(
+            ((ModStatsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1816,7 +1839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((ModStatsBinaryTranslation)item.BinaryTranslator).Write(
+            ((ModStatsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1829,7 +1852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((ModStatsBinaryTranslation)item.BinaryTranslator).Write(
+            ((ModStatsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

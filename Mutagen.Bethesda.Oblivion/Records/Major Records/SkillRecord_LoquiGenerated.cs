@@ -36,11 +36,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SkillRecord :
         OblivionMajorRecord,
-        ISkillRecord,
         ISkillRecordInternal,
-        ILoquiObject<SkillRecord>,
-        ILoquiObjectSetter,
-        IEquatable<SkillRecord>
+        ILoquiObjectSetter<SkillRecord>,
+        IEquatable<SkillRecord>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
@@ -315,8 +314,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<SkillRecord>.GetEqualsMask(SkillRecord rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<ISkillRecordGetter>.GetEqualsMask(ISkillRecordGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillRecordInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -330,7 +328,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -431,7 +429,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => SkillRecordXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => SkillRecordXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static SkillRecord Create_Xml(
@@ -490,7 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    SkillRecordXmlTranslation.FillPublicElement_Xml(
+                    SkillRecordXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -669,7 +667,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => SkillRecordBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => SkillRecordBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static SkillRecord Create_Binary(
@@ -931,7 +929,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public SkillRecord Copy(
             SkillRecord_CopyMask copyMask = null,
-            ISkillRecordGetter def = null)
+            SkillRecord def = null)
         {
             return SkillRecord.Copy(
                 this,
@@ -940,9 +938,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SkillRecord Copy(
-            ISkillRecordGetter item,
+            SkillRecord item,
             SkillRecord_CopyMask copyMask = null,
-            ISkillRecordGetter def = null)
+            SkillRecord def = null)
         {
             SkillRecord ret;
             if (item.GetType().Equals(typeof(SkillRecord)))
@@ -961,9 +959,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SkillRecord Copy_ToLoqui(
-            ISkillRecordGetter item,
+            SkillRecord item,
             SkillRecord_CopyMask copyMask = null,
-            ISkillRecordGetter def = null)
+            SkillRecord def = null)
         {
             SkillRecord ret;
             if (item.GetType().Equals(typeof(SkillRecord)))
@@ -981,10 +979,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ISkillRecordGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -992,9 +990,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISkillRecordGetter rhs,
+            SkillRecord rhs,
             SkillRecord_CopyMask copyMask,
-            ISkillRecordGetter def = null)
+            SkillRecord def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -1005,10 +1003,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISkillRecordGetter rhs,
+            SkillRecord rhs,
             out SkillRecord_ErrorMask errorMask,
             SkillRecord_CopyMask copyMask = null,
-            ISkillRecordGetter def = null,
+            SkillRecord def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1022,10 +1020,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISkillRecordGetter rhs,
+            SkillRecord rhs,
             ErrorMaskBuilder errorMask,
             SkillRecord_CopyMask copyMask = null,
-            ISkillRecordGetter def = null)
+            SkillRecord def = null)
         {
             SkillRecordCommon.CopyFieldsFrom(
                 item: this,
@@ -1158,22 +1156,21 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISkillRecord :
         ISkillRecordGetter,
         IOblivionMajorRecord,
-        ILoquiClass<ISkillRecord, ISkillRecordGetter>,
-        ILoquiClass<SkillRecord, ISkillRecordGetter>
+        ILoquiObjectSetter<ISkillRecordInternal>
     {
         new ActorValue Skill { get; set; }
         new bool Skill_IsSet { get; set; }
-        void Skill_Set(ActorValue item, bool hasBeenSet = true);
+        void Skill_Set(ActorValue value, bool hasBeenSet = true);
         void Skill_Unset();
 
         new String Description { get; set; }
         new bool Description_IsSet { get; set; }
-        void Description_Set(String item, bool hasBeenSet = true);
+        void Description_Set(String value, bool hasBeenSet = true);
         void Description_Unset();
 
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }
-        void Icon_Set(String item, bool hasBeenSet = true);
+        void Icon_Set(String value, bool hasBeenSet = true);
         void Icon_Unset();
 
         new ActorValue Action { get; set; }
@@ -1188,29 +1185,29 @@ namespace Mutagen.Bethesda.Oblivion
 
         new String ApprenticeText { get; set; }
         new bool ApprenticeText_IsSet { get; set; }
-        void ApprenticeText_Set(String item, bool hasBeenSet = true);
+        void ApprenticeText_Set(String value, bool hasBeenSet = true);
         void ApprenticeText_Unset();
 
         new String JourneymanText { get; set; }
         new bool JourneymanText_IsSet { get; set; }
-        void JourneymanText_Set(String item, bool hasBeenSet = true);
+        void JourneymanText_Set(String value, bool hasBeenSet = true);
         void JourneymanText_Unset();
 
         new String ExpertText { get; set; }
         new bool ExpertText_IsSet { get; set; }
-        void ExpertText_Set(String item, bool hasBeenSet = true);
+        void ExpertText_Set(String value, bool hasBeenSet = true);
         void ExpertText_Unset();
 
         new String MasterText { get; set; }
         new bool MasterText_IsSet { get; set; }
-        void MasterText_Set(String item, bool hasBeenSet = true);
+        void MasterText_Set(String value, bool hasBeenSet = true);
         void MasterText_Unset();
 
         void CopyFieldsFrom(
-            ISkillRecordGetter rhs,
+            SkillRecord rhs,
             ErrorMaskBuilder errorMask = null,
             SkillRecord_CopyMask copyMask = null,
-            ISkillRecordGetter def = null);
+            SkillRecord def = null);
     }
 
     public partial interface ISkillRecordInternal :
@@ -1224,6 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISkillRecordGetter :
         IOblivionMajorRecordGetter,
+        ILoquiObject<ISkillRecordInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -1307,17 +1305,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SkillRecord_Mask<bool> GetEqualsMask(
-            this ISkillRecordGetter item,
-            ISkillRecordGetter rhs,
+            this ISkillRecordInternalGetter item,
+            ISkillRecordInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SkillRecord_Mask<bool>();
-            ((SkillRecordCommon)item.CommonInstance).FillEqualsMask(
+            return ((SkillRecordCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -1353,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static SkillRecord_Mask<bool> GetHasBeenSetMask(this ISkillRecordGetter item)
+        public static SkillRecord_Mask<bool> GetHasBeenSetMask(this ISkillRecordInternalGetter item)
         {
             var ret = new SkillRecord_Mask<bool>();
             ((SkillRecordCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -1664,7 +1659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(SkillRecordXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(SkillRecordXmlWriteTranslation);
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
         public static readonly RecordType INDX_HEADER = new RecordType("INDX");
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
@@ -1677,7 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SKIL_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 7;
-        public static readonly Type BinaryTranslation = typeof(SkillRecordBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(SkillRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1712,11 +1707,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SkillRecordCommon : OblivionMajorRecordCommon
     {
         public static readonly SkillRecordCommon Instance = new SkillRecordCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ISkillRecord item,
-            ISkillRecordGetter rhs,
-            ISkillRecordGetter def,
+            SkillRecord item,
+            SkillRecord rhs,
+            SkillRecord def,
             ErrorMaskBuilder errorMask,
             SkillRecord_CopyMask copyMask)
         {
@@ -2027,7 +2023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(ISkillRecord item)
+        public virtual void Clear(ISkillRecordInternal item)
         {
             ClearPartial();
             item.Skill_Unset();
@@ -2045,19 +2041,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (ISkillRecord)item);
+            Clear(item: (ISkillRecordInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ISkillRecord)item);
+            Clear(item: (ISkillRecordInternal)item);
+        }
+
+        public SkillRecord_Mask<bool> GetEqualsMask(
+            ISkillRecordInternalGetter item,
+            ISkillRecordInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SkillRecord_Mask<bool>();
+            ((SkillRecordCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            ISkillRecordGetter item,
-            ISkillRecordGetter rhs,
+            ISkillRecordInternalGetter item,
+            ISkillRecordInternalGetter rhs,
             SkillRecord_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -2078,7 +2088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            ISkillRecordGetter item,
+            ISkillRecordInternalGetter item,
             string name = null,
             SkillRecord_Mask<bool> printMask = null)
         {
@@ -2092,18 +2102,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            ISkillRecordGetter item,
+            ISkillRecordInternalGetter item,
             FileGeneration fg,
             string name = null,
             SkillRecord_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(SkillRecord)} =>");
+                fg.AppendLine($"SkillRecord =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(SkillRecord)}) =>");
+                fg.AppendLine($"{name} (SkillRecord) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -2117,7 +2127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            ISkillRecordGetter item,
+            ISkillRecordInternalGetter item,
             FileGeneration fg,
             SkillRecord_Mask<bool> printMask = null)
         {
@@ -2179,7 +2189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            ISkillRecordGetter item,
+            ISkillRecordInternalGetter item,
             SkillRecord_Mask<bool?> checkMask)
         {
             if (checkMask.Skill.HasValue && checkMask.Skill.Value != item.Skill_IsSet) return false;
@@ -2195,7 +2205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            ISkillRecordGetter item,
+            ISkillRecordInternalGetter item,
             SkillRecord_Mask<bool> mask)
         {
             mask.Skill = item.Skill_IsSet;
@@ -2257,11 +2267,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class SkillRecordXmlTranslation :
-        OblivionMajorRecordXmlTranslation,
-        IXmlTranslator
+    public partial class SkillRecordXmlWriteTranslation :
+        OblivionMajorRecordXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static SkillRecordXmlTranslation Instance = new SkillRecordXmlTranslation();
+        public new readonly static SkillRecordXmlWriteTranslation Instance = new SkillRecordXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             ISkillRecordInternalGetter item,
@@ -2269,7 +2279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2403,6 +2413,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            ISkillRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SkillRecord");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SkillRecord");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISkillRecordInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISkillRecordInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISkillRecordInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class SkillRecordXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
+    {
+        public new readonly static SkillRecordXmlCreateTranslation Instance = new SkillRecordXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             ISkillRecordInternal item,
             XElement node,
@@ -2413,7 +2494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    SkillRecordXmlTranslation.FillPublicElement_Xml(
+                    SkillRecordXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2777,7 +2858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2785,71 +2866,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            ISkillRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SkillRecord");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SkillRecord");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ISkillRecordInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ISkillRecordInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ISkillRecordInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -2866,7 +2882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SkillRecordXmlTranslation)item.XmlTranslator).Write(
+            ((SkillRecordXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -3504,11 +3520,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class SkillRecordBinaryTranslation :
-        OblivionMajorRecordBinaryTranslation,
-        IBinaryTranslator
+    public partial class SkillRecordBinaryWriteTranslation :
+        OblivionMajorRecordBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static SkillRecordBinaryTranslation Instance = new SkillRecordBinaryTranslation();
+        public new readonly static SkillRecordBinaryWriteTranslation Instance = new SkillRecordBinaryWriteTranslation();
 
         public static void Write_Embedded(
             ISkillRecordInternalGetter item,
@@ -3516,7 +3532,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
@@ -3530,7 +3546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3692,6 +3708,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class SkillRecordBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    {
+        public new readonly static SkillRecordBinaryCreateTranslation Instance = new SkillRecordBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class SkillRecordBinaryTranslationMixIn
     {
@@ -3703,7 +3725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SkillRecordBinaryTranslation)item.BinaryTranslator).Write(
+            ((SkillRecordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

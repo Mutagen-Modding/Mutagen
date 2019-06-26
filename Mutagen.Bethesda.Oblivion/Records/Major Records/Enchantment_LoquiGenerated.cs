@@ -38,13 +38,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Enchantment :
         OblivionMajorRecord,
-        IEnchantment,
         IEnchantmentInternal,
-        ILoquiObject<Enchantment>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<Enchantment>,
         INamed,
         ILinkSubContainer,
-        IEquatable<Enchantment>
+        IEquatable<Enchantment>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Enchantment_Registration.Instance;
@@ -163,8 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Enchantment>.GetEqualsMask(Enchantment rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IEnchantmentGetter>.GetEqualsMask(IEnchantmentGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnchantmentInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -178,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -232,7 +230,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => EnchantmentXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => EnchantmentXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Enchantment Create_Xml(
@@ -291,7 +289,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    EnchantmentXmlTranslation.FillPublicElement_Xml(
+                    EnchantmentXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -495,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => EnchantmentBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => EnchantmentBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Enchantment Create_Binary(
@@ -653,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Enchantment Copy(
             Enchantment_CopyMask copyMask = null,
-            IEnchantmentGetter def = null)
+            Enchantment def = null)
         {
             return Enchantment.Copy(
                 this,
@@ -662,9 +660,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Enchantment Copy(
-            IEnchantmentGetter item,
+            Enchantment item,
             Enchantment_CopyMask copyMask = null,
-            IEnchantmentGetter def = null)
+            Enchantment def = null)
         {
             Enchantment ret;
             if (item.GetType().Equals(typeof(Enchantment)))
@@ -683,9 +681,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Enchantment Copy_ToLoqui(
-            IEnchantmentGetter item,
+            Enchantment item,
             Enchantment_CopyMask copyMask = null,
-            IEnchantmentGetter def = null)
+            Enchantment def = null)
         {
             Enchantment ret;
             if (item.GetType().Equals(typeof(Enchantment)))
@@ -703,10 +701,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IEnchantmentGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -714,9 +712,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IEnchantmentGetter rhs,
+            Enchantment rhs,
             Enchantment_CopyMask copyMask,
-            IEnchantmentGetter def = null)
+            Enchantment def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -727,10 +725,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IEnchantmentGetter rhs,
+            Enchantment rhs,
             out Enchantment_ErrorMask errorMask,
             Enchantment_CopyMask copyMask = null,
-            IEnchantmentGetter def = null,
+            Enchantment def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -744,10 +742,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IEnchantmentGetter rhs,
+            Enchantment rhs,
             ErrorMaskBuilder errorMask,
             Enchantment_CopyMask copyMask = null,
-            IEnchantmentGetter def = null)
+            Enchantment def = null)
         {
             EnchantmentCommon.CopyFieldsFrom(
                 item: this,
@@ -844,12 +842,11 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IEnchantment :
         IEnchantmentGetter,
         IOblivionMajorRecord,
-        ILoquiClass<IEnchantment, IEnchantmentGetter>,
-        ILoquiClass<Enchantment, IEnchantmentGetter>
+        ILoquiObjectSetter<IEnchantmentInternal>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
-        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Set(String value, bool hasBeenSet = true);
         void Name_Unset();
 
         new Enchantment.EnchantmentType Type { get; set; }
@@ -862,10 +859,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         new ISetList<Effect> Effects { get; }
         void CopyFieldsFrom(
-            IEnchantmentGetter rhs,
+            Enchantment rhs,
             ErrorMaskBuilder errorMask = null,
             Enchantment_CopyMask copyMask = null,
-            IEnchantmentGetter def = null);
+            Enchantment def = null);
     }
 
     public partial interface IEnchantmentInternal :
@@ -879,6 +876,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IEnchantmentGetter :
         IOblivionMajorRecordGetter,
+        ILoquiObject<IEnchantmentInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -931,17 +929,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Enchantment_Mask<bool> GetEqualsMask(
-            this IEnchantmentGetter item,
-            IEnchantmentGetter rhs,
+            this IEnchantmentInternalGetter item,
+            IEnchantmentInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Enchantment_Mask<bool>();
-            ((EnchantmentCommon)item.CommonInstance).FillEqualsMask(
+            return ((EnchantmentCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -977,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static Enchantment_Mask<bool> GetHasBeenSetMask(this IEnchantmentGetter item)
+        public static Enchantment_Mask<bool> GetHasBeenSetMask(this IEnchantmentInternalGetter item)
         {
             var ret = new Enchantment_Mask<bool>();
             ((EnchantmentCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -1218,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(EnchantmentXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(EnchantmentXmlWriteTranslation);
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
@@ -1226,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = ENCH_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
-        public static readonly Type BinaryTranslation = typeof(EnchantmentBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(EnchantmentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1261,11 +1256,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class EnchantmentCommon : OblivionMajorRecordCommon
     {
         public static readonly EnchantmentCommon Instance = new EnchantmentCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IEnchantment item,
-            IEnchantmentGetter rhs,
-            IEnchantmentGetter def,
+            Enchantment item,
+            Enchantment rhs,
+            Enchantment def,
             ErrorMaskBuilder errorMask,
             Enchantment_CopyMask copyMask)
         {
@@ -1378,7 +1374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.Effects);
                 try
                 {
-                    item.Effects.SetToWithDefault<Effect, IEffectInternalGetter>(
+                    item.Effects.SetToWithDefault<Effect, Effect>(
                         rhs: rhs.Effects,
                         def: def?.Effects,
                         converter: (r, d) =>
@@ -1413,7 +1409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IEnchantment item)
+        public virtual void Clear(IEnchantmentInternal item)
         {
             ClearPartial();
             item.Name_Unset();
@@ -1425,19 +1421,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (IEnchantment)item);
+            Clear(item: (IEnchantmentInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IEnchantment)item);
+            Clear(item: (IEnchantmentInternal)item);
+        }
+
+        public Enchantment_Mask<bool> GetEqualsMask(
+            IEnchantmentInternalGetter item,
+            IEnchantmentInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Enchantment_Mask<bool>();
+            ((EnchantmentCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IEnchantmentGetter item,
-            IEnchantmentGetter rhs,
+            IEnchantmentInternalGetter item,
+            IEnchantmentInternalGetter rhs,
             Enchantment_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -1455,7 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            IEnchantmentGetter item,
+            IEnchantmentInternalGetter item,
             string name = null,
             Enchantment_Mask<bool> printMask = null)
         {
@@ -1469,18 +1479,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            IEnchantmentGetter item,
+            IEnchantmentInternalGetter item,
             FileGeneration fg,
             string name = null,
             Enchantment_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Enchantment)} =>");
+                fg.AppendLine($"Enchantment =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Enchantment)}) =>");
+                fg.AppendLine($"{name} (Enchantment) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1494,7 +1504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            IEnchantmentGetter item,
+            IEnchantmentInternalGetter item,
             FileGeneration fg,
             Enchantment_Mask<bool> printMask = null)
         {
@@ -1546,7 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            IEnchantmentGetter item,
+            IEnchantmentInternalGetter item,
             Enchantment_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -1557,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            IEnchantmentGetter item,
+            IEnchantmentInternalGetter item,
             Enchantment_Mask<bool> mask)
         {
             mask.Name = item.Name_IsSet;
@@ -1613,11 +1623,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class EnchantmentXmlTranslation :
-        OblivionMajorRecordXmlTranslation,
-        IXmlTranslator
+    public partial class EnchantmentXmlWriteTranslation :
+        OblivionMajorRecordXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static EnchantmentXmlTranslation Instance = new EnchantmentXmlTranslation();
+        public new readonly static EnchantmentXmlWriteTranslation Instance = new EnchantmentXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IEnchantmentInternalGetter item,
@@ -1625,7 +1635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1691,7 +1701,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Enchantment_FieldIndex.Effects),
                     transl: (XElement subNode, IEffectInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((EffectXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                        ((EffectXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -1710,6 +1720,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IEnchantmentInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Enchantment");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Enchantment");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IEnchantmentInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IEnchantmentInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IEnchantmentInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class EnchantmentXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
+    {
+        public new readonly static EnchantmentXmlCreateTranslation Instance = new EnchantmentXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IEnchantmentInternal item,
             XElement node,
@@ -1720,7 +1801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    EnchantmentXmlTranslation.FillPublicElement_Xml(
+                    EnchantmentXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1930,7 +2011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1938,71 +2019,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            IEnchantmentInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Enchantment");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Enchantment");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IEnchantmentInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IEnchantmentInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IEnchantmentInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -2019,7 +2035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((EnchantmentXmlTranslation)item.XmlTranslator).Write(
+            ((EnchantmentXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2573,11 +2589,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class EnchantmentBinaryTranslation :
-        OblivionMajorRecordBinaryTranslation,
-        IBinaryTranslator
+    public partial class EnchantmentBinaryWriteTranslation :
+        OblivionMajorRecordBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static EnchantmentBinaryTranslation Instance = new EnchantmentBinaryTranslation();
+        public new readonly static EnchantmentBinaryWriteTranslation Instance = new EnchantmentBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IEnchantmentInternalGetter item,
@@ -2585,7 +2601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
@@ -2599,7 +2615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2638,7 +2654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IEffectInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((EffectBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
+                        ((EffectBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
                             item: subItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
@@ -2721,6 +2737,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class EnchantmentBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    {
+        public new readonly static EnchantmentBinaryCreateTranslation Instance = new EnchantmentBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class EnchantmentBinaryTranslationMixIn
     {
@@ -2732,7 +2754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((EnchantmentBinaryTranslation)item.BinaryTranslator).Write(
+            ((EnchantmentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

@@ -35,9 +35,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class HavokData :
         LoquiNotifyingObject,
         IHavokData,
-        ILoquiObject<HavokData>,
-        ILoquiObjectSetter,
-        IEquatable<HavokData>
+        ILoquiObjectSetter<HavokData>,
+        IEquatable<HavokData>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HavokData_Registration.Instance;
@@ -79,8 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<HavokData>.GetEqualsMask(HavokData rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IHavokDataGetter>.GetEqualsMask(IHavokDataGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHavokDataGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -94,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -124,8 +123,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => HavokDataXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => HavokDataXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static HavokData Create_Xml(
@@ -178,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    HavokDataXmlTranslation.FillPublicElement_Xml(
+                    HavokDataXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -297,8 +296,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => HavokDataBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => HavokDataBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static HavokData Create_Binary(
@@ -376,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public HavokData Copy(
             HavokData_CopyMask copyMask = null,
-            IHavokDataGetter def = null)
+            HavokData def = null)
         {
             return HavokData.Copy(
                 this,
@@ -385,9 +384,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static HavokData Copy(
-            IHavokDataGetter item,
+            HavokData item,
             HavokData_CopyMask copyMask = null,
-            IHavokDataGetter def = null)
+            HavokData def = null)
         {
             HavokData ret;
             if (item.GetType().Equals(typeof(HavokData)))
@@ -406,9 +405,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static HavokData Copy_ToLoqui(
-            IHavokDataGetter item,
+            HavokData item,
             HavokData_CopyMask copyMask = null,
-            IHavokDataGetter def = null)
+            HavokData def = null)
         {
             HavokData ret;
             if (item.GetType().Equals(typeof(HavokData)))
@@ -426,10 +425,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IHavokDataGetter rhs)
+        public void CopyFieldsFrom(HavokData rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IHavokDataGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -437,9 +436,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IHavokDataGetter rhs,
+            HavokData rhs,
             HavokData_CopyMask copyMask,
-            IHavokDataGetter def = null)
+            HavokData def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -450,10 +449,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IHavokDataGetter rhs,
+            HavokData rhs,
             out HavokData_ErrorMask errorMask,
             HavokData_CopyMask copyMask = null,
-            IHavokDataGetter def = null,
+            HavokData def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -467,10 +466,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IHavokDataGetter rhs,
+            HavokData rhs,
             ErrorMaskBuilder errorMask,
             HavokData_CopyMask copyMask = null,
-            IHavokDataGetter def = null)
+            HavokData def = null)
         {
             HavokDataCommon.CopyFieldsFrom(
                 item: this,
@@ -541,8 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IHavokData :
         IHavokDataGetter,
-        ILoquiClass<IHavokData, IHavokDataGetter>,
-        ILoquiClass<HavokData, IHavokDataGetter>
+        ILoquiObjectSetter<IHavokData>
     {
         new HavokData.MaterialType Material { get; set; }
 
@@ -551,14 +549,15 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte Restitution { get; set; }
 
         void CopyFieldsFrom(
-            IHavokDataGetter rhs,
+            HavokData rhs,
             ErrorMaskBuilder errorMask = null,
             HavokData_CopyMask copyMask = null,
-            IHavokDataGetter def = null);
+            HavokData def = null);
     }
 
     public partial interface IHavokDataGetter :
         ILoquiObject,
+        ILoquiObject<IHavokDataGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -592,13 +591,10 @@ namespace Mutagen.Bethesda.Oblivion
             IHavokDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new HavokData_Mask<bool>();
-            ((HavokDataCommon)item.CommonInstance).FillEqualsMask(
+            return ((HavokDataCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -820,12 +816,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(HavokDataXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(HavokDataXmlWriteTranslation);
         public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = HNAM_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(HavokDataBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(HavokDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -860,11 +856,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class HavokDataCommon
     {
         public static readonly HavokDataCommon Instance = new HavokDataCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IHavokData item,
-            IHavokDataGetter rhs,
-            IHavokDataGetter def,
+            HavokData item,
+            HavokData rhs,
+            HavokData def,
             ErrorMaskBuilder errorMask,
             HavokData_CopyMask copyMask)
         {
@@ -933,6 +930,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Restitution = default(Byte);
         }
 
+        public HavokData_Mask<bool> GetEqualsMask(
+            IHavokDataGetter item,
+            IHavokDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new HavokData_Mask<bool>();
+            ((HavokDataCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IHavokDataGetter item,
             IHavokDataGetter rhs,
@@ -967,11 +978,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(HavokData)} =>");
+                fg.AppendLine($"HavokData =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(HavokData)}) =>");
+                fg.AppendLine($"{name} (HavokData) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1024,9 +1035,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class HavokDataXmlTranslation : IXmlTranslator
+    public partial class HavokDataXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static HavokDataXmlTranslation Instance = new HavokDataXmlTranslation();
+        public readonly static HavokDataXmlWriteTranslation Instance = new HavokDataXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IHavokDataGetter item,
@@ -1063,6 +1074,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IHavokDataGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.HavokData");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.HavokData");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IHavokDataGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IHavokDataGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IHavokDataGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class HavokDataXmlCreateTranslation
+    {
+        public readonly static HavokDataXmlCreateTranslation Instance = new HavokDataXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IHavokData item,
             XElement node,
@@ -1073,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    HavokDataXmlTranslation.FillPublicElement_Xml(
+                    HavokDataXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1180,70 +1261,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IHavokDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.HavokData");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.HavokData");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IHavokDataGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IHavokDataGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IHavokDataGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1258,7 +1275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((HavokDataXmlTranslation)item.XmlTranslator).Write(
+            ((HavokDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1348,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((HavokDataXmlTranslation)item.XmlTranslator).Write(
+            ((HavokDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1362,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             HavokData_TranslationMask translationMask = null)
         {
-            ((HavokDataXmlTranslation)item.XmlTranslator).Write(
+            ((HavokDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1376,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((HavokDataXmlTranslation)item.XmlTranslator).Write(
+            ((HavokDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1391,7 +1408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((HavokDataXmlTranslation)item.XmlTranslator).Write(
+            ((HavokDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1736,9 +1753,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class HavokDataBinaryTranslation : IBinaryTranslator
+    public partial class HavokDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static HavokDataBinaryTranslation Instance = new HavokDataBinaryTranslation();
+        public readonly static HavokDataBinaryWriteTranslation Instance = new HavokDataBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IHavokDataGetter item,
@@ -1791,6 +1808,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class HavokDataBinaryCreateTranslation
+    {
+        public readonly static HavokDataBinaryCreateTranslation Instance = new HavokDataBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class HavokDataBinaryTranslationMixIn
     {
@@ -1802,7 +1825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((HavokDataBinaryTranslation)item.BinaryTranslator).Write(
+            ((HavokDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1817,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((HavokDataBinaryTranslation)item.BinaryTranslator).Write(
+            ((HavokDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1830,7 +1853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((HavokDataBinaryTranslation)item.BinaryTranslator).Write(
+            ((HavokDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

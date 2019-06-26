@@ -38,14 +38,13 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Faction :
         OblivionMajorRecord,
-        IFaction,
         IFactionInternal,
-        ILoquiObject<Faction>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<Faction>,
         INamed,
         IOwner,
         ILinkSubContainer,
-        IEquatable<Faction>
+        IEquatable<Faction>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
@@ -163,8 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Faction>.GetEqualsMask(Faction rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IFactionGetter>.GetEqualsMask(IFactionGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -178,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -249,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => FactionXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Faction Create_Xml(
@@ -308,7 +306,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    FactionXmlTranslation.FillPublicElement_Xml(
+                    FactionXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -502,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => FactionBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Faction Create_Binary(
@@ -680,7 +678,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Faction Copy(
             Faction_CopyMask copyMask = null,
-            IFactionGetter def = null)
+            Faction def = null)
         {
             return Faction.Copy(
                 this,
@@ -689,9 +687,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Faction Copy(
-            IFactionGetter item,
+            Faction item,
             Faction_CopyMask copyMask = null,
-            IFactionGetter def = null)
+            Faction def = null)
         {
             Faction ret;
             if (item.GetType().Equals(typeof(Faction)))
@@ -710,9 +708,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Faction Copy_ToLoqui(
-            IFactionGetter item,
+            Faction item,
             Faction_CopyMask copyMask = null,
-            IFactionGetter def = null)
+            Faction def = null)
         {
             Faction ret;
             if (item.GetType().Equals(typeof(Faction)))
@@ -730,10 +728,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IFactionGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -741,9 +739,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IFactionGetter rhs,
+            Faction rhs,
             Faction_CopyMask copyMask,
-            IFactionGetter def = null)
+            Faction def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -754,10 +752,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IFactionGetter rhs,
+            Faction rhs,
             out Faction_ErrorMask errorMask,
             Faction_CopyMask copyMask = null,
-            IFactionGetter def = null,
+            Faction def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -771,10 +769,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IFactionGetter rhs,
+            Faction rhs,
             ErrorMaskBuilder errorMask,
             Faction_CopyMask copyMask = null,
-            IFactionGetter def = null)
+            Faction def = null)
         {
             FactionCommon.CopyFieldsFrom(
                 item: this,
@@ -859,31 +857,30 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IFaction :
         IFactionGetter,
         IOblivionMajorRecord,
-        ILoquiClass<IFaction, IFactionGetter>,
-        ILoquiClass<Faction, IFactionGetter>
+        ILoquiObjectSetter<IFactionInternal>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
-        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Set(String value, bool hasBeenSet = true);
         void Name_Unset();
 
         new ISetList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
         new bool Flags_IsSet { get; set; }
-        void Flags_Set(Faction.FactionFlag item, bool hasBeenSet = true);
+        void Flags_Set(Faction.FactionFlag value, bool hasBeenSet = true);
         void Flags_Unset();
 
         new Single CrimeGoldMultiplier { get; set; }
         new bool CrimeGoldMultiplier_IsSet { get; set; }
-        void CrimeGoldMultiplier_Set(Single item, bool hasBeenSet = true);
+        void CrimeGoldMultiplier_Set(Single value, bool hasBeenSet = true);
         void CrimeGoldMultiplier_Unset();
 
         new ISetList<Rank> Ranks { get; }
         void CopyFieldsFrom(
-            IFactionGetter rhs,
+            Faction rhs,
             ErrorMaskBuilder errorMask = null,
             Faction_CopyMask copyMask = null,
-            IFactionGetter def = null);
+            Faction def = null);
     }
 
     public partial interface IFactionInternal :
@@ -895,6 +892,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IFactionGetter :
         IOblivionMajorRecordGetter,
+        ILoquiObject<IFactionInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -940,17 +938,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Faction_Mask<bool> GetEqualsMask(
-            this IFactionGetter item,
-            IFactionGetter rhs,
+            this IFactionInternalGetter item,
+            IFactionInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Faction_Mask<bool>();
-            ((FactionCommon)item.CommonInstance).FillEqualsMask(
+            return ((FactionCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -986,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static Faction_Mask<bool> GetHasBeenSetMask(this IFactionGetter item)
+        public static Faction_Mask<bool> GetHasBeenSetMask(this IFactionInternalGetter item)
         {
             var ret = new Faction_Mask<bool>();
             ((FactionCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -1203,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(FactionXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(FactionXmlWriteTranslation);
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
@@ -1216,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = FACT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 5;
-        public static readonly Type BinaryTranslation = typeof(FactionBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(FactionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1251,11 +1246,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class FactionCommon : OblivionMajorRecordCommon
     {
         public static readonly FactionCommon Instance = new FactionCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IFaction item,
-            IFactionGetter rhs,
-            IFactionGetter def,
+            Faction item,
+            Faction rhs,
+            Faction def,
             ErrorMaskBuilder errorMask,
             Faction_CopyMask copyMask)
         {
@@ -1300,7 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
                 try
                 {
-                    item.Relations.SetToWithDefault<Relation, IRelationGetter>(
+                    item.Relations.SetToWithDefault<Relation, Relation>(
                         rhs: rhs.Relations,
                         def: def?.Relations,
                         converter: (r, d) =>
@@ -1394,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
                 try
                 {
-                    item.Ranks.SetToWithDefault<Rank, IRankGetter>(
+                    item.Ranks.SetToWithDefault<Rank, Rank>(
                         rhs: rhs.Ranks,
                         def: def?.Ranks,
                         converter: (r, d) =>
@@ -1429,7 +1425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IFaction item)
+        public virtual void Clear(IFactionInternal item)
         {
             ClearPartial();
             item.Name_Unset();
@@ -1440,19 +1436,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (IFaction)item);
+            Clear(item: (IFactionInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IFaction)item);
+            Clear(item: (IFactionInternal)item);
+        }
+
+        public Faction_Mask<bool> GetEqualsMask(
+            IFactionInternalGetter item,
+            IFactionInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Faction_Mask<bool>();
+            ((FactionCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IFactionGetter item,
-            IFactionGetter rhs,
+            IFactionInternalGetter item,
+            IFactionInternalGetter rhs,
             Faction_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -1472,7 +1482,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            IFactionGetter item,
+            IFactionInternalGetter item,
             string name = null,
             Faction_Mask<bool> printMask = null)
         {
@@ -1486,18 +1496,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            IFactionGetter item,
+            IFactionInternalGetter item,
             FileGeneration fg,
             string name = null,
             Faction_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Faction)} =>");
+                fg.AppendLine($"Faction =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Faction)}) =>");
+                fg.AppendLine($"{name} (Faction) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1511,7 +1521,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            IFactionGetter item,
+            IFactionInternalGetter item,
             FileGeneration fg,
             Faction_Mask<bool> printMask = null)
         {
@@ -1570,7 +1580,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            IFactionGetter item,
+            IFactionInternalGetter item,
             Faction_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -1584,7 +1594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            IFactionGetter item,
+            IFactionInternalGetter item,
             Faction_Mask<bool> mask)
         {
             mask.Name = item.Name_IsSet;
@@ -1638,11 +1648,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class FactionXmlTranslation :
-        OblivionMajorRecordXmlTranslation,
-        IXmlTranslator
+    public partial class FactionXmlWriteTranslation :
+        OblivionMajorRecordXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static FactionXmlTranslation Instance = new FactionXmlTranslation();
+        public new readonly static FactionXmlWriteTranslation Instance = new FactionXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IFactionInternalGetter item,
@@ -1650,7 +1660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1677,7 +1687,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Relations),
                     transl: (XElement subNode, IRelationGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((RelationXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                        ((RelationXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -1717,7 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks),
                     transl: (XElement subNode, IRankGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((RankXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                        ((RankXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -1726,6 +1736,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     });
             }
         }
+
+        public void Write(
+            XElement node,
+            IFactionInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Faction");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Faction");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IFactionInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IFactionInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IFactionInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class FactionXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
+    {
+        public new readonly static FactionXmlCreateTranslation Instance = new FactionXmlCreateTranslation();
 
         public static void FillPublic_Xml(
             IFactionInternal item,
@@ -1737,7 +1818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    FactionXmlTranslation.FillPublicElement_Xml(
+                    FactionXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1896,7 +1977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1904,71 +1985,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            IFactionInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Faction");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Faction");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IFactionInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IFactionInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IFactionInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -1985,7 +2001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((FactionXmlTranslation)item.XmlTranslator).Write(
+            ((FactionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2563,11 +2579,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class FactionBinaryTranslation :
-        OblivionMajorRecordBinaryTranslation,
-        IBinaryTranslator
+    public partial class FactionBinaryWriteTranslation :
+        OblivionMajorRecordBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static FactionBinaryTranslation Instance = new FactionBinaryTranslation();
+        public new readonly static FactionBinaryWriteTranslation Instance = new FactionBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
             IFactionInternalGetter item,
@@ -2576,7 +2592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2599,7 +2615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IRelationGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((RelationBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
+                        ((RelationBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
                             item: subItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
@@ -2633,7 +2649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IRankGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((RankBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
+                        ((RankBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
                             item: subItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
@@ -2655,7 +2671,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Faction_Registration.FACT_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryTranslation.Write_Embedded(
+                OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -2716,6 +2732,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class FactionBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    {
+        public new readonly static FactionBinaryCreateTranslation Instance = new FactionBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class FactionBinaryTranslationMixIn
     {
@@ -2727,7 +2749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((FactionBinaryTranslation)item.BinaryTranslator).Write(
+            ((FactionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

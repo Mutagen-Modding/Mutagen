@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Generation
                 writerAccessor: writerAccessor);
         }
 
-        public static void GeneratePartialMethods(
+        public static void GenerateCreatePartialMethods(
             FileGeneration fg,
             ObjectGeneration obj,
             TypeGeneration field,
@@ -128,6 +128,14 @@ namespace Mutagen.Bethesda.Generation
                 }
                 fg.AppendLine();
             }
+        }
+
+        public static void GenerateWritePartialMethods(
+            FileGeneration fg,
+            ObjectGeneration obj,
+            TypeGeneration field,
+            bool isAsync)
+        {
             using (var args = new FunctionWrapper(fg,
                 $"static partial void WriteBinary_{field.Name}_Custom")
             {
@@ -178,7 +186,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor)
         {
             using (var args = new ArgsWrapper(fg,
-                $"{this.Module.TranslationClass(obj)}.WriteBinary_{field.Name}"))
+                $"{this.Module.TranslationWriteClass(obj)}.WriteBinary_{field.Name}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add("item: item");
@@ -198,7 +206,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = field.GetFieldData();
             using (var args = new ArgsWrapper(fg,
-                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Module.TranslationClass(field.ObjectGen)}.FillBinary_{field.Name}_Custom_Public"))
+                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Module.TranslationCreateClass(field.ObjectGen)}.FillBinary_{field.Name}_Custom_Public"))
             {
                 args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength)" : frameAccessor)}");
                 args.Add("item: item");

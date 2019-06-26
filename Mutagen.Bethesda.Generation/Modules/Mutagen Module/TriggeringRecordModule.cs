@@ -491,10 +491,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER} = (RecordType){grupLoqui.TargetObjectGeneration.Name}.{Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER};");
                 }
-                else
-                {
-                    fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER} = (RecordType)typeof(T).GetField(Mutagen.Bethesda.Constants.{nameof(Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER)}).GetValue(null);");
-                }
             }
             else if (await obj.IsSingleTriggerSource())
             {

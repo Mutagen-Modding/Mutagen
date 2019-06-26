@@ -37,9 +37,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class PathGridPoint :
         LoquiNotifyingObject,
         IPathGridPoint,
-        ILoquiObject<PathGridPoint>,
-        ILoquiObjectSetter,
-        IEquatable<PathGridPoint>
+        ILoquiObjectSetter<PathGridPoint>,
+        IEquatable<PathGridPoint>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
@@ -92,8 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<PathGridPoint>.GetEqualsMask(PathGridPoint rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IPathGridPointGetter>.GetEqualsMask(IPathGridPointGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPathGridPointGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -107,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -137,8 +136,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => PathGridPointXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => PathGridPointXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static PathGridPoint Create_Xml(
@@ -191,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    PathGridPointXmlTranslation.FillPublicElement_Xml(
+                    PathGridPointXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -306,8 +305,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => PathGridPointBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => PathGridPointBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static PathGridPoint Create_Binary(
@@ -395,7 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public PathGridPoint Copy(
             PathGridPoint_CopyMask copyMask = null,
-            IPathGridPointGetter def = null)
+            PathGridPoint def = null)
         {
             return PathGridPoint.Copy(
                 this,
@@ -404,9 +403,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static PathGridPoint Copy(
-            IPathGridPointGetter item,
+            PathGridPoint item,
             PathGridPoint_CopyMask copyMask = null,
-            IPathGridPointGetter def = null)
+            PathGridPoint def = null)
         {
             PathGridPoint ret;
             if (item.GetType().Equals(typeof(PathGridPoint)))
@@ -425,9 +424,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static PathGridPoint Copy_ToLoqui(
-            IPathGridPointGetter item,
+            PathGridPoint item,
             PathGridPoint_CopyMask copyMask = null,
-            IPathGridPointGetter def = null)
+            PathGridPoint def = null)
         {
             PathGridPoint ret;
             if (item.GetType().Equals(typeof(PathGridPoint)))
@@ -445,10 +444,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IPathGridPointGetter rhs)
+        public void CopyFieldsFrom(PathGridPoint rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IPathGridPointGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -456,9 +455,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IPathGridPointGetter rhs,
+            PathGridPoint rhs,
             PathGridPoint_CopyMask copyMask,
-            IPathGridPointGetter def = null)
+            PathGridPoint def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -469,10 +468,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IPathGridPointGetter rhs,
+            PathGridPoint rhs,
             out PathGridPoint_ErrorMask errorMask,
             PathGridPoint_CopyMask copyMask = null,
-            IPathGridPointGetter def = null,
+            PathGridPoint def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -486,10 +485,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IPathGridPointGetter rhs,
+            PathGridPoint rhs,
             ErrorMaskBuilder errorMask,
             PathGridPoint_CopyMask copyMask = null,
-            IPathGridPointGetter def = null)
+            PathGridPoint def = null)
         {
             PathGridPointCommon.CopyFieldsFrom(
                 item: this,
@@ -560,8 +559,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IPathGridPoint :
         IPathGridPointGetter,
-        ILoquiClass<IPathGridPoint, IPathGridPointGetter>,
-        ILoquiClass<PathGridPoint, IPathGridPointGetter>
+        ILoquiObjectSetter<IPathGridPoint>
     {
         new P3Float Point { get; set; }
 
@@ -569,14 +567,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         new IList<Int16> Connections { get; }
         void CopyFieldsFrom(
-            IPathGridPointGetter rhs,
+            PathGridPoint rhs,
             ErrorMaskBuilder errorMask = null,
             PathGridPoint_CopyMask copyMask = null,
-            IPathGridPointGetter def = null);
+            PathGridPoint def = null);
     }
 
     public partial interface IPathGridPointGetter :
         ILoquiObject,
+        ILoquiObject<IPathGridPointGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -609,13 +608,10 @@ namespace Mutagen.Bethesda.Oblivion
             IPathGridPointGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PathGridPoint_Mask<bool>();
-            ((PathGridPointCommon)item.CommonInstance).FillEqualsMask(
+            return ((PathGridPointCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -838,10 +834,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(PathGridPointXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(PathGridPointXmlWriteTranslation);
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(PathGridPointBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(PathGridPointBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -876,11 +872,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class PathGridPointCommon
     {
         public static readonly PathGridPointCommon Instance = new PathGridPointCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IPathGridPoint item,
-            IPathGridPointGetter rhs,
-            IPathGridPointGetter def,
+            PathGridPoint item,
+            PathGridPoint rhs,
+            PathGridPoint def,
             ErrorMaskBuilder errorMask,
             PathGridPoint_CopyMask copyMask)
         {
@@ -951,6 +948,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Connections.Clear();
         }
 
+        public PathGridPoint_Mask<bool> GetEqualsMask(
+            IPathGridPointGetter item,
+            IPathGridPointGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new PathGridPoint_Mask<bool>();
+            ((PathGridPointCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IPathGridPointGetter item,
             IPathGridPointGetter rhs,
@@ -988,11 +999,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(PathGridPoint)} =>");
+                fg.AppendLine($"PathGridPoint =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(PathGridPoint)}) =>");
+                fg.AppendLine($"{name} (PathGridPoint) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1059,9 +1070,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class PathGridPointXmlTranslation : IXmlTranslator
+    public partial class PathGridPointXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static PathGridPointXmlTranslation Instance = new PathGridPointXmlTranslation();
+        public readonly static PathGridPointXmlWriteTranslation Instance = new PathGridPointXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IPathGridPointGetter item,
@@ -1107,6 +1118,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IPathGridPointGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PathGridPoint");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PathGridPoint");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IPathGridPointGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IPathGridPointGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IPathGridPointGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class PathGridPointXmlCreateTranslation
+    {
+        public readonly static PathGridPointXmlCreateTranslation Instance = new PathGridPointXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IPathGridPoint item,
             XElement node,
@@ -1117,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    PathGridPointXmlTranslation.FillPublicElement_Xml(
+                    PathGridPointXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1226,70 +1307,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IPathGridPointGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PathGridPoint");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PathGridPoint");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IPathGridPointGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IPathGridPointGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IPathGridPointGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1304,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((PathGridPointXmlTranslation)item.XmlTranslator).Write(
+            ((PathGridPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1394,7 +1411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((PathGridPointXmlTranslation)item.XmlTranslator).Write(
+            ((PathGridPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1408,7 +1425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             PathGridPoint_TranslationMask translationMask = null)
         {
-            ((PathGridPointXmlTranslation)item.XmlTranslator).Write(
+            ((PathGridPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1422,7 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((PathGridPointXmlTranslation)item.XmlTranslator).Write(
+            ((PathGridPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1437,7 +1454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((PathGridPointXmlTranslation)item.XmlTranslator).Write(
+            ((PathGridPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1851,9 +1868,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class PathGridPointBinaryTranslation : IBinaryTranslator
+    public partial class PathGridPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PathGridPointBinaryTranslation Instance = new PathGridPointBinaryTranslation();
+        public readonly static PathGridPointBinaryWriteTranslation Instance = new PathGridPointBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IPathGridPointGetter item,
@@ -1904,6 +1921,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class PathGridPointBinaryCreateTranslation
+    {
+        public readonly static PathGridPointBinaryCreateTranslation Instance = new PathGridPointBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class PathGridPointBinaryTranslationMixIn
     {
@@ -1915,7 +1938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((PathGridPointBinaryTranslation)item.BinaryTranslator).Write(
+            ((PathGridPointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1930,7 +1953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((PathGridPointBinaryTranslation)item.BinaryTranslator).Write(
+            ((PathGridPointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1943,7 +1966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((PathGridPointBinaryTranslation)item.BinaryTranslator).Write(
+            ((PathGridPointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

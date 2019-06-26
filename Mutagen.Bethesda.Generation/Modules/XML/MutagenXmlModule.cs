@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.HasLoquiBaseObject)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{this.TranslationClass(obj.BaseClass)}.WriteToNode_{ModuleNickname}"))
+                        $"{this.TranslationWriteClass(obj.BaseClass)}.WriteToNode_{ModuleNickname}"))
                     {
                         args.Add($"item: item");
                         args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Generation
                         if (obj.HasLoquiBaseObject)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"{this.TranslationClass(obj.BaseClass)}.FillPublicElement_{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
+                                $"{this.TranslationCreateClass(obj.BaseClass)}.FillPublicElement_{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
                             {
                                 args.Add("item: item");
                                 args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: {XmlTranslationModule.XElementLine.GetParameterName(obj)}");

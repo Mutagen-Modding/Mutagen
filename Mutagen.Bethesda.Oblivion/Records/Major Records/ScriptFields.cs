@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class ScriptFieldsBinaryTranslation
+        public partial class ScriptFieldsBinaryCreateTranslation
         {
             private readonly static RecordTypeConverter metaConverter = new RecordTypeConverter(
                 new KeyValuePair<RecordType, RecordType>(
@@ -77,10 +77,6 @@ namespace Mutagen.Bethesda.Oblivion
                     def: null,
                     copyMask: null,
                     errorMask: errorMask);
-            }
-
-            static partial void WriteBinary_MetadataSummaryOld_Custom(MutagenWriter writer, IScriptFieldsGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-            {
             }
         }
     }

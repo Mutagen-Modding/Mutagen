@@ -35,10 +35,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class TeleportDestination :
         LoquiNotifyingObject,
         ITeleportDestination,
-        ILoquiObject<TeleportDestination>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<TeleportDestination>,
         ILinkSubContainer,
-        IEquatable<TeleportDestination>
+        IEquatable<TeleportDestination>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
@@ -56,10 +56,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Destination
-        public FormIDLink<IPlaced> Destination_Property { get; } = new FormIDLink<IPlaced>();
+        public IFormIDLink<IPlaced> Destination_Property { get; } = new FormIDLink<IPlaced>();
         public IPlaced Destination { get => Destination_Property.Item; set => Destination_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<IPlaced> ITeleportDestinationGetter.Destination_Property => this.Destination_Property;
+        IFormIDLink<IPlaced> ITeleportDestination.Destination_Property => this.Destination_Property;
+        IPlaced ITeleportDestinationGetter.Destination => this.Destination_Property.Item;
+        IFormIDLinkGetter<IPlaced> ITeleportDestinationGetter.Destination_Property => this.Destination_Property;
         #endregion
         #region Position
         private P3Float _Position;
@@ -78,8 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<TeleportDestination>.GetEqualsMask(TeleportDestination rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<ITeleportDestinationGetter>.GetEqualsMask(ITeleportDestinationGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITeleportDestinationGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -93,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -123,8 +124,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => TeleportDestinationXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => TeleportDestinationXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static TeleportDestination Create_Xml(
@@ -177,7 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    TeleportDestinationXmlTranslation.FillPublicElement_Xml(
+                    TeleportDestinationXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -313,8 +314,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => TeleportDestinationBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => TeleportDestinationBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static TeleportDestination Create_Binary(
@@ -404,7 +405,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public TeleportDestination Copy(
             TeleportDestination_CopyMask copyMask = null,
-            ITeleportDestinationGetter def = null)
+            TeleportDestination def = null)
         {
             return TeleportDestination.Copy(
                 this,
@@ -413,9 +414,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static TeleportDestination Copy(
-            ITeleportDestinationGetter item,
+            TeleportDestination item,
             TeleportDestination_CopyMask copyMask = null,
-            ITeleportDestinationGetter def = null)
+            TeleportDestination def = null)
         {
             TeleportDestination ret;
             if (item.GetType().Equals(typeof(TeleportDestination)))
@@ -434,9 +435,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static TeleportDestination Copy_ToLoqui(
-            ITeleportDestinationGetter item,
+            TeleportDestination item,
             TeleportDestination_CopyMask copyMask = null,
-            ITeleportDestinationGetter def = null)
+            TeleportDestination def = null)
         {
             TeleportDestination ret;
             if (item.GetType().Equals(typeof(TeleportDestination)))
@@ -454,10 +455,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(ITeleportDestinationGetter rhs)
+        public void CopyFieldsFrom(TeleportDestination rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ITeleportDestinationGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -465,9 +466,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ITeleportDestinationGetter rhs,
+            TeleportDestination rhs,
             TeleportDestination_CopyMask copyMask,
-            ITeleportDestinationGetter def = null)
+            TeleportDestination def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -478,10 +479,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ITeleportDestinationGetter rhs,
+            TeleportDestination rhs,
             out TeleportDestination_ErrorMask errorMask,
             TeleportDestination_CopyMask copyMask = null,
-            ITeleportDestinationGetter def = null,
+            TeleportDestination def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -495,10 +496,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ITeleportDestinationGetter rhs,
+            TeleportDestination rhs,
             ErrorMaskBuilder errorMask,
             TeleportDestination_CopyMask copyMask = null,
-            ITeleportDestinationGetter def = null)
+            TeleportDestination def = null)
         {
             TeleportDestinationCommon.CopyFieldsFrom(
                 item: this,
@@ -514,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case TeleportDestination_FieldIndex.Destination:
-                    this.Destination_Property.Set((FormIDLink<IPlaced>)obj);
+                    this.Destination_Property.Set((IFormIDLink<IPlaced>)obj);
                     break;
                 case TeleportDestination_FieldIndex.Position:
                     this.Position = (P3Float)obj;
@@ -551,7 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case TeleportDestination_FieldIndex.Destination:
-                    obj.Destination_Property.Set((FormIDLink<IPlaced>)pair.Value);
+                    obj.Destination_Property.Set((IFormIDLink<IPlaced>)pair.Value);
                     break;
                 case TeleportDestination_FieldIndex.Position:
                     obj.Position = (P3Float)pair.Value;
@@ -569,29 +570,30 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ITeleportDestination :
         ITeleportDestinationGetter,
-        ILoquiClass<ITeleportDestination, ITeleportDestinationGetter>,
-        ILoquiClass<TeleportDestination, ITeleportDestinationGetter>
+        ILoquiObjectSetter<ITeleportDestination>
     {
         new IPlaced Destination { get; set; }
+        new IFormIDLink<IPlaced> Destination_Property { get; }
         new P3Float Position { get; set; }
 
         new P3Float Rotation { get; set; }
 
         void CopyFieldsFrom(
-            ITeleportDestinationGetter rhs,
+            TeleportDestination rhs,
             ErrorMaskBuilder errorMask = null,
             TeleportDestination_CopyMask copyMask = null,
-            ITeleportDestinationGetter def = null);
+            TeleportDestination def = null);
     }
 
     public partial interface ITeleportDestinationGetter :
         ILoquiObject,
+        ILoquiObject<ITeleportDestinationGetter>,
         IXmlItem,
         IBinaryItem
     {
         #region Destination
         IPlaced Destination { get; }
-        FormIDLink<IPlaced> Destination_Property { get; }
+        IFormIDLinkGetter<IPlaced> Destination_Property { get; }
 
         #endregion
         #region Position
@@ -620,13 +622,10 @@ namespace Mutagen.Bethesda.Oblivion
             ITeleportDestinationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new TeleportDestination_Mask<bool>();
-            ((TeleportDestinationCommon)item.CommonInstance).FillEqualsMask(
+            return ((TeleportDestinationCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -838,7 +837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TeleportDestination_FieldIndex.Destination:
-                    return typeof(FormIDLink<IPlaced>);
+                    return typeof(IFormIDLink<IPlaced>);
                 case TeleportDestination_FieldIndex.Position:
                     return typeof(P3Float);
                 case TeleportDestination_FieldIndex.Rotation:
@@ -848,12 +847,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(TeleportDestinationXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(TeleportDestinationXmlWriteTranslation);
         public static readonly RecordType XTEL_HEADER = new RecordType("XTEL");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = XTEL_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(TeleportDestinationBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(TeleportDestinationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -888,11 +887,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class TeleportDestinationCommon
     {
         public static readonly TeleportDestinationCommon Instance = new TeleportDestinationCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ITeleportDestination item,
-            ITeleportDestinationGetter rhs,
-            ITeleportDestinationGetter def,
+            TeleportDestination item,
+            TeleportDestination rhs,
+            TeleportDestination def,
             ErrorMaskBuilder errorMask,
             TeleportDestination_CopyMask copyMask)
         {
@@ -961,6 +961,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Rotation = default(P3Float);
         }
 
+        public TeleportDestination_Mask<bool> GetEqualsMask(
+            ITeleportDestinationGetter item,
+            ITeleportDestinationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new TeleportDestination_Mask<bool>();
+            ((TeleportDestinationCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             ITeleportDestinationGetter item,
             ITeleportDestinationGetter rhs,
@@ -995,11 +1009,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(TeleportDestination)} =>");
+                fg.AppendLine($"TeleportDestination =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(TeleportDestination)}) =>");
+                fg.AppendLine($"{name} (TeleportDestination) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1052,9 +1066,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class TeleportDestinationXmlTranslation : IXmlTranslator
+    public partial class TeleportDestinationXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static TeleportDestinationXmlTranslation Instance = new TeleportDestinationXmlTranslation();
+        public readonly static TeleportDestinationXmlWriteTranslation Instance = new TeleportDestinationXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             ITeleportDestinationGetter item,
@@ -1091,6 +1105,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            ITeleportDestinationGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.TeleportDestination");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.TeleportDestination");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ITeleportDestinationGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            ITeleportDestinationGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (ITeleportDestinationGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class TeleportDestinationXmlCreateTranslation
+    {
+        public readonly static TeleportDestinationXmlCreateTranslation Instance = new TeleportDestinationXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             ITeleportDestination item,
             XElement node,
@@ -1101,7 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    TeleportDestinationXmlTranslation.FillPublicElement_Xml(
+                    TeleportDestinationXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1189,70 +1273,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            ITeleportDestinationGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.TeleportDestination");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.TeleportDestination");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ITeleportDestinationGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            ITeleportDestinationGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (ITeleportDestinationGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1267,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((TeleportDestinationXmlTranslation)item.XmlTranslator).Write(
+            ((TeleportDestinationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1357,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((TeleportDestinationXmlTranslation)item.XmlTranslator).Write(
+            ((TeleportDestinationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1371,7 +1391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             TeleportDestination_TranslationMask translationMask = null)
         {
-            ((TeleportDestinationXmlTranslation)item.XmlTranslator).Write(
+            ((TeleportDestinationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1385,7 +1405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((TeleportDestinationXmlTranslation)item.XmlTranslator).Write(
+            ((TeleportDestinationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1400,7 +1420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((TeleportDestinationXmlTranslation)item.XmlTranslator).Write(
+            ((TeleportDestinationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1745,9 +1765,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class TeleportDestinationBinaryTranslation : IBinaryTranslator
+    public partial class TeleportDestinationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static TeleportDestinationBinaryTranslation Instance = new TeleportDestinationBinaryTranslation();
+        public readonly static TeleportDestinationBinaryWriteTranslation Instance = new TeleportDestinationBinaryWriteTranslation();
 
         public static void Write_Embedded(
             ITeleportDestinationGetter item,
@@ -1804,6 +1824,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class TeleportDestinationBinaryCreateTranslation
+    {
+        public readonly static TeleportDestinationBinaryCreateTranslation Instance = new TeleportDestinationBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class TeleportDestinationBinaryTranslationMixIn
     {
@@ -1815,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((TeleportDestinationBinaryTranslation)item.BinaryTranslator).Write(
+            ((TeleportDestinationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1830,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((TeleportDestinationBinaryTranslation)item.BinaryTranslator).Write(
+            ((TeleportDestinationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1843,7 +1869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((TeleportDestinationBinaryTranslation)item.BinaryTranslator).Write(
+            ((TeleportDestinationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

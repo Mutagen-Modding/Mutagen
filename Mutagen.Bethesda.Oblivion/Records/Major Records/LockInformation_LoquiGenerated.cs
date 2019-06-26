@@ -35,10 +35,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LockInformation :
         LoquiNotifyingObject,
         ILockInformation,
-        ILoquiObject<LockInformation>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<LockInformation>,
         ILinkSubContainer,
-        IEquatable<LockInformation>
+        IEquatable<LockInformation>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
@@ -79,10 +79,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Key
-        public FormIDLink<Key> Key_Property { get; } = new FormIDLink<Key>();
+        public IFormIDLink<Key> Key_Property { get; } = new FormIDLink<Key>();
         public Key Key { get => Key_Property.Item; set => Key_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Key> ILockInformationGetter.Key_Property => this.Key_Property;
+        IFormIDLink<Key> ILockInformation.Key_Property => this.Key_Property;
+        IKeyInternalGetter ILockInformationGetter.Key => this.Key_Property.Item;
+        IFormIDLinkGetter<Key> ILockInformationGetter.Key_Property => this.Key_Property;
         #endregion
         #region Flags
         private LockInformation.Flag _Flags;
@@ -93,8 +95,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<LockInformation>.GetEqualsMask(LockInformation rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<ILockInformationGetter>.GetEqualsMask(ILockInformationGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILockInformationGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -108,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -140,8 +141,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => LockInformationXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => LockInformationXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static LockInformation Create_Xml(
@@ -194,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    LockInformationXmlTranslation.FillPublicElement_Xml(
+                    LockInformationXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -331,8 +332,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => LockInformationBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => LockInformationBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static LockInformation Create_Binary(
@@ -423,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public LockInformation Copy(
             LockInformation_CopyMask copyMask = null,
-            ILockInformationGetter def = null)
+            LockInformation def = null)
         {
             return LockInformation.Copy(
                 this,
@@ -432,9 +433,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LockInformation Copy(
-            ILockInformationGetter item,
+            LockInformation item,
             LockInformation_CopyMask copyMask = null,
-            ILockInformationGetter def = null)
+            LockInformation def = null)
         {
             LockInformation ret;
             if (item.GetType().Equals(typeof(LockInformation)))
@@ -453,9 +454,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static LockInformation Copy_ToLoqui(
-            ILockInformationGetter item,
+            LockInformation item,
             LockInformation_CopyMask copyMask = null,
-            ILockInformationGetter def = null)
+            LockInformation def = null)
         {
             LockInformation ret;
             if (item.GetType().Equals(typeof(LockInformation)))
@@ -473,10 +474,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(ILockInformationGetter rhs)
+        public void CopyFieldsFrom(LockInformation rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ILockInformationGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -484,9 +485,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ILockInformationGetter rhs,
+            LockInformation rhs,
             LockInformation_CopyMask copyMask,
-            ILockInformationGetter def = null)
+            LockInformation def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -497,10 +498,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ILockInformationGetter rhs,
+            LockInformation rhs,
             out LockInformation_ErrorMask errorMask,
             LockInformation_CopyMask copyMask = null,
-            ILockInformationGetter def = null,
+            LockInformation def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -514,10 +515,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ILockInformationGetter rhs,
+            LockInformation rhs,
             ErrorMaskBuilder errorMask,
             LockInformation_CopyMask copyMask = null,
-            ILockInformationGetter def = null)
+            LockInformation def = null)
         {
             LockInformationCommon.CopyFieldsFrom(
                 item: this,
@@ -539,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Fluff = (Byte[])obj;
                     break;
                 case LockInformation_FieldIndex.Key:
-                    this.Key_Property.Set((FormIDLink<Key>)obj);
+                    this.Key_Property.Set((IFormIDLink<Key>)obj);
                     break;
                 case LockInformation_FieldIndex.Flags:
                     this.Flags = (LockInformation.Flag)obj;
@@ -579,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Fluff = (Byte[])pair.Value;
                     break;
                 case LockInformation_FieldIndex.Key:
-                    obj.Key_Property.Set((FormIDLink<Key>)pair.Value);
+                    obj.Key_Property.Set((IFormIDLink<Key>)pair.Value);
                     break;
                 case LockInformation_FieldIndex.Flags:
                     obj.Flags = (LockInformation.Flag)pair.Value;
@@ -594,25 +595,26 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILockInformation :
         ILockInformationGetter,
-        ILoquiClass<ILockInformation, ILockInformationGetter>,
-        ILoquiClass<LockInformation, ILockInformationGetter>
+        ILoquiObjectSetter<ILockInformation>
     {
         new Byte LockLevel { get; set; }
 
         new Byte[] Fluff { get; set; }
 
         new Key Key { get; set; }
+        new IFormIDLink<Key> Key_Property { get; }
         new LockInformation.Flag Flags { get; set; }
 
         void CopyFieldsFrom(
-            ILockInformationGetter rhs,
+            LockInformation rhs,
             ErrorMaskBuilder errorMask = null,
             LockInformation_CopyMask copyMask = null,
-            ILockInformationGetter def = null);
+            LockInformation def = null);
     }
 
     public partial interface ILockInformationGetter :
         ILoquiObject,
+        ILoquiObject<ILockInformationGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -625,8 +627,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Key
-        Key Key { get; }
-        FormIDLink<Key> Key_Property { get; }
+        IKeyInternalGetter Key { get; }
+        IFormIDLinkGetter<Key> Key_Property { get; }
 
         #endregion
         #region Flags
@@ -651,13 +653,10 @@ namespace Mutagen.Bethesda.Oblivion
             ILockInformationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LockInformation_Mask<bool>();
-            ((LockInformationCommon)item.CommonInstance).FillEqualsMask(
+            return ((LockInformationCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -883,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LockInformation_FieldIndex.Fluff:
                     return typeof(Byte[]);
                 case LockInformation_FieldIndex.Key:
-                    return typeof(FormIDLink<Key>);
+                    return typeof(IFormIDLink<Key>);
                 case LockInformation_FieldIndex.Flags:
                     return typeof(LockInformation.Flag);
                 default:
@@ -891,12 +890,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(LockInformationXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(LockInformationXmlWriteTranslation);
         public static readonly RecordType XLOC_HEADER = new RecordType("XLOC");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = XLOC_HEADER;
         public const int NumStructFields = 4;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(LockInformationBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(LockInformationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -931,11 +930,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class LockInformationCommon
     {
         public static readonly LockInformationCommon Instance = new LockInformationCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ILockInformation item,
-            ILockInformationGetter rhs,
-            ILockInformationGetter def,
+            LockInformation item,
+            LockInformation rhs,
+            LockInformation def,
             ErrorMaskBuilder errorMask,
             LockInformation_CopyMask copyMask)
         {
@@ -1022,6 +1022,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(LockInformation.Flag);
         }
 
+        public LockInformation_Mask<bool> GetEqualsMask(
+            ILockInformationGetter item,
+            ILockInformationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new LockInformation_Mask<bool>();
+            ((LockInformationCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             ILockInformationGetter item,
             ILockInformationGetter rhs,
@@ -1057,11 +1071,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(LockInformation)} =>");
+                fg.AppendLine($"LockInformation =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(LockInformation)}) =>");
+                fg.AppendLine($"{name} (LockInformation) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1119,9 +1133,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class LockInformationXmlTranslation : IXmlTranslator
+    public partial class LockInformationXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static LockInformationXmlTranslation Instance = new LockInformationXmlTranslation();
+        public readonly static LockInformationXmlWriteTranslation Instance = new LockInformationXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             ILockInformationGetter item,
@@ -1167,6 +1181,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            ILockInformationGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LockInformation");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LockInformation");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ILockInformationGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            ILockInformationGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (ILockInformationGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class LockInformationXmlCreateTranslation
+    {
+        public readonly static LockInformationXmlCreateTranslation Instance = new LockInformationXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             ILockInformation item,
             XElement node,
@@ -1177,7 +1261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    LockInformationXmlTranslation.FillPublicElement_Xml(
+                    LockInformationXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1291,70 +1375,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            ILockInformationGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LockInformation");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LockInformation");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ILockInformationGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            ILockInformationGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (ILockInformationGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1369,7 +1389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((LockInformationXmlTranslation)item.XmlTranslator).Write(
+            ((LockInformationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1459,7 +1479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((LockInformationXmlTranslation)item.XmlTranslator).Write(
+            ((LockInformationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1473,7 +1493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             LockInformation_TranslationMask translationMask = null)
         {
-            ((LockInformationXmlTranslation)item.XmlTranslator).Write(
+            ((LockInformationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1487,7 +1507,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((LockInformationXmlTranslation)item.XmlTranslator).Write(
+            ((LockInformationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1502,7 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((LockInformationXmlTranslation)item.XmlTranslator).Write(
+            ((LockInformationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1874,9 +1894,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class LockInformationBinaryTranslation : IBinaryTranslator
+    public partial class LockInformationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LockInformationBinaryTranslation Instance = new LockInformationBinaryTranslation();
+        public readonly static LockInformationBinaryWriteTranslation Instance = new LockInformationBinaryWriteTranslation();
 
         public static void Write_Embedded(
             ILockInformationGetter item,
@@ -1935,6 +1955,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class LockInformationBinaryCreateTranslation
+    {
+        public readonly static LockInformationBinaryCreateTranslation Instance = new LockInformationBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class LockInformationBinaryTranslationMixIn
     {
@@ -1946,7 +1972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((LockInformationBinaryTranslation)item.BinaryTranslator).Write(
+            ((LockInformationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1961,7 +1987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((LockInformationBinaryTranslation)item.BinaryTranslator).Write(
+            ((LockInformationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1974,7 +2000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((LockInformationBinaryTranslation)item.BinaryTranslator).Write(
+            ((LockInformationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

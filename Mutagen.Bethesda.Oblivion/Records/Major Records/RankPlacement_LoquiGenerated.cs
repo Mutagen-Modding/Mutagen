@@ -35,10 +35,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RankPlacement :
         LoquiNotifyingObject,
         IRankPlacement,
-        ILoquiObject<RankPlacement>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<RankPlacement>,
         ILinkSubContainer,
-        IEquatable<RankPlacement>
+        IEquatable<RankPlacement>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RankPlacement_Registration.Instance;
@@ -56,10 +56,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Faction
-        public FormIDLink<Faction> Faction_Property { get; } = new FormIDLink<Faction>();
+        public IFormIDLink<Faction> Faction_Property { get; } = new FormIDLink<Faction>();
         public Faction Faction { get => Faction_Property.Item; set => Faction_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Faction> IRankPlacementGetter.Faction_Property => this.Faction_Property;
+        IFormIDLink<Faction> IRankPlacement.Faction_Property => this.Faction_Property;
+        IFactionInternalGetter IRankPlacementGetter.Faction => this.Faction_Property.Item;
+        IFormIDLinkGetter<Faction> IRankPlacementGetter.Faction_Property => this.Faction_Property;
         #endregion
         #region Rank
         private Byte _Rank;
@@ -85,8 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<RankPlacement>.GetEqualsMask(RankPlacement rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IRankPlacementGetter>.GetEqualsMask(IRankPlacementGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRankPlacementGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -100,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -130,8 +131,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => RankPlacementXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => RankPlacementXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static RankPlacement Create_Xml(
@@ -184,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    RankPlacementXmlTranslation.FillPublicElement_Xml(
+                    RankPlacementXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -320,8 +321,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => RankPlacementBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => RankPlacementBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static RankPlacement Create_Binary(
@@ -402,7 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public RankPlacement Copy(
             RankPlacement_CopyMask copyMask = null,
-            IRankPlacementGetter def = null)
+            RankPlacement def = null)
         {
             return RankPlacement.Copy(
                 this,
@@ -411,9 +412,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RankPlacement Copy(
-            IRankPlacementGetter item,
+            RankPlacement item,
             RankPlacement_CopyMask copyMask = null,
-            IRankPlacementGetter def = null)
+            RankPlacement def = null)
         {
             RankPlacement ret;
             if (item.GetType().Equals(typeof(RankPlacement)))
@@ -432,9 +433,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RankPlacement Copy_ToLoqui(
-            IRankPlacementGetter item,
+            RankPlacement item,
             RankPlacement_CopyMask copyMask = null,
-            IRankPlacementGetter def = null)
+            RankPlacement def = null)
         {
             RankPlacement ret;
             if (item.GetType().Equals(typeof(RankPlacement)))
@@ -452,10 +453,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IRankPlacementGetter rhs)
+        public void CopyFieldsFrom(RankPlacement rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IRankPlacementGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -463,9 +464,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRankPlacementGetter rhs,
+            RankPlacement rhs,
             RankPlacement_CopyMask copyMask,
-            IRankPlacementGetter def = null)
+            RankPlacement def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -476,10 +477,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRankPlacementGetter rhs,
+            RankPlacement rhs,
             out RankPlacement_ErrorMask errorMask,
             RankPlacement_CopyMask copyMask = null,
-            IRankPlacementGetter def = null,
+            RankPlacement def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -493,10 +494,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRankPlacementGetter rhs,
+            RankPlacement rhs,
             ErrorMaskBuilder errorMask,
             RankPlacement_CopyMask copyMask = null,
-            IRankPlacementGetter def = null)
+            RankPlacement def = null)
         {
             RankPlacementCommon.CopyFieldsFrom(
                 item: this,
@@ -512,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    this.Faction_Property.Set((FormIDLink<Faction>)obj);
+                    this.Faction_Property.Set((IFormIDLink<Faction>)obj);
                     break;
                 case RankPlacement_FieldIndex.Rank:
                     this.Rank = (Byte)obj;
@@ -549,7 +550,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    obj.Faction_Property.Set((FormIDLink<Faction>)pair.Value);
+                    obj.Faction_Property.Set((IFormIDLink<Faction>)pair.Value);
                     break;
                 case RankPlacement_FieldIndex.Rank:
                     obj.Rank = (Byte)pair.Value;
@@ -567,29 +568,30 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRankPlacement :
         IRankPlacementGetter,
-        ILoquiClass<IRankPlacement, IRankPlacementGetter>,
-        ILoquiClass<RankPlacement, IRankPlacementGetter>
+        ILoquiObjectSetter<IRankPlacement>
     {
         new Faction Faction { get; set; }
+        new IFormIDLink<Faction> Faction_Property { get; }
         new Byte Rank { get; set; }
 
         new Byte[] Fluff { get; set; }
 
         void CopyFieldsFrom(
-            IRankPlacementGetter rhs,
+            RankPlacement rhs,
             ErrorMaskBuilder errorMask = null,
             RankPlacement_CopyMask copyMask = null,
-            IRankPlacementGetter def = null);
+            RankPlacement def = null);
     }
 
     public partial interface IRankPlacementGetter :
         ILoquiObject,
+        ILoquiObject<IRankPlacementGetter>,
         IXmlItem,
         IBinaryItem
     {
         #region Faction
-        Faction Faction { get; }
-        FormIDLink<Faction> Faction_Property { get; }
+        IFactionInternalGetter Faction { get; }
+        IFormIDLinkGetter<Faction> Faction_Property { get; }
 
         #endregion
         #region Rank
@@ -618,13 +620,10 @@ namespace Mutagen.Bethesda.Oblivion
             IRankPlacementGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RankPlacement_Mask<bool>();
-            ((RankPlacementCommon)item.CommonInstance).FillEqualsMask(
+            return ((RankPlacementCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -836,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    return typeof(FormIDLink<Faction>);
+                    return typeof(IFormIDLink<Faction>);
                 case RankPlacement_FieldIndex.Rank:
                     return typeof(Byte);
                 case RankPlacement_FieldIndex.Fluff:
@@ -846,12 +845,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(RankPlacementXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(RankPlacementXmlWriteTranslation);
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SNAM_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(RankPlacementBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(RankPlacementBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -886,11 +885,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RankPlacementCommon
     {
         public static readonly RankPlacementCommon Instance = new RankPlacementCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IRankPlacement item,
-            IRankPlacementGetter rhs,
-            IRankPlacementGetter def,
+            RankPlacement item,
+            RankPlacement rhs,
+            RankPlacement def,
             ErrorMaskBuilder errorMask,
             RankPlacement_CopyMask copyMask)
         {
@@ -959,6 +959,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff = default(Byte[]);
         }
 
+        public RankPlacement_Mask<bool> GetEqualsMask(
+            IRankPlacementGetter item,
+            IRankPlacementGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RankPlacement_Mask<bool>();
+            ((RankPlacementCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IRankPlacementGetter item,
             IRankPlacementGetter rhs,
@@ -993,11 +1007,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(RankPlacement)} =>");
+                fg.AppendLine($"RankPlacement =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(RankPlacement)}) =>");
+                fg.AppendLine($"{name} (RankPlacement) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1050,9 +1064,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class RankPlacementXmlTranslation : IXmlTranslator
+    public partial class RankPlacementXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static RankPlacementXmlTranslation Instance = new RankPlacementXmlTranslation();
+        public readonly static RankPlacementXmlWriteTranslation Instance = new RankPlacementXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IRankPlacementGetter item,
@@ -1089,6 +1103,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IRankPlacementGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RankPlacement");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RankPlacement");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IRankPlacementGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IRankPlacementGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IRankPlacementGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class RankPlacementXmlCreateTranslation
+    {
+        public readonly static RankPlacementXmlCreateTranslation Instance = new RankPlacementXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IRankPlacement item,
             XElement node,
@@ -1099,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    RankPlacementXmlTranslation.FillPublicElement_Xml(
+                    RankPlacementXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1187,70 +1271,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IRankPlacementGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RankPlacement");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RankPlacement");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IRankPlacementGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IRankPlacementGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IRankPlacementGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1265,7 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RankPlacementXmlTranslation)item.XmlTranslator).Write(
+            ((RankPlacementXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1355,7 +1375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((RankPlacementXmlTranslation)item.XmlTranslator).Write(
+            ((RankPlacementXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1369,7 +1389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             RankPlacement_TranslationMask translationMask = null)
         {
-            ((RankPlacementXmlTranslation)item.XmlTranslator).Write(
+            ((RankPlacementXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1383,7 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((RankPlacementXmlTranslation)item.XmlTranslator).Write(
+            ((RankPlacementXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1398,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((RankPlacementXmlTranslation)item.XmlTranslator).Write(
+            ((RankPlacementXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1743,9 +1763,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class RankPlacementBinaryTranslation : IBinaryTranslator
+    public partial class RankPlacementBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RankPlacementBinaryTranslation Instance = new RankPlacementBinaryTranslation();
+        public readonly static RankPlacementBinaryWriteTranslation Instance = new RankPlacementBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IRankPlacementGetter item,
@@ -1800,6 +1820,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class RankPlacementBinaryCreateTranslation
+    {
+        public readonly static RankPlacementBinaryCreateTranslation Instance = new RankPlacementBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class RankPlacementBinaryTranslationMixIn
     {
@@ -1811,7 +1837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RankPlacementBinaryTranslation)item.BinaryTranslator).Write(
+            ((RankPlacementBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1826,7 +1852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((RankPlacementBinaryTranslation)item.BinaryTranslator).Write(
+            ((RankPlacementBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1839,7 +1865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((RankPlacementBinaryTranslation)item.BinaryTranslator).Write(
+            ((RankPlacementBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

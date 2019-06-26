@@ -38,12 +38,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Water :
         OblivionMajorRecord,
-        IWater,
         IWaterInternal,
-        ILoquiObject<Water>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<Water>,
         ILinkSubContainer,
-        IEquatable<Water>
+        IEquatable<Water>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
@@ -163,10 +162,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Sound
-        public FormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
+        public IFormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
         public Sound Sound { get => Sound_Property.Item; set => Sound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Sound> IWaterGetter.Sound_Property => this.Sound_Property;
+        IFormIDSetLink<Sound> IWater.Sound_Property => this.Sound_Property;
+        ISoundInternalGetter IWaterGetter.Sound => this.Sound_Property.Item;
+        IFormIDSetLinkGetter<Sound> IWaterGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region WindVelocity
         private Single _WindVelocity;
@@ -554,9 +555,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         public void RelatedWaters_Set(
             RelatedWaters value,
-            bool markSet = true)
+            bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _RelatedWaters, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.RelatedWaters, nameof(RelatedWaters), nameof(RelatedWaters_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _RelatedWaters, value, _hasBeenSetTracker, hasBeenSet, (int)Water_FieldIndex.RelatedWaters, nameof(RelatedWaters), nameof(RelatedWaters_IsSet));
         }
         public void RelatedWaters_Unset()
         {
@@ -583,8 +584,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Water>.GetEqualsMask(Water rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IWaterGetter>.GetEqualsMask(IWaterGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWaterInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -732,7 +732,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => WaterXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => WaterXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Water Create_Xml(
@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    WaterXmlTranslation.FillPublicElement_Xml(
+                    WaterXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => WaterBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Water Create_Binary(
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DATADataTypeState = DATADataType.Has;
                     }
-                    WaterBinaryTranslation.FillBinary_NothingCustomLogic_Custom_Public(
+                    WaterBinaryCreateTranslation.FillBinary_NothingCustomLogic_Custom_Public(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.FogDistanceNearPlane = default(Single);
                     }
-                    WaterBinaryTranslation.FillBinary_BloodCustomLogic_Custom_Public(
+                    WaterBinaryCreateTranslation.FillBinary_BloodCustomLogic_Custom_Public(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     item.TextureBlend = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 3);
-                    WaterBinaryTranslation.FillBinary_OilCustomLogic_Custom_Public(
+                    WaterBinaryCreateTranslation.FillBinary_OilCustomLogic_Custom_Public(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
@@ -1416,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DisplacementSimulatorForce = default(Single);
                     }
-                    WaterBinaryTranslation.FillBinary_OddExtraBytes_Custom_Public(
+                    WaterBinaryCreateTranslation.FillBinary_OddExtraBytes_Custom_Public(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
@@ -1507,7 +1507,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Water Copy(
             Water_CopyMask copyMask = null,
-            IWaterGetter def = null)
+            Water def = null)
         {
             return Water.Copy(
                 this,
@@ -1516,9 +1516,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Water Copy(
-            IWaterGetter item,
+            Water item,
             Water_CopyMask copyMask = null,
-            IWaterGetter def = null)
+            Water def = null)
         {
             Water ret;
             if (item.GetType().Equals(typeof(Water)))
@@ -1537,9 +1537,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Water Copy_ToLoqui(
-            IWaterGetter item,
+            Water item,
             Water_CopyMask copyMask = null,
-            IWaterGetter def = null)
+            Water def = null)
         {
             Water ret;
             if (item.GetType().Equals(typeof(Water)))
@@ -1557,10 +1557,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IWaterGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -1568,9 +1568,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWaterGetter rhs,
+            Water rhs,
             Water_CopyMask copyMask,
-            IWaterGetter def = null)
+            Water def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -1581,10 +1581,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWaterGetter rhs,
+            Water rhs,
             out Water_ErrorMask errorMask,
             Water_CopyMask copyMask = null,
-            IWaterGetter def = null,
+            Water def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1598,10 +1598,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWaterGetter rhs,
+            Water rhs,
             ErrorMaskBuilder errorMask,
             Water_CopyMask copyMask = null,
-            IWaterGetter def = null)
+            Water def = null)
         {
             WaterCommon.CopyFieldsFrom(
                 item: this,
@@ -1629,7 +1629,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MaterialID = (String)obj;
                     break;
                 case Water_FieldIndex.Sound:
-                    this.Sound_Property.Set((FormIDSetLink<Sound>)obj);
+                    this.Sound_Property.Set((IFormIDSetLink<Sound>)obj);
                     break;
                 case Water_FieldIndex.WindVelocity:
                     this.WindVelocity = (Single)obj;
@@ -1757,7 +1757,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.MaterialID = (String)pair.Value;
                     break;
                 case Water_FieldIndex.Sound:
-                    obj.Sound_Property.Set((FormIDSetLink<Sound>)pair.Value);
+                    obj.Sound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
                     break;
                 case Water_FieldIndex.WindVelocity:
                     obj.WindVelocity = (Single)pair.Value;
@@ -1854,30 +1854,30 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWater :
         IWaterGetter,
         IOblivionMajorRecord,
-        ILoquiClass<IWater, IWaterGetter>,
-        ILoquiClass<Water, IWaterGetter>
+        ILoquiObjectSetter<IWaterInternal>
     {
         new String Texture { get; set; }
         new bool Texture_IsSet { get; set; }
-        void Texture_Set(String item, bool hasBeenSet = true);
+        void Texture_Set(String value, bool hasBeenSet = true);
         void Texture_Unset();
 
         new Byte Opacity { get; set; }
         new bool Opacity_IsSet { get; set; }
-        void Opacity_Set(Byte item, bool hasBeenSet = true);
+        void Opacity_Set(Byte value, bool hasBeenSet = true);
         void Opacity_Unset();
 
         new Water.Flag Flags { get; set; }
         new bool Flags_IsSet { get; set; }
-        void Flags_Set(Water.Flag item, bool hasBeenSet = true);
+        void Flags_Set(Water.Flag value, bool hasBeenSet = true);
         void Flags_Unset();
 
         new String MaterialID { get; set; }
         new bool MaterialID_IsSet { get; set; }
-        void MaterialID_Set(String item, bool hasBeenSet = true);
+        void MaterialID_Set(String value, bool hasBeenSet = true);
         void MaterialID_Unset();
 
         new Sound Sound { get; set; }
+        new IFormIDSetLink<Sound> Sound_Property { get; }
         new Single WindVelocity { get; set; }
 
         new Single WindDirection { get; set; }
@@ -1932,14 +1932,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         new RelatedWaters RelatedWaters { get; set; }
         new bool RelatedWaters_IsSet { get; set; }
-        void RelatedWaters_Set(RelatedWaters item, bool hasBeenSet = true);
+        void RelatedWaters_Set(RelatedWaters value, bool hasBeenSet = true);
         void RelatedWaters_Unset();
 
         void CopyFieldsFrom(
-            IWaterGetter rhs,
+            Water rhs,
             ErrorMaskBuilder errorMask = null,
             Water_CopyMask copyMask = null,
-            IWaterGetter def = null);
+            Water def = null);
     }
 
     public partial interface IWaterInternal :
@@ -1948,12 +1948,14 @@ namespace Mutagen.Bethesda.Oblivion
         IWaterInternalGetter
     {
         new Sound Sound { get; set; }
+        new IFormIDSetLink<Sound> Sound_Property { get; }
         new Water.DATADataType DATADataTypeState { get; set; }
 
     }
 
     public partial interface IWaterGetter :
         IOblivionMajorRecordGetter,
+        ILoquiObject<IWaterInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -1978,8 +1980,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Sound
-        Sound Sound { get; }
-        FormIDSetLink<Sound> Sound_Property { get; }
+        ISoundInternalGetter Sound { get; }
+        IFormIDSetLinkGetter<Sound> Sound_Property { get; }
 
         #endregion
         #region WindVelocity
@@ -2116,17 +2118,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Water_Mask<bool> GetEqualsMask(
-            this IWaterGetter item,
-            IWaterGetter rhs,
+            this IWaterInternalGetter item,
+            IWaterInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Water_Mask<bool>();
-            ((WaterCommon)item.CommonInstance).FillEqualsMask(
+            return ((WaterCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -2162,7 +2161,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static Water_Mask<bool> GetHasBeenSetMask(this IWaterGetter item)
+        public static Water_Mask<bool> GetHasBeenSetMask(this IWaterInternalGetter item)
         {
             var ret = new Water_Mask<bool>();
             ((WaterCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -2652,7 +2651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.MaterialID:
                     return typeof(String);
                 case Water_FieldIndex.Sound:
-                    return typeof(FormIDSetLink<Sound>);
+                    return typeof(IFormIDSetLink<Sound>);
                 case Water_FieldIndex.WindVelocity:
                     return typeof(Single);
                 case Water_FieldIndex.WindDirection:
@@ -2714,7 +2713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(WaterXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(WaterXmlWriteTranslation);
         public static readonly RecordType WATR_HEADER = new RecordType("WATR");
         public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
         public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
@@ -2726,7 +2725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = WATR_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 6;
-        public static readonly Type BinaryTranslation = typeof(WaterBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2761,11 +2760,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class WaterCommon : OblivionMajorRecordCommon
     {
         public static readonly WaterCommon Instance = new WaterCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IWater item,
-            IWaterGetter rhs,
-            IWaterGetter def,
+            Water item,
+            Water rhs,
+            Water def,
             ErrorMaskBuilder errorMask,
             Water_CopyMask copyMask)
         {
@@ -3394,7 +3394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     else
                     {
                         item.RelatedWaters_Set(
-                            item: default(RelatedWaters),
+                            value: default(RelatedWaters),
                             hasBeenSet: false);
                     }
                 }
@@ -3414,7 +3414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IWater item)
+        public virtual void Clear(IWaterInternal item)
         {
             ClearPartial();
             item.Texture_Unset();
@@ -3452,19 +3452,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (IWater)item);
+            Clear(item: (IWaterInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IWater)item);
+            Clear(item: (IWaterInternal)item);
+        }
+
+        public Water_Mask<bool> GetEqualsMask(
+            IWaterInternalGetter item,
+            IWaterInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Water_Mask<bool>();
+            ((WaterCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IWaterGetter item,
-            IWaterGetter rhs,
+            IWaterInternalGetter item,
+            IWaterInternalGetter rhs,
             Water_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -3511,7 +3525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            IWaterGetter item,
+            IWaterInternalGetter item,
             string name = null,
             Water_Mask<bool> printMask = null)
         {
@@ -3525,18 +3539,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            IWaterGetter item,
+            IWaterInternalGetter item,
             FileGeneration fg,
             string name = null,
             Water_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Water)} =>");
+                fg.AppendLine($"Water =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Water)}) =>");
+                fg.AppendLine($"{name} (Water) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -3550,7 +3564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            IWaterGetter item,
+            IWaterInternalGetter item,
             FileGeneration fg,
             Water_Mask<bool> printMask = null)
         {
@@ -3692,7 +3706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            IWaterGetter item,
+            IWaterInternalGetter item,
             Water_Mask<bool?> checkMask)
         {
             if (checkMask.Texture.HasValue && checkMask.Texture.Value != item.Texture_IsSet) return false;
@@ -3708,7 +3722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            IWaterGetter item,
+            IWaterInternalGetter item,
             Water_Mask<bool> mask)
         {
             mask.Texture = item.Texture_IsSet;
@@ -3790,11 +3804,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class WaterXmlTranslation :
-        OblivionMajorRecordXmlTranslation,
-        IXmlTranslator
+    public partial class WaterXmlWriteTranslation :
+        OblivionMajorRecordXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static WaterXmlTranslation Instance = new WaterXmlTranslation();
+        public new readonly static WaterXmlWriteTranslation Instance = new WaterXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IWaterInternalGetter item,
@@ -3802,7 +3816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -4113,7 +4127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.RelatedWaters_IsSet
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
             {
-                ((RelatedWatersXmlTranslation)((IXmlItem)item.RelatedWaters).XmlTranslator).Write(
+                ((RelatedWatersXmlWriteTranslation)((IXmlItem)item.RelatedWaters).XmlWriteTranslator).Write(
                     item: item.RelatedWaters,
                     node: node,
                     name: nameof(item.RelatedWaters),
@@ -4132,6 +4146,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IWaterInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Water");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Water");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWaterInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWaterInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWaterInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class WaterXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
+    {
+        public new readonly static WaterXmlCreateTranslation Instance = new WaterXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IWaterInternal item,
             XElement node,
@@ -4142,7 +4227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    WaterXmlTranslation.FillPublicElement_Xml(
+                    WaterXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -5011,7 +5096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -5019,71 +5104,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            IWaterInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Water");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Water");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IWaterInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IWaterInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IWaterInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -5100,7 +5120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WaterXmlTranslation)item.XmlTranslator).Write(
+            ((WaterXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -6290,30 +6310,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class WaterBinaryTranslation :
-        OblivionMajorRecordBinaryTranslation,
-        IBinaryTranslator
+    public partial class WaterBinaryWriteTranslation :
+        OblivionMajorRecordBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static WaterBinaryTranslation Instance = new WaterBinaryTranslation();
-
-        static partial void FillBinary_NothingCustomLogic_Custom(
-            MutagenFrame frame,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void FillBinary_NothingCustomLogic_Custom_Public(
-            MutagenFrame frame,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            FillBinary_NothingCustomLogic_Custom(
-                frame: frame,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
+        public new readonly static WaterBinaryWriteTranslation Instance = new WaterBinaryWriteTranslation();
 
         static partial void WriteBinary_NothingCustomLogic_Custom(
             MutagenWriter writer,
@@ -6329,25 +6330,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             WriteBinary_NothingCustomLogic_Custom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        static partial void FillBinary_BloodCustomLogic_Custom(
-            MutagenFrame frame,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void FillBinary_BloodCustomLogic_Custom_Public(
-            MutagenFrame frame,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            FillBinary_BloodCustomLogic_Custom(
-                frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
@@ -6372,25 +6354,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        static partial void FillBinary_OilCustomLogic_Custom(
-            MutagenFrame frame,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void FillBinary_OilCustomLogic_Custom_Public(
-            MutagenFrame frame,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            FillBinary_OilCustomLogic_Custom(
-                frame: frame,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
         static partial void WriteBinary_OilCustomLogic_Custom(
             MutagenWriter writer,
             IWaterInternalGetter item,
@@ -6405,25 +6368,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             WriteBinary_OilCustomLogic_Custom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        static partial void FillBinary_OddExtraBytes_Custom(
-            MutagenFrame frame,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void FillBinary_OddExtraBytes_Custom_Public(
-            MutagenFrame frame,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            FillBinary_OddExtraBytes_Custom(
-                frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
@@ -6454,7 +6398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
@@ -6468,7 +6412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -6520,7 +6464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Water_Registration.DATA_HEADER)))
                 {
-                    WaterBinaryTranslation.WriteBinary_NothingCustomLogic(
+                    WaterBinaryWriteTranslation.WriteBinary_NothingCustomLogic(
                         writer: writer,
                         item: item,
                         masterReferences: masterReferences,
@@ -6557,7 +6501,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: item.FogDistanceNearPlane);
-                        WaterBinaryTranslation.WriteBinary_BloodCustomLogic(
+                        WaterBinaryWriteTranslation.WriteBinary_BloodCustomLogic(
                             writer: writer,
                             item: item,
                             masterReferences: masterReferences,
@@ -6581,7 +6525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 extraByte: true);
                             writer.Write(item.TextureBlend);
                             writer.WriteZeros(3);
-                            WaterBinaryTranslation.WriteBinary_OilCustomLogic(
+                            WaterBinaryWriteTranslation.WriteBinary_OilCustomLogic(
                                 writer: writer,
                                 item: item,
                                 masterReferences: masterReferences,
@@ -6606,7 +6550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
                                     item: item.DisplacementSimulatorForce);
-                                WaterBinaryTranslation.WriteBinary_OddExtraBytes(
+                                WaterBinaryWriteTranslation.WriteBinary_OddExtraBytes(
                                     writer: writer,
                                     item: item,
                                     masterReferences: masterReferences,
@@ -6634,7 +6578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.RelatedWaters_IsSet)
             {
-                ((RelatedWatersBinaryTranslation)((IBinaryItem)item.RelatedWaters).BinaryTranslator).Write(
+                ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)item.RelatedWaters).BinaryWriteTranslator).Write(
                     item: item.RelatedWaters,
                     writer: writer,
                     errorMask: errorMask,
@@ -6716,6 +6660,88 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class WaterBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    {
+        public new readonly static WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
+
+        static partial void FillBinary_NothingCustomLogic_Custom(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_NothingCustomLogic_Custom_Public(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_NothingCustomLogic_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void FillBinary_BloodCustomLogic_Custom(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_BloodCustomLogic_Custom_Public(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_BloodCustomLogic_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void FillBinary_OilCustomLogic_Custom(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_OilCustomLogic_Custom_Public(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_OilCustomLogic_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void FillBinary_OddExtraBytes_Custom(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_OddExtraBytes_Custom_Public(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_OddExtraBytes_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+    }
+
     #region Binary Write Mixins
     public static class WaterBinaryTranslationMixIn
     {
@@ -6727,7 +6753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WaterBinaryTranslation)item.BinaryTranslator).Write(
+            ((WaterBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

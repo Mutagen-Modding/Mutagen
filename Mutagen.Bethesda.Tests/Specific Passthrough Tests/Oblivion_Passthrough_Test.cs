@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Tests
 
                 // Get icon string
                 var iconLoc = rdats[(int)RegionData.RegionDataType.Icon];
-                stream.Position = iconLoc.Min + RegionBinaryTranslation.RDAT_LEN + 6;
+                stream.Position = iconLoc.Min + RegionBinaryCreateTranslation.RDAT_LEN + 6;
                 var iconStr = stream.ReadZString((int)(iconLoc.Max - stream.Position));
 
                 // Get icon bytes

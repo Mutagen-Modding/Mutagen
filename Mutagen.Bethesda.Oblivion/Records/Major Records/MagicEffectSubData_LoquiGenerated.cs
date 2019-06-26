@@ -35,10 +35,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class MagicEffectSubData :
         LoquiNotifyingObject,
         IMagicEffectSubData,
-        ILoquiObject<MagicEffectSubData>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<MagicEffectSubData>,
         ILinkSubContainer,
-        IEquatable<MagicEffectSubData>
+        IEquatable<MagicEffectSubData>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSubData_Registration.Instance;
@@ -56,34 +56,44 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region EnchantEffect
-        public FormIDLink<EffectShader> EnchantEffect_Property { get; } = new FormIDLink<EffectShader>();
+        public IFormIDLink<EffectShader> EnchantEffect_Property { get; } = new FormIDLink<EffectShader>();
         public EffectShader EnchantEffect { get => EnchantEffect_Property.Item; set => EnchantEffect_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<EffectShader> IMagicEffectSubDataGetter.EnchantEffect_Property => this.EnchantEffect_Property;
+        IFormIDLink<EffectShader> IMagicEffectSubData.EnchantEffect_Property => this.EnchantEffect_Property;
+        IEffectShaderInternalGetter IMagicEffectSubDataGetter.EnchantEffect => this.EnchantEffect_Property.Item;
+        IFormIDLinkGetter<EffectShader> IMagicEffectSubDataGetter.EnchantEffect_Property => this.EnchantEffect_Property;
         #endregion
         #region CastingSound
-        public FormIDLink<Sound> CastingSound_Property { get; } = new FormIDLink<Sound>();
+        public IFormIDLink<Sound> CastingSound_Property { get; } = new FormIDLink<Sound>();
         public Sound CastingSound { get => CastingSound_Property.Item; set => CastingSound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Sound> IMagicEffectSubDataGetter.CastingSound_Property => this.CastingSound_Property;
+        IFormIDLink<Sound> IMagicEffectSubData.CastingSound_Property => this.CastingSound_Property;
+        ISoundInternalGetter IMagicEffectSubDataGetter.CastingSound => this.CastingSound_Property.Item;
+        IFormIDLinkGetter<Sound> IMagicEffectSubDataGetter.CastingSound_Property => this.CastingSound_Property;
         #endregion
         #region BoltSound
-        public FormIDLink<Sound> BoltSound_Property { get; } = new FormIDLink<Sound>();
+        public IFormIDLink<Sound> BoltSound_Property { get; } = new FormIDLink<Sound>();
         public Sound BoltSound { get => BoltSound_Property.Item; set => BoltSound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Sound> IMagicEffectSubDataGetter.BoltSound_Property => this.BoltSound_Property;
+        IFormIDLink<Sound> IMagicEffectSubData.BoltSound_Property => this.BoltSound_Property;
+        ISoundInternalGetter IMagicEffectSubDataGetter.BoltSound => this.BoltSound_Property.Item;
+        IFormIDLinkGetter<Sound> IMagicEffectSubDataGetter.BoltSound_Property => this.BoltSound_Property;
         #endregion
         #region HitSound
-        public FormIDLink<Sound> HitSound_Property { get; } = new FormIDLink<Sound>();
+        public IFormIDLink<Sound> HitSound_Property { get; } = new FormIDLink<Sound>();
         public Sound HitSound { get => HitSound_Property.Item; set => HitSound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Sound> IMagicEffectSubDataGetter.HitSound_Property => this.HitSound_Property;
+        IFormIDLink<Sound> IMagicEffectSubData.HitSound_Property => this.HitSound_Property;
+        ISoundInternalGetter IMagicEffectSubDataGetter.HitSound => this.HitSound_Property.Item;
+        IFormIDLinkGetter<Sound> IMagicEffectSubDataGetter.HitSound_Property => this.HitSound_Property;
         #endregion
         #region AreaSound
-        public FormIDLink<Sound> AreaSound_Property { get; } = new FormIDLink<Sound>();
+        public IFormIDLink<Sound> AreaSound_Property { get; } = new FormIDLink<Sound>();
         public Sound AreaSound { get => AreaSound_Property.Item; set => AreaSound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Sound> IMagicEffectSubDataGetter.AreaSound_Property => this.AreaSound_Property;
+        IFormIDLink<Sound> IMagicEffectSubData.AreaSound_Property => this.AreaSound_Property;
+        ISoundInternalGetter IMagicEffectSubDataGetter.AreaSound => this.AreaSound_Property.Item;
+        IFormIDLinkGetter<Sound> IMagicEffectSubDataGetter.AreaSound_Property => this.AreaSound_Property;
         #endregion
         #region ConstantEffectEnchantmentFactor
         private Single _ConstantEffectEnchantmentFactor;
@@ -102,8 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<MagicEffectSubData>.GetEqualsMask(MagicEffectSubData rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IMagicEffectSubDataGetter>.GetEqualsMask(IMagicEffectSubDataGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectSubDataGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -117,7 +126,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -155,8 +164,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => MagicEffectSubDataXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => MagicEffectSubDataXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static MagicEffectSubData Create_Xml(
@@ -209,7 +218,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    MagicEffectSubDataXmlTranslation.FillPublicElement_Xml(
+                    MagicEffectSubDataXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -364,8 +373,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => MagicEffectSubDataBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => MagicEffectSubDataBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static MagicEffectSubData Create_Binary(
@@ -468,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public MagicEffectSubData Copy(
             MagicEffectSubData_CopyMask copyMask = null,
-            IMagicEffectSubDataGetter def = null)
+            MagicEffectSubData def = null)
         {
             return MagicEffectSubData.Copy(
                 this,
@@ -477,9 +486,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static MagicEffectSubData Copy(
-            IMagicEffectSubDataGetter item,
+            MagicEffectSubData item,
             MagicEffectSubData_CopyMask copyMask = null,
-            IMagicEffectSubDataGetter def = null)
+            MagicEffectSubData def = null)
         {
             MagicEffectSubData ret;
             if (item.GetType().Equals(typeof(MagicEffectSubData)))
@@ -498,9 +507,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static MagicEffectSubData Copy_ToLoqui(
-            IMagicEffectSubDataGetter item,
+            MagicEffectSubData item,
             MagicEffectSubData_CopyMask copyMask = null,
-            IMagicEffectSubDataGetter def = null)
+            MagicEffectSubData def = null)
         {
             MagicEffectSubData ret;
             if (item.GetType().Equals(typeof(MagicEffectSubData)))
@@ -518,10 +527,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IMagicEffectSubDataGetter rhs)
+        public void CopyFieldsFrom(MagicEffectSubData rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IMagicEffectSubDataGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -529,9 +538,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IMagicEffectSubDataGetter rhs,
+            MagicEffectSubData rhs,
             MagicEffectSubData_CopyMask copyMask,
-            IMagicEffectSubDataGetter def = null)
+            MagicEffectSubData def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -542,10 +551,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IMagicEffectSubDataGetter rhs,
+            MagicEffectSubData rhs,
             out MagicEffectSubData_ErrorMask errorMask,
             MagicEffectSubData_CopyMask copyMask = null,
-            IMagicEffectSubDataGetter def = null,
+            MagicEffectSubData def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -559,10 +568,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IMagicEffectSubDataGetter rhs,
+            MagicEffectSubData rhs,
             ErrorMaskBuilder errorMask,
             MagicEffectSubData_CopyMask copyMask = null,
-            IMagicEffectSubDataGetter def = null)
+            MagicEffectSubData def = null)
         {
             MagicEffectSubDataCommon.CopyFieldsFrom(
                 item: this,
@@ -578,19 +587,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    this.EnchantEffect_Property.Set((FormIDLink<EffectShader>)obj);
+                    this.EnchantEffect_Property.Set((IFormIDLink<EffectShader>)obj);
                     break;
                 case MagicEffectSubData_FieldIndex.CastingSound:
-                    this.CastingSound_Property.Set((FormIDLink<Sound>)obj);
+                    this.CastingSound_Property.Set((IFormIDLink<Sound>)obj);
                     break;
                 case MagicEffectSubData_FieldIndex.BoltSound:
-                    this.BoltSound_Property.Set((FormIDLink<Sound>)obj);
+                    this.BoltSound_Property.Set((IFormIDLink<Sound>)obj);
                     break;
                 case MagicEffectSubData_FieldIndex.HitSound:
-                    this.HitSound_Property.Set((FormIDLink<Sound>)obj);
+                    this.HitSound_Property.Set((IFormIDLink<Sound>)obj);
                     break;
                 case MagicEffectSubData_FieldIndex.AreaSound:
-                    this.AreaSound_Property.Set((FormIDLink<Sound>)obj);
+                    this.AreaSound_Property.Set((IFormIDLink<Sound>)obj);
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
                     this.ConstantEffectEnchantmentFactor = (Single)obj;
@@ -627,19 +636,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    obj.EnchantEffect_Property.Set((FormIDLink<EffectShader>)pair.Value);
+                    obj.EnchantEffect_Property.Set((IFormIDLink<EffectShader>)pair.Value);
                     break;
                 case MagicEffectSubData_FieldIndex.CastingSound:
-                    obj.CastingSound_Property.Set((FormIDLink<Sound>)pair.Value);
+                    obj.CastingSound_Property.Set((IFormIDLink<Sound>)pair.Value);
                     break;
                 case MagicEffectSubData_FieldIndex.BoltSound:
-                    obj.BoltSound_Property.Set((FormIDLink<Sound>)pair.Value);
+                    obj.BoltSound_Property.Set((IFormIDLink<Sound>)pair.Value);
                     break;
                 case MagicEffectSubData_FieldIndex.HitSound:
-                    obj.HitSound_Property.Set((FormIDLink<Sound>)pair.Value);
+                    obj.HitSound_Property.Set((IFormIDLink<Sound>)pair.Value);
                     break;
                 case MagicEffectSubData_FieldIndex.AreaSound:
-                    obj.AreaSound_Property.Set((FormIDLink<Sound>)pair.Value);
+                    obj.AreaSound_Property.Set((IFormIDLink<Sound>)pair.Value);
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
                     obj.ConstantEffectEnchantmentFactor = (Single)pair.Value;
@@ -657,53 +666,58 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IMagicEffectSubData :
         IMagicEffectSubDataGetter,
-        ILoquiClass<IMagicEffectSubData, IMagicEffectSubDataGetter>,
-        ILoquiClass<MagicEffectSubData, IMagicEffectSubDataGetter>
+        ILoquiObjectSetter<IMagicEffectSubData>
     {
         new EffectShader EnchantEffect { get; set; }
+        new IFormIDLink<EffectShader> EnchantEffect_Property { get; }
         new Sound CastingSound { get; set; }
+        new IFormIDLink<Sound> CastingSound_Property { get; }
         new Sound BoltSound { get; set; }
+        new IFormIDLink<Sound> BoltSound_Property { get; }
         new Sound HitSound { get; set; }
+        new IFormIDLink<Sound> HitSound_Property { get; }
         new Sound AreaSound { get; set; }
+        new IFormIDLink<Sound> AreaSound_Property { get; }
         new Single ConstantEffectEnchantmentFactor { get; set; }
 
         new Single ConstantEffectBarterFactor { get; set; }
 
         void CopyFieldsFrom(
-            IMagicEffectSubDataGetter rhs,
+            MagicEffectSubData rhs,
             ErrorMaskBuilder errorMask = null,
             MagicEffectSubData_CopyMask copyMask = null,
-            IMagicEffectSubDataGetter def = null);
+            MagicEffectSubData def = null);
     }
 
     public partial interface IMagicEffectSubDataGetter :
         ILoquiObject,
+        ILoquiObject<IMagicEffectSubDataGetter>,
         IXmlItem,
         IBinaryItem
     {
         #region EnchantEffect
-        EffectShader EnchantEffect { get; }
-        FormIDLink<EffectShader> EnchantEffect_Property { get; }
+        IEffectShaderInternalGetter EnchantEffect { get; }
+        IFormIDLinkGetter<EffectShader> EnchantEffect_Property { get; }
 
         #endregion
         #region CastingSound
-        Sound CastingSound { get; }
-        FormIDLink<Sound> CastingSound_Property { get; }
+        ISoundInternalGetter CastingSound { get; }
+        IFormIDLinkGetter<Sound> CastingSound_Property { get; }
 
         #endregion
         #region BoltSound
-        Sound BoltSound { get; }
-        FormIDLink<Sound> BoltSound_Property { get; }
+        ISoundInternalGetter BoltSound { get; }
+        IFormIDLinkGetter<Sound> BoltSound_Property { get; }
 
         #endregion
         #region HitSound
-        Sound HitSound { get; }
-        FormIDLink<Sound> HitSound_Property { get; }
+        ISoundInternalGetter HitSound { get; }
+        IFormIDLinkGetter<Sound> HitSound_Property { get; }
 
         #endregion
         #region AreaSound
-        Sound AreaSound { get; }
-        FormIDLink<Sound> AreaSound_Property { get; }
+        ISoundInternalGetter AreaSound { get; }
+        IFormIDLinkGetter<Sound> AreaSound_Property { get; }
 
         #endregion
         #region ConstantEffectEnchantmentFactor
@@ -732,13 +746,10 @@ namespace Mutagen.Bethesda.Oblivion
             IMagicEffectSubDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MagicEffectSubData_Mask<bool>();
-            ((MagicEffectSubDataCommon)item.CommonInstance).FillEqualsMask(
+            return ((MagicEffectSubDataCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -990,15 +1001,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    return typeof(FormIDLink<EffectShader>);
+                    return typeof(IFormIDLink<EffectShader>);
                 case MagicEffectSubData_FieldIndex.CastingSound:
-                    return typeof(FormIDLink<Sound>);
+                    return typeof(IFormIDLink<Sound>);
                 case MagicEffectSubData_FieldIndex.BoltSound:
-                    return typeof(FormIDLink<Sound>);
+                    return typeof(IFormIDLink<Sound>);
                 case MagicEffectSubData_FieldIndex.HitSound:
-                    return typeof(FormIDLink<Sound>);
+                    return typeof(IFormIDLink<Sound>);
                 case MagicEffectSubData_FieldIndex.AreaSound:
-                    return typeof(FormIDLink<Sound>);
+                    return typeof(IFormIDLink<Sound>);
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
                     return typeof(Single);
                 case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
@@ -1008,10 +1019,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(MagicEffectSubDataXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(MagicEffectSubDataXmlWriteTranslation);
         public const int NumStructFields = 7;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(MagicEffectSubDataBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(MagicEffectSubDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1046,11 +1057,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class MagicEffectSubDataCommon
     {
         public static readonly MagicEffectSubDataCommon Instance = new MagicEffectSubDataCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IMagicEffectSubData item,
-            IMagicEffectSubDataGetter rhs,
-            IMagicEffectSubDataGetter def,
+            MagicEffectSubData item,
+            MagicEffectSubData rhs,
+            MagicEffectSubData def,
             ErrorMaskBuilder errorMask,
             MagicEffectSubData_CopyMask copyMask)
         {
@@ -1191,6 +1203,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ConstantEffectBarterFactor = default(Single);
         }
 
+        public MagicEffectSubData_Mask<bool> GetEqualsMask(
+            IMagicEffectSubDataGetter item,
+            IMagicEffectSubDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new MagicEffectSubData_Mask<bool>();
+            ((MagicEffectSubDataCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IMagicEffectSubDataGetter item,
             IMagicEffectSubDataGetter rhs,
@@ -1229,11 +1255,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(MagicEffectSubData)} =>");
+                fg.AppendLine($"MagicEffectSubData =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(MagicEffectSubData)}) =>");
+                fg.AppendLine($"{name} (MagicEffectSubData) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1306,9 +1332,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class MagicEffectSubDataXmlTranslation : IXmlTranslator
+    public partial class MagicEffectSubDataXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static MagicEffectSubDataXmlTranslation Instance = new MagicEffectSubDataXmlTranslation();
+        public readonly static MagicEffectSubDataXmlWriteTranslation Instance = new MagicEffectSubDataXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IMagicEffectSubDataGetter item,
@@ -1381,6 +1407,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IMagicEffectSubDataGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MagicEffectSubData");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MagicEffectSubData");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IMagicEffectSubDataGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IMagicEffectSubDataGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IMagicEffectSubDataGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class MagicEffectSubDataXmlCreateTranslation
+    {
+        public readonly static MagicEffectSubDataXmlCreateTranslation Instance = new MagicEffectSubDataXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IMagicEffectSubData item,
             XElement node,
@@ -1391,7 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    MagicEffectSubDataXmlTranslation.FillPublicElement_Xml(
+                    MagicEffectSubDataXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1507,70 +1603,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IMagicEffectSubDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MagicEffectSubData");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MagicEffectSubData");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IMagicEffectSubDataGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IMagicEffectSubDataGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IMagicEffectSubDataGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1585,7 +1617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((MagicEffectSubDataXmlTranslation)item.XmlTranslator).Write(
+            ((MagicEffectSubDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1675,7 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((MagicEffectSubDataXmlTranslation)item.XmlTranslator).Write(
+            ((MagicEffectSubDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1689,7 +1721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             MagicEffectSubData_TranslationMask translationMask = null)
         {
-            ((MagicEffectSubDataXmlTranslation)item.XmlTranslator).Write(
+            ((MagicEffectSubDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1703,7 +1735,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((MagicEffectSubDataXmlTranslation)item.XmlTranslator).Write(
+            ((MagicEffectSubDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1718,7 +1750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((MagicEffectSubDataXmlTranslation)item.XmlTranslator).Write(
+            ((MagicEffectSubDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2171,9 +2203,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class MagicEffectSubDataBinaryTranslation : IBinaryTranslator
+    public partial class MagicEffectSubDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MagicEffectSubDataBinaryTranslation Instance = new MagicEffectSubDataBinaryTranslation();
+        public readonly static MagicEffectSubDataBinaryWriteTranslation Instance = new MagicEffectSubDataBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IMagicEffectSubDataGetter item,
@@ -2240,6 +2272,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class MagicEffectSubDataBinaryCreateTranslation
+    {
+        public readonly static MagicEffectSubDataBinaryCreateTranslation Instance = new MagicEffectSubDataBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class MagicEffectSubDataBinaryTranslationMixIn
     {
@@ -2251,7 +2289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((MagicEffectSubDataBinaryTranslation)item.BinaryTranslator).Write(
+            ((MagicEffectSubDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2266,7 +2304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((MagicEffectSubDataBinaryTranslation)item.BinaryTranslator).Write(
+            ((MagicEffectSubDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2279,7 +2317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((MagicEffectSubDataBinaryTranslation)item.BinaryTranslator).Write(
+            ((MagicEffectSubDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

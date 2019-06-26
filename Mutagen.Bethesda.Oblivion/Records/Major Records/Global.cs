@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class GlobalBinaryTranslation
+        public partial class GlobalBinaryWriteTranslation
         {
             static partial void WriteBinary_TypeChar_Custom(
                 MutagenWriter writer,

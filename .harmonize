@@ -2,26 +2,26 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>4bab7c33e70d80790995006d51a6a8961a734133</Sha>
+         <Sha>ef2473c1a98741e3d6e558f92d25ff550dfda4f4</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>06-11-2019 23:29:33</CommitDate>
-         <Description>Made IReadOnlySetList covariant</Description>
+         <CommitDate>06-25-2019 21:05:34</CommitDate>
+         <Description>TryGetAttribute enum improvements.  Tests</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a1ce2cdb4e53c963dc36f53439f775164960643a</Sha>
+         <Sha>db5cb246be45a3db1579159c25e76c9a9dcb5c24</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>06-15-2019 18:08:06</CommitDate>
-         <Description>Args/FuncWrapper extra line eliminated</Description>
+         <CommitDate>06-25-2019 22:47:17</CommitDate>
+         <Description>Refactors to support LoquiInterfaceType for containers</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>cf7da29e7a13829f638210d1ce6c58c30de4dd86</Sha>
+         <Sha>88349576612d32f9bb24293a0c14936d4a5e1638</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>04-20-2019 16:23:13</CommitDate>
-         <Description>Nuget updates</Description>
+         <CommitDate>06-23-2019 18:15:12</CommitDate>
+         <Description>IReadOnlyCache</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

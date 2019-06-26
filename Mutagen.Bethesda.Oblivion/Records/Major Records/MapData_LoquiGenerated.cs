@@ -35,9 +35,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class MapData :
         LoquiNotifyingObject,
         IMapData,
-        ILoquiObject<MapData>,
-        ILoquiObjectSetter,
-        IEquatable<MapData>
+        ILoquiObjectSetter<MapData>,
+        IEquatable<MapData>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapData_Registration.Instance;
@@ -79,8 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<MapData>.GetEqualsMask(MapData rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IMapDataGetter>.GetEqualsMask(IMapDataGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapDataGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -94,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -124,8 +123,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => MapDataXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => MapDataXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static MapData Create_Xml(
@@ -178,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    MapDataXmlTranslation.FillPublicElement_Xml(
+                    MapDataXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -297,8 +296,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => MapDataBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => MapDataBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static MapData Create_Binary(
@@ -394,7 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public MapData Copy(
             MapData_CopyMask copyMask = null,
-            IMapDataGetter def = null)
+            MapData def = null)
         {
             return MapData.Copy(
                 this,
@@ -403,9 +402,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static MapData Copy(
-            IMapDataGetter item,
+            MapData item,
             MapData_CopyMask copyMask = null,
-            IMapDataGetter def = null)
+            MapData def = null)
         {
             MapData ret;
             if (item.GetType().Equals(typeof(MapData)))
@@ -424,9 +423,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static MapData Copy_ToLoqui(
-            IMapDataGetter item,
+            MapData item,
             MapData_CopyMask copyMask = null,
-            IMapDataGetter def = null)
+            MapData def = null)
         {
             MapData ret;
             if (item.GetType().Equals(typeof(MapData)))
@@ -444,10 +443,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IMapDataGetter rhs)
+        public void CopyFieldsFrom(MapData rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IMapDataGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -455,9 +454,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IMapDataGetter rhs,
+            MapData rhs,
             MapData_CopyMask copyMask,
-            IMapDataGetter def = null)
+            MapData def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -468,10 +467,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IMapDataGetter rhs,
+            MapData rhs,
             out MapData_ErrorMask errorMask,
             MapData_CopyMask copyMask = null,
-            IMapDataGetter def = null,
+            MapData def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -485,10 +484,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IMapDataGetter rhs,
+            MapData rhs,
             ErrorMaskBuilder errorMask,
             MapData_CopyMask copyMask = null,
-            IMapDataGetter def = null)
+            MapData def = null)
         {
             MapDataCommon.CopyFieldsFrom(
                 item: this,
@@ -559,8 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IMapData :
         IMapDataGetter,
-        ILoquiClass<IMapData, IMapDataGetter>,
-        ILoquiClass<MapData, IMapDataGetter>
+        ILoquiObjectSetter<IMapData>
     {
         new P2Int UsableDimensions { get; set; }
 
@@ -569,14 +567,15 @@ namespace Mutagen.Bethesda.Oblivion
         new P2Int16 CellCoordinatesSECell { get; set; }
 
         void CopyFieldsFrom(
-            IMapDataGetter rhs,
+            MapData rhs,
             ErrorMaskBuilder errorMask = null,
             MapData_CopyMask copyMask = null,
-            IMapDataGetter def = null);
+            MapData def = null);
     }
 
     public partial interface IMapDataGetter :
         ILoquiObject,
+        ILoquiObject<IMapDataGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -610,13 +609,10 @@ namespace Mutagen.Bethesda.Oblivion
             IMapDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MapData_Mask<bool>();
-            ((MapDataCommon)item.CommonInstance).FillEqualsMask(
+            return ((MapDataCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -838,12 +834,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(MapDataXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(MapDataXmlWriteTranslation);
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = MNAM_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(MapDataBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(MapDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -878,11 +874,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class MapDataCommon
     {
         public static readonly MapDataCommon Instance = new MapDataCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IMapData item,
-            IMapDataGetter rhs,
-            IMapDataGetter def,
+            MapData item,
+            MapData rhs,
+            MapData def,
             ErrorMaskBuilder errorMask,
             MapData_CopyMask copyMask)
         {
@@ -951,6 +948,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CellCoordinatesSECell = default(P2Int16);
         }
 
+        public MapData_Mask<bool> GetEqualsMask(
+            IMapDataGetter item,
+            IMapDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new MapData_Mask<bool>();
+            ((MapDataCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IMapDataGetter item,
             IMapDataGetter rhs,
@@ -985,11 +996,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(MapData)} =>");
+                fg.AppendLine($"MapData =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(MapData)}) =>");
+                fg.AppendLine($"{name} (MapData) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1042,9 +1053,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class MapDataXmlTranslation : IXmlTranslator
+    public partial class MapDataXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static MapDataXmlTranslation Instance = new MapDataXmlTranslation();
+        public readonly static MapDataXmlWriteTranslation Instance = new MapDataXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IMapDataGetter item,
@@ -1081,6 +1092,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IMapDataGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MapData");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MapData");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IMapDataGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IMapDataGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IMapDataGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class MapDataXmlCreateTranslation
+    {
+        public readonly static MapDataXmlCreateTranslation Instance = new MapDataXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IMapData item,
             XElement node,
@@ -1091,7 +1172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    MapDataXmlTranslation.FillPublicElement_Xml(
+                    MapDataXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1198,70 +1279,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IMapDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MapData");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MapData");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IMapDataGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IMapDataGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IMapDataGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1276,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((MapDataXmlTranslation)item.XmlTranslator).Write(
+            ((MapDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1366,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((MapDataXmlTranslation)item.XmlTranslator).Write(
+            ((MapDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1380,7 +1397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             MapData_TranslationMask translationMask = null)
         {
-            ((MapDataXmlTranslation)item.XmlTranslator).Write(
+            ((MapDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1394,7 +1411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((MapDataXmlTranslation)item.XmlTranslator).Write(
+            ((MapDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1409,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((MapDataXmlTranslation)item.XmlTranslator).Write(
+            ((MapDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1754,9 +1771,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class MapDataBinaryTranslation : IBinaryTranslator
+    public partial class MapDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MapDataBinaryTranslation Instance = new MapDataBinaryTranslation();
+        public readonly static MapDataBinaryWriteTranslation Instance = new MapDataBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IMapDataGetter item,
@@ -1812,6 +1829,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class MapDataBinaryCreateTranslation
+    {
+        public readonly static MapDataBinaryCreateTranslation Instance = new MapDataBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class MapDataBinaryTranslationMixIn
     {
@@ -1823,7 +1846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((MapDataBinaryTranslation)item.BinaryTranslator).Write(
+            ((MapDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1838,7 +1861,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((MapDataBinaryTranslation)item.BinaryTranslator).Write(
+            ((MapDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1851,7 +1874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((MapDataBinaryTranslation)item.BinaryTranslator).Write(
+            ((MapDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

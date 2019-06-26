@@ -35,11 +35,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public abstract partial class SkyrimMajorRecord :
         MajorRecord,
-        ISkyrimMajorRecord,
         ISkyrimMajorRecordInternal,
-        ILoquiObject<SkyrimMajorRecord>,
-        ILoquiObjectSetter,
-        IEquatable<SkyrimMajorRecord>
+        ILoquiObjectSetter<SkyrimMajorRecord>,
+        IEquatable<SkyrimMajorRecord>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
@@ -55,8 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
 
-        IMask<bool> IEqualsMask<SkyrimMajorRecord>.GetEqualsMask(SkyrimMajorRecord rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<ISkyrimMajorRecordGetter>.GetEqualsMask(ISkyrimMajorRecordGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimMajorRecordInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -70,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -98,7 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => SkyrimMajorRecordXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => SkyrimMajorRecordXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static SkyrimMajorRecord Create_Xml(
@@ -284,7 +282,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => SkyrimMajorRecordBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => SkyrimMajorRecordBinaryWriteTranslation.Instance;
         protected static void Fill_Binary_Structs(
             SkyrimMajorRecord item,
             MutagenFrame frame,
@@ -302,7 +300,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public SkyrimMajorRecord Copy(
             SkyrimMajorRecord_CopyMask copyMask = null,
-            ISkyrimMajorRecordGetter def = null)
+            SkyrimMajorRecord def = null)
         {
             return SkyrimMajorRecord.Copy(
                 this,
@@ -311,9 +309,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static SkyrimMajorRecord Copy(
-            ISkyrimMajorRecordGetter item,
+            SkyrimMajorRecord item,
             SkyrimMajorRecord_CopyMask copyMask = null,
-            ISkyrimMajorRecordGetter def = null)
+            SkyrimMajorRecord def = null)
         {
             SkyrimMajorRecord ret = (SkyrimMajorRecord)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
@@ -324,9 +322,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static SkyrimMajorRecord Copy_ToLoqui(
-            ISkyrimMajorRecordGetter item,
+            SkyrimMajorRecord item,
             SkyrimMajorRecord_CopyMask copyMask = null,
-            ISkyrimMajorRecordGetter def = null)
+            SkyrimMajorRecord def = null)
         {
             SkyrimMajorRecord ret = (SkyrimMajorRecord)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
@@ -336,10 +334,10 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ISkyrimMajorRecordGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -347,9 +345,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            ISkyrimMajorRecordGetter rhs,
+            SkyrimMajorRecord rhs,
             SkyrimMajorRecord_CopyMask copyMask,
-            ISkyrimMajorRecordGetter def = null)
+            SkyrimMajorRecord def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -360,10 +358,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            ISkyrimMajorRecordGetter rhs,
+            SkyrimMajorRecord rhs,
             out SkyrimMajorRecord_ErrorMask errorMask,
             SkyrimMajorRecord_CopyMask copyMask = null,
-            ISkyrimMajorRecordGetter def = null,
+            SkyrimMajorRecord def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -377,10 +375,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            ISkyrimMajorRecordGetter rhs,
+            SkyrimMajorRecord rhs,
             ErrorMaskBuilder errorMask,
             SkyrimMajorRecord_CopyMask copyMask = null,
-            ISkyrimMajorRecordGetter def = null)
+            SkyrimMajorRecord def = null)
         {
             SkyrimMajorRecordCommon.CopyFieldsFrom(
                 item: this,
@@ -431,16 +429,15 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISkyrimMajorRecord :
         ISkyrimMajorRecordGetter,
         IMajorRecord,
-        ILoquiClass<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>,
-        ILoquiClass<SkyrimMajorRecord, ISkyrimMajorRecordGetter>
+        ILoquiObjectSetter<ISkyrimMajorRecordInternal>
     {
         new SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlags { get; set; }
 
         void CopyFieldsFrom(
-            ISkyrimMajorRecordGetter rhs,
+            SkyrimMajorRecord rhs,
             ErrorMaskBuilder errorMask = null,
             SkyrimMajorRecord_CopyMask copyMask = null,
-            ISkyrimMajorRecordGetter def = null);
+            SkyrimMajorRecord def = null);
     }
 
     public partial interface ISkyrimMajorRecordInternal :
@@ -452,6 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISkyrimMajorRecordGetter :
         IMajorRecordGetter,
+        ILoquiObject<ISkyrimMajorRecordInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -480,17 +478,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static SkyrimMajorRecord_Mask<bool> GetEqualsMask(
-            this ISkyrimMajorRecordGetter item,
-            ISkyrimMajorRecordGetter rhs,
+            this ISkyrimMajorRecordInternalGetter item,
+            ISkyrimMajorRecordInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SkyrimMajorRecord_Mask<bool>();
-            ((SkyrimMajorRecordCommon)item.CommonInstance).FillEqualsMask(
+            return ((SkyrimMajorRecordCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -526,7 +521,7 @@ namespace Mutagen.Bethesda.Skyrim
                 checkMask: checkMask);
         }
 
-        public static SkyrimMajorRecord_Mask<bool> GetHasBeenSetMask(this ISkyrimMajorRecordGetter item)
+        public static SkyrimMajorRecord_Mask<bool> GetHasBeenSetMask(this ISkyrimMajorRecordInternalGetter item)
         {
             var ret = new SkyrimMajorRecord_Mask<bool>();
             ((SkyrimMajorRecordCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -692,7 +687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(SkyrimMajorRecordXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(SkyrimMajorRecordXmlWriteTranslation);
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -709,7 +704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(SkyrimMajorRecordBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(SkyrimMajorRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -744,11 +739,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class SkyrimMajorRecordCommon : MajorRecordCommon
     {
         public static readonly SkyrimMajorRecordCommon Instance = new SkyrimMajorRecordCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ISkyrimMajorRecord item,
-            ISkyrimMajorRecordGetter rhs,
-            ISkyrimMajorRecordGetter def,
+            SkyrimMajorRecord item,
+            SkyrimMajorRecord rhs,
+            SkyrimMajorRecord def,
             ErrorMaskBuilder errorMask,
             SkyrimMajorRecord_CopyMask copyMask)
         {
@@ -781,21 +777,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(ISkyrimMajorRecord item)
+        public virtual void Clear(ISkyrimMajorRecordInternal item)
         {
             ClearPartial();
             item.SkyrimMajorRecordFlags = default(SkyrimMajorRecord.SkyrimMajorRecordFlag);
             base.Clear(item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ISkyrimMajorRecord)item);
+            Clear(item: (ISkyrimMajorRecordInternal)item);
+        }
+
+        public SkyrimMajorRecord_Mask<bool> GetEqualsMask(
+            ISkyrimMajorRecordInternalGetter item,
+            ISkyrimMajorRecordInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SkyrimMajorRecord_Mask<bool>();
+            ((SkyrimMajorRecordCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            ISkyrimMajorRecordGetter item,
-            ISkyrimMajorRecordGetter rhs,
+            ISkyrimMajorRecordInternalGetter item,
+            ISkyrimMajorRecordInternalGetter rhs,
             SkyrimMajorRecord_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -805,7 +815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public string ToString(
-            ISkyrimMajorRecordGetter item,
+            ISkyrimMajorRecordInternalGetter item,
             string name = null,
             SkyrimMajorRecord_Mask<bool> printMask = null)
         {
@@ -819,18 +829,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public void ToString(
-            ISkyrimMajorRecordGetter item,
+            ISkyrimMajorRecordInternalGetter item,
             FileGeneration fg,
             string name = null,
             SkyrimMajorRecord_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(SkyrimMajorRecord)} =>");
+                fg.AppendLine($"SkyrimMajorRecord =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(SkyrimMajorRecord)}) =>");
+                fg.AppendLine($"{name} (SkyrimMajorRecord) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -844,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         protected static void ToStringFields(
-            ISkyrimMajorRecordGetter item,
+            ISkyrimMajorRecordInternalGetter item,
             FileGeneration fg,
             SkyrimMajorRecord_Mask<bool> printMask = null)
         {
@@ -859,7 +869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public bool HasBeenSet(
-            ISkyrimMajorRecordGetter item,
+            ISkyrimMajorRecordInternalGetter item,
             SkyrimMajorRecord_Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
@@ -868,7 +878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public void FillHasBeenSetMask(
-            ISkyrimMajorRecordGetter item,
+            ISkyrimMajorRecordInternalGetter item,
             SkyrimMajorRecord_Mask<bool> mask)
         {
             mask.SkyrimMajorRecordFlags = true;
@@ -899,11 +909,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class SkyrimMajorRecordXmlTranslation :
-        MajorRecordXmlTranslation,
-        IXmlTranslator
+    public partial class SkyrimMajorRecordXmlWriteTranslation :
+        MajorRecordXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static SkyrimMajorRecordXmlTranslation Instance = new SkyrimMajorRecordXmlTranslation();
+        public new readonly static SkyrimMajorRecordXmlWriteTranslation Instance = new SkyrimMajorRecordXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             ISkyrimMajorRecordInternalGetter item,
@@ -911,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordXmlTranslation.WriteToNode_Xml(
+            MajorRecordXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -924,77 +934,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.SkyrimMajorRecordFlags,
                     fieldIndex: (int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags,
                     errorMask: errorMask);
-            }
-        }
-
-        public static void FillPublic_Xml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    SkyrimMajorRecordXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "SkyrimMajorRecordFlags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags);
-                        if (EnumXmlTranslation<SkyrimMajorRecord.SkyrimMajorRecordFlag>.Instance.Parse(
-                            node: node,
-                            item: out SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.SkyrimMajorRecordFlags = SkyrimMajorRecordFlagsParse;
-                        }
-                        else
-                        {
-                            item.SkyrimMajorRecordFlags = default(SkyrimMajorRecord.SkyrimMajorRecordFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    MajorRecordXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
             }
         }
 
@@ -1050,6 +989,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public partial class SkyrimMajorRecordXmlCreateTranslation : MajorRecordXmlCreateTranslation
+    {
+        public new readonly static SkyrimMajorRecordXmlCreateTranslation Instance = new SkyrimMajorRecordXmlCreateTranslation();
+
+        public static void FillPublic_Xml(
+            ISkyrimMajorRecordInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            ISkyrimMajorRecordInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "SkyrimMajorRecordFlags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags);
+                        if (EnumXmlTranslation<SkyrimMajorRecord.SkyrimMajorRecordFlag>.Instance.Parse(
+                            node: node,
+                            item: out SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.SkyrimMajorRecordFlags = SkyrimMajorRecordFlagsParse;
+                        }
+                        else
+                        {
+                            item.SkyrimMajorRecordFlags = default(SkyrimMajorRecord.SkyrimMajorRecordFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+
+    }
+
     #region Xml Write Mixins
     public static class SkyrimMajorRecordXmlTranslationMixIn
     {
@@ -1062,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SkyrimMajorRecordXmlTranslation)item.XmlTranslator).Write(
+            ((SkyrimMajorRecordXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1376,11 +1392,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Binary Translation
-    public partial class SkyrimMajorRecordBinaryTranslation :
-        MajorRecordBinaryTranslation,
-        IBinaryTranslator
+    public partial class SkyrimMajorRecordBinaryWriteTranslation :
+        MajorRecordBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static SkyrimMajorRecordBinaryTranslation Instance = new SkyrimMajorRecordBinaryTranslation();
+        public new readonly static SkyrimMajorRecordBinaryWriteTranslation Instance = new SkyrimMajorRecordBinaryWriteTranslation();
 
         public static void Write_Embedded(
             ISkyrimMajorRecordInternalGetter item,
@@ -1388,7 +1404,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_Embedded(
+            MajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
@@ -1407,7 +1423,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1447,6 +1463,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public partial class SkyrimMajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
+    {
+        public new readonly static SkyrimMajorRecordBinaryCreateTranslation Instance = new SkyrimMajorRecordBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class SkyrimMajorRecordBinaryTranslationMixIn
     {
@@ -1458,7 +1480,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SkyrimMajorRecordBinaryTranslation)item.BinaryTranslator).Write(
+            ((SkyrimMajorRecordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

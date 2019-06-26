@@ -83,11 +83,11 @@ namespace Mutagen.Bethesda.Generation
             string line;
             if (loquiGen.TargetObjectGeneration != null)
             {
-                line = $"(({this.Module.TranslationClassName(loquiGen.TargetObjectGeneration)}{loquiGen.GenericTypes})(({nameof(IBinaryItem)}){itemAccessor.DirectAccess}).{this.Module.ModuleNickname}Translator)";
+                line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)}{loquiGen.GetGenericTypes(getter: true, typeOverride: LoquiInterfaceType.Direct, additionalMasks: new MaskType[] { MaskType.Normal })})(({nameof(IBinaryItem)}){itemAccessor.DirectAccess}).{this.Module.TranslationWriteItemMember})";
             }
             else
             {
-                line = $"(({nameof(IBinaryItem)}){itemAccessor.DirectAccess}).{this.Module.ModuleNickname}Translator";
+                line = $"(({nameof(IBinaryItem)}){itemAccessor.DirectAccess}).{this.Module.TranslationWriteItemMember}";
             }
             using (new BraceWrapper(fg, doIt: isGroup))
             {
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add($"masterReferences: masterReferences");
                             }
                             using (var args = new ArgsWrapper(fg,
-                                $"{itemAccessor.DirectAccess}.CopyFieldsFrom{loquiGen.GetGenericTypes(MaskType.Copy)}"))
+                                $"{itemAccessor.DirectAccess}.CopyFieldsFrom{loquiGen.GetGenericTypes(getter: true, additionalMasks: MaskType.Copy)}"))
                             {
                                 args.Add($"rhs: tmp{typeGen.Name}");
                                 args.Add("def: null");
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Generation
             var data = loquiGen.GetFieldData();
             asyncMode = this.IsAsync(typeGen, read: true) ? asyncMode : AsyncMode.Off;
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}LoquiBinary{(asyncMode == AsyncMode.Off ? null : "Async")}Translation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.Parse",
+                $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}LoquiBinary{(asyncMode == AsyncMode.Off ? null : "Async")}Translation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes(getter: false)}>.Instance.Parse",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
             {
                 args.Add($"frame: {readerAccessor}");

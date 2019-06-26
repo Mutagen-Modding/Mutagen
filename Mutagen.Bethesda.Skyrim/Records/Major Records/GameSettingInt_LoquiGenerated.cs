@@ -36,11 +36,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class GameSettingInt :
         GameSetting,
-        IGameSettingInt,
         IGameSettingIntInternal,
-        ILoquiObject<GameSettingInt>,
-        ILoquiObjectSetter,
-        IEquatable<GameSettingInt>
+        ILoquiObjectSetter<GameSettingInt>,
+        IEquatable<GameSettingInt>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingInt_Registration.Instance;
@@ -82,8 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        IMask<bool> IEqualsMask<GameSettingInt>.GetEqualsMask(GameSettingInt rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IGameSettingIntGetter>.GetEqualsMask(IGameSettingIntGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingIntInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -97,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -132,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => GameSettingIntXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => GameSettingIntXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static GameSettingInt Create_Xml(
@@ -191,7 +189,7 @@ namespace Mutagen.Bethesda.Skyrim
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    GameSettingIntXmlTranslation.FillPublicElement_Xml(
+                    GameSettingIntXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -349,7 +347,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => GameSettingIntBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => GameSettingIntBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static GameSettingInt Create_Binary(
@@ -446,7 +444,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public GameSettingInt Copy(
             GameSettingInt_CopyMask copyMask = null,
-            IGameSettingIntGetter def = null)
+            GameSettingInt def = null)
         {
             return GameSettingInt.Copy(
                 this,
@@ -455,9 +453,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static GameSettingInt Copy(
-            IGameSettingIntGetter item,
+            GameSettingInt item,
             GameSettingInt_CopyMask copyMask = null,
-            IGameSettingIntGetter def = null)
+            GameSettingInt def = null)
         {
             GameSettingInt ret;
             if (item.GetType().Equals(typeof(GameSettingInt)))
@@ -476,9 +474,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static GameSettingInt Copy_ToLoqui(
-            IGameSettingIntGetter item,
+            GameSettingInt item,
             GameSettingInt_CopyMask copyMask = null,
-            IGameSettingIntGetter def = null)
+            GameSettingInt def = null)
         {
             GameSettingInt ret;
             if (item.GetType().Equals(typeof(GameSettingInt)))
@@ -496,10 +494,10 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IGameSettingIntGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -507,9 +505,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            IGameSettingIntGetter rhs,
+            GameSettingInt rhs,
             GameSettingInt_CopyMask copyMask,
-            IGameSettingIntGetter def = null)
+            GameSettingInt def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -520,10 +518,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            IGameSettingIntGetter rhs,
+            GameSettingInt rhs,
             out GameSettingInt_ErrorMask errorMask,
             GameSettingInt_CopyMask copyMask = null,
-            IGameSettingIntGetter def = null,
+            GameSettingInt def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -537,10 +535,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            IGameSettingIntGetter rhs,
+            GameSettingInt rhs,
             ErrorMaskBuilder errorMask,
             GameSettingInt_CopyMask copyMask = null,
-            IGameSettingIntGetter def = null)
+            GameSettingInt def = null)
         {
             GameSettingIntCommon.CopyFieldsFrom(
                 item: this,
@@ -601,19 +599,18 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGameSettingInt :
         IGameSettingIntGetter,
         IGameSetting,
-        ILoquiClass<IGameSettingInt, IGameSettingIntGetter>,
-        ILoquiClass<GameSettingInt, IGameSettingIntGetter>
+        ILoquiObjectSetter<IGameSettingIntInternal>
     {
         new Int32 Data { get; set; }
         new bool Data_IsSet { get; set; }
-        void Data_Set(Int32 item, bool hasBeenSet = true);
+        void Data_Set(Int32 value, bool hasBeenSet = true);
         void Data_Unset();
 
         void CopyFieldsFrom(
-            IGameSettingIntGetter rhs,
+            GameSettingInt rhs,
             ErrorMaskBuilder errorMask = null,
             GameSettingInt_CopyMask copyMask = null,
-            IGameSettingIntGetter def = null);
+            GameSettingInt def = null);
     }
 
     public partial interface IGameSettingIntInternal :
@@ -625,6 +622,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IGameSettingIntGetter :
         IGameSettingGetter,
+        ILoquiObject<IGameSettingIntInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -654,17 +652,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static GameSettingInt_Mask<bool> GetEqualsMask(
-            this IGameSettingIntGetter item,
-            IGameSettingIntGetter rhs,
+            this IGameSettingIntInternalGetter item,
+            IGameSettingIntInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new GameSettingInt_Mask<bool>();
-            ((GameSettingIntCommon)item.CommonInstance).FillEqualsMask(
+            return ((GameSettingIntCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -700,7 +695,7 @@ namespace Mutagen.Bethesda.Skyrim
                 checkMask: checkMask);
         }
 
-        public static GameSettingInt_Mask<bool> GetHasBeenSetMask(this IGameSettingIntGetter item)
+        public static GameSettingInt_Mask<bool> GetHasBeenSetMask(this IGameSettingIntInternalGetter item)
         {
             var ret = new GameSettingInt_Mask<bool>();
             ((GameSettingIntCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -867,13 +862,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(GameSettingIntXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(GameSettingIntXmlWriteTranslation);
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GMST_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
-        public static readonly Type BinaryTranslation = typeof(GameSettingIntBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(GameSettingIntBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -908,11 +903,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class GameSettingIntCommon : GameSettingCommon
     {
         public static readonly GameSettingIntCommon Instance = new GameSettingIntCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IGameSettingInt item,
-            IGameSettingIntGetter rhs,
-            IGameSettingIntGetter def,
+            GameSettingInt item,
+            GameSettingInt rhs,
+            GameSettingInt def,
             ErrorMaskBuilder errorMask,
             GameSettingInt_CopyMask copyMask)
         {
@@ -958,31 +954,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IGameSettingInt item)
+        public virtual void Clear(IGameSettingIntInternal item)
         {
             ClearPartial();
             item.Data_Unset();
             base.Clear(item);
         }
 
-        public override void Clear(IGameSetting item)
+        public override void Clear(IGameSettingInternal item)
         {
-            Clear(item: (IGameSettingInt)item);
+            Clear(item: (IGameSettingIntInternal)item);
         }
 
-        public override void Clear(ISkyrimMajorRecord item)
+        public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (IGameSettingInt)item);
+            Clear(item: (IGameSettingIntInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IGameSettingInt)item);
+            Clear(item: (IGameSettingIntInternal)item);
+        }
+
+        public GameSettingInt_Mask<bool> GetEqualsMask(
+            IGameSettingIntInternalGetter item,
+            IGameSettingIntInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new GameSettingInt_Mask<bool>();
+            ((GameSettingIntCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IGameSettingIntGetter item,
-            IGameSettingIntGetter rhs,
+            IGameSettingIntInternalGetter item,
+            IGameSettingIntInternalGetter rhs,
             GameSettingInt_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -992,7 +1002,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public string ToString(
-            IGameSettingIntGetter item,
+            IGameSettingIntInternalGetter item,
             string name = null,
             GameSettingInt_Mask<bool> printMask = null)
         {
@@ -1006,18 +1016,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public void ToString(
-            IGameSettingIntGetter item,
+            IGameSettingIntInternalGetter item,
             FileGeneration fg,
             string name = null,
             GameSettingInt_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(GameSettingInt)} =>");
+                fg.AppendLine($"GameSettingInt =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(GameSettingInt)}) =>");
+                fg.AppendLine($"{name} (GameSettingInt) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1031,7 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         protected static void ToStringFields(
-            IGameSettingIntGetter item,
+            IGameSettingIntInternalGetter item,
             FileGeneration fg,
             GameSettingInt_Mask<bool> printMask = null)
         {
@@ -1046,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public bool HasBeenSet(
-            IGameSettingIntGetter item,
+            IGameSettingIntInternalGetter item,
             GameSettingInt_Mask<bool?> checkMask)
         {
             if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_IsSet) return false;
@@ -1056,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public void FillHasBeenSetMask(
-            IGameSettingIntGetter item,
+            IGameSettingIntInternalGetter item,
             GameSettingInt_Mask<bool> mask)
         {
             mask.Data = item.Data_IsSet;
@@ -1125,11 +1135,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class GameSettingIntXmlTranslation :
-        GameSettingXmlTranslation,
-        IXmlTranslator
+    public partial class GameSettingIntXmlWriteTranslation :
+        GameSettingXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static GameSettingIntXmlTranslation Instance = new GameSettingIntXmlTranslation();
+        public new readonly static GameSettingIntXmlWriteTranslation Instance = new GameSettingIntXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IGameSettingIntInternalGetter item,
@@ -1137,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            GameSettingXmlTranslation.WriteToNode_Xml(
+            GameSettingXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1151,77 +1161,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.Data,
                     fieldIndex: (int)GameSettingInt_FieldIndex.Data,
                     errorMask: errorMask);
-            }
-        }
-
-        public static void FillPublic_Xml(
-            IGameSettingIntInternal item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    GameSettingIntXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            IGameSettingIntInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Data":
-                    try
-                    {
-                        errorMask?.PushIndex((int)GameSettingInt_FieldIndex.Data);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    GameSettingXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
             }
         }
 
@@ -1307,6 +1246,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public partial class GameSettingIntXmlCreateTranslation : GameSettingXmlCreateTranslation
+    {
+        public new readonly static GameSettingIntXmlCreateTranslation Instance = new GameSettingIntXmlCreateTranslation();
+
+        public static void FillPublic_Xml(
+            IGameSettingIntInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    GameSettingIntXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            IGameSettingIntInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Data":
+                    try
+                    {
+                        errorMask?.PushIndex((int)GameSettingInt_FieldIndex.Data);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 DataParse,
+                            errorMask: errorMask))
+                        {
+                            item.Data = DataParse;
+                        }
+                        else
+                        {
+                            item.Data = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    GameSettingXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+
+    }
+
     #region Xml Write Mixins
     public static class GameSettingIntXmlTranslationMixIn
     {
@@ -1319,7 +1335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GameSettingIntXmlTranslation)item.XmlTranslator).Write(
+            ((GameSettingIntXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1633,11 +1649,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Binary Translation
-    public partial class GameSettingIntBinaryTranslation :
-        GameSettingBinaryTranslation,
-        IBinaryTranslator
+    public partial class GameSettingIntBinaryWriteTranslation :
+        GameSettingBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static GameSettingIntBinaryTranslation Instance = new GameSettingIntBinaryTranslation();
+        public new readonly static GameSettingIntBinaryWriteTranslation Instance = new GameSettingIntBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
             IGameSettingIntInternalGetter item,
@@ -1646,7 +1662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1674,7 +1690,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: GameSettingInt_Registration.GMST_HEADER,
                 type: ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryTranslation.Write_Embedded(
+                SkyrimMajorRecordBinaryWriteTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -1750,6 +1766,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public partial class GameSettingIntBinaryCreateTranslation : GameSettingBinaryCreateTranslation
+    {
+        public new readonly static GameSettingIntBinaryCreateTranslation Instance = new GameSettingIntBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class GameSettingIntBinaryTranslationMixIn
     {
@@ -1761,7 +1783,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GameSettingIntBinaryTranslation)item.BinaryTranslator).Write(
+            ((GameSettingIntBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

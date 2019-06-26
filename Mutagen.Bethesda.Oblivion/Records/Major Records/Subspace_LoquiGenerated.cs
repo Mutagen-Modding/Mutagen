@@ -36,11 +36,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Subspace :
         OblivionMajorRecord,
-        ISubspace,
         ISubspaceInternal,
-        ILoquiObject<Subspace>,
-        ILoquiObjectSetter,
-        IEquatable<Subspace>
+        ILoquiObjectSetter<Subspace>,
+        IEquatable<Subspace>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Subspace_Registration.Instance;
@@ -109,8 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Subspace>.GetEqualsMask(Subspace rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<ISubspaceGetter>.GetEqualsMask(ISubspaceGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISubspaceInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -124,7 +122,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -158,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => SubspaceXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => SubspaceXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Subspace Create_Xml(
@@ -217,7 +215,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    SubspaceXmlTranslation.FillPublicElement_Xml(
+                    SubspaceXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -386,7 +384,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => SubspaceBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => SubspaceBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Subspace Create_Binary(
@@ -517,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Subspace Copy(
             Subspace_CopyMask copyMask = null,
-            ISubspaceGetter def = null)
+            Subspace def = null)
         {
             return Subspace.Copy(
                 this,
@@ -526,9 +524,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Subspace Copy(
-            ISubspaceGetter item,
+            Subspace item,
             Subspace_CopyMask copyMask = null,
-            ISubspaceGetter def = null)
+            Subspace def = null)
         {
             Subspace ret;
             if (item.GetType().Equals(typeof(Subspace)))
@@ -547,9 +545,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Subspace Copy_ToLoqui(
-            ISubspaceGetter item,
+            Subspace item,
             Subspace_CopyMask copyMask = null,
-            ISubspaceGetter def = null)
+            Subspace def = null)
         {
             Subspace ret;
             if (item.GetType().Equals(typeof(Subspace)))
@@ -567,10 +565,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ISubspaceGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -578,9 +576,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISubspaceGetter rhs,
+            Subspace rhs,
             Subspace_CopyMask copyMask,
-            ISubspaceGetter def = null)
+            Subspace def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -591,10 +589,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISubspaceGetter rhs,
+            Subspace rhs,
             out Subspace_ErrorMask errorMask,
             Subspace_CopyMask copyMask = null,
-            ISubspaceGetter def = null,
+            Subspace def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -608,10 +606,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISubspaceGetter rhs,
+            Subspace rhs,
             ErrorMaskBuilder errorMask,
             Subspace_CopyMask copyMask = null,
-            ISubspaceGetter def = null)
+            Subspace def = null)
         {
             SubspaceCommon.CopyFieldsFrom(
                 item: this,
@@ -690,8 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISubspace :
         ISubspaceGetter,
         IOblivionMajorRecord,
-        ILoquiClass<ISubspace, ISubspaceGetter>,
-        ILoquiClass<Subspace, ISubspaceGetter>
+        ILoquiObjectSetter<ISubspaceInternal>
     {
         new Single X { get; set; }
 
@@ -700,10 +697,10 @@ namespace Mutagen.Bethesda.Oblivion
         new Single Z { get; set; }
 
         void CopyFieldsFrom(
-            ISubspaceGetter rhs,
+            Subspace rhs,
             ErrorMaskBuilder errorMask = null,
             Subspace_CopyMask copyMask = null,
-            ISubspaceGetter def = null);
+            Subspace def = null);
     }
 
     public partial interface ISubspaceInternal :
@@ -717,6 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISubspaceGetter :
         IOblivionMajorRecordGetter,
+        ILoquiObject<ISubspaceInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -757,17 +755,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Subspace_Mask<bool> GetEqualsMask(
-            this ISubspaceGetter item,
-            ISubspaceGetter rhs,
+            this ISubspaceInternalGetter item,
+            ISubspaceInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Subspace_Mask<bool>();
-            ((SubspaceCommon)item.CommonInstance).FillEqualsMask(
+            return ((SubspaceCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -803,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static Subspace_Mask<bool> GetHasBeenSetMask(this ISubspaceGetter item)
+        public static Subspace_Mask<bool> GetHasBeenSetMask(this ISubspaceInternalGetter item)
         {
             var ret = new Subspace_Mask<bool>();
             ((SubspaceCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -1006,13 +1001,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(SubspaceXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(SubspaceXmlWriteTranslation);
         public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
         public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SBSP_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(SubspaceBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(SubspaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1047,11 +1042,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SubspaceCommon : OblivionMajorRecordCommon
     {
         public static readonly SubspaceCommon Instance = new SubspaceCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ISubspace item,
-            ISubspaceGetter rhs,
-            ISubspaceGetter def,
+            Subspace item,
+            Subspace rhs,
+            Subspace def,
             ErrorMaskBuilder errorMask,
             Subspace_CopyMask copyMask)
         {
@@ -1118,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(ISubspace item)
+        public virtual void Clear(ISubspaceInternal item)
         {
             ClearPartial();
             item.X = default(Single);
@@ -1127,19 +1123,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (ISubspace)item);
+            Clear(item: (ISubspaceInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ISubspace)item);
+            Clear(item: (ISubspaceInternal)item);
+        }
+
+        public Subspace_Mask<bool> GetEqualsMask(
+            ISubspaceInternalGetter item,
+            ISubspaceInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Subspace_Mask<bool>();
+            ((SubspaceCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            ISubspaceGetter item,
-            ISubspaceGetter rhs,
+            ISubspaceInternalGetter item,
+            ISubspaceInternalGetter rhs,
             Subspace_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -1151,7 +1161,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            ISubspaceGetter item,
+            ISubspaceInternalGetter item,
             string name = null,
             Subspace_Mask<bool> printMask = null)
         {
@@ -1165,18 +1175,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            ISubspaceGetter item,
+            ISubspaceInternalGetter item,
             FileGeneration fg,
             string name = null,
             Subspace_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Subspace)} =>");
+                fg.AppendLine($"Subspace =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Subspace)}) =>");
+                fg.AppendLine($"{name} (Subspace) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1190,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            ISubspaceGetter item,
+            ISubspaceInternalGetter item,
             FileGeneration fg,
             Subspace_Mask<bool> printMask = null)
         {
@@ -1216,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            ISubspaceGetter item,
+            ISubspaceInternalGetter item,
             Subspace_Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
@@ -1225,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            ISubspaceGetter item,
+            ISubspaceInternalGetter item,
             Subspace_Mask<bool> mask)
         {
             mask.X = true;
@@ -1278,11 +1288,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class SubspaceXmlTranslation :
-        OblivionMajorRecordXmlTranslation,
-        IXmlTranslator
+    public partial class SubspaceXmlWriteTranslation :
+        OblivionMajorRecordXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static SubspaceXmlTranslation Instance = new SubspaceXmlTranslation();
+        public new readonly static SubspaceXmlWriteTranslation Instance = new SubspaceXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             ISubspaceInternalGetter item,
@@ -1290,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1336,6 +1346,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            ISubspaceInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Subspace");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Subspace");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISubspaceInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISubspaceInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISubspaceInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class SubspaceXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
+    {
+        public new readonly static SubspaceXmlCreateTranslation Instance = new SubspaceXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             ISubspaceInternal item,
             XElement node,
@@ -1346,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    SubspaceXmlTranslation.FillPublicElement_Xml(
+                    SubspaceXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1476,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1484,71 +1565,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            ISubspaceInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Subspace");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Subspace");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ISubspaceInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ISubspaceInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ISubspaceInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -1565,7 +1581,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SubspaceXmlTranslation)item.XmlTranslator).Write(
+            ((SubspaceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1960,11 +1976,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class SubspaceBinaryTranslation :
-        OblivionMajorRecordBinaryTranslation,
-        IBinaryTranslator
+    public partial class SubspaceBinaryWriteTranslation :
+        OblivionMajorRecordBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static SubspaceBinaryTranslation Instance = new SubspaceBinaryTranslation();
+        public new readonly static SubspaceBinaryWriteTranslation Instance = new SubspaceBinaryWriteTranslation();
 
         public static void Write_Embedded(
             ISubspaceInternalGetter item,
@@ -1972,7 +1988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
@@ -1986,7 +2002,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2082,6 +2098,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class SubspaceBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    {
+        public new readonly static SubspaceBinaryCreateTranslation Instance = new SubspaceBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class SubspaceBinaryTranslationMixIn
     {
@@ -2093,7 +2115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SubspaceBinaryTranslation)item.BinaryTranslator).Write(
+            ((SubspaceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

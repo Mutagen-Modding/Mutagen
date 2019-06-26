@@ -38,11 +38,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Tree :
         OblivionMajorRecord,
-        ITree,
         ITreeInternal,
-        ILoquiObject<Tree>,
-        ILoquiObjectSetter,
-        IEquatable<Tree>
+        ILoquiObjectSetter<Tree>,
+        IEquatable<Tree>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
@@ -73,9 +72,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         public void Model_Set(
             Model value,
-            bool markSet = true)
+            bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)Tree_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)Tree_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
         public void Model_Unset()
         {
@@ -277,8 +276,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Tree>.GetEqualsMask(Tree rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<ITreeGetter>.GetEqualsMask(ITreeGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITreeInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -292,7 +290,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -369,7 +367,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => TreeXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => TreeXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Tree Create_Xml(
@@ -428,7 +426,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    TreeXmlTranslation.FillPublicElement_Xml(
+                    TreeXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -618,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => TreeBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => TreeBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Tree Create_Binary(
@@ -868,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Tree Copy(
             Tree_CopyMask copyMask = null,
-            ITreeGetter def = null)
+            Tree def = null)
         {
             return Tree.Copy(
                 this,
@@ -877,9 +875,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Tree Copy(
-            ITreeGetter item,
+            Tree item,
             Tree_CopyMask copyMask = null,
-            ITreeGetter def = null)
+            Tree def = null)
         {
             Tree ret;
             if (item.GetType().Equals(typeof(Tree)))
@@ -898,9 +896,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Tree Copy_ToLoqui(
-            ITreeGetter item,
+            Tree item,
             Tree_CopyMask copyMask = null,
-            ITreeGetter def = null)
+            Tree def = null)
         {
             Tree ret;
             if (item.GetType().Equals(typeof(Tree)))
@@ -918,10 +916,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ITreeGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -929,9 +927,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ITreeGetter rhs,
+            Tree rhs,
             Tree_CopyMask copyMask,
-            ITreeGetter def = null)
+            Tree def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -942,10 +940,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ITreeGetter rhs,
+            Tree rhs,
             out Tree_ErrorMask errorMask,
             Tree_CopyMask copyMask = null,
-            ITreeGetter def = null,
+            Tree def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -959,10 +957,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ITreeGetter rhs,
+            Tree rhs,
             ErrorMaskBuilder errorMask,
             Tree_CopyMask copyMask = null,
-            ITreeGetter def = null)
+            Tree def = null)
         {
             TreeCommon.CopyFieldsFrom(
                 item: this,
@@ -1107,17 +1105,16 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ITree :
         ITreeGetter,
         IOblivionMajorRecord,
-        ILoquiClass<ITree, ITreeGetter>,
-        ILoquiClass<Tree, ITreeGetter>
+        ILoquiObjectSetter<ITreeInternal>
     {
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }
-        void Model_Set(Model item, bool hasBeenSet = true);
+        void Model_Set(Model value, bool hasBeenSet = true);
         void Model_Unset();
 
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }
-        void Icon_Set(String item, bool hasBeenSet = true);
+        void Icon_Set(String value, bool hasBeenSet = true);
         void Icon_Unset();
 
         new ISetList<UInt32> SpeedTreeSeeds { get; }
@@ -1142,10 +1139,10 @@ namespace Mutagen.Bethesda.Oblivion
         new Single BillboardHeight { get; set; }
 
         void CopyFieldsFrom(
-            ITreeGetter rhs,
+            Tree rhs,
             ErrorMaskBuilder errorMask = null,
             Tree_CopyMask copyMask = null,
-            ITreeGetter def = null);
+            Tree def = null);
     }
 
     public partial interface ITreeInternal :
@@ -1161,6 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ITreeGetter :
         IOblivionMajorRecordGetter,
+        ILoquiObject<ITreeInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -1246,17 +1244,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Tree_Mask<bool> GetEqualsMask(
-            this ITreeGetter item,
-            ITreeGetter rhs,
+            this ITreeInternalGetter item,
+            ITreeInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Tree_Mask<bool>();
-            ((TreeCommon)item.CommonInstance).FillEqualsMask(
+            return ((TreeCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -1292,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static Tree_Mask<bool> GetHasBeenSetMask(this ITreeGetter item)
+        public static Tree_Mask<bool> GetHasBeenSetMask(this ITreeInternalGetter item)
         {
             var ret = new Tree_Mask<bool>();
             ((TreeCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -1629,7 +1624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(TreeXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(TreeXmlWriteTranslation);
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
@@ -1639,7 +1634,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = TREE_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
-        public static readonly Type BinaryTranslation = typeof(TreeBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(TreeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1674,11 +1669,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class TreeCommon : OblivionMajorRecordCommon
     {
         public static readonly TreeCommon Instance = new TreeCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ITree item,
-            ITreeGetter rhs,
-            ITreeGetter def,
+            Tree item,
+            Tree rhs,
+            Tree def,
             ErrorMaskBuilder errorMask,
             Tree_CopyMask copyMask)
         {
@@ -1726,7 +1722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     else
                     {
                         item.Model_Set(
-                            item: default(Model),
+                            value: default(Model),
                             hasBeenSet: false);
                     }
                 }
@@ -1965,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(ITree item)
+        public virtual void Clear(ITreeInternal item)
         {
             ClearPartial();
             item.Model_Unset();
@@ -1984,19 +1980,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (ITree)item);
+            Clear(item: (ITreeInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ITree)item);
+            Clear(item: (ITreeInternal)item);
+        }
+
+        public Tree_Mask<bool> GetEqualsMask(
+            ITreeInternalGetter item,
+            ITreeInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Tree_Mask<bool>();
+            ((TreeCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            ITreeGetter item,
-            ITreeGetter rhs,
+            ITreeInternalGetter item,
+            ITreeInternalGetter rhs,
             Tree_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -2027,7 +2037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            ITreeGetter item,
+            ITreeInternalGetter item,
             string name = null,
             Tree_Mask<bool> printMask = null)
         {
@@ -2041,18 +2051,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            ITreeGetter item,
+            ITreeInternalGetter item,
             FileGeneration fg,
             string name = null,
             Tree_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Tree)} =>");
+                fg.AppendLine($"Tree =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Tree)}) =>");
+                fg.AppendLine($"{name} (Tree) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -2066,7 +2076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            ITreeGetter item,
+            ITreeInternalGetter item,
             FileGeneration fg,
             Tree_Mask<bool> printMask = null)
         {
@@ -2149,7 +2159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            ITreeGetter item,
+            ITreeInternalGetter item,
             Tree_Mask<bool?> checkMask)
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
@@ -2162,7 +2172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            ITreeGetter item,
+            ITreeInternalGetter item,
             Tree_Mask<bool> mask)
         {
             mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
@@ -2226,11 +2236,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class TreeXmlTranslation :
-        OblivionMajorRecordXmlTranslation,
-        IXmlTranslator
+    public partial class TreeXmlWriteTranslation :
+        OblivionMajorRecordXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static TreeXmlTranslation Instance = new TreeXmlTranslation();
+        public new readonly static TreeXmlWriteTranslation Instance = new TreeXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             ITreeInternalGetter item,
@@ -2238,7 +2248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2246,7 +2256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
             {
-                ((ModelXmlTranslation)((IXmlItem)item.Model).XmlTranslator).Write(
+                ((ModelXmlWriteTranslation)((IXmlItem)item.Model).XmlWriteTranslator).Write(
                     item: item.Model,
                     node: node,
                     name: nameof(item.Model),
@@ -2399,6 +2409,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            ITreeInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Tree");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Tree");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ITreeInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ITreeInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ITreeInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class TreeXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
+    {
+        public new readonly static TreeXmlCreateTranslation Instance = new TreeXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             ITreeInternal item,
             XElement node,
@@ -2409,7 +2490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    TreeXmlTranslation.FillPublicElement_Xml(
+                    TreeXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2829,7 +2910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2837,71 +2918,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            ITreeInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Tree");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Tree");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ITreeInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ITreeInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ITreeInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -2918,7 +2934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((TreeXmlTranslation)item.XmlTranslator).Write(
+            ((TreeXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -3691,11 +3707,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class TreeBinaryTranslation :
-        OblivionMajorRecordBinaryTranslation,
-        IBinaryTranslator
+    public partial class TreeBinaryWriteTranslation :
+        OblivionMajorRecordBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static TreeBinaryTranslation Instance = new TreeBinaryTranslation();
+        public new readonly static TreeBinaryWriteTranslation Instance = new TreeBinaryWriteTranslation();
 
         public static void Write_Embedded(
             ITreeInternalGetter item,
@@ -3703,7 +3719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
@@ -3717,7 +3733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3725,7 +3741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
             if (item.Model_IsSet)
             {
-                ((ModelBinaryTranslation)((IBinaryItem)item.Model).BinaryTranslator).Write(
+                ((ModelBinaryWriteTranslation)((IBinaryItem)item.Model).BinaryWriteTranslator).Write(
                     item: item.Model,
                     writer: writer,
                     errorMask: errorMask,
@@ -3863,6 +3879,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class TreeBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    {
+        public new readonly static TreeBinaryCreateTranslation Instance = new TreeBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class TreeBinaryTranslationMixIn
     {
@@ -3874,7 +3896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((TreeBinaryTranslation)item.BinaryTranslator).Write(
+            ((TreeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

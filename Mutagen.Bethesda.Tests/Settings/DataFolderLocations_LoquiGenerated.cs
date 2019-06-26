@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Tests
     public partial class DataFolderLocations :
         LoquiNotifyingObject,
         IDataFolderLocations,
-        ILoquiObject<DataFolderLocations>,
-        ILoquiObjectSetter,
-        IEquatable<DataFolderLocations>
+        ILoquiObjectSetter<DataFolderLocations>,
+        IEquatable<DataFolderLocations>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DataFolderLocations_Registration.Instance;
@@ -64,8 +64,7 @@ namespace Mutagen.Bethesda.Tests
         }
         #endregion
 
-        IMask<bool> IEqualsMask<DataFolderLocations>.GetEqualsMask(DataFolderLocations rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IDataFolderLocationsGetter>.GetEqualsMask(IDataFolderLocationsGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDataFolderLocationsGetter)rhs, include);
         #region To String
         public override string ToString()
         {
@@ -84,7 +83,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -112,8 +111,8 @@ namespace Mutagen.Bethesda.Tests
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => DataFolderLocationsXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => DataFolderLocationsXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static DataFolderLocations Create_Xml(
@@ -166,7 +165,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 foreach (var elem in node.Elements())
                 {
-                    DataFolderLocationsXmlTranslation.FillPublicElement_Xml(
+                    DataFolderLocationsXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -378,7 +377,7 @@ namespace Mutagen.Bethesda.Tests
 
         public DataFolderLocations Copy(
             DataFolderLocations_CopyMask copyMask = null,
-            IDataFolderLocationsGetter def = null)
+            DataFolderLocations def = null)
         {
             return DataFolderLocations.Copy(
                 this,
@@ -387,9 +386,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static DataFolderLocations Copy(
-            IDataFolderLocationsGetter item,
+            DataFolderLocations item,
             DataFolderLocations_CopyMask copyMask = null,
-            IDataFolderLocationsGetter def = null)
+            DataFolderLocations def = null)
         {
             DataFolderLocations ret;
             if (item.GetType().Equals(typeof(DataFolderLocations)))
@@ -408,9 +407,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static DataFolderLocations Copy_ToLoqui(
-            IDataFolderLocationsGetter item,
+            DataFolderLocations item,
             DataFolderLocations_CopyMask copyMask = null,
-            IDataFolderLocationsGetter def = null)
+            DataFolderLocations def = null)
         {
             DataFolderLocations ret;
             if (item.GetType().Equals(typeof(DataFolderLocations)))
@@ -428,10 +427,10 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public void CopyFieldsFrom(IDataFolderLocationsGetter rhs)
+        public void CopyFieldsFrom(DataFolderLocations rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IDataFolderLocationsGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -439,9 +438,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            IDataFolderLocationsGetter rhs,
+            DataFolderLocations rhs,
             DataFolderLocations_CopyMask copyMask,
-            IDataFolderLocationsGetter def = null)
+            DataFolderLocations def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -452,10 +451,10 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            IDataFolderLocationsGetter rhs,
+            DataFolderLocations rhs,
             out DataFolderLocations_ErrorMask errorMask,
             DataFolderLocations_CopyMask copyMask = null,
-            IDataFolderLocationsGetter def = null,
+            DataFolderLocations def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -469,10 +468,10 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            IDataFolderLocationsGetter rhs,
+            DataFolderLocations rhs,
             ErrorMaskBuilder errorMask,
             DataFolderLocations_CopyMask copyMask = null,
-            IDataFolderLocationsGetter def = null)
+            DataFolderLocations def = null)
         {
             DataFolderLocationsCommon.CopyFieldsFrom(
                 item: this,
@@ -537,22 +536,22 @@ namespace Mutagen.Bethesda.Tests
     #region Interface
     public partial interface IDataFolderLocations :
         IDataFolderLocationsGetter,
-        ILoquiClass<IDataFolderLocations, IDataFolderLocationsGetter>,
-        ILoquiClass<DataFolderLocations, IDataFolderLocationsGetter>
+        ILoquiObjectSetter<IDataFolderLocations>
     {
         new String Oblivion { get; set; }
 
         new String Skyrim { get; set; }
 
         void CopyFieldsFrom(
-            IDataFolderLocationsGetter rhs,
+            DataFolderLocations rhs,
             ErrorMaskBuilder errorMask = null,
             DataFolderLocations_CopyMask copyMask = null,
-            IDataFolderLocationsGetter def = null);
+            DataFolderLocations def = null);
     }
 
     public partial interface IDataFolderLocationsGetter :
         ILoquiObject,
+        ILoquiObject<IDataFolderLocationsGetter>,
         IXmlItem
     {
         #region Oblivion
@@ -581,13 +580,10 @@ namespace Mutagen.Bethesda.Tests
             IDataFolderLocationsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new DataFolderLocations_Mask<bool>();
-            ((DataFolderLocationsCommon)item.CommonInstance).FillEqualsMask(
+            return ((DataFolderLocationsCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -797,7 +793,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(DataFolderLocationsXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(DataFolderLocationsXmlWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -832,11 +828,12 @@ namespace Mutagen.Bethesda.Tests.Internals
     public partial class DataFolderLocationsCommon
     {
         public static readonly DataFolderLocationsCommon Instance = new DataFolderLocationsCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IDataFolderLocations item,
-            IDataFolderLocationsGetter rhs,
-            IDataFolderLocationsGetter def,
+            DataFolderLocations item,
+            DataFolderLocations rhs,
+            DataFolderLocations def,
             ErrorMaskBuilder errorMask,
             DataFolderLocations_CopyMask copyMask)
         {
@@ -887,6 +884,20 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Skyrim = default(String);
         }
 
+        public DataFolderLocations_Mask<bool> GetEqualsMask(
+            IDataFolderLocationsGetter item,
+            IDataFolderLocationsGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new DataFolderLocations_Mask<bool>();
+            ((DataFolderLocationsCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IDataFolderLocationsGetter item,
             IDataFolderLocationsGetter rhs,
@@ -920,11 +931,11 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(DataFolderLocations)} =>");
+                fg.AppendLine($"DataFolderLocations =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(DataFolderLocations)}) =>");
+                fg.AppendLine($"{name} (DataFolderLocations) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -972,9 +983,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class DataFolderLocationsXmlTranslation : IXmlTranslator
+    public partial class DataFolderLocationsXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static DataFolderLocationsXmlTranslation Instance = new DataFolderLocationsXmlTranslation();
+        public readonly static DataFolderLocationsXmlWriteTranslation Instance = new DataFolderLocationsXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IDataFolderLocationsGetter item,
@@ -1002,6 +1013,76 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IDataFolderLocationsGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.DataFolderLocations");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.DataFolderLocations");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IDataFolderLocationsGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IDataFolderLocationsGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IDataFolderLocationsGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class DataFolderLocationsXmlCreateTranslation
+    {
+        public readonly static DataFolderLocationsXmlCreateTranslation Instance = new DataFolderLocationsXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IDataFolderLocations item,
             XElement node,
@@ -1012,7 +1093,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    DataFolderLocationsXmlTranslation.FillPublicElement_Xml(
+                    DataFolderLocationsXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1099,70 +1180,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IDataFolderLocationsGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.DataFolderLocations");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.DataFolderLocations");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IDataFolderLocationsGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IDataFolderLocationsGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IDataFolderLocationsGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1177,7 +1194,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((DataFolderLocationsXmlTranslation)item.XmlTranslator).Write(
+            ((DataFolderLocationsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1267,7 +1284,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((DataFolderLocationsXmlTranslation)item.XmlTranslator).Write(
+            ((DataFolderLocationsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1281,7 +1298,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null,
             DataFolderLocations_TranslationMask translationMask = null)
         {
-            ((DataFolderLocationsXmlTranslation)item.XmlTranslator).Write(
+            ((DataFolderLocationsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1295,7 +1312,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((DataFolderLocationsXmlTranslation)item.XmlTranslator).Write(
+            ((DataFolderLocationsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1310,7 +1327,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((DataFolderLocationsXmlTranslation)item.XmlTranslator).Write(
+            ((DataFolderLocationsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,

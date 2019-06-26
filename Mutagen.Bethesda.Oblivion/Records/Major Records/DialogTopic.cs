@@ -21,8 +21,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class DialogTopicBinaryTranslation
-        {
+        public partial class DialogTopicBinaryCreateTranslation
+        { 
             static partial void CustomBinaryEnd_Import(MutagenFrame frame, DialogTopic obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (frame.Reader.Complete) return;
@@ -64,7 +64,10 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     );
             }
+        }
 
+        public partial class DialogTopicBinaryWriteTranslation
+        {
             static partial void CustomBinaryEnd_Export(MutagenWriter writer, IDialogTopicInternalGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (obj.Items.Count == 0) return;
@@ -83,13 +86,14 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: (MutagenWriter subWriter, IDialogItemInternalGetter subItem, ErrorMaskBuilder listErrMask) =>
                         {
-                           subItem.Write_Binary(
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                errorMask: listErrMask);
+                            subItem.Write_Binary(
+                                 writer: subWriter,
+                                 masterReferences: masterReferences,
+                                 errorMask: listErrMask);
                         });
                 }
             }
+
         }
     }
 }

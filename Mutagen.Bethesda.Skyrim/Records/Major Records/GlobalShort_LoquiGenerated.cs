@@ -36,11 +36,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class GlobalShort :
         Global,
-        IGlobalShort,
         IGlobalShortInternal,
-        ILoquiObject<GlobalShort>,
-        ILoquiObjectSetter,
-        IEquatable<GlobalShort>
+        ILoquiObjectSetter<GlobalShort>,
+        IEquatable<GlobalShort>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalShort_Registration.Instance;
@@ -82,8 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        IMask<bool> IEqualsMask<GlobalShort>.GetEqualsMask(GlobalShort rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IGlobalShortGetter>.GetEqualsMask(IGlobalShortGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalShortInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -97,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -132,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => GlobalShortXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => GlobalShortXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static GlobalShort Create_Xml(
@@ -191,7 +189,7 @@ namespace Mutagen.Bethesda.Skyrim
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    GlobalShortXmlTranslation.FillPublicElement_Xml(
+                    GlobalShortXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -349,7 +347,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => GlobalShortBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => GlobalShortBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static GlobalShort Create_Binary(
@@ -426,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case 0x56544C46: // FLTV
                 {
-                    GlobalShortBinaryTranslation.FillBinary_Data_Custom_Public(
+                    GlobalShortBinaryCreateTranslation.FillBinary_Data_Custom_Public(
                         frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
                         item: item,
                         masterReferences: masterReferences,
@@ -449,7 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public GlobalShort Copy(
             GlobalShort_CopyMask copyMask = null,
-            IGlobalShortGetter def = null)
+            GlobalShort def = null)
         {
             return GlobalShort.Copy(
                 this,
@@ -458,9 +456,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static GlobalShort Copy(
-            IGlobalShortGetter item,
+            GlobalShort item,
             GlobalShort_CopyMask copyMask = null,
-            IGlobalShortGetter def = null)
+            GlobalShort def = null)
         {
             GlobalShort ret;
             if (item.GetType().Equals(typeof(GlobalShort)))
@@ -479,9 +477,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static GlobalShort Copy_ToLoqui(
-            IGlobalShortGetter item,
+            GlobalShort item,
             GlobalShort_CopyMask copyMask = null,
-            IGlobalShortGetter def = null)
+            GlobalShort def = null)
         {
             GlobalShort ret;
             if (item.GetType().Equals(typeof(GlobalShort)))
@@ -499,10 +497,10 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IGlobalShortGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -510,9 +508,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            IGlobalShortGetter rhs,
+            GlobalShort rhs,
             GlobalShort_CopyMask copyMask,
-            IGlobalShortGetter def = null)
+            GlobalShort def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -523,10 +521,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            IGlobalShortGetter rhs,
+            GlobalShort rhs,
             out GlobalShort_ErrorMask errorMask,
             GlobalShort_CopyMask copyMask = null,
-            IGlobalShortGetter def = null,
+            GlobalShort def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -540,10 +538,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            IGlobalShortGetter rhs,
+            GlobalShort rhs,
             ErrorMaskBuilder errorMask,
             GlobalShort_CopyMask copyMask = null,
-            IGlobalShortGetter def = null)
+            GlobalShort def = null)
         {
             GlobalShortCommon.CopyFieldsFrom(
                 item: this,
@@ -604,19 +602,18 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGlobalShort :
         IGlobalShortGetter,
         IGlobal,
-        ILoquiClass<IGlobalShort, IGlobalShortGetter>,
-        ILoquiClass<GlobalShort, IGlobalShortGetter>
+        ILoquiObjectSetter<IGlobalShortInternal>
     {
         new Int16 Data { get; set; }
         new bool Data_IsSet { get; set; }
-        void Data_Set(Int16 item, bool hasBeenSet = true);
+        void Data_Set(Int16 value, bool hasBeenSet = true);
         void Data_Unset();
 
         void CopyFieldsFrom(
-            IGlobalShortGetter rhs,
+            GlobalShort rhs,
             ErrorMaskBuilder errorMask = null,
             GlobalShort_CopyMask copyMask = null,
-            IGlobalShortGetter def = null);
+            GlobalShort def = null);
     }
 
     public partial interface IGlobalShortInternal :
@@ -628,6 +625,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IGlobalShortGetter :
         IGlobalGetter,
+        ILoquiObject<IGlobalShortInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -657,17 +655,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static GlobalShort_Mask<bool> GetEqualsMask(
-            this IGlobalShortGetter item,
-            IGlobalShortGetter rhs,
+            this IGlobalShortInternalGetter item,
+            IGlobalShortInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new GlobalShort_Mask<bool>();
-            ((GlobalShortCommon)item.CommonInstance).FillEqualsMask(
+            return ((GlobalShortCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -703,7 +698,7 @@ namespace Mutagen.Bethesda.Skyrim
                 checkMask: checkMask);
         }
 
-        public static GlobalShort_Mask<bool> GetHasBeenSetMask(this IGlobalShortGetter item)
+        public static GlobalShort_Mask<bool> GetHasBeenSetMask(this IGlobalShortInternalGetter item)
         {
             var ret = new GlobalShort_Mask<bool>();
             ((GlobalShortCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -870,13 +865,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(GlobalShortXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(GlobalShortXmlWriteTranslation);
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType FLTV_HEADER = new RecordType("FLTV");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GLOB_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
-        public static readonly Type BinaryTranslation = typeof(GlobalShortBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(GlobalShortBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -911,11 +906,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class GlobalShortCommon : GlobalCommon
     {
         public static readonly GlobalShortCommon Instance = new GlobalShortCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IGlobalShort item,
-            IGlobalShortGetter rhs,
-            IGlobalShortGetter def,
+            GlobalShort item,
+            GlobalShort rhs,
+            GlobalShort def,
             ErrorMaskBuilder errorMask,
             GlobalShort_CopyMask copyMask)
         {
@@ -961,31 +957,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IGlobalShort item)
+        public virtual void Clear(IGlobalShortInternal item)
         {
             ClearPartial();
             item.Data_Unset();
             base.Clear(item);
         }
 
-        public override void Clear(IGlobal item)
+        public override void Clear(IGlobalInternal item)
         {
-            Clear(item: (IGlobalShort)item);
+            Clear(item: (IGlobalShortInternal)item);
         }
 
-        public override void Clear(ISkyrimMajorRecord item)
+        public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (IGlobalShort)item);
+            Clear(item: (IGlobalShortInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IGlobalShort)item);
+            Clear(item: (IGlobalShortInternal)item);
+        }
+
+        public GlobalShort_Mask<bool> GetEqualsMask(
+            IGlobalShortInternalGetter item,
+            IGlobalShortInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new GlobalShort_Mask<bool>();
+            ((GlobalShortCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IGlobalShortGetter item,
-            IGlobalShortGetter rhs,
+            IGlobalShortInternalGetter item,
+            IGlobalShortInternalGetter rhs,
             GlobalShort_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -995,7 +1005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public string ToString(
-            IGlobalShortGetter item,
+            IGlobalShortInternalGetter item,
             string name = null,
             GlobalShort_Mask<bool> printMask = null)
         {
@@ -1009,18 +1019,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public void ToString(
-            IGlobalShortGetter item,
+            IGlobalShortInternalGetter item,
             FileGeneration fg,
             string name = null,
             GlobalShort_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(GlobalShort)} =>");
+                fg.AppendLine($"GlobalShort =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(GlobalShort)}) =>");
+                fg.AppendLine($"{name} (GlobalShort) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1034,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         protected static void ToStringFields(
-            IGlobalShortGetter item,
+            IGlobalShortInternalGetter item,
             FileGeneration fg,
             GlobalShort_Mask<bool> printMask = null)
         {
@@ -1049,7 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public bool HasBeenSet(
-            IGlobalShortGetter item,
+            IGlobalShortInternalGetter item,
             GlobalShort_Mask<bool?> checkMask)
         {
             if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_IsSet) return false;
@@ -1059,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public void FillHasBeenSetMask(
-            IGlobalShortGetter item,
+            IGlobalShortInternalGetter item,
             GlobalShort_Mask<bool> mask)
         {
             mask.Data = item.Data_IsSet;
@@ -1128,11 +1138,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class GlobalShortXmlTranslation :
-        GlobalXmlTranslation,
-        IXmlTranslator
+    public partial class GlobalShortXmlWriteTranslation :
+        GlobalXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static GlobalShortXmlTranslation Instance = new GlobalShortXmlTranslation();
+        public new readonly static GlobalShortXmlWriteTranslation Instance = new GlobalShortXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IGlobalShortInternalGetter item,
@@ -1140,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            GlobalXmlTranslation.WriteToNode_Xml(
+            GlobalXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1154,77 +1164,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.Data,
                     fieldIndex: (int)GlobalShort_FieldIndex.Data,
                     errorMask: errorMask);
-            }
-        }
-
-        public static void FillPublic_Xml(
-            IGlobalShortInternal item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    GlobalShortXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            IGlobalShortInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Data":
-                    try
-                    {
-                        errorMask?.PushIndex((int)GlobalShort_FieldIndex.Data);
-                        if (Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int16 DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(Int16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    GlobalXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
             }
         }
 
@@ -1310,6 +1249,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public partial class GlobalShortXmlCreateTranslation : GlobalXmlCreateTranslation
+    {
+        public new readonly static GlobalShortXmlCreateTranslation Instance = new GlobalShortXmlCreateTranslation();
+
+        public static void FillPublic_Xml(
+            IGlobalShortInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    GlobalShortXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            IGlobalShortInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Data":
+                    try
+                    {
+                        errorMask?.PushIndex((int)GlobalShort_FieldIndex.Data);
+                        if (Int16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int16 DataParse,
+                            errorMask: errorMask))
+                        {
+                            item.Data = DataParse;
+                        }
+                        else
+                        {
+                            item.Data = default(Int16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    GlobalXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+
+    }
+
     #region Xml Write Mixins
     public static class GlobalShortXmlTranslationMixIn
     {
@@ -1322,7 +1338,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GlobalShortXmlTranslation)item.XmlTranslator).Write(
+            ((GlobalShortXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1636,30 +1652,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Binary Translation
-    public partial class GlobalShortBinaryTranslation :
-        GlobalBinaryTranslation,
-        IBinaryTranslator
+    public partial class GlobalShortBinaryWriteTranslation :
+        GlobalBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static GlobalShortBinaryTranslation Instance = new GlobalShortBinaryTranslation();
-
-        static partial void FillBinary_Data_Custom(
-            MutagenFrame frame,
-            GlobalShort item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void FillBinary_Data_Custom_Public(
-            MutagenFrame frame,
-            GlobalShort item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            FillBinary_Data_Custom(
-                frame: frame,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
+        public new readonly static GlobalShortBinaryWriteTranslation Instance = new GlobalShortBinaryWriteTranslation();
 
         static partial void WriteBinary_Data_Custom(
             MutagenWriter writer,
@@ -1687,13 +1684,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            GlobalBinaryTranslation.Write_RecordTypes(
+            GlobalBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            GlobalShortBinaryTranslation.WriteBinary_Data(
+            GlobalShortBinaryWriteTranslation.WriteBinary_Data(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -1712,7 +1709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: GlobalShort_Registration.GLOB_HEADER,
                 type: ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryTranslation.Write_Embedded(
+                SkyrimMajorRecordBinaryWriteTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -1788,6 +1785,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public partial class GlobalShortBinaryCreateTranslation : GlobalBinaryCreateTranslation
+    {
+        public new readonly static GlobalShortBinaryCreateTranslation Instance = new GlobalShortBinaryCreateTranslation();
+
+        static partial void FillBinary_Data_Custom(
+            MutagenFrame frame,
+            GlobalShort item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_Data_Custom_Public(
+            MutagenFrame frame,
+            GlobalShort item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_Data_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+    }
+
     #region Binary Write Mixins
     public static class GlobalShortBinaryTranslationMixIn
     {
@@ -1799,7 +1821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GlobalShortBinaryTranslation)item.BinaryTranslator).Write(
+            ((GlobalShortBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

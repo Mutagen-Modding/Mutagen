@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Binary
 
         public bool Parse<T>(
             MutagenFrame frame,
-            out FormIDLink<T> item,
+            out IFormIDLink<T> item,
             MasterReferences masterReferences)
             where T : class, IMajorRecordInternalGetter
         {
@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Binary
 
         public bool Parse<T>(
             MutagenFrame frame,
-            out FormIDSetLink<T> item,
+            out IFormIDSetLink<T> item,
             MasterReferences masterReferences)
             where T : class, IMajorRecordInternalGetter
         {
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseInto<T>(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            FormIDSetLink<T> item)
+            IFormIDSetLink<T> item)
             where T : class, IMajorRecordInternalGetter
         {
             if (FormKeyBinaryTranslation.Instance.Parse(
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseInto<T>(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            FormIDLink<T> item)
+            IFormIDLink<T> item)
             where T : class, IMajorRecordInternalGetter
         {
             if (FormKeyBinaryTranslation.Instance.Parse(
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<T>(
             MutagenWriter writer,
-            FormIDLink<T> item,
+            IFormIDLinkGetter<T> item,
             MasterReferences masterReferences,
             bool nullable = false)
             where T : class, IMajorRecordInternalGetter
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<T>(
             MutagenWriter writer,
-            FormIDSetLink<T> item,
+            IFormIDSetLinkGetter<T> item,
             MasterReferences masterReferences,
             bool nullable = false)
             where T : class, IMajorRecordInternalGetter
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<T>(
             MutagenWriter writer,
-            EDIDLink<T> item,
+            IEDIDLinkGetter<T> item,
             MasterReferences masterReferences,
             bool nullable = false)
             where T : class, IMajorRecordInternalGetter
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<T>(
             MutagenWriter writer,
-            FormIDLink<T> item,
+            IFormIDLinkGetter<T> item,
             MasterReferences masterReferences,
             RecordType header,
             bool nullable = false)
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<T>(
             MutagenWriter writer,
-            FormIDSetLink<T> item,
+            IFormIDSetLinkGetter<T> item,
             MasterReferences masterReferences,
             RecordType header,
             bool nullable = false)

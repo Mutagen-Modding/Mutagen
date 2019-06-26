@@ -8,7 +8,7 @@ using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RegionBinaryTranslation
+    public partial class RegionBinaryCreateTranslation
     {
         public static readonly int RDAT_LEN = 14;
         public static readonly RecordType RDOT = new RecordType("RDOT");
@@ -119,7 +119,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new NotImplementedException();
             }
         }
+    }
 
+    public partial class RegionBinaryWriteTranslation
+    {
         static partial void WriteBinary_RegionAreaLogic_Custom(MutagenWriter writer, IRegionInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (item.Objects_IsSet)

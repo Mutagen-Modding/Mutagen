@@ -10,7 +10,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RoadBinaryTranslation
+    public partial class RoadBinaryCreateTranslation
     {
         public static readonly RecordType PGRP = new RecordType("PGRP");
         public static readonly RecordType PGRR = new RecordType("PGRR");
@@ -81,11 +81,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             pt.NumConnectionsFluffBytes = reader.Slice(13, 3).ToArray();
             return pt;
         }
+    }
 
+    public partial class RoadBinaryWriteTranslation
+    {
         static partial void WriteBinary_Points_Custom(MutagenWriter writer, IRoadInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             bool anyConnections = false;
-            using (HeaderExport.ExportSubRecordHeader(writer, PGRP))
+            using (HeaderExport.ExportSubRecordHeader(writer, RoadBinaryCreateTranslation.PGRP))
             {
                 foreach (var pt in item.Points)
                 {
@@ -102,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
 
             if (!anyConnections) return;
-            using (HeaderExport.ExportSubRecordHeader(writer, PGRR))
+            using (HeaderExport.ExportSubRecordHeader(writer, RoadBinaryCreateTranslation.PGRR))
             {
                 foreach (var pt in item.Points)
                 {

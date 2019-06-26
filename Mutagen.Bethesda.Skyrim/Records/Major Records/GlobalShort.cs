@@ -57,12 +57,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class GlobalShortBinaryTranslation
+        public partial class GlobalShortBinaryCreateTranslation
         {
             static partial void FillBinary_Data_Custom(MutagenFrame frame, GlobalShort item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
             }
+        }
 
+        public partial class GlobalShortBinaryWriteTranslation
+        {
             static partial void WriteBinary_Data_Custom(MutagenWriter writer, IGlobalShortInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, GlobalShort_Registration.FLTV_HEADER))

@@ -44,21 +44,24 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class ConditionBinaryTranslation
+        public partial class ConditionBinaryCreateTranslation
         {
-            const byte mask = 0xF0;
+            public const byte Mask = 0xF0;
 
             static partial void FillBinary_InitialParser_Custom(MutagenFrame frame, Condition item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 byte b = frame.ReadUInt8();
                 item.Flags = (Condition.Flag)(0xF & b);
-                item.CompareOperator = (CompareOperator)((mask & b) / 16);
+                item.CompareOperator = (CompareOperator)((Mask & b) / 16);
             }
+        }
 
+        public partial class ConditionBinaryWriteTranslation
+        {
             static partial void WriteBinary_InitialParser_Custom(MutagenWriter writer, IConditionGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 byte b = (byte)item.Flags;
-                b |= (byte)(((int)(item.CompareOperator) * 16) & mask);
+                b |= (byte)(((int)(item.CompareOperator) * 16) & ConditionBinaryCreateTranslation.Mask);
                 writer.Write(b);
             }
         }

@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Tests
     public partial class TestingSettings :
         LoquiNotifyingObject,
         ITestingSettings,
-        ILoquiObject<TestingSettings>,
-        ILoquiObjectSetter,
-        IEquatable<TestingSettings>
+        ILoquiObjectSetter<TestingSettings>,
+        IEquatable<TestingSettings>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TestingSettings_Registration.Instance;
@@ -111,8 +111,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        IMask<bool> IEqualsMask<TestingSettings>.GetEqualsMask(TestingSettings rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<ITestingSettingsGetter>.GetEqualsMask(ITestingSettingsGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITestingSettingsGetter)rhs, include);
         #region To String
         public override string ToString()
         {
@@ -131,7 +130,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -171,8 +170,8 @@ namespace Mutagen.Bethesda.Tests
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => TestingSettingsXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => TestingSettingsXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static TestingSettings Create_Xml(
@@ -225,7 +224,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 foreach (var elem in node.Elements())
                 {
-                    TestingSettingsXmlTranslation.FillPublicElement_Xml(
+                    TestingSettingsXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -443,7 +442,7 @@ namespace Mutagen.Bethesda.Tests
 
         public TestingSettings Copy(
             TestingSettings_CopyMask copyMask = null,
-            ITestingSettingsGetter def = null)
+            TestingSettings def = null)
         {
             return TestingSettings.Copy(
                 this,
@@ -452,9 +451,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static TestingSettings Copy(
-            ITestingSettingsGetter item,
+            TestingSettings item,
             TestingSettings_CopyMask copyMask = null,
-            ITestingSettingsGetter def = null)
+            TestingSettings def = null)
         {
             TestingSettings ret;
             if (item.GetType().Equals(typeof(TestingSettings)))
@@ -473,9 +472,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static TestingSettings Copy_ToLoqui(
-            ITestingSettingsGetter item,
+            TestingSettings item,
             TestingSettings_CopyMask copyMask = null,
-            ITestingSettingsGetter def = null)
+            TestingSettings def = null)
         {
             TestingSettings ret;
             if (item.GetType().Equals(typeof(TestingSettings)))
@@ -493,10 +492,10 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public void CopyFieldsFrom(ITestingSettingsGetter rhs)
+        public void CopyFieldsFrom(TestingSettings rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ITestingSettingsGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -504,9 +503,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            ITestingSettingsGetter rhs,
+            TestingSettings rhs,
             TestingSettings_CopyMask copyMask,
-            ITestingSettingsGetter def = null)
+            TestingSettings def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -517,10 +516,10 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            ITestingSettingsGetter rhs,
+            TestingSettings rhs,
             out TestingSettings_ErrorMask errorMask,
             TestingSettings_CopyMask copyMask = null,
-            ITestingSettingsGetter def = null,
+            TestingSettings def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -534,10 +533,10 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            ITestingSettingsGetter rhs,
+            TestingSettings rhs,
             ErrorMaskBuilder errorMask,
             TestingSettings_CopyMask copyMask = null,
-            ITestingSettingsGetter def = null)
+            TestingSettings def = null)
         {
             TestingSettingsCommon.CopyFieldsFrom(
                 item: this,
@@ -638,8 +637,7 @@ namespace Mutagen.Bethesda.Tests
     #region Interface
     public partial interface ITestingSettings :
         ITestingSettingsGetter,
-        ILoquiClass<ITestingSettings, ITestingSettingsGetter>,
-        ILoquiClass<TestingSettings, ITestingSettingsGetter>
+        ILoquiObjectSetter<ITestingSettings>
     {
         new Boolean TestGroupMasks { get; set; }
 
@@ -657,14 +655,15 @@ namespace Mutagen.Bethesda.Tests
 
         new IList<TargetGroup> TargetGroups { get; }
         void CopyFieldsFrom(
-            ITestingSettingsGetter rhs,
+            TestingSettings rhs,
             ErrorMaskBuilder errorMask = null,
             TestingSettings_CopyMask copyMask = null,
-            ITestingSettingsGetter def = null);
+            TestingSettings def = null);
     }
 
     public partial interface ITestingSettingsGetter :
         ILoquiObject,
+        ILoquiObject<ITestingSettingsGetter>,
         IXmlItem
     {
         #region TestGroupMasks
@@ -716,13 +715,10 @@ namespace Mutagen.Bethesda.Tests
             ITestingSettingsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new TestingSettings_Mask<bool>();
-            ((TestingSettingsCommon)item.CommonInstance).FillEqualsMask(
+            return ((TestingSettingsCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -1006,7 +1002,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(TestingSettingsXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(TestingSettingsXmlWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1041,11 +1037,12 @@ namespace Mutagen.Bethesda.Tests.Internals
     public partial class TestingSettingsCommon
     {
         public static readonly TestingSettingsCommon Instance = new TestingSettingsCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ITestingSettings item,
-            ITestingSettingsGetter rhs,
-            ITestingSettingsGetter def,
+            TestingSettings item,
+            TestingSettings rhs,
+            TestingSettings def,
             ErrorMaskBuilder errorMask,
             TestingSettings_CopyMask copyMask)
         {
@@ -1229,7 +1226,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TargetGroups);
                 try
                 {
-                    item.TargetGroups.SetToWithDefault<TargetGroup, ITargetGroupGetter>(
+                    item.TargetGroups.SetToWithDefault<TargetGroup, TargetGroup>(
                         rhs: rhs.TargetGroups,
                         def: def?.TargetGroups,
                         converter: (r, d) =>
@@ -1277,6 +1274,20 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TargetGroups.Clear();
         }
 
+        public TestingSettings_Mask<bool> GetEqualsMask(
+            ITestingSettingsGetter item,
+            ITestingSettingsGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new TestingSettings_Mask<bool>();
+            ((TestingSettingsCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             ITestingSettingsGetter item,
             ITestingSettingsGetter rhs,
@@ -1319,11 +1330,11 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(TestingSettings)} =>");
+                fg.AppendLine($"TestingSettings =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(TestingSettings)}) =>");
+                fg.AppendLine($"{name} (TestingSettings) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1415,9 +1426,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class TestingSettingsXmlTranslation : IXmlTranslator
+    public partial class TestingSettingsXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static TestingSettingsXmlTranslation Instance = new TestingSettingsXmlTranslation();
+        public readonly static TestingSettingsXmlWriteTranslation Instance = new TestingSettingsXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             ITestingSettingsGetter item,
@@ -1472,7 +1483,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.DataFolderLocations) ?? true))
             {
-                ((DataFolderLocationsXmlTranslation)((IXmlItem)item.DataFolderLocations).XmlTranslator).Write(
+                ((DataFolderLocationsXmlWriteTranslation)((IXmlItem)item.DataFolderLocations).XmlWriteTranslator).Write(
                     item: item.DataFolderLocations,
                     node: node,
                     name: nameof(item.DataFolderLocations),
@@ -1482,7 +1493,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.PassthroughSettings) ?? true))
             {
-                ((PassthroughSettingsXmlTranslation)((IXmlItem)item.PassthroughSettings).XmlTranslator).Write(
+                ((PassthroughSettingsXmlWriteTranslation)((IXmlItem)item.PassthroughSettings).XmlWriteTranslator).Write(
                     item: item.PassthroughSettings,
                     node: node,
                     name: nameof(item.PassthroughSettings),
@@ -1501,7 +1512,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.TargetGroups),
                     transl: (XElement subNode, ITargetGroupGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((TargetGroupXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                        ((TargetGroupXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -1510,6 +1521,76 @@ namespace Mutagen.Bethesda.Tests.Internals
                     });
             }
         }
+
+        public void Write(
+            XElement node,
+            ITestingSettingsGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.TestingSettings");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.TestingSettings");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ITestingSettingsGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            ITestingSettingsGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (ITestingSettingsGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class TestingSettingsXmlCreateTranslation
+    {
+        public readonly static TestingSettingsXmlCreateTranslation Instance = new TestingSettingsXmlCreateTranslation();
 
         public static void FillPublic_Xml(
             ITestingSettings item,
@@ -1521,7 +1602,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    TestingSettingsXmlTranslation.FillPublicElement_Xml(
+                    TestingSettingsXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1786,70 +1867,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            ITestingSettingsGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.TestingSettings");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.TestingSettings");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ITestingSettingsGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            ITestingSettingsGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (ITestingSettingsGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1864,7 +1881,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((TestingSettingsXmlTranslation)item.XmlTranslator).Write(
+            ((TestingSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1954,7 +1971,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((TestingSettingsXmlTranslation)item.XmlTranslator).Write(
+            ((TestingSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1968,7 +1985,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null,
             TestingSettings_TranslationMask translationMask = null)
         {
-            ((TestingSettingsXmlTranslation)item.XmlTranslator).Write(
+            ((TestingSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1982,7 +1999,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((TestingSettingsXmlTranslation)item.XmlTranslator).Write(
+            ((TestingSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1997,7 +2014,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((TestingSettingsXmlTranslation)item.XmlTranslator).Write(
+            ((TestingSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,

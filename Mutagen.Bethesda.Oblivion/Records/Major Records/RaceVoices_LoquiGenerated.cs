@@ -35,10 +35,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RaceVoices :
         LoquiNotifyingObject,
         IRaceVoices,
-        ILoquiObject<RaceVoices>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<RaceVoices>,
         ILinkSubContainer,
-        IEquatable<RaceVoices>
+        IEquatable<RaceVoices>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
@@ -55,20 +55,23 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Male
-        public FormIDLink<Race> Male_Property { get; } = new FormIDLink<Race>();
+        public IFormIDLink<Race> Male_Property { get; } = new FormIDLink<Race>();
         public Race Male { get => Male_Property.Item; set => Male_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Race> IRaceVoicesGetter.Male_Property => this.Male_Property;
+        IFormIDLink<Race> IRaceVoices.Male_Property => this.Male_Property;
+        IRaceInternalGetter IRaceVoicesGetter.Male => this.Male_Property.Item;
+        IFormIDLinkGetter<Race> IRaceVoicesGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
-        public FormIDLink<Race> Female_Property { get; } = new FormIDLink<Race>();
+        public IFormIDLink<Race> Female_Property { get; } = new FormIDLink<Race>();
         public Race Female { get => Female_Property.Item; set => Female_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Race> IRaceVoicesGetter.Female_Property => this.Female_Property;
+        IFormIDLink<Race> IRaceVoices.Female_Property => this.Female_Property;
+        IRaceInternalGetter IRaceVoicesGetter.Female => this.Female_Property.Item;
+        IFormIDLinkGetter<Race> IRaceVoicesGetter.Female_Property => this.Female_Property;
         #endregion
 
-        IMask<bool> IEqualsMask<RaceVoices>.GetEqualsMask(RaceVoices rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IRaceVoicesGetter>.GetEqualsMask(IRaceVoicesGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceVoicesGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -82,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -110,8 +113,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => RaceVoicesXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => RaceVoicesXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static RaceVoices Create_Xml(
@@ -164,7 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    RaceVoicesXmlTranslation.FillPublicElement_Xml(
+                    RaceVoicesXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -290,8 +293,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => RaceVoicesBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => RaceVoicesBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static RaceVoices Create_Binary(
@@ -365,7 +368,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public RaceVoices Copy(
             RaceVoices_CopyMask copyMask = null,
-            IRaceVoicesGetter def = null)
+            RaceVoices def = null)
         {
             return RaceVoices.Copy(
                 this,
@@ -374,9 +377,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RaceVoices Copy(
-            IRaceVoicesGetter item,
+            RaceVoices item,
             RaceVoices_CopyMask copyMask = null,
-            IRaceVoicesGetter def = null)
+            RaceVoices def = null)
         {
             RaceVoices ret;
             if (item.GetType().Equals(typeof(RaceVoices)))
@@ -395,9 +398,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RaceVoices Copy_ToLoqui(
-            IRaceVoicesGetter item,
+            RaceVoices item,
             RaceVoices_CopyMask copyMask = null,
-            IRaceVoicesGetter def = null)
+            RaceVoices def = null)
         {
             RaceVoices ret;
             if (item.GetType().Equals(typeof(RaceVoices)))
@@ -415,10 +418,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IRaceVoicesGetter rhs)
+        public void CopyFieldsFrom(RaceVoices rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IRaceVoicesGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -426,9 +429,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRaceVoicesGetter rhs,
+            RaceVoices rhs,
             RaceVoices_CopyMask copyMask,
-            IRaceVoicesGetter def = null)
+            RaceVoices def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -439,10 +442,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRaceVoicesGetter rhs,
+            RaceVoices rhs,
             out RaceVoices_ErrorMask errorMask,
             RaceVoices_CopyMask copyMask = null,
-            IRaceVoicesGetter def = null,
+            RaceVoices def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -456,10 +459,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRaceVoicesGetter rhs,
+            RaceVoices rhs,
             ErrorMaskBuilder errorMask,
             RaceVoices_CopyMask copyMask = null,
-            IRaceVoicesGetter def = null)
+            RaceVoices def = null)
         {
             RaceVoicesCommon.CopyFieldsFrom(
                 item: this,
@@ -475,10 +478,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RaceVoices_FieldIndex.Male:
-                    this.Male_Property.Set((FormIDLink<Race>)obj);
+                    this.Male_Property.Set((IFormIDLink<Race>)obj);
                     break;
                 case RaceVoices_FieldIndex.Female:
-                    this.Female_Property.Set((FormIDLink<Race>)obj);
+                    this.Female_Property.Set((IFormIDLink<Race>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -509,10 +512,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RaceVoices_FieldIndex.Male:
-                    obj.Male_Property.Set((FormIDLink<Race>)pair.Value);
+                    obj.Male_Property.Set((IFormIDLink<Race>)pair.Value);
                     break;
                 case RaceVoices_FieldIndex.Female:
-                    obj.Female_Property.Set((FormIDLink<Race>)pair.Value);
+                    obj.Female_Property.Set((IFormIDLink<Race>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -524,31 +527,33 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRaceVoices :
         IRaceVoicesGetter,
-        ILoquiClass<IRaceVoices, IRaceVoicesGetter>,
-        ILoquiClass<RaceVoices, IRaceVoicesGetter>
+        ILoquiObjectSetter<IRaceVoices>
     {
         new Race Male { get; set; }
+        new IFormIDLink<Race> Male_Property { get; }
         new Race Female { get; set; }
+        new IFormIDLink<Race> Female_Property { get; }
         void CopyFieldsFrom(
-            IRaceVoicesGetter rhs,
+            RaceVoices rhs,
             ErrorMaskBuilder errorMask = null,
             RaceVoices_CopyMask copyMask = null,
-            IRaceVoicesGetter def = null);
+            RaceVoices def = null);
     }
 
     public partial interface IRaceVoicesGetter :
         ILoquiObject,
+        ILoquiObject<IRaceVoicesGetter>,
         IXmlItem,
         IBinaryItem
     {
         #region Male
-        Race Male { get; }
-        FormIDLink<Race> Male_Property { get; }
+        IRaceInternalGetter Male { get; }
+        IFormIDLinkGetter<Race> Male_Property { get; }
 
         #endregion
         #region Female
-        Race Female { get; }
-        FormIDLink<Race> Female_Property { get; }
+        IRaceInternalGetter Female { get; }
+        IFormIDLinkGetter<Race> Female_Property { get; }
 
         #endregion
 
@@ -569,13 +574,10 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceVoicesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RaceVoices_Mask<bool>();
-            ((RaceVoicesCommon)item.CommonInstance).FillEqualsMask(
+            return ((RaceVoicesCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -777,20 +779,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceVoices_FieldIndex.Male:
-                    return typeof(FormIDLink<Race>);
+                    return typeof(IFormIDLink<Race>);
                 case RaceVoices_FieldIndex.Female:
-                    return typeof(FormIDLink<Race>);
+                    return typeof(IFormIDLink<Race>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(RaceVoicesXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(RaceVoicesXmlWriteTranslation);
         public static readonly RecordType VNAM_HEADER = new RecordType("VNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = VNAM_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(RaceVoicesBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(RaceVoicesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -825,11 +827,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RaceVoicesCommon
     {
         public static readonly RaceVoicesCommon Instance = new RaceVoicesCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IRaceVoices item,
-            IRaceVoicesGetter rhs,
-            IRaceVoicesGetter def,
+            RaceVoices item,
+            RaceVoices rhs,
+            RaceVoices def,
             ErrorMaskBuilder errorMask,
             RaceVoices_CopyMask copyMask)
         {
@@ -880,6 +883,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(Race);
         }
 
+        public RaceVoices_Mask<bool> GetEqualsMask(
+            IRaceVoicesGetter item,
+            IRaceVoicesGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RaceVoices_Mask<bool>();
+            ((RaceVoicesCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IRaceVoicesGetter item,
             IRaceVoicesGetter rhs,
@@ -913,11 +930,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(RaceVoices)} =>");
+                fg.AppendLine($"RaceVoices =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(RaceVoices)}) =>");
+                fg.AppendLine($"{name} (RaceVoices) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -965,9 +982,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class RaceVoicesXmlTranslation : IXmlTranslator
+    public partial class RaceVoicesXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static RaceVoicesXmlTranslation Instance = new RaceVoicesXmlTranslation();
+        public readonly static RaceVoicesXmlWriteTranslation Instance = new RaceVoicesXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IRaceVoicesGetter item,
@@ -992,59 +1009,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Female_Property?.FormKey,
                     fieldIndex: (int)RaceVoices_FieldIndex.Female,
                     errorMask: errorMask);
-            }
-        }
-
-        public static void FillPublic_Xml(
-            IRaceVoices item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RaceVoicesXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            IRaceVoices item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Male":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Male_Property,
-                        fieldIndex: (int)RaceVoices_FieldIndex.Male,
-                        errorMask: errorMask);
-                    break;
-                case "Female":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Female_Property,
-                        fieldIndex: (int)RaceVoices_FieldIndex.Female,
-                        errorMask: errorMask);
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -1114,6 +1078,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class RaceVoicesXmlCreateTranslation
+    {
+        public readonly static RaceVoicesXmlCreateTranslation Instance = new RaceVoicesXmlCreateTranslation();
+
+        public static void FillPublic_Xml(
+            IRaceVoices item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RaceVoicesXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            IRaceVoices item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Male":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Male_Property,
+                        fieldIndex: (int)RaceVoices_FieldIndex.Male,
+                        errorMask: errorMask);
+                    break;
+                case "Female":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Female_Property,
+                        fieldIndex: (int)RaceVoices_FieldIndex.Female,
+                        errorMask: errorMask);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+
     #region Xml Write Mixins
     public static class RaceVoicesXmlTranslationMixIn
     {
@@ -1126,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RaceVoicesXmlTranslation)item.XmlTranslator).Write(
+            ((RaceVoicesXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1216,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((RaceVoicesXmlTranslation)item.XmlTranslator).Write(
+            ((RaceVoicesXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1230,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             RaceVoices_TranslationMask translationMask = null)
         {
-            ((RaceVoicesXmlTranslation)item.XmlTranslator).Write(
+            ((RaceVoicesXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1244,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((RaceVoicesXmlTranslation)item.XmlTranslator).Write(
+            ((RaceVoicesXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1259,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((RaceVoicesXmlTranslation)item.XmlTranslator).Write(
+            ((RaceVoicesXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1577,9 +1600,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class RaceVoicesBinaryTranslation : IBinaryTranslator
+    public partial class RaceVoicesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RaceVoicesBinaryTranslation Instance = new RaceVoicesBinaryTranslation();
+        public readonly static RaceVoicesBinaryWriteTranslation Instance = new RaceVoicesBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IRaceVoicesGetter item,
@@ -1634,6 +1657,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class RaceVoicesBinaryCreateTranslation
+    {
+        public readonly static RaceVoicesBinaryCreateTranslation Instance = new RaceVoicesBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class RaceVoicesBinaryTranslationMixIn
     {
@@ -1645,7 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RaceVoicesBinaryTranslation)item.BinaryTranslator).Write(
+            ((RaceVoicesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1660,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((RaceVoicesBinaryTranslation)item.BinaryTranslator).Write(
+            ((RaceVoicesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1673,7 +1702,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((RaceVoicesBinaryTranslation)item.BinaryTranslator).Write(
+            ((RaceVoicesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

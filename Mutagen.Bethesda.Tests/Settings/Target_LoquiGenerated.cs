@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Tests
     public partial class Target :
         LoquiNotifyingObject,
         ITarget,
-        ILoquiObject<Target>,
-        ILoquiObjectSetter,
-        IEquatable<Target>
+        ILoquiObjectSetter<Target>,
+        IEquatable<Target>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Target_Registration.Instance;
@@ -106,8 +106,7 @@ namespace Mutagen.Bethesda.Tests
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Target>.GetEqualsMask(Target rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<ITargetGetter>.GetEqualsMask(ITargetGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITargetGetter)rhs, include);
         #region To String
         public override string ToString()
         {
@@ -126,7 +125,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -167,8 +166,8 @@ namespace Mutagen.Bethesda.Tests
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => TargetXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => TargetXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static Target Create_Xml(
@@ -221,7 +220,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 foreach (var elem in node.Elements())
                 {
-                    TargetXmlTranslation.FillPublicElement_Xml(
+                    TargetXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -437,7 +436,7 @@ namespace Mutagen.Bethesda.Tests
 
         public Target Copy(
             Target_CopyMask copyMask = null,
-            ITargetGetter def = null)
+            Target def = null)
         {
             return Target.Copy(
                 this,
@@ -446,9 +445,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static Target Copy(
-            ITargetGetter item,
+            Target item,
             Target_CopyMask copyMask = null,
-            ITargetGetter def = null)
+            Target def = null)
         {
             Target ret;
             if (item.GetType().Equals(typeof(Target)))
@@ -467,9 +466,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static Target Copy_ToLoqui(
-            ITargetGetter item,
+            Target item,
             Target_CopyMask copyMask = null,
-            ITargetGetter def = null)
+            Target def = null)
         {
             Target ret;
             if (item.GetType().Equals(typeof(Target)))
@@ -487,10 +486,10 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public void CopyFieldsFrom(ITargetGetter rhs)
+        public void CopyFieldsFrom(Target rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ITargetGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -498,9 +497,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            ITargetGetter rhs,
+            Target rhs,
             Target_CopyMask copyMask,
-            ITargetGetter def = null)
+            Target def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -511,10 +510,10 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            ITargetGetter rhs,
+            Target rhs,
             out Target_ErrorMask errorMask,
             Target_CopyMask copyMask = null,
-            ITargetGetter def = null,
+            Target def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -528,10 +527,10 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            ITargetGetter rhs,
+            Target rhs,
             ErrorMaskBuilder errorMask,
             Target_CopyMask copyMask = null,
-            ITargetGetter def = null)
+            Target def = null)
         {
             TargetCommon.CopyFieldsFrom(
                 item: this,
@@ -614,8 +613,7 @@ namespace Mutagen.Bethesda.Tests
     #region Interface
     public partial interface ITarget :
         ITargetGetter,
-        ILoquiClass<ITarget, ITargetGetter>,
-        ILoquiClass<Target, ITargetGetter>
+        ILoquiObjectSetter<ITarget>
     {
         new Boolean Do { get; set; }
 
@@ -627,18 +625,19 @@ namespace Mutagen.Bethesda.Tests
 
         new Byte ExpectedBaseGroupCount { get; set; }
         new bool ExpectedBaseGroupCount_IsSet { get; set; }
-        void ExpectedBaseGroupCount_Set(Byte item, bool hasBeenSet = true);
+        void ExpectedBaseGroupCount_Set(Byte value, bool hasBeenSet = true);
         void ExpectedBaseGroupCount_Unset();
 
         void CopyFieldsFrom(
-            ITargetGetter rhs,
+            Target rhs,
             ErrorMaskBuilder errorMask = null,
             Target_CopyMask copyMask = null,
-            ITargetGetter def = null);
+            Target def = null);
     }
 
     public partial interface ITargetGetter :
         ILoquiObject,
+        ILoquiObject<ITargetGetter>,
         IXmlItem
     {
         #region Do
@@ -680,13 +679,10 @@ namespace Mutagen.Bethesda.Tests
             ITargetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Target_Mask<bool>();
-            ((TargetCommon)item.CommonInstance).FillEqualsMask(
+            return ((TargetCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -932,7 +928,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(TargetXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(TargetXmlWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -967,11 +963,12 @@ namespace Mutagen.Bethesda.Tests.Internals
     public partial class TargetCommon
     {
         public static readonly TargetCommon Instance = new TargetCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ITarget item,
-            ITargetGetter rhs,
-            ITargetGetter def,
+            Target item,
+            Target rhs,
+            Target def,
             ErrorMaskBuilder errorMask,
             Target_CopyMask copyMask)
         {
@@ -1089,6 +1086,20 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.ExpectedBaseGroupCount_Unset();
         }
 
+        public Target_Mask<bool> GetEqualsMask(
+            ITargetGetter item,
+            ITargetGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Target_Mask<bool>();
+            ((TargetCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             ITargetGetter item,
             ITargetGetter rhs,
@@ -1125,11 +1136,11 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Target)} =>");
+                fg.AppendLine($"Target =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Target)}) =>");
+                fg.AppendLine($"{name} (Target) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1193,9 +1204,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class TargetXmlTranslation : IXmlTranslator
+    public partial class TargetXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static TargetXmlTranslation Instance = new TargetXmlTranslation();
+        public readonly static TargetXmlWriteTranslation Instance = new TargetXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             ITargetGetter item,
@@ -1251,6 +1262,76 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            ITargetGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.Target");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.Target");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ITargetGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            ITargetGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (ITargetGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class TargetXmlCreateTranslation
+    {
+        public readonly static TargetXmlCreateTranslation Instance = new TargetXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             ITarget item,
             XElement node,
@@ -1261,7 +1342,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    TargetXmlTranslation.FillPublicElement_Xml(
+                    TargetXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1435,70 +1516,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            ITargetGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.Target");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.Target");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ITargetGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            ITargetGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (ITargetGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1513,7 +1530,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((TargetXmlTranslation)item.XmlTranslator).Write(
+            ((TargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1603,7 +1620,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((TargetXmlTranslation)item.XmlTranslator).Write(
+            ((TargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1617,7 +1634,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null,
             Target_TranslationMask translationMask = null)
         {
-            ((TargetXmlTranslation)item.XmlTranslator).Write(
+            ((TargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1631,7 +1648,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((TargetXmlTranslation)item.XmlTranslator).Write(
+            ((TargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1646,7 +1663,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((TargetXmlTranslation)item.XmlTranslator).Write(
+            ((TargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,

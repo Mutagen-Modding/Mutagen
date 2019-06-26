@@ -36,13 +36,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Activator :
         OblivionMajorRecord,
-        IActivator,
         IActivatorInternal,
-        ILoquiObject<Activator>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<Activator>,
         INamed,
         ILinkSubContainer,
-        IEquatable<Activator>
+        IEquatable<Activator>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Activator_Registration.Instance;
@@ -99,9 +98,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         public void Model_Set(
             Model value,
-            bool markSet = true)
+            bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)Activator_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)Activator_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
         public void Model_Unset()
         {
@@ -111,20 +110,23 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter IActivatorGetter.Model => this.Model;
         #endregion
         #region Script
-        public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        public IFormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Script> IActivatorGetter.Script_Property => this.Script_Property;
+        IFormIDSetLink<Script> IActivator.Script_Property => this.Script_Property;
+        IScriptInternalGetter IActivatorGetter.Script => this.Script_Property.Item;
+        IFormIDSetLinkGetter<Script> IActivatorGetter.Script_Property => this.Script_Property;
         #endregion
         #region Sound
-        public FormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
+        public IFormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
         public Sound Sound { get => Sound_Property.Item; set => Sound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Sound> IActivatorGetter.Sound_Property => this.Sound_Property;
+        IFormIDSetLink<Sound> IActivator.Sound_Property => this.Sound_Property;
+        ISoundInternalGetter IActivatorGetter.Sound => this.Sound_Property.Item;
+        IFormIDSetLinkGetter<Sound> IActivatorGetter.Sound_Property => this.Sound_Property;
         #endregion
 
-        IMask<bool> IEqualsMask<Activator>.GetEqualsMask(Activator rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IActivatorGetter>.GetEqualsMask(IActivatorGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActivatorInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -138,7 +140,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -200,7 +202,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => ActivatorXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => ActivatorXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Activator Create_Xml(
@@ -259,7 +261,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    ActivatorXmlTranslation.FillPublicElement_Xml(
+                    ActivatorXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -450,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => ActivatorBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => ActivatorBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Activator Create_Binary(
@@ -597,7 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Activator Copy(
             Activator_CopyMask copyMask = null,
-            IActivatorGetter def = null)
+            Activator def = null)
         {
             return Activator.Copy(
                 this,
@@ -606,9 +608,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Activator Copy(
-            IActivatorGetter item,
+            Activator item,
             Activator_CopyMask copyMask = null,
-            IActivatorGetter def = null)
+            Activator def = null)
         {
             Activator ret;
             if (item.GetType().Equals(typeof(Activator)))
@@ -627,9 +629,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Activator Copy_ToLoqui(
-            IActivatorGetter item,
+            Activator item,
             Activator_CopyMask copyMask = null,
-            IActivatorGetter def = null)
+            Activator def = null)
         {
             Activator ret;
             if (item.GetType().Equals(typeof(Activator)))
@@ -647,10 +649,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IActivatorGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -658,9 +660,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IActivatorGetter rhs,
+            Activator rhs,
             Activator_CopyMask copyMask,
-            IActivatorGetter def = null)
+            Activator def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -671,10 +673,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IActivatorGetter rhs,
+            Activator rhs,
             out Activator_ErrorMask errorMask,
             Activator_CopyMask copyMask = null,
-            IActivatorGetter def = null,
+            Activator def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -688,10 +690,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IActivatorGetter rhs,
+            Activator rhs,
             ErrorMaskBuilder errorMask,
             Activator_CopyMask copyMask = null,
-            IActivatorGetter def = null)
+            Activator def = null)
         {
             ActivatorCommon.CopyFieldsFrom(
                 item: this,
@@ -713,10 +715,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case Activator_FieldIndex.Script:
-                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
+                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
                     break;
                 case Activator_FieldIndex.Sound:
-                    this.Sound_Property.Set((FormIDSetLink<Sound>)obj);
+                    this.Sound_Property.Set((IFormIDSetLink<Sound>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -754,10 +756,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case Activator_FieldIndex.Script:
-                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
+                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
                     break;
                 case Activator_FieldIndex.Sound:
-                    obj.Sound_Property.Set((FormIDSetLink<Sound>)pair.Value);
+                    obj.Sound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -770,26 +772,27 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IActivator :
         IActivatorGetter,
         IOblivionMajorRecord,
-        ILoquiClass<IActivator, IActivatorGetter>,
-        ILoquiClass<Activator, IActivatorGetter>
+        ILoquiObjectSetter<IActivatorInternal>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
-        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Set(String value, bool hasBeenSet = true);
         void Name_Unset();
 
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }
-        void Model_Set(Model item, bool hasBeenSet = true);
+        void Model_Set(Model value, bool hasBeenSet = true);
         void Model_Unset();
 
         new Script Script { get; set; }
+        new IFormIDSetLink<Script> Script_Property { get; }
         new Sound Sound { get; set; }
+        new IFormIDSetLink<Sound> Sound_Property { get; }
         void CopyFieldsFrom(
-            IActivatorGetter rhs,
+            Activator rhs,
             ErrorMaskBuilder errorMask = null,
             Activator_CopyMask copyMask = null,
-            IActivatorGetter def = null);
+            Activator def = null);
     }
 
     public partial interface IActivatorInternal :
@@ -798,11 +801,14 @@ namespace Mutagen.Bethesda.Oblivion
         IActivatorInternalGetter
     {
         new Script Script { get; set; }
+        new IFormIDSetLink<Script> Script_Property { get; }
         new Sound Sound { get; set; }
+        new IFormIDSetLink<Sound> Sound_Property { get; }
     }
 
     public partial interface IActivatorGetter :
         IOblivionMajorRecordGetter,
+        ILoquiObject<IActivatorInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -817,13 +823,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        Script Script { get; }
-        FormIDSetLink<Script> Script_Property { get; }
+        IScriptInternalGetter Script { get; }
+        IFormIDSetLinkGetter<Script> Script_Property { get; }
 
         #endregion
         #region Sound
-        Sound Sound { get; }
-        FormIDSetLink<Sound> Sound_Property { get; }
+        ISoundInternalGetter Sound { get; }
+        IFormIDSetLinkGetter<Sound> Sound_Property { get; }
 
         #endregion
 
@@ -847,17 +853,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Activator_Mask<bool> GetEqualsMask(
-            this IActivatorGetter item,
-            IActivatorGetter rhs,
+            this IActivatorInternalGetter item,
+            IActivatorInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Activator_Mask<bool>();
-            ((ActivatorCommon)item.CommonInstance).FillEqualsMask(
+            return ((ActivatorCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -893,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static Activator_Mask<bool> GetHasBeenSetMask(this IActivatorGetter item)
+        public static Activator_Mask<bool> GetHasBeenSetMask(this IActivatorInternalGetter item)
         {
             var ret = new Activator_Mask<bool>();
             ((ActivatorCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -1089,15 +1092,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Activator_FieldIndex.Model:
                     return typeof(Model);
                 case Activator_FieldIndex.Script:
-                    return typeof(FormIDSetLink<Script>);
+                    return typeof(IFormIDSetLink<Script>);
                 case Activator_FieldIndex.Sound:
-                    return typeof(FormIDSetLink<Sound>);
+                    return typeof(IFormIDSetLink<Sound>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(ActivatorXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(ActivatorXmlWriteTranslation);
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
@@ -1106,7 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = ACTI_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
-        public static readonly Type BinaryTranslation = typeof(ActivatorBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(ActivatorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1141,11 +1144,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ActivatorCommon : OblivionMajorRecordCommon
     {
         public static readonly ActivatorCommon Instance = new ActivatorCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IActivator item,
-            IActivatorGetter rhs,
-            IActivatorGetter def,
+            Activator item,
+            Activator rhs,
+            Activator def,
             ErrorMaskBuilder errorMask,
             Activator_CopyMask copyMask)
         {
@@ -1223,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     else
                     {
                         item.Model_Set(
-                            item: default(Model),
+                            value: default(Model),
                             hasBeenSet: false);
                     }
                 }
@@ -1281,7 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IActivator item)
+        public virtual void Clear(IActivatorInternal item)
         {
             ClearPartial();
             item.Name_Unset();
@@ -1291,19 +1295,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (IActivator)item);
+            Clear(item: (IActivatorInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IActivator)item);
+            Clear(item: (IActivatorInternal)item);
+        }
+
+        public Activator_Mask<bool> GetEqualsMask(
+            IActivatorInternalGetter item,
+            IActivatorInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Activator_Mask<bool>();
+            ((ActivatorCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IActivatorGetter item,
-            IActivatorGetter rhs,
+            IActivatorInternalGetter item,
+            IActivatorInternalGetter rhs,
             Activator_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -1322,7 +1340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            IActivatorGetter item,
+            IActivatorInternalGetter item,
             string name = null,
             Activator_Mask<bool> printMask = null)
         {
@@ -1336,18 +1354,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            IActivatorGetter item,
+            IActivatorInternalGetter item,
             FileGeneration fg,
             string name = null,
             Activator_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Activator)} =>");
+                fg.AppendLine($"Activator =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Activator)}) =>");
+                fg.AppendLine($"{name} (Activator) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1361,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            IActivatorGetter item,
+            IActivatorInternalGetter item,
             FileGeneration fg,
             Activator_Mask<bool> printMask = null)
         {
@@ -1388,7 +1406,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            IActivatorGetter item,
+            IActivatorInternalGetter item,
             Activator_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -1402,7 +1420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            IActivatorGetter item,
+            IActivatorInternalGetter item,
             Activator_Mask<bool> mask)
         {
             mask.Name = item.Name_IsSet;
@@ -1455,11 +1473,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class ActivatorXmlTranslation :
-        OblivionMajorRecordXmlTranslation,
-        IXmlTranslator
+    public partial class ActivatorXmlWriteTranslation :
+        OblivionMajorRecordXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static ActivatorXmlTranslation Instance = new ActivatorXmlTranslation();
+        public new readonly static ActivatorXmlWriteTranslation Instance = new ActivatorXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IActivatorInternalGetter item,
@@ -1467,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1485,7 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Model) ?? true))
             {
-                ((ModelXmlTranslation)((IXmlItem)item.Model).XmlTranslator).Write(
+                ((ModelXmlWriteTranslation)((IXmlItem)item.Model).XmlWriteTranslator).Write(
                     item: item.Model,
                     node: node,
                     name: nameof(item.Model),
@@ -1515,6 +1533,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IActivatorInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Activator");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Activator");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IActivatorInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IActivatorInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IActivatorInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class ActivatorXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
+    {
+        public new readonly static ActivatorXmlCreateTranslation Instance = new ActivatorXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IActivatorInternal item,
             XElement node,
@@ -1525,7 +1614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ActivatorXmlTranslation.FillPublicElement_Xml(
+                    ActivatorXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1617,7 +1706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                     break;
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1625,71 +1714,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            IActivatorInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Activator");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Activator");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IActivatorInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IActivatorInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IActivatorInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -1706,7 +1730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ActivatorXmlTranslation)item.XmlTranslator).Write(
+            ((ActivatorXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2113,11 +2137,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class ActivatorBinaryTranslation :
-        OblivionMajorRecordBinaryTranslation,
-        IBinaryTranslator
+    public partial class ActivatorBinaryWriteTranslation :
+        OblivionMajorRecordBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static ActivatorBinaryTranslation Instance = new ActivatorBinaryTranslation();
+        public new readonly static ActivatorBinaryWriteTranslation Instance = new ActivatorBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
             IActivatorInternalGetter item,
@@ -2126,7 +2150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2142,7 +2166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Model_IsSet)
             {
-                ((ModelBinaryTranslation)((IBinaryItem)item.Model).BinaryTranslator).Write(
+                ((ModelBinaryWriteTranslation)((IBinaryItem)item.Model).BinaryWriteTranslator).Write(
                     item: item.Model,
                     writer: writer,
                     errorMask: errorMask,
@@ -2181,7 +2205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Activator_Registration.ACTI_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryTranslation.Write_Embedded(
+                OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -2242,6 +2266,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class ActivatorBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    {
+        public new readonly static ActivatorBinaryCreateTranslation Instance = new ActivatorBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class ActivatorBinaryTranslationMixIn
     {
@@ -2253,7 +2283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ActivatorBinaryTranslation)item.BinaryTranslator).Write(
+            ((ActivatorBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

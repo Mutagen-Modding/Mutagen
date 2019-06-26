@@ -35,10 +35,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class EnableParent :
         LoquiNotifyingObject,
         IEnableParent,
-        ILoquiObject<EnableParent>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<EnableParent>,
         ILinkSubContainer,
-        IEquatable<EnableParent>
+        IEquatable<EnableParent>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
@@ -56,10 +56,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormIDLink<IPlaced> Reference_Property { get; } = new FormIDLink<IPlaced>();
+        public IFormIDLink<IPlaced> Reference_Property { get; } = new FormIDLink<IPlaced>();
         public IPlaced Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<IPlaced> IEnableParentGetter.Reference_Property => this.Reference_Property;
+        IFormIDLink<IPlaced> IEnableParent.Reference_Property => this.Reference_Property;
+        IPlaced IEnableParentGetter.Reference => this.Reference_Property.Item;
+        IFormIDLinkGetter<IPlaced> IEnableParentGetter.Reference_Property => this.Reference_Property;
         #endregion
         #region Flags
         private EnableParent.Flag _Flags;
@@ -70,8 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<EnableParent>.GetEqualsMask(EnableParent rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IEnableParentGetter>.GetEqualsMask(IEnableParentGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnableParentGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -85,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -113,8 +114,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => EnableParentXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => EnableParentXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static EnableParent Create_Xml(
@@ -167,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    EnableParentXmlTranslation.FillPublicElement_Xml(
+                    EnableParentXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -302,8 +303,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => EnableParentBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => EnableParentBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static EnableParent Create_Binary(
@@ -383,7 +384,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public EnableParent Copy(
             EnableParent_CopyMask copyMask = null,
-            IEnableParentGetter def = null)
+            EnableParent def = null)
         {
             return EnableParent.Copy(
                 this,
@@ -392,9 +393,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static EnableParent Copy(
-            IEnableParentGetter item,
+            EnableParent item,
             EnableParent_CopyMask copyMask = null,
-            IEnableParentGetter def = null)
+            EnableParent def = null)
         {
             EnableParent ret;
             if (item.GetType().Equals(typeof(EnableParent)))
@@ -413,9 +414,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static EnableParent Copy_ToLoqui(
-            IEnableParentGetter item,
+            EnableParent item,
             EnableParent_CopyMask copyMask = null,
-            IEnableParentGetter def = null)
+            EnableParent def = null)
         {
             EnableParent ret;
             if (item.GetType().Equals(typeof(EnableParent)))
@@ -433,10 +434,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IEnableParentGetter rhs)
+        public void CopyFieldsFrom(EnableParent rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IEnableParentGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -444,9 +445,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IEnableParentGetter rhs,
+            EnableParent rhs,
             EnableParent_CopyMask copyMask,
-            IEnableParentGetter def = null)
+            EnableParent def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -457,10 +458,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IEnableParentGetter rhs,
+            EnableParent rhs,
             out EnableParent_ErrorMask errorMask,
             EnableParent_CopyMask copyMask = null,
-            IEnableParentGetter def = null,
+            EnableParent def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -474,10 +475,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IEnableParentGetter rhs,
+            EnableParent rhs,
             ErrorMaskBuilder errorMask,
             EnableParent_CopyMask copyMask = null,
-            IEnableParentGetter def = null)
+            EnableParent def = null)
         {
             EnableParentCommon.CopyFieldsFrom(
                 item: this,
@@ -493,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case EnableParent_FieldIndex.Reference:
-                    this.Reference_Property.Set((FormIDLink<IPlaced>)obj);
+                    this.Reference_Property.Set((IFormIDLink<IPlaced>)obj);
                     break;
                 case EnableParent_FieldIndex.Flags:
                     this.Flags = (EnableParent.Flag)obj;
@@ -527,7 +528,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case EnableParent_FieldIndex.Reference:
-                    obj.Reference_Property.Set((FormIDLink<IPlaced>)pair.Value);
+                    obj.Reference_Property.Set((IFormIDLink<IPlaced>)pair.Value);
                     break;
                 case EnableParent_FieldIndex.Flags:
                     obj.Flags = (EnableParent.Flag)pair.Value;
@@ -542,27 +543,28 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IEnableParent :
         IEnableParentGetter,
-        ILoquiClass<IEnableParent, IEnableParentGetter>,
-        ILoquiClass<EnableParent, IEnableParentGetter>
+        ILoquiObjectSetter<IEnableParent>
     {
         new IPlaced Reference { get; set; }
+        new IFormIDLink<IPlaced> Reference_Property { get; }
         new EnableParent.Flag Flags { get; set; }
 
         void CopyFieldsFrom(
-            IEnableParentGetter rhs,
+            EnableParent rhs,
             ErrorMaskBuilder errorMask = null,
             EnableParent_CopyMask copyMask = null,
-            IEnableParentGetter def = null);
+            EnableParent def = null);
     }
 
     public partial interface IEnableParentGetter :
         ILoquiObject,
+        ILoquiObject<IEnableParentGetter>,
         IXmlItem,
         IBinaryItem
     {
         #region Reference
         IPlaced Reference { get; }
-        FormIDLink<IPlaced> Reference_Property { get; }
+        IFormIDLinkGetter<IPlaced> Reference_Property { get; }
 
         #endregion
         #region Flags
@@ -587,13 +589,10 @@ namespace Mutagen.Bethesda.Oblivion
             IEnableParentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new EnableParent_Mask<bool>();
-            ((EnableParentCommon)item.CommonInstance).FillEqualsMask(
+            return ((EnableParentCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -795,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case EnableParent_FieldIndex.Reference:
-                    return typeof(FormIDLink<IPlaced>);
+                    return typeof(IFormIDLink<IPlaced>);
                 case EnableParent_FieldIndex.Flags:
                     return typeof(EnableParent.Flag);
                 default:
@@ -803,12 +802,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(EnableParentXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(EnableParentXmlWriteTranslation);
         public static readonly RecordType XESP_HEADER = new RecordType("XESP");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = XESP_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(EnableParentBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(EnableParentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -843,11 +842,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class EnableParentCommon
     {
         public static readonly EnableParentCommon Instance = new EnableParentCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IEnableParent item,
-            IEnableParentGetter rhs,
-            IEnableParentGetter def,
+            EnableParent item,
+            EnableParent rhs,
+            EnableParent def,
             ErrorMaskBuilder errorMask,
             EnableParent_CopyMask copyMask)
         {
@@ -898,6 +898,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(EnableParent.Flag);
         }
 
+        public EnableParent_Mask<bool> GetEqualsMask(
+            IEnableParentGetter item,
+            IEnableParentGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new EnableParent_Mask<bool>();
+            ((EnableParentCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IEnableParentGetter item,
             IEnableParentGetter rhs,
@@ -931,11 +945,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(EnableParent)} =>");
+                fg.AppendLine($"EnableParent =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(EnableParent)}) =>");
+                fg.AppendLine($"{name} (EnableParent) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -983,9 +997,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class EnableParentXmlTranslation : IXmlTranslator
+    public partial class EnableParentXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static EnableParentXmlTranslation Instance = new EnableParentXmlTranslation();
+        public readonly static EnableParentXmlWriteTranslation Instance = new EnableParentXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IEnableParentGetter item,
@@ -1010,78 +1024,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Flags,
                     fieldIndex: (int)EnableParent_FieldIndex.Flags,
                     errorMask: errorMask);
-            }
-        }
-
-        public static void FillPublic_Xml(
-            IEnableParent item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    EnableParentXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            IEnableParent item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Reference":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Reference_Property,
-                        fieldIndex: (int)EnableParent_FieldIndex.Reference,
-                        errorMask: errorMask);
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)EnableParent_FieldIndex.Flags);
-                        if (EnumXmlTranslation<EnableParent.Flag>.Instance.Parse(
-                            node: node,
-                            item: out EnableParent.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(EnableParent.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -1151,6 +1093,84 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class EnableParentXmlCreateTranslation
+    {
+        public readonly static EnableParentXmlCreateTranslation Instance = new EnableParentXmlCreateTranslation();
+
+        public static void FillPublic_Xml(
+            IEnableParent item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    EnableParentXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            IEnableParent item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Reference":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Reference_Property,
+                        fieldIndex: (int)EnableParent_FieldIndex.Reference,
+                        errorMask: errorMask);
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)EnableParent_FieldIndex.Flags);
+                        if (EnumXmlTranslation<EnableParent.Flag>.Instance.Parse(
+                            node: node,
+                            item: out EnableParent.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(EnableParent.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+
     #region Xml Write Mixins
     public static class EnableParentXmlTranslationMixIn
     {
@@ -1163,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((EnableParentXmlTranslation)item.XmlTranslator).Write(
+            ((EnableParentXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1253,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((EnableParentXmlTranslation)item.XmlTranslator).Write(
+            ((EnableParentXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1267,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             EnableParent_TranslationMask translationMask = null)
         {
-            ((EnableParentXmlTranslation)item.XmlTranslator).Write(
+            ((EnableParentXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1281,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((EnableParentXmlTranslation)item.XmlTranslator).Write(
+            ((EnableParentXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1296,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((EnableParentXmlTranslation)item.XmlTranslator).Write(
+            ((EnableParentXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1614,9 +1634,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class EnableParentBinaryTranslation : IBinaryTranslator
+    public partial class EnableParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static EnableParentBinaryTranslation Instance = new EnableParentBinaryTranslation();
+        public readonly static EnableParentBinaryWriteTranslation Instance = new EnableParentBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IEnableParentGetter item,
@@ -1671,6 +1691,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class EnableParentBinaryCreateTranslation
+    {
+        public readonly static EnableParentBinaryCreateTranslation Instance = new EnableParentBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class EnableParentBinaryTranslationMixIn
     {
@@ -1682,7 +1708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((EnableParentBinaryTranslation)item.BinaryTranslator).Write(
+            ((EnableParentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1697,7 +1723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((EnableParentBinaryTranslation)item.BinaryTranslator).Write(
+            ((EnableParentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1710,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((EnableParentBinaryTranslation)item.BinaryTranslator).Write(
+            ((EnableParentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

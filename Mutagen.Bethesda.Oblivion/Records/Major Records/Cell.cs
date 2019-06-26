@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class CellBinaryTranslation
+        public partial class CellBinaryCreateTranslation
         {
             public static async Task CustomBinaryEnd_Import(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
@@ -297,7 +297,10 @@ namespace Mutagen.Bethesda.Oblivion
                         return false;
                     });
             }
+        }
 
+        public partial class CellBinaryWriteTranslation
+        {
             static partial void CustomBinaryEnd_Export(MutagenWriter writer, ICellInternalGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (obj.Persistent.Count == 0

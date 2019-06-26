@@ -17,7 +17,31 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class SoundDataExtendedBinaryTranslation
+        public partial class SoundDataExtendedBinaryWriteTranslation
+        {
+            static partial void WriteBinary_StaticAttenuation_Custom(MutagenWriter writer, ISoundDataExtendedInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                UInt16BinaryTranslation.Instance.Write(
+                    writer,
+                    (ushort)Math.Round(item.StaticAttenuation * 100));
+            }
+
+            static partial void WriteBinary_StartTime_Custom(MutagenWriter writer, ISoundDataExtendedInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                ByteBinaryTranslation.Instance.Write(
+                    writer,
+                    (byte)Math.Round(item.StartTime / 1440f * 256f));
+            }
+
+            static partial void WriteBinary_StopTime_Custom(MutagenWriter writer, ISoundDataExtendedInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                ByteBinaryTranslation.Instance.Write(
+                    writer,
+                    (byte)Math.Round(item.StopTime / 1440f * 256f));
+            }
+        }
+
+        public partial class SoundDataExtendedBinaryCreateTranslation
         {
             static partial void FillBinary_StaticAttenuation_Custom(MutagenFrame frame, SoundDataExtended item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
@@ -28,13 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return;
                 }
                 item.StaticAttenuation = i / 100f;
-            }
-
-            static partial void WriteBinary_StaticAttenuation_Custom(MutagenWriter writer, ISoundDataExtendedInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-            {
-                UInt16BinaryTranslation.Instance.Write(
-                    writer,
-                    (ushort)Math.Round(item.StaticAttenuation * 100));
             }
 
             static partial void FillBinary_StartTime_Custom(MutagenFrame frame, SoundDataExtended item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
@@ -48,13 +65,6 @@ namespace Mutagen.Bethesda.Oblivion
                 item.StartTime = b * 1440f / 256f;
             }
 
-            static partial void WriteBinary_StartTime_Custom(MutagenWriter writer, ISoundDataExtendedInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-            {
-                ByteBinaryTranslation.Instance.Write(
-                    writer,
-                    (byte)Math.Round(item.StartTime / 1440f * 256f));
-            }
-
             static partial void FillBinary_StopTime_Custom(MutagenFrame frame, SoundDataExtended item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (!ByteBinaryTranslation.Instance.Parse(
@@ -64,13 +74,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return;
                 }
                 item.StopTime = b * 1440f / 256f;
-            }
-
-            static partial void WriteBinary_StopTime_Custom(MutagenWriter writer, ISoundDataExtendedInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-            {
-                ByteBinaryTranslation.Instance.Write(
-                    writer,
-                    (byte)Math.Round(item.StopTime / 1440f * 256f));
             }
         }
     }

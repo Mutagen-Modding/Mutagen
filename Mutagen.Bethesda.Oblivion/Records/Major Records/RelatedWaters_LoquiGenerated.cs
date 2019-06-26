@@ -35,10 +35,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RelatedWaters :
         LoquiNotifyingObject,
         IRelatedWaters,
-        ILoquiObject<RelatedWaters>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<RelatedWaters>,
         ILinkSubContainer,
-        IEquatable<RelatedWaters>
+        IEquatable<RelatedWaters>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RelatedWaters_Registration.Instance;
@@ -55,26 +55,31 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region RelatedWaterDaytime
-        public FormIDLink<Water> RelatedWaterDaytime_Property { get; } = new FormIDLink<Water>();
+        public IFormIDLink<Water> RelatedWaterDaytime_Property { get; } = new FormIDLink<Water>();
         public Water RelatedWaterDaytime { get => RelatedWaterDaytime_Property.Item; set => RelatedWaterDaytime_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Water> IRelatedWatersGetter.RelatedWaterDaytime_Property => this.RelatedWaterDaytime_Property;
+        IFormIDLink<Water> IRelatedWaters.RelatedWaterDaytime_Property => this.RelatedWaterDaytime_Property;
+        IWaterInternalGetter IRelatedWatersGetter.RelatedWaterDaytime => this.RelatedWaterDaytime_Property.Item;
+        IFormIDLinkGetter<Water> IRelatedWatersGetter.RelatedWaterDaytime_Property => this.RelatedWaterDaytime_Property;
         #endregion
         #region RelatedWaterNighttime
-        public FormIDLink<Water> RelatedWaterNighttime_Property { get; } = new FormIDLink<Water>();
+        public IFormIDLink<Water> RelatedWaterNighttime_Property { get; } = new FormIDLink<Water>();
         public Water RelatedWaterNighttime { get => RelatedWaterNighttime_Property.Item; set => RelatedWaterNighttime_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Water> IRelatedWatersGetter.RelatedWaterNighttime_Property => this.RelatedWaterNighttime_Property;
+        IFormIDLink<Water> IRelatedWaters.RelatedWaterNighttime_Property => this.RelatedWaterNighttime_Property;
+        IWaterInternalGetter IRelatedWatersGetter.RelatedWaterNighttime => this.RelatedWaterNighttime_Property.Item;
+        IFormIDLinkGetter<Water> IRelatedWatersGetter.RelatedWaterNighttime_Property => this.RelatedWaterNighttime_Property;
         #endregion
         #region RelatedWaterUnderwater
-        public FormIDLink<Water> RelatedWaterUnderwater_Property { get; } = new FormIDLink<Water>();
+        public IFormIDLink<Water> RelatedWaterUnderwater_Property { get; } = new FormIDLink<Water>();
         public Water RelatedWaterUnderwater { get => RelatedWaterUnderwater_Property.Item; set => RelatedWaterUnderwater_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Water> IRelatedWatersGetter.RelatedWaterUnderwater_Property => this.RelatedWaterUnderwater_Property;
+        IFormIDLink<Water> IRelatedWaters.RelatedWaterUnderwater_Property => this.RelatedWaterUnderwater_Property;
+        IWaterInternalGetter IRelatedWatersGetter.RelatedWaterUnderwater => this.RelatedWaterUnderwater_Property.Item;
+        IFormIDLinkGetter<Water> IRelatedWatersGetter.RelatedWaterUnderwater_Property => this.RelatedWaterUnderwater_Property;
         #endregion
 
-        IMask<bool> IEqualsMask<RelatedWaters>.GetEqualsMask(RelatedWaters rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IRelatedWatersGetter>.GetEqualsMask(IRelatedWatersGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelatedWatersGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -88,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -118,8 +123,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => RelatedWatersXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => RelatedWatersXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static RelatedWaters Create_Xml(
@@ -172,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    RelatedWatersXmlTranslation.FillPublicElement_Xml(
+                    RelatedWatersXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -302,8 +307,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => RelatedWatersBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => RelatedWatersBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static RelatedWaters Create_Binary(
@@ -381,7 +386,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public RelatedWaters Copy(
             RelatedWaters_CopyMask copyMask = null,
-            IRelatedWatersGetter def = null)
+            RelatedWaters def = null)
         {
             return RelatedWaters.Copy(
                 this,
@@ -390,9 +395,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RelatedWaters Copy(
-            IRelatedWatersGetter item,
+            RelatedWaters item,
             RelatedWaters_CopyMask copyMask = null,
-            IRelatedWatersGetter def = null)
+            RelatedWaters def = null)
         {
             RelatedWaters ret;
             if (item.GetType().Equals(typeof(RelatedWaters)))
@@ -411,9 +416,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RelatedWaters Copy_ToLoqui(
-            IRelatedWatersGetter item,
+            RelatedWaters item,
             RelatedWaters_CopyMask copyMask = null,
-            IRelatedWatersGetter def = null)
+            RelatedWaters def = null)
         {
             RelatedWaters ret;
             if (item.GetType().Equals(typeof(RelatedWaters)))
@@ -431,10 +436,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IRelatedWatersGetter rhs)
+        public void CopyFieldsFrom(RelatedWaters rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IRelatedWatersGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -442,9 +447,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRelatedWatersGetter rhs,
+            RelatedWaters rhs,
             RelatedWaters_CopyMask copyMask,
-            IRelatedWatersGetter def = null)
+            RelatedWaters def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -455,10 +460,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRelatedWatersGetter rhs,
+            RelatedWaters rhs,
             out RelatedWaters_ErrorMask errorMask,
             RelatedWaters_CopyMask copyMask = null,
-            IRelatedWatersGetter def = null,
+            RelatedWaters def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -472,10 +477,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRelatedWatersGetter rhs,
+            RelatedWaters rhs,
             ErrorMaskBuilder errorMask,
             RelatedWaters_CopyMask copyMask = null,
-            IRelatedWatersGetter def = null)
+            RelatedWaters def = null)
         {
             RelatedWatersCommon.CopyFieldsFrom(
                 item: this,
@@ -491,13 +496,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    this.RelatedWaterDaytime_Property.Set((FormIDLink<Water>)obj);
+                    this.RelatedWaterDaytime_Property.Set((IFormIDLink<Water>)obj);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    this.RelatedWaterNighttime_Property.Set((FormIDLink<Water>)obj);
+                    this.RelatedWaterNighttime_Property.Set((IFormIDLink<Water>)obj);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    this.RelatedWaterUnderwater_Property.Set((FormIDLink<Water>)obj);
+                    this.RelatedWaterUnderwater_Property.Set((IFormIDLink<Water>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -528,13 +533,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    obj.RelatedWaterDaytime_Property.Set((FormIDLink<Water>)pair.Value);
+                    obj.RelatedWaterDaytime_Property.Set((IFormIDLink<Water>)pair.Value);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    obj.RelatedWaterNighttime_Property.Set((FormIDLink<Water>)pair.Value);
+                    obj.RelatedWaterNighttime_Property.Set((IFormIDLink<Water>)pair.Value);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    obj.RelatedWaterUnderwater_Property.Set((FormIDLink<Water>)pair.Value);
+                    obj.RelatedWaterUnderwater_Property.Set((IFormIDLink<Water>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -546,37 +551,40 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRelatedWaters :
         IRelatedWatersGetter,
-        ILoquiClass<IRelatedWaters, IRelatedWatersGetter>,
-        ILoquiClass<RelatedWaters, IRelatedWatersGetter>
+        ILoquiObjectSetter<IRelatedWaters>
     {
         new Water RelatedWaterDaytime { get; set; }
+        new IFormIDLink<Water> RelatedWaterDaytime_Property { get; }
         new Water RelatedWaterNighttime { get; set; }
+        new IFormIDLink<Water> RelatedWaterNighttime_Property { get; }
         new Water RelatedWaterUnderwater { get; set; }
+        new IFormIDLink<Water> RelatedWaterUnderwater_Property { get; }
         void CopyFieldsFrom(
-            IRelatedWatersGetter rhs,
+            RelatedWaters rhs,
             ErrorMaskBuilder errorMask = null,
             RelatedWaters_CopyMask copyMask = null,
-            IRelatedWatersGetter def = null);
+            RelatedWaters def = null);
     }
 
     public partial interface IRelatedWatersGetter :
         ILoquiObject,
+        ILoquiObject<IRelatedWatersGetter>,
         IXmlItem,
         IBinaryItem
     {
         #region RelatedWaterDaytime
-        Water RelatedWaterDaytime { get; }
-        FormIDLink<Water> RelatedWaterDaytime_Property { get; }
+        IWaterInternalGetter RelatedWaterDaytime { get; }
+        IFormIDLinkGetter<Water> RelatedWaterDaytime_Property { get; }
 
         #endregion
         #region RelatedWaterNighttime
-        Water RelatedWaterNighttime { get; }
-        FormIDLink<Water> RelatedWaterNighttime_Property { get; }
+        IWaterInternalGetter RelatedWaterNighttime { get; }
+        IFormIDLinkGetter<Water> RelatedWaterNighttime_Property { get; }
 
         #endregion
         #region RelatedWaterUnderwater
-        Water RelatedWaterUnderwater { get; }
-        FormIDLink<Water> RelatedWaterUnderwater_Property { get; }
+        IWaterInternalGetter RelatedWaterUnderwater { get; }
+        IFormIDLinkGetter<Water> RelatedWaterUnderwater_Property { get; }
 
         #endregion
 
@@ -597,13 +605,10 @@ namespace Mutagen.Bethesda.Oblivion
             IRelatedWatersGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RelatedWaters_Mask<bool>();
-            ((RelatedWatersCommon)item.CommonInstance).FillEqualsMask(
+            return ((RelatedWatersCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -815,22 +820,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    return typeof(FormIDLink<Water>);
+                    return typeof(IFormIDLink<Water>);
                 case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    return typeof(FormIDLink<Water>);
+                    return typeof(IFormIDLink<Water>);
                 case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    return typeof(FormIDLink<Water>);
+                    return typeof(IFormIDLink<Water>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(RelatedWatersXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(RelatedWatersXmlWriteTranslation);
         public static readonly RecordType GNAM_HEADER = new RecordType("GNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GNAM_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(RelatedWatersBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(RelatedWatersBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -865,11 +870,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RelatedWatersCommon
     {
         public static readonly RelatedWatersCommon Instance = new RelatedWatersCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IRelatedWaters item,
-            IRelatedWatersGetter rhs,
-            IRelatedWatersGetter def,
+            RelatedWaters item,
+            RelatedWaters rhs,
+            RelatedWaters def,
             ErrorMaskBuilder errorMask,
             RelatedWaters_CopyMask copyMask)
         {
@@ -938,6 +944,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RelatedWaterUnderwater = default(Water);
         }
 
+        public RelatedWaters_Mask<bool> GetEqualsMask(
+            IRelatedWatersGetter item,
+            IRelatedWatersGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RelatedWaters_Mask<bool>();
+            ((RelatedWatersCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IRelatedWatersGetter item,
             IRelatedWatersGetter rhs,
@@ -972,11 +992,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(RelatedWaters)} =>");
+                fg.AppendLine($"RelatedWaters =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(RelatedWaters)}) =>");
+                fg.AppendLine($"{name} (RelatedWaters) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1029,9 +1049,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class RelatedWatersXmlTranslation : IXmlTranslator
+    public partial class RelatedWatersXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static RelatedWatersXmlTranslation Instance = new RelatedWatersXmlTranslation();
+        public readonly static RelatedWatersXmlWriteTranslation Instance = new RelatedWatersXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IRelatedWatersGetter item,
@@ -1065,66 +1085,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.RelatedWaterUnderwater_Property?.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
                     errorMask: errorMask);
-            }
-        }
-
-        public static void FillPublic_Xml(
-            IRelatedWaters item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RelatedWatersXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            IRelatedWaters item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "RelatedWaterDaytime":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.RelatedWaterDaytime_Property,
-                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
-                        errorMask: errorMask);
-                    break;
-                case "RelatedWaterNighttime":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.RelatedWaterNighttime_Property,
-                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
-                        errorMask: errorMask);
-                    break;
-                case "RelatedWaterUnderwater":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.RelatedWaterUnderwater_Property,
-                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
-                        errorMask: errorMask);
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -1194,6 +1154,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class RelatedWatersXmlCreateTranslation
+    {
+        public readonly static RelatedWatersXmlCreateTranslation Instance = new RelatedWatersXmlCreateTranslation();
+
+        public static void FillPublic_Xml(
+            IRelatedWaters item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RelatedWatersXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            IRelatedWaters item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "RelatedWaterDaytime":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.RelatedWaterDaytime_Property,
+                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
+                        errorMask: errorMask);
+                    break;
+                case "RelatedWaterNighttime":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.RelatedWaterNighttime_Property,
+                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
+                        errorMask: errorMask);
+                    break;
+                case "RelatedWaterUnderwater":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.RelatedWaterUnderwater_Property,
+                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
+                        errorMask: errorMask);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+
     #region Xml Write Mixins
     public static class RelatedWatersXmlTranslationMixIn
     {
@@ -1206,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RelatedWatersXmlTranslation)item.XmlTranslator).Write(
+            ((RelatedWatersXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1296,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((RelatedWatersXmlTranslation)item.XmlTranslator).Write(
+            ((RelatedWatersXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1310,7 +1336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             RelatedWaters_TranslationMask translationMask = null)
         {
-            ((RelatedWatersXmlTranslation)item.XmlTranslator).Write(
+            ((RelatedWatersXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1324,7 +1350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((RelatedWatersXmlTranslation)item.XmlTranslator).Write(
+            ((RelatedWatersXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1339,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((RelatedWatersXmlTranslation)item.XmlTranslator).Write(
+            ((RelatedWatersXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1684,9 +1710,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class RelatedWatersBinaryTranslation : IBinaryTranslator
+    public partial class RelatedWatersBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RelatedWatersBinaryTranslation Instance = new RelatedWatersBinaryTranslation();
+        public readonly static RelatedWatersBinaryWriteTranslation Instance = new RelatedWatersBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IRelatedWatersGetter item,
@@ -1745,6 +1771,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class RelatedWatersBinaryCreateTranslation
+    {
+        public readonly static RelatedWatersBinaryCreateTranslation Instance = new RelatedWatersBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class RelatedWatersBinaryTranslationMixIn
     {
@@ -1756,7 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RelatedWatersBinaryTranslation)item.BinaryTranslator).Write(
+            ((RelatedWatersBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1771,7 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((RelatedWatersBinaryTranslation)item.BinaryTranslator).Write(
+            ((RelatedWatersBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1784,7 +1816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((RelatedWatersBinaryTranslation)item.BinaryTranslator).Write(
+            ((RelatedWatersBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

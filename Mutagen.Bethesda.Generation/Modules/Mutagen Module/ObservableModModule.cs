@@ -76,7 +76,8 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (item.IsGroup)
                 {
-                    fg.AppendLine($"public IObservable<GroupObservable{item.Loqui.GenericTypes}> {item.Loqui.Name} {{ get; private set; }}");
+                    throw new NotImplementedException();
+                    //fg.AppendLine($"public IObservable<GroupObservable{item.Loqui.GenericTypes}> {item.Loqui.Name} {{ get; private set; }}");
                 }
                 else
                 {

@@ -35,9 +35,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AIPackageTarget :
         LoquiNotifyingObject,
         IAIPackageTarget,
-        ILoquiObject<AIPackageTarget>,
-        ILoquiObjectSetter,
-        IEquatable<AIPackageTarget>
+        ILoquiObjectSetter<AIPackageTarget>,
+        IEquatable<AIPackageTarget>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
@@ -79,8 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<AIPackageTarget>.GetEqualsMask(AIPackageTarget rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IAIPackageTargetGetter>.GetEqualsMask(IAIPackageTargetGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageTargetGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -94,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -124,8 +123,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => AIPackageTargetXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => AIPackageTargetXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static AIPackageTarget Create_Xml(
@@ -178,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    AIPackageTargetXmlTranslation.FillPublicElement_Xml(
+                    AIPackageTargetXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -297,8 +296,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => AIPackageTargetBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => AIPackageTargetBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static AIPackageTarget Create_Binary(
@@ -376,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public AIPackageTarget Copy(
             AIPackageTarget_CopyMask copyMask = null,
-            IAIPackageTargetGetter def = null)
+            AIPackageTarget def = null)
         {
             return AIPackageTarget.Copy(
                 this,
@@ -385,9 +384,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static AIPackageTarget Copy(
-            IAIPackageTargetGetter item,
+            AIPackageTarget item,
             AIPackageTarget_CopyMask copyMask = null,
-            IAIPackageTargetGetter def = null)
+            AIPackageTarget def = null)
         {
             AIPackageTarget ret;
             if (item.GetType().Equals(typeof(AIPackageTarget)))
@@ -406,9 +405,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static AIPackageTarget Copy_ToLoqui(
-            IAIPackageTargetGetter item,
+            AIPackageTarget item,
             AIPackageTarget_CopyMask copyMask = null,
-            IAIPackageTargetGetter def = null)
+            AIPackageTarget def = null)
         {
             AIPackageTarget ret;
             if (item.GetType().Equals(typeof(AIPackageTarget)))
@@ -426,10 +425,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IAIPackageTargetGetter rhs)
+        public void CopyFieldsFrom(AIPackageTarget rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IAIPackageTargetGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -437,9 +436,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IAIPackageTargetGetter rhs,
+            AIPackageTarget rhs,
             AIPackageTarget_CopyMask copyMask,
-            IAIPackageTargetGetter def = null)
+            AIPackageTarget def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -450,10 +449,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IAIPackageTargetGetter rhs,
+            AIPackageTarget rhs,
             out AIPackageTarget_ErrorMask errorMask,
             AIPackageTarget_CopyMask copyMask = null,
-            IAIPackageTargetGetter def = null,
+            AIPackageTarget def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -467,10 +466,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IAIPackageTargetGetter rhs,
+            AIPackageTarget rhs,
             ErrorMaskBuilder errorMask,
             AIPackageTarget_CopyMask copyMask = null,
-            IAIPackageTargetGetter def = null)
+            AIPackageTarget def = null)
         {
             AIPackageTargetCommon.CopyFieldsFrom(
                 item: this,
@@ -541,8 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IAIPackageTarget :
         IAIPackageTargetGetter,
-        ILoquiClass<IAIPackageTarget, IAIPackageTargetGetter>,
-        ILoquiClass<AIPackageTarget, IAIPackageTargetGetter>
+        ILoquiObjectSetter<IAIPackageTarget>
     {
         new AIPackageTarget.ObjectTypeEnum ObjectType { get; set; }
 
@@ -551,14 +549,15 @@ namespace Mutagen.Bethesda.Oblivion
         new Int32 Count { get; set; }
 
         void CopyFieldsFrom(
-            IAIPackageTargetGetter rhs,
+            AIPackageTarget rhs,
             ErrorMaskBuilder errorMask = null,
             AIPackageTarget_CopyMask copyMask = null,
-            IAIPackageTargetGetter def = null);
+            AIPackageTarget def = null);
     }
 
     public partial interface IAIPackageTargetGetter :
         ILoquiObject,
+        ILoquiObject<IAIPackageTargetGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -592,13 +591,10 @@ namespace Mutagen.Bethesda.Oblivion
             IAIPackageTargetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AIPackageTarget_Mask<bool>();
-            ((AIPackageTargetCommon)item.CommonInstance).FillEqualsMask(
+            return ((AIPackageTargetCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -820,12 +816,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(AIPackageTargetXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(AIPackageTargetXmlWriteTranslation);
         public static readonly RecordType PTDT_HEADER = new RecordType("PTDT");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = PTDT_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(AIPackageTargetBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(AIPackageTargetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -860,11 +856,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class AIPackageTargetCommon
     {
         public static readonly AIPackageTargetCommon Instance = new AIPackageTargetCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IAIPackageTarget item,
-            IAIPackageTargetGetter rhs,
-            IAIPackageTargetGetter def,
+            AIPackageTarget item,
+            AIPackageTarget rhs,
+            AIPackageTarget def,
             ErrorMaskBuilder errorMask,
             AIPackageTarget_CopyMask copyMask)
         {
@@ -933,6 +930,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Count = default(Int32);
         }
 
+        public AIPackageTarget_Mask<bool> GetEqualsMask(
+            IAIPackageTargetGetter item,
+            IAIPackageTargetGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new AIPackageTarget_Mask<bool>();
+            ((AIPackageTargetCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IAIPackageTargetGetter item,
             IAIPackageTargetGetter rhs,
@@ -967,11 +978,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(AIPackageTarget)} =>");
+                fg.AppendLine($"AIPackageTarget =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(AIPackageTarget)}) =>");
+                fg.AppendLine($"{name} (AIPackageTarget) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1024,9 +1035,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class AIPackageTargetXmlTranslation : IXmlTranslator
+    public partial class AIPackageTargetXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static AIPackageTargetXmlTranslation Instance = new AIPackageTargetXmlTranslation();
+        public readonly static AIPackageTargetXmlWriteTranslation Instance = new AIPackageTargetXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IAIPackageTargetGetter item,
@@ -1063,6 +1074,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IAIPackageTargetGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.AIPackageTarget");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AIPackageTarget");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IAIPackageTargetGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IAIPackageTargetGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IAIPackageTargetGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class AIPackageTargetXmlCreateTranslation
+    {
+        public readonly static AIPackageTargetXmlCreateTranslation Instance = new AIPackageTargetXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IAIPackageTarget item,
             XElement node,
@@ -1073,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    AIPackageTargetXmlTranslation.FillPublicElement_Xml(
+                    AIPackageTargetXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1180,70 +1261,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IAIPackageTargetGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.AIPackageTarget");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AIPackageTarget");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IAIPackageTargetGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IAIPackageTargetGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IAIPackageTargetGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1258,7 +1275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((AIPackageTargetXmlTranslation)item.XmlTranslator).Write(
+            ((AIPackageTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1348,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((AIPackageTargetXmlTranslation)item.XmlTranslator).Write(
+            ((AIPackageTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1362,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             AIPackageTarget_TranslationMask translationMask = null)
         {
-            ((AIPackageTargetXmlTranslation)item.XmlTranslator).Write(
+            ((AIPackageTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1376,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((AIPackageTargetXmlTranslation)item.XmlTranslator).Write(
+            ((AIPackageTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1391,7 +1408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((AIPackageTargetXmlTranslation)item.XmlTranslator).Write(
+            ((AIPackageTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1736,9 +1753,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class AIPackageTargetBinaryTranslation : IBinaryTranslator
+    public partial class AIPackageTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AIPackageTargetBinaryTranslation Instance = new AIPackageTargetBinaryTranslation();
+        public readonly static AIPackageTargetBinaryWriteTranslation Instance = new AIPackageTargetBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IAIPackageTargetGetter item,
@@ -1791,6 +1808,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class AIPackageTargetBinaryCreateTranslation
+    {
+        public readonly static AIPackageTargetBinaryCreateTranslation Instance = new AIPackageTargetBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class AIPackageTargetBinaryTranslationMixIn
     {
@@ -1802,7 +1825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((AIPackageTargetBinaryTranslation)item.BinaryTranslator).Write(
+            ((AIPackageTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1817,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((AIPackageTargetBinaryTranslation)item.BinaryTranslator).Write(
+            ((AIPackageTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1830,7 +1853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((AIPackageTargetBinaryTranslation)item.BinaryTranslator).Write(
+            ((AIPackageTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

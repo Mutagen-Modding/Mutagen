@@ -35,10 +35,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Relation :
         LoquiNotifyingObject,
         IRelation,
-        ILoquiObject<Relation>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<Relation>,
         ILinkSubContainer,
-        IEquatable<Relation>
+        IEquatable<Relation>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
@@ -56,10 +56,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Faction
-        public FormIDLink<Faction> Faction_Property { get; } = new FormIDLink<Faction>();
+        public IFormIDLink<Faction> Faction_Property { get; } = new FormIDLink<Faction>();
         public Faction Faction { get => Faction_Property.Item; set => Faction_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Faction> IRelationGetter.Faction_Property => this.Faction_Property;
+        IFormIDLink<Faction> IRelation.Faction_Property => this.Faction_Property;
+        IFactionInternalGetter IRelationGetter.Faction => this.Faction_Property.Item;
+        IFormIDLinkGetter<Faction> IRelationGetter.Faction_Property => this.Faction_Property;
         #endregion
         #region Modifier
         private Int32 _Modifier;
@@ -70,8 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Relation>.GetEqualsMask(Relation rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IRelationGetter>.GetEqualsMask(IRelationGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelationGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -85,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -113,8 +114,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => RelationXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => RelationXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static Relation Create_Xml(
@@ -167,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    RelationXmlTranslation.FillPublicElement_Xml(
+                    RelationXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -302,8 +303,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => RelationBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => RelationBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static Relation Create_Binary(
@@ -374,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Relation Copy(
             Relation_CopyMask copyMask = null,
-            IRelationGetter def = null)
+            Relation def = null)
         {
             return Relation.Copy(
                 this,
@@ -383,9 +384,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Relation Copy(
-            IRelationGetter item,
+            Relation item,
             Relation_CopyMask copyMask = null,
-            IRelationGetter def = null)
+            Relation def = null)
         {
             Relation ret;
             if (item.GetType().Equals(typeof(Relation)))
@@ -404,9 +405,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Relation Copy_ToLoqui(
-            IRelationGetter item,
+            Relation item,
             Relation_CopyMask copyMask = null,
-            IRelationGetter def = null)
+            Relation def = null)
         {
             Relation ret;
             if (item.GetType().Equals(typeof(Relation)))
@@ -424,10 +425,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IRelationGetter rhs)
+        public void CopyFieldsFrom(Relation rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IRelationGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -435,9 +436,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRelationGetter rhs,
+            Relation rhs,
             Relation_CopyMask copyMask,
-            IRelationGetter def = null)
+            Relation def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -448,10 +449,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRelationGetter rhs,
+            Relation rhs,
             out Relation_ErrorMask errorMask,
             Relation_CopyMask copyMask = null,
-            IRelationGetter def = null,
+            Relation def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -465,10 +466,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IRelationGetter rhs,
+            Relation rhs,
             ErrorMaskBuilder errorMask,
             Relation_CopyMask copyMask = null,
-            IRelationGetter def = null)
+            Relation def = null)
         {
             RelationCommon.CopyFieldsFrom(
                 item: this,
@@ -484,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Relation_FieldIndex.Faction:
-                    this.Faction_Property.Set((FormIDLink<Faction>)obj);
+                    this.Faction_Property.Set((IFormIDLink<Faction>)obj);
                     break;
                 case Relation_FieldIndex.Modifier:
                     this.Modifier = (Int32)obj;
@@ -518,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Relation_FieldIndex.Faction:
-                    obj.Faction_Property.Set((FormIDLink<Faction>)pair.Value);
+                    obj.Faction_Property.Set((IFormIDLink<Faction>)pair.Value);
                     break;
                 case Relation_FieldIndex.Modifier:
                     obj.Modifier = (Int32)pair.Value;
@@ -533,27 +534,28 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRelation :
         IRelationGetter,
-        ILoquiClass<IRelation, IRelationGetter>,
-        ILoquiClass<Relation, IRelationGetter>
+        ILoquiObjectSetter<IRelation>
     {
         new Faction Faction { get; set; }
+        new IFormIDLink<Faction> Faction_Property { get; }
         new Int32 Modifier { get; set; }
 
         void CopyFieldsFrom(
-            IRelationGetter rhs,
+            Relation rhs,
             ErrorMaskBuilder errorMask = null,
             Relation_CopyMask copyMask = null,
-            IRelationGetter def = null);
+            Relation def = null);
     }
 
     public partial interface IRelationGetter :
         ILoquiObject,
+        ILoquiObject<IRelationGetter>,
         IXmlItem,
         IBinaryItem
     {
         #region Faction
-        Faction Faction { get; }
-        FormIDLink<Faction> Faction_Property { get; }
+        IFactionInternalGetter Faction { get; }
+        IFormIDLinkGetter<Faction> Faction_Property { get; }
 
         #endregion
         #region Modifier
@@ -578,13 +580,10 @@ namespace Mutagen.Bethesda.Oblivion
             IRelationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Relation_Mask<bool>();
-            ((RelationCommon)item.CommonInstance).FillEqualsMask(
+            return ((RelationCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -786,7 +785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Relation_FieldIndex.Faction:
-                    return typeof(FormIDLink<Faction>);
+                    return typeof(IFormIDLink<Faction>);
                 case Relation_FieldIndex.Modifier:
                     return typeof(Int32);
                 default:
@@ -794,12 +793,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(RelationXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(RelationXmlWriteTranslation);
         public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = XNAM_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(RelationBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(RelationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -834,11 +833,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RelationCommon
     {
         public static readonly RelationCommon Instance = new RelationCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IRelation item,
-            IRelationGetter rhs,
-            IRelationGetter def,
+            Relation item,
+            Relation rhs,
+            Relation def,
             ErrorMaskBuilder errorMask,
             Relation_CopyMask copyMask)
         {
@@ -889,6 +889,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Modifier = default(Int32);
         }
 
+        public Relation_Mask<bool> GetEqualsMask(
+            IRelationGetter item,
+            IRelationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Relation_Mask<bool>();
+            ((RelationCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IRelationGetter item,
             IRelationGetter rhs,
@@ -922,11 +936,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Relation)} =>");
+                fg.AppendLine($"Relation =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Relation)}) =>");
+                fg.AppendLine($"{name} (Relation) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -974,9 +988,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class RelationXmlTranslation : IXmlTranslator
+    public partial class RelationXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static RelationXmlTranslation Instance = new RelationXmlTranslation();
+        public readonly static RelationXmlWriteTranslation Instance = new RelationXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IRelationGetter item,
@@ -1001,78 +1015,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Modifier,
                     fieldIndex: (int)Relation_FieldIndex.Modifier,
                     errorMask: errorMask);
-            }
-        }
-
-        public static void FillPublic_Xml(
-            IRelation item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RelationXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            IRelation item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Faction":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Faction_Property,
-                        fieldIndex: (int)Relation_FieldIndex.Faction,
-                        errorMask: errorMask);
-                    break;
-                case "Modifier":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Relation_FieldIndex.Modifier);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 ModifierParse,
-                            errorMask: errorMask))
-                        {
-                            item.Modifier = ModifierParse;
-                        }
-                        else
-                        {
-                            item.Modifier = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -1142,6 +1084,84 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class RelationXmlCreateTranslation
+    {
+        public readonly static RelationXmlCreateTranslation Instance = new RelationXmlCreateTranslation();
+
+        public static void FillPublic_Xml(
+            IRelation item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RelationXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            IRelation item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Faction":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Faction_Property,
+                        fieldIndex: (int)Relation_FieldIndex.Faction,
+                        errorMask: errorMask);
+                    break;
+                case "Modifier":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Relation_FieldIndex.Modifier);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 ModifierParse,
+                            errorMask: errorMask))
+                        {
+                            item.Modifier = ModifierParse;
+                        }
+                        else
+                        {
+                            item.Modifier = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+
     #region Xml Write Mixins
     public static class RelationXmlTranslationMixIn
     {
@@ -1154,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RelationXmlTranslation)item.XmlTranslator).Write(
+            ((RelationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1244,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((RelationXmlTranslation)item.XmlTranslator).Write(
+            ((RelationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1258,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             Relation_TranslationMask translationMask = null)
         {
-            ((RelationXmlTranslation)item.XmlTranslator).Write(
+            ((RelationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1272,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((RelationXmlTranslation)item.XmlTranslator).Write(
+            ((RelationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1287,7 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((RelationXmlTranslation)item.XmlTranslator).Write(
+            ((RelationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1605,9 +1625,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class RelationBinaryTranslation : IBinaryTranslator
+    public partial class RelationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RelationBinaryTranslation Instance = new RelationBinaryTranslation();
+        public readonly static RelationBinaryWriteTranslation Instance = new RelationBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IRelationGetter item,
@@ -1659,6 +1679,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class RelationBinaryCreateTranslation
+    {
+        public readonly static RelationBinaryCreateTranslation Instance = new RelationBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class RelationBinaryTranslationMixIn
     {
@@ -1670,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RelationBinaryTranslation)item.BinaryTranslator).Write(
+            ((RelationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1685,7 +1711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((RelationBinaryTranslation)item.BinaryTranslator).Write(
+            ((RelationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1698,7 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((RelationBinaryTranslation)item.BinaryTranslator).Write(
+            ((RelationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

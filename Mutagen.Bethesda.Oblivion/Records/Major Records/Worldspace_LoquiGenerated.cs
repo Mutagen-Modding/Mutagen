@@ -38,14 +38,13 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Worldspace :
         Place,
-        IWorldspace,
         IWorldspaceInternal,
-        ILoquiObject<Worldspace>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<Worldspace>,
         INamed,
         IPlace,
         ILinkSubContainer,
-        IEquatable<Worldspace>
+        IEquatable<Worldspace>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Worldspace_Registration.Instance;
@@ -87,22 +86,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Parent
-        public FormIDSetLink<Worldspace> Parent_Property { get; } = new FormIDSetLink<Worldspace>();
+        public IFormIDSetLink<Worldspace> Parent_Property { get; } = new FormIDSetLink<Worldspace>();
         public Worldspace Parent { get => Parent_Property.Item; set => Parent_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Worldspace> IWorldspaceGetter.Parent_Property => this.Parent_Property;
+        IFormIDSetLink<Worldspace> IWorldspace.Parent_Property => this.Parent_Property;
+        IWorldspaceInternalGetter IWorldspaceGetter.Parent => this.Parent_Property.Item;
+        IFormIDSetLinkGetter<Worldspace> IWorldspaceGetter.Parent_Property => this.Parent_Property;
         #endregion
         #region Climate
-        public FormIDSetLink<Climate> Climate_Property { get; } = new FormIDSetLink<Climate>();
+        public IFormIDSetLink<Climate> Climate_Property { get; } = new FormIDSetLink<Climate>();
         public Climate Climate { get => Climate_Property.Item; set => Climate_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Climate> IWorldspaceGetter.Climate_Property => this.Climate_Property;
+        IFormIDSetLink<Climate> IWorldspace.Climate_Property => this.Climate_Property;
+        IClimateInternalGetter IWorldspaceGetter.Climate => this.Climate_Property.Item;
+        IFormIDSetLinkGetter<Climate> IWorldspaceGetter.Climate_Property => this.Climate_Property;
         #endregion
         #region Water
-        public FormIDSetLink<Water> Water_Property { get; } = new FormIDSetLink<Water>();
+        public IFormIDSetLink<Water> Water_Property { get; } = new FormIDSetLink<Water>();
         public Water Water { get => Water_Property.Item; set => Water_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Water> IWorldspaceGetter.Water_Property => this.Water_Property;
+        IFormIDSetLink<Water> IWorldspace.Water_Property => this.Water_Property;
+        IWaterInternalGetter IWorldspaceGetter.Water => this.Water_Property.Item;
+        IFormIDSetLinkGetter<Water> IWorldspaceGetter.Water_Property => this.Water_Property;
         #endregion
         #region Icon
         public bool Icon_IsSet
@@ -146,9 +151,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         public void MapData_Set(
             MapData value,
-            bool markSet = true)
+            bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _MapData, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.MapData, nameof(MapData), nameof(MapData_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _MapData, value, _hasBeenSetTracker, hasBeenSet, (int)Worldspace_FieldIndex.MapData, nameof(MapData), nameof(MapData_IsSet));
         }
         public void MapData_Unset()
         {
@@ -305,9 +310,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         public void Road_Set(
             Road value,
-            bool markSet = true)
+            bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Road, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Road, nameof(Road), nameof(Road_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Road, value, _hasBeenSetTracker, hasBeenSet, (int)Worldspace_FieldIndex.Road, nameof(Road), nameof(Road_IsSet));
         }
         public void Road_Unset()
         {
@@ -332,9 +337,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         public void TopCell_Set(
             Cell value,
-            bool markSet = true)
+            bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _TopCell, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.TopCell, nameof(TopCell), nameof(TopCell_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _TopCell, value, _hasBeenSetTracker, hasBeenSet, (int)Worldspace_FieldIndex.TopCell, nameof(TopCell), nameof(TopCell_IsSet));
         }
         public void TopCell_Unset()
         {
@@ -379,8 +384,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Worldspace>.GetEqualsMask(Worldspace rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IWorldspaceGetter>.GetEqualsMask(IWorldspaceGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -394,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -550,7 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => WorldspaceXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => WorldspaceXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Worldspace Create_Xml(
@@ -609,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    WorldspaceXmlTranslation.FillPublicElement_Xml(
+                    WorldspaceXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -842,7 +846,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => WorldspaceBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static async Task<Worldspace> Create_Binary(
@@ -888,7 +892,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fillTyped: Fill_Binary_RecordTypes);
             try
             {
-                await WorldspaceBinaryTranslation.CustomBinaryEnd_Import(
+                await WorldspaceBinaryCreateTranslation.CustomBinaryEnd_Import(
                     frame: frame,
                     obj: ret,
                     masterReferences: masterReferences,
@@ -1072,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x58585858: // XXXX
                 {
-                    WorldspaceBinaryTranslation.FillBinary_OffsetLength_Custom_Public(
+                    WorldspaceBinaryCreateTranslation.FillBinary_OffsetLength_Custom_Public(
                         frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
                         item: item,
                         masterReferences: masterReferences,
@@ -1081,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x5453464F: // OFST
                 {
-                    WorldspaceBinaryTranslation.FillBinary_OffsetData_Custom_Public(
+                    WorldspaceBinaryCreateTranslation.FillBinary_OffsetData_Custom_Public(
                         frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
                         item: item,
                         masterReferences: masterReferences,
@@ -1104,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Worldspace Copy(
             Worldspace_CopyMask copyMask = null,
-            IWorldspaceGetter def = null)
+            Worldspace def = null)
         {
             return Worldspace.Copy(
                 this,
@@ -1113,9 +1117,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Worldspace Copy(
-            IWorldspaceGetter item,
+            Worldspace item,
             Worldspace_CopyMask copyMask = null,
-            IWorldspaceGetter def = null)
+            Worldspace def = null)
         {
             Worldspace ret;
             if (item.GetType().Equals(typeof(Worldspace)))
@@ -1134,9 +1138,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Worldspace Copy_ToLoqui(
-            IWorldspaceGetter item,
+            Worldspace item,
             Worldspace_CopyMask copyMask = null,
-            IWorldspaceGetter def = null)
+            Worldspace def = null)
         {
             Worldspace ret;
             if (item.GetType().Equals(typeof(Worldspace)))
@@ -1154,10 +1158,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IWorldspaceGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -1165,9 +1169,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWorldspaceGetter rhs,
+            Worldspace rhs,
             Worldspace_CopyMask copyMask,
-            IWorldspaceGetter def = null)
+            Worldspace def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -1178,10 +1182,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWorldspaceGetter rhs,
+            Worldspace rhs,
             out Worldspace_ErrorMask errorMask,
             Worldspace_CopyMask copyMask = null,
-            IWorldspaceGetter def = null,
+            Worldspace def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1195,10 +1199,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWorldspaceGetter rhs,
+            Worldspace rhs,
             ErrorMaskBuilder errorMask,
             Worldspace_CopyMask copyMask = null,
-            IWorldspaceGetter def = null)
+            Worldspace def = null)
         {
             WorldspaceCommon.CopyFieldsFrom(
                 item: this,
@@ -1217,13 +1221,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Name = (String)obj;
                     break;
                 case Worldspace_FieldIndex.Parent:
-                    this.Parent_Property.Set((FormIDSetLink<Worldspace>)obj);
+                    this.Parent_Property.Set((IFormIDSetLink<Worldspace>)obj);
                     break;
                 case Worldspace_FieldIndex.Climate:
-                    this.Climate_Property.Set((FormIDSetLink<Climate>)obj);
+                    this.Climate_Property.Set((IFormIDSetLink<Climate>)obj);
                     break;
                 case Worldspace_FieldIndex.Water:
-                    this.Water_Property.Set((FormIDSetLink<Water>)obj);
+                    this.Water_Property.Set((IFormIDSetLink<Water>)obj);
                     break;
                 case Worldspace_FieldIndex.Icon:
                     this.Icon = (String)obj;
@@ -1294,13 +1298,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Name = (String)pair.Value;
                     break;
                 case Worldspace_FieldIndex.Parent:
-                    obj.Parent_Property.Set((FormIDSetLink<Worldspace>)pair.Value);
+                    obj.Parent_Property.Set((IFormIDSetLink<Worldspace>)pair.Value);
                     break;
                 case Worldspace_FieldIndex.Climate:
-                    obj.Climate_Property.Set((FormIDSetLink<Climate>)pair.Value);
+                    obj.Climate_Property.Set((IFormIDSetLink<Climate>)pair.Value);
                     break;
                 case Worldspace_FieldIndex.Water:
-                    obj.Water_Property.Set((FormIDSetLink<Water>)pair.Value);
+                    obj.Water_Property.Set((IFormIDSetLink<Water>)pair.Value);
                     break;
                 case Worldspace_FieldIndex.Icon:
                     obj.Icon = (String)pair.Value;
@@ -1349,60 +1353,62 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWorldspace :
         IWorldspaceGetter,
         IPlace,
-        ILoquiClass<IWorldspace, IWorldspaceGetter>,
-        ILoquiClass<Worldspace, IWorldspaceGetter>
+        ILoquiObjectSetter<IWorldspaceInternal>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
-        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Set(String value, bool hasBeenSet = true);
         void Name_Unset();
 
         new Worldspace Parent { get; set; }
+        new IFormIDSetLink<Worldspace> Parent_Property { get; }
         new Climate Climate { get; set; }
+        new IFormIDSetLink<Climate> Climate_Property { get; }
         new Water Water { get; set; }
+        new IFormIDSetLink<Water> Water_Property { get; }
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }
-        void Icon_Set(String item, bool hasBeenSet = true);
+        void Icon_Set(String value, bool hasBeenSet = true);
         void Icon_Unset();
 
         new MapData MapData { get; set; }
         new bool MapData_IsSet { get; set; }
-        void MapData_Set(MapData item, bool hasBeenSet = true);
+        void MapData_Set(MapData value, bool hasBeenSet = true);
         void MapData_Unset();
 
         new Worldspace.Flag Flags { get; set; }
         new bool Flags_IsSet { get; set; }
-        void Flags_Set(Worldspace.Flag item, bool hasBeenSet = true);
+        void Flags_Set(Worldspace.Flag value, bool hasBeenSet = true);
         void Flags_Unset();
 
         new P2Float ObjectBoundsMin { get; set; }
         new bool ObjectBoundsMin_IsSet { get; set; }
-        void ObjectBoundsMin_Set(P2Float item, bool hasBeenSet = true);
+        void ObjectBoundsMin_Set(P2Float value, bool hasBeenSet = true);
         void ObjectBoundsMin_Unset();
 
         new P2Float ObjectBoundsMax { get; set; }
         new bool ObjectBoundsMax_IsSet { get; set; }
-        void ObjectBoundsMax_Set(P2Float item, bool hasBeenSet = true);
+        void ObjectBoundsMax_Set(P2Float value, bool hasBeenSet = true);
         void ObjectBoundsMax_Unset();
 
         new MusicType Music { get; set; }
         new bool Music_IsSet { get; set; }
-        void Music_Set(MusicType item, bool hasBeenSet = true);
+        void Music_Set(MusicType value, bool hasBeenSet = true);
         void Music_Unset();
 
         new Byte[] OffsetData { get; set; }
         new bool OffsetData_IsSet { get; set; }
-        void OffsetData_Set(Byte[] item, bool hasBeenSet = true);
+        void OffsetData_Set(Byte[] value, bool hasBeenSet = true);
         void OffsetData_Unset();
 
         new Road Road { get; set; }
         new bool Road_IsSet { get; set; }
-        void Road_Set(Road item, bool hasBeenSet = true);
+        void Road_Set(Road value, bool hasBeenSet = true);
         void Road_Unset();
 
         new Cell TopCell { get; set; }
         new bool TopCell_IsSet { get; set; }
-        void TopCell_Set(Cell item, bool hasBeenSet = true);
+        void TopCell_Set(Cell value, bool hasBeenSet = true);
         void TopCell_Unset();
 
         new Byte[] SubCellsTimestamp { get; set; }
@@ -1411,10 +1417,10 @@ namespace Mutagen.Bethesda.Oblivion
         new Boolean UsingOffsetLength { get; set; }
 
         void CopyFieldsFrom(
-            IWorldspaceGetter rhs,
+            Worldspace rhs,
             ErrorMaskBuilder errorMask = null,
             Worldspace_CopyMask copyMask = null,
-            IWorldspaceGetter def = null);
+            Worldspace def = null);
     }
 
     public partial interface IWorldspaceInternal :
@@ -1423,12 +1429,16 @@ namespace Mutagen.Bethesda.Oblivion
         IWorldspaceInternalGetter
     {
         new Worldspace Parent { get; set; }
+        new IFormIDSetLink<Worldspace> Parent_Property { get; }
         new Climate Climate { get; set; }
+        new IFormIDSetLink<Climate> Climate_Property { get; }
         new Water Water { get; set; }
+        new IFormIDSetLink<Water> Water_Property { get; }
     }
 
     public partial interface IWorldspaceGetter :
         IPlaceGetter,
+        ILoquiObject<IWorldspaceInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -1438,18 +1448,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Parent
-        Worldspace Parent { get; }
-        FormIDSetLink<Worldspace> Parent_Property { get; }
+        IWorldspaceInternalGetter Parent { get; }
+        IFormIDSetLinkGetter<Worldspace> Parent_Property { get; }
 
         #endregion
         #region Climate
-        Climate Climate { get; }
-        FormIDSetLink<Climate> Climate_Property { get; }
+        IClimateInternalGetter Climate { get; }
+        IFormIDSetLinkGetter<Climate> Climate_Property { get; }
 
         #endregion
         #region Water
-        Water Water { get; }
-        FormIDSetLink<Water> Water_Property { get; }
+        IWaterInternalGetter Water { get; }
+        IFormIDSetLinkGetter<Water> Water_Property { get; }
 
         #endregion
         #region Icon
@@ -1529,17 +1539,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Worldspace_Mask<bool> GetEqualsMask(
-            this IWorldspaceGetter item,
-            IWorldspaceGetter rhs,
+            this IWorldspaceInternalGetter item,
+            IWorldspaceInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Worldspace_Mask<bool>();
-            ((WorldspaceCommon)item.CommonInstance).FillEqualsMask(
+            return ((WorldspaceCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -1575,7 +1582,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static Worldspace_Mask<bool> GetHasBeenSetMask(this IWorldspaceGetter item)
+        public static Worldspace_Mask<bool> GetHasBeenSetMask(this IWorldspaceInternalGetter item)
         {
             var ret = new Worldspace_Mask<bool>();
             ((WorldspaceCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -1890,11 +1897,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.Name:
                     return typeof(String);
                 case Worldspace_FieldIndex.Parent:
-                    return typeof(FormIDSetLink<Worldspace>);
+                    return typeof(IFormIDSetLink<Worldspace>);
                 case Worldspace_FieldIndex.Climate:
-                    return typeof(FormIDSetLink<Climate>);
+                    return typeof(IFormIDSetLink<Climate>);
                 case Worldspace_FieldIndex.Water:
-                    return typeof(FormIDSetLink<Water>);
+                    return typeof(IFormIDSetLink<Water>);
                 case Worldspace_FieldIndex.Icon:
                     return typeof(String);
                 case Worldspace_FieldIndex.MapData:
@@ -1924,7 +1931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(WorldspaceXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(WorldspaceXmlWriteTranslation);
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType WNAM_HEADER = new RecordType("WNAM");
@@ -1944,7 +1951,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = WRLD_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 14;
-        public static readonly Type BinaryTranslation = typeof(WorldspaceBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(WorldspaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1979,11 +1986,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class WorldspaceCommon : PlaceCommon
     {
         public static readonly WorldspaceCommon Instance = new WorldspaceCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IWorldspace item,
-            IWorldspaceGetter rhs,
-            IWorldspaceGetter def,
+            Worldspace item,
+            Worldspace rhs,
+            Worldspace def,
             ErrorMaskBuilder errorMask,
             Worldspace_CopyMask copyMask)
         {
@@ -2148,7 +2156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     else
                     {
                         item.MapData_Set(
-                            item: default(MapData),
+                            value: default(MapData),
                             hasBeenSet: false);
                     }
                 }
@@ -2350,7 +2358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     else
                     {
                         item.Road_Set(
-                            item: default(Road),
+                            value: default(Road),
                             hasBeenSet: false);
                     }
                 }
@@ -2402,7 +2410,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     else
                     {
                         item.TopCell_Set(
-                            item: default(Cell),
+                            value: default(Cell),
                             hasBeenSet: false);
                     }
                 }
@@ -2438,7 +2446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCells);
                 try
                 {
-                    item.SubCells.SetToWithDefault<WorldspaceBlock, IWorldspaceBlockGetter>(
+                    item.SubCells.SetToWithDefault<WorldspaceBlock, WorldspaceBlock>(
                         rhs: rhs.SubCells,
                         def: def?.SubCells,
                         converter: (r, d) =>
@@ -2490,7 +2498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IWorldspace item)
+        public virtual void Clear(IWorldspaceInternal item)
         {
             ClearPartial();
             item.Name_Unset();
@@ -2512,24 +2520,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IPlace item)
+        public override void Clear(IPlaceInternal item)
         {
-            Clear(item: (IWorldspace)item);
+            Clear(item: (IWorldspaceInternal)item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (IWorldspace)item);
+            Clear(item: (IWorldspaceInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IWorldspace)item);
+            Clear(item: (IWorldspaceInternal)item);
+        }
+
+        public Worldspace_Mask<bool> GetEqualsMask(
+            IWorldspaceInternalGetter item,
+            IWorldspaceInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Worldspace_Mask<bool>();
+            ((WorldspaceCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IWorldspaceGetter item,
-            IWorldspaceGetter rhs,
+            IWorldspaceInternalGetter item,
+            IWorldspaceInternalGetter rhs,
             Worldspace_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -2575,7 +2597,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            IWorldspaceGetter item,
+            IWorldspaceInternalGetter item,
             string name = null,
             Worldspace_Mask<bool> printMask = null)
         {
@@ -2589,18 +2611,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            IWorldspaceGetter item,
+            IWorldspaceInternalGetter item,
             FileGeneration fg,
             string name = null,
             Worldspace_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Worldspace)} =>");
+                fg.AppendLine($"Worldspace =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Worldspace)}) =>");
+                fg.AppendLine($"{name} (Worldspace) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -2614,7 +2636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            IWorldspaceGetter item,
+            IWorldspaceInternalGetter item,
             FileGeneration fg,
             Worldspace_Mask<bool> printMask = null)
         {
@@ -2703,7 +2725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            IWorldspaceGetter item,
+            IWorldspaceInternalGetter item,
             Worldspace_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -2729,7 +2751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            IWorldspaceGetter item,
+            IWorldspaceInternalGetter item,
             Worldspace_Mask<bool> mask)
         {
             mask.Name = item.Name_IsSet;
@@ -2813,11 +2835,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class WorldspaceXmlTranslation :
-        PlaceXmlTranslation,
-        IXmlTranslator
+    public partial class WorldspaceXmlWriteTranslation :
+        PlaceXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static WorldspaceXmlTranslation Instance = new WorldspaceXmlTranslation();
+        public new readonly static WorldspaceXmlWriteTranslation Instance = new WorldspaceXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IWorldspaceInternalGetter item,
@@ -2825,7 +2847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            PlaceXmlTranslation.WriteToNode_Xml(
+            PlaceXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2883,7 +2905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.MapData_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
             {
-                ((MapDataXmlTranslation)((IXmlItem)item.MapData).XmlTranslator).Write(
+                ((MapDataXmlWriteTranslation)((IXmlItem)item.MapData).XmlWriteTranslator).Write(
                     item: item.MapData,
                     node: node,
                     name: nameof(item.MapData),
@@ -2944,7 +2966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Road_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Road) ?? true))
             {
-                ((RoadXmlTranslation)((IXmlItem)item.Road).XmlTranslator).Write(
+                ((RoadXmlWriteTranslation)((IXmlItem)item.Road).XmlWriteTranslator).Write(
                     item: item.Road,
                     node: node,
                     name: nameof(item.Road),
@@ -2955,7 +2977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.TopCell_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
             {
-                ((CellXmlTranslation)((IXmlItem)item.TopCell).XmlTranslator).Write(
+                ((CellXmlWriteTranslation)((IXmlItem)item.TopCell).XmlWriteTranslator).Write(
                     item: item.TopCell,
                     node: node,
                     name: nameof(item.TopCell),
@@ -2984,7 +3006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells),
                     transl: (XElement subNode, IWorldspaceBlockGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((WorldspaceBlockXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                        ((WorldspaceBlockXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -3003,6 +3025,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IWorldspaceInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Worldspace");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Worldspace");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWorldspaceInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IPlaceInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWorldspaceInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWorldspaceInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWorldspaceInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class WorldspaceXmlCreateTranslation : PlaceXmlCreateTranslation
+    {
+        public new readonly static WorldspaceXmlCreateTranslation Instance = new WorldspaceXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IWorldspaceInternal item,
             XElement node,
@@ -3013,7 +3121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    WorldspaceXmlTranslation.FillPublicElement_Xml(
+                    WorldspaceXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -3402,7 +3510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    PlaceXmlTranslation.FillPublicElement_Xml(
+                    PlaceXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -3410,86 +3518,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            IWorldspaceInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Worldspace");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Worldspace");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IWorldspaceInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IPlaceInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IWorldspaceInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IWorldspaceInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IWorldspaceInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -3506,7 +3534,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WorldspaceXmlTranslation)item.XmlTranslator).Write(
+            ((WorldspaceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -4339,30 +4367,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class WorldspaceBinaryTranslation :
-        PlaceBinaryTranslation,
-        IBinaryTranslator
+    public partial class WorldspaceBinaryWriteTranslation :
+        PlaceBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static WorldspaceBinaryTranslation Instance = new WorldspaceBinaryTranslation();
-
-        static partial void FillBinary_OffsetLength_Custom(
-            MutagenFrame frame,
-            Worldspace item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void FillBinary_OffsetLength_Custom_Public(
-            MutagenFrame frame,
-            Worldspace item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            FillBinary_OffsetLength_Custom(
-                frame: frame,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
+        public new readonly static WorldspaceBinaryWriteTranslation Instance = new WorldspaceBinaryWriteTranslation();
 
         static partial void WriteBinary_OffsetLength_Custom(
             MutagenWriter writer,
@@ -4378,25 +4387,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             WriteBinary_OffsetLength_Custom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        static partial void FillBinary_OffsetData_Custom(
-            MutagenFrame frame,
-            Worldspace item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void FillBinary_OffsetData_Custom_Public(
-            MutagenFrame frame,
-            Worldspace item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            FillBinary_OffsetData_Custom(
-                frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
@@ -4444,7 +4434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
@@ -4458,7 +4448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -4509,7 +4499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.MapData_IsSet)
             {
-                ((MapDataBinaryTranslation)((IBinaryItem)item.MapData).BinaryTranslator).Write(
+                ((MapDataBinaryWriteTranslation)((IBinaryItem)item.MapData).BinaryWriteTranslator).Write(
                     item: item.MapData,
                     writer: writer,
                     errorMask: errorMask,
@@ -4550,12 +4540,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.SNAM_HEADER),
                     nullable: false);
             }
-            WorldspaceBinaryTranslation.WriteBinary_OffsetLength(
+            WorldspaceBinaryWriteTranslation.WriteBinary_OffsetLength(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            WorldspaceBinaryTranslation.WriteBinary_OffsetData(
+            WorldspaceBinaryWriteTranslation.WriteBinary_OffsetData(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -4655,6 +4645,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class WorldspaceBinaryCreateTranslation : PlaceBinaryCreateTranslation
+    {
+        public new readonly static WorldspaceBinaryCreateTranslation Instance = new WorldspaceBinaryCreateTranslation();
+
+        static partial void FillBinary_OffsetLength_Custom(
+            MutagenFrame frame,
+            Worldspace item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_OffsetLength_Custom_Public(
+            MutagenFrame frame,
+            Worldspace item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_OffsetLength_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void FillBinary_OffsetData_Custom(
+            MutagenFrame frame,
+            Worldspace item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_OffsetData_Custom_Public(
+            MutagenFrame frame,
+            Worldspace item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_OffsetData_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+    }
+
     #region Binary Write Mixins
     public static class WorldspaceBinaryTranslationMixIn
     {
@@ -4666,7 +4700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WorldspaceBinaryTranslation)item.BinaryTranslator).Write(
+            ((WorldspaceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

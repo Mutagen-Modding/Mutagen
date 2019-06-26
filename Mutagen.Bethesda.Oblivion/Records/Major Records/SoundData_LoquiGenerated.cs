@@ -34,11 +34,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SoundData :
         LoquiNotifyingObject,
-        ISoundData,
         ISoundDataInternal,
-        ILoquiObject<SoundData>,
-        ILoquiObjectSetter,
-        IEquatable<SoundData>
+        ILoquiObjectSetter<SoundData>,
+        IEquatable<SoundData>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundData_Registration.Instance;
@@ -88,8 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<SoundData>.GetEqualsMask(SoundData rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<ISoundDataGetter>.GetEqualsMask(ISoundDataGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataInternalGetter)rhs, include);
         #region To String
 
         public virtual void ToString(
@@ -103,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -135,8 +133,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected virtual IXmlTranslator XmlTranslator => SoundDataXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected virtual IXmlWriteTranslator XmlWriteTranslator => SoundDataXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static SoundData Create_Xml(
@@ -189,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    SoundDataXmlTranslation.FillPublicElement_Xml(
+                    SoundDataXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -305,8 +303,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        protected virtual IBinaryTranslator BinaryTranslator => SoundDataBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected virtual IBinaryWriteTranslator BinaryWriteTranslator => SoundDataBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static SoundData Create_Binary(
@@ -366,12 +364,12 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            SoundDataBinaryTranslation.FillBinary_MinimumAttenuationDistance_Custom_Public(
+            SoundDataBinaryCreateTranslation.FillBinary_MinimumAttenuationDistance_Custom_Public(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            SoundDataBinaryTranslation.FillBinary_MaximumAttenuationDistance_Custom_Public(
+            SoundDataBinaryCreateTranslation.FillBinary_MaximumAttenuationDistance_Custom_Public(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
@@ -394,7 +392,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public SoundData Copy(
             SoundData_CopyMask copyMask = null,
-            ISoundDataGetter def = null)
+            SoundData def = null)
         {
             return SoundData.Copy(
                 this,
@@ -403,9 +401,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SoundData Copy(
-            ISoundDataGetter item,
+            SoundData item,
             SoundData_CopyMask copyMask = null,
-            ISoundDataGetter def = null)
+            SoundData def = null)
         {
             SoundData ret;
             if (item.GetType().Equals(typeof(SoundData)))
@@ -424,9 +422,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SoundData Copy_ToLoqui(
-            ISoundDataGetter item,
+            SoundData item,
             SoundData_CopyMask copyMask = null,
-            ISoundDataGetter def = null)
+            SoundData def = null)
         {
             SoundData ret;
             if (item.GetType().Equals(typeof(SoundData)))
@@ -444,10 +442,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public virtual void CopyFieldsFrom(ISoundDataGetter rhs)
+        public virtual void CopyFieldsFrom(SoundData rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ISoundDataGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -455,9 +453,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISoundDataGetter rhs,
+            SoundData rhs,
             SoundData_CopyMask copyMask,
-            ISoundDataGetter def = null)
+            SoundData def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -468,10 +466,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISoundDataGetter rhs,
+            SoundData rhs,
             out SoundData_ErrorMask errorMask,
             SoundData_CopyMask copyMask = null,
-            ISoundDataGetter def = null,
+            SoundData def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -485,10 +483,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISoundDataGetter rhs,
+            SoundData rhs,
             ErrorMaskBuilder errorMask,
             SoundData_CopyMask copyMask = null,
-            ISoundDataGetter def = null)
+            SoundData def = null)
         {
             SoundDataCommon.CopyFieldsFrom(
                 item: this,
@@ -565,8 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ISoundData :
         ISoundDataGetter,
-        ILoquiClass<ISoundData, ISoundDataGetter>,
-        ILoquiClass<SoundData, ISoundDataGetter>
+        ILoquiObjectSetter<ISoundDataInternal>
     {
         new UInt16 MinimumAttenuationDistance { get; set; }
 
@@ -577,10 +574,10 @@ namespace Mutagen.Bethesda.Oblivion
         new SoundData.Flag Flags { get; set; }
 
         void CopyFieldsFrom(
-            ISoundDataGetter rhs,
+            SoundData rhs,
             ErrorMaskBuilder errorMask = null,
             SoundData_CopyMask copyMask = null,
-            ISoundDataGetter def = null);
+            SoundData def = null);
     }
 
     public partial interface ISoundDataInternal :
@@ -591,6 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISoundDataGetter :
         ILoquiObject,
+        ILoquiObject<ISoundDataInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -629,17 +627,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SoundData_Mask<bool> GetEqualsMask(
-            this ISoundDataGetter item,
-            ISoundDataGetter rhs,
+            this ISoundDataInternalGetter item,
+            ISoundDataInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SoundData_Mask<bool>();
-            ((SoundDataCommon)item.CommonInstance).FillEqualsMask(
+            return ((SoundDataCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -675,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static SoundData_Mask<bool> GetHasBeenSetMask(this ISoundDataGetter item)
+        public static SoundData_Mask<bool> GetHasBeenSetMask(this ISoundDataInternalGetter item)
         {
             var ret = new SoundData_Mask<bool>();
             ((SoundDataCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -873,7 +868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(SoundDataXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(SoundDataXmlWriteTranslation);
         public static readonly RecordType SNDD_HEADER = new RecordType("SNDD");
         public static readonly RecordType SNDX_HEADER = new RecordType("SNDX");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -890,7 +885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         });
         public const int NumStructFields = 4;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(SoundDataBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(SoundDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -925,11 +920,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SoundDataCommon
     {
         public static readonly SoundDataCommon Instance = new SoundDataCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ISoundData item,
-            ISoundDataGetter rhs,
-            ISoundDataGetter def,
+            SoundData item,
+            SoundData rhs,
+            SoundData def,
             ErrorMaskBuilder errorMask,
             SoundData_CopyMask copyMask)
         {
@@ -1007,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(ISoundData item)
+        public virtual void Clear(ISoundDataInternal item)
         {
             ClearPartial();
             item.MinimumAttenuationDistance = default(UInt16);
@@ -1016,9 +1012,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(SoundData.Flag);
         }
 
+        public SoundData_Mask<bool> GetEqualsMask(
+            ISoundDataInternalGetter item,
+            ISoundDataInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SoundData_Mask<bool>();
+            ((SoundDataCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
-            ISoundDataGetter item,
-            ISoundDataGetter rhs,
+            ISoundDataInternalGetter item,
+            ISoundDataInternalGetter rhs,
             SoundData_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -1030,7 +1040,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            ISoundDataGetter item,
+            ISoundDataInternalGetter item,
             string name = null,
             SoundData_Mask<bool> printMask = null)
         {
@@ -1044,18 +1054,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            ISoundDataGetter item,
+            ISoundDataInternalGetter item,
             FileGeneration fg,
             string name = null,
             SoundData_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(SoundData)} =>");
+                fg.AppendLine($"SoundData =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(SoundData)}) =>");
+                fg.AppendLine($"{name} (SoundData) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1069,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            ISoundDataGetter item,
+            ISoundDataInternalGetter item,
             FileGeneration fg,
             SoundData_Mask<bool> printMask = null)
         {
@@ -1092,14 +1102,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            ISoundDataGetter item,
+            ISoundDataInternalGetter item,
             SoundData_Mask<bool?> checkMask)
         {
             return true;
         }
 
         public void FillHasBeenSetMask(
-            ISoundDataGetter item,
+            ISoundDataInternalGetter item,
             SoundData_Mask<bool> mask)
         {
             mask.MinimumAttenuationDistance = true;
@@ -1113,9 +1123,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class SoundDataXmlTranslation : IXmlTranslator
+    public partial class SoundDataXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static SoundDataXmlTranslation Instance = new SoundDataXmlTranslation();
+        public readonly static SoundDataXmlWriteTranslation Instance = new SoundDataXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             ISoundDataInternalGetter item,
@@ -1161,6 +1171,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public virtual void Write(
+            XElement node,
+            ISoundDataInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SoundData");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SoundData");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public virtual void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISoundDataInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            ISoundDataInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (ISoundDataInternalGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class SoundDataXmlCreateTranslation
+    {
+        public readonly static SoundDataXmlCreateTranslation Instance = new SoundDataXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             ISoundDataInternal item,
             XElement node,
@@ -1171,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    SoundDataXmlTranslation.FillPublicElement_Xml(
+                    SoundDataXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1304,70 +1384,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public virtual void Write(
-            XElement node,
-            ISoundDataInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SoundData");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SoundData");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public virtual void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ISoundDataInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            ISoundDataInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (ISoundDataInternalGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1382,7 +1398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SoundDataXmlTranslation)item.XmlTranslator).Write(
+            ((SoundDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1472,7 +1488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((SoundDataXmlTranslation)item.XmlTranslator).Write(
+            ((SoundDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1486,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             SoundData_TranslationMask translationMask = null)
         {
-            ((SoundDataXmlTranslation)item.XmlTranslator).Write(
+            ((SoundDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1500,7 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((SoundDataXmlTranslation)item.XmlTranslator).Write(
+            ((SoundDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1515,7 +1531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((SoundDataXmlTranslation)item.XmlTranslator).Write(
+            ((SoundDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1887,28 +1903,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class SoundDataBinaryTranslation : IBinaryTranslator
+    public partial class SoundDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SoundDataBinaryTranslation Instance = new SoundDataBinaryTranslation();
-
-        static partial void FillBinary_MinimumAttenuationDistance_Custom(
-            MutagenFrame frame,
-            SoundData item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void FillBinary_MinimumAttenuationDistance_Custom_Public(
-            MutagenFrame frame,
-            SoundData item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            FillBinary_MinimumAttenuationDistance_Custom(
-                frame: frame,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
+        public readonly static SoundDataBinaryWriteTranslation Instance = new SoundDataBinaryWriteTranslation();
 
         static partial void WriteBinary_MinimumAttenuationDistance_Custom(
             MutagenWriter writer,
@@ -1924,25 +1921,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             WriteBinary_MinimumAttenuationDistance_Custom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        static partial void FillBinary_MaximumAttenuationDistance_Custom(
-            MutagenFrame frame,
-            SoundData item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void FillBinary_MaximumAttenuationDistance_Custom_Public(
-            MutagenFrame frame,
-            SoundData item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            FillBinary_MaximumAttenuationDistance_Custom(
-                frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
@@ -1973,12 +1951,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            SoundDataBinaryTranslation.WriteBinary_MinimumAttenuationDistance(
+            SoundDataBinaryWriteTranslation.WriteBinary_MinimumAttenuationDistance(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            SoundDataBinaryTranslation.WriteBinary_MaximumAttenuationDistance(
+            SoundDataBinaryWriteTranslation.WriteBinary_MaximumAttenuationDistance(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -2030,6 +2008,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class SoundDataBinaryCreateTranslation
+    {
+        public readonly static SoundDataBinaryCreateTranslation Instance = new SoundDataBinaryCreateTranslation();
+
+        static partial void FillBinary_MinimumAttenuationDistance_Custom(
+            MutagenFrame frame,
+            SoundData item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_MinimumAttenuationDistance_Custom_Public(
+            MutagenFrame frame,
+            SoundData item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_MinimumAttenuationDistance_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void FillBinary_MaximumAttenuationDistance_Custom(
+            MutagenFrame frame,
+            SoundData item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_MaximumAttenuationDistance_Custom_Public(
+            MutagenFrame frame,
+            SoundData item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_MaximumAttenuationDistance_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+    }
+
     #region Binary Write Mixins
     public static class SoundDataBinaryTranslationMixIn
     {
@@ -2041,7 +2063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SoundDataBinaryTranslation)item.BinaryTranslator).Write(
+            ((SoundDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2056,7 +2078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((SoundDataBinaryTranslation)item.BinaryTranslator).Write(
+            ((SoundDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2069,7 +2091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((SoundDataBinaryTranslation)item.BinaryTranslator).Write(
+            ((SoundDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

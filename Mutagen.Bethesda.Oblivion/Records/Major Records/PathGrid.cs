@@ -12,7 +12,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class PathGridBinaryTranslation
+    public partial class PathGridBinaryCreateTranslation
     {
         public static readonly RecordType PGRP = new RecordType("PGRP");
         public static readonly RecordType PGRR = new RecordType("PGRR");
@@ -106,7 +106,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             pt.NumConnectionsFluffBytes = reader.Slice(13, 3).ToArray();
             return pt;
         }
+    }
 
+    public partial class PathGridBinaryWriteTranslation
+    {
         static partial void WriteBinary_PointToPointConnections_Custom(MutagenWriter writer, IPathGridInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.DATA_HEADER))
@@ -115,7 +118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
 
             bool anyConnections = false;
-            using (HeaderExport.ExportSubRecordHeader(writer, PGRP))
+            using (HeaderExport.ExportSubRecordHeader(writer, PathGridBinaryCreateTranslation.PGRP))
             {
                 foreach (var pt in item.PointToPointConnections)
                 {
@@ -140,7 +143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
 
             if (!anyConnections) return;
-            using (HeaderExport.ExportSubRecordHeader(writer, PGRR))
+            using (HeaderExport.ExportSubRecordHeader(writer, PathGridBinaryCreateTranslation.PGRR))
             {
                 foreach (var pt in item.PointToPointConnections)
                 {

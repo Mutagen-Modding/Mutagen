@@ -35,10 +35,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class WeatherSound :
         LoquiNotifyingObject,
         IWeatherSound,
-        ILoquiObject<WeatherSound>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<WeatherSound>,
         ILinkSubContainer,
-        IEquatable<WeatherSound>
+        IEquatable<WeatherSound>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
@@ -56,10 +56,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        public FormIDLink<Sound> Sound_Property { get; } = new FormIDLink<Sound>();
+        public IFormIDLink<Sound> Sound_Property { get; } = new FormIDLink<Sound>();
         public Sound Sound { get => Sound_Property.Item; set => Sound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Sound> IWeatherSoundGetter.Sound_Property => this.Sound_Property;
+        IFormIDLink<Sound> IWeatherSound.Sound_Property => this.Sound_Property;
+        ISoundInternalGetter IWeatherSoundGetter.Sound => this.Sound_Property.Item;
+        IFormIDLinkGetter<Sound> IWeatherSoundGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region Type
         private WeatherSound.SoundType _Type;
@@ -70,8 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<WeatherSound>.GetEqualsMask(WeatherSound rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IWeatherSoundGetter>.GetEqualsMask(IWeatherSoundGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherSoundGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -85,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -113,8 +114,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => WeatherSoundXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => WeatherSoundXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static WeatherSound Create_Xml(
@@ -167,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    WeatherSoundXmlTranslation.FillPublicElement_Xml(
+                    WeatherSoundXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -302,8 +303,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => WeatherSoundBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => WeatherSoundBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static WeatherSound Create_Binary(
@@ -383,7 +384,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public WeatherSound Copy(
             WeatherSound_CopyMask copyMask = null,
-            IWeatherSoundGetter def = null)
+            WeatherSound def = null)
         {
             return WeatherSound.Copy(
                 this,
@@ -392,9 +393,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static WeatherSound Copy(
-            IWeatherSoundGetter item,
+            WeatherSound item,
             WeatherSound_CopyMask copyMask = null,
-            IWeatherSoundGetter def = null)
+            WeatherSound def = null)
         {
             WeatherSound ret;
             if (item.GetType().Equals(typeof(WeatherSound)))
@@ -413,9 +414,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static WeatherSound Copy_ToLoqui(
-            IWeatherSoundGetter item,
+            WeatherSound item,
             WeatherSound_CopyMask copyMask = null,
-            IWeatherSoundGetter def = null)
+            WeatherSound def = null)
         {
             WeatherSound ret;
             if (item.GetType().Equals(typeof(WeatherSound)))
@@ -433,10 +434,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IWeatherSoundGetter rhs)
+        public void CopyFieldsFrom(WeatherSound rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IWeatherSoundGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -444,9 +445,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWeatherSoundGetter rhs,
+            WeatherSound rhs,
             WeatherSound_CopyMask copyMask,
-            IWeatherSoundGetter def = null)
+            WeatherSound def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -457,10 +458,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWeatherSoundGetter rhs,
+            WeatherSound rhs,
             out WeatherSound_ErrorMask errorMask,
             WeatherSound_CopyMask copyMask = null,
-            IWeatherSoundGetter def = null,
+            WeatherSound def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -474,10 +475,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWeatherSoundGetter rhs,
+            WeatherSound rhs,
             ErrorMaskBuilder errorMask,
             WeatherSound_CopyMask copyMask = null,
-            IWeatherSoundGetter def = null)
+            WeatherSound def = null)
         {
             WeatherSoundCommon.CopyFieldsFrom(
                 item: this,
@@ -493,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case WeatherSound_FieldIndex.Sound:
-                    this.Sound_Property.Set((FormIDLink<Sound>)obj);
+                    this.Sound_Property.Set((IFormIDLink<Sound>)obj);
                     break;
                 case WeatherSound_FieldIndex.Type:
                     this.Type = (WeatherSound.SoundType)obj;
@@ -527,7 +528,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case WeatherSound_FieldIndex.Sound:
-                    obj.Sound_Property.Set((FormIDLink<Sound>)pair.Value);
+                    obj.Sound_Property.Set((IFormIDLink<Sound>)pair.Value);
                     break;
                 case WeatherSound_FieldIndex.Type:
                     obj.Type = (WeatherSound.SoundType)pair.Value;
@@ -542,27 +543,28 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IWeatherSound :
         IWeatherSoundGetter,
-        ILoquiClass<IWeatherSound, IWeatherSoundGetter>,
-        ILoquiClass<WeatherSound, IWeatherSoundGetter>
+        ILoquiObjectSetter<IWeatherSound>
     {
         new Sound Sound { get; set; }
+        new IFormIDLink<Sound> Sound_Property { get; }
         new WeatherSound.SoundType Type { get; set; }
 
         void CopyFieldsFrom(
-            IWeatherSoundGetter rhs,
+            WeatherSound rhs,
             ErrorMaskBuilder errorMask = null,
             WeatherSound_CopyMask copyMask = null,
-            IWeatherSoundGetter def = null);
+            WeatherSound def = null);
     }
 
     public partial interface IWeatherSoundGetter :
         ILoquiObject,
+        ILoquiObject<IWeatherSoundGetter>,
         IXmlItem,
         IBinaryItem
     {
         #region Sound
-        Sound Sound { get; }
-        FormIDLink<Sound> Sound_Property { get; }
+        ISoundInternalGetter Sound { get; }
+        IFormIDLinkGetter<Sound> Sound_Property { get; }
 
         #endregion
         #region Type
@@ -587,13 +589,10 @@ namespace Mutagen.Bethesda.Oblivion
             IWeatherSoundGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new WeatherSound_Mask<bool>();
-            ((WeatherSoundCommon)item.CommonInstance).FillEqualsMask(
+            return ((WeatherSoundCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -795,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case WeatherSound_FieldIndex.Sound:
-                    return typeof(FormIDLink<Sound>);
+                    return typeof(IFormIDLink<Sound>);
                 case WeatherSound_FieldIndex.Type:
                     return typeof(WeatherSound.SoundType);
                 default:
@@ -803,12 +802,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(WeatherSoundXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(WeatherSoundXmlWriteTranslation);
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SNAM_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(WeatherSoundBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(WeatherSoundBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -843,11 +842,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class WeatherSoundCommon
     {
         public static readonly WeatherSoundCommon Instance = new WeatherSoundCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IWeatherSound item,
-            IWeatherSoundGetter rhs,
-            IWeatherSoundGetter def,
+            WeatherSound item,
+            WeatherSound rhs,
+            WeatherSound def,
             ErrorMaskBuilder errorMask,
             WeatherSound_CopyMask copyMask)
         {
@@ -898,6 +898,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = default(WeatherSound.SoundType);
         }
 
+        public WeatherSound_Mask<bool> GetEqualsMask(
+            IWeatherSoundGetter item,
+            IWeatherSoundGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new WeatherSound_Mask<bool>();
+            ((WeatherSoundCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IWeatherSoundGetter item,
             IWeatherSoundGetter rhs,
@@ -931,11 +945,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(WeatherSound)} =>");
+                fg.AppendLine($"WeatherSound =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(WeatherSound)}) =>");
+                fg.AppendLine($"{name} (WeatherSound) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -983,9 +997,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class WeatherSoundXmlTranslation : IXmlTranslator
+    public partial class WeatherSoundXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static WeatherSoundXmlTranslation Instance = new WeatherSoundXmlTranslation();
+        public readonly static WeatherSoundXmlWriteTranslation Instance = new WeatherSoundXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IWeatherSoundGetter item,
@@ -1010,78 +1024,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Type,
                     fieldIndex: (int)WeatherSound_FieldIndex.Type,
                     errorMask: errorMask);
-            }
-        }
-
-        public static void FillPublic_Xml(
-            IWeatherSound item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    WeatherSoundXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            IWeatherSound item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Sound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Sound_Property,
-                        fieldIndex: (int)WeatherSound_FieldIndex.Sound,
-                        errorMask: errorMask);
-                    break;
-                case "Type":
-                    try
-                    {
-                        errorMask?.PushIndex((int)WeatherSound_FieldIndex.Type);
-                        if (EnumXmlTranslation<WeatherSound.SoundType>.Instance.Parse(
-                            node: node,
-                            item: out WeatherSound.SoundType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(WeatherSound.SoundType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -1151,6 +1093,84 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class WeatherSoundXmlCreateTranslation
+    {
+        public readonly static WeatherSoundXmlCreateTranslation Instance = new WeatherSoundXmlCreateTranslation();
+
+        public static void FillPublic_Xml(
+            IWeatherSound item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    WeatherSoundXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            IWeatherSound item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Sound":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Sound_Property,
+                        fieldIndex: (int)WeatherSound_FieldIndex.Sound,
+                        errorMask: errorMask);
+                    break;
+                case "Type":
+                    try
+                    {
+                        errorMask?.PushIndex((int)WeatherSound_FieldIndex.Type);
+                        if (EnumXmlTranslation<WeatherSound.SoundType>.Instance.Parse(
+                            node: node,
+                            item: out WeatherSound.SoundType TypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Type = TypeParse;
+                        }
+                        else
+                        {
+                            item.Type = default(WeatherSound.SoundType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+
     #region Xml Write Mixins
     public static class WeatherSoundXmlTranslationMixIn
     {
@@ -1163,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WeatherSoundXmlTranslation)item.XmlTranslator).Write(
+            ((WeatherSoundXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1253,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((WeatherSoundXmlTranslation)item.XmlTranslator).Write(
+            ((WeatherSoundXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1267,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             WeatherSound_TranslationMask translationMask = null)
         {
-            ((WeatherSoundXmlTranslation)item.XmlTranslator).Write(
+            ((WeatherSoundXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1281,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((WeatherSoundXmlTranslation)item.XmlTranslator).Write(
+            ((WeatherSoundXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1296,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((WeatherSoundXmlTranslation)item.XmlTranslator).Write(
+            ((WeatherSoundXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1614,9 +1634,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class WeatherSoundBinaryTranslation : IBinaryTranslator
+    public partial class WeatherSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherSoundBinaryTranslation Instance = new WeatherSoundBinaryTranslation();
+        public readonly static WeatherSoundBinaryWriteTranslation Instance = new WeatherSoundBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IWeatherSoundGetter item,
@@ -1671,6 +1691,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class WeatherSoundBinaryCreateTranslation
+    {
+        public readonly static WeatherSoundBinaryCreateTranslation Instance = new WeatherSoundBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class WeatherSoundBinaryTranslationMixIn
     {
@@ -1682,7 +1708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WeatherSoundBinaryTranslation)item.BinaryTranslator).Write(
+            ((WeatherSoundBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1697,7 +1723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((WeatherSoundBinaryTranslation)item.BinaryTranslator).Write(
+            ((WeatherSoundBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1710,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((WeatherSoundBinaryTranslation)item.BinaryTranslator).Write(
+            ((WeatherSoundBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

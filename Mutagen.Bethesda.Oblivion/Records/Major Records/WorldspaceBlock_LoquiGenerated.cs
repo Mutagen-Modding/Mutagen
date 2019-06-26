@@ -37,10 +37,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class WorldspaceBlock :
         LoquiNotifyingObject,
         IWorldspaceBlock,
-        ILoquiObject<WorldspaceBlock>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<WorldspaceBlock>,
         ILinkSubContainer,
-        IEquatable<WorldspaceBlock>
+        IEquatable<WorldspaceBlock>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
@@ -109,8 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<WorldspaceBlock>.GetEqualsMask(WorldspaceBlock rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IWorldspaceBlockGetter>.GetEqualsMask(IWorldspaceBlockGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceBlockGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -124,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -165,8 +164,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => WorldspaceBlockXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => WorldspaceBlockXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static WorldspaceBlock Create_Xml(
@@ -219,7 +218,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    WorldspaceBlockXmlTranslation.FillPublicElement_Xml(
+                    WorldspaceBlockXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -364,8 +363,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => WorldspaceBlockBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => WorldspaceBlockBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static async Task<WorldspaceBlock> Create_Binary(
@@ -486,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public WorldspaceBlock Copy(
             WorldspaceBlock_CopyMask copyMask = null,
-            IWorldspaceBlockGetter def = null)
+            WorldspaceBlock def = null)
         {
             return WorldspaceBlock.Copy(
                 this,
@@ -495,9 +494,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static WorldspaceBlock Copy(
-            IWorldspaceBlockGetter item,
+            WorldspaceBlock item,
             WorldspaceBlock_CopyMask copyMask = null,
-            IWorldspaceBlockGetter def = null)
+            WorldspaceBlock def = null)
         {
             WorldspaceBlock ret;
             if (item.GetType().Equals(typeof(WorldspaceBlock)))
@@ -516,9 +515,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static WorldspaceBlock Copy_ToLoqui(
-            IWorldspaceBlockGetter item,
+            WorldspaceBlock item,
             WorldspaceBlock_CopyMask copyMask = null,
-            IWorldspaceBlockGetter def = null)
+            WorldspaceBlock def = null)
         {
             WorldspaceBlock ret;
             if (item.GetType().Equals(typeof(WorldspaceBlock)))
@@ -536,10 +535,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IWorldspaceBlockGetter rhs)
+        public void CopyFieldsFrom(WorldspaceBlock rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IWorldspaceBlockGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -547,9 +546,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWorldspaceBlockGetter rhs,
+            WorldspaceBlock rhs,
             WorldspaceBlock_CopyMask copyMask,
-            IWorldspaceBlockGetter def = null)
+            WorldspaceBlock def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -560,10 +559,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWorldspaceBlockGetter rhs,
+            WorldspaceBlock rhs,
             out WorldspaceBlock_ErrorMask errorMask,
             WorldspaceBlock_CopyMask copyMask = null,
-            IWorldspaceBlockGetter def = null,
+            WorldspaceBlock def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -577,10 +576,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IWorldspaceBlockGetter rhs,
+            WorldspaceBlock rhs,
             ErrorMaskBuilder errorMask,
             WorldspaceBlock_CopyMask copyMask = null,
-            IWorldspaceBlockGetter def = null)
+            WorldspaceBlock def = null)
         {
             WorldspaceBlockCommon.CopyFieldsFrom(
                 item: this,
@@ -663,8 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IWorldspaceBlock :
         IWorldspaceBlockGetter,
-        ILoquiClass<IWorldspaceBlock, IWorldspaceBlockGetter>,
-        ILoquiClass<WorldspaceBlock, IWorldspaceBlockGetter>
+        ILoquiObjectSetter<IWorldspaceBlock>
     {
         new Int16 BlockNumberY { get; set; }
 
@@ -676,14 +674,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         new ISetList<WorldspaceSubBlock> Items { get; }
         void CopyFieldsFrom(
-            IWorldspaceBlockGetter rhs,
+            WorldspaceBlock rhs,
             ErrorMaskBuilder errorMask = null,
             WorldspaceBlock_CopyMask copyMask = null,
-            IWorldspaceBlockGetter def = null);
+            WorldspaceBlock def = null);
     }
 
     public partial interface IWorldspaceBlockGetter :
         ILoquiObject,
+        ILoquiObject<IWorldspaceBlockGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -724,13 +723,10 @@ namespace Mutagen.Bethesda.Oblivion
             IWorldspaceBlockGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new WorldspaceBlock_Mask<bool>();
-            ((WorldspaceBlockCommon)item.CommonInstance).FillEqualsMask(
+            return ((WorldspaceBlockCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -978,12 +974,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(WorldspaceBlockXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(WorldspaceBlockXmlWriteTranslation);
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
         public const int NumStructFields = 4;
         public const int NumTypedFields = 1;
-        public static readonly Type BinaryTranslation = typeof(WorldspaceBlockBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(WorldspaceBlockBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1018,11 +1014,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class WorldspaceBlockCommon
     {
         public static readonly WorldspaceBlockCommon Instance = new WorldspaceBlockCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IWorldspaceBlock item,
-            IWorldspaceBlockGetter rhs,
-            IWorldspaceBlockGetter def,
+            WorldspaceBlock item,
+            WorldspaceBlock rhs,
+            WorldspaceBlock def,
             ErrorMaskBuilder errorMask,
             WorldspaceBlock_CopyMask copyMask)
         {
@@ -1099,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetToWithDefault<WorldspaceSubBlock, IWorldspaceSubBlockGetter>(
+                    item.Items.SetToWithDefault<WorldspaceSubBlock, WorldspaceSubBlock>(
                         rhs: rhs.Items,
                         def: def?.Items,
                         converter: (r, d) =>
@@ -1144,6 +1141,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Unset();
         }
 
+        public WorldspaceBlock_Mask<bool> GetEqualsMask(
+            IWorldspaceBlockGetter item,
+            IWorldspaceBlockGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new WorldspaceBlock_Mask<bool>();
+            ((WorldspaceBlockCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IWorldspaceBlockGetter item,
             IWorldspaceBlockGetter rhs,
@@ -1183,11 +1194,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(WorldspaceBlock)} =>");
+                fg.AppendLine($"WorldspaceBlock =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(WorldspaceBlock)}) =>");
+                fg.AppendLine($"{name} (WorldspaceBlock) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1265,9 +1276,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class WorldspaceBlockXmlTranslation : IXmlTranslator
+    public partial class WorldspaceBlockXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static WorldspaceBlockXmlTranslation Instance = new WorldspaceBlockXmlTranslation();
+        public readonly static WorldspaceBlockXmlWriteTranslation Instance = new WorldspaceBlockXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IWorldspaceBlockGetter item,
@@ -1323,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)WorldspaceBlock_FieldIndex.Items),
                     transl: (XElement subNode, IWorldspaceSubBlockGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((WorldspaceSubBlockXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                        ((WorldspaceSubBlockXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -1332,6 +1343,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     });
             }
         }
+
+        public void Write(
+            XElement node,
+            IWorldspaceBlockGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.WorldspaceBlock");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.WorldspaceBlock");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IWorldspaceBlockGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IWorldspaceBlockGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IWorldspaceBlockGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class WorldspaceBlockXmlCreateTranslation
+    {
+        public readonly static WorldspaceBlockXmlCreateTranslation Instance = new WorldspaceBlockXmlCreateTranslation();
 
         public static void FillPublic_Xml(
             IWorldspaceBlock item,
@@ -1343,7 +1424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    WorldspaceBlockXmlTranslation.FillPublicElement_Xml(
+                    WorldspaceBlockXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1504,70 +1585,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IWorldspaceBlockGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.WorldspaceBlock");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.WorldspaceBlock");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IWorldspaceBlockGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IWorldspaceBlockGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IWorldspaceBlockGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1582,7 +1599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WorldspaceBlockXmlTranslation)item.XmlTranslator).Write(
+            ((WorldspaceBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1672,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((WorldspaceBlockXmlTranslation)item.XmlTranslator).Write(
+            ((WorldspaceBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1686,7 +1703,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             WorldspaceBlock_TranslationMask translationMask = null)
         {
-            ((WorldspaceBlockXmlTranslation)item.XmlTranslator).Write(
+            ((WorldspaceBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1700,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((WorldspaceBlockXmlTranslation)item.XmlTranslator).Write(
+            ((WorldspaceBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1715,7 +1732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((WorldspaceBlockXmlTranslation)item.XmlTranslator).Write(
+            ((WorldspaceBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2192,9 +2209,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class WorldspaceBlockBinaryTranslation : IBinaryTranslator
+    public partial class WorldspaceBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WorldspaceBlockBinaryTranslation Instance = new WorldspaceBlockBinaryTranslation();
+        public readonly static WorldspaceBlockBinaryWriteTranslation Instance = new WorldspaceBlockBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IWorldspaceBlockGetter item,
@@ -2229,7 +2246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IWorldspaceSubBlockGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((WorldspaceSubBlockBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
+                        ((WorldspaceSubBlockBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
                             item: subItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
@@ -2282,6 +2299,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class WorldspaceBlockBinaryCreateTranslation
+    {
+        public readonly static WorldspaceBlockBinaryCreateTranslation Instance = new WorldspaceBlockBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class WorldspaceBlockBinaryTranslationMixIn
     {
@@ -2293,7 +2316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WorldspaceBlockBinaryTranslation)item.BinaryTranslator).Write(
+            ((WorldspaceBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2308,7 +2331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((WorldspaceBlockBinaryTranslation)item.BinaryTranslator).Write(
+            ((WorldspaceBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2321,7 +2344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((WorldspaceBlockBinaryTranslation)item.BinaryTranslator).Write(
+            ((WorldspaceBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

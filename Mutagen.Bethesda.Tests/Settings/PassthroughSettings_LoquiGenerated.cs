@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Tests
     public partial class PassthroughSettings :
         LoquiNotifyingObject,
         IPassthroughSettings,
-        ILoquiObject<PassthroughSettings>,
-        ILoquiObjectSetter,
-        IEquatable<PassthroughSettings>
+        ILoquiObjectSetter<PassthroughSettings>,
+        IEquatable<PassthroughSettings>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PassthroughSettings_Registration.Instance;
@@ -97,8 +97,7 @@ namespace Mutagen.Bethesda.Tests
         }
         #endregion
 
-        IMask<bool> IEqualsMask<PassthroughSettings>.GetEqualsMask(PassthroughSettings rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IPassthroughSettingsGetter>.GetEqualsMask(IPassthroughSettingsGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPassthroughSettingsGetter)rhs, include);
         #region To String
         public override string ToString()
         {
@@ -117,7 +116,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -153,8 +152,8 @@ namespace Mutagen.Bethesda.Tests
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => PassthroughSettingsXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => PassthroughSettingsXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static PassthroughSettings Create_Xml(
@@ -207,7 +206,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 foreach (var elem in node.Elements())
                 {
-                    PassthroughSettingsXmlTranslation.FillPublicElement_Xml(
+                    PassthroughSettingsXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -423,7 +422,7 @@ namespace Mutagen.Bethesda.Tests
 
         public PassthroughSettings Copy(
             PassthroughSettings_CopyMask copyMask = null,
-            IPassthroughSettingsGetter def = null)
+            PassthroughSettings def = null)
         {
             return PassthroughSettings.Copy(
                 this,
@@ -432,9 +431,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static PassthroughSettings Copy(
-            IPassthroughSettingsGetter item,
+            PassthroughSettings item,
             PassthroughSettings_CopyMask copyMask = null,
-            IPassthroughSettingsGetter def = null)
+            PassthroughSettings def = null)
         {
             PassthroughSettings ret;
             if (item.GetType().Equals(typeof(PassthroughSettings)))
@@ -453,9 +452,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static PassthroughSettings Copy_ToLoqui(
-            IPassthroughSettingsGetter item,
+            PassthroughSettings item,
             PassthroughSettings_CopyMask copyMask = null,
-            IPassthroughSettingsGetter def = null)
+            PassthroughSettings def = null)
         {
             PassthroughSettings ret;
             if (item.GetType().Equals(typeof(PassthroughSettings)))
@@ -473,10 +472,10 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public void CopyFieldsFrom(IPassthroughSettingsGetter rhs)
+        public void CopyFieldsFrom(PassthroughSettings rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IPassthroughSettingsGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -484,9 +483,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            IPassthroughSettingsGetter rhs,
+            PassthroughSettings rhs,
             PassthroughSettings_CopyMask copyMask,
-            IPassthroughSettingsGetter def = null)
+            PassthroughSettings def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -497,10 +496,10 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            IPassthroughSettingsGetter rhs,
+            PassthroughSettings rhs,
             out PassthroughSettings_ErrorMask errorMask,
             PassthroughSettings_CopyMask copyMask = null,
-            IPassthroughSettingsGetter def = null,
+            PassthroughSettings def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -514,10 +513,10 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            IPassthroughSettingsGetter rhs,
+            PassthroughSettings rhs,
             ErrorMaskBuilder errorMask,
             PassthroughSettings_CopyMask copyMask = null,
-            IPassthroughSettingsGetter def = null)
+            PassthroughSettings def = null)
         {
             PassthroughSettingsCommon.CopyFieldsFrom(
                 item: this,
@@ -606,8 +605,7 @@ namespace Mutagen.Bethesda.Tests
     #region Interface
     public partial interface IPassthroughSettings :
         IPassthroughSettingsGetter,
-        ILoquiClass<IPassthroughSettings, IPassthroughSettingsGetter>,
-        ILoquiClass<PassthroughSettings, IPassthroughSettingsGetter>
+        ILoquiObjectSetter<IPassthroughSettings>
     {
         new Boolean ReuseCaches { get; set; }
 
@@ -622,14 +620,15 @@ namespace Mutagen.Bethesda.Tests
         new Boolean TestFolder { get; set; }
 
         void CopyFieldsFrom(
-            IPassthroughSettingsGetter rhs,
+            PassthroughSettings rhs,
             ErrorMaskBuilder errorMask = null,
             PassthroughSettings_CopyMask copyMask = null,
-            IPassthroughSettingsGetter def = null);
+            PassthroughSettings def = null);
     }
 
     public partial interface IPassthroughSettingsGetter :
         ILoquiObject,
+        ILoquiObject<IPassthroughSettingsGetter>,
         IXmlItem
     {
         #region ReuseCaches
@@ -674,13 +673,10 @@ namespace Mutagen.Bethesda.Tests
             IPassthroughSettingsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PassthroughSettings_Mask<bool>();
-            ((PassthroughSettingsCommon)item.CommonInstance).FillEqualsMask(
+            return ((PassthroughSettingsCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -938,7 +934,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(PassthroughSettingsXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(PassthroughSettingsXmlWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -973,11 +969,12 @@ namespace Mutagen.Bethesda.Tests.Internals
     public partial class PassthroughSettingsCommon
     {
         public static readonly PassthroughSettingsCommon Instance = new PassthroughSettingsCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IPassthroughSettings item,
-            IPassthroughSettingsGetter rhs,
-            IPassthroughSettingsGetter def,
+            PassthroughSettings item,
+            PassthroughSettings rhs,
+            PassthroughSettings def,
             ErrorMaskBuilder errorMask,
             PassthroughSettings_CopyMask copyMask)
         {
@@ -1100,6 +1097,20 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestFolder = default(Boolean);
         }
 
+        public PassthroughSettings_Mask<bool> GetEqualsMask(
+            IPassthroughSettingsGetter item,
+            IPassthroughSettingsGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new PassthroughSettings_Mask<bool>();
+            ((PassthroughSettingsCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IPassthroughSettingsGetter item,
             IPassthroughSettingsGetter rhs,
@@ -1137,11 +1148,11 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(PassthroughSettings)} =>");
+                fg.AppendLine($"PassthroughSettings =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(PassthroughSettings)}) =>");
+                fg.AppendLine($"{name} (PassthroughSettings) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1209,9 +1220,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class PassthroughSettingsXmlTranslation : IXmlTranslator
+    public partial class PassthroughSettingsXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static PassthroughSettingsXmlTranslation Instance = new PassthroughSettingsXmlTranslation();
+        public readonly static PassthroughSettingsXmlWriteTranslation Instance = new PassthroughSettingsXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IPassthroughSettingsGetter item,
@@ -1275,6 +1286,76 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IPassthroughSettingsGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.PassthroughSettings");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.PassthroughSettings");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IPassthroughSettingsGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IPassthroughSettingsGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IPassthroughSettingsGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class PassthroughSettingsXmlCreateTranslation
+    {
+        public readonly static PassthroughSettingsXmlCreateTranslation Instance = new PassthroughSettingsXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IPassthroughSettings item,
             XElement node,
@@ -1285,7 +1366,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    PassthroughSettingsXmlTranslation.FillPublicElement_Xml(
+                    PassthroughSettingsXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1488,70 +1569,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IPassthroughSettingsGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.PassthroughSettings");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.PassthroughSettings");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IPassthroughSettingsGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IPassthroughSettingsGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IPassthroughSettingsGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1566,7 +1583,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((PassthroughSettingsXmlTranslation)item.XmlTranslator).Write(
+            ((PassthroughSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1656,7 +1673,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((PassthroughSettingsXmlTranslation)item.XmlTranslator).Write(
+            ((PassthroughSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1670,7 +1687,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null,
             PassthroughSettings_TranslationMask translationMask = null)
         {
-            ((PassthroughSettingsXmlTranslation)item.XmlTranslator).Write(
+            ((PassthroughSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1684,7 +1701,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((PassthroughSettingsXmlTranslation)item.XmlTranslator).Write(
+            ((PassthroughSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1699,7 +1716,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((PassthroughSettingsXmlTranslation)item.XmlTranslator).Write(
+            ((PassthroughSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,

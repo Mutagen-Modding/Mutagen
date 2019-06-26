@@ -36,13 +36,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Furnature :
         OblivionMajorRecord,
-        IFurnature,
         IFurnatureInternal,
-        ILoquiObject<Furnature>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<Furnature>,
         INamed,
         ILinkSubContainer,
-        IEquatable<Furnature>
+        IEquatable<Furnature>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Furnature_Registration.Instance;
@@ -99,9 +98,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         public void Model_Set(
             Model value,
-            bool markSet = true)
+            bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)Furnature_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)Furnature_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
         public void Model_Unset()
         {
@@ -111,10 +110,12 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter IFurnatureGetter.Model => this.Model;
         #endregion
         #region Script
-        public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        public IFormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Script> IFurnatureGetter.Script_Property => this.Script_Property;
+        IFormIDSetLink<Script> IFurnature.Script_Property => this.Script_Property;
+        IScriptInternalGetter IFurnatureGetter.Script => this.Script_Property.Item;
+        IFormIDSetLinkGetter<Script> IFurnatureGetter.Script_Property => this.Script_Property;
         #endregion
         #region MarkerFlags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -145,8 +146,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Furnature>.GetEqualsMask(Furnature rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IFurnatureGetter>.GetEqualsMask(IFurnatureGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFurnatureInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => FurnatureXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => FurnatureXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Furnature Create_Xml(
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    FurnatureXmlTranslation.FillPublicElement_Xml(
+                    FurnatureXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => FurnatureBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => FurnatureBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Furnature Create_Binary(
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Furnature Copy(
             Furnature_CopyMask copyMask = null,
-            IFurnatureGetter def = null)
+            Furnature def = null)
         {
             return Furnature.Copy(
                 this,
@@ -629,9 +629,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Furnature Copy(
-            IFurnatureGetter item,
+            Furnature item,
             Furnature_CopyMask copyMask = null,
-            IFurnatureGetter def = null)
+            Furnature def = null)
         {
             Furnature ret;
             if (item.GetType().Equals(typeof(Furnature)))
@@ -650,9 +650,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Furnature Copy_ToLoqui(
-            IFurnatureGetter item,
+            Furnature item,
             Furnature_CopyMask copyMask = null,
-            IFurnatureGetter def = null)
+            Furnature def = null)
         {
             Furnature ret;
             if (item.GetType().Equals(typeof(Furnature)))
@@ -670,10 +670,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IFurnatureGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -681,9 +681,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IFurnatureGetter rhs,
+            Furnature rhs,
             Furnature_CopyMask copyMask,
-            IFurnatureGetter def = null)
+            Furnature def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -694,10 +694,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IFurnatureGetter rhs,
+            Furnature rhs,
             out Furnature_ErrorMask errorMask,
             Furnature_CopyMask copyMask = null,
-            IFurnatureGetter def = null,
+            Furnature def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -711,10 +711,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IFurnatureGetter rhs,
+            Furnature rhs,
             ErrorMaskBuilder errorMask,
             Furnature_CopyMask copyMask = null,
-            IFurnatureGetter def = null)
+            Furnature def = null)
         {
             FurnatureCommon.CopyFieldsFrom(
                 item: this,
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case Furnature_FieldIndex.Script:
-                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
+                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
                     break;
                 case Furnature_FieldIndex.MarkerFlags:
                     this.MarkerFlags = (Byte[])obj;
@@ -777,7 +777,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case Furnature_FieldIndex.Script:
-                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
+                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
                     break;
                 case Furnature_FieldIndex.MarkerFlags:
                     obj.MarkerFlags = (Byte[])pair.Value;
@@ -793,30 +793,30 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IFurnature :
         IFurnatureGetter,
         IOblivionMajorRecord,
-        ILoquiClass<IFurnature, IFurnatureGetter>,
-        ILoquiClass<Furnature, IFurnatureGetter>
+        ILoquiObjectSetter<IFurnatureInternal>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
-        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Set(String value, bool hasBeenSet = true);
         void Name_Unset();
 
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }
-        void Model_Set(Model item, bool hasBeenSet = true);
+        void Model_Set(Model value, bool hasBeenSet = true);
         void Model_Unset();
 
         new Script Script { get; set; }
+        new IFormIDSetLink<Script> Script_Property { get; }
         new Byte[] MarkerFlags { get; set; }
         new bool MarkerFlags_IsSet { get; set; }
-        void MarkerFlags_Set(Byte[] item, bool hasBeenSet = true);
+        void MarkerFlags_Set(Byte[] value, bool hasBeenSet = true);
         void MarkerFlags_Unset();
 
         void CopyFieldsFrom(
-            IFurnatureGetter rhs,
+            Furnature rhs,
             ErrorMaskBuilder errorMask = null,
             Furnature_CopyMask copyMask = null,
-            IFurnatureGetter def = null);
+            Furnature def = null);
     }
 
     public partial interface IFurnatureInternal :
@@ -825,10 +825,12 @@ namespace Mutagen.Bethesda.Oblivion
         IFurnatureInternalGetter
     {
         new Script Script { get; set; }
+        new IFormIDSetLink<Script> Script_Property { get; }
     }
 
     public partial interface IFurnatureGetter :
         IOblivionMajorRecordGetter,
+        ILoquiObject<IFurnatureInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -843,8 +845,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        Script Script { get; }
-        FormIDSetLink<Script> Script_Property { get; }
+        IScriptInternalGetter Script { get; }
+        IFormIDSetLinkGetter<Script> Script_Property { get; }
 
         #endregion
         #region MarkerFlags
@@ -873,17 +875,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Furnature_Mask<bool> GetEqualsMask(
-            this IFurnatureGetter item,
-            IFurnatureGetter rhs,
+            this IFurnatureInternalGetter item,
+            IFurnatureInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Furnature_Mask<bool>();
-            ((FurnatureCommon)item.CommonInstance).FillEqualsMask(
+            return ((FurnatureCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -919,7 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static Furnature_Mask<bool> GetHasBeenSetMask(this IFurnatureGetter item)
+        public static Furnature_Mask<bool> GetHasBeenSetMask(this IFurnatureInternalGetter item)
         {
             var ret = new Furnature_Mask<bool>();
             ((FurnatureCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -1115,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Furnature_FieldIndex.Model:
                     return typeof(Model);
                 case Furnature_FieldIndex.Script:
-                    return typeof(FormIDSetLink<Script>);
+                    return typeof(IFormIDSetLink<Script>);
                 case Furnature_FieldIndex.MarkerFlags:
                     return typeof(Byte[]);
                 default:
@@ -1123,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(FurnatureXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(FurnatureXmlWriteTranslation);
         public static readonly RecordType FURN_HEADER = new RecordType("FURN");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
@@ -1132,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = FURN_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
-        public static readonly Type BinaryTranslation = typeof(FurnatureBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(FurnatureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1167,11 +1166,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class FurnatureCommon : OblivionMajorRecordCommon
     {
         public static readonly FurnatureCommon Instance = new FurnatureCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IFurnature item,
-            IFurnatureGetter rhs,
-            IFurnatureGetter def,
+            Furnature item,
+            Furnature rhs,
+            Furnature def,
             ErrorMaskBuilder errorMask,
             Furnature_CopyMask copyMask)
         {
@@ -1249,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     else
                     {
                         item.Model_Set(
-                            item: default(Model),
+                            value: default(Model),
                             hasBeenSet: false);
                     }
                 }
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IFurnature item)
+        public virtual void Clear(IFurnatureInternal item)
         {
             ClearPartial();
             item.Name_Unset();
@@ -1328,19 +1328,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (IFurnature)item);
+            Clear(item: (IFurnatureInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IFurnature)item);
+            Clear(item: (IFurnatureInternal)item);
+        }
+
+        public Furnature_Mask<bool> GetEqualsMask(
+            IFurnatureInternalGetter item,
+            IFurnatureInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Furnature_Mask<bool>();
+            ((FurnatureCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IFurnatureGetter item,
-            IFurnatureGetter rhs,
+            IFurnatureInternalGetter item,
+            IFurnatureInternalGetter rhs,
             Furnature_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -1359,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            IFurnatureGetter item,
+            IFurnatureInternalGetter item,
             string name = null,
             Furnature_Mask<bool> printMask = null)
         {
@@ -1373,18 +1387,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            IFurnatureGetter item,
+            IFurnatureInternalGetter item,
             FileGeneration fg,
             string name = null,
             Furnature_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Furnature)} =>");
+                fg.AppendLine($"Furnature =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Furnature)}) =>");
+                fg.AppendLine($"{name} (Furnature) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1398,7 +1412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            IFurnatureGetter item,
+            IFurnatureInternalGetter item,
             FileGeneration fg,
             Furnature_Mask<bool> printMask = null)
         {
@@ -1425,7 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            IFurnatureGetter item,
+            IFurnatureInternalGetter item,
             Furnature_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -1439,7 +1453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            IFurnatureGetter item,
+            IFurnatureInternalGetter item,
             Furnature_Mask<bool> mask)
         {
             mask.Name = item.Name_IsSet;
@@ -1492,11 +1506,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class FurnatureXmlTranslation :
-        OblivionMajorRecordXmlTranslation,
-        IXmlTranslator
+    public partial class FurnatureXmlWriteTranslation :
+        OblivionMajorRecordXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static FurnatureXmlTranslation Instance = new FurnatureXmlTranslation();
+        public new readonly static FurnatureXmlWriteTranslation Instance = new FurnatureXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IFurnatureInternalGetter item,
@@ -1504,7 +1518,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1522,7 +1536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)Furnature_FieldIndex.Model) ?? true))
             {
-                ((ModelXmlTranslation)((IXmlItem)item.Model).XmlTranslator).Write(
+                ((ModelXmlWriteTranslation)((IXmlItem)item.Model).XmlWriteTranslator).Write(
                     item: item.Model,
                     node: node,
                     name: nameof(item.Model),
@@ -1552,6 +1566,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IFurnatureInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Furnature");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Furnature");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IFurnatureInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IFurnatureInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IFurnatureInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class FurnatureXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
+    {
+        public new readonly static FurnatureXmlCreateTranslation Instance = new FurnatureXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IFurnatureInternal item,
             XElement node,
@@ -1562,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    FurnatureXmlTranslation.FillPublicElement_Xml(
+                    FurnatureXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1673,7 +1758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1681,71 +1766,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            IFurnatureInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Furnature");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Furnature");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IFurnatureInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IFurnatureInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IFurnatureInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -1762,7 +1782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((FurnatureXmlTranslation)item.XmlTranslator).Write(
+            ((FurnatureXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2169,11 +2189,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class FurnatureBinaryTranslation :
-        OblivionMajorRecordBinaryTranslation,
-        IBinaryTranslator
+    public partial class FurnatureBinaryWriteTranslation :
+        OblivionMajorRecordBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static FurnatureBinaryTranslation Instance = new FurnatureBinaryTranslation();
+        public new readonly static FurnatureBinaryWriteTranslation Instance = new FurnatureBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
             IFurnatureInternalGetter item,
@@ -2182,7 +2202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2198,7 +2218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Model_IsSet)
             {
-                ((ModelBinaryTranslation)((IBinaryItem)item.Model).BinaryTranslator).Write(
+                ((ModelBinaryWriteTranslation)((IBinaryItem)item.Model).BinaryWriteTranslator).Write(
                     item: item.Model,
                     writer: writer,
                     errorMask: errorMask,
@@ -2236,7 +2256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Furnature_Registration.FURN_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryTranslation.Write_Embedded(
+                OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -2297,6 +2317,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class FurnatureBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    {
+        public new readonly static FurnatureBinaryCreateTranslation Instance = new FurnatureBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class FurnatureBinaryTranslationMixIn
     {
@@ -2308,7 +2334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((FurnatureBinaryTranslation)item.BinaryTranslator).Write(
+            ((FurnatureBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

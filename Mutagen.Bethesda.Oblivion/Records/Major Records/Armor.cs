@@ -10,7 +10,7 @@ using Mutagen.Bethesda.Oblivion.Internals;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ArmorBinaryTranslation
+    public partial class ArmorBinaryCreateTranslation
     {
         static partial void FillBinary_ArmorValue_Custom(MutagenFrame frame, Armor item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
@@ -21,7 +21,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.ArmorValue = val / 100f;
             }
         }
+    }
 
+    public partial class ArmorBinaryWriteTranslation
+    {
         static partial void WriteBinary_ArmorValue_Custom(MutagenWriter writer, IArmorInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             UInt16BinaryTranslation.Instance.Write(

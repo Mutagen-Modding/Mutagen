@@ -35,9 +35,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Model :
         LoquiNotifyingObject,
         IModel,
-        ILoquiObject<Model>,
-        ILoquiObjectSetter,
-        IEquatable<Model>
+        ILoquiObjectSetter<Model>,
+        IEquatable<Model>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
@@ -99,8 +99,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<Model>.GetEqualsMask(Model rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IModelGetter>.GetEqualsMask(IModelGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModelGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -114,7 +113,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -151,8 +150,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => ModelXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => ModelXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static Model Create_Xml(
@@ -205,7 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    ModelXmlTranslation.FillPublicElement_Xml(
+                    ModelXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -325,8 +324,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => ModelBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static Model Create_Binary(
@@ -455,7 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Model Copy(
             Model_CopyMask copyMask = null,
-            IModelGetter def = null)
+            Model def = null)
         {
             return Model.Copy(
                 this,
@@ -464,9 +463,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Model Copy(
-            IModelGetter item,
+            Model item,
             Model_CopyMask copyMask = null,
-            IModelGetter def = null)
+            Model def = null)
         {
             Model ret;
             if (item.GetType().Equals(typeof(Model)))
@@ -485,9 +484,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Model Copy_ToLoqui(
-            IModelGetter item,
+            Model item,
             Model_CopyMask copyMask = null,
-            IModelGetter def = null)
+            Model def = null)
         {
             Model ret;
             if (item.GetType().Equals(typeof(Model)))
@@ -505,10 +504,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IModelGetter rhs)
+        public void CopyFieldsFrom(Model rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IModelGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -516,9 +515,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IModelGetter rhs,
+            Model rhs,
             Model_CopyMask copyMask,
-            IModelGetter def = null)
+            Model def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -529,10 +528,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IModelGetter rhs,
+            Model rhs,
             out Model_ErrorMask errorMask,
             Model_CopyMask copyMask = null,
-            IModelGetter def = null,
+            Model def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -546,10 +545,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IModelGetter rhs,
+            Model rhs,
             ErrorMaskBuilder errorMask,
             Model_CopyMask copyMask = null,
-            IModelGetter def = null)
+            Model def = null)
         {
             ModelCommon.CopyFieldsFrom(
                 item: this,
@@ -620,8 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IModel :
         IModelGetter,
-        ILoquiClass<IModel, IModelGetter>,
-        ILoquiClass<Model, IModelGetter>
+        ILoquiObjectSetter<IModel>
     {
         new String File { get; set; }
 
@@ -629,18 +627,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] Hashes { get; set; }
         new bool Hashes_IsSet { get; set; }
-        void Hashes_Set(Byte[] item, bool hasBeenSet = true);
+        void Hashes_Set(Byte[] value, bool hasBeenSet = true);
         void Hashes_Unset();
 
         void CopyFieldsFrom(
-            IModelGetter rhs,
+            Model rhs,
             ErrorMaskBuilder errorMask = null,
             Model_CopyMask copyMask = null,
-            IModelGetter def = null);
+            Model def = null);
     }
 
     public partial interface IModelGetter :
         ILoquiObject,
+        ILoquiObject<IModelGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -675,13 +674,10 @@ namespace Mutagen.Bethesda.Oblivion
             IModelGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Model_Mask<bool>();
-            ((ModelCommon)item.CommonInstance).FillEqualsMask(
+            return ((ModelCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -903,14 +899,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(ModelXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(ModelXmlWriteTranslation);
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType MODB_HEADER = new RecordType("MODB");
         public static readonly RecordType MODT_HEADER = new RecordType("MODT");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = MODL_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
-        public static readonly Type BinaryTranslation = typeof(ModelBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(ModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -945,11 +941,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ModelCommon
     {
         public static readonly ModelCommon Instance = new ModelCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IModel item,
-            IModelGetter rhs,
-            IModelGetter def,
+            Model item,
+            Model rhs,
+            Model def,
             ErrorMaskBuilder errorMask,
             Model_CopyMask copyMask)
         {
@@ -1031,6 +1028,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Hashes_Unset();
         }
 
+        public Model_Mask<bool> GetEqualsMask(
+            IModelGetter item,
+            IModelGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Model_Mask<bool>();
+            ((ModelCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IModelGetter item,
             IModelGetter rhs,
@@ -1065,11 +1076,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Model)} =>");
+                fg.AppendLine($"Model =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Model)}) =>");
+                fg.AppendLine($"{name} (Model) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1123,9 +1134,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class ModelXmlTranslation : IXmlTranslator
+    public partial class ModelXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static ModelXmlTranslation Instance = new ModelXmlTranslation();
+        public readonly static ModelXmlWriteTranslation Instance = new ModelXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IModelGetter item,
@@ -1163,6 +1174,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IModelGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Model");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Model");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IModelGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IModelGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IModelGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class ModelXmlCreateTranslation
+    {
+        public readonly static ModelXmlCreateTranslation Instance = new ModelXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IModel item,
             XElement node,
@@ -1173,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ModelXmlTranslation.FillPublicElement_Xml(
+                    ModelXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1280,70 +1361,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IModelGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Model");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Model");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IModelGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IModelGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IModelGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1358,7 +1375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ModelXmlTranslation)item.XmlTranslator).Write(
+            ((ModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1448,7 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((ModelXmlTranslation)item.XmlTranslator).Write(
+            ((ModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1462,7 +1479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             Model_TranslationMask translationMask = null)
         {
-            ((ModelXmlTranslation)item.XmlTranslator).Write(
+            ((ModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1476,7 +1493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((ModelXmlTranslation)item.XmlTranslator).Write(
+            ((ModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1491,7 +1508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((ModelXmlTranslation)item.XmlTranslator).Write(
+            ((ModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1836,9 +1853,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class ModelBinaryTranslation : IBinaryTranslator
+    public partial class ModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ModelBinaryTranslation Instance = new ModelBinaryTranslation();
+        public readonly static ModelBinaryWriteTranslation Instance = new ModelBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
             IModelGetter item,
@@ -1899,6 +1916,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class ModelBinaryCreateTranslation
+    {
+        public readonly static ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class ModelBinaryTranslationMixIn
     {
@@ -1910,7 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ModelBinaryTranslation)item.BinaryTranslator).Write(
+            ((ModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1925,7 +1948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((ModelBinaryTranslation)item.BinaryTranslator).Write(
+            ((ModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1938,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((ModelBinaryTranslation)item.BinaryTranslator).Write(
+            ((ModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

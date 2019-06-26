@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         {
             PathGridReader.Position = 0;
             var pathGrid = new PathGrid(FormKey.NULL);
-            PathGridBinaryTranslation.FillBinary_PointToPointConnections_Custom_Public(
+            PathGridBinaryCreateTranslation.FillBinary_PointToPointConnections_Custom_Public(
                 new Binary.MutagenFrame(PathGridReader),
                 pathGrid,
                 masterReferences: null,

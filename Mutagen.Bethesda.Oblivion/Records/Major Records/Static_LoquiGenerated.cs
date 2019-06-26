@@ -36,11 +36,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Static :
         OblivionMajorRecord,
-        IStatic,
         IStaticInternal,
-        ILoquiObject<Static>,
-        ILoquiObjectSetter,
-        IEquatable<Static>
+        ILoquiObjectSetter<Static>,
+        IEquatable<Static>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Static_Registration.Instance;
@@ -71,9 +70,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         public void Model_Set(
             Model value,
-            bool markSet = true)
+            bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)Static_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)Static_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
         public void Model_Unset()
         {
@@ -83,8 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter IStaticGetter.Model => this.Model;
         #endregion
 
-        IMask<bool> IEqualsMask<Static>.GetEqualsMask(Static rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IStaticGetter>.GetEqualsMask(IStaticGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IStaticInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -98,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -133,7 +131,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => StaticXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => StaticXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Static Create_Xml(
@@ -192,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    StaticXmlTranslation.FillPublicElement_Xml(
+                    StaticXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -350,7 +348,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => StaticBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => StaticBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Static Create_Binary(
@@ -463,7 +461,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public Static Copy(
             Static_CopyMask copyMask = null,
-            IStaticGetter def = null)
+            Static def = null)
         {
             return Static.Copy(
                 this,
@@ -472,9 +470,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Static Copy(
-            IStaticGetter item,
+            Static item,
             Static_CopyMask copyMask = null,
-            IStaticGetter def = null)
+            Static def = null)
         {
             Static ret;
             if (item.GetType().Equals(typeof(Static)))
@@ -493,9 +491,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Static Copy_ToLoqui(
-            IStaticGetter item,
+            Static item,
             Static_CopyMask copyMask = null,
-            IStaticGetter def = null)
+            Static def = null)
         {
             Static ret;
             if (item.GetType().Equals(typeof(Static)))
@@ -513,10 +511,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IStaticGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -524,9 +522,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IStaticGetter rhs,
+            Static rhs,
             Static_CopyMask copyMask,
-            IStaticGetter def = null)
+            Static def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -537,10 +535,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IStaticGetter rhs,
+            Static rhs,
             out Static_ErrorMask errorMask,
             Static_CopyMask copyMask = null,
-            IStaticGetter def = null,
+            Static def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -554,10 +552,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IStaticGetter rhs,
+            Static rhs,
             ErrorMaskBuilder errorMask,
             Static_CopyMask copyMask = null,
-            IStaticGetter def = null)
+            Static def = null)
         {
             StaticCommon.CopyFieldsFrom(
                 item: this,
@@ -618,19 +616,18 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IStatic :
         IStaticGetter,
         IOblivionMajorRecord,
-        ILoquiClass<IStatic, IStaticGetter>,
-        ILoquiClass<Static, IStaticGetter>
+        ILoquiObjectSetter<IStaticInternal>
     {
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }
-        void Model_Set(Model item, bool hasBeenSet = true);
+        void Model_Set(Model value, bool hasBeenSet = true);
         void Model_Unset();
 
         void CopyFieldsFrom(
-            IStaticGetter rhs,
+            Static rhs,
             ErrorMaskBuilder errorMask = null,
             Static_CopyMask copyMask = null,
-            IStaticGetter def = null);
+            Static def = null);
     }
 
     public partial interface IStaticInternal :
@@ -642,6 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IStaticGetter :
         IOblivionMajorRecordGetter,
+        ILoquiObject<IStaticInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -671,17 +669,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Static_Mask<bool> GetEqualsMask(
-            this IStaticGetter item,
-            IStaticGetter rhs,
+            this IStaticInternalGetter item,
+            IStaticInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Static_Mask<bool>();
-            ((StaticCommon)item.CommonInstance).FillEqualsMask(
+            return ((StaticCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -717,7 +712,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static Static_Mask<bool> GetHasBeenSetMask(this IStaticGetter item)
+        public static Static_Mask<bool> GetHasBeenSetMask(this IStaticInternalGetter item)
         {
             var ret = new Static_Mask<bool>();
             ((StaticCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -884,13 +879,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(StaticXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(StaticXmlWriteTranslation);
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = STAT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
-        public static readonly Type BinaryTranslation = typeof(StaticBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(StaticBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -925,11 +920,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class StaticCommon : OblivionMajorRecordCommon
     {
         public static readonly StaticCommon Instance = new StaticCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IStatic item,
-            IStaticGetter rhs,
-            IStaticGetter def,
+            Static item,
+            Static rhs,
+            Static def,
             ErrorMaskBuilder errorMask,
             Static_CopyMask copyMask)
         {
@@ -977,7 +973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     else
                     {
                         item.Model_Set(
-                            item: default(Model),
+                            value: default(Model),
                             hasBeenSet: false);
                     }
                 }
@@ -997,26 +993,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IStatic item)
+        public virtual void Clear(IStaticInternal item)
         {
             ClearPartial();
             item.Model_Unset();
             base.Clear(item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (IStatic)item);
+            Clear(item: (IStaticInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IStatic)item);
+            Clear(item: (IStaticInternal)item);
+        }
+
+        public Static_Mask<bool> GetEqualsMask(
+            IStaticInternalGetter item,
+            IStaticInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Static_Mask<bool>();
+            ((StaticCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IStaticGetter item,
-            IStaticGetter rhs,
+            IStaticInternalGetter item,
+            IStaticInternalGetter rhs,
             Static_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -1032,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            IStaticGetter item,
+            IStaticInternalGetter item,
             string name = null,
             Static_Mask<bool> printMask = null)
         {
@@ -1046,18 +1056,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            IStaticGetter item,
+            IStaticInternalGetter item,
             FileGeneration fg,
             string name = null,
             Static_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Static)} =>");
+                fg.AppendLine($"Static =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Static)}) =>");
+                fg.AppendLine($"{name} (Static) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1071,7 +1081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            IStaticGetter item,
+            IStaticInternalGetter item,
             FileGeneration fg,
             Static_Mask<bool> printMask = null)
         {
@@ -1086,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            IStaticGetter item,
+            IStaticInternalGetter item,
             Static_Mask<bool?> checkMask)
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
@@ -1097,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            IStaticGetter item,
+            IStaticInternalGetter item,
             Static_Mask<bool> mask)
         {
             mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
@@ -1147,11 +1157,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class StaticXmlTranslation :
-        OblivionMajorRecordXmlTranslation,
-        IXmlTranslator
+    public partial class StaticXmlWriteTranslation :
+        OblivionMajorRecordXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static StaticXmlTranslation Instance = new StaticXmlTranslation();
+        public new readonly static StaticXmlWriteTranslation Instance = new StaticXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IStaticInternalGetter item,
@@ -1159,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1167,85 +1177,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)Static_FieldIndex.Model) ?? true))
             {
-                ((ModelXmlTranslation)((IXmlItem)item.Model).XmlTranslator).Write(
+                ((ModelXmlWriteTranslation)((IXmlItem)item.Model).XmlWriteTranslator).Write(
                     item: item.Model,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)Static_FieldIndex.Model,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Model));
-            }
-        }
-
-        public static void FillPublic_Xml(
-            IStaticInternal item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    StaticXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            IStaticInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Static_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model ModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    OblivionMajorRecordXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
             }
         }
 
@@ -1316,6 +1254,84 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class StaticXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
+    {
+        public new readonly static StaticXmlCreateTranslation Instance = new StaticXmlCreateTranslation();
+
+        public static void FillPublic_Xml(
+            IStaticInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    StaticXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            IStaticInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Static_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model ModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Model)))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.Model = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    OblivionMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+
+    }
+
     #region Xml Write Mixins
     public static class StaticXmlTranslationMixIn
     {
@@ -1328,7 +1344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((StaticXmlTranslation)item.XmlTranslator).Write(
+            ((StaticXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1654,11 +1670,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class StaticBinaryTranslation :
-        OblivionMajorRecordBinaryTranslation,
-        IBinaryTranslator
+    public partial class StaticBinaryWriteTranslation :
+        OblivionMajorRecordBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static StaticBinaryTranslation Instance = new StaticBinaryTranslation();
+        public new readonly static StaticBinaryWriteTranslation Instance = new StaticBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
             IStaticInternalGetter item,
@@ -1667,7 +1683,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1675,7 +1691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
             if (item.Model_IsSet)
             {
-                ((ModelBinaryTranslation)((IBinaryItem)item.Model).BinaryTranslator).Write(
+                ((ModelBinaryWriteTranslation)((IBinaryItem)item.Model).BinaryWriteTranslator).Write(
                     item: item.Model,
                     writer: writer,
                     errorMask: errorMask,
@@ -1696,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Static_Registration.STAT_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryTranslation.Write_Embedded(
+                OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -1757,6 +1773,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class StaticBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    {
+        public new readonly static StaticBinaryCreateTranslation Instance = new StaticBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class StaticBinaryTranslationMixIn
     {
@@ -1768,7 +1790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((StaticBinaryTranslation)item.BinaryTranslator).Write(
+            ((StaticBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

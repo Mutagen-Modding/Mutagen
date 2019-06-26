@@ -38,13 +38,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SigilStone :
         ItemAbstract,
-        ISigilStone,
         ISigilStoneInternal,
-        ILoquiObject<SigilStone>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<SigilStone>,
         INamed,
         ILinkSubContainer,
-        IEquatable<SigilStone>
+        IEquatable<SigilStone>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SigilStone_Registration.Instance;
@@ -101,9 +100,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         public void Model_Set(
             Model value,
-            bool markSet = true)
+            bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)SigilStone_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)SigilStone_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
         public void Model_Unset()
         {
@@ -139,10 +138,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Script
-        public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        public IFormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Script> ISigilStoneGetter.Script_Property => this.Script_Property;
+        IFormIDSetLink<Script> ISigilStone.Script_Property => this.Script_Property;
+        IScriptInternalGetter ISigilStoneGetter.Script => this.Script_Property.Item;
+        IFormIDSetLinkGetter<Script> ISigilStoneGetter.Script_Property => this.Script_Property;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -210,8 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<SigilStone>.GetEqualsMask(SigilStone rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<ISigilStoneGetter>.GetEqualsMask(ISigilStoneGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISigilStoneInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => SigilStoneXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => SigilStoneXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static SigilStone Create_Xml(
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    SigilStoneXmlTranslation.FillPublicElement_Xml(
+                    SigilStoneXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => SigilStoneBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => SigilStoneBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static SigilStone Create_Binary(
@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public SigilStone Copy(
             SigilStone_CopyMask copyMask = null,
-            ISigilStoneGetter def = null)
+            SigilStone def = null)
         {
             return SigilStone.Copy(
                 this,
@@ -778,9 +778,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SigilStone Copy(
-            ISigilStoneGetter item,
+            SigilStone item,
             SigilStone_CopyMask copyMask = null,
-            ISigilStoneGetter def = null)
+            SigilStone def = null)
         {
             SigilStone ret;
             if (item.GetType().Equals(typeof(SigilStone)))
@@ -799,9 +799,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SigilStone Copy_ToLoqui(
-            ISigilStoneGetter item,
+            SigilStone item,
             SigilStone_CopyMask copyMask = null,
-            ISigilStoneGetter def = null)
+            SigilStone def = null)
         {
             SigilStone ret;
             if (item.GetType().Equals(typeof(SigilStone)))
@@ -819,10 +819,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ISigilStoneGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -830,9 +830,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISigilStoneGetter rhs,
+            SigilStone rhs,
             SigilStone_CopyMask copyMask,
-            ISigilStoneGetter def = null)
+            SigilStone def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -843,10 +843,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISigilStoneGetter rhs,
+            SigilStone rhs,
             out SigilStone_ErrorMask errorMask,
             SigilStone_CopyMask copyMask = null,
-            ISigilStoneGetter def = null,
+            SigilStone def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -860,10 +860,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ISigilStoneGetter rhs,
+            SigilStone rhs,
             ErrorMaskBuilder errorMask,
             SigilStone_CopyMask copyMask = null,
-            ISigilStoneGetter def = null)
+            SigilStone def = null)
         {
             SigilStoneCommon.CopyFieldsFrom(
                 item: this,
@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Icon = (String)obj;
                     break;
                 case SigilStone_FieldIndex.Script:
-                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
+                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
                     break;
                 case SigilStone_FieldIndex.Effects:
                     this._Effects.SetTo((IEnumerable<Effect>)obj);
@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Icon = (String)pair.Value;
                     break;
                 case SigilStone_FieldIndex.Script:
-                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
+                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
                     break;
                 case SigilStone_FieldIndex.Effects:
                     obj._Effects.SetTo((IEnumerable<Effect>)pair.Value);
@@ -972,25 +972,25 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISigilStone :
         ISigilStoneGetter,
         IItemAbstract,
-        ILoquiClass<ISigilStone, ISigilStoneGetter>,
-        ILoquiClass<SigilStone, ISigilStoneGetter>
+        ILoquiObjectSetter<ISigilStoneInternal>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
-        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Set(String value, bool hasBeenSet = true);
         void Name_Unset();
 
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }
-        void Model_Set(Model item, bool hasBeenSet = true);
+        void Model_Set(Model value, bool hasBeenSet = true);
         void Model_Unset();
 
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }
-        void Icon_Set(String item, bool hasBeenSet = true);
+        void Icon_Set(String value, bool hasBeenSet = true);
         void Icon_Unset();
 
         new Script Script { get; set; }
+        new IFormIDSetLink<Script> Script_Property { get; }
         new ISetList<Effect> Effects { get; }
         new Byte Uses { get; set; }
 
@@ -999,10 +999,10 @@ namespace Mutagen.Bethesda.Oblivion
         new Single Weight { get; set; }
 
         void CopyFieldsFrom(
-            ISigilStoneGetter rhs,
+            SigilStone rhs,
             ErrorMaskBuilder errorMask = null,
             SigilStone_CopyMask copyMask = null,
-            ISigilStoneGetter def = null);
+            SigilStone def = null);
     }
 
     public partial interface ISigilStoneInternal :
@@ -1011,12 +1011,14 @@ namespace Mutagen.Bethesda.Oblivion
         ISigilStoneInternalGetter
     {
         new Script Script { get; set; }
+        new IFormIDSetLink<Script> Script_Property { get; }
         new SigilStone.DATADataType DATADataTypeState { get; set; }
 
     }
 
     public partial interface ISigilStoneGetter :
         IItemAbstractGetter,
+        ILoquiObject<ISigilStoneInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -1036,8 +1038,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        Script Script { get; }
-        FormIDSetLink<Script> Script_Property { get; }
+        IScriptInternalGetter Script { get; }
+        IFormIDSetLinkGetter<Script> Script_Property { get; }
 
         #endregion
         #region Effects
@@ -1080,17 +1082,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static SigilStone_Mask<bool> GetEqualsMask(
-            this ISigilStoneGetter item,
-            ISigilStoneGetter rhs,
+            this ISigilStoneInternalGetter item,
+            ISigilStoneInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SigilStone_Mask<bool>();
-            ((SigilStoneCommon)item.CommonInstance).FillEqualsMask(
+            return ((SigilStoneCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -1126,7 +1125,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static SigilStone_Mask<bool> GetHasBeenSetMask(this ISigilStoneGetter item)
+        public static SigilStone_Mask<bool> GetHasBeenSetMask(this ISigilStoneInternalGetter item)
         {
             var ret = new SigilStone_Mask<bool>();
             ((SigilStoneCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -1375,7 +1374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SigilStone_FieldIndex.Icon:
                     return typeof(String);
                 case SigilStone_FieldIndex.Script:
-                    return typeof(FormIDSetLink<Script>);
+                    return typeof(IFormIDSetLink<Script>);
                 case SigilStone_FieldIndex.Effects:
                     return typeof(SourceSetList<Effect>);
                 case SigilStone_FieldIndex.Uses:
@@ -1391,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(SigilStoneXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(SigilStoneXmlWriteTranslation);
         public static readonly RecordType SGST_HEADER = new RecordType("SGST");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
@@ -1402,7 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SGST_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 5;
-        public static readonly Type BinaryTranslation = typeof(SigilStoneBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(SigilStoneBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1437,11 +1436,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SigilStoneCommon : ItemAbstractCommon
     {
         public static readonly SigilStoneCommon Instance = new SigilStoneCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ISigilStone item,
-            ISigilStoneGetter rhs,
-            ISigilStoneGetter def,
+            SigilStone item,
+            SigilStone rhs,
+            SigilStone def,
             ErrorMaskBuilder errorMask,
             SigilStone_CopyMask copyMask)
         {
@@ -1519,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     else
                     {
                         item.Model_Set(
-                            item: default(Model),
+                            value: default(Model),
                             hasBeenSet: false);
                     }
                 }
@@ -1587,7 +1587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Effects);
                 try
                 {
-                    item.Effects.SetToWithDefault<Effect, IEffectInternalGetter>(
+                    item.Effects.SetToWithDefault<Effect, Effect>(
                         rhs: rhs.Effects,
                         def: def?.Effects,
                         converter: (r, d) =>
@@ -1673,7 +1673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(ISigilStone item)
+        public virtual void Clear(ISigilStoneInternal item)
         {
             ClearPartial();
             item.Name_Unset();
@@ -1687,24 +1687,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
 
-        public override void Clear(IItemAbstract item)
+        public override void Clear(IItemAbstractInternal item)
         {
-            Clear(item: (ISigilStone)item);
+            Clear(item: (ISigilStoneInternal)item);
         }
 
-        public override void Clear(IOblivionMajorRecord item)
+        public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (ISigilStone)item);
+            Clear(item: (ISigilStoneInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ISigilStone)item);
+            Clear(item: (ISigilStoneInternal)item);
+        }
+
+        public SigilStone_Mask<bool> GetEqualsMask(
+            ISigilStoneInternalGetter item,
+            ISigilStoneInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SigilStone_Mask<bool>();
+            ((SigilStoneCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            ISigilStoneGetter item,
-            ISigilStoneGetter rhs,
+            ISigilStoneInternalGetter item,
+            ISigilStoneInternalGetter rhs,
             SigilStone_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -1730,7 +1744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            ISigilStoneGetter item,
+            ISigilStoneInternalGetter item,
             string name = null,
             SigilStone_Mask<bool> printMask = null)
         {
@@ -1744,18 +1758,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            ISigilStoneGetter item,
+            ISigilStoneInternalGetter item,
             FileGeneration fg,
             string name = null,
             SigilStone_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(SigilStone)} =>");
+                fg.AppendLine($"SigilStone =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(SigilStone)}) =>");
+                fg.AppendLine($"{name} (SigilStone) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1769,7 +1783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            ISigilStoneGetter item,
+            ISigilStoneInternalGetter item,
             FileGeneration fg,
             SigilStone_Mask<bool> printMask = null)
         {
@@ -1829,7 +1843,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            ISigilStoneGetter item,
+            ISigilStoneInternalGetter item,
             SigilStone_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
@@ -1844,7 +1858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void FillHasBeenSetMask(
-            ISigilStoneGetter item,
+            ISigilStoneInternalGetter item,
             SigilStone_Mask<bool> mask)
         {
             mask.Name = item.Name_IsSet;
@@ -1921,11 +1935,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class SigilStoneXmlTranslation :
-        ItemAbstractXmlTranslation,
-        IXmlTranslator
+    public partial class SigilStoneXmlWriteTranslation :
+        ItemAbstractXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static SigilStoneXmlTranslation Instance = new SigilStoneXmlTranslation();
+        public new readonly static SigilStoneXmlWriteTranslation Instance = new SigilStoneXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             ISigilStoneInternalGetter item,
@@ -1933,7 +1947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            ItemAbstractXmlTranslation.WriteToNode_Xml(
+            ItemAbstractXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1951,7 +1965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Model) ?? true))
             {
-                ((ModelXmlTranslation)((IXmlItem)item.Model).XmlTranslator).Write(
+                ((ModelXmlWriteTranslation)((IXmlItem)item.Model).XmlWriteTranslator).Write(
                     item: item.Model,
                     node: node,
                     name: nameof(item.Model),
@@ -1991,7 +2005,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)SigilStone_FieldIndex.Effects),
                     transl: (XElement subNode, IEffectInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((EffectXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                        ((EffectXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -2040,6 +2054,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            ISigilStoneInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SigilStone");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SigilStone");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISigilStoneInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IItemAbstractInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISigilStoneInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISigilStoneInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ISigilStoneInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+    }
+
+    public partial class SigilStoneXmlCreateTranslation : ItemAbstractXmlCreateTranslation
+    {
+        public new readonly static SigilStoneXmlCreateTranslation Instance = new SigilStoneXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             ISigilStoneInternal item,
             XElement node,
@@ -2050,7 +2150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    SigilStoneXmlTranslation.FillPublicElement_Xml(
+                    SigilStoneXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2294,7 +2394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    ItemAbstractXmlTranslation.FillPublicElement_Xml(
+                    ItemAbstractXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2302,86 +2402,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                     break;
             }
-        }
-
-        public void Write(
-            XElement node,
-            ISigilStoneInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SigilStone");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SigilStone");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ISigilStoneInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IItemAbstractInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ISigilStoneInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ISigilStoneInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ISigilStoneInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
         }
 
     }
@@ -2398,7 +2418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SigilStoneXmlTranslation)item.XmlTranslator).Write(
+            ((SigilStoneXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -3018,11 +3038,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class SigilStoneBinaryTranslation :
-        ItemAbstractBinaryTranslation,
-        IBinaryTranslator
+    public partial class SigilStoneBinaryWriteTranslation :
+        ItemAbstractBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static SigilStoneBinaryTranslation Instance = new SigilStoneBinaryTranslation();
+        public new readonly static SigilStoneBinaryWriteTranslation Instance = new SigilStoneBinaryWriteTranslation();
 
         public static void Write_Embedded(
             ISigilStoneInternalGetter item,
@@ -3030,7 +3050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
@@ -3044,7 +3064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3060,7 +3080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Model_IsSet)
             {
-                ((ModelBinaryTranslation)((IBinaryItem)item.Model).BinaryTranslator).Write(
+                ((ModelBinaryWriteTranslation)((IBinaryItem)item.Model).BinaryWriteTranslator).Write(
                     item: item.Model,
                     writer: writer,
                     errorMask: errorMask,
@@ -3093,7 +3113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IEffectInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((EffectBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
+                        ((EffectBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
                             item: subItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
@@ -3202,6 +3222,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class SigilStoneBinaryCreateTranslation : ItemAbstractBinaryCreateTranslation
+    {
+        public new readonly static SigilStoneBinaryCreateTranslation Instance = new SigilStoneBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class SigilStoneBinaryTranslationMixIn
     {
@@ -3213,7 +3239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SigilStoneBinaryTranslation)item.BinaryTranslator).Write(
+            ((SigilStoneBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

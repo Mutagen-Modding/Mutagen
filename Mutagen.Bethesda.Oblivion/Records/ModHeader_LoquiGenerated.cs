@@ -38,9 +38,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ModHeader :
         LoquiNotifyingObject,
         IModHeader,
-        ILoquiObject<ModHeader>,
-        ILoquiObjectSetter,
-        IEquatable<ModHeader>
+        ILoquiObjectSetter<ModHeader>,
+        IEquatable<ModHeader>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
@@ -229,8 +229,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<ModHeader>.GetEqualsMask(ModHeader rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IModHeaderGetter>.GetEqualsMask(IModHeaderGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -244,7 +243,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -326,8 +325,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => ModHeaderXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static ModHeader Create_Xml(
@@ -380,7 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    ModHeaderXmlTranslation.FillPublicElement_Xml(
+                    ModHeaderXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -518,8 +517,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => ModHeaderBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static ModHeader Create_Binary(
@@ -724,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public ModHeader Copy(
             ModHeader_CopyMask copyMask = null,
-            IModHeaderGetter def = null)
+            ModHeader def = null)
         {
             return ModHeader.Copy(
                 this,
@@ -733,9 +732,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ModHeader Copy(
-            IModHeaderGetter item,
+            ModHeader item,
             ModHeader_CopyMask copyMask = null,
-            IModHeaderGetter def = null)
+            ModHeader def = null)
         {
             ModHeader ret;
             if (item.GetType().Equals(typeof(ModHeader)))
@@ -754,9 +753,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ModHeader Copy_ToLoqui(
-            IModHeaderGetter item,
+            ModHeader item,
             ModHeader_CopyMask copyMask = null,
-            IModHeaderGetter def = null)
+            ModHeader def = null)
         {
             ModHeader ret;
             if (item.GetType().Equals(typeof(ModHeader)))
@@ -774,10 +773,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IModHeaderGetter rhs)
+        public void CopyFieldsFrom(ModHeader rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IModHeaderGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -785,9 +784,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IModHeaderGetter rhs,
+            ModHeader rhs,
             ModHeader_CopyMask copyMask,
-            IModHeaderGetter def = null)
+            ModHeader def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -798,10 +797,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IModHeaderGetter rhs,
+            ModHeader rhs,
             out ModHeader_ErrorMask errorMask,
             ModHeader_CopyMask copyMask = null,
-            IModHeaderGetter def = null,
+            ModHeader def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -815,10 +814,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IModHeaderGetter rhs,
+            ModHeader rhs,
             ErrorMaskBuilder errorMask,
             ModHeader_CopyMask copyMask = null,
-            IModHeaderGetter def = null)
+            ModHeader def = null)
         {
             ModHeaderCommon.CopyFieldsFrom(
                 item: this,
@@ -919,8 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IModHeader :
         IModHeaderGetter,
-        ILoquiClass<IModHeader, IModHeaderGetter>,
-        ILoquiClass<ModHeader, IModHeaderGetter>
+        ILoquiObjectSetter<IModHeader>
     {
         new Byte[] Fluff { get; set; }
 
@@ -928,39 +926,40 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] TypeOffsets { get; set; }
         new bool TypeOffsets_IsSet { get; set; }
-        void TypeOffsets_Set(Byte[] item, bool hasBeenSet = true);
+        void TypeOffsets_Set(Byte[] value, bool hasBeenSet = true);
         void TypeOffsets_Unset();
 
         new Byte[] Deleted { get; set; }
         new bool Deleted_IsSet { get; set; }
-        void Deleted_Set(Byte[] item, bool hasBeenSet = true);
+        void Deleted_Set(Byte[] value, bool hasBeenSet = true);
         void Deleted_Unset();
 
         new String Author { get; set; }
         new bool Author_IsSet { get; set; }
-        void Author_Set(String item, bool hasBeenSet = true);
+        void Author_Set(String value, bool hasBeenSet = true);
         void Author_Unset();
 
         new String Description { get; set; }
         new bool Description_IsSet { get; set; }
-        void Description_Set(String item, bool hasBeenSet = true);
+        void Description_Set(String value, bool hasBeenSet = true);
         void Description_Unset();
 
         new ISetList<MasterReference> MasterReferences { get; }
         new UInt64 VestigialData { get; set; }
         new bool VestigialData_IsSet { get; set; }
-        void VestigialData_Set(UInt64 item, bool hasBeenSet = true);
+        void VestigialData_Set(UInt64 value, bool hasBeenSet = true);
         void VestigialData_Unset();
 
         void CopyFieldsFrom(
-            IModHeaderGetter rhs,
+            ModHeader rhs,
             ErrorMaskBuilder errorMask = null,
             ModHeader_CopyMask copyMask = null,
-            IModHeaderGetter def = null);
+            ModHeader def = null);
     }
 
     public partial interface IModHeaderGetter :
         ILoquiObject,
+        ILoquiObject<IModHeaderGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -1018,13 +1017,10 @@ namespace Mutagen.Bethesda.Oblivion
             IModHeaderGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ModHeader_Mask<bool>();
-            ((ModHeaderCommon)item.CommonInstance).FillEqualsMask(
+            return ((ModHeaderCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -1308,7 +1304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(ModHeaderXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(ModHeaderXmlWriteTranslation);
         public static readonly RecordType TES4_HEADER = new RecordType("TES4");
         public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
         public static readonly RecordType OFST_HEADER = new RecordType("OFST");
@@ -1320,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = TES4_HEADER;
         public const int NumStructFields = 1;
         public const int NumTypedFields = 7;
-        public static readonly Type BinaryTranslation = typeof(ModHeaderBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(ModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1355,11 +1351,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ModHeaderCommon
     {
         public static readonly ModHeaderCommon Instance = new ModHeaderCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IModHeader item,
-            IModHeaderGetter rhs,
-            IModHeaderGetter def,
+            ModHeader item,
+            ModHeader rhs,
+            ModHeader def,
             ErrorMaskBuilder errorMask,
             ModHeader_CopyMask copyMask)
         {
@@ -1550,7 +1547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.MasterReferences);
                 try
                 {
-                    item.MasterReferences.SetToWithDefault<MasterReference, IMasterReferenceGetter>(
+                    item.MasterReferences.SetToWithDefault<MasterReference, MasterReference>(
                         rhs: rhs.MasterReferences,
                         def: def?.MasterReferences,
                         converter: (r, d) =>
@@ -1628,6 +1625,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.VestigialData_Unset();
         }
 
+        public ModHeader_Mask<bool> GetEqualsMask(
+            IModHeaderGetter item,
+            IModHeaderGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ModHeader_Mask<bool>();
+            ((ModHeaderCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IModHeaderGetter item,
             IModHeaderGetter rhs,
@@ -1670,11 +1681,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(ModHeader)} =>");
+                fg.AppendLine($"ModHeader =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(ModHeader)}) =>");
+                fg.AppendLine($"{name} (ModHeader) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1772,9 +1783,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class ModHeaderXmlTranslation : IXmlTranslator
+    public partial class ModHeaderXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static ModHeaderXmlTranslation Instance = new ModHeaderXmlTranslation();
+        public readonly static ModHeaderXmlWriteTranslation Instance = new ModHeaderXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IModHeaderGetter item,
@@ -1793,7 +1804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Stats) ?? true))
             {
-                ((ModStatsXmlTranslation)((IXmlItem)item.Stats).XmlTranslator).Write(
+                ((ModStatsXmlWriteTranslation)((IXmlItem)item.Stats).XmlWriteTranslator).Write(
                     item: item.Stats,
                     node: node,
                     name: nameof(item.Stats),
@@ -1853,7 +1864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)ModHeader_FieldIndex.MasterReferences),
                     transl: (XElement subNode, IMasterReferenceGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((MasterReferenceXmlTranslation)((IXmlItem)subItem).XmlTranslator).Write(
+                        ((MasterReferenceXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -1873,6 +1884,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IModHeaderGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ModHeader");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ModHeader");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IModHeaderGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IModHeaderGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IModHeaderGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class ModHeaderXmlCreateTranslation
+    {
+        public readonly static ModHeaderXmlCreateTranslation Instance = new ModHeaderXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IModHeader item,
             XElement node,
@@ -1883,7 +1964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ModHeaderXmlTranslation.FillPublicElement_Xml(
+                    ModHeaderXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2123,70 +2204,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IModHeaderGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ModHeader");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ModHeader");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IModHeaderGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IModHeaderGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IModHeaderGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -2201,7 +2218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ModHeaderXmlTranslation)item.XmlTranslator).Write(
+            ((ModHeaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2291,7 +2308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((ModHeaderXmlTranslation)item.XmlTranslator).Write(
+            ((ModHeaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2305,7 +2322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             ModHeader_TranslationMask translationMask = null)
         {
-            ((ModHeaderXmlTranslation)item.XmlTranslator).Write(
+            ((ModHeaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2319,7 +2336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((ModHeaderXmlTranslation)item.XmlTranslator).Write(
+            ((ModHeaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2334,7 +2351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((ModHeaderXmlTranslation)item.XmlTranslator).Write(
+            ((ModHeaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2904,9 +2921,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class ModHeaderBinaryTranslation : IBinaryTranslator
+    public partial class ModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ModHeaderBinaryTranslation Instance = new ModHeaderBinaryTranslation();
+        public readonly static ModHeaderBinaryWriteTranslation Instance = new ModHeaderBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IModHeaderGetter item,
@@ -2926,7 +2943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            ((ModStatsBinaryTranslation)((IBinaryItem)item.Stats).BinaryTranslator).Write(
+            ((ModStatsBinaryWriteTranslation)((IBinaryItem)item.Stats).BinaryWriteTranslator).Write(
                 item: item.Stats,
                 writer: writer,
                 errorMask: errorMask,
@@ -2973,7 +2990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IMasterReferenceGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((MasterReferenceBinaryTranslation)((IBinaryItem)subItem).BinaryTranslator).Write(
+                        ((MasterReferenceBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
                             item: subItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
@@ -3034,6 +3051,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class ModHeaderBinaryCreateTranslation
+    {
+        public readonly static ModHeaderBinaryCreateTranslation Instance = new ModHeaderBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class ModHeaderBinaryTranslationMixIn
     {
@@ -3045,7 +3068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ModHeaderBinaryTranslation)item.BinaryTranslator).Write(
+            ((ModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -3060,7 +3083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((ModHeaderBinaryTranslation)item.BinaryTranslator).Write(
+            ((ModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -3073,7 +3096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((ModHeaderBinaryTranslation)item.BinaryTranslator).Write(
+            ((ModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

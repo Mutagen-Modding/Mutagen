@@ -36,11 +36,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public abstract partial class Global :
         SkyrimMajorRecord,
-        IGlobal,
         IGlobalInternal,
-        ILoquiObject<Global>,
-        ILoquiObjectSetter,
-        IEquatable<Global>
+        ILoquiObjectSetter<Global>,
+        IEquatable<Global>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
@@ -56,8 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
 
-        IMask<bool> IEqualsMask<Global>.GetEqualsMask(Global rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IGlobalGetter>.GetEqualsMask(IGlobalGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -71,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -97,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region Xml Translation
-        protected override IXmlTranslator XmlTranslator => GlobalXmlTranslation.Instance;
+        protected override IXmlWriteTranslator XmlWriteTranslator => GlobalXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Global Create_Xml(
@@ -273,7 +271,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        protected override IBinaryTranslator BinaryTranslator => GlobalBinaryTranslation.Instance;
+        protected override IBinaryWriteTranslator BinaryWriteTranslator => GlobalBinaryWriteTranslation.Instance;
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Global item,
             MutagenFrame frame,
@@ -288,7 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case 0x4D414E46: // FNAM
                 {
-                    GlobalBinaryTranslation.FillBinary_TypeChar_Custom_Public(
+                    GlobalBinaryCreateTranslation.FillBinary_TypeChar_Custom_Public(
                         frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
                         item: item,
                         masterReferences: masterReferences,
@@ -311,7 +309,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public Global Copy(
             Global_CopyMask copyMask = null,
-            IGlobalGetter def = null)
+            Global def = null)
         {
             return Global.Copy(
                 this,
@@ -320,9 +318,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static Global Copy(
-            IGlobalGetter item,
+            Global item,
             Global_CopyMask copyMask = null,
-            IGlobalGetter def = null)
+            Global def = null)
         {
             Global ret = (Global)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
@@ -333,9 +331,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static Global Copy_ToLoqui(
-            IGlobalGetter item,
+            Global item,
             Global_CopyMask copyMask = null,
-            IGlobalGetter def = null)
+            Global def = null)
         {
             Global ret = (Global)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
@@ -345,10 +343,10 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
+        public override void CopyFieldsFrom(MajorRecord rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IGlobalGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -356,9 +354,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            IGlobalGetter rhs,
+            Global rhs,
             Global_CopyMask copyMask,
-            IGlobalGetter def = null)
+            Global def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -369,10 +367,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            IGlobalGetter rhs,
+            Global rhs,
             out Global_ErrorMask errorMask,
             Global_CopyMask copyMask = null,
-            IGlobalGetter def = null,
+            Global def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -386,10 +384,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            IGlobalGetter rhs,
+            Global rhs,
             ErrorMaskBuilder errorMask,
             Global_CopyMask copyMask = null,
-            IGlobalGetter def = null)
+            Global def = null)
         {
             GlobalCommon.CopyFieldsFrom(
                 item: this,
@@ -434,14 +432,13 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGlobal :
         IGlobalGetter,
         ISkyrimMajorRecord,
-        ILoquiClass<IGlobal, IGlobalGetter>,
-        ILoquiClass<Global, IGlobalGetter>
+        ILoquiObjectSetter<IGlobalInternal>
     {
         void CopyFieldsFrom(
-            IGlobalGetter rhs,
+            Global rhs,
             ErrorMaskBuilder errorMask = null,
             Global_CopyMask copyMask = null,
-            IGlobalGetter def = null);
+            Global def = null);
     }
 
     public partial interface IGlobalInternal :
@@ -453,6 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IGlobalGetter :
         ISkyrimMajorRecordGetter,
+        ILoquiObject<IGlobalInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -477,17 +475,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static Global_Mask<bool> GetEqualsMask(
-            this IGlobalGetter item,
-            IGlobalGetter rhs,
+            this IGlobalInternalGetter item,
+            IGlobalInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Global_Mask<bool>();
-            ((GlobalCommon)item.CommonInstance).FillEqualsMask(
+            return ((GlobalCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -523,7 +518,7 @@ namespace Mutagen.Bethesda.Skyrim
                 checkMask: checkMask);
         }
 
-        public static Global_Mask<bool> GetHasBeenSetMask(this IGlobalGetter item)
+        public static Global_Mask<bool> GetHasBeenSetMask(this IGlobalInternalGetter item)
         {
             var ret = new Global_Mask<bool>();
             ((GlobalCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -673,13 +668,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(GlobalXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(GlobalXmlWriteTranslation);
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GLOB_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(GlobalBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(GlobalBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -714,11 +709,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class GlobalCommon : SkyrimMajorRecordCommon
     {
         public static readonly GlobalCommon Instance = new GlobalCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IGlobal item,
-            IGlobalGetter rhs,
-            IGlobalGetter def,
+            Global item,
+            Global rhs,
+            Global def,
             ErrorMaskBuilder errorMask,
             Global_CopyMask copyMask)
         {
@@ -734,25 +730,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IGlobal item)
+        public virtual void Clear(IGlobalInternal item)
         {
             ClearPartial();
             base.Clear(item);
         }
 
-        public override void Clear(ISkyrimMajorRecord item)
+        public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (IGlobal)item);
+            Clear(item: (IGlobalInternal)item);
         }
 
-        public override void Clear(IMajorRecord item)
+        public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IGlobal)item);
+            Clear(item: (IGlobalInternal)item);
+        }
+
+        public Global_Mask<bool> GetEqualsMask(
+            IGlobalInternalGetter item,
+            IGlobalInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Global_Mask<bool>();
+            ((GlobalCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
         }
 
         public void FillEqualsMask(
-            IGlobalGetter item,
-            IGlobalGetter rhs,
+            IGlobalInternalGetter item,
+            IGlobalInternalGetter rhs,
             Global_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -761,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public string ToString(
-            IGlobalGetter item,
+            IGlobalInternalGetter item,
             string name = null,
             Global_Mask<bool> printMask = null)
         {
@@ -775,18 +785,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public void ToString(
-            IGlobalGetter item,
+            IGlobalInternalGetter item,
             FileGeneration fg,
             string name = null,
             Global_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Global)} =>");
+                fg.AppendLine($"Global =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Global)}) =>");
+                fg.AppendLine($"{name} (Global) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -800,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         protected static void ToStringFields(
-            IGlobalGetter item,
+            IGlobalInternalGetter item,
             FileGeneration fg,
             Global_Mask<bool> printMask = null)
         {
@@ -811,7 +821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public bool HasBeenSet(
-            IGlobalGetter item,
+            IGlobalInternalGetter item,
             Global_Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
@@ -820,7 +830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public void FillHasBeenSetMask(
-            IGlobalGetter item,
+            IGlobalInternalGetter item,
             Global_Mask<bool> mask)
         {
             base.FillHasBeenSetMask(
@@ -869,11 +879,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class GlobalXmlTranslation :
-        SkyrimMajorRecordXmlTranslation,
-        IXmlTranslator
+    public partial class GlobalXmlWriteTranslation :
+        SkyrimMajorRecordXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public new readonly static GlobalXmlTranslation Instance = new GlobalXmlTranslation();
+        public new readonly static GlobalXmlWriteTranslation Instance = new GlobalXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IGlobalInternalGetter item,
@@ -881,56 +891,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            SkyrimMajorRecordXmlTranslation.WriteToNode_Xml(
+            SkyrimMajorRecordXmlWriteTranslation.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-        }
-
-        public static void FillPublic_Xml(
-            IGlobalInternal item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    GlobalXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            IGlobalInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
         }
 
         public virtual void Write(
@@ -1000,6 +965,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public partial class GlobalXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    {
+        public new readonly static GlobalXmlCreateTranslation Instance = new GlobalXmlCreateTranslation();
+
+        public static void FillPublic_Xml(
+            IGlobalInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    GlobalXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            IGlobalInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                default:
+                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+
+    }
+
     #region Xml Write Mixins
     public static class GlobalXmlTranslationMixIn
     {
@@ -1012,7 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GlobalXmlTranslation)item.XmlTranslator).Write(
+            ((GlobalXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1283,30 +1299,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Binary Translation
-    public partial class GlobalBinaryTranslation :
-        SkyrimMajorRecordBinaryTranslation,
-        IBinaryTranslator
+    public partial class GlobalBinaryWriteTranslation :
+        SkyrimMajorRecordBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public new readonly static GlobalBinaryTranslation Instance = new GlobalBinaryTranslation();
-
-        static partial void FillBinary_TypeChar_Custom(
-            MutagenFrame frame,
-            Global item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void FillBinary_TypeChar_Custom_Public(
-            MutagenFrame frame,
-            Global item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            FillBinary_TypeChar_Custom(
-                frame: frame,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
+        public new readonly static GlobalBinaryWriteTranslation Instance = new GlobalBinaryWriteTranslation();
 
         static partial void WriteBinary_TypeChar_Custom(
             MutagenWriter writer,
@@ -1334,13 +1331,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            GlobalBinaryTranslation.WriteBinary_TypeChar(
+            GlobalBinaryWriteTranslation.WriteBinary_TypeChar(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -1359,7 +1356,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: Global_Registration.GLOB_HEADER,
                 type: ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryTranslation.Write_Embedded(
+                SkyrimMajorRecordBinaryWriteTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -1420,6 +1417,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public partial class GlobalBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    {
+        public new readonly static GlobalBinaryCreateTranslation Instance = new GlobalBinaryCreateTranslation();
+
+        static partial void FillBinary_TypeChar_Custom(
+            MutagenFrame frame,
+            Global item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_TypeChar_Custom_Public(
+            MutagenFrame frame,
+            Global item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_TypeChar_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+    }
+
     #region Binary Write Mixins
     public static class GlobalBinaryTranslationMixIn
     {
@@ -1431,7 +1453,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GlobalBinaryTranslation)item.BinaryTranslator).Write(
+            ((GlobalBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

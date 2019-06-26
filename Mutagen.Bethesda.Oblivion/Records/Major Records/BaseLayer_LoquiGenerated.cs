@@ -34,12 +34,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class BaseLayer :
         LoquiNotifyingObject,
-        IBaseLayer,
         IBaseLayerInternal,
-        ILoquiObject<BaseLayer>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<BaseLayer>,
         ILinkSubContainer,
-        IEquatable<BaseLayer>
+        IEquatable<BaseLayer>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
@@ -57,10 +56,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Texture
-        public FormIDLink<LandTexture> Texture_Property { get; } = new FormIDLink<LandTexture>();
+        public IFormIDLink<LandTexture> Texture_Property { get; } = new FormIDLink<LandTexture>();
         public LandTexture Texture { get => Texture_Property.Item; set => Texture_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<LandTexture> IBaseLayerGetter.Texture_Property => this.Texture_Property;
+        IFormIDLink<LandTexture> IBaseLayer.Texture_Property => this.Texture_Property;
+        ILandTextureInternalGetter IBaseLayerGetter.Texture => this.Texture_Property.Item;
+        IFormIDLinkGetter<LandTexture> IBaseLayerGetter.Texture_Property => this.Texture_Property;
         #endregion
         #region Quadrant
         private AlphaLayer.QuadrantEnum _Quadrant;
@@ -104,8 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<BaseLayer>.GetEqualsMask(BaseLayer rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IBaseLayerGetter>.GetEqualsMask(IBaseLayerGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBaseLayerInternalGetter)rhs, include);
         #region To String
 
         public virtual void ToString(
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -151,8 +151,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected virtual IXmlTranslator XmlTranslator => BaseLayerXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected virtual IXmlWriteTranslator XmlWriteTranslator => BaseLayerXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static BaseLayer Create_Xml(
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    BaseLayerXmlTranslation.FillPublicElement_Xml(
+                    BaseLayerXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -395,8 +395,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected virtual IBinaryTranslator BinaryTranslator => BaseLayerBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected virtual IBinaryWriteTranslator BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static BaseLayer Create_Binary(
@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public BaseLayer Copy(
             BaseLayer_CopyMask copyMask = null,
-            IBaseLayerGetter def = null)
+            BaseLayer def = null)
         {
             return BaseLayer.Copy(
                 this,
@@ -513,9 +513,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static BaseLayer Copy(
-            IBaseLayerGetter item,
+            BaseLayer item,
             BaseLayer_CopyMask copyMask = null,
-            IBaseLayerGetter def = null)
+            BaseLayer def = null)
         {
             BaseLayer ret;
             if (item.GetType().Equals(typeof(BaseLayer)))
@@ -534,9 +534,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static BaseLayer Copy_ToLoqui(
-            IBaseLayerGetter item,
+            BaseLayer item,
             BaseLayer_CopyMask copyMask = null,
-            IBaseLayerGetter def = null)
+            BaseLayer def = null)
         {
             BaseLayer ret;
             if (item.GetType().Equals(typeof(BaseLayer)))
@@ -554,10 +554,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public virtual void CopyFieldsFrom(IBaseLayerGetter rhs)
+        public virtual void CopyFieldsFrom(BaseLayer rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IBaseLayerGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -565,9 +565,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IBaseLayerGetter rhs,
+            BaseLayer rhs,
             BaseLayer_CopyMask copyMask,
-            IBaseLayerGetter def = null)
+            BaseLayer def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -578,10 +578,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IBaseLayerGetter rhs,
+            BaseLayer rhs,
             out BaseLayer_ErrorMask errorMask,
             BaseLayer_CopyMask copyMask = null,
-            IBaseLayerGetter def = null,
+            BaseLayer def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -595,10 +595,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IBaseLayerGetter rhs,
+            BaseLayer rhs,
             ErrorMaskBuilder errorMask,
             BaseLayer_CopyMask copyMask = null,
-            IBaseLayerGetter def = null)
+            BaseLayer def = null)
         {
             BaseLayerCommon.CopyFieldsFrom(
                 item: this,
@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case BaseLayer_FieldIndex.Texture:
-                    this.Texture_Property.Set((FormIDLink<LandTexture>)obj);
+                    this.Texture_Property.Set((IFormIDLink<LandTexture>)obj);
                     break;
                 case BaseLayer_FieldIndex.Quadrant:
                     this.Quadrant = (AlphaLayer.QuadrantEnum)obj;
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case BaseLayer_FieldIndex.Texture:
-                    obj.Texture_Property.Set((FormIDLink<LandTexture>)pair.Value);
+                    obj.Texture_Property.Set((IFormIDLink<LandTexture>)pair.Value);
                     break;
                 case BaseLayer_FieldIndex.Quadrant:
                     obj.Quadrant = (AlphaLayer.QuadrantEnum)pair.Value;
@@ -675,17 +675,17 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IBaseLayer :
         IBaseLayerGetter,
-        ILoquiClass<IBaseLayer, IBaseLayerGetter>,
-        ILoquiClass<BaseLayer, IBaseLayerGetter>
+        ILoquiObjectSetter<IBaseLayerInternal>
     {
         new LandTexture Texture { get; set; }
+        new IFormIDLink<LandTexture> Texture_Property { get; }
         new AlphaLayer.QuadrantEnum Quadrant { get; set; }
 
         void CopyFieldsFrom(
-            IBaseLayerGetter rhs,
+            BaseLayer rhs,
             ErrorMaskBuilder errorMask = null,
             BaseLayer_CopyMask copyMask = null,
-            IBaseLayerGetter def = null);
+            BaseLayer def = null);
     }
 
     public partial interface IBaseLayerInternal :
@@ -693,18 +693,20 @@ namespace Mutagen.Bethesda.Oblivion
         IBaseLayerInternalGetter
     {
         new LandTexture Texture { get; set; }
+        new IFormIDLink<LandTexture> Texture_Property { get; }
         new BaseLayer.BTXTDataType BTXTDataTypeState { get; set; }
 
     }
 
     public partial interface IBaseLayerGetter :
         ILoquiObject,
+        ILoquiObject<IBaseLayerInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
         #region Texture
-        LandTexture Texture { get; }
-        FormIDLink<LandTexture> Texture_Property { get; }
+        ILandTextureInternalGetter Texture { get; }
+        IFormIDLinkGetter<LandTexture> Texture_Property { get; }
 
         #endregion
         #region Quadrant
@@ -738,17 +740,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static BaseLayer_Mask<bool> GetEqualsMask(
-            this IBaseLayerGetter item,
-            IBaseLayerGetter rhs,
+            this IBaseLayerInternalGetter item,
+            IBaseLayerInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BaseLayer_Mask<bool>();
-            ((BaseLayerCommon)item.CommonInstance).FillEqualsMask(
+            return ((BaseLayerCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -784,7 +783,7 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static BaseLayer_Mask<bool> GetHasBeenSetMask(this IBaseLayerGetter item)
+        public static BaseLayer_Mask<bool> GetHasBeenSetMask(this IBaseLayerInternalGetter item)
         {
             var ret = new BaseLayer_Mask<bool>();
             ((BaseLayerCommon)item.CommonInstance).FillHasBeenSetMask(
@@ -971,7 +970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case BaseLayer_FieldIndex.Texture:
-                    return typeof(FormIDLink<LandTexture>);
+                    return typeof(IFormIDLink<LandTexture>);
                 case BaseLayer_FieldIndex.Quadrant:
                     return typeof(AlphaLayer.QuadrantEnum);
                 case BaseLayer_FieldIndex.LayerNumber:
@@ -983,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(BaseLayerXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(BaseLayerXmlWriteTranslation);
         public static readonly RecordType BTXT_HEADER = new RecordType("BTXT");
         public static readonly RecordType ATXT_HEADER = new RecordType("ATXT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1000,7 +999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(BaseLayerBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(BaseLayerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1035,11 +1034,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class BaseLayerCommon
     {
         public static readonly BaseLayerCommon Instance = new BaseLayerCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IBaseLayer item,
-            IBaseLayerGetter rhs,
-            IBaseLayerGetter def,
+            BaseLayer item,
+            BaseLayer rhs,
+            BaseLayer def,
             ErrorMaskBuilder errorMask,
             BaseLayer_CopyMask copyMask)
         {
@@ -1083,16 +1083,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IBaseLayer item)
+        public virtual void Clear(IBaseLayerInternal item)
         {
             ClearPartial();
             item.Texture = default(LandTexture);
             item.Quadrant = default(AlphaLayer.QuadrantEnum);
         }
 
+        public BaseLayer_Mask<bool> GetEqualsMask(
+            IBaseLayerInternalGetter item,
+            IBaseLayerInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new BaseLayer_Mask<bool>();
+            ((BaseLayerCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
-            IBaseLayerGetter item,
-            IBaseLayerGetter rhs,
+            IBaseLayerInternalGetter item,
+            IBaseLayerInternalGetter rhs,
             BaseLayer_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -1103,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public string ToString(
-            IBaseLayerGetter item,
+            IBaseLayerInternalGetter item,
             string name = null,
             BaseLayer_Mask<bool> printMask = null)
         {
@@ -1117,18 +1131,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public void ToString(
-            IBaseLayerGetter item,
+            IBaseLayerInternalGetter item,
             FileGeneration fg,
             string name = null,
             BaseLayer_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(BaseLayer)} =>");
+                fg.AppendLine($"BaseLayer =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(BaseLayer)}) =>");
+                fg.AppendLine($"{name} (BaseLayer) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1142,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         protected static void ToStringFields(
-            IBaseLayerGetter item,
+            IBaseLayerInternalGetter item,
             FileGeneration fg,
             BaseLayer_Mask<bool> printMask = null)
         {
@@ -1164,14 +1178,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public bool HasBeenSet(
-            IBaseLayerGetter item,
+            IBaseLayerInternalGetter item,
             BaseLayer_Mask<bool?> checkMask)
         {
             return true;
         }
 
         public void FillHasBeenSetMask(
-            IBaseLayerGetter item,
+            IBaseLayerInternalGetter item,
             BaseLayer_Mask<bool> mask)
         {
             mask.Texture = true;
@@ -1185,9 +1199,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class BaseLayerXmlTranslation : IXmlTranslator
+    public partial class BaseLayerXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static BaseLayerXmlTranslation Instance = new BaseLayerXmlTranslation();
+        public readonly static BaseLayerXmlWriteTranslation Instance = new BaseLayerXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IBaseLayerInternalGetter item,
@@ -1236,6 +1250,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public virtual void Write(
+            XElement node,
+            IBaseLayerInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BaseLayer");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BaseLayer");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public virtual void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IBaseLayerInternalGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IBaseLayerInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IBaseLayerInternalGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class BaseLayerXmlCreateTranslation
+    {
+        public readonly static BaseLayerXmlCreateTranslation Instance = new BaseLayerXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IBaseLayerInternal item,
             XElement node,
@@ -1246,7 +1330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    BaseLayerXmlTranslation.FillPublicElement_Xml(
+                    BaseLayerXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1335,70 +1419,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public virtual void Write(
-            XElement node,
-            IBaseLayerInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BaseLayer");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BaseLayer");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public virtual void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IBaseLayerInternalGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IBaseLayerInternalGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IBaseLayerInternalGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1413,7 +1433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((BaseLayerXmlTranslation)item.XmlTranslator).Write(
+            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1503,7 +1523,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((BaseLayerXmlTranslation)item.XmlTranslator).Write(
+            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1517,7 +1537,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             BaseLayer_TranslationMask translationMask = null)
         {
-            ((BaseLayerXmlTranslation)item.XmlTranslator).Write(
+            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1531,7 +1551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((BaseLayerXmlTranslation)item.XmlTranslator).Write(
+            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1546,7 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((BaseLayerXmlTranslation)item.XmlTranslator).Write(
+            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1918,9 +1938,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class BaseLayerBinaryTranslation : IBinaryTranslator
+    public partial class BaseLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BaseLayerBinaryTranslation Instance = new BaseLayerBinaryTranslation();
+        public readonly static BaseLayerBinaryWriteTranslation Instance = new BaseLayerBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IBaseLayerInternalGetter item,
@@ -1991,6 +2011,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class BaseLayerBinaryCreateTranslation
+    {
+        public readonly static BaseLayerBinaryCreateTranslation Instance = new BaseLayerBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class BaseLayerBinaryTranslationMixIn
     {
@@ -2002,7 +2028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((BaseLayerBinaryTranslation)item.BinaryTranslator).Write(
+            ((BaseLayerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2017,7 +2043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((BaseLayerBinaryTranslation)item.BinaryTranslator).Write(
+            ((BaseLayerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2030,7 +2056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((BaseLayerBinaryTranslation)item.BinaryTranslator).Write(
+            ((BaseLayerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

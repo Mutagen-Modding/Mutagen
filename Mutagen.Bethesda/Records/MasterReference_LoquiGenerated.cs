@@ -34,9 +34,9 @@ namespace Mutagen.Bethesda
     public partial class MasterReference :
         LoquiNotifyingObject,
         IMasterReference,
-        ILoquiObject<MasterReference>,
-        ILoquiObjectSetter,
-        IEquatable<MasterReference>
+        ILoquiObjectSetter<MasterReference>,
+        IEquatable<MasterReference>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
@@ -88,8 +88,7 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        IMask<bool> IEqualsMask<MasterReference>.GetEqualsMask(MasterReference rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IMasterReferenceGetter>.GetEqualsMask(IMasterReferenceGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -103,7 +102,7 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -138,8 +137,8 @@ namespace Mutagen.Bethesda
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => MasterReferenceXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => MasterReferenceXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static MasterReference Create_Xml(
@@ -192,7 +191,7 @@ namespace Mutagen.Bethesda
             {
                 foreach (var elem in node.Elements())
                 {
-                    MasterReferenceXmlTranslation.FillPublicElement_Xml(
+                    MasterReferenceXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -311,8 +310,8 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => MasterReferenceBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => MasterReferenceBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static MasterReference Create_Binary(
@@ -416,7 +415,7 @@ namespace Mutagen.Bethesda
 
         public MasterReference Copy(
             MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
+            MasterReference def = null)
         {
             return MasterReference.Copy(
                 this,
@@ -425,9 +424,9 @@ namespace Mutagen.Bethesda
         }
 
         public static MasterReference Copy(
-            IMasterReferenceGetter item,
+            MasterReference item,
             MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
+            MasterReference def = null)
         {
             MasterReference ret;
             if (item.GetType().Equals(typeof(MasterReference)))
@@ -446,9 +445,9 @@ namespace Mutagen.Bethesda
         }
 
         public static MasterReference Copy_ToLoqui(
-            IMasterReferenceGetter item,
+            MasterReference item,
             MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
+            MasterReference def = null)
         {
             MasterReference ret;
             if (item.GetType().Equals(typeof(MasterReference)))
@@ -466,10 +465,10 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public void CopyFieldsFrom(IMasterReferenceGetter rhs)
+        public void CopyFieldsFrom(MasterReference rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IMasterReferenceGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -477,9 +476,9 @@ namespace Mutagen.Bethesda
         }
 
         public void CopyFieldsFrom(
-            IMasterReferenceGetter rhs,
+            MasterReference rhs,
             MasterReference_CopyMask copyMask,
-            IMasterReferenceGetter def = null)
+            MasterReference def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -490,10 +489,10 @@ namespace Mutagen.Bethesda
         }
 
         public void CopyFieldsFrom(
-            IMasterReferenceGetter rhs,
+            MasterReference rhs,
             out MasterReference_ErrorMask errorMask,
             MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null,
+            MasterReference def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -507,10 +506,10 @@ namespace Mutagen.Bethesda
         }
 
         public void CopyFieldsFrom(
-            IMasterReferenceGetter rhs,
+            MasterReference rhs,
             ErrorMaskBuilder errorMask,
             MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
+            MasterReference def = null)
         {
             MasterReferenceCommon.CopyFieldsFrom(
                 item: this,
@@ -575,25 +574,25 @@ namespace Mutagen.Bethesda
     #region Interface
     public partial interface IMasterReference :
         IMasterReferenceGetter,
-        ILoquiClass<IMasterReference, IMasterReferenceGetter>,
-        ILoquiClass<MasterReference, IMasterReferenceGetter>
+        ILoquiObjectSetter<IMasterReference>
     {
         new ModKey Master { get; set; }
 
         new UInt64 FileSize { get; set; }
         new bool FileSize_IsSet { get; set; }
-        void FileSize_Set(UInt64 item, bool hasBeenSet = true);
+        void FileSize_Set(UInt64 value, bool hasBeenSet = true);
         void FileSize_Unset();
 
         void CopyFieldsFrom(
-            IMasterReferenceGetter rhs,
+            MasterReference rhs,
             ErrorMaskBuilder errorMask = null,
             MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null);
+            MasterReference def = null);
     }
 
     public partial interface IMasterReferenceGetter :
         ILoquiObject,
+        ILoquiObject<IMasterReferenceGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -624,13 +623,10 @@ namespace Mutagen.Bethesda
             IMasterReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MasterReference_Mask<bool>();
-            ((MasterReferenceCommon)item.CommonInstance).FillEqualsMask(
+            return ((MasterReferenceCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -840,13 +836,13 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(MasterReferenceXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(MasterReferenceXmlWriteTranslation);
         public static readonly RecordType MAST_HEADER = new RecordType("MAST");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = MAST_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
-        public static readonly Type BinaryTranslation = typeof(MasterReferenceBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(MasterReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -881,11 +877,12 @@ namespace Mutagen.Bethesda.Internals
     public partial class MasterReferenceCommon
     {
         public static readonly MasterReferenceCommon Instance = new MasterReferenceCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IMasterReference item,
-            IMasterReferenceGetter rhs,
-            IMasterReferenceGetter def,
+            MasterReference item,
+            MasterReference rhs,
+            MasterReference def,
             ErrorMaskBuilder errorMask,
             MasterReference_CopyMask copyMask)
         {
@@ -949,6 +946,20 @@ namespace Mutagen.Bethesda.Internals
             item.FileSize_Unset();
         }
 
+        public MasterReference_Mask<bool> GetEqualsMask(
+            IMasterReferenceGetter item,
+            IMasterReferenceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new MasterReference_Mask<bool>();
+            ((MasterReferenceCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IMasterReferenceGetter item,
             IMasterReferenceGetter rhs,
@@ -982,11 +993,11 @@ namespace Mutagen.Bethesda.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(MasterReference)} =>");
+                fg.AppendLine($"MasterReference =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(MasterReference)}) =>");
+                fg.AppendLine($"{name} (MasterReference) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1035,9 +1046,9 @@ namespace Mutagen.Bethesda.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class MasterReferenceXmlTranslation : IXmlTranslator
+    public partial class MasterReferenceXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static MasterReferenceXmlTranslation Instance = new MasterReferenceXmlTranslation();
+        public readonly static MasterReferenceXmlWriteTranslation Instance = new MasterReferenceXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IMasterReferenceGetter item,
@@ -1066,6 +1077,76 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            IMasterReferenceGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.MasterReference");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.MasterReference");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (IMasterReferenceGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            IMasterReferenceGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (IMasterReferenceGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class MasterReferenceXmlCreateTranslation
+    {
+        public readonly static MasterReferenceXmlCreateTranslation Instance = new MasterReferenceXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             IMasterReference item,
             XElement node,
@@ -1076,7 +1157,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    MasterReferenceXmlTranslation.FillPublicElement_Xml(
+                    MasterReferenceXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1157,70 +1238,6 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            IMasterReferenceGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.MasterReference");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.MasterReference");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (IMasterReferenceGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IMasterReferenceGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (IMasterReferenceGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1235,7 +1252,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((MasterReferenceXmlTranslation)item.XmlTranslator).Write(
+            ((MasterReferenceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1325,7 +1342,7 @@ namespace Mutagen.Bethesda.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((MasterReferenceXmlTranslation)item.XmlTranslator).Write(
+            ((MasterReferenceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1339,7 +1356,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null,
             MasterReference_TranslationMask translationMask = null)
         {
-            ((MasterReferenceXmlTranslation)item.XmlTranslator).Write(
+            ((MasterReferenceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1353,7 +1370,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((MasterReferenceXmlTranslation)item.XmlTranslator).Write(
+            ((MasterReferenceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1368,7 +1385,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((MasterReferenceXmlTranslation)item.XmlTranslator).Write(
+            ((MasterReferenceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1686,9 +1703,9 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Binary Translation
-    public partial class MasterReferenceBinaryTranslation : IBinaryTranslator
+    public partial class MasterReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MasterReferenceBinaryTranslation Instance = new MasterReferenceBinaryTranslation();
+        public readonly static MasterReferenceBinaryWriteTranslation Instance = new MasterReferenceBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
             IMasterReferenceGetter item,
@@ -1744,6 +1761,12 @@ namespace Mutagen.Bethesda.Internals
 
     }
 
+    public partial class MasterReferenceBinaryCreateTranslation
+    {
+        public readonly static MasterReferenceBinaryCreateTranslation Instance = new MasterReferenceBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class MasterReferenceBinaryTranslationMixIn
     {
@@ -1755,7 +1778,7 @@ namespace Mutagen.Bethesda.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((MasterReferenceBinaryTranslation)item.BinaryTranslator).Write(
+            ((MasterReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1770,7 +1793,7 @@ namespace Mutagen.Bethesda.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((MasterReferenceBinaryTranslation)item.BinaryTranslator).Write(
+            ((MasterReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1783,7 +1806,7 @@ namespace Mutagen.Bethesda.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((MasterReferenceBinaryTranslation)item.BinaryTranslator).Write(
+            ((MasterReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

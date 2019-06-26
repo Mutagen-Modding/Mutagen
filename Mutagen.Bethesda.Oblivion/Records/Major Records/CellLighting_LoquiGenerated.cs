@@ -37,9 +37,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class CellLighting :
         LoquiNotifyingObject,
         ICellLighting,
-        ILoquiObject<CellLighting>,
-        ILoquiObjectSetter,
-        IEquatable<CellLighting>
+        ILoquiObjectSetter<CellLighting>,
+        IEquatable<CellLighting>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellLighting_Registration.Instance;
@@ -129,8 +129,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<CellLighting>.GetEqualsMask(CellLighting rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<ICellLightingGetter>.GetEqualsMask(ICellLightingGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellLightingGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -144,7 +143,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -186,8 +185,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => CellLightingXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => CellLightingXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static CellLighting Create_Xml(
@@ -240,7 +239,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    CellLightingXmlTranslation.FillPublicElement_Xml(
+                    CellLightingXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -365,8 +364,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => CellLightingBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => CellLightingBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static CellLighting Create_Binary(
@@ -507,7 +506,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public CellLighting Copy(
             CellLighting_CopyMask copyMask = null,
-            ICellLightingGetter def = null)
+            CellLighting def = null)
         {
             return CellLighting.Copy(
                 this,
@@ -516,9 +515,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static CellLighting Copy(
-            ICellLightingGetter item,
+            CellLighting item,
             CellLighting_CopyMask copyMask = null,
-            ICellLightingGetter def = null)
+            CellLighting def = null)
         {
             CellLighting ret;
             if (item.GetType().Equals(typeof(CellLighting)))
@@ -537,9 +536,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static CellLighting Copy_ToLoqui(
-            ICellLightingGetter item,
+            CellLighting item,
             CellLighting_CopyMask copyMask = null,
-            ICellLightingGetter def = null)
+            CellLighting def = null)
         {
             CellLighting ret;
             if (item.GetType().Equals(typeof(CellLighting)))
@@ -557,10 +556,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(ICellLightingGetter rhs)
+        public void CopyFieldsFrom(CellLighting rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (ICellLightingGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -568,9 +567,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ICellLightingGetter rhs,
+            CellLighting rhs,
             CellLighting_CopyMask copyMask,
-            ICellLightingGetter def = null)
+            CellLighting def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -581,10 +580,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ICellLightingGetter rhs,
+            CellLighting rhs,
             out CellLighting_ErrorMask errorMask,
             CellLighting_CopyMask copyMask = null,
-            ICellLightingGetter def = null,
+            CellLighting def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -598,10 +597,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ICellLightingGetter rhs,
+            CellLighting rhs,
             ErrorMaskBuilder errorMask,
             CellLighting_CopyMask copyMask = null,
-            ICellLightingGetter def = null)
+            CellLighting def = null)
         {
             CellLightingCommon.CopyFieldsFrom(
                 item: this,
@@ -708,8 +707,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ICellLighting :
         ICellLightingGetter,
-        ILoquiClass<ICellLighting, ICellLightingGetter>,
-        ILoquiClass<CellLighting, ICellLightingGetter>
+        ILoquiObjectSetter<ICellLighting>
     {
         new Color AmbientColor { get; set; }
 
@@ -730,14 +728,15 @@ namespace Mutagen.Bethesda.Oblivion
         new Single FogClipDistance { get; set; }
 
         void CopyFieldsFrom(
-            ICellLightingGetter rhs,
+            CellLighting rhs,
             ErrorMaskBuilder errorMask = null,
             CellLighting_CopyMask copyMask = null,
-            ICellLightingGetter def = null);
+            CellLighting def = null);
     }
 
     public partial interface ICellLightingGetter :
         ILoquiObject,
+        ILoquiObject<ICellLightingGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -795,13 +794,10 @@ namespace Mutagen.Bethesda.Oblivion
             ICellLightingGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new CellLighting_Mask<bool>();
-            ((CellLightingCommon)item.CommonInstance).FillEqualsMask(
+            return ((CellLightingCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -1095,12 +1091,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(CellLightingXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(CellLightingXmlWriteTranslation);
         public static readonly RecordType XCLL_HEADER = new RecordType("XCLL");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = XCLL_HEADER;
         public const int NumStructFields = 9;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(CellLightingBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(CellLightingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1135,11 +1131,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class CellLightingCommon
     {
         public static readonly CellLightingCommon Instance = new CellLightingCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ICellLighting item,
-            ICellLightingGetter rhs,
-            ICellLightingGetter def,
+            CellLighting item,
+            CellLighting rhs,
+            CellLighting def,
             ErrorMaskBuilder errorMask,
             CellLighting_CopyMask copyMask)
         {
@@ -1316,6 +1313,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FogClipDistance = default(Single);
         }
 
+        public CellLighting_Mask<bool> GetEqualsMask(
+            ICellLightingGetter item,
+            ICellLightingGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new CellLighting_Mask<bool>();
+            ((CellLightingCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             ICellLightingGetter item,
             ICellLightingGetter rhs,
@@ -1356,11 +1367,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(CellLighting)} =>");
+                fg.AppendLine($"CellLighting =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(CellLighting)}) =>");
+                fg.AppendLine($"{name} (CellLighting) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1443,9 +1454,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class CellLightingXmlTranslation : IXmlTranslator
+    public partial class CellLightingXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static CellLightingXmlTranslation Instance = new CellLightingXmlTranslation();
+        public readonly static CellLightingXmlWriteTranslation Instance = new CellLightingXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             ICellLightingGetter item,
@@ -1536,6 +1547,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public void Write(
+            XElement node,
+            ICellLightingGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.CellLighting");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CellLighting");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            object item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            Write(
+                item: (ICellLightingGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public void Write(
+            XElement node,
+            ICellLightingGetter item,
+            ErrorMaskBuilder errorMask,
+            int fieldIndex,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                Write(
+                    item: (ICellLightingGetter)item,
+                    name: name,
+                    node: node,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+    }
+
+    public partial class CellLightingXmlCreateTranslation
+    {
+        public readonly static CellLightingXmlCreateTranslation Instance = new CellLightingXmlCreateTranslation();
+
         public static void FillPublic_Xml(
             ICellLighting item,
             XElement node,
@@ -1546,7 +1627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    CellLightingXmlTranslation.FillPublicElement_Xml(
+                    CellLightingXmlCreateTranslation.FillPublicElement_Xml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1809,70 +1890,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
-            XElement node,
-            ICellLightingGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.CellLighting");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CellLighting");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            Write(
-                item: (ICellLightingGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            ICellLightingGetter item,
-            ErrorMaskBuilder errorMask,
-            int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            try
-            {
-                errorMask?.PushIndex(fieldIndex);
-                Write(
-                    item: (ICellLightingGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
     }
 
     #region Xml Write Mixins
@@ -1887,7 +1904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((CellLightingXmlTranslation)item.XmlTranslator).Write(
+            ((CellLightingXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1977,7 +1994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((CellLightingXmlTranslation)item.XmlTranslator).Write(
+            ((CellLightingXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1991,7 +2008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             CellLighting_TranslationMask translationMask = null)
         {
-            ((CellLightingXmlTranslation)item.XmlTranslator).Write(
+            ((CellLightingXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2005,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((CellLightingXmlTranslation)item.XmlTranslator).Write(
+            ((CellLightingXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2020,7 +2037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((CellLightingXmlTranslation)item.XmlTranslator).Write(
+            ((CellLightingXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2527,9 +2544,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class CellLightingBinaryTranslation : IBinaryTranslator
+    public partial class CellLightingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CellLightingBinaryTranslation Instance = new CellLightingBinaryTranslation();
+        public readonly static CellLightingBinaryWriteTranslation Instance = new CellLightingBinaryWriteTranslation();
 
         public static void Write_Embedded(
             ICellLightingGetter item,
@@ -2602,6 +2619,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class CellLightingBinaryCreateTranslation
+    {
+        public readonly static CellLightingBinaryCreateTranslation Instance = new CellLightingBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class CellLightingBinaryTranslationMixIn
     {
@@ -2613,7 +2636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((CellLightingBinaryTranslation)item.BinaryTranslator).Write(
+            ((CellLightingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2628,7 +2651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((CellLightingBinaryTranslation)item.BinaryTranslator).Write(
+            ((CellLightingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2641,7 +2664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((CellLightingBinaryTranslation)item.BinaryTranslator).Write(
+            ((CellLightingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class GlobalBinaryTranslation
+        public partial class GlobalBinaryWriteTranslation
         {
             static partial void WriteBinary_TypeChar_Custom(
                 MutagenWriter writer,

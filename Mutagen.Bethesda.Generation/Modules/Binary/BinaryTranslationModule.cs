@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 return base.TranslatorReference(obj, item);
             }
-            return $"{this.TranslationClass(obj)}.Instance";
+            return $"{this.TranslationWriteClass(obj)}.Instance";
         }
 
         public override async Task<bool> AsyncImport(ObjectGeneration obj)
@@ -237,12 +237,19 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override async Task GenerateInTranslationClass(ObjectGeneration obj, FileGeneration fg)
+        public override async Task GenerateInTranslationWriteClass(ObjectGeneration obj, FileGeneration fg)
         {
-            GenerateCustomPartials(obj, fg);
-            GenerateCustomBinaryEndPartial(obj, fg);
+            GenerateCustomWritePartials(obj, fg);
+            GenerateCustomBinaryEndWritePartial(obj, fg);
             GenerateWriteExtras(obj, fg);
-            await base.GenerateInTranslationClass(obj, fg);
+            await base.GenerateInTranslationWriteClass(obj, fg);
+        }
+
+        public override async Task GenerateInTranslationCreateClass(ObjectGeneration obj, FileGeneration fg)
+        {
+            GenerateCustomCreatePartials(obj, fg);
+            GenerateCustomBinaryEndCreatePartial(obj, fg);
+            await base.GenerateInTranslationCreateClass(obj, fg);
         }
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
@@ -251,13 +258,27 @@ namespace Mutagen.Bethesda.Generation
             await GenerateCreateExtras(obj, fg);
         }
 
-        private void GenerateCustomPartials(ObjectGeneration obj, FileGeneration fg)
+        private void GenerateCustomWritePartials(ObjectGeneration obj, FileGeneration fg)
         {
             foreach (var field in obj.IterateFields(nonIntegrated: true))
             {
                 if (!field.TryGetFieldData(out var mutaData)) continue;
                 if (mutaData.Binary != BinaryGenerationType.Custom && !(field is CustomLogic)) continue;
-                CustomLogicTranslationGeneration.GeneratePartialMethods(
+                CustomLogicTranslationGeneration.GenerateWritePartialMethods(
+                    fg: fg,
+                    obj: obj,
+                    field: field,
+                    isAsync: false);
+            }
+        }
+
+        private void GenerateCustomCreatePartials(ObjectGeneration obj, FileGeneration fg)
+        {
+            foreach (var field in obj.IterateFields(nonIntegrated: true))
+            {
+                if (!field.TryGetFieldData(out var mutaData)) continue;
+                if (mutaData.Binary != BinaryGenerationType.Custom && !(field is CustomLogic)) continue;
+                CustomLogicTranslationGeneration.GenerateCreatePartialMethods(
                     fg: fg,
                     obj: obj,
                     field: field,
@@ -614,7 +635,40 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        private void GenerateCustomBinaryEndPartial(ObjectGeneration obj, FileGeneration fg)
+        private void GenerateCustomBinaryEndWritePartial(ObjectGeneration obj, FileGeneration fg)
+        {
+            var data = obj.GetObjectData();
+            if (data.CustomBinaryEnd == CustomEnd.Off) return;
+            using (var args = new ArgsWrapper(fg,
+                $"static partial void CustomBinaryEnd_Export"))
+            {
+                args.Add("MutagenWriter writer");
+                args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} obj");
+                args.Add("MasterReferences masterReferences");
+                args.Add($"ErrorMaskBuilder errorMask");
+            }
+            using (var args = new FunctionWrapper(fg,
+                $"public static void CustomBinaryEnd_ExportInternal"))
+            {
+                args.Add("MutagenWriter writer");
+                args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} obj");
+                args.Add("MasterReferences masterReferences");
+                args.Add($"ErrorMaskBuilder errorMask");
+            }
+            using (new BraceWrapper(fg))
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"CustomBinaryEnd_Export"))
+                {
+                    args.Add($"writer: writer");
+                    args.Add($"obj: obj");
+                    args.Add($"masterReferences: masterReferences");
+                    args.Add($"errorMask: errorMask");
+                }
+            }
+        }
+
+        private void GenerateCustomBinaryEndCreatePartial(ObjectGeneration obj, FileGeneration fg)
         {
             var data = obj.GetObjectData();
             if (data.CustomBinaryEnd == CustomEnd.Off) return;
@@ -646,33 +700,6 @@ namespace Mutagen.Bethesda.Generation
                         args.Add("masterReferences: masterReferences");
                         args.Add($"errorMask: errorMask");
                     }
-                }
-            }
-            using (var args = new ArgsWrapper(fg,
-                $"static partial void CustomBinaryEnd_Export"))
-            {
-                args.Add("MutagenWriter writer");
-                args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} obj");
-                args.Add("MasterReferences masterReferences");
-                args.Add($"ErrorMaskBuilder errorMask");
-            }
-            using (var args = new FunctionWrapper(fg,
-                $"public static void CustomBinaryEnd_ExportInternal"))
-            {
-                args.Add("MutagenWriter writer");
-                args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} obj");
-                args.Add("MasterReferences masterReferences");
-                args.Add($"ErrorMaskBuilder errorMask");
-            }
-            using (new BraceWrapper(fg))
-            {
-                using (var args = new ArgsWrapper(fg,
-                    $"CustomBinaryEnd_Export"))
-                {
-                    args.Add($"writer: writer");
-                    args.Add($"obj: obj");
-                    args.Add($"masterReferences: masterReferences");
-                    args.Add($"errorMask: errorMask");
                 }
             }
         }
@@ -906,7 +933,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg))
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationClass(obj)}.CustomBinaryEnd_Import{(await this.AsyncImport(obj) ? null : "_Public")}"))
+                            $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationCreateClass(obj)}.CustomBinaryEnd_Import{(await this.AsyncImport(obj) ? null : "_Public")}"))
                         {
                             args.Add("frame: frame");
                             args.Add("obj: ret");
@@ -1118,7 +1145,7 @@ namespace Mutagen.Bethesda.Generation
                     if (firstBase != null)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{this.TranslationClass(firstBase)}.Write_Embedded"))
+                            $"{this.TranslationWriteClass(firstBase)}.Write_Embedded"))
                         {
                             args.Add($"item: item");
                             args.Add($"writer: writer");
@@ -1153,7 +1180,7 @@ namespace Mutagen.Bethesda.Generation
                     if (firstBase != null)
                     {
                         using (var args = new ArgsWrapper(fg,
-                        $"{this.TranslationClass(firstBase)}.Write_RecordTypes"))
+                        $"{this.TranslationWriteClass(firstBase)}.Write_RecordTypes"))
                         {
                             args.Add($"item: item");
                             args.Add($"writer: writer");
@@ -1198,7 +1225,7 @@ namespace Mutagen.Bethesda.Generation
                         if (firstBase != null)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"{TranslationClass(firstBase)}.Write_Embedded"))
+                                $"{TranslationWriteClass(firstBase)}.Write_Embedded"))
                             {
                                 args.Add("item: item");
                                 args.Add("writer: writer");
@@ -1290,7 +1317,7 @@ namespace Mutagen.Bethesda.Generation
                         if (firstBase != null)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"{TranslationClass(firstBase)}.Write_RecordTypes"))
+                                $"{TranslationWriteClass(firstBase)}.Write_RecordTypes"))
                             {
                                 args.Add($"item: item");
                                 args.Add("writer: writer");
@@ -1348,7 +1375,7 @@ namespace Mutagen.Bethesda.Generation
                                         if (subData.Binary == BinaryGenerationType.Custom)
                                         {
                                             using (var args = new ArgsWrapper(fg,
-                                                $"{TranslationClass(obj)}.WriteBinary_{subField.Field.Name}"))
+                                                $"{TranslationWriteClass(obj)}.WriteBinary_{subField.Field.Name}"))
                                             {
                                                 args.Add("writer: writer");
                                                 args.Add("item: item");

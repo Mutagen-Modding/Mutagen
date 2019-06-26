@@ -35,10 +35,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ContainerItem :
         LoquiNotifyingObject,
         IContainerItem,
-        ILoquiObject<ContainerItem>,
-        ILoquiObjectSetter,
+        ILoquiObjectSetter<ContainerItem>,
         ILinkSubContainer,
-        IEquatable<ContainerItem>
+        IEquatable<ContainerItem>,
+        IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
@@ -56,10 +56,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Item
-        public FormIDLink<ItemAbstract> Item_Property { get; } = new FormIDLink<ItemAbstract>();
+        public IFormIDLink<ItemAbstract> Item_Property { get; } = new FormIDLink<ItemAbstract>();
         public ItemAbstract Item { get => Item_Property.Item; set => Item_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<ItemAbstract> IContainerItemGetter.Item_Property => this.Item_Property;
+        IFormIDLink<ItemAbstract> IContainerItem.Item_Property => this.Item_Property;
+        IItemAbstractInternalGetter IContainerItemGetter.Item => this.Item_Property.Item;
+        IFormIDLinkGetter<ItemAbstract> IContainerItemGetter.Item_Property => this.Item_Property;
         #endregion
         #region Count
         private UInt32 _Count;
@@ -70,8 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask<ContainerItem>.GetEqualsMask(ContainerItem rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
-        IMask<bool> IEqualsMask<IContainerItemGetter>.GetEqualsMask(IContainerItemGetter rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask(rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IContainerItemGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -85,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -113,8 +114,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlTranslator XmlTranslator => ContainerItemXmlTranslation.Instance;
-        IXmlTranslator IXmlItem.XmlTranslator => this.XmlTranslator;
+        protected IXmlWriteTranslator XmlWriteTranslator => ContainerItemXmlWriteTranslation.Instance;
+        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static ContainerItem Create_Xml(
@@ -167,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    ContainerItemXmlTranslation.FillPublicElement_Xml(
+                    ContainerItemXmlCreateTranslation.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -302,8 +303,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryTranslator BinaryTranslator => ContainerItemBinaryTranslation.Instance;
-        IBinaryTranslator IBinaryItem.BinaryTranslator => this.BinaryTranslator;
+        protected IBinaryWriteTranslator BinaryWriteTranslator => ContainerItemBinaryWriteTranslation.Instance;
+        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static ContainerItem Create_Binary(
@@ -374,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public ContainerItem Copy(
             ContainerItem_CopyMask copyMask = null,
-            IContainerItemGetter def = null)
+            ContainerItem def = null)
         {
             return ContainerItem.Copy(
                 this,
@@ -383,9 +384,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ContainerItem Copy(
-            IContainerItemGetter item,
+            ContainerItem item,
             ContainerItem_CopyMask copyMask = null,
-            IContainerItemGetter def = null)
+            ContainerItem def = null)
         {
             ContainerItem ret;
             if (item.GetType().Equals(typeof(ContainerItem)))
@@ -404,9 +405,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ContainerItem Copy_ToLoqui(
-            IContainerItemGetter item,
+            ContainerItem item,
             ContainerItem_CopyMask copyMask = null,
-            IContainerItemGetter def = null)
+            ContainerItem def = null)
         {
             ContainerItem ret;
             if (item.GetType().Equals(typeof(ContainerItem)))
@@ -424,10 +425,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(IContainerItemGetter rhs)
+        public void CopyFieldsFrom(ContainerItem rhs)
         {
             this.CopyFieldsFrom(
-                rhs: (IContainerItemGetter)rhs,
+                rhs: rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
@@ -435,9 +436,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IContainerItemGetter rhs,
+            ContainerItem rhs,
             ContainerItem_CopyMask copyMask,
-            IContainerItemGetter def = null)
+            ContainerItem def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -448,10 +449,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IContainerItemGetter rhs,
+            ContainerItem rhs,
             out ContainerItem_ErrorMask errorMask,
             ContainerItem_CopyMask copyMask = null,
-            IContainerItemGetter def = null,
+            ContainerItem def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -465,10 +466,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IContainerItemGetter rhs,
+            ContainerItem rhs,
             ErrorMaskBuilder errorMask,
             ContainerItem_CopyMask copyMask = null,
-            IContainerItemGetter def = null)
+            ContainerItem def = null)
         {
             ContainerItemCommon.CopyFieldsFrom(
                 item: this,
@@ -484,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ContainerItem_FieldIndex.Item:
-                    this.Item_Property.Set((FormIDLink<ItemAbstract>)obj);
+                    this.Item_Property.Set((IFormIDLink<ItemAbstract>)obj);
                     break;
                 case ContainerItem_FieldIndex.Count:
                     this.Count = (UInt32)obj;
@@ -518,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ContainerItem_FieldIndex.Item:
-                    obj.Item_Property.Set((FormIDLink<ItemAbstract>)pair.Value);
+                    obj.Item_Property.Set((IFormIDLink<ItemAbstract>)pair.Value);
                     break;
                 case ContainerItem_FieldIndex.Count:
                     obj.Count = (UInt32)pair.Value;
@@ -533,27 +534,28 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IContainerItem :
         IContainerItemGetter,
-        ILoquiClass<IContainerItem, IContainerItemGetter>,
-        ILoquiClass<ContainerItem, IContainerItemGetter>
+        ILoquiObjectSetter<IContainerItem>
     {
         new ItemAbstract Item { get; set; }
+        new IFormIDLink<ItemAbstract> Item_Property { get; }
         new UInt32 Count { get; set; }
 
         void CopyFieldsFrom(
-            IContainerItemGetter rhs,
+            ContainerItem rhs,
             ErrorMaskBuilder errorMask = null,
             ContainerItem_CopyMask copyMask = null,
-            IContainerItemGetter def = null);
+            ContainerItem def = null);
     }
 
     public partial interface IContainerItemGetter :
         ILoquiObject,
+        ILoquiObject<IContainerItemGetter>,
         IXmlItem,
         IBinaryItem
     {
         #region Item
-        ItemAbstract Item { get; }
-        FormIDLink<ItemAbstract> Item_Property { get; }
+        IItemAbstractInternalGetter Item { get; }
+        IFormIDLinkGetter<ItemAbstract> Item_Property { get; }
 
         #endregion
         #region Count
@@ -578,13 +580,10 @@ namespace Mutagen.Bethesda.Oblivion
             IContainerItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ContainerItem_Mask<bool>();
-            ((ContainerItemCommon)item.CommonInstance).FillEqualsMask(
+            return ((ContainerItemCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
-                ret: ret,
                 include: include);
-            return ret;
         }
 
         public static string ToString(
@@ -786,7 +785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ContainerItem_FieldIndex.Item:
-                    return typeof(FormIDLink<ItemAbstract>);
+                    return typeof(IFormIDLink<ItemAbstract>);
                 case ContainerItem_FieldIndex.Count:
                     return typeof(UInt32);
                 default:
@@ -794,12 +793,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(ContainerItemXmlTranslation);
+        public static readonly Type XmlTranslation = typeof(ContainerItemXmlWriteTranslation);
         public static readonly RecordType CNTO_HEADER = new RecordType("CNTO");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CNTO_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(ContainerItemBinaryTranslation);
+        public static readonly Type BinaryTranslation = typeof(ContainerItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -834,11 +833,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ContainerItemCommon
     {
         public static readonly ContainerItemCommon Instance = new ContainerItemCommon();
+
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IContainerItem item,
-            IContainerItemGetter rhs,
-            IContainerItemGetter def,
+            ContainerItem item,
+            ContainerItem rhs,
+            ContainerItem def,
             ErrorMaskBuilder errorMask,
             ContainerItem_CopyMask copyMask)
         {
@@ -889,6 +889,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Count = default(UInt32);
         }
 
+        public ContainerItem_Mask<bool> GetEqualsMask(
+            IContainerItemGetter item,
+            IContainerItemGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ContainerItem_Mask<bool>();
+            ((ContainerItemCommon)item.CommonInstance).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+
         public void FillEqualsMask(
             IContainerItemGetter item,
             IContainerItemGetter rhs,
@@ -922,11 +936,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(ContainerItem)} =>");
+                fg.AppendLine($"ContainerItem =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(ContainerItem)}) =>");
+                fg.AppendLine($"{name} (ContainerItem) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -974,9 +988,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class ContainerItemXmlTranslation : IXmlTranslator
+    public partial class ContainerItemXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static ContainerItemXmlTranslation Instance = new ContainerItemXmlTranslation();
+        public readonly static ContainerItemXmlWriteTranslation Instance = new ContainerItemXmlWriteTranslation();
 
         public static void WriteToNode_Xml(
             IContainerItemGetter item,
@@ -1001,78 +1015,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Count,
                     fieldIndex: (int)ContainerItem_FieldIndex.Count,
                     errorMask: errorMask);
-            }
-        }
-
-        public static void FillPublic_Xml(
-            IContainerItem item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ContainerItemXmlTranslation.FillPublicElement_Xml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElement_Xml(
-            IContainerItem item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Item":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Item_Property,
-                        fieldIndex: (int)ContainerItem_FieldIndex.Item,
-                        errorMask: errorMask);
-                    break;
-                case "Count":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ContainerItem_FieldIndex.Count);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 CountParse,
-                            errorMask: errorMask))
-                        {
-                            item.Count = CountParse;
-                        }
-                        else
-                        {
-                            item.Count = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -1142,6 +1084,84 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class ContainerItemXmlCreateTranslation
+    {
+        public readonly static ContainerItemXmlCreateTranslation Instance = new ContainerItemXmlCreateTranslation();
+
+        public static void FillPublic_Xml(
+            IContainerItem item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ContainerItemXmlCreateTranslation.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            IContainerItem item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Item":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Item_Property,
+                        fieldIndex: (int)ContainerItem_FieldIndex.Item,
+                        errorMask: errorMask);
+                    break;
+                case "Count":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ContainerItem_FieldIndex.Count);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 CountParse,
+                            errorMask: errorMask))
+                        {
+                            item.Count = CountParse;
+                        }
+                        else
+                        {
+                            item.Count = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+
     #region Xml Write Mixins
     public static class ContainerItemXmlTranslationMixIn
     {
@@ -1154,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ContainerItemXmlTranslation)item.XmlTranslator).Write(
+            ((ContainerItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1244,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((ContainerItemXmlTranslation)item.XmlTranslator).Write(
+            ((ContainerItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1258,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null,
             ContainerItem_TranslationMask translationMask = null)
         {
-            ((ContainerItemXmlTranslation)item.XmlTranslator).Write(
+            ((ContainerItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1272,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((ContainerItemXmlTranslation)item.XmlTranslator).Write(
+            ((ContainerItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1287,7 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            ((ContainerItemXmlTranslation)item.XmlTranslator).Write(
+            ((ContainerItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1605,9 +1625,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class ContainerItemBinaryTranslation : IBinaryTranslator
+    public partial class ContainerItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ContainerItemBinaryTranslation Instance = new ContainerItemBinaryTranslation();
+        public readonly static ContainerItemBinaryWriteTranslation Instance = new ContainerItemBinaryWriteTranslation();
 
         public static void Write_Embedded(
             IContainerItemGetter item,
@@ -1659,6 +1679,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public partial class ContainerItemBinaryCreateTranslation
+    {
+        public readonly static ContainerItemBinaryCreateTranslation Instance = new ContainerItemBinaryCreateTranslation();
+
+    }
+
     #region Binary Write Mixins
     public static class ContainerItemBinaryTranslationMixIn
     {
@@ -1670,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ContainerItemBinaryTranslation)item.BinaryTranslator).Write(
+            ((ContainerItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1685,7 +1711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ((ContainerItemBinaryTranslation)item.BinaryTranslator).Write(
+            ((ContainerItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1698,7 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ((ContainerItemBinaryTranslation)item.BinaryTranslator).Write(
+            ((ContainerItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
