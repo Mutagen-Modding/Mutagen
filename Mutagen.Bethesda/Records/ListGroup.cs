@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda
             Items = new MaskItem<bool, TranslationMaskStub>(false, default)
         };
 
-        public static async Task Create_Xml_Folder<T>(
+        public static async Task CreateFromXmlFolder<T>(
             this ListGroup<T> group,
             DirectoryPath dir,
             string name,
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda
                             {
                                 throw new ArgumentException("XML file did not have \"Group\" top node.");
                             }
-                            ListGroupXmlCreateTranslation<T>.FillPublic_Xml(
+                            ListGroupXmlCreateTranslation<T>.FillPublicXml(
                                 group,
                                 elem,
                                 errorMask,
@@ -69,10 +69,6 @@ namespace Mutagen.Bethesda
                             })
                             .OrderBy(i => i.Index))
                         {
-                            //using (errorMask.PushIndex(counter))
-                            //{
-                            //try
-                            //{
                             tasks.Add(Task.Run(async () =>
                             {
                                 var creator = LoquiXmlFolderTranslation<T>.CREATE;
@@ -82,14 +78,6 @@ namespace Mutagen.Bethesda
                                     errorMask: errorMask,
                                     translationMask: null);
                             }));
-                            //}
-                            //catch (Exception ex)
-                            //when (errorMask != null)
-                            //{
-                            //    errorMask.ReportException(ex);
-                            //}
-                            //}
-                            //counter++;
                         }
                         var items = await Task.WhenAll(tasks);
                         group.Items.AddRange(items);
@@ -103,7 +91,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static async Task Write_Xml_Folder<T>(
+        public static async Task WriteToXmlFolder<T>(
             this ListGroup<T> list,
             DirectoryPath dir,
             string name,
@@ -120,7 +108,7 @@ namespace Mutagen.Bethesda
                         dir = new DirectoryPath(Path.Combine(dir.Path, name));
                         dir.Create();
                         XElement topNode = new XElement("Group");
-                        ListGroupXmlWriteTranslation<T>.WriteToNode_Xml(
+                        ListGroupXmlWriteTranslation<T>.WriteToNodeXml(
                             list,
                             topNode,
                             errorMask,
@@ -129,27 +117,16 @@ namespace Mutagen.Bethesda
                         int counter = 0;
                         foreach (var item in list.Items.Items)
                         {
-                            //using (errorMask.PushIndex(counter))
-                            //{
-                            //    try
-                            //    {
                             int stampedCounter = counter++;
                             tasks.Add(Task.Run(() =>
                             {
-                                item.Write_Xml_Folder(
+                                item.WriteToXmlFolder(
                                     node: null,
                                     name: name,
                                     counter: stampedCounter,
                                     dir: dir,
                                     errorMask: errorMask);
                             }));
-                            //    }
-                            //    catch (Exception ex)
-                            //    when (errorMask != null)
-                            //    {
-                            //        errorMask.ReportException(ex);
-                            //    }
-                            //}
                         }
                         await Task.WhenAll(tasks);
                         topNode.SaveIfChanged(Path.Combine(dir.Path, $"Group.xml"));
@@ -168,7 +145,7 @@ namespace Mutagen.Bethesda
     {
         public partial class ListGroupBinaryCreateTranslation<T>
         {
-            static partial void FillBinary_ContainedRecordType_Custom(
+            static partial void FillBinaryContainedRecordTypeCustom(
                 MutagenFrame frame,
                 ListGroup<T> item,
                 MasterReferences masterReferences,
@@ -182,7 +159,7 @@ namespace Mutagen.Bethesda
         {
             public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)LoquiRegistration.GetRegister(typeof(T)).ClassType.GetField(Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER).GetValue(null);
 
-            static partial void WriteBinary_ContainedRecordType_Custom(
+            static partial void WriteBinaryContainedRecordTypeCustom(
                 MutagenWriter writer,
                 IListGroupGetter<T> item,
                 MasterReferences masterReferences,

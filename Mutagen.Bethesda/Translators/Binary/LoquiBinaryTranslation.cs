@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Binary
         {
             var tType = typeof(T);
             var method = tType.GetMethods()
-                .Where((methodInfo) => methodInfo.Name.Equals("Create_Binary"))
+                .Where((methodInfo) => methodInfo.Name.Equals("CreateFromBinary"))
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
                 .Where((methodInfo) => methodInfo.ReturnType.Equals(tType))
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Binary
         {
             var tType = typeof(T);
             var method = tType.GetMethods()
-                .Where((methodInfo) => methodInfo.Name.Equals("Create_Binary"))
+                .Where((methodInfo) => methodInfo.Name.Equals("CreateFromBinary"))
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
                 .Where((methodInfo) => methodInfo.GetParameters().Length == 4)

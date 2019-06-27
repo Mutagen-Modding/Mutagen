@@ -143,12 +143,12 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static SkyrimMod Create_Xml(
+        public static SkyrimMod CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             SkyrimMod_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static SkyrimMod Create_Xml(
+        public static SkyrimMod CreateFromXml(
             XElement node,
             out SkyrimMod_ErrorMask errorMask,
             bool doMasks = true,
@@ -164,7 +164,7 @@ namespace Mutagen.Bethesda.Skyrim
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SkyrimMod Create_Xml(
+        public static SkyrimMod CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -193,13 +193,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    SkyrimModXmlCreateTranslation.FillPublicElement_Xml(
+                    SkyrimModXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -220,80 +220,80 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SkyrimMod Create_Xml(
+        public static SkyrimMod CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             SkyrimMod_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static SkyrimMod Create_Xml(
+        public static SkyrimMod CreateFromXml(
             string path,
             out SkyrimMod_ErrorMask errorMask,
             SkyrimMod_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static SkyrimMod Create_Xml(
+        public static SkyrimMod CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             SkyrimMod_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static SkyrimMod Create_Xml(
+        public static SkyrimMod CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             SkyrimMod_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static SkyrimMod Create_Xml(
+        public static SkyrimMod CreateFromXml(
             Stream stream,
             out SkyrimMod_ErrorMask errorMask,
             SkyrimMod_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static SkyrimMod Create_Xml(
+        public static SkyrimMod CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             SkyrimMod_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             SkyrimMod item,
             XElement node,
             string name,
@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ModHeader);
                         item.ModHeader.CopyFieldsFrom(
-                            rhs: ModHeader.Create_Xml(
+                            rhs: ModHeader.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask),
@@ -482,22 +482,22 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
 
-        public static Task<SkyrimMod> Create_Xml_Folder(
+        public static Task<SkyrimMod> CreateFromXmlFolder(
             DirectoryPath dir,
             ModKey modKey)
         {
-            return Create_Xml_Folder(
+            return CreateFromXmlFolder(
                 dir: dir,
                 modKey: modKey,
                 errorMask: null);
         }
 
-        public static async Task<(SkyrimMod Mod, SkyrimMod_ErrorMask ErrorMask)> Create_Xml_Folder_WithErrors(
+        public static async Task<(SkyrimMod Mod, SkyrimMod_ErrorMask ErrorMask)> CreateFromXmlFolderWithErrors(
             DirectoryPath dir,
             ModKey modKey)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = await Create_Xml_Folder(
+            var ret = await CreateFromXmlFolder(
                 dir: dir,
                 modKey: modKey,
                 errorMask: errorMaskBuilder);
@@ -505,23 +505,23 @@ namespace Mutagen.Bethesda.Skyrim
             return (ret, errorMask);
         }
 
-        public static async Task<SkyrimMod> Create_Xml_Folder(
+        public static async Task<SkyrimMod> CreateFromXmlFolder(
             DirectoryPath dir,
             ModKey modKey,
             ErrorMaskBuilder errorMask)
         {
             var ret = new SkyrimMod(modKey);
             var tasks = new List<Task>();
-            ret.ModHeader.CopyFieldsFrom(ModHeader.Create_Xml(
+            ret.ModHeader.CopyFieldsFrom(ModHeader.CreateFromXml(
                 path: Path.Combine(dir.Path, "ModHeader.xml"),
                 errorMask: errorMask,
                 translationMask: null));
-            tasks.Add(Task.Run(() => ret.GameSettings.Create_Xml_Folder<GameSetting>(
+            tasks.Add(Task.Run(() => ret.GameSettings.CreateFromXmlFolder<GameSetting>(
                 dir: dir,
                 name: nameof(GameSettings),
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.GameSettings)));
-            tasks.Add(Task.Run(() => ret.Globals.Create_Xml_Folder<Global>(
+            tasks.Add(Task.Run(() => ret.Globals.CreateFromXmlFolder<Global>(
                 dir: dir,
                 name: nameof(Globals),
                 errorMask: errorMask,
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public async Task<SkyrimMod_ErrorMask> Write_XmlFolder(
+        public async Task<SkyrimMod_ErrorMask> WriteToXmlFolder(
             DirectoryPath dir,
             bool doMasks = true)
         {
@@ -544,16 +544,16 @@ namespace Mutagen.Bethesda.Skyrim
             using (new FolderCleaner(dir, FolderCleaner.CleanType.AccessTime))
             {
                 var tasks = new List<Task>();
-                tasks.Add(Task.Run(() => this.ModHeader.Write_Xml(
+                tasks.Add(Task.Run(() => this.ModHeader.WriteToXml(
                     path: Path.Combine(dir.Path, "ModHeader.xml"),
                     errorMask: errorMaskBuilder,
                     translationMask: null)));
-                tasks.Add(Task.Run(() => GameSettings.Write_Xml_Folder<GameSetting, GameSetting_ErrorMask>(
+                tasks.Add(Task.Run(() => GameSettings.WriteToXmlFolder<GameSetting, GameSetting_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(GameSettings),
                     errorMask: errorMaskBuilder,
                     index: (int)SkyrimMod_FieldIndex.GameSettings)));
-                tasks.Add(Task.Run(() => Globals.Write_Xml_Folder<Global, Global_ErrorMask>(
+                tasks.Add(Task.Run(() => Globals.WriteToXmlFolder<Global, Global_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Globals),
                     errorMask: errorMaskBuilder,
@@ -567,12 +567,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static async Task<SkyrimMod> Create_Binary(
+        public static async Task<SkyrimMod> CreateFromBinary(
             MutagenFrame frame,
             ModKey modKey,
             GroupMask importMask = null)
         {
-            return await Create_Binary(
+            return await CreateFromBinary(
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
@@ -581,14 +581,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> Create_Binary_Error(
+        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> CreateFromBinary_Error(
             MutagenFrame frame,
             ModKey modKey,
             bool doMasks = true,
             GroupMask importMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = await Create_Binary(
+            var ret = await CreateFromBinary(
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Skyrim
             return (ret, SkyrimMod_ErrorMask.Factory(errorMaskBuilder));
         }
 
-        public static async Task<SkyrimMod> Create_Binary(
+        public static async Task<SkyrimMod> CreateFromBinary(
             MutagenFrame frame,
             ModKey modKey,
             RecordTypeConverter recordTypeConverter,
@@ -613,8 +613,8 @@ namespace Mutagen.Bethesda.Skyrim
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes).ConfigureAwait(false);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
             foreach (var link in ret.Links)
             {
                 if (link.Linked) continue;
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static async Task<SkyrimMod> Create_Binary(
+        public static async Task<SkyrimMod> CreateFromBinary(
             string path,
             ModKey modKey,
             GroupMask importMask = null)
@@ -631,14 +631,14 @@ namespace Mutagen.Bethesda.Skyrim
             using (var reader = new MutagenBinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return await Create_Binary(
+                return await CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
             }
         }
 
-        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> Create_Binary_Error(
+        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> CreateFromBinary_Error(
             string path,
             ModKey modKey,
             GroupMask importMask = null)
@@ -646,14 +646,14 @@ namespace Mutagen.Bethesda.Skyrim
             using (var reader = new MutagenBinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return await Create_Binary_Error(
+                return await CreateFromBinary_Error(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
             }
         }
 
-        public static async Task<SkyrimMod> Create_Binary(
+        public static async Task<SkyrimMod> CreateFromBinary(
             string path,
             ModKey modKey,
             ErrorMaskBuilder errorMask,
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
             using (var reader = new MutagenBinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return await Create_Binary(
+                return await CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
@@ -671,7 +671,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public static async Task<SkyrimMod> Create_Binary(
+        public static async Task<SkyrimMod> CreateFromBinary(
             Stream stream,
             ModKey modKey,
             GroupMask importMask = null)
@@ -679,14 +679,14 @@ namespace Mutagen.Bethesda.Skyrim
             using (var reader = new MutagenBinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
-                return await Create_Binary(
+                return await CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
             }
         }
 
-        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> Create_Binary_Error(
+        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> CreateFromBinary_Error(
             Stream stream,
             ModKey modKey,
             GroupMask importMask = null)
@@ -694,14 +694,14 @@ namespace Mutagen.Bethesda.Skyrim
             using (var reader = new MutagenBinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
-                return await Create_Binary_Error(
+                return await CreateFromBinary_Error(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
             }
         }
 
-        public static async Task<SkyrimMod> Create_Binary(
+        public static async Task<SkyrimMod> CreateFromBinary(
             Stream stream,
             ModKey modKey,
             ErrorMaskBuilder errorMask,
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Skyrim
             using (var reader = new MutagenBinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
-                return await Create_Binary(
+                return await CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
@@ -721,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             SkyrimMod item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
         }
 
-        protected static async Task<TryGet<int?>> Fill_Binary_RecordTypes(
+        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
             SkyrimMod item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ModHeader);
-                        var tmpModHeader = ModHeader.Create_Binary(
+                        var tmpModHeader = ModHeader.CreateFromBinary(
                             frame: frame,
                             errorMask: errorMask,
                             recordTypeConverter: null,
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Skyrim
                         try
                         {
                             errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
-                            var tmpGameSettings = await Group<GameSetting>.Create_Binary(
+                            var tmpGameSettings = await Group<GameSetting>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim
                         try
                         {
                             errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
-                            var tmpGlobals = await Group<Global>.Create_Binary(
+                            var tmpGlobals = await Group<Global>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static SkyrimModXmlWriteTranslation Instance = new SkyrimModXmlWriteTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             ISkyrimModGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1593,7 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.SkyrimMod");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1650,7 +1650,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static SkyrimModXmlCreateTranslation Instance = new SkyrimModXmlCreateTranslation();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             ISkyrimMod item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1660,7 +1660,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    SkyrimModXmlCreateTranslation.FillPublicElement_Xml(
+                    SkyrimModXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1675,7 +1675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             ISkyrimMod item,
             XElement node,
             string name,
@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
                         item.GameSettings.CopyFieldsFrom<GameSetting_CopyMask>(
-                            rhs: Group<GameSetting>.Create_Xml(
+                            rhs: Group<GameSetting>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask),
@@ -1712,7 +1712,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
                         item.Globals.CopyFieldsFrom<Global_CopyMask>(
-                            rhs: Group<Global>.Create_Xml(
+                            rhs: Group<Global>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask),
@@ -1740,7 +1740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Xml Write Mixins
     public static class SkyrimModXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISkyrimModGetter item,
             XElement node,
             out SkyrimMod_ErrorMask errorMask,
@@ -1758,7 +1758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             errorMask = SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISkyrimModGetter item,
             string path,
             out SkyrimMod_ErrorMask errorMask,
@@ -1767,7 +1767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1777,7 +1777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISkyrimModGetter item,
             string path,
             ErrorMaskBuilder errorMask,
@@ -1786,7 +1786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1795,7 +1795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISkyrimModGetter item,
             Stream stream,
             out SkyrimMod_ErrorMask errorMask,
@@ -1804,7 +1804,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1814,7 +1814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISkyrimModGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
@@ -1823,7 +1823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1832,7 +1832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISkyrimModGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1847,7 +1847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISkyrimModGetter item,
             XElement node,
             string name = null,
@@ -1861,7 +1861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask.GetCrystal());
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISkyrimModGetter item,
             string path,
             string name = null)
@@ -1876,7 +1876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISkyrimModGetter item,
             Stream stream,
             string name = null)
@@ -2372,7 +2372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Binary Write Mixins
     public static class SkyrimModBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ISkyrimModGetter item,
             MutagenWriter writer,
             ModKey modKey,
@@ -2391,7 +2391,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             errorMask = SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ISkyrimModGetter item,
             string path,
             ModKey modKey,
@@ -2403,7 +2403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
-                    Write_Binary(
+                    WriteToBinary(
                         item: item,
                         importMask: importMask,
                         modKey: modKey,
@@ -2419,7 +2419,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ISkyrimModGetter item,
             string path,
             ModKey modKey,
@@ -2431,7 +2431,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
-                    Write_Binary(
+                    WriteToBinary(
                         item: item,
                         importMask: importMask,
                         modKey: modKey,
@@ -2446,7 +2446,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ISkyrimModGetter item,
             Stream stream,
             ModKey modKey,
@@ -2456,7 +2456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary(
+                WriteToBinary(
                     item: item,
                     importMask: importMask,
                     modKey: modKey,
@@ -2466,7 +2466,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ISkyrimModGetter item,
             Stream stream,
             ModKey modKey,
@@ -2476,7 +2476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary(
+                WriteToBinary(
                     item: item,
                     importMask: importMask,
                     modKey: modKey,
@@ -2485,7 +2485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ISkyrimModGetter item,
             MutagenWriter writer,
             ModKey modKey,
@@ -2501,7 +2501,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ISkyrimModGetter item,
             MutagenWriter writer,
             ModKey modKey,
@@ -2516,7 +2516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: null);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ISkyrimModGetter item,
             string path,
             ModKey modKey,
@@ -2542,7 +2542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ISkyrimModGetter item,
             Stream stream,
             ModKey modKey,

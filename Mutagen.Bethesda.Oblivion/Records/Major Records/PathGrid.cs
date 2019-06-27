@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType PGRR = new RecordType("PGRR");
         public const int POINT_LEN = 16;
 
-        static partial void FillBinary_PointToPointConnections_Custom(MutagenFrame frame, PathGrid item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void FillBinaryPointToPointConnectionsCustom(MutagenFrame frame, PathGrid item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             var nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len);
             if (!nextRec.Equals(PathGrid_Registration.DATA_HEADER))
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class PathGridBinaryWriteTranslation
     {
-        static partial void WriteBinary_PointToPointConnections_Custom(MutagenWriter writer, IPathGridInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void WriteBinaryPointToPointConnectionsCustom(MutagenWriter writer, IPathGridInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.DATA_HEADER))
             {

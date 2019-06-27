@@ -167,12 +167,12 @@ namespace Mutagen.Bethesda
         IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static MajorRecord Create_Xml(
+        public static MajorRecord CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             MajorRecord_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda
         }
 
         [DebuggerStepThrough]
-        public static MajorRecord Create_Xml(
+        public static MajorRecord CreateFromXml(
             XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static MajorRecord Create_Xml(
+        public static MajorRecord CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -220,80 +220,80 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static MajorRecord Create_Xml(
+        public static MajorRecord CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             MajorRecord_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static MajorRecord Create_Xml(
+        public static MajorRecord CreateFromXml(
             string path,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static MajorRecord Create_Xml(
+        public static MajorRecord CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             MajorRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static MajorRecord Create_Xml(
+        public static MajorRecord CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             MajorRecord_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static MajorRecord Create_Xml(
+        public static MajorRecord CreateFromXml(
             Stream stream,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static MajorRecord Create_Xml(
+        public static MajorRecord CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             MajorRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             MajorRecord item,
             XElement node,
             string name,
@@ -361,14 +361,14 @@ namespace Mutagen.Bethesda
         }
 
         #region Mutagen
-        public virtual async Task Write_Xml_Folder(
+        public virtual async Task WriteToXmlFolder(
             DirectoryPath? dir,
             string name,
             XElement node,
             int counter,
             ErrorMaskBuilder errorMask)
         {
-            this.Write_Xml(
+            this.WriteToXml(
                 node: node,
                 errorMask: errorMask,
                 translationMask: null);
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda
         #region Binary Translation
         protected virtual IBinaryWriteTranslator BinaryWriteTranslator => MajorRecordBinaryWriteTranslation.Instance;
         IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             MajorRecord item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda
             item.Version = frame.ReadUInt32();
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             MajorRecord item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Internals
     {
         public readonly static MajorRecordXmlWriteTranslation Instance = new MajorRecordXmlWriteTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IMajorRecordInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1362,7 +1362,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.MajorRecord");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Internals
     {
         public readonly static MajorRecordXmlCreateTranslation Instance = new MajorRecordXmlCreateTranslation();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1429,7 +1429,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    MajorRecordXmlCreateTranslation.FillPublicElement_Xml(
+                    MajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1444,7 +1444,7 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IMajorRecordInternal item,
             XElement node,
             string name,
@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Internals
     #region Xml Write Mixins
     public static class MajorRecordXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMajorRecordInternalGetter item,
             XElement node,
             out MajorRecord_ErrorMask errorMask,
@@ -1559,7 +1559,7 @@ namespace Mutagen.Bethesda.Internals
             errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMajorRecordInternalGetter item,
             string path,
             out MajorRecord_ErrorMask errorMask,
@@ -1568,7 +1568,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1578,7 +1578,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMajorRecordInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
@@ -1587,7 +1587,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1596,7 +1596,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMajorRecordInternalGetter item,
             Stream stream,
             out MajorRecord_ErrorMask errorMask,
@@ -1605,7 +1605,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1615,7 +1615,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMajorRecordInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
@@ -1624,7 +1624,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1633,7 +1633,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMajorRecordInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1648,7 +1648,7 @@ namespace Mutagen.Bethesda.Internals
                 translationMask: translationMask);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMajorRecordInternalGetter item,
             XElement node,
             string name = null,
@@ -1662,7 +1662,7 @@ namespace Mutagen.Bethesda.Internals
                 translationMask: translationMask.GetCrystal());
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMajorRecordInternalGetter item,
             string path,
             string name = null)
@@ -1677,7 +1677,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IMajorRecordInternalGetter item,
             Stream stream,
             string name = null)
@@ -2136,7 +2136,7 @@ namespace Mutagen.Bethesda.Internals
     #region Binary Write Mixins
     public static class MajorRecordBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IMajorRecordInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -2153,7 +2153,7 @@ namespace Mutagen.Bethesda.Internals
             errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IMajorRecordInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -2167,7 +2167,7 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IMajorRecordInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)

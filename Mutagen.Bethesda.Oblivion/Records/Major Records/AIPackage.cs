@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class AIPackageBinaryCreateTranslation
         {
-            static partial void FillBinary_Flags_Custom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryFlagsCustom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (frame.Remaining == 8)
                 {
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class AIPackageBinaryWriteTranslation
         {
-            static partial void WriteBinary_Flags_Custom(MutagenWriter writer, IAIPackageInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IAIPackageInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.Flag>.Instance.Write(
                     writer,

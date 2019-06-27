@@ -145,12 +145,12 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static LockInformation Create_Xml(
+        public static LockInformation CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             LockInformation_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static LockInformation Create_Xml(
+        public static LockInformation CreateFromXml(
             XElement node,
             out LockInformation_ErrorMask errorMask,
             bool doMasks = true,
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LockInformation Create_Xml(
+        public static LockInformation CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    LockInformationXmlCreateTranslation.FillPublicElement_Xml(
+                    LockInformationXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -211,80 +211,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LockInformation Create_Xml(
+        public static LockInformation CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             LockInformation_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static LockInformation Create_Xml(
+        public static LockInformation CreateFromXml(
             string path,
             out LockInformation_ErrorMask errorMask,
             LockInformation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static LockInformation Create_Xml(
+        public static LockInformation CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             LockInformation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static LockInformation Create_Xml(
+        public static LockInformation CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             LockInformation_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static LockInformation Create_Xml(
+        public static LockInformation CreateFromXml(
             Stream stream,
             out LockInformation_ErrorMask errorMask,
             LockInformation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static LockInformation Create_Xml(
+        public static LockInformation CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             LockInformation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -336,11 +336,11 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
-        public static LockInformation Create_Binary(
+        public static LockInformation CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -348,14 +348,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static LockInformation Create_Binary(
+        public static LockInformation CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out LockInformation_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LockInformation Create_Binary(
+        public static LockInformation CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -381,13 +381,13 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs);
+                fillStructs: FillBinaryStructs);
             return ret;
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             LockInformation item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static LockInformationXmlWriteTranslation Instance = new LockInformationXmlWriteTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             ILockInformationGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LockInformation");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static LockInformationXmlCreateTranslation Instance = new LockInformationXmlCreateTranslation();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             ILockInformation item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1261,7 +1261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    LockInformationXmlCreateTranslation.FillPublicElement_Xml(
+                    LockInformationXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             ILockInformation item,
             XElement node,
             string name,
@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class LockInformationXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILockInformationGetter item,
             XElement node,
             out LockInformation_ErrorMask errorMask,
@@ -1398,7 +1398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = LockInformation_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILockInformationGetter item,
             string path,
             out LockInformation_ErrorMask errorMask,
@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1417,7 +1417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILockInformationGetter item,
             string path,
             ErrorMaskBuilder errorMask,
@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1435,7 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILockInformationGetter item,
             Stream stream,
             out LockInformation_ErrorMask errorMask,
@@ -1444,7 +1444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1454,7 +1454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILockInformationGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILockInformationGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1487,7 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILockInformationGetter item,
             XElement node,
             string name = null,
@@ -1501,7 +1501,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask.GetCrystal());
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILockInformationGetter item,
             string path,
             string name = null)
@@ -1516,7 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILockInformationGetter item,
             Stream stream,
             string name = null)
@@ -1964,7 +1964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class LockInformationBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ILockInformationGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -1981,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = LockInformation_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ILockInformationGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -1995,7 +1995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ILockInformationGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)

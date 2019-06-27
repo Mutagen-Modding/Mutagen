@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Generation
         private async Task GenerateForMod(ObjectGeneration obj, FileGeneration fg)
         {
             using (var args = new FunctionWrapper(fg,
-                $"public static Task<{obj.Name}> Create_Xml_Folder"))
+                $"public static Task<{obj.Name}> CreateFromXmlFolder"))
             {
                 args.Add("DirectoryPath dir");
                 args.Add("ModKey modKey");
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    "return Create_Xml_Folder"))
+                    "return CreateFromXmlFolder"))
                 {
                     args.Add("dir: dir");
                     args.Add("modKey: modKey");
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public static async Task<({obj.Name} Mod, {obj.Mask(MaskType.Error)} ErrorMask)> Create_Xml_Folder_WithErrors"))
+                $"public static async Task<({obj.Name} Mod, {obj.Mask(MaskType.Error)} ErrorMask)> CreateFromXmlFolderWithErrors"))
             {
                 args.Add("DirectoryPath dir");
                 args.Add("ModKey modKey");
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine("ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();");
                 using (var args = new ArgsWrapper(fg,
-                    "var ret = await Create_Xml_Folder"))
+                    "var ret = await CreateFromXmlFolder"))
                 {
                     args.Add("dir: dir");
                     args.Add("modKey: modKey");
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public static async Task<{obj.Name}> Create_Xml_Folder"))
+                $"public static async Task<{obj.Name}> CreateFromXmlFolder"))
             {
                 args.Add("DirectoryPath dir");
                 args.Add("ModKey modKey");
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Generation
                     if (field.GetFieldData().CustomFolder)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"tasks.Add(Task.Run(() => ret.Create_Xml_Folder_{field.Name}",
+                            $"tasks.Add(Task.Run(() => ret.CreateFromXmlFolder{field.Name}",
                             suffixLine: "))"))
                         {
                             args.Add("dir: dir");
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         case ObjectType.Record:
                             using (var args = new ArgsWrapper(fg,
-                                $"ret.{field.Name}.CopyFieldsFrom({loqui.TypeName}.Create_Xml",
+                                $"ret.{field.Name}.CopyFieldsFrom({loqui.TypeName}.CreateFromXml",
                                 suffixLine: ");")
                             {
                                 SemiColon = false
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Generation
                         case ObjectType.Group:
                             if (!loqui.TryGetSpecificationAsObject("T", out var subObj)) continue;
                             using (var args = new ArgsWrapper(fg,
-                                $"tasks.Add(Task.Run(() => ret.{field.Name}.Create_Xml_Folder<{subObj.Name}>",
+                                $"tasks.Add(Task.Run(() => ret.{field.Name}.CreateFromXmlFolder<{subObj.Name}>",
                                 suffixLine: "))"))
                             {
                                 args.Add($"dir: dir");
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public async Task<{obj.Mask(MaskType.Error)}> Write_XmlFolder"))
+                $"public async Task<{obj.Mask(MaskType.Error)}> WriteToXmlFolder"))
             {
                 args.Add("DirectoryPath dir");
                 args.Add("bool doMasks = true");
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Generation
                         if (field.GetFieldData().CustomFolder)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"tasks.Add(Task.Run(() =>  Write_Xml_Folder_{field.Name}",
+                                $"tasks.Add(Task.Run(() =>  WriteToXmlFolder{field.Name}",
                                 suffixLine: "))"))
                             {
                                 args.Add("dir: dir");
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             case ObjectType.Record:
                                 using (var args = new ArgsWrapper(fg,
-                                    $"tasks.Add(Task.Run(() => this.{field.Name}.Write_Xml",
+                                    $"tasks.Add(Task.Run(() => this.{field.Name}.WriteToXml",
                                     suffixLine: "))"))
                                 {
                                     args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     if (!group.TryGetSpecificationAsObject("T", out subObj)) continue;
                                     using (var args = new ArgsWrapper(fg,
-                                        $"tasks.Add(Task.Run(() => {field.Name}.Write_Xml_Folder<{subObj.Name}, {subObj.Mask(MaskType.Error)}>",
+                                        $"tasks.Add(Task.Run(() => {field.Name}.WriteToXmlFolder<{subObj.Name}, {subObj.Mask(MaskType.Error)}>",
                                         suffixLine: "))"))
                                     {
                                         args.Add($"dir: dir.Path");
@@ -216,7 +216,7 @@ namespace Mutagen.Bethesda.Generation
                                 else
                                 {
                                     using (var args = new ArgsWrapper(fg,
-                                        $"tasks.Add(Task.Run(() => {field.Name}.Write_Xml_Folder",
+                                        $"tasks.Add(Task.Run(() => {field.Name}.WriteToXmlFolder",
                                         suffixLine: "))"))
                                     {
                                         args.Add($"dir: dir.Path");
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Generation
             if (!obj.IsTopClass) return;
 
             using (var args = new FunctionWrapper(fg,
-                $"public{obj.FunctionOverride()}async Task Write_Xml_Folder"))
+                $"public{obj.FunctionOverride()}async Task WriteToXmlFolder"))
             {
                 args.Add("DirectoryPath? dir");
                 args.Add("string name");
@@ -252,7 +252,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    "this.Write_Xml"))
+                    "this.WriteToXml"))
                 {
                     args.Add("node: node");
                     args.Add("errorMask: errorMask");

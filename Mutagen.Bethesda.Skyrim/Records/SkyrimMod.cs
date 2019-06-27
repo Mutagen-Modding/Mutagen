@@ -32,9 +32,9 @@ namespace Mutagen.Bethesda.Skyrim
             this.ModKey = modKey;
         }
 
-        void IMod.Write_Binary(string path, ModKey modKey)
+        void IMod.WriteToBinary(string path, ModKey modKey)
         {
-            this.Write_Binary(path, modKey, importMask: null);
+            this.WriteToBinary(path, modKey, importMask: null);
         }
 
         public FormKey GetNextFormKey()

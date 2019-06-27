@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             System.Console.WriteLine("Running in directory: " + Directory.GetCurrentDirectory());
             FilePath settingsPath = "../../../../TestingSettings.xml";
             System.Console.WriteLine("Settings path: " + settingsPath);
-            Settings = TestingSettings.Create_Xml(settingsPath.Path);
+            Settings = TestingSettings.CreateFromXml(settingsPath.Path);
             System.Console.WriteLine("Target settings: " + Settings.ToString());
 
             // Setup folders and paths
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             BinaryPath = Path.Combine(TempFolder.Dir.Path, "Oblivion.esm");
 
             // Setup
-            Mod = await OblivionMod.Create_Binary(
+            Mod = await OblivionMod.CreateFromBinary(
                 DataPath,
                 ModKey);
 
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public void CreateBinary()
         {
-            OblivionMod.Create_Binary(
+            OblivionMod.CreateFromBinary(
                 DataPath,
                 ModKey).Wait();
         }
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public void WriteBinary()
         {
-            Mod.Write_Binary(
+            Mod.WriteToBinary(
                 BinaryPath,
                 ModKey);
         }
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         {
             PathGridReader.Position = 0;
             var pathGrid = new PathGrid(FormKey.NULL);
-            PathGridBinaryCreateTranslation.FillBinary_PointToPointConnections_Custom_Public(
+            PathGridBinaryCreateTranslation.FillBinaryPointToPointConnectionsCustomPublic(
                 new Binary.MutagenFrame(PathGridReader),
                 pathGrid,
                 masterReferences: null,

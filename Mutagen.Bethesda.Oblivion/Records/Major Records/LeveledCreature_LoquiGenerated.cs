@@ -226,12 +226,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlWriteTranslator XmlWriteTranslator => LeveledCreatureXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static LeveledCreature Create_Xml(
+        public static LeveledCreature CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             LeveledCreature_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static LeveledCreature Create_Xml(
+        public static LeveledCreature CreateFromXml(
             XElement node,
             out LeveledCreature_ErrorMask errorMask,
             bool doMasks = true,
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static LeveledCreature Create_Xml(
+        public new static LeveledCreature CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -276,13 +276,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    LeveledCreatureXmlCreateTranslation.FillPublicElement_Xml(
+                    LeveledCreatureXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -298,80 +298,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LeveledCreature Create_Xml(
+        public static LeveledCreature CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             LeveledCreature_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static LeveledCreature Create_Xml(
+        public static LeveledCreature CreateFromXml(
             string path,
             out LeveledCreature_ErrorMask errorMask,
             LeveledCreature_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static LeveledCreature Create_Xml(
+        public static LeveledCreature CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             LeveledCreature_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static LeveledCreature Create_Xml(
+        public static LeveledCreature CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             LeveledCreature_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static LeveledCreature Create_Xml(
+        public static LeveledCreature CreateFromXml(
             Stream stream,
             out LeveledCreature_ErrorMask errorMask,
             LeveledCreature_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static LeveledCreature Create_Xml(
+        public static LeveledCreature CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             LeveledCreature_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             LeveledCreature item,
             XElement node,
             string name,
@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    NPCSpawn.FillPrivateElement_Xml(
+                    NPCSpawn.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -488,11 +488,11 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IBinaryWriteTranslator BinaryWriteTranslator => LeveledCreatureBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
-        public static LeveledCreature Create_Binary(
+        public static LeveledCreature CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -500,14 +500,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static LeveledCreature Create_Binary(
+        public static LeveledCreature CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out LeveledCreature_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static LeveledCreature Create_Binary(
+        public new static LeveledCreature CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -529,26 +529,26 @@ namespace Mutagen.Bethesda.Oblivion
                 recType: LeveledCreature_Registration.LVLC_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             LeveledCreature item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            NPCSpawn.Fill_Binary_Structs(
+            NPCSpawn.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             LeveledCreature item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Template);
                 }
                 default:
-                    return NPCSpawn.Fill_Binary_RecordTypes(
+                    return NPCSpawn.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1592,13 +1592,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static LeveledCreatureXmlWriteTranslation Instance = new LeveledCreatureXmlWriteTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             ILeveledCreatureInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            NPCSpawnXmlWriteTranslation.WriteToNode_Xml(
+            NPCSpawnXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1678,7 +1678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LeveledCreature");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1751,7 +1751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static LeveledCreatureXmlCreateTranslation Instance = new LeveledCreatureXmlCreateTranslation();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             ILeveledCreatureInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1761,7 +1761,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    LeveledCreatureXmlCreateTranslation.FillPublicElement_Xml(
+                    LeveledCreatureXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1776,7 +1776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             ILeveledCreatureInternal item,
             XElement node,
             string name,
@@ -1880,7 +1880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                     break;
                 default:
-                    NPCSpawnXmlCreateTranslation.FillPublicElement_Xml(
+                    NPCSpawnXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1895,7 +1895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class LeveledCreatureXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILeveledCreatureInternalGetter item,
             XElement node,
             out LeveledCreature_ErrorMask errorMask,
@@ -1913,7 +1913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = LeveledCreature_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILeveledCreatureInternalGetter item,
             string path,
             out LeveledCreature_ErrorMask errorMask,
@@ -1922,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1932,7 +1932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILeveledCreatureInternalGetter item,
             Stream stream,
             out LeveledCreature_ErrorMask errorMask,
@@ -1941,7 +1941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -2574,7 +2574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class LeveledCreatureBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ILeveledCreatureInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

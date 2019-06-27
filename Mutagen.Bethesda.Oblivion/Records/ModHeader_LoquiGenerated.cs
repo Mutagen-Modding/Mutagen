@@ -329,12 +329,12 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static ModHeader Create_Xml(
+        public static ModHeader CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             ModHeader_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static ModHeader Create_Xml(
+        public static ModHeader CreateFromXml(
             XElement node,
             out ModHeader_ErrorMask errorMask,
             bool doMasks = true,
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ModHeader Create_Xml(
+        public static ModHeader CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    ModHeaderXmlCreateTranslation.FillPublicElement_Xml(
+                    ModHeaderXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -395,80 +395,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ModHeader Create_Xml(
+        public static ModHeader CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             ModHeader_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static ModHeader Create_Xml(
+        public static ModHeader CreateFromXml(
             string path,
             out ModHeader_ErrorMask errorMask,
             ModHeader_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static ModHeader Create_Xml(
+        public static ModHeader CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             ModHeader_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static ModHeader Create_Xml(
+        public static ModHeader CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             ModHeader_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static ModHeader Create_Xml(
+        public static ModHeader CreateFromXml(
             Stream stream,
             out ModHeader_ErrorMask errorMask,
             ModHeader_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static ModHeader Create_Xml(
+        public static ModHeader CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             ModHeader_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -502,14 +502,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = ModHeader_Registration.TRIGGERING_RECORD_TYPE;
-        public async Task Write_Xml_Folder(
+        public async Task WriteToXmlFolder(
             DirectoryPath? dir,
             string name,
             XElement node,
             int counter,
             ErrorMaskBuilder errorMask)
         {
-            this.Write_Xml(
+            this.WriteToXml(
                 node: node,
                 errorMask: errorMask,
                 translationMask: null);
@@ -521,11 +521,11 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
-        public static ModHeader Create_Binary(
+        public static ModHeader CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -533,14 +533,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static ModHeader Create_Binary(
+        public static ModHeader CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out ModHeader_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ModHeader Create_Binary(
+        public static ModHeader CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -566,14 +566,14 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
             return ret;
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             ModHeader item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             ModHeader item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ModHeader_FieldIndex.Stats);
-                        item.Stats = Mutagen.Bethesda.Oblivion.ModStats.Create_Binary(
+                        item.Stats = Mutagen.Bethesda.Oblivion.ModStats.CreateFromBinary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1787,7 +1787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ModHeaderXmlWriteTranslation Instance = new ModHeaderXmlWriteTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IModHeaderGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1897,7 +1897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ModHeader");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1954,7 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ModHeaderXmlCreateTranslation Instance = new ModHeaderXmlCreateTranslation();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IModHeader item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1964,7 +1964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ModHeaderXmlCreateTranslation.FillPublicElement_Xml(
+                    ModHeaderXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1979,7 +1979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IModHeader item,
             XElement node,
             string name,
@@ -2209,7 +2209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class ModHeaderXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModHeaderGetter item,
             XElement node,
             out ModHeader_ErrorMask errorMask,
@@ -2227,7 +2227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModHeaderGetter item,
             string path,
             out ModHeader_ErrorMask errorMask,
@@ -2236,7 +2236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -2246,7 +2246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModHeaderGetter item,
             string path,
             ErrorMaskBuilder errorMask,
@@ -2255,7 +2255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -2264,7 +2264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModHeaderGetter item,
             Stream stream,
             out ModHeader_ErrorMask errorMask,
@@ -2273,7 +2273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -2283,7 +2283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModHeaderGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
@@ -2292,7 +2292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -2301,7 +2301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModHeaderGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -2316,7 +2316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModHeaderGetter item,
             XElement node,
             string name = null,
@@ -2330,7 +2330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask.GetCrystal());
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModHeaderGetter item,
             string path,
             string name = null)
@@ -2345,7 +2345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IModHeaderGetter item,
             Stream stream,
             string name = null)
@@ -3060,7 +3060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class ModHeaderBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IModHeaderGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -3077,7 +3077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IModHeaderGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -3091,7 +3091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IModHeaderGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)

@@ -51,9 +51,9 @@ namespace Mutagen.Bethesda.Oblivion
                 .PopulateInto(this._majorRecords);
         }
 
-        void IMod.Write_Binary(string path, ModKey modKey)
+        void IMod.WriteToBinary(string path, ModKey modKey)
         {
-            this.Write_Binary(path, modKey, importMask: null);
+            this.WriteToBinary(path, modKey, importMask: null);
         }
 
         private IObservable<IChangeSet<IMajorRecord>> GetCellRecords(Cell cell)
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
             setter(count);
         }
 
-        async Task Create_Xml_Folder_Worldspaces(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
+        async Task CreateFromXmlFolderWorldspaces(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
         {
             dir = new DirectoryPath(Path.Combine(dir.Path, nameof(this.Worldspaces)));
             using (errorMask?.PushIndex(index))
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var path = Path.Combine(dir.Path, $"Group.xml");
                         if (File.Exists(path))
                         {
-                            GroupXmlCreateTranslation<Worldspace>.FillPublic_Xml(
+                            GroupXmlCreateTranslation<Worldspace>.FillPublicXml(
                                 this.Worldspaces,
                                 XElement.Load(path),
                                 errorMask,
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             tasks.Add(Task.Run(async () =>
                             {
-                                var get = await Worldspace.TryCreate_Xml_Folder(subDir.Dir, errorMask);
+                                var get = await Worldspace.TryCreateXmFolder(subDir.Dir, errorMask);
                                 return get.Value;
                             }));
                         }
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        async Task Write_Xml_Folder_Worldspaces(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
+        async Task WriteToXmlFolderWorldspaces(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
         {
             if (!this.Worldspaces.Items.HasBeenSet) return;
             dir = new DirectoryPath(Path.Combine(dir.Path, nameof(this.Worldspaces)));
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
                 {
                     dir.Create();
-                    this.Worldspaces.Write_Xml(
+                    this.Worldspaces.WriteToXml(
                         Path.Combine(dir.Path, $"Group.xml"),
                         errorMask,
                         translationMask: GroupExt.XmlFolderTranslationCrystal);
@@ -228,25 +228,13 @@ namespace Mutagen.Bethesda.Oblivion
                     List<Task> tasks = new List<Task>();
                     foreach (var item in this.Worldspaces.Items.Items)
                     {
-                        //using (errorMask.PushIndex(counter))
-                        //{
-                        //    try
-                        //    {
                         tasks.Add(
-                            item.Write_Xml_Folder(
+                            item.WriteToXmlFolder(
                                 node: null,
                                 name: name,
                                 counter: counter++,
                                 dir: dir,
                                 errorMask: errorMask));
-                        //    }
-                        //    catch (Exception ex)
-                        //    when (errorMask != null)
-                        //    {
-                        //        errorMask.ReportException(ex);
-                        //    }
-                        //}
-                        //counter++;
                     }
                     await Task.WhenAll(tasks);
                 }
@@ -264,14 +252,14 @@ namespace Mutagen.Bethesda.Oblivion
         };
         public static readonly TranslationCrystal ScriptXmlFolderTranslationCrystal = ScriptXmlFolderTranslationMask.GetCrystal();
 
-        async Task Create_Xml_Folder_Scripts(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
+        async Task CreateFromXmlFolderScripts(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
         {
             dir = new DirectoryPath(Path.Combine(dir.Path, nameof(this.Scripts)));
 
             var path = Path.Combine(dir.Path, $"Group.xml");
             if (File.Exists(path))
             {
-                GroupXmlCreateTranslation<Script>.FillPublic_Xml(
+                GroupXmlCreateTranslation<Script>.FillPublicXml(
                     this.Scripts,
                     XElement.Load(path),
                     errorMask,
@@ -294,7 +282,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!scriptXml.Exists) continue;
                 tasks.Add(Task.Run(() =>
                 {
-                    var script = Script.Create_Xml(
+                    var script = Script.CreateFromXml(
                         scriptXml.Path,
                         errorMask: errorMask,
                         translationMask: ScriptXmlFolderTranslationMask);
@@ -310,7 +298,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        async Task Write_Xml_Folder_Scripts(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
+        async Task WriteToXmlFolderScripts(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
         {
             if (!this.Scripts.Items.HasBeenSet) return;
             dir = new DirectoryPath(Path.Combine(dir.Path, nameof(this.Scripts)));
@@ -319,7 +307,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
                 {
                     dir.Create();
-                    this.Scripts.Write_Xml(
+                    this.Scripts.WriteToXml(
                         Path.Combine(dir.Path, "Group.xml"),
                         errorMask,
                         translationMask: GroupExt.XmlFolderTranslationCrystal);
@@ -332,7 +320,7 @@ namespace Mutagen.Bethesda.Oblivion
                         subDir.Create();
                         tasks.Add(Task.Run(() =>
                         {
-                            item.Write_Xml(
+                            item.WriteToXml(
                                 Path.Combine(subDir.Path, $"Script.xml"),
                                 errorMask: errorMask,
                                 translationMask: ScriptXmlFolderTranslationCrystal);

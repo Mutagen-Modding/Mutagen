@@ -231,12 +231,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlWriteTranslator XmlWriteTranslator => DialogTopicXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static DialogTopic Create_Xml(
+        public static DialogTopic CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             DialogTopic_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static DialogTopic Create_Xml(
+        public static DialogTopic CreateFromXml(
             XElement node,
             out DialogTopic_ErrorMask errorMask,
             bool doMasks = true,
@@ -252,7 +252,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -261,7 +261,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static DialogTopic Create_Xml(
+        public new static DialogTopic CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -281,13 +281,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    DialogTopicXmlCreateTranslation.FillPublicElement_Xml(
+                    DialogTopicXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -303,80 +303,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static DialogTopic Create_Xml(
+        public static DialogTopic CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             DialogTopic_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static DialogTopic Create_Xml(
+        public static DialogTopic CreateFromXml(
             string path,
             out DialogTopic_ErrorMask errorMask,
             DialogTopic_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static DialogTopic Create_Xml(
+        public static DialogTopic CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             DialogTopic_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static DialogTopic Create_Xml(
+        public static DialogTopic CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             DialogTopic_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static DialogTopic Create_Xml(
+        public static DialogTopic CreateFromXml(
             Stream stream,
             out DialogTopic_ErrorMask errorMask,
             DialogTopic_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static DialogTopic Create_Xml(
+        public static DialogTopic CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             DialogTopic_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             DialogTopic item,
             XElement node,
             string name,
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    OblivionMajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -495,11 +495,11 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IBinaryWriteTranslator BinaryWriteTranslator => DialogTopicBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
-        public static DialogTopic Create_Binary(
+        public static DialogTopic CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -507,14 +507,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static DialogTopic Create_Binary(
+        public static DialogTopic CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out DialogTopic_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static DialogTopic Create_Binary(
+        public new static DialogTopic CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -536,11 +536,11 @@ namespace Mutagen.Bethesda.Oblivion
                 recType: DialogTopic_Registration.DIAL_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
             try
             {
-                DialogTopicBinaryCreateTranslation.CustomBinaryEnd_Import_Public(
+                DialogTopicBinaryCreateTranslation.CustomBinaryEndImportPublic(
                     frame: frame,
                     obj: ret,
                     masterReferences: masterReferences,
@@ -556,20 +556,20 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             DialogTopic item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            OblivionMajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             DialogTopic item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.DialogType);
                 }
                 default:
-                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1578,13 +1578,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static DialogTopicXmlWriteTranslation Instance = new DialogTopicXmlWriteTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IDialogTopicInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            OblivionMajorRecordXmlWriteTranslation.WriteToNode_Xml(
+            OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1672,7 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogTopic");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1730,7 +1730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static DialogTopicXmlCreateTranslation Instance = new DialogTopicXmlCreateTranslation();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IDialogTopicInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1740,7 +1740,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    DialogTopicXmlCreateTranslation.FillPublicElement_Xml(
+                    DialogTopicXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1755,7 +1755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IDialogTopicInternal item,
             XElement node,
             string name,
@@ -1899,7 +1899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    OblivionMajorRecordXmlCreateTranslation.FillPublicElement_Xml(
+                    OblivionMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1914,7 +1914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class DialogTopicXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IDialogTopicInternalGetter item,
             XElement node,
             out DialogTopic_ErrorMask errorMask,
@@ -1932,7 +1932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = DialogTopic_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IDialogTopicInternalGetter item,
             string path,
             out DialogTopic_ErrorMask errorMask,
@@ -1941,7 +1941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1951,7 +1951,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IDialogTopicInternalGetter item,
             Stream stream,
             out DialogTopic_ErrorMask errorMask,
@@ -1960,7 +1960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -2498,18 +2498,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static DialogTopicBinaryWriteTranslation Instance = new DialogTopicBinaryWriteTranslation();
 
-        static partial void CustomBinaryEnd_Export(
+        static partial void CustomBinaryEndExport(
             MutagenWriter writer,
             IDialogTopicInternalGetter obj,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
-        public static void CustomBinaryEnd_ExportInternal(
+        public static void CustomBinaryEndExportInternal(
             MutagenWriter writer,
             IDialogTopicInternalGetter obj,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            CustomBinaryEnd_Export(
+            CustomBinaryEndExport(
                 writer: writer,
                 obj: obj,
                 masterReferences: masterReferences,
@@ -2599,7 +2599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     masterReferences: masterReferences);
             }
-            CustomBinaryEnd_ExportInternal(
+            CustomBinaryEndExportInternal(
                 writer: writer,
                 obj: item,
                 errorMask: errorMask,
@@ -2657,18 +2657,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static DialogTopicBinaryCreateTranslation Instance = new DialogTopicBinaryCreateTranslation();
 
-        static partial void CustomBinaryEnd_Import(
+        static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             DialogTopic obj,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
-        public static void CustomBinaryEnd_Import_Public(
+        public static void CustomBinaryEndImportPublic(
             MutagenFrame frame,
             DialogTopic obj,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            CustomBinaryEnd_Import(
+            CustomBinaryEndImport(
                 frame: frame,
                 obj: obj,
                 masterReferences: masterReferences,
@@ -2679,7 +2679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class DialogTopicBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IDialogTopicInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

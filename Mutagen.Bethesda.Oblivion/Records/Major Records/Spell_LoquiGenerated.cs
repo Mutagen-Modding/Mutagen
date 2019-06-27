@@ -135,12 +135,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlWriteTranslator XmlWriteTranslator => SpellXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static Spell Create_Xml(
+        public static Spell CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Spell_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Spell Create_Xml(
+        public static Spell CreateFromXml(
             XElement node,
             out Spell_ErrorMask errorMask,
             bool doMasks = true,
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static Spell Create_Xml(
+        public new static Spell CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -188,80 +188,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Spell Create_Xml(
+        public static Spell CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             Spell_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Spell Create_Xml(
+        public static Spell CreateFromXml(
             string path,
             out Spell_ErrorMask errorMask,
             Spell_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Spell Create_Xml(
+        public static Spell CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             Spell_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Spell Create_Xml(
+        public static Spell CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             Spell_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Spell Create_Xml(
+        public static Spell CreateFromXml(
             Stream stream,
             out Spell_ErrorMask errorMask,
             Spell_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Spell Create_Xml(
+        public static Spell CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             Spell_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             Spell item,
             XElement node,
             string name,
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    SpellAbstract.FillPrivateElement_Xml(
+                    SpellAbstract.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override IBinaryWriteTranslator BinaryWriteTranslator => SpellBinaryWriteTranslation.Instance;
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             Spell item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -368,7 +368,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.Name);
                 }
                 default:
-                    return SpellAbstract.Fill_Binary_RecordTypes(
+                    return SpellAbstract.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1067,13 +1067,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static SpellXmlWriteTranslation Instance = new SpellXmlWriteTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             ISpellInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            SpellAbstractXmlWriteTranslation.WriteToNode_Xml(
+            SpellAbstractXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1103,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Spell");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static SpellXmlCreateTranslation Instance = new SpellXmlCreateTranslation();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             ISpellInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    SpellXmlCreateTranslation.FillPublicElement_Xml(
+                    SpellXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             ISpellInternal item,
             XElement node,
             string name,
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    SpellAbstractXmlCreateTranslation.FillPublicElement_Xml(
+                    SpellAbstractXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class SpellXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISpellInternalGetter item,
             XElement node,
             out Spell_ErrorMask errorMask,
@@ -1270,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = Spell_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISpellInternalGetter item,
             string path,
             out Spell_ErrorMask errorMask,
@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ISpellInternalGetter item,
             Stream stream,
             out Spell_ErrorMask errorMask,
@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1695,7 +1695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class SpellBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ISpellInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

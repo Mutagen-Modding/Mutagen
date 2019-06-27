@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
                 processor: processor,
                 importer: async (p, mk) =>
                 {
-                    var mod = await OblivionMod.Create_Binary(
+                    var mod = await OblivionMod.CreateFromBinary(
                         p.Path,
                         mk,
                         importMask: importMask);
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
                 loadOrder,
                 importer: async (path, modKey) =>
                 {
-                    var mod = await OblivionMod.Create_Binary(
+                    var mod = await OblivionMod.CreateFromBinary(
                         path.Path,
                         modKey,
                         importMask: importMask);

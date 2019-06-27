@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             System.Console.WriteLine("Running in directory: " + Directory.GetCurrentDirectory());
             FilePath settingsPath = "../../../../TestingSettings.xml";
             System.Console.WriteLine("Settings path: " + settingsPath);
-            var settings = TestingSettings.Create_Xml(settingsPath.Path);
+            var settings = TestingSettings.CreateFromXml(settingsPath.Path);
             System.Console.WriteLine("Target settings: " + settings.ToString());
             var dataPath = Path.Combine(settings.DataFolderLocations.Oblivion, "Oblivion.esm");
             data = File.ReadAllBytes(dataPath);

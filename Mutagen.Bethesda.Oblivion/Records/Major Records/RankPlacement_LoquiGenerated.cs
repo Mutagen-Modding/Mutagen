@@ -135,12 +135,12 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static RankPlacement Create_Xml(
+        public static RankPlacement CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             RankPlacement_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static RankPlacement Create_Xml(
+        public static RankPlacement CreateFromXml(
             XElement node,
             out RankPlacement_ErrorMask errorMask,
             bool doMasks = true,
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RankPlacement Create_Xml(
+        public static RankPlacement CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    RankPlacementXmlCreateTranslation.FillPublicElement_Xml(
+                    RankPlacementXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -201,80 +201,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RankPlacement Create_Xml(
+        public static RankPlacement CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             RankPlacement_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static RankPlacement Create_Xml(
+        public static RankPlacement CreateFromXml(
             string path,
             out RankPlacement_ErrorMask errorMask,
             RankPlacement_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static RankPlacement Create_Xml(
+        public static RankPlacement CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             RankPlacement_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static RankPlacement Create_Xml(
+        public static RankPlacement CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             RankPlacement_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static RankPlacement Create_Xml(
+        public static RankPlacement CreateFromXml(
             Stream stream,
             out RankPlacement_ErrorMask errorMask,
             RankPlacement_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static RankPlacement Create_Xml(
+        public static RankPlacement CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             RankPlacement_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -325,11 +325,11 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
-        public static RankPlacement Create_Binary(
+        public static RankPlacement CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -337,14 +337,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static RankPlacement Create_Binary(
+        public static RankPlacement CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out RankPlacement_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RankPlacement Create_Binary(
+        public static RankPlacement CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -370,13 +370,13 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs);
+                fillStructs: FillBinaryStructs);
             return ret;
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             RankPlacement item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static RankPlacementXmlWriteTranslation Instance = new RankPlacementXmlWriteTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IRankPlacementGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RankPlacement");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1173,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static RankPlacementXmlCreateTranslation Instance = new RankPlacementXmlCreateTranslation();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IRankPlacement item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    RankPlacementXmlCreateTranslation.FillPublicElement_Xml(
+                    RankPlacementXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IRankPlacement item,
             XElement node,
             string name,
@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class RankPlacementXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IRankPlacementGetter item,
             XElement node,
             out RankPlacement_ErrorMask errorMask,
@@ -1294,7 +1294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = RankPlacement_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IRankPlacementGetter item,
             string path,
             out RankPlacement_ErrorMask errorMask,
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IRankPlacementGetter item,
             string path,
             ErrorMaskBuilder errorMask,
@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1331,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IRankPlacementGetter item,
             Stream stream,
             out RankPlacement_ErrorMask errorMask,
@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1350,7 +1350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IRankPlacementGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
@@ -1359,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IRankPlacementGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1383,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IRankPlacementGetter item,
             XElement node,
             string name = null,
@@ -1397,7 +1397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask.GetCrystal());
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IRankPlacementGetter item,
             string path,
             string name = null)
@@ -1412,7 +1412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IRankPlacementGetter item,
             Stream stream,
             string name = null)
@@ -1829,7 +1829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class RankPlacementBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IRankPlacementGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -1846,7 +1846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = RankPlacement_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IRankPlacementGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -1860,7 +1860,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IRankPlacementGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)

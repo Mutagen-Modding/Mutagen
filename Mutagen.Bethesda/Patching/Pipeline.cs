@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda
                         Master = modKey
                     }));
             outMod.SyncRecordCount();
-            outMod.Write_Binary(
+            outMod.WriteToBinary(
                 path: Path.Combine(dataFolder.Path, outModKey.FileName),
                 modKey: outModKey);
         }

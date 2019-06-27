@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateWriteToNode(ObjectGeneration obj, FileGeneration fg)
         {
             using (var args = new FunctionWrapper(fg,
-                $"public static void WriteToNode_{ModuleNickname}"))
+                $"public static void WriteToNode{ModuleNickname}"))
             {
                 args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} item");
                 args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.HasLoquiBaseObject)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{this.TranslationWriteClass(obj.BaseClass)}.WriteToNode_{ModuleNickname}"))
+                        $"{this.TranslationWriteClass(obj.BaseClass)}.WriteToNode{ModuleNickname}"))
                     {
                         args.Add($"item: item");
                         args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Generation
             if (obj.IterateFields(includeBaseClass: true).Any(f => f.ReadOnly))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static void FillPrivateElement_{ModuleNickname}"))
+                    $"protected static void FillPrivateElement{ModuleNickname}"))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
@@ -277,8 +277,7 @@ namespace Mutagen.Bethesda.Generation
                             if (obj.HasLoquiBaseObject)
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"{obj.BaseClassName}.FillPrivateElement_" +
-                                    $"{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
+                                    $"{obj.BaseClassName}.FillPrivateElement{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
                                 {
                                     args.Add("item: item");
                                     args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
@@ -301,7 +300,7 @@ namespace Mutagen.Bethesda.Generation
         protected override void FillPublicElement(ObjectGeneration obj, FileGeneration fg)
         {
             using (var args = new FunctionWrapper(fg,
-                $"public static void FillPublicElement_{ModuleNickname}"))
+                $"public static void FillPublicElement{ModuleNickname}"))
             {
                 args.Add($"{obj.Interface(getter: false, internalInterface: obj.HasInternalInterface)} item");
                 args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
@@ -382,7 +381,7 @@ namespace Mutagen.Bethesda.Generation
                         if (obj.HasLoquiBaseObject)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"{this.TranslationCreateClass(obj.BaseClass)}.FillPublicElement_{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
+                                $"{this.TranslationCreateClass(obj.BaseClass)}.FillPublicElement{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
                             {
                                 args.Add("item: item");
                                 args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: {XmlTranslationModule.XElementLine.GetParameterName(obj)}");

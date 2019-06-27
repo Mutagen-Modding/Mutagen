@@ -170,12 +170,12 @@ namespace Mutagen.Bethesda.Tests
         IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static Target Create_Xml(
+        public static Target CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Target_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         [DebuggerStepThrough]
-        public static Target Create_Xml(
+        public static Target CreateFromXml(
             XElement node,
             out Target_ErrorMask errorMask,
             bool doMasks = true,
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Tests
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static Target Create_Xml(
+        public static Target CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 foreach (var elem in node.Elements())
                 {
-                    TargetXmlCreateTranslation.FillPublicElement_Xml(
+                    TargetXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -236,80 +236,80 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static Target Create_Xml(
+        public static Target CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             Target_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Target Create_Xml(
+        public static Target CreateFromXml(
             string path,
             out Target_ErrorMask errorMask,
             Target_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Target Create_Xml(
+        public static Target CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             Target_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Target Create_Xml(
+        public static Target CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             Target_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Target Create_Xml(
+        public static Target CreateFromXml(
             Stream stream,
             out Target_ErrorMask errorMask,
             Target_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Target Create_Xml(
+        public static Target CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             Target_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -319,18 +319,18 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Xml Copy In
-        public void CopyIn_Xml(
+        public void CopyInXml(
             XElement node,
             MissingCreate missing = MissingCreate.New)
         {
-            CopyIn_Xml_Internal(
+            CopyInXml_Internal(
                 missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: null);
         }
 
-        public virtual void CopyIn_Xml(
+        public virtual void CopyInXml(
             XElement node,
             out Target_ErrorMask errorMask,
             Target_TranslationMask translationMask = null,
@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Tests
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyIn_Xml_Internal(
+            CopyInXml_Internal(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Tests
             errorMask = Target_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        protected void CopyIn_Xml_Internal(
+        protected void CopyInXml_Internal(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -361,17 +361,17 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask);
         }
 
-        public void CopyIn_Xml(
+        public void CopyInXml(
             string path,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            this.CopyIn_Xml(
+            this.CopyInXml(
                 missing: missing,
                 node: node);
         }
 
-        public void CopyIn_Xml(
+        public void CopyInXml(
             string path,
             out Target_ErrorMask errorMask,
             Target_TranslationMask translationMask,
@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Tests
             bool doMasks = true)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            this.CopyIn_Xml(
+            this.CopyInXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
@@ -387,17 +387,17 @@ namespace Mutagen.Bethesda.Tests
                 doMasks: doMasks);
         }
 
-        public void CopyIn_Xml(
+        public void CopyInXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            this.CopyIn_Xml(
+            this.CopyInXml(
                 missing: missing,
                 node: node);
         }
 
-        public void CopyIn_Xml(
+        public void CopyInXml(
             Stream stream,
             out Target_ErrorMask errorMask,
             Target_TranslationMask translationMask,
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Tests
             bool doMasks = true)
         {
             var node = XDocument.Load(stream).Root;
-            this.CopyIn_Xml(
+            this.CopyInXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         public readonly static TargetXmlWriteTranslation Instance = new TargetXmlWriteTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             ITargetGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1275,7 +1275,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.Target");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         public readonly static TargetXmlCreateTranslation Instance = new TargetXmlCreateTranslation();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             ITarget item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1342,7 +1342,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    TargetXmlCreateTranslation.FillPublicElement_Xml(
+                    TargetXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1357,7 +1357,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             ITarget item,
             XElement node,
             string name,
@@ -1521,7 +1521,7 @@ namespace Mutagen.Bethesda.Tests.Internals
     #region Xml Write Mixins
     public static class TargetXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITargetGetter item,
             XElement node,
             out Target_ErrorMask errorMask,
@@ -1539,7 +1539,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             errorMask = Target_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITargetGetter item,
             string path,
             out Target_ErrorMask errorMask,
@@ -1548,7 +1548,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1558,7 +1558,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITargetGetter item,
             string path,
             ErrorMaskBuilder errorMask,
@@ -1567,7 +1567,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITargetGetter item,
             Stream stream,
             out Target_ErrorMask errorMask,
@@ -1585,7 +1585,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1595,7 +1595,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITargetGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
@@ -1604,7 +1604,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1613,7 +1613,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITargetGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1628,7 +1628,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 translationMask: translationMask);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITargetGetter item,
             XElement node,
             string name = null,
@@ -1642,7 +1642,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 translationMask: translationMask.GetCrystal());
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITargetGetter item,
             string path,
             string name = null)
@@ -1657,7 +1657,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ITargetGetter item,
             Stream stream,
             string name = null)

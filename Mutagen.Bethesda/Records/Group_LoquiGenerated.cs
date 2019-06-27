@@ -154,13 +154,13 @@ namespace Mutagen.Bethesda
         IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static Group<T> Create_Xml<T_TranslMask>(
+        public static Group<T> CreateFromXml<T_TranslMask>(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Group_TranslationMask<T_TranslMask> translationMask = null)
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda
         }
 
         [DebuggerStepThrough]
-        public static Group<T> Create_Xml<T_ErrMask, T_TranslMask>(
+        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             XElement node,
             out Group_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true,
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static Group<T> Create_Xml(
+        public static Group<T> CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -207,13 +207,13 @@ namespace Mutagen.Bethesda
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    GroupXmlCreateTranslation<T>.FillPublicElement_Xml(
+                    GroupXmlCreateTranslation<T>.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -229,20 +229,20 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static Group<T> Create_Xml<T_TranslMask>(
+        public static Group<T> CreateFromXml<T_TranslMask>(
             string path,
             MissingCreate missing = MissingCreate.New,
             Group_TranslationMask<T_TranslMask> translationMask = null)
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Group<T> Create_Xml<T_ErrMask, T_TranslMask>(
+        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             string path,
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_TranslationMask<T_TranslMask> translationMask = null,
@@ -251,14 +251,14 @@ namespace Mutagen.Bethesda
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Group<T> Create_Xml<T_ErrMask, T_TranslMask>(
+        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             string path,
             ErrorMaskBuilder errorMask,
             Group_TranslationMask<T_TranslMask> translationMask = null,
@@ -267,27 +267,27 @@ namespace Mutagen.Bethesda
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Group<T> Create_Xml<T_TranslMask>(
+        public static Group<T> CreateFromXml<T_TranslMask>(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             Group_TranslationMask<T_TranslMask> translationMask = null)
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static Group<T> Create_Xml<T_ErrMask, T_TranslMask>(
+        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             Stream stream,
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_TranslationMask<T_TranslMask> translationMask = null,
@@ -296,14 +296,14 @@ namespace Mutagen.Bethesda
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static Group<T> Create_Xml<T_ErrMask, T_TranslMask>(
+        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             Stream stream,
             ErrorMaskBuilder errorMask,
             Group_TranslationMask<T_TranslMask> translationMask = null,
@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             Group<T> item,
             XElement node,
             string name,
@@ -384,11 +384,11 @@ namespace Mutagen.Bethesda
         IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
-        public static async Task<Group<T>> Create_Binary(
+        public static async Task<Group<T>> CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return await Create_Binary(
+            return await CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -396,14 +396,14 @@ namespace Mutagen.Bethesda
         }
 
         [DebuggerStepThrough]
-        public static async Task<(Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask)> Create_Binary_Error<T_ErrMask>(
+        public static async Task<(Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask)> CreateFromBinary_Error<T_ErrMask>(
             MutagenFrame frame,
             MasterReferences masterReferences,
             bool doMasks = true)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = await Create_Binary(
+            var ret = await CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda
             return (ret, Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder));
         }
 
-        public static async Task<Group<T>> Create_Binary(
+        public static async Task<Group<T>> CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -424,20 +424,20 @@ namespace Mutagen.Bethesda
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes).ConfigureAwait(false);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
             return ret;
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             Group<T> item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            GroupBinaryCreateTranslation<T>.FillBinary_ContainedRecordType_Custom_Public(
+            GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeCustomPublic(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        protected static async Task<TryGet<int?>> Fill_Binary_RecordTypes(
+        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
             Group<T> item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -1262,7 +1262,7 @@ namespace Mutagen.Bethesda.Internals
     {
         public readonly static GroupXmlWriteTranslation<T> Instance = new GroupXmlWriteTranslation<T>();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IGroupGetter<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Group");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1390,7 +1390,7 @@ namespace Mutagen.Bethesda.Internals
     {
         public readonly static GroupXmlCreateTranslation<T> Instance = new GroupXmlCreateTranslation<T>();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IGroup<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    GroupXmlCreateTranslation<T>.FillPublicElement_Xml(
+                    GroupXmlCreateTranslation<T>.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1415,7 +1415,7 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IGroup<T> item,
             XElement node,
             string name,
@@ -1495,7 +1495,7 @@ namespace Mutagen.Bethesda.Internals
     #region Xml Write Mixins
     public static class GroupXmlTranslationMixIn
     {
-        public static void Write_Xml<T, T_ErrMask, T_TranslMask>(
+        public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
             this IGroupGetter<T> item,
             XElement node,
             out Group_ErrorMask<T_ErrMask> errorMask,
@@ -1516,7 +1516,7 @@ namespace Mutagen.Bethesda.Internals
             errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml<T, T_ErrMask, T_TranslMask>(
+        public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
             this IGroupGetter<T> item,
             string path,
             out Group_ErrorMask<T_ErrMask> errorMask,
@@ -1528,7 +1528,7 @@ namespace Mutagen.Bethesda.Internals
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1538,7 +1538,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml<T>(
+        public static void WriteToXml<T>(
             this IGroupGetter<T> item,
             string path,
             ErrorMaskBuilder errorMask,
@@ -1548,7 +1548,7 @@ namespace Mutagen.Bethesda.Internals
             where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             var node = new XElement("topnode");
-            Write_Xml<T>(
+            WriteToXml<T>(
                 item: item,
                 name: name,
                 node: node,
@@ -1557,7 +1557,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml<T, T_ErrMask, T_TranslMask>(
+        public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
             this IGroupGetter<T> item,
             Stream stream,
             out Group_ErrorMask<T_ErrMask> errorMask,
@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Internals
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1579,7 +1579,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml<T>(
+        public static void WriteToXml<T>(
             this IGroupGetter<T> item,
             Stream stream,
             ErrorMaskBuilder errorMask,
@@ -1589,7 +1589,7 @@ namespace Mutagen.Bethesda.Internals
             where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             var node = new XElement("topnode");
-            Write_Xml<T>(
+            WriteToXml<T>(
                 item: item,
                 name: name,
                 node: node,
@@ -1598,7 +1598,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml<T>(
+        public static void WriteToXml<T>(
             this IGroupGetter<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1614,7 +1614,7 @@ namespace Mutagen.Bethesda.Internals
                 translationMask: translationMask);
         }
 
-        public static void Write_Xml<T, T_ErrMask, T_TranslMask>(
+        public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
             this IGroupGetter<T> item,
             XElement node,
             string name = null,
@@ -1631,7 +1631,7 @@ namespace Mutagen.Bethesda.Internals
                 translationMask: translationMask.GetCrystal());
         }
 
-        public static void Write_Xml<T, T_TranslMask>(
+        public static void WriteToXml<T, T_TranslMask>(
             this IGroupGetter<T> item,
             string path,
             string name = null)
@@ -1648,7 +1648,7 @@ namespace Mutagen.Bethesda.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml<T, T_TranslMask>(
+        public static void WriteToXml<T, T_TranslMask>(
             this IGroupGetter<T> item,
             Stream stream,
             string name = null)
@@ -2104,19 +2104,19 @@ namespace Mutagen.Bethesda.Internals
     {
         public readonly static GroupBinaryWriteTranslation<T> Instance = new GroupBinaryWriteTranslation<T>();
 
-        static partial void WriteBinary_ContainedRecordType_Custom(
+        static partial void WriteBinaryContainedRecordTypeCustom(
             MutagenWriter writer,
             IGroupGetter<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void WriteBinary_ContainedRecordType(
+        public static void WriteBinaryContainedRecordType(
             MutagenWriter writer,
             IGroupGetter<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            WriteBinary_ContainedRecordType_Custom(
+            WriteBinaryContainedRecordTypeCustom(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -2129,7 +2129,7 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            GroupBinaryWriteTranslation<T>.WriteBinary_ContainedRecordType(
+            GroupBinaryWriteTranslation<T>.WriteBinaryContainedRecordType(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -2214,19 +2214,19 @@ namespace Mutagen.Bethesda.Internals
     {
         public readonly static GroupBinaryCreateTranslation<T> Instance = new GroupBinaryCreateTranslation<T>();
 
-        static partial void FillBinary_ContainedRecordType_Custom(
+        static partial void FillBinaryContainedRecordTypeCustom(
             MutagenFrame frame,
             Group<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void FillBinary_ContainedRecordType_Custom_Public(
+        public static void FillBinaryContainedRecordTypeCustomPublic(
             MutagenFrame frame,
             Group<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            FillBinary_ContainedRecordType_Custom(
+            FillBinaryContainedRecordTypeCustom(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
@@ -2238,7 +2238,7 @@ namespace Mutagen.Bethesda.Internals
     #region Binary Write Mixins
     public static class GroupBinaryTranslationMixIn
     {
-        public static void Write_Binary<T, T_ErrMask>(
+        public static void WriteToBinary<T, T_ErrMask>(
             this IGroupGetter<T> item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -2257,7 +2257,7 @@ namespace Mutagen.Bethesda.Internals
             errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary<T>(
+        public static void WriteToBinary<T>(
             this IGroupGetter<T> item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -2272,7 +2272,7 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Binary<T, T_ErrMask>(
+        public static void WriteToBinary<T, T_ErrMask>(
             this IGroupGetter<T> item,
             MutagenWriter writer,
             MasterReferences masterReferences)

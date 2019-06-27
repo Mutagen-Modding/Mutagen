@@ -192,12 +192,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlWriteTranslator XmlWriteTranslator => LeveledSpellXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static LeveledSpell Create_Xml(
+        public static LeveledSpell CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             LeveledSpell_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static LeveledSpell Create_Xml(
+        public static LeveledSpell CreateFromXml(
             XElement node,
             out LeveledSpell_ErrorMask errorMask,
             bool doMasks = true,
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static LeveledSpell Create_Xml(
+        public new static LeveledSpell CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -242,13 +242,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    LeveledSpellXmlCreateTranslation.FillPublicElement_Xml(
+                    LeveledSpellXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -264,80 +264,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LeveledSpell Create_Xml(
+        public static LeveledSpell CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             LeveledSpell_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static LeveledSpell Create_Xml(
+        public static LeveledSpell CreateFromXml(
             string path,
             out LeveledSpell_ErrorMask errorMask,
             LeveledSpell_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static LeveledSpell Create_Xml(
+        public static LeveledSpell CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             LeveledSpell_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static LeveledSpell Create_Xml(
+        public static LeveledSpell CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             LeveledSpell_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static LeveledSpell Create_Xml(
+        public static LeveledSpell CreateFromXml(
             Stream stream,
             out LeveledSpell_ErrorMask errorMask,
             LeveledSpell_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static LeveledSpell Create_Xml(
+        public static LeveledSpell CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             LeveledSpell_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             LeveledSpell item,
             XElement node,
             string name,
@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    SpellAbstract.FillPrivateElement_Xml(
+                    SpellAbstract.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -442,11 +442,11 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IBinaryWriteTranslator BinaryWriteTranslator => LeveledSpellBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
-        public static LeveledSpell Create_Binary(
+        public static LeveledSpell CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -454,14 +454,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static LeveledSpell Create_Binary(
+        public static LeveledSpell CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out LeveledSpell_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static LeveledSpell Create_Binary(
+        public new static LeveledSpell CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -483,26 +483,26 @@ namespace Mutagen.Bethesda.Oblivion
                 recType: LeveledSpell_Registration.LVSP_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             LeveledSpell item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            SpellAbstract.Fill_Binary_Structs(
+            SpellAbstract.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             LeveledSpell item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.Entries);
                 }
                 default:
-                    return SpellAbstract.Fill_Binary_RecordTypes(
+                    return SpellAbstract.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1418,13 +1418,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static LeveledSpellXmlWriteTranslation Instance = new LeveledSpellXmlWriteTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             ILeveledSpellInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            SpellAbstractXmlWriteTranslation.WriteToNode_Xml(
+            SpellAbstractXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1484,7 +1484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LeveledSpell");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1557,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static LeveledSpellXmlCreateTranslation Instance = new LeveledSpellXmlCreateTranslation();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             ILeveledSpellInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1567,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    LeveledSpellXmlCreateTranslation.FillPublicElement_Xml(
+                    LeveledSpellXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1582,7 +1582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             ILeveledSpellInternal item,
             XElement node,
             string name,
@@ -1672,7 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    SpellAbstractXmlCreateTranslation.FillPublicElement_Xml(
+                    SpellAbstractXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1687,7 +1687,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class LeveledSpellXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILeveledSpellInternalGetter item,
             XElement node,
             out LeveledSpell_ErrorMask errorMask,
@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = LeveledSpell_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILeveledSpellInternalGetter item,
             string path,
             out LeveledSpell_ErrorMask errorMask,
@@ -1714,7 +1714,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1724,7 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this ILeveledSpellInternalGetter item,
             Stream stream,
             out LeveledSpell_ErrorMask errorMask,
@@ -1733,7 +1733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -2294,7 +2294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class LeveledSpellBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this ILeveledSpellInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

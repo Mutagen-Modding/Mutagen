@@ -27,13 +27,13 @@ namespace Mutagen.Bethesda.Oblivion
             DoNotAcquire = 0x0100,
         }
 
-        public static async Task<CombatStyle> Create_XmlFolder(
+        public static async Task<CombatStyle> CreateFromXmlFolder(
             XElement node,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override async Task Write_Xml_Folder(
+        public override async Task WriteToXmlFolder(
             DirectoryPath? dir,
             string name,
             XElement node,
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CombatStyle");
             }
-            CombatStyleXmlWriteTranslation.WriteToNode_Xml(
+            CombatStyleXmlWriteTranslation.WriteToNodeXml(
                 item: this,
                 node: elem,
                 errorMask: errorMask,
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class CombatStyleBinaryCreateTranslation
         {
-            static partial void FillBinary_SecondaryFlags_Custom(MutagenFrame frame, CombatStyle item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinarySecondaryFlagsCustom(MutagenFrame frame, CombatStyle item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 int flags = frame.ReadInt32();
                 var otherFlag = (CombatStyle.Flag)(flags << 8);
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CombatStyleBinaryWriteTranslation
         {
-            static partial void WriteBinary_SecondaryFlags_Custom(MutagenWriter writer, ICombatStyleInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinarySecondaryFlagsCustom(MutagenWriter writer, ICombatStyleInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 int flags = (int)item.Flags;
                 flags = flags >> 8;

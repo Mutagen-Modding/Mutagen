@@ -134,12 +134,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IXmlWriteTranslator XmlWriteTranslator => AlphaLayerXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static AlphaLayer Create_Xml(
+        public static AlphaLayer CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             AlphaLayer_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static AlphaLayer Create_Xml(
+        public static AlphaLayer CreateFromXml(
             XElement node,
             out AlphaLayer_ErrorMask errorMask,
             bool doMasks = true,
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -164,7 +164,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static AlphaLayer Create_Xml(
+        public new static AlphaLayer CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -184,13 +184,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    AlphaLayerXmlCreateTranslation.FillPublicElement_Xml(
+                    AlphaLayerXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -206,80 +206,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static AlphaLayer Create_Xml(
+        public static AlphaLayer CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             AlphaLayer_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static AlphaLayer Create_Xml(
+        public static AlphaLayer CreateFromXml(
             string path,
             out AlphaLayer_ErrorMask errorMask,
             AlphaLayer_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static AlphaLayer Create_Xml(
+        public static AlphaLayer CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             AlphaLayer_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static AlphaLayer Create_Xml(
+        public static AlphaLayer CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             AlphaLayer_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static AlphaLayer Create_Xml(
+        public static AlphaLayer CreateFromXml(
             Stream stream,
             out AlphaLayer_ErrorMask errorMask,
             AlphaLayer_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static AlphaLayer Create_Xml(
+        public static AlphaLayer CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             AlphaLayer_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             AlphaLayer item,
             XElement node,
             string name,
@@ -298,7 +298,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    BaseLayer.FillPrivateElement_Xml(
+                    BaseLayer.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -329,11 +329,11 @@ namespace Mutagen.Bethesda.Oblivion
         protected override IBinaryWriteTranslator BinaryWriteTranslator => AlphaLayerBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
-        public static AlphaLayer Create_Binary(
+        public static AlphaLayer CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -341,14 +341,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static AlphaLayer Create_Binary(
+        public static AlphaLayer CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out AlphaLayer_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public new static AlphaLayer Create_Binary(
+        public new static AlphaLayer CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -371,14 +371,14 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
             return ret;
         }
 
         #endregion
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             AlphaLayer item,
             MutagenFrame frame,
             int? lastParsed,
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)AlphaLayer_FieldIndex.AlphaLayerData);
                 }
                 default:
-                    return BaseLayer.Fill_Binary_RecordTypes(
+                    return BaseLayer.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         lastParsed: lastParsed,
@@ -1075,13 +1075,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static AlphaLayerXmlWriteTranslation Instance = new AlphaLayerXmlWriteTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IAlphaLayerInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            BaseLayerXmlWriteTranslation.WriteToNode_Xml(
+            BaseLayerXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AlphaLayer");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static AlphaLayerXmlCreateTranslation Instance = new AlphaLayerXmlCreateTranslation();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IAlphaLayerInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    AlphaLayerXmlCreateTranslation.FillPublicElement_Xml(
+                    AlphaLayerXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IAlphaLayerInternal item,
             XElement node,
             string name,
@@ -1215,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    BaseLayerXmlCreateTranslation.FillPublicElement_Xml(
+                    BaseLayerXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class AlphaLayerXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IAlphaLayerInternalGetter item,
             XElement node,
             out AlphaLayer_ErrorMask errorMask,
@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IAlphaLayerInternalGetter item,
             string path,
             out AlphaLayer_ErrorMask errorMask,
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IAlphaLayerInternalGetter item,
             Stream stream,
             out AlphaLayer_ErrorMask errorMask,
@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1643,7 +1643,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class AlphaLayerBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IAlphaLayerInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType RDSD = new RecordType("RDSD");
         public static readonly RecordType RDMD = new RecordType("RDMD");
 
-        static partial void FillBinary_RegionAreaLogic_Custom(MutagenFrame frame, Region item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, Region item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             var rdat = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var rdatType);
             while (rdat.Equals(Region_Registration.RDAT_HEADER))
@@ -82,13 +82,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (dataType)
             {
                 case RegionData.RegionDataType.Objects:
-                    item.Objects = RegionDataObjects.Create_Binary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
+                    item.Objects = RegionDataObjects.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
                 case RegionData.RegionDataType.MapName:
-                    item.MapName = RegionDataMapName.Create_Binary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
+                    item.MapName = RegionDataMapName.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
                 case RegionData.RegionDataType.Grasses:
-                    item.Grasses = RegionDataGrasses.Create_Binary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
+                    item.Grasses = RegionDataGrasses.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
                 case RegionData.RegionDataType.Sounds:
                     var nextRec = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var nextLen, offset: len);
@@ -96,10 +96,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         len += nextLen + 6;
                     }
-                    item.Sounds = RegionDataSounds.Create_Binary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
+                    item.Sounds = RegionDataSounds.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
                 case RegionData.RegionDataType.Weather:
-                    item.Weather = RegionDataWeather.Create_Binary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
+                    item.Weather = RegionDataWeather.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
                 case RegionData.RegionDataType.Icon:
                     frame.Position += 6 + RDAT_LEN;
@@ -123,27 +123,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RegionBinaryWriteTranslation
     {
-        static partial void WriteBinary_RegionAreaLogic_Custom(MutagenWriter writer, IRegionInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void WriteBinaryRegionAreaLogicCustom(MutagenWriter writer, IRegionInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (item.Objects_IsSet)
             {
-                item.Objects.Write_Binary(writer, masterReferences);
+                item.Objects.WriteToBinary(writer, masterReferences);
             }
             if (item.Weather_IsSet)
             {
-                item.Weather.Write_Binary(writer, masterReferences);
+                item.Weather.WriteToBinary(writer, masterReferences);
             }
             if (item.MapName_IsSet)
             {
-                item.MapName.Write_Binary(writer, masterReferences);
+                item.MapName.WriteToBinary(writer, masterReferences);
             }
             if (item.Grasses_IsSet)
             {
-                item.Grasses.Write_Binary(writer, masterReferences);
+                item.Grasses.WriteToBinary(writer, masterReferences);
             }
             if (item.Sounds_IsSet)
             {
-                item.Sounds.Write_Binary(writer, masterReferences);
+                item.Sounds.WriteToBinary(writer, masterReferences);
             }
         }
     }

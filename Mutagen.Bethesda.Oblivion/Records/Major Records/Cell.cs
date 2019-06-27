@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class CellBinaryCreateTranslation
         {
-            public static async Task CustomBinaryEnd_Import(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            public static async Task CustomBinaryEndImport(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (frame.Reader.Complete) return;
                 var next = HeaderTranslation.GetNextType(
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     using (errorMask.PushIndex((int)Cell_FieldIndex.PathGrid))
                     {
-                        obj.PathGrid = PathGrid.Create_Binary(
+                        obj.PathGrid = PathGrid.CreateFromBinary(
                             frame.SpawnWithLength(pathLen + Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH),
                             errorMask: errorMask,
                             masterReferences: masterReferences,
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     using (errorMask.PushIndex((int)Cell_FieldIndex.Landscape))
                     {
-                        obj.Landscape = Landscape.Create_Binary(
+                        obj.Landscape = Landscape.CreateFromBinary(
                             frame.SpawnWithLength(pathLen + Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH),
                             errorMask: errorMask,
                             masterReferences: masterReferences,
@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryWriteTranslation
         {
-            static partial void CustomBinaryEnd_Export(MutagenWriter writer, ICellInternalGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void CustomBinaryEndExport(MutagenWriter writer, ICellInternalGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (obj.Persistent.Count == 0
                     && obj.Temporary.Count == 0
@@ -333,7 +333,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: errorMask,
                                 transl: (r, item, subErr) =>
                                 {
-                                    item.Write_Binary(
+                                    item.WriteToBinary(
                                         r,
                                         masterReferences,
                                         errorMask);
@@ -354,14 +354,14 @@ namespace Mutagen.Bethesda.Oblivion
                             writer.Write(obj.TemporaryTimestamp);
                             if (obj.Landscape_IsSet)
                             {
-                                obj.Landscape.Write_Binary(
+                                obj.Landscape.WriteToBinary(
                                     writer,
                                     masterReferences: masterReferences,
                                     errorMask: errorMask);
                             }
                             if (obj.PathGrid_IsSet)
                             {
-                                obj.PathGrid.Write_Binary(
+                                obj.PathGrid.WriteToBinary(
                                     writer,
                                     masterReferences: masterReferences,
                                     errorMask: errorMask);
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: errorMask,
                                 transl: (r, item, subErr) =>
                                 {
-                                    item.Write_Binary(
+                                    item.WriteToBinary(
                                         r,
                                         masterReferences,
                                         errorMask);
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: errorMask,
                                 transl: (r, item, subErr) =>
                                 {
-                                    item.Write_Binary(
+                                    item.WriteToBinary(
                                         r,
                                         masterReferences,
                                         errorMask);

@@ -133,12 +133,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override IXmlWriteTranslator XmlWriteTranslator => GameSettingStringXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static GameSettingString Create_Xml(
+        public static GameSettingString CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             GameSettingString_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static GameSettingString Create_Xml(
+        public static GameSettingString CreateFromXml(
             XElement node,
             out GameSettingString_ErrorMask errorMask,
             bool doMasks = true,
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Skyrim
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public new static GameSettingString Create_Xml(
+        public new static GameSettingString CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -183,13 +183,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElement_Xml(
+                    FillPrivateElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    GameSettingStringXmlCreateTranslation.FillPublicElement_Xml(
+                    GameSettingStringXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -205,80 +205,80 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static GameSettingString Create_Xml(
+        public static GameSettingString CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             GameSettingString_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static GameSettingString Create_Xml(
+        public static GameSettingString CreateFromXml(
             string path,
             out GameSettingString_ErrorMask errorMask,
             GameSettingString_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static GameSettingString Create_Xml(
+        public static GameSettingString CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             GameSettingString_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static GameSettingString Create_Xml(
+        public static GameSettingString CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             GameSettingString_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static GameSettingString Create_Xml(
+        public static GameSettingString CreateFromXml(
             Stream stream,
             out GameSettingString_ErrorMask errorMask,
             GameSettingString_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static GameSettingString Create_Xml(
+        public static GameSettingString CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             GameSettingString_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        protected static void FillPrivateElement_Xml(
+        protected static void FillPrivateElementXml(
             GameSettingString item,
             XElement node,
             string name,
@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda.Skyrim
             switch (name)
             {
                 default:
-                    GameSetting.FillPrivateElement_Xml(
+                    GameSetting.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -350,11 +350,11 @@ namespace Mutagen.Bethesda.Skyrim
         protected override IBinaryWriteTranslator BinaryWriteTranslator => GameSettingStringBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
-        public static GameSettingString Create_Binary(
+        public static GameSettingString CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -362,14 +362,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static GameSettingString Create_Binary(
+        public static GameSettingString CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out GameSettingString_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -378,7 +378,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public new static GameSettingString Create_Binary(
+        public new static GameSettingString CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -391,26 +391,26 @@ namespace Mutagen.Bethesda.Skyrim
                 recType: GameSettingString_Registration.GMST_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             GameSettingString item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            GameSetting.Fill_Binary_Structs(
+            GameSetting.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             GameSettingString item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return TryGet<int?>.Succeed((int)GameSettingString_FieldIndex.Data);
                 }
                 default:
-                    return GameSetting.Fill_Binary_RecordTypes(
+                    return GameSetting.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1151,13 +1151,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GameSettingStringXmlWriteTranslation Instance = new GameSettingStringXmlWriteTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IGameSettingStringInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            GameSettingXmlWriteTranslation.WriteToNode_Xml(
+            GameSettingXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.GameSettingString");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GameSettingStringXmlCreateTranslation Instance = new GameSettingStringXmlCreateTranslation();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IGameSettingStringInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1270,7 +1270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    GameSettingStringXmlCreateTranslation.FillPublicElement_Xml(
+                    GameSettingStringXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1285,7 +1285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IGameSettingStringInternal item,
             XElement node,
             string name,
@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 default:
-                    GameSettingXmlCreateTranslation.FillPublicElement_Xml(
+                    GameSettingXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Xml Write Mixins
     public static class GameSettingStringXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGameSettingStringInternalGetter item,
             XElement node,
             out GameSettingString_ErrorMask errorMask,
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGameSettingStringInternalGetter item,
             string path,
             out GameSettingString_ErrorMask errorMask,
@@ -1363,7 +1363,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1373,7 +1373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGameSettingStringInternalGetter item,
             Stream stream,
             out GameSettingString_ErrorMask errorMask,
@@ -1382,7 +1382,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1785,7 +1785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Binary Write Mixins
     public static class GameSettingStringBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IGameSettingStringInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,

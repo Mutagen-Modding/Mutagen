@@ -170,12 +170,12 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static GenderedBodyData Create_Xml(
+        public static GenderedBodyData CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             GenderedBodyData_TranslationMask translationMask = null)
         {
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static GenderedBodyData Create_Xml(
+        public static GenderedBodyData CreateFromXml(
             XElement node,
             out GenderedBodyData_ErrorMask errorMask,
             bool doMasks = true,
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
+            var ret = CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GenderedBodyData Create_Xml(
+        public static GenderedBodyData CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    GenderedBodyDataXmlCreateTranslation.FillPublicElement_Xml(
+                    GenderedBodyDataXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -236,80 +236,80 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GenderedBodyData Create_Xml(
+        public static GenderedBodyData CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
             GenderedBodyData_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static GenderedBodyData Create_Xml(
+        public static GenderedBodyData CreateFromXml(
             string path,
             out GenderedBodyData_ErrorMask errorMask,
             GenderedBodyData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static GenderedBodyData Create_Xml(
+        public static GenderedBodyData CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
             GenderedBodyData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static GenderedBodyData Create_Xml(
+        public static GenderedBodyData CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
             GenderedBodyData_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
 
-        public static GenderedBodyData Create_Xml(
+        public static GenderedBodyData CreateFromXml(
             Stream stream,
             out GenderedBodyData_ErrorMask errorMask,
             GenderedBodyData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
         }
 
-        public static GenderedBodyData Create_Xml(
+        public static GenderedBodyData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
             GenderedBodyData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
-            return Create_Xml(
+            return CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -338,11 +338,11 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
-        public static GenderedBodyData Create_Binary(
+        public static GenderedBodyData CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -350,14 +350,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static GenderedBodyData Create_Binary(
+        public static GenderedBodyData CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             out GenderedBodyData_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GenderedBodyData Create_Binary(
+        public static GenderedBodyData CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -380,14 +380,14 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
             return ret;
         }
 
         #endregion
 
-        protected static void Fill_Binary_Structs(
+        protected static void FillBinaryStructs(
             GenderedBodyData item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             GenderedBodyData item,
             MutagenFrame frame,
             int? lastParsed,
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)GenderedBodyData_FieldIndex.Male);
-                        item.Male = Mutagen.Bethesda.Oblivion.BodyData.Create_Binary(
+                        item.Male = Mutagen.Bethesda.Oblivion.BodyData.CreateFromBinary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)GenderedBodyData_FieldIndex.Female);
-                        item.Female = Mutagen.Bethesda.Oblivion.BodyData.Create_Binary(
+                        item.Female = Mutagen.Bethesda.Oblivion.BodyData.CreateFromBinary(
                             frame: frame,
                             recordTypeConverter: null,
                             masterReferences: masterReferences,
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static GenderedBodyDataXmlWriteTranslation Instance = new GenderedBodyDataXmlWriteTranslation();
 
-        public static void WriteToNode_Xml(
+        public static void WriteToNodeXml(
             IGenderedBodyDataGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.GenderedBodyData");
             }
-            WriteToNode_Xml(
+            WriteToNodeXml(
                 item: item,
                 node: elem,
                 errorMask: errorMask,
@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static GenderedBodyDataXmlCreateTranslation Instance = new GenderedBodyDataXmlCreateTranslation();
 
-        public static void FillPublic_Xml(
+        public static void FillPublicXml(
             IGenderedBodyData item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1297,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    GenderedBodyDataXmlCreateTranslation.FillPublicElement_Xml(
+                    GenderedBodyDataXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1312,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static void FillPublicElement_Xml(
+        public static void FillPublicElementXml(
             IGenderedBodyData item,
             XElement node,
             string name,
@@ -1385,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Xml Write Mixins
     public static class GenderedBodyDataXmlTranslationMixIn
     {
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGenderedBodyDataGetter item,
             XElement node,
             out GenderedBodyData_ErrorMask errorMask,
@@ -1403,7 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGenderedBodyDataGetter item,
             string path,
             out GenderedBodyData_ErrorMask errorMask,
@@ -1412,7 +1412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1422,7 +1422,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGenderedBodyDataGetter item,
             string path,
             ErrorMaskBuilder errorMask,
@@ -1431,7 +1431,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1440,7 +1440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGenderedBodyDataGetter item,
             Stream stream,
             out GenderedBodyData_ErrorMask errorMask,
@@ -1449,7 +1449,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1459,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGenderedBodyDataGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
@@ -1468,7 +1468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            WriteToXml(
                 item: item,
                 name: name,
                 node: node,
@@ -1477,7 +1477,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().Save(stream);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGenderedBodyDataGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1492,7 +1492,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGenderedBodyDataGetter item,
             XElement node,
             string name = null,
@@ -1506,7 +1506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask.GetCrystal());
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGenderedBodyDataGetter item,
             string path,
             string name = null)
@@ -1521,7 +1521,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Elements().First().SaveIfChanged(path);
         }
 
-        public static void Write_Xml(
+        public static void WriteToXml(
             this IGenderedBodyDataGetter item,
             Stream stream,
             string name = null)
@@ -1943,7 +1943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Binary Write Mixins
     public static class GenderedBodyDataBinaryTranslationMixIn
     {
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IGenderedBodyDataGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -1960,7 +1960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IGenderedBodyDataGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -1974,7 +1974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Binary(
+        public static void WriteToBinary(
             this IGenderedBodyDataGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)

@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         //ToDo
         //Upgrade to spans
-        static partial void FillBinary_Points_Custom(MutagenFrame frame, Road item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void FillBinaryPointsCustom(MutagenFrame frame, Road item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             var nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len);
             if (!nextRec.Equals(PGRP))
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RoadBinaryWriteTranslation
     {
-        static partial void WriteBinary_Points_Custom(MutagenWriter writer, IRoadInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void WriteBinaryPointsCustom(MutagenWriter writer, IRoadInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             bool anyConnections = false;
             using (HeaderExport.ExportSubRecordHeader(writer, RoadBinaryCreateTranslation.PGRP))

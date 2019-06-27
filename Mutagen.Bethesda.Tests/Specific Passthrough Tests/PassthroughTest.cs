@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda.Tests
                     {
                         record.IsCompressed = false;
                     }
-                    mod.Write_Binary(
+                    mod.WriteToBinary(
                         outputPath,
                         Mutagen.Bethesda.Oblivion.Constants.Oblivion);
                     GC.Collect();

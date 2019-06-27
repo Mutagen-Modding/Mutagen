@@ -19,19 +19,19 @@ namespace Mutagen.Bethesda.Oblivion
             Items = new Loqui.MaskItem<Loqui.CopyOption, Cell_CopyMask>(Loqui.CopyOption.Skip, null)
         };
 
-        public void Write_Xml_Folder(
+        public void WriteToXmlFolder(
             string path,
             ErrorMaskBuilder errorMask)
         {
-            this.Write_Xml(
+            this.WriteToXml(
                 path, 
                 errorMask,
                 translationMask: null);
         }
 
-        public static CellSubBlock Create_Xml_Folder(FilePath file, int index)
+        public static CellSubBlock CreateFromXmlFolder(FilePath file, int index)
         {
-            return CellSubBlock.Create_Xml(file.Path);
+            return CellSubBlock.CreateFromXml(file.Path);
         }
 
         public object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)

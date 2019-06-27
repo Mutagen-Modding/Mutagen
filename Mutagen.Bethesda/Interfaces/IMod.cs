@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda
         ISourceList<MasterReference> MasterReferences { get; }
         IObservableCache<IMajorRecord, FormKey> MajorRecords { get; }
         ISourceCache<T, FormKey> GetGroup<T>() where T : IMajorRecordInternalGetter;
-        void Write_Binary(
+        void WriteToBinary(
             string path,
             ModKey modKey);
         ModKey ModKey { get; }

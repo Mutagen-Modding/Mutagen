@@ -65,9 +65,9 @@ namespace Mutagen.Bethesda.Oblivion
                     new RecordType("SCHR"),
                     new RecordType("SCHD")));
 
-            static partial void FillBinary_MetadataSummaryOld_Custom(MutagenFrame frame, ScriptFields item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryMetadataSummaryOldCustom(MutagenFrame frame, ScriptFields item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
+                var tmpMetadataSummary = ScriptMetaSummary.CreateFromBinary(
                     frame: frame,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

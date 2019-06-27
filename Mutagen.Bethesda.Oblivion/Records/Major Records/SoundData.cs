@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class SoundDataBinaryWriteTranslation
         {
-            static partial void WriteBinary_MinimumAttenuationDistance_Custom(MutagenWriter writer, ISoundDataInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryMinimumAttenuationDistanceCustom(MutagenWriter writer, ISoundDataInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 var val = (byte)(item.MinimumAttenuationDistance / SoundData.MinAttenuationDistanceMultiplier);
                 ByteBinaryTranslation.Instance.Write(
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item: val);
             }
 
-            static partial void WriteBinary_MaximumAttenuationDistance_Custom(MutagenWriter writer, ISoundDataInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryMaximumAttenuationDistanceCustom(MutagenWriter writer, ISoundDataInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 var val = (byte)(item.MaximumAttenuationDistance / SoundData.MaxAttenuationDistanceMultiplier);
                 ByteBinaryTranslation.Instance.Write(
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class SoundDataBinaryCreateTranslation
         {
-            static partial void FillBinary_MinimumAttenuationDistance_Custom(MutagenFrame frame, SoundData item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryMinimumAttenuationDistanceCustom(MutagenFrame frame, SoundData item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (ByteBinaryTranslation.Instance.Parse(
                     frame: frame,
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinary_MaximumAttenuationDistance_Custom(MutagenFrame frame, SoundData item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryMaximumAttenuationDistanceCustom(MutagenFrame frame, SoundData item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (ByteBinaryTranslation.Instance.Parse(
                     frame: frame,

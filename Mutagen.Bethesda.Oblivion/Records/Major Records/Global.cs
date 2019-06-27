@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Oblivion
         public abstract float RawFloat { get; set; }
         public abstract char TypeChar { get; }
         
-        public static Global Create_Binary(
+        public static Global CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             // Fill with major record fields
             frame.Reader.Position = initialPos + 8;
-            OblivionMajorRecord.Fill_Binary(
+            OblivionMajorRecord.FillBinary(
                 frame,
                 g,
                 masterReferences,
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class GlobalBinaryWriteTranslation
         {
-            static partial void WriteBinary_TypeChar_Custom(
+            static partial void WriteBinaryTypeCharCustom(
                 MutagenWriter writer,
                 IGlobalInternalGetter item,
                 MasterReferences masterReferences,

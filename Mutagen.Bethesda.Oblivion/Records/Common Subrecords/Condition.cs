@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public const byte Mask = 0xF0;
 
-            static partial void FillBinary_InitialParser_Custom(MutagenFrame frame, Condition item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryInitialParserCustom(MutagenFrame frame, Condition item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 byte b = frame.ReadUInt8();
                 item.Flags = (Condition.Flag)(0xF & b);
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class ConditionBinaryWriteTranslation
         {
-            static partial void WriteBinary_InitialParser_Custom(MutagenWriter writer, IConditionGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryInitialParserCustom(MutagenWriter writer, IConditionGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 byte b = (byte)item.Flags;
                 b |= (byte)(((int)(item.CompareOperator) * 16) & ConditionBinaryCreateTranslation.Mask);

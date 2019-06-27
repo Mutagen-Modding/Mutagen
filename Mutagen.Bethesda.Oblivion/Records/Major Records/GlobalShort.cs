@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class GlobalShortBinaryWriteTranslation
         {
-            static partial void WriteBinary_Data_Custom(MutagenWriter writer, IGlobalShortInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalShortInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, GlobalShort_Registration.FLTV_HEADER))
                 {

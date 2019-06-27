@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Folder
         {
             var tType = typeof(T);
             var options = tType.GetMethods()
-                .Where((methodInfo) => methodInfo.Name.Equals("Create_XmlFolder"))
+                .Where((methodInfo) => methodInfo.Name.Equals("CreateFromXmlFolder"))
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
                 .Where((methodInfo) => methodInfo.ReturnType.Equals(typeof(Task<T>)))
