@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Preprocessing
                             interest: interest,
                             additionalCriteria: (stream, recType, len) =>
                             {
-                                stream.Position += 8;
-                                var flags = (MajorRecord.MajorRecordFlag)inputStream.ReadInt32();
+                                var majorMeta = MetaDataConstants.Get(gameMode).MajorRecord(stream);
+                                var flags = (MajorRecord.MajorRecordFlag)majorMeta.MajorRecordFlags;
                                 return flags.HasFlag(MajorRecord.MajorRecordFlag.Compressed);
                             });
 

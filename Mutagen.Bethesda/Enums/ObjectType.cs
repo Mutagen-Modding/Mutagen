@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda;
+using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace System
                 case ObjectType.Subrecord:
                     return Constants.SUBRECORD_HEADER_OFFSET;
                 case ObjectType.Record:
-                    return MetaData.Get(mode).RecordMetaLengthAfterRecordLength;
+                    return MetaDataConstants.Get(mode).RecordMetaLengthAfterRecordLength;
                 case ObjectType.Group:
                     return Constants.GRUP_HEADER_OFFSET;
                 case ObjectType.Mod:

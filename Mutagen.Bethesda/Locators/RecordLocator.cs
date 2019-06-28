@@ -22,14 +22,14 @@ namespace Mutagen.Bethesda
             public List<long> GrupLocations = new List<long>();
             public FormID LastParsed;
             public long LastLoc;
-            public MetaData MetaData { get; }
+            public MetaDataConstants MetaData { get; }
             public GameMode GameMode { get; }
             public Func<IMutagenReadStream, RecordType, uint, bool> AdditionalCriteria;
 
             public FileLocationConstructor(GameMode mode)
             {
                 this.GameMode = mode;
-                this.MetaData = MetaData.Get(mode);
+                this.MetaData = MetaDataConstants.Get(mode);
             }
 
             public void Add(
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda
 
         private static void SkipHeader(
             IMutagenReadStream reader,
-            MetaData meta)
+            MetaDataConstants meta)
         {
             if (reader.Length < 8)
             {
@@ -215,40 +215,32 @@ namespace Mutagen.Bethesda
             bool checkOverallGrupType)
         {
             var grupLoc = reader.Position;
-            var grup = HeaderTranslation.ReadNextRecordType(reader);
-            if (!grup.Equals(Constants.GRUP))
+            GroupRecordMeta groupMeta = fileLocs.MetaData.Group(reader);
+            if (!groupMeta.IsGroup)
             {
                 throw new ArgumentException();
             }
-            fileLocs.GrupLocations.Add(grupLoc);
-            var grupLength = reader.ReadUInt32();
-            var grupRec = HeaderTranslation.ReadNextRecordType(reader);
-            if (grupRecOverride != null)
-            {
-                grupRec = grupRecOverride.Value;
-            }
-            var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(MutagenFrame.ByLength(reader, 4));
+            fileLocs.GrupLocations.Add(reader.Position);
+            var grupRec = grupRecOverride ?? groupMeta.ContainedRecordType;
 
             if (checkOverallGrupType
                 && (!interest?.IsInterested(grupRec) ?? false))
             { // Skip
-                reader.Position -= 16;
-                reader.Position += grupLength;
+                reader.Position += groupMeta.TotalLength;
                 return null;
             }
 
-            reader.Position += fileLocs.MetaData.GrupMetaLengthAfterType;
+            reader.Position += groupMeta.HeaderLength;
 
-            using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + grupLength - fileLocs.MetaData.GrupHeaderLength))
+            using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + groupMeta.ContentLength))
             {
                 while (!frame.Complete)
                 {
-                    var recordLocation = reader.Position;
-                    var targetRec = HeaderTranslation.ReadNextRecordType(reader);
-                    if (!grupRec.Equals(targetRec))
+                    MajorRecordMeta majorRecordMeta = fileLocs.MetaData.MajorRecord(frame.Reader);
+                    var targetRec = majorRecordMeta.RecordType;
+                    if (targetRec != grupRec)
                     {
-                        reader.Position -= 4;
-                        if (IsSubLevelGRUP(reader))
+                        if (IsSubLevelGRUP(fileLocs.MetaData.Group(frame.Reader)))
                         {
                             parentGroupLocations.Push(grupLoc);
                             HandleSubLevelGRUP(
@@ -260,58 +252,47 @@ namespace Mutagen.Bethesda
                             parentGroupLocations.Pop();
                             continue;
                         }
-                        else if (!checkOverallGrupType)
-                        {
-                            reader.Position += 4;
-                        }
-                        else
+                        else if (checkOverallGrupType)
                         {
                             throw new ArgumentException($"Target Record {targetRec} at {frame.Position} did not match its containing GRUP: {grupRec}");
                         }
                     }
-                    var recLength = reader.ReadUInt32();
+                    var recLength = majorRecordMeta.RecordLength;
                     if (fileLocs.AdditionalCriteria != null)
                     {
                         var pos = reader.Position;
-                        reader.Position -= 8;
                         if (!fileLocs.AdditionalCriteria(reader, targetRec, recLength))
                         {
-                            reader.Position = pos + fileLocs.MetaData.RecordMetaLengthAfterRecordLength + recLength;
+                            reader.Position = pos + majorRecordMeta.TotalLength;
                             continue;
                         }
                         reader.Position = pos;
                     }
-                    reader.Position += 4; // Skip flags
-                    var formID = FormID.Factory(reader.ReadUInt32());
                     if (interest?.IsInterested(targetRec) ?? true)
                     {
                         parentGroupLocations.Push(grupLoc);
+                        var pos = reader.Position;
                         fileLocs.Add(
-                            id: formID,
+                            id: majorRecordMeta.FormID,
                             record: targetRec,
                             parentGrupLocations: parentGroupLocations,
-                            section: new RangeInt64(recordLocation, recordLocation + recLength + Constants.RECORD_LENGTH + fileLocs.MetaData.RecordMetaLengthAfterRecordLength - 1));
+                            section: new RangeInt64(pos, pos + majorRecordMeta.TotalLength - 1));
                         parentGroupLocations.Pop();
                     }
-                    reader.Position += 4 + recLength;
+                    reader.Position += majorRecordMeta.TotalLength;
                 }
             }
 
             return grupRec;
         }
 
-        private static bool IsSubLevelGRUP(
-            IMutagenReadStream reader)
+        private static bool IsSubLevelGRUP(GroupRecordMeta groupMeta)
         {
-            var targetRec = HeaderTranslation.ReadNextRecordType(reader);
-            if (!targetRec.Equals(Group_Registration.GRUP_HEADER))
+            if (!groupMeta.IsGroup)
             {
-                reader.Position -= 4;
                 return false;
             }
-            reader.Position += 8;
-            var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(MutagenFrame.ByLength(reader, 4));
-            reader.Position -= 16;
+            var grupType = EnumExt<GroupTypeEnum>.Convert(groupMeta.GroupFlags);
             switch (grupType)
             {
                 case GroupTypeEnum.InteriorCellBlock:
@@ -333,23 +314,19 @@ namespace Mutagen.Bethesda
             Stack<long> parentGroupLocations)
         {
             var grupLoc = frame.Position;
-            var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-            if (!targetRec.Equals(Group_Registration.GRUP_HEADER))
+            GroupRecordMeta groupMeta = fileLocs.MetaData.Group(frame.Reader);
+            if (!groupMeta.IsGroup)
             {
                 throw new DataMisalignedException("Group was not read in where expected: 0x" + (frame.Position - 4).ToString("X"));
             }
             fileLocs.GrupLocations.Add(grupLoc);
-            var recLength = frame.Reader.ReadUInt32();
-            var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-            var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(MutagenFrame.ByLength(frame.Reader, 4));
-            frame.Reader.Position -= 16;
-            switch (grupType)
+            switch (EnumExt<GroupTypeEnum>.Convert(groupMeta.GroupFlags))
             {
                 case GroupTypeEnum.InteriorCellBlock:
                 case GroupTypeEnum.ExteriorCellBlock:
                     parentGroupLocations.Push(grupLoc);
                     HandleCells(
-                        frame: frame.SpawnWithLength(recLength),
+                        frame: frame.SpawnWithLength(groupMeta.RecordLength),
                         fileLocs: fileLocs,
                         parentGroupLocations: parentGroupLocations,
                         interest: interest);
@@ -358,7 +335,7 @@ namespace Mutagen.Bethesda
                 case GroupTypeEnum.CellChildren:
                     parentGroupLocations.Push(grupLoc);
                     HandleCellSubchildren(
-                        frame: frame.SpawnWithLength(recLength),
+                        frame: frame.SpawnWithLength(groupMeta.RecordLength),
                         fileLocs: fileLocs,
                         parentGroupLocations: parentGroupLocations,
                         interest: interest);
@@ -385,7 +362,7 @@ namespace Mutagen.Bethesda
             RecordInterest interest,
             Stack<long> parentGroupLocations)
         {
-            frame.Reader.Position += fileLocs.MetaData.GrupHeaderLength;
+            frame.Reader.Position += fileLocs.MetaData.GroupHeaderLength;
             while (!frame.Complete)
             {
                 var grupLoc = frame.Position;
@@ -423,7 +400,7 @@ namespace Mutagen.Bethesda
             RecordInterest interest,
             Stack<long> parentGroupLocations)
         {
-            frame.Reader.Position += fileLocs.MetaData.GrupHeaderLength;
+            frame.Reader.Position += fileLocs.MetaData.GroupHeaderLength;
             while (!frame.Complete)
             {
                 var grupLoc = frame.Position;
@@ -462,20 +439,18 @@ namespace Mutagen.Bethesda
             IMutagenReadStream reader,
             GameMode mode)
         {
-            MetaData meta = MetaData.Get(mode);
+            MetaDataConstants meta = MetaDataConstants.Get(mode);
             SkipHeader(reader, meta);
             while (!reader.Complete)
             {
-                var grupLoc = reader.Position;
-                var grup = HeaderTranslation.ReadNextRecordType(reader);
-                if (grup != Constants.GRUP)
+                GroupRecordMeta groupMeta = meta.Group(reader);
+                if (!groupMeta.IsGroup)
                 {
-                    throw new DataMisalignedException("Group was not read in where expected: 0x" + (reader.Position - Constants.HEADER_LENGTH).ToString("X"));
+                    throw new DataMisalignedException("Group was not read in where expected: 0x" + reader.Position.ToString("X"));
                 }
-                var grupLength = reader.ReadUInt32();
-                var recType = HeaderTranslation.ReadNextRecordType(reader);
-                yield return new KeyValuePair<RecordType, long>(recType, grupLoc);
-                reader.Position = grupLoc + grupLength;
+                var pos = reader.Position + groupMeta.TotalLength;
+                yield return new KeyValuePair<RecordType, long>(groupMeta.ContainedRecordType, reader.Position);
+                reader.Position = pos;
             }
         }
 
@@ -484,51 +459,42 @@ namespace Mutagen.Bethesda
             GameMode gameMode,
             bool checkOverallGrupType = true)
         {
-            var meta = MetaData.Get(gameMode);
+            var meta = MetaDataConstants.Get(gameMode);
+            var groupMeta = meta.Group(reader);
             var grupLoc = reader.Position;
-            var grup = HeaderTranslation.ReadNextRecordType(reader);
-            if (!grup.Equals(Constants.GRUP))
+            var targetRec = groupMeta.ContainedRecordType;
+            if (!groupMeta.IsGroup)
             {
                 throw new ArgumentException();
             }
-            var grupLength = reader.ReadUInt32();
-            var grupRec = HeaderTranslation.ReadNextRecordType(reader);
-            var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(MutagenFrame.ByLength(reader, 4));
 
-            reader.Position += meta.GrupMetaLengthAfterType;
+            reader.Position += groupMeta.HeaderLength;
 
-            using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + grupLength - meta.GrupHeaderLength))
+            using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + groupMeta.ContentLength))
             {
                 while (!frame.Complete)
                 {
                     var recordLocation = reader.Position;
-                    var targetRec = HeaderTranslation.ReadNextRecordType(reader);
-                    if (!grupRec.Equals(targetRec))
+                    MajorRecordMeta majorMeta = meta.MajorRecord(reader);
+                    if (majorMeta.RecordType != targetRec)
                     {
-                        reader.Position -= 4;
-                        if (IsSubLevelGRUP(reader))
+                        var subGroupMeta = meta.Group(reader);
+                        if (IsSubLevelGRUP(subGroupMeta))
                         {
-                            reader.Position += 4;
-                            var subGrupLen = reader.ReadUInt32();
-                            reader.Position += subGrupLen - 8;
+                            reader.Position += subGroupMeta.TotalLength;
                             continue;
                         }
-                        else if (!checkOverallGrupType)
+                        else if (checkOverallGrupType)
                         {
-                            reader.Position += 4;
-                        }
-                        else
-                        {
-                            throw new ArgumentException($"Target Record {targetRec} at {frame.Position} did not match its containing GRUP: {grupRec}");
+                            throw new ArgumentException($"Target Record {targetRec} at {frame.Position} did not match its containing GRUP: {subGroupMeta.ContainedRecordType}");
                         }
                     }
-                    var recLength = reader.ReadUInt32();
-                    reader.Position += 4; // Skip flags
-                    var formID = FormID.Factory(reader.ReadUInt32());
+                    var formID = majorMeta.FormID;
+                    var len = majorMeta.TotalLength;
                     yield return (
                         formID,
                         recordLocation);
-                    reader.Position += 4 + recLength;
+                    reader.Position += len;
                 }
             }
         }
