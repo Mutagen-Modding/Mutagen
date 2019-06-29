@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,38 +65,15 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (frame.Remaining == 8)
                 {
-                    if (EnumBinaryTranslation<AIPackage.Flag>.Instance.Parse(
-                        frame: frame.SpawnWithLength(4),
-                        item: out AIPackage.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    if (EnumBinaryTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
-                            frame: frame.SpawnWithLength(4),
-                            item: out AIPackage.GeneralTypeEnum GeneralTypeParse))
-                    {
-                        item.GeneralType = GeneralTypeParse;
-                    }
+                    var span = frame.Reader.ReadSpan(8);
+                    item.Flags = EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span));
+                    item.GeneralType = EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4)));
                 }
                 else if (frame.Remaining == 4)
                 {
-                    byte[] buff = new byte[4];
-                    frame.Reader.Read(buff, 0, 2);
-                    var subFrame = new MutagenFrame(
-                        new MutagenMemoryReadStream(buff, offsetReference: frame.FinalWithOffset - 2));
-                    if (EnumBinaryTranslation<AIPackage.Flag>.Instance.Parse(
-                        frame: subFrame,
-                        item: out AIPackage.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    if (EnumBinaryTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
-                            frame: frame.SpawnWithLength(1),
-                            item: out AIPackage.GeneralTypeEnum GeneralTypeParse))
-                    {
-                        item.GeneralType = GeneralTypeParse;
-                    }
-                    frame.Position += 1;
+                    var span = frame.Reader.ReadSpan(4);
+                    item.Flags = EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(span));
+                    item.GeneralType = EnumExt<AIPackage.GeneralTypeEnum>.Convert(span[2]);
                 }
                 else
                 {
