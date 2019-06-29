@@ -11,4 +11,5 @@ Frequency=3984652 Hz, Resolution=250.9629 ns, Timer=TSC
 ```
 |           Method |     Mean |     Error |    StdDev |
 |----------------- |---------:|----------:|----------:|
-| BaseGRUPIterator | 7.873 ns | 0.2014 ns | 0.2619 ns |
+| BaseGRUPIterator | 8.589 ns | 0.1644 ns | 0.1538 ns |
+| GetFileLocations | 325.9 ms |  2.822 ms |  2.501 ms |

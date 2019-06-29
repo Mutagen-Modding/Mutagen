@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda
         }
 
         public static FileLocations GetFileLocations(
-            MutagenBinaryReadStream reader,
+            IMutagenReadStream reader,
             GameMode gameMode,
             RecordInterest interest = null,
             Func<IMutagenReadStream, RecordType, uint, bool> additionalCriteria = null)
