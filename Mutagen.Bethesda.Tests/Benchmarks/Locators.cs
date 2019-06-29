@@ -39,5 +39,12 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             stream.Position = 0;
             return RecordLocator.IterateBaseGroupLocations(stream, GameMode.Oblivion);
         }
+
+        [Benchmark]
+        public object GetFileLocations()
+        {
+            stream.Position = 0;
+            return RecordLocator.GetFileLocations(stream, GameMode.Oblivion);
+        }
     }
 }
