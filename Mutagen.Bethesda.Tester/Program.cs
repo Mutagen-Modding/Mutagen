@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Tester
                 {
                     throw new ArgumentException($"Coult not find settings file at: {settingsFile}");
                 }
-
+                
                 var settings = TestingSettings.CreateFromXml(settingsFile.Path);
 
                 Stopwatch sw = new Stopwatch();

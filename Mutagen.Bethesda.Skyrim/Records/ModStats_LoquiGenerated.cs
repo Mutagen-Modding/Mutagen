@@ -123,8 +123,8 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region Xml Translation
-        protected IXmlWriteTranslator XmlWriteTranslator => ModStatsXmlWriteTranslation.Instance;
-        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object XmlWriteTranslator => ModStatsXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static ModStats CreateFromXml(
@@ -296,8 +296,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        protected IBinaryWriteTranslator BinaryWriteTranslator => ModStatsBinaryWriteTranslation.Instance;
-        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected object BinaryWriteTranslator => ModStatsBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static ModStats CreateFromBinary(
@@ -816,12 +816,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(ModStatsXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(ModStatsXmlWriteTranslation);
         public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = HEDR_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(ModStatsBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ModStatsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -832,7 +832,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;

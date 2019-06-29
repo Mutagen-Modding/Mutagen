@@ -187,8 +187,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlWriteTranslator XmlWriteTranslator => MapMarkerXmlWriteTranslation.Instance;
-        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object XmlWriteTranslator => MapMarkerXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static MapMarker CreateFromXml(
@@ -357,8 +357,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        protected IBinaryWriteTranslator BinaryWriteTranslator => MapMarkerBinaryWriteTranslation.Instance;
-        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected object BinaryWriteTranslator => MapMarkerBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static MapMarker CreateFromBinary(
@@ -937,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(MapMarkerXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(MapMarkerXmlWriteTranslation);
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
-        public static readonly Type BinaryTranslation = typeof(MapMarkerBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(MapMarkerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -967,7 +967,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;

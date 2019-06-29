@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda
                 {
                     if (group.Items.Count == 0) return;
                     XElement topNode = new XElement("Group");
-                    GroupXmlWriteTranslation<T>.WriteToNodeXml(
+                    GroupXmlWriteTranslation.WriteToNodeXml(
                         group,
                         topNode,
                         errorMask,
@@ -173,19 +173,23 @@ namespace Mutagen.Bethesda
 
     namespace Internals
     {
-        public partial class GroupBinaryWriteTranslation<T>
+        public static class GroupRecordTypeGetter<T>
         {
             public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)LoquiRegistration.GetRegister(typeof(T)).ClassType.GetField(Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER).GetValue(null);
+        }
 
-            static partial void WriteBinaryContainedRecordTypeCustom(
+        public partial class GroupBinaryWriteTranslation
+        {
+            static partial void WriteBinaryContainedRecordTypeCustom<T>(
                 MutagenWriter writer,
                 IGroupGetter<T> item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
+                where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer,
-                    GRUP_RECORD_TYPE.TypeInt);
+                    GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE.TypeInt);
             }
         }
 

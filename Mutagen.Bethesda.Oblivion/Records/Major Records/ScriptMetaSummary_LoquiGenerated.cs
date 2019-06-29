@@ -150,8 +150,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlWriteTranslator XmlWriteTranslator => ScriptMetaSummaryXmlWriteTranslation.Instance;
-        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object XmlWriteTranslator => ScriptMetaSummaryXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static ScriptMetaSummary CreateFromXml(
@@ -345,8 +345,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryWriteTranslator BinaryWriteTranslator => ScriptMetaSummaryBinaryWriteTranslation.Instance;
-        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected object BinaryWriteTranslator => ScriptMetaSummaryBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static ScriptMetaSummary CreateFromBinary(
@@ -924,12 +924,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(ScriptMetaSummaryXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(ScriptMetaSummaryXmlWriteTranslation);
         public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SCHR_HEADER;
         public const int NumStructFields = 5;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(ScriptMetaSummaryBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ScriptMetaSummaryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -940,7 +940,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;

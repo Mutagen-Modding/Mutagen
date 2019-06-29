@@ -677,8 +677,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlWriteTranslator XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;
-        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static OblivionMod CreateFromXml(
@@ -6706,7 +6706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(OblivionModXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(OblivionModXmlWriteTranslation);
         public static readonly RecordType TES4_HEADER = new RecordType("TES4");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
@@ -6778,7 +6778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 57;
-        public static readonly Type BinaryTranslation = typeof(OblivionModBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(OblivionModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -6789,7 +6789,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
@@ -8547,7 +8549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.GameSettings) ?? true))
             {
-                ((GroupXmlWriteTranslation<IGameSettingInternalGetter>)((IXmlItem)item.GameSettings).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.GameSettings).XmlWriteTranslator).Write<IGameSettingInternalGetter>(
                     item: item.GameSettings,
                     node: node,
                     name: nameof(item.GameSettings),
@@ -8557,7 +8559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Globals) ?? true))
             {
-                ((GroupXmlWriteTranslation<IGlobalInternalGetter>)((IXmlItem)item.Globals).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Globals).XmlWriteTranslator).Write<IGlobalInternalGetter>(
                     item: item.Globals,
                     node: node,
                     name: nameof(item.Globals),
@@ -8567,7 +8569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Classes) ?? true))
             {
-                ((GroupXmlWriteTranslation<IClassInternalGetter>)((IXmlItem)item.Classes).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Classes).XmlWriteTranslator).Write<IClassInternalGetter>(
                     item: item.Classes,
                     node: node,
                     name: nameof(item.Classes),
@@ -8577,7 +8579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Factions) ?? true))
             {
-                ((GroupXmlWriteTranslation<IFactionInternalGetter>)((IXmlItem)item.Factions).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Factions).XmlWriteTranslator).Write<IFactionInternalGetter>(
                     item: item.Factions,
                     node: node,
                     name: nameof(item.Factions),
@@ -8587,7 +8589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Hairs) ?? true))
             {
-                ((GroupXmlWriteTranslation<IHairInternalGetter>)((IXmlItem)item.Hairs).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Hairs).XmlWriteTranslator).Write<IHairInternalGetter>(
                     item: item.Hairs,
                     node: node,
                     name: nameof(item.Hairs),
@@ -8597,7 +8599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Eyes) ?? true))
             {
-                ((GroupXmlWriteTranslation<IEyeInternalGetter>)((IXmlItem)item.Eyes).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Eyes).XmlWriteTranslator).Write<IEyeInternalGetter>(
                     item: item.Eyes,
                     node: node,
                     name: nameof(item.Eyes),
@@ -8607,7 +8609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Races) ?? true))
             {
-                ((GroupXmlWriteTranslation<IRaceInternalGetter>)((IXmlItem)item.Races).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Races).XmlWriteTranslator).Write<IRaceInternalGetter>(
                     item: item.Races,
                     node: node,
                     name: nameof(item.Races),
@@ -8617,7 +8619,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Sounds) ?? true))
             {
-                ((GroupXmlWriteTranslation<ISoundInternalGetter>)((IXmlItem)item.Sounds).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Sounds).XmlWriteTranslator).Write<ISoundInternalGetter>(
                     item: item.Sounds,
                     node: node,
                     name: nameof(item.Sounds),
@@ -8627,7 +8629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Skills) ?? true))
             {
-                ((GroupXmlWriteTranslation<ISkillRecordInternalGetter>)((IXmlItem)item.Skills).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Skills).XmlWriteTranslator).Write<ISkillRecordInternalGetter>(
                     item: item.Skills,
                     node: node,
                     name: nameof(item.Skills),
@@ -8637,7 +8639,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.MagicEffects) ?? true))
             {
-                ((GroupXmlWriteTranslation<IMagicEffectInternalGetter>)((IXmlItem)item.MagicEffects).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.MagicEffects).XmlWriteTranslator).Write<IMagicEffectInternalGetter>(
                     item: item.MagicEffects,
                     node: node,
                     name: nameof(item.MagicEffects),
@@ -8647,7 +8649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Scripts) ?? true))
             {
-                ((GroupXmlWriteTranslation<IScriptInternalGetter>)((IXmlItem)item.Scripts).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Scripts).XmlWriteTranslator).Write<IScriptInternalGetter>(
                     item: item.Scripts,
                     node: node,
                     name: nameof(item.Scripts),
@@ -8657,7 +8659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LandTextures) ?? true))
             {
-                ((GroupXmlWriteTranslation<ILandTextureInternalGetter>)((IXmlItem)item.LandTextures).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.LandTextures).XmlWriteTranslator).Write<ILandTextureInternalGetter>(
                     item: item.LandTextures,
                     node: node,
                     name: nameof(item.LandTextures),
@@ -8667,7 +8669,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Enchantments) ?? true))
             {
-                ((GroupXmlWriteTranslation<IEnchantmentInternalGetter>)((IXmlItem)item.Enchantments).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Enchantments).XmlWriteTranslator).Write<IEnchantmentInternalGetter>(
                     item: item.Enchantments,
                     node: node,
                     name: nameof(item.Enchantments),
@@ -8677,7 +8679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Spells) ?? true))
             {
-                ((GroupXmlWriteTranslation<ISpellUnleveledInternalGetter>)((IXmlItem)item.Spells).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Spells).XmlWriteTranslator).Write<ISpellUnleveledInternalGetter>(
                     item: item.Spells,
                     node: node,
                     name: nameof(item.Spells),
@@ -8687,7 +8689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Birthsigns) ?? true))
             {
-                ((GroupXmlWriteTranslation<IBirthsignInternalGetter>)((IXmlItem)item.Birthsigns).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Birthsigns).XmlWriteTranslator).Write<IBirthsignInternalGetter>(
                     item: item.Birthsigns,
                     node: node,
                     name: nameof(item.Birthsigns),
@@ -8697,7 +8699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Activators) ?? true))
             {
-                ((GroupXmlWriteTranslation<IActivatorInternalGetter>)((IXmlItem)item.Activators).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Activators).XmlWriteTranslator).Write<IActivatorInternalGetter>(
                     item: item.Activators,
                     node: node,
                     name: nameof(item.Activators),
@@ -8707,7 +8709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AlchemicalApparatus) ?? true))
             {
-                ((GroupXmlWriteTranslation<IAlchemicalApparatusInternalGetter>)((IXmlItem)item.AlchemicalApparatus).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.AlchemicalApparatus).XmlWriteTranslator).Write<IAlchemicalApparatusInternalGetter>(
                     item: item.AlchemicalApparatus,
                     node: node,
                     name: nameof(item.AlchemicalApparatus),
@@ -8717,7 +8719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Armors) ?? true))
             {
-                ((GroupXmlWriteTranslation<IArmorInternalGetter>)((IXmlItem)item.Armors).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Armors).XmlWriteTranslator).Write<IArmorInternalGetter>(
                     item: item.Armors,
                     node: node,
                     name: nameof(item.Armors),
@@ -8727,7 +8729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Books) ?? true))
             {
-                ((GroupXmlWriteTranslation<IBookInternalGetter>)((IXmlItem)item.Books).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Books).XmlWriteTranslator).Write<IBookInternalGetter>(
                     item: item.Books,
                     node: node,
                     name: nameof(item.Books),
@@ -8737,7 +8739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Clothes) ?? true))
             {
-                ((GroupXmlWriteTranslation<IClothingInternalGetter>)((IXmlItem)item.Clothes).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Clothes).XmlWriteTranslator).Write<IClothingInternalGetter>(
                     item: item.Clothes,
                     node: node,
                     name: nameof(item.Clothes),
@@ -8747,7 +8749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Containers) ?? true))
             {
-                ((GroupXmlWriteTranslation<IContainerInternalGetter>)((IXmlItem)item.Containers).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Containers).XmlWriteTranslator).Write<IContainerInternalGetter>(
                     item: item.Containers,
                     node: node,
                     name: nameof(item.Containers),
@@ -8757,7 +8759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Doors) ?? true))
             {
-                ((GroupXmlWriteTranslation<IDoorInternalGetter>)((IXmlItem)item.Doors).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Doors).XmlWriteTranslator).Write<IDoorInternalGetter>(
                     item: item.Doors,
                     node: node,
                     name: nameof(item.Doors),
@@ -8767,7 +8769,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ingredients) ?? true))
             {
-                ((GroupXmlWriteTranslation<IIngredientInternalGetter>)((IXmlItem)item.Ingredients).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Ingredients).XmlWriteTranslator).Write<IIngredientInternalGetter>(
                     item: item.Ingredients,
                     node: node,
                     name: nameof(item.Ingredients),
@@ -8777,7 +8779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Lights) ?? true))
             {
-                ((GroupXmlWriteTranslation<ILightInternalGetter>)((IXmlItem)item.Lights).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Lights).XmlWriteTranslator).Write<ILightInternalGetter>(
                     item: item.Lights,
                     node: node,
                     name: nameof(item.Lights),
@@ -8787,7 +8789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Miscellaneous) ?? true))
             {
-                ((GroupXmlWriteTranslation<IMiscellaneousInternalGetter>)((IXmlItem)item.Miscellaneous).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Miscellaneous).XmlWriteTranslator).Write<IMiscellaneousInternalGetter>(
                     item: item.Miscellaneous,
                     node: node,
                     name: nameof(item.Miscellaneous),
@@ -8797,7 +8799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Statics) ?? true))
             {
-                ((GroupXmlWriteTranslation<IStaticInternalGetter>)((IXmlItem)item.Statics).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Statics).XmlWriteTranslator).Write<IStaticInternalGetter>(
                     item: item.Statics,
                     node: node,
                     name: nameof(item.Statics),
@@ -8807,7 +8809,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Grasses) ?? true))
             {
-                ((GroupXmlWriteTranslation<IGrassInternalGetter>)((IXmlItem)item.Grasses).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Grasses).XmlWriteTranslator).Write<IGrassInternalGetter>(
                     item: item.Grasses,
                     node: node,
                     name: nameof(item.Grasses),
@@ -8817,7 +8819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Trees) ?? true))
             {
-                ((GroupXmlWriteTranslation<ITreeInternalGetter>)((IXmlItem)item.Trees).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Trees).XmlWriteTranslator).Write<ITreeInternalGetter>(
                     item: item.Trees,
                     node: node,
                     name: nameof(item.Trees),
@@ -8827,7 +8829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Flora) ?? true))
             {
-                ((GroupXmlWriteTranslation<IFloraInternalGetter>)((IXmlItem)item.Flora).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Flora).XmlWriteTranslator).Write<IFloraInternalGetter>(
                     item: item.Flora,
                     node: node,
                     name: nameof(item.Flora),
@@ -8837,7 +8839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Furnature) ?? true))
             {
-                ((GroupXmlWriteTranslation<IFurnatureInternalGetter>)((IXmlItem)item.Furnature).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Furnature).XmlWriteTranslator).Write<IFurnatureInternalGetter>(
                     item: item.Furnature,
                     node: node,
                     name: nameof(item.Furnature),
@@ -8847,7 +8849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weapons) ?? true))
             {
-                ((GroupXmlWriteTranslation<IWeaponInternalGetter>)((IXmlItem)item.Weapons).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Weapons).XmlWriteTranslator).Write<IWeaponInternalGetter>(
                     item: item.Weapons,
                     node: node,
                     name: nameof(item.Weapons),
@@ -8857,7 +8859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ammo) ?? true))
             {
-                ((GroupXmlWriteTranslation<IAmmoInternalGetter>)((IXmlItem)item.Ammo).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Ammo).XmlWriteTranslator).Write<IAmmoInternalGetter>(
                     item: item.Ammo,
                     node: node,
                     name: nameof(item.Ammo),
@@ -8867,7 +8869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.NPCs) ?? true))
             {
-                ((GroupXmlWriteTranslation<INPCInternalGetter>)((IXmlItem)item.NPCs).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.NPCs).XmlWriteTranslator).Write<INPCInternalGetter>(
                     item: item.NPCs,
                     node: node,
                     name: nameof(item.NPCs),
@@ -8877,7 +8879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Creatures) ?? true))
             {
-                ((GroupXmlWriteTranslation<ICreatureInternalGetter>)((IXmlItem)item.Creatures).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Creatures).XmlWriteTranslator).Write<ICreatureInternalGetter>(
                     item: item.Creatures,
                     node: node,
                     name: nameof(item.Creatures),
@@ -8887,7 +8889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledCreatures) ?? true))
             {
-                ((GroupXmlWriteTranslation<ILeveledCreatureInternalGetter>)((IXmlItem)item.LeveledCreatures).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.LeveledCreatures).XmlWriteTranslator).Write<ILeveledCreatureInternalGetter>(
                     item: item.LeveledCreatures,
                     node: node,
                     name: nameof(item.LeveledCreatures),
@@ -8897,7 +8899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.SoulGems) ?? true))
             {
-                ((GroupXmlWriteTranslation<ISoulGemInternalGetter>)((IXmlItem)item.SoulGems).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.SoulGems).XmlWriteTranslator).Write<ISoulGemInternalGetter>(
                     item: item.SoulGems,
                     node: node,
                     name: nameof(item.SoulGems),
@@ -8907,7 +8909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Keys) ?? true))
             {
-                ((GroupXmlWriteTranslation<IKeyInternalGetter>)((IXmlItem)item.Keys).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Keys).XmlWriteTranslator).Write<IKeyInternalGetter>(
                     item: item.Keys,
                     node: node,
                     name: nameof(item.Keys),
@@ -8917,7 +8919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Potions) ?? true))
             {
-                ((GroupXmlWriteTranslation<IPotionInternalGetter>)((IXmlItem)item.Potions).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Potions).XmlWriteTranslator).Write<IPotionInternalGetter>(
                     item: item.Potions,
                     node: node,
                     name: nameof(item.Potions),
@@ -8927,7 +8929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Subspaces) ?? true))
             {
-                ((GroupXmlWriteTranslation<ISubspaceInternalGetter>)((IXmlItem)item.Subspaces).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Subspaces).XmlWriteTranslator).Write<ISubspaceInternalGetter>(
                     item: item.Subspaces,
                     node: node,
                     name: nameof(item.Subspaces),
@@ -8937,7 +8939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.SigilStones) ?? true))
             {
-                ((GroupXmlWriteTranslation<ISigilStoneInternalGetter>)((IXmlItem)item.SigilStones).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.SigilStones).XmlWriteTranslator).Write<ISigilStoneInternalGetter>(
                     item: item.SigilStones,
                     node: node,
                     name: nameof(item.SigilStones),
@@ -8947,7 +8949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledItems) ?? true))
             {
-                ((GroupXmlWriteTranslation<ILeveledItemInternalGetter>)((IXmlItem)item.LeveledItems).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.LeveledItems).XmlWriteTranslator).Write<ILeveledItemInternalGetter>(
                     item: item.LeveledItems,
                     node: node,
                     name: nameof(item.LeveledItems),
@@ -8957,7 +8959,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weathers) ?? true))
             {
-                ((GroupXmlWriteTranslation<IWeatherInternalGetter>)((IXmlItem)item.Weathers).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Weathers).XmlWriteTranslator).Write<IWeatherInternalGetter>(
                     item: item.Weathers,
                     node: node,
                     name: nameof(item.Weathers),
@@ -8967,7 +8969,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Climates) ?? true))
             {
-                ((GroupXmlWriteTranslation<IClimateInternalGetter>)((IXmlItem)item.Climates).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Climates).XmlWriteTranslator).Write<IClimateInternalGetter>(
                     item: item.Climates,
                     node: node,
                     name: nameof(item.Climates),
@@ -8977,7 +8979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Regions) ?? true))
             {
-                ((GroupXmlWriteTranslation<IRegionInternalGetter>)((IXmlItem)item.Regions).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Regions).XmlWriteTranslator).Write<IRegionInternalGetter>(
                     item: item.Regions,
                     node: node,
                     name: nameof(item.Regions),
@@ -8987,7 +8989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Cells) ?? true))
             {
-                ((ListGroupXmlWriteTranslation<ICellBlockGetter>)((IXmlItem)item.Cells).XmlWriteTranslator).Write(
+                ((ListGroupXmlWriteTranslation)((IXmlItem)item.Cells).XmlWriteTranslator).Write<ICellBlockGetter>(
                     item: item.Cells,
                     node: node,
                     name: nameof(item.Cells),
@@ -8997,7 +8999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Worldspaces) ?? true))
             {
-                ((GroupXmlWriteTranslation<IWorldspaceInternalGetter>)((IXmlItem)item.Worldspaces).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Worldspaces).XmlWriteTranslator).Write<IWorldspaceInternalGetter>(
                     item: item.Worldspaces,
                     node: node,
                     name: nameof(item.Worldspaces),
@@ -9007,7 +9009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.DialogTopics) ?? true))
             {
-                ((GroupXmlWriteTranslation<IDialogTopicInternalGetter>)((IXmlItem)item.DialogTopics).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.DialogTopics).XmlWriteTranslator).Write<IDialogTopicInternalGetter>(
                     item: item.DialogTopics,
                     node: node,
                     name: nameof(item.DialogTopics),
@@ -9017,7 +9019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Quests) ?? true))
             {
-                ((GroupXmlWriteTranslation<IQuestInternalGetter>)((IXmlItem)item.Quests).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Quests).XmlWriteTranslator).Write<IQuestInternalGetter>(
                     item: item.Quests,
                     node: node,
                     name: nameof(item.Quests),
@@ -9027,7 +9029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.IdleAnimations) ?? true))
             {
-                ((GroupXmlWriteTranslation<IIdleAnimationInternalGetter>)((IXmlItem)item.IdleAnimations).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.IdleAnimations).XmlWriteTranslator).Write<IIdleAnimationInternalGetter>(
                     item: item.IdleAnimations,
                     node: node,
                     name: nameof(item.IdleAnimations),
@@ -9037,7 +9039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AIPackages) ?? true))
             {
-                ((GroupXmlWriteTranslation<IAIPackageInternalGetter>)((IXmlItem)item.AIPackages).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.AIPackages).XmlWriteTranslator).Write<IAIPackageInternalGetter>(
                     item: item.AIPackages,
                     node: node,
                     name: nameof(item.AIPackages),
@@ -9047,7 +9049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.CombatStyles) ?? true))
             {
-                ((GroupXmlWriteTranslation<ICombatStyleInternalGetter>)((IXmlItem)item.CombatStyles).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.CombatStyles).XmlWriteTranslator).Write<ICombatStyleInternalGetter>(
                     item: item.CombatStyles,
                     node: node,
                     name: nameof(item.CombatStyles),
@@ -9057,7 +9059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LoadScreens) ?? true))
             {
-                ((GroupXmlWriteTranslation<ILoadScreenInternalGetter>)((IXmlItem)item.LoadScreens).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.LoadScreens).XmlWriteTranslator).Write<ILoadScreenInternalGetter>(
                     item: item.LoadScreens,
                     node: node,
                     name: nameof(item.LoadScreens),
@@ -9067,7 +9069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledSpells) ?? true))
             {
-                ((GroupXmlWriteTranslation<ILeveledSpellInternalGetter>)((IXmlItem)item.LeveledSpells).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.LeveledSpells).XmlWriteTranslator).Write<ILeveledSpellInternalGetter>(
                     item: item.LeveledSpells,
                     node: node,
                     name: nameof(item.LeveledSpells),
@@ -9077,7 +9079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AnimatedObjects) ?? true))
             {
-                ((GroupXmlWriteTranslation<IAnimatedObjectInternalGetter>)((IXmlItem)item.AnimatedObjects).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.AnimatedObjects).XmlWriteTranslator).Write<IAnimatedObjectInternalGetter>(
                     item: item.AnimatedObjects,
                     node: node,
                     name: nameof(item.AnimatedObjects),
@@ -9087,7 +9089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Waters) ?? true))
             {
-                ((GroupXmlWriteTranslation<IWaterInternalGetter>)((IXmlItem)item.Waters).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Waters).XmlWriteTranslator).Write<IWaterInternalGetter>(
                     item: item.Waters,
                     node: node,
                     name: nameof(item.Waters),
@@ -9097,7 +9099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.EffectShaders) ?? true))
             {
-                ((GroupXmlWriteTranslation<IEffectShaderInternalGetter>)((IXmlItem)item.EffectShaders).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.EffectShaders).XmlWriteTranslator).Write<IEffectShaderInternalGetter>(
                     item: item.EffectShaders,
                     node: node,
                     name: nameof(item.EffectShaders),
@@ -13265,7 +13267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.GameSettings.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<GameSetting>)((IBinaryItem)item.GameSettings).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.GameSettings).BinaryWriteTranslator).Write<IGameSettingInternalGetter>(
                         item: item.GameSettings,
                         writer: writer,
                         errorMask: errorMask,
@@ -13277,7 +13279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Globals.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Global>)((IBinaryItem)item.Globals).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Globals).BinaryWriteTranslator).Write<IGlobalInternalGetter>(
                         item: item.Globals,
                         writer: writer,
                         errorMask: errorMask,
@@ -13289,7 +13291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Classes.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Class>)((IBinaryItem)item.Classes).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Classes).BinaryWriteTranslator).Write<IClassInternalGetter>(
                         item: item.Classes,
                         writer: writer,
                         errorMask: errorMask,
@@ -13301,7 +13303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Factions.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Faction>)((IBinaryItem)item.Factions).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Factions).BinaryWriteTranslator).Write<IFactionInternalGetter>(
                         item: item.Factions,
                         writer: writer,
                         errorMask: errorMask,
@@ -13313,7 +13315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Hairs.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Hair>)((IBinaryItem)item.Hairs).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Hairs).BinaryWriteTranslator).Write<IHairInternalGetter>(
                         item: item.Hairs,
                         writer: writer,
                         errorMask: errorMask,
@@ -13325,7 +13327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Eyes.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Eye>)((IBinaryItem)item.Eyes).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Eyes).BinaryWriteTranslator).Write<IEyeInternalGetter>(
                         item: item.Eyes,
                         writer: writer,
                         errorMask: errorMask,
@@ -13337,7 +13339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Races.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Race>)((IBinaryItem)item.Races).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Races).BinaryWriteTranslator).Write<IRaceInternalGetter>(
                         item: item.Races,
                         writer: writer,
                         errorMask: errorMask,
@@ -13349,7 +13351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Sounds.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Sound>)((IBinaryItem)item.Sounds).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Sounds).BinaryWriteTranslator).Write<ISoundInternalGetter>(
                         item: item.Sounds,
                         writer: writer,
                         errorMask: errorMask,
@@ -13361,7 +13363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Skills.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<SkillRecord>)((IBinaryItem)item.Skills).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Skills).BinaryWriteTranslator).Write<ISkillRecordInternalGetter>(
                         item: item.Skills,
                         writer: writer,
                         errorMask: errorMask,
@@ -13373,7 +13375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.MagicEffects.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<MagicEffect>)((IBinaryItem)item.MagicEffects).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.MagicEffects).BinaryWriteTranslator).Write<IMagicEffectInternalGetter>(
                         item: item.MagicEffects,
                         writer: writer,
                         errorMask: errorMask,
@@ -13385,7 +13387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Scripts.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Script>)((IBinaryItem)item.Scripts).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Scripts).BinaryWriteTranslator).Write<IScriptInternalGetter>(
                         item: item.Scripts,
                         writer: writer,
                         errorMask: errorMask,
@@ -13397,7 +13399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.LandTextures.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<LandTexture>)((IBinaryItem)item.LandTextures).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.LandTextures).BinaryWriteTranslator).Write<ILandTextureInternalGetter>(
                         item: item.LandTextures,
                         writer: writer,
                         errorMask: errorMask,
@@ -13409,7 +13411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Enchantments.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Enchantment>)((IBinaryItem)item.Enchantments).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Enchantments).BinaryWriteTranslator).Write<IEnchantmentInternalGetter>(
                         item: item.Enchantments,
                         writer: writer,
                         errorMask: errorMask,
@@ -13421,7 +13423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Spells.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<SpellUnleveled>)((IBinaryItem)item.Spells).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Spells).BinaryWriteTranslator).Write<ISpellUnleveledInternalGetter>(
                         item: item.Spells,
                         writer: writer,
                         errorMask: errorMask,
@@ -13433,7 +13435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Birthsigns.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Birthsign>)((IBinaryItem)item.Birthsigns).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Birthsigns).BinaryWriteTranslator).Write<IBirthsignInternalGetter>(
                         item: item.Birthsigns,
                         writer: writer,
                         errorMask: errorMask,
@@ -13445,7 +13447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Activators.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Activator>)((IBinaryItem)item.Activators).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Activators).BinaryWriteTranslator).Write<IActivatorInternalGetter>(
                         item: item.Activators,
                         writer: writer,
                         errorMask: errorMask,
@@ -13457,7 +13459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.AlchemicalApparatus.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<AlchemicalApparatus>)((IBinaryItem)item.AlchemicalApparatus).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.AlchemicalApparatus).BinaryWriteTranslator).Write<IAlchemicalApparatusInternalGetter>(
                         item: item.AlchemicalApparatus,
                         writer: writer,
                         errorMask: errorMask,
@@ -13469,7 +13471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Armors.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Armor>)((IBinaryItem)item.Armors).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Armors).BinaryWriteTranslator).Write<IArmorInternalGetter>(
                         item: item.Armors,
                         writer: writer,
                         errorMask: errorMask,
@@ -13481,7 +13483,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Books.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Book>)((IBinaryItem)item.Books).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Books).BinaryWriteTranslator).Write<IBookInternalGetter>(
                         item: item.Books,
                         writer: writer,
                         errorMask: errorMask,
@@ -13493,7 +13495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Clothes.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Clothing>)((IBinaryItem)item.Clothes).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Clothes).BinaryWriteTranslator).Write<IClothingInternalGetter>(
                         item: item.Clothes,
                         writer: writer,
                         errorMask: errorMask,
@@ -13505,7 +13507,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Containers.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Container>)((IBinaryItem)item.Containers).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Containers).BinaryWriteTranslator).Write<IContainerInternalGetter>(
                         item: item.Containers,
                         writer: writer,
                         errorMask: errorMask,
@@ -13517,7 +13519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Doors.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Door>)((IBinaryItem)item.Doors).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Doors).BinaryWriteTranslator).Write<IDoorInternalGetter>(
                         item: item.Doors,
                         writer: writer,
                         errorMask: errorMask,
@@ -13529,7 +13531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Ingredients.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Ingredient>)((IBinaryItem)item.Ingredients).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Ingredients).BinaryWriteTranslator).Write<IIngredientInternalGetter>(
                         item: item.Ingredients,
                         writer: writer,
                         errorMask: errorMask,
@@ -13541,7 +13543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Lights.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Light>)((IBinaryItem)item.Lights).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Lights).BinaryWriteTranslator).Write<ILightInternalGetter>(
                         item: item.Lights,
                         writer: writer,
                         errorMask: errorMask,
@@ -13553,7 +13555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Miscellaneous.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Miscellaneous>)((IBinaryItem)item.Miscellaneous).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Miscellaneous).BinaryWriteTranslator).Write<IMiscellaneousInternalGetter>(
                         item: item.Miscellaneous,
                         writer: writer,
                         errorMask: errorMask,
@@ -13565,7 +13567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Statics.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Static>)((IBinaryItem)item.Statics).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Statics).BinaryWriteTranslator).Write<IStaticInternalGetter>(
                         item: item.Statics,
                         writer: writer,
                         errorMask: errorMask,
@@ -13577,7 +13579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Grasses.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Grass>)((IBinaryItem)item.Grasses).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Grasses).BinaryWriteTranslator).Write<IGrassInternalGetter>(
                         item: item.Grasses,
                         writer: writer,
                         errorMask: errorMask,
@@ -13589,7 +13591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Trees.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Tree>)((IBinaryItem)item.Trees).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Trees).BinaryWriteTranslator).Write<ITreeInternalGetter>(
                         item: item.Trees,
                         writer: writer,
                         errorMask: errorMask,
@@ -13601,7 +13603,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Flora.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Flora>)((IBinaryItem)item.Flora).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Flora).BinaryWriteTranslator).Write<IFloraInternalGetter>(
                         item: item.Flora,
                         writer: writer,
                         errorMask: errorMask,
@@ -13613,7 +13615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Furnature.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Furnature>)((IBinaryItem)item.Furnature).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Furnature).BinaryWriteTranslator).Write<IFurnatureInternalGetter>(
                         item: item.Furnature,
                         writer: writer,
                         errorMask: errorMask,
@@ -13625,7 +13627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Weapons.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Weapon>)((IBinaryItem)item.Weapons).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Weapons).BinaryWriteTranslator).Write<IWeaponInternalGetter>(
                         item: item.Weapons,
                         writer: writer,
                         errorMask: errorMask,
@@ -13637,7 +13639,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Ammo.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Ammo>)((IBinaryItem)item.Ammo).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Ammo).BinaryWriteTranslator).Write<IAmmoInternalGetter>(
                         item: item.Ammo,
                         writer: writer,
                         errorMask: errorMask,
@@ -13649,7 +13651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.NPCs.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<NPC>)((IBinaryItem)item.NPCs).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.NPCs).BinaryWriteTranslator).Write<INPCInternalGetter>(
                         item: item.NPCs,
                         writer: writer,
                         errorMask: errorMask,
@@ -13661,7 +13663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Creatures.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Creature>)((IBinaryItem)item.Creatures).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Creatures).BinaryWriteTranslator).Write<ICreatureInternalGetter>(
                         item: item.Creatures,
                         writer: writer,
                         errorMask: errorMask,
@@ -13673,7 +13675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.LeveledCreatures.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<LeveledCreature>)((IBinaryItem)item.LeveledCreatures).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.LeveledCreatures).BinaryWriteTranslator).Write<ILeveledCreatureInternalGetter>(
                         item: item.LeveledCreatures,
                         writer: writer,
                         errorMask: errorMask,
@@ -13685,7 +13687,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.SoulGems.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<SoulGem>)((IBinaryItem)item.SoulGems).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.SoulGems).BinaryWriteTranslator).Write<ISoulGemInternalGetter>(
                         item: item.SoulGems,
                         writer: writer,
                         errorMask: errorMask,
@@ -13697,7 +13699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Keys.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Key>)((IBinaryItem)item.Keys).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Keys).BinaryWriteTranslator).Write<IKeyInternalGetter>(
                         item: item.Keys,
                         writer: writer,
                         errorMask: errorMask,
@@ -13709,7 +13711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Potions.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Potion>)((IBinaryItem)item.Potions).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Potions).BinaryWriteTranslator).Write<IPotionInternalGetter>(
                         item: item.Potions,
                         writer: writer,
                         errorMask: errorMask,
@@ -13721,7 +13723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Subspaces.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Subspace>)((IBinaryItem)item.Subspaces).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Subspaces).BinaryWriteTranslator).Write<ISubspaceInternalGetter>(
                         item: item.Subspaces,
                         writer: writer,
                         errorMask: errorMask,
@@ -13733,7 +13735,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.SigilStones.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<SigilStone>)((IBinaryItem)item.SigilStones).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.SigilStones).BinaryWriteTranslator).Write<ISigilStoneInternalGetter>(
                         item: item.SigilStones,
                         writer: writer,
                         errorMask: errorMask,
@@ -13745,7 +13747,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.LeveledItems.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<LeveledItem>)((IBinaryItem)item.LeveledItems).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.LeveledItems).BinaryWriteTranslator).Write<ILeveledItemInternalGetter>(
                         item: item.LeveledItems,
                         writer: writer,
                         errorMask: errorMask,
@@ -13757,7 +13759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Weathers.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Weather>)((IBinaryItem)item.Weathers).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Weathers).BinaryWriteTranslator).Write<IWeatherInternalGetter>(
                         item: item.Weathers,
                         writer: writer,
                         errorMask: errorMask,
@@ -13769,7 +13771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Climates.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Climate>)((IBinaryItem)item.Climates).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Climates).BinaryWriteTranslator).Write<IClimateInternalGetter>(
                         item: item.Climates,
                         writer: writer,
                         errorMask: errorMask,
@@ -13781,7 +13783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Regions.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Region>)((IBinaryItem)item.Regions).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Regions).BinaryWriteTranslator).Write<IRegionInternalGetter>(
                         item: item.Regions,
                         writer: writer,
                         errorMask: errorMask,
@@ -13793,7 +13795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Cells.Items.Count > 0)
                 {
-                    ((ListGroupBinaryWriteTranslation<CellBlock>)((IBinaryItem)item.Cells).BinaryWriteTranslator).Write(
+                    ((ListGroupBinaryWriteTranslation)((IBinaryItem)item.Cells).BinaryWriteTranslator).Write<ICellBlockGetter>(
                         item: item.Cells,
                         writer: writer,
                         errorMask: errorMask,
@@ -13805,7 +13807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Worldspaces.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Worldspace>)((IBinaryItem)item.Worldspaces).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Worldspaces).BinaryWriteTranslator).Write<IWorldspaceInternalGetter>(
                         item: item.Worldspaces,
                         writer: writer,
                         errorMask: errorMask,
@@ -13817,7 +13819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.DialogTopics.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<DialogTopic>)((IBinaryItem)item.DialogTopics).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.DialogTopics).BinaryWriteTranslator).Write<IDialogTopicInternalGetter>(
                         item: item.DialogTopics,
                         writer: writer,
                         errorMask: errorMask,
@@ -13829,7 +13831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Quests.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Quest>)((IBinaryItem)item.Quests).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Quests).BinaryWriteTranslator).Write<IQuestInternalGetter>(
                         item: item.Quests,
                         writer: writer,
                         errorMask: errorMask,
@@ -13841,7 +13843,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.IdleAnimations.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<IdleAnimation>)((IBinaryItem)item.IdleAnimations).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.IdleAnimations).BinaryWriteTranslator).Write<IIdleAnimationInternalGetter>(
                         item: item.IdleAnimations,
                         writer: writer,
                         errorMask: errorMask,
@@ -13853,7 +13855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.AIPackages.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<AIPackage>)((IBinaryItem)item.AIPackages).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.AIPackages).BinaryWriteTranslator).Write<IAIPackageInternalGetter>(
                         item: item.AIPackages,
                         writer: writer,
                         errorMask: errorMask,
@@ -13865,7 +13867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.CombatStyles.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<CombatStyle>)((IBinaryItem)item.CombatStyles).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.CombatStyles).BinaryWriteTranslator).Write<ICombatStyleInternalGetter>(
                         item: item.CombatStyles,
                         writer: writer,
                         errorMask: errorMask,
@@ -13877,7 +13879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.LoadScreens.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<LoadScreen>)((IBinaryItem)item.LoadScreens).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.LoadScreens).BinaryWriteTranslator).Write<ILoadScreenInternalGetter>(
                         item: item.LoadScreens,
                         writer: writer,
                         errorMask: errorMask,
@@ -13889,7 +13891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.LeveledSpells.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<LeveledSpell>)((IBinaryItem)item.LeveledSpells).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.LeveledSpells).BinaryWriteTranslator).Write<ILeveledSpellInternalGetter>(
                         item: item.LeveledSpells,
                         writer: writer,
                         errorMask: errorMask,
@@ -13901,7 +13903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.AnimatedObjects.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<AnimatedObject>)((IBinaryItem)item.AnimatedObjects).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.AnimatedObjects).BinaryWriteTranslator).Write<IAnimatedObjectInternalGetter>(
                         item: item.AnimatedObjects,
                         writer: writer,
                         errorMask: errorMask,
@@ -13913,7 +13915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Waters.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Water>)((IBinaryItem)item.Waters).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Waters).BinaryWriteTranslator).Write<IWaterInternalGetter>(
                         item: item.Waters,
                         writer: writer,
                         errorMask: errorMask,
@@ -13925,7 +13927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.EffectShaders.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<EffectShader>)((IBinaryItem)item.EffectShaders).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.EffectShaders).BinaryWriteTranslator).Write<IEffectShaderInternalGetter>(
                         item: item.EffectShaders,
                         writer: writer,
                         errorMask: errorMask,

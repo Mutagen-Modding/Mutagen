@@ -141,8 +141,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlWriteTranslator XmlWriteTranslator => LockInformationXmlWriteTranslation.Instance;
-        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object XmlWriteTranslator => LockInformationXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static LockInformation CreateFromXml(
@@ -332,8 +332,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryWriteTranslator BinaryWriteTranslator => LockInformationBinaryWriteTranslation.Instance;
-        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected object BinaryWriteTranslator => LockInformationBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static LockInformation CreateFromBinary(
@@ -890,12 +890,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(LockInformationXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(LockInformationXmlWriteTranslation);
         public static readonly RecordType XLOC_HEADER = new RecordType("XLOC");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = XLOC_HEADER;
         public const int NumStructFields = 4;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(LockInformationBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(LockInformationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -906,7 +906,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;

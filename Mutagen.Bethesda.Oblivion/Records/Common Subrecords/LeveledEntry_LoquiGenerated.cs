@@ -204,8 +204,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected IXmlWriteTranslator XmlWriteTranslator => LeveledEntryXmlWriteTranslation<T>.Instance;
-        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object XmlWriteTranslator => LeveledEntryXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static LeveledEntry<T> CreateFromXml<T_TranslMask>(
@@ -410,8 +410,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected IBinaryWriteTranslator BinaryWriteTranslator => LeveledEntryBinaryWriteTranslation<T>.Instance;
-        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected object BinaryWriteTranslator => LeveledEntryBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static LeveledEntry<T> CreateFromBinary(
@@ -1003,12 +1003,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
 
-        public static readonly Type XmlTranslation = typeof(LeveledEntryXmlWriteTranslation<>);
+        public static readonly Type XmlWriteTranslation = typeof(LeveledEntryXmlWriteTranslation);
         public static readonly RecordType LVLO_HEADER = new RecordType("LVLO");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = LVLO_HEADER;
         public const int NumStructFields = 5;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(LeveledEntryBinaryWriteTranslation<>);
+        public static readonly Type BinaryWriteTranslation = typeof(LeveledEntryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1019,7 +1019,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
@@ -1335,16 +1337,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class LeveledEntryXmlWriteTranslation<T> : IXmlWriteTranslator
-        where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
+    public partial class LeveledEntryXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static LeveledEntryXmlWriteTranslation<T> Instance = new LeveledEntryXmlWriteTranslation<T>();
+        public readonly static LeveledEntryXmlWriteTranslation Instance = new LeveledEntryXmlWriteTranslation();
 
-        public static void WriteToNodeXml(
+        public static void WriteToNodeXml<T>(
             ILeveledEntryGetter<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
+            where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             if ((translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Level) ?? true))
             {
@@ -1395,12 +1397,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
+        public void Write<T>(
             XElement node,
             ILeveledEntryGetter<T> item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
+            where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LeveledEntry");
             node.Add(elem);
@@ -1422,21 +1425,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal translationMask,
             string name = null)
         {
-            Write(
-                item: (ILeveledEntryGetter<T>)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
+            throw new NotImplementedException();
         }
 
-        public void Write(
+        public void Write<T>(
             XElement node,
             ILeveledEntryGetter<T> item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
             string name = null)
+            where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             try
             {
@@ -1633,7 +1632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((LeveledEntryXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((LeveledEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1732,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
             where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            ((LeveledEntryXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((LeveledEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1749,7 +1748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            ((LeveledEntryXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((LeveledEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1765,7 +1764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = new XElement("topnode");
-            ((LeveledEntryXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((LeveledEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1782,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = new XElement("topnode");
-            ((LeveledEntryXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((LeveledEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2184,16 +2183,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Binary Translation
-    public partial class LeveledEntryBinaryWriteTranslation<T> : IBinaryWriteTranslator
-        where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
+    public partial class LeveledEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LeveledEntryBinaryWriteTranslation<T> Instance = new LeveledEntryBinaryWriteTranslation<T>();
+        public readonly static LeveledEntryBinaryWriteTranslation Instance = new LeveledEntryBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void Write_Embedded<T>(
             ILeveledEntryGetter<T> item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
+            where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             writer.Write(item.Level);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
@@ -2215,12 +2214,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public void Write(
+        public void Write<T>(
             MutagenWriter writer,
             ILeveledEntryGetter<T> item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
+            where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2242,12 +2242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Write(
-                item: (ILeveledEntryGetter<T>)item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+            throw new NotImplementedException();
         }
 
     }
@@ -2272,7 +2267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((LeveledEntryBinaryWriteTranslation<T>)item.BinaryWriteTranslator).Write(
+            ((LeveledEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2288,7 +2283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
             where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            ((LeveledEntryBinaryWriteTranslation<T>)item.BinaryWriteTranslator).Write(
+            ((LeveledEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2303,7 +2298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            ((LeveledEntryBinaryWriteTranslation<T>)item.BinaryWriteTranslator).Write(
+            ((LeveledEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

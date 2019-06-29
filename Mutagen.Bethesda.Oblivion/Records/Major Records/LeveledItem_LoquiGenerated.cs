@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlWriteTranslator XmlWriteTranslator => LeveledItemXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => LeveledItemXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static LeveledItem CreateFromXml(
@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryWriteTranslator BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static LeveledItem CreateFromBinary(
@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(LeveledItemXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(LeveledItemXmlWriteTranslation);
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
         public static readonly RecordType LVLD_HEADER = new RecordType("LVLD");
         public static readonly RecordType LVLF_HEADER = new RecordType("LVLF");
@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = LVLI_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
-        public static readonly Type BinaryTranslation = typeof(LeveledItemBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(LeveledItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1086,7 +1086,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
@@ -1488,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Entries),
                     transl: (XElement subNode, ILeveledEntryGetter<IItemAbstractInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((LeveledEntryXmlWriteTranslation<IItemAbstractInternalGetter>)((IXmlItem)subItem).XmlWriteTranslator).Write(
+                        ((LeveledEntryXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write<IItemAbstractInternalGetter>(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -2214,7 +2216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, ILeveledEntryGetter<IItemAbstractInternalGetter> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((LeveledEntryBinaryWriteTranslation<ItemAbstract>)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
+                        ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write<IItemAbstractInternalGetter>(
                             item: subItem,
                             writer: subWriter,
                             errorMask: listErrorMask,

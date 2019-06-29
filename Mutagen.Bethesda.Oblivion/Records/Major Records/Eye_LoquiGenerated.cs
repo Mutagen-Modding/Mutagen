@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlWriteTranslator XmlWriteTranslator => EyeXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => EyeXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Eye CreateFromXml(
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryWriteTranslator BinaryWriteTranslator => EyeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => EyeBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static Eye CreateFromBinary(
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(EyeXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(EyeXmlWriteTranslation);
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = EYES_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
-        public static readonly Type BinaryTranslation = typeof(EyeBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(EyeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1051,7 +1051,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;

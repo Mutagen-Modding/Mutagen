@@ -137,7 +137,8 @@ namespace Mutagen.Bethesda.Generation
             bool isAsync)
         {
             using (var args = new FunctionWrapper(fg,
-                $"static partial void WriteBinary{field.Name}Custom")
+                $"static partial void WriteBinary{field.Name}Custom{obj.GetGenericTypes(MaskType.Normal)}",
+                    obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics).ToArray())
             {
                 SemiColon = true
             })
@@ -152,7 +153,8 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
             using (var args = new FunctionWrapper(fg,
-                $"public static void WriteBinary{field.Name}"))
+                $"public static void WriteBinary{field.Name}{obj.GetGenericTypes(MaskType.Normal)}",
+                obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics).ToArray()))
             {
                 args.Add($"{nameof(MutagenWriter)} writer");
                 args.Add($"{obj.Interface(getter: true, internalInterface: obj.HasInternalInterface)} item");

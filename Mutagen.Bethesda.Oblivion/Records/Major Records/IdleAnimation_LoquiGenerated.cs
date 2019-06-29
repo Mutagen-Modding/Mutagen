@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlWriteTranslator XmlWriteTranslator => IdleAnimationXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => IdleAnimationXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static IdleAnimation CreateFromXml(
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryWriteTranslator BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static IdleAnimation CreateFromBinary(
@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(IdleAnimationXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(IdleAnimationXmlWriteTranslation);
         public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
@@ -1124,7 +1124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = IDLE_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
-        public static readonly Type BinaryTranslation = typeof(IdleAnimationBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(IdleAnimationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1135,7 +1135,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;

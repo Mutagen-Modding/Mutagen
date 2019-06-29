@@ -1169,7 +1169,8 @@ namespace Mutagen.Bethesda.Generation
             if (HasEmbeddedFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_Embedded"))
+                    $"public static void Write_Embedded{obj.GetGenericTypes(MaskType.Normal)}",
+                    obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics).ToArray()))
                 {
                     args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} item");
                     args.Add("MutagenWriter writer");
@@ -1248,7 +1249,8 @@ namespace Mutagen.Bethesda.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_RecordTypes"))
+                    $"public static void Write_RecordTypes{obj.GetGenericTypes(MaskType.Normal)}",
+                    obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics).ToArray()))
                 {
                     args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} item");
                     args.Add("MutagenWriter writer");

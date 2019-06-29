@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlWriteTranslator XmlWriteTranslator => NPCSpawnXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => NPCSpawnXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static NPCSpawn CreateFromXml(
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryWriteTranslator BinaryWriteTranslator => NPCSpawnBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NPCSpawnBinaryWriteTranslation.Instance;
         #endregion
 
         public NPCSpawn Copy(
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(NPCSpawnXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(NPCSpawnXmlWriteTranslation);
         public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
         public static readonly RecordType CREA_HEADER = new RecordType("CREA");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(NPCSpawnBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(NPCSpawnBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -685,7 +685,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;

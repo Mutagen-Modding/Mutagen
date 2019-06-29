@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlWriteTranslator XmlWriteTranslator => LeveledCreatureXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => LeveledCreatureXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static LeveledCreature CreateFromXml(
@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryWriteTranslator BinaryWriteTranslator => LeveledCreatureBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => LeveledCreatureBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static LeveledCreature CreateFromBinary(
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(LeveledCreatureXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(LeveledCreatureXmlWriteTranslation);
         public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
         public static readonly RecordType LVLD_HEADER = new RecordType("LVLD");
         public static readonly RecordType LVLF_HEADER = new RecordType("LVLF");
@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = LVLC_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 5;
-        public static readonly Type BinaryTranslation = typeof(LeveledCreatureBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(LeveledCreatureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1179,7 +1179,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
@@ -1635,7 +1637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)LeveledCreature_FieldIndex.Entries),
                     transl: (XElement subNode, ILeveledEntryGetter<INPCSpawnInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((LeveledEntryXmlWriteTranslation<INPCSpawnInternalGetter>)((IXmlItem)subItem).XmlWriteTranslator).Write(
+                        ((LeveledEntryXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write<INPCSpawnInternalGetter>(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -2449,7 +2451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, ILeveledEntryGetter<INPCSpawnInternalGetter> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((LeveledEntryBinaryWriteTranslation<NPCSpawn>)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
+                        ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write<INPCSpawnInternalGetter>(
                             item: subItem,
                             writer: subWriter,
                             errorMask: listErrorMask,

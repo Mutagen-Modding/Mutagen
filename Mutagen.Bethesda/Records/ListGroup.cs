@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda
                         dir = new DirectoryPath(Path.Combine(dir.Path, name));
                         dir.Create();
                         XElement topNode = new XElement("Group");
-                        ListGroupXmlWriteTranslation<T>.WriteToNodeXml(
+                        ListGroupXmlWriteTranslation.WriteToNodeXml(
                             list,
                             topNode,
                             errorMask,
@@ -155,19 +155,18 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public partial class ListGroupBinaryWriteTranslation<T>
+        public partial class ListGroupBinaryWriteTranslation
         {
-            public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)LoquiRegistration.GetRegister(typeof(T)).ClassType.GetField(Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER).GetValue(null);
-
-            static partial void WriteBinaryContainedRecordTypeCustom(
+            static partial void WriteBinaryContainedRecordTypeCustom<T>(
                 MutagenWriter writer,
                 IListGroupGetter<T> item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
+                where T : IXmlItem, IBinaryItem, ILoquiObject<T>
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer,
-                    GRUP_RECORD_TYPE.TypeInt);
+                    GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE.TypeInt);
             }
         }
     }

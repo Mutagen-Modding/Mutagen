@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlWriteTranslator XmlWriteTranslator => DialogItemXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => DialogItemXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static DialogItem CreateFromXml(
@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryWriteTranslator BinaryWriteTranslator => DialogItemBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => DialogItemBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static DialogItem CreateFromBinary(
@@ -1546,7 +1546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(DialogItemXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(DialogItemXmlWriteTranslation);
         public static readonly RecordType INFO_HEADER = new RecordType("INFO");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType QSTI_HEADER = new RecordType("QSTI");
@@ -1566,7 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = INFO_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 8;
-        public static readonly Type BinaryTranslation = typeof(DialogItemBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(DialogItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1577,7 +1577,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;

@@ -150,8 +150,8 @@ namespace Mutagen.Bethesda
 
 
         #region Xml Translation
-        protected IXmlWriteTranslator XmlWriteTranslator => GroupXmlWriteTranslation<T>.Instance;
-        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static Group<T> CreateFromXml<T_TranslMask>(
@@ -380,8 +380,8 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Binary Translation
-        protected IBinaryWriteTranslator BinaryWriteTranslator => GroupBinaryWriteTranslation<T>.Instance;
-        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static async Task<Group<T>> CreateFromBinary(
@@ -965,12 +965,12 @@ namespace Mutagen.Bethesda.Internals
 
         public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
 
-        public static readonly Type XmlTranslation = typeof(GroupXmlWriteTranslation<>);
+        public static readonly Type XmlWriteTranslation = typeof(GroupXmlWriteTranslation);
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 1;
-        public static readonly Type BinaryTranslation = typeof(GroupBinaryWriteTranslation<>);
+        public static readonly Type BinaryWriteTranslation = typeof(GroupBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -981,7 +981,9 @@ namespace Mutagen.Bethesda.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
@@ -1257,16 +1259,16 @@ namespace Mutagen.Bethesda.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class GroupXmlWriteTranslation<T> : IXmlWriteTranslator
-        where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
+    public partial class GroupXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static GroupXmlWriteTranslation<T> Instance = new GroupXmlWriteTranslation<T>();
+        public readonly static GroupXmlWriteTranslation Instance = new GroupXmlWriteTranslation();
 
-        public static void WriteToNodeXml(
+        public static void WriteToNodeXml<T>(
             IGroupGetter<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.GroupType) ?? true))
             {
@@ -1319,12 +1321,13 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
-        public void Write(
+        public void Write<T>(
             XElement node,
             IGroupGetter<T> item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Group");
             node.Add(elem);
@@ -1346,21 +1349,17 @@ namespace Mutagen.Bethesda.Internals
             TranslationCrystal translationMask,
             string name = null)
         {
-            Write(
-                item: (IGroupGetter<T>)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
+            throw new NotImplementedException();
         }
 
-        public void Write(
+        public void Write<T>(
             XElement node,
             IGroupGetter<T> item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
             string name = null)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             try
             {
@@ -1507,7 +1506,7 @@ namespace Mutagen.Bethesda.Internals
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GroupXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1606,7 +1605,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
             where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            ((GroupXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1623,7 +1622,7 @@ namespace Mutagen.Bethesda.Internals
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
-            ((GroupXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1639,7 +1638,7 @@ namespace Mutagen.Bethesda.Internals
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = new XElement("topnode");
-            ((GroupXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1656,7 +1655,7 @@ namespace Mutagen.Bethesda.Internals
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = new XElement("topnode");
-            ((GroupXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2099,22 +2098,23 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Binary Translation
-    public partial class GroupBinaryWriteTranslation<T> : IBinaryWriteTranslator
-        where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
+    public partial class GroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static GroupBinaryWriteTranslation<T> Instance = new GroupBinaryWriteTranslation<T>();
+        public readonly static GroupBinaryWriteTranslation Instance = new GroupBinaryWriteTranslation();
 
-        static partial void WriteBinaryContainedRecordTypeCustom(
-            MutagenWriter writer,
-            IGroupGetter<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinaryContainedRecordType(
+        static partial void WriteBinaryContainedRecordTypeCustom<T>(
             MutagenWriter writer,
             IGroupGetter<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem;
+
+        public static void WriteBinaryContainedRecordType<T>(
+            MutagenWriter writer,
+            IGroupGetter<T> item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             WriteBinaryContainedRecordTypeCustom(
                 writer: writer,
@@ -2123,13 +2123,14 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Embedded(
+        public static void Write_Embedded<T>(
             IGroupGetter<T> item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            GroupBinaryWriteTranslation<T>.WriteBinaryContainedRecordType(
+            GroupBinaryWriteTranslation.WriteBinaryContainedRecordType(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -2143,12 +2144,13 @@ namespace Mutagen.Bethesda.Internals
                 item: item.LastModified);
         }
 
-        public static void Write_RecordTypes(
+        public static void Write_RecordTypes<T>(
             IGroupGetter<T> item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
@@ -2166,12 +2168,13 @@ namespace Mutagen.Bethesda.Internals
                 });
         }
 
-        public void Write(
+        public void Write<T>(
             MutagenWriter writer,
             IGroupGetter<T> item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2199,12 +2202,7 @@ namespace Mutagen.Bethesda.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Write(
-                item: (IGroupGetter<T>)item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+            throw new NotImplementedException();
         }
 
     }
@@ -2248,7 +2246,7 @@ namespace Mutagen.Bethesda.Internals
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GroupBinaryWriteTranslation<T>)item.BinaryWriteTranslator).Write(
+            ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2264,7 +2262,7 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask)
             where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            ((GroupBinaryWriteTranslation<T>)item.BinaryWriteTranslator).Write(
+            ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2279,7 +2277,7 @@ namespace Mutagen.Bethesda.Internals
             where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            ((GroupBinaryWriteTranslation<T>)item.BinaryWriteTranslator).Write(
+            ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

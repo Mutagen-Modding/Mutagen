@@ -139,8 +139,8 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region Xml Translation
-        protected IXmlWriteTranslator XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
-        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static SkyrimMod CreateFromXml(
@@ -1285,7 +1285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(SkyrimModXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(SkyrimModXmlWriteTranslation);
         public static readonly RecordType TES4_HEADER = new RecordType("TES4");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
-        public static readonly Type BinaryTranslation = typeof(SkyrimModBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1314,7 +1314,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
@@ -1560,7 +1562,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.GameSettings) ?? true))
             {
-                ((GroupXmlWriteTranslation<IGameSettingInternalGetter>)((IXmlItem)item.GameSettings).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.GameSettings).XmlWriteTranslator).Write<IGameSettingInternalGetter>(
                     item: item.GameSettings,
                     node: node,
                     name: nameof(item.GameSettings),
@@ -1570,7 +1572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Globals) ?? true))
             {
-                ((GroupXmlWriteTranslation<IGlobalInternalGetter>)((IXmlItem)item.Globals).XmlWriteTranslator).Write(
+                ((GroupXmlWriteTranslation)((IXmlItem)item.Globals).XmlWriteTranslator).Write<IGlobalInternalGetter>(
                     item: item.Globals,
                     node: node,
                     name: nameof(item.Globals),
@@ -2305,7 +2307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.GameSettings.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<GameSetting>)((IBinaryItem)item.GameSettings).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.GameSettings).BinaryWriteTranslator).Write<IGameSettingInternalGetter>(
                         item: item.GameSettings,
                         writer: writer,
                         errorMask: errorMask,
@@ -2317,7 +2319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.Globals.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation<Global>)((IBinaryItem)item.Globals).BinaryWriteTranslator).Write(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Globals).BinaryWriteTranslator).Write<IGlobalInternalGetter>(
                         item: item.Globals,
                         writer: writer,
                         errorMask: errorMask,

@@ -163,8 +163,8 @@ namespace Mutagen.Bethesda
 
 
         #region Xml Translation
-        protected virtual IXmlWriteTranslator XmlWriteTranslator => MajorRecordXmlWriteTranslation.Instance;
-        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected virtual object XmlWriteTranslator => MajorRecordXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static MajorRecord CreateFromXml(
@@ -401,8 +401,8 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Binary Translation
-        protected virtual IBinaryWriteTranslator BinaryWriteTranslator => MajorRecordBinaryWriteTranslation.Instance;
-        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected virtual object BinaryWriteTranslator => MajorRecordBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         protected static void FillBinaryStructs(
             MajorRecord item,
             MutagenFrame frame,
@@ -918,7 +918,7 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(MajorRecordXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(MajorRecordXmlWriteTranslation);
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType PACK_HEADER = new RecordType("PACK");
         public static readonly RecordType ANIO_HEADER = new RecordType("ANIO");
@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Internals
         });
         public const int NumStructFields = 3;
         public const int NumTypedFields = 1;
-        public static readonly Type BinaryTranslation = typeof(MajorRecordBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(MajorRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1079,7 +1079,9 @@ namespace Mutagen.Bethesda.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;

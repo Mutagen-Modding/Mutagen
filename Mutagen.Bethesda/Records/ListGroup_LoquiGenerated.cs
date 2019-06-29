@@ -153,8 +153,8 @@ namespace Mutagen.Bethesda
 
 
         #region Xml Translation
-        protected IXmlWriteTranslator XmlWriteTranslator => ListGroupXmlWriteTranslation<T>.Instance;
-        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object XmlWriteTranslator => ListGroupXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
@@ -344,8 +344,8 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Binary Translation
-        protected IBinaryWriteTranslator BinaryWriteTranslator => ListGroupBinaryWriteTranslation<T>.Instance;
-        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected object BinaryWriteTranslator => ListGroupBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static async Task<(ListGroup<T> Object, ListGroup_ErrorMask<T_ErrMask> ErrorMask)> CreateFromBinary_Error<T_ErrMask>(
@@ -920,12 +920,12 @@ namespace Mutagen.Bethesda.Internals
 
         public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
 
-        public static readonly Type XmlTranslation = typeof(ListGroupXmlWriteTranslation<>);
+        public static readonly Type XmlWriteTranslation = typeof(ListGroupXmlWriteTranslation);
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 1;
-        public static readonly Type BinaryTranslation = typeof(ListGroupBinaryWriteTranslation<>);
+        public static readonly Type BinaryWriteTranslation = typeof(ListGroupBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -936,7 +936,9 @@ namespace Mutagen.Bethesda.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
@@ -1211,16 +1213,16 @@ namespace Mutagen.Bethesda.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class ListGroupXmlWriteTranslation<T> : IXmlWriteTranslator
-        where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+    public partial class ListGroupXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static ListGroupXmlWriteTranslation<T> Instance = new ListGroupXmlWriteTranslation<T>();
+        public readonly static ListGroupXmlWriteTranslation Instance = new ListGroupXmlWriteTranslation();
 
-        public static void WriteToNodeXml(
+        public static void WriteToNodeXml<T>(
             IListGroupGetter<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.GroupType) ?? true))
             {
@@ -1251,7 +1253,7 @@ namespace Mutagen.Bethesda.Internals
                     translationMask: translationMask?.GetSubCrystal((int)ListGroup_FieldIndex.Items),
                     transl: (XElement subNode, T subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((IXmlItem)subItem).XmlWriteTranslator.Write(
+                        ((IXmlWriteTranslator)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -1261,12 +1263,13 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
-        public void Write(
+        public void Write<T>(
             XElement node,
             IListGroupGetter<T> item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.ListGroup");
             node.Add(elem);
@@ -1288,21 +1291,17 @@ namespace Mutagen.Bethesda.Internals
             TranslationCrystal translationMask,
             string name = null)
         {
-            Write(
-                item: (IListGroupGetter<T>)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
+            throw new NotImplementedException();
         }
 
-        public void Write(
+        public void Write<T>(
             XElement node,
             IListGroupGetter<T> item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
             string name = null)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             try
             {
@@ -1468,7 +1467,7 @@ namespace Mutagen.Bethesda.Internals
             where T_TranslMask : class, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ListGroupXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1567,7 +1566,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
             where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
-            ((ListGroupXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1584,7 +1583,7 @@ namespace Mutagen.Bethesda.Internals
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : class, ITranslationMask, new()
         {
-            ((ListGroupXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1600,7 +1599,7 @@ namespace Mutagen.Bethesda.Internals
             where T_TranslMask : class, ITranslationMask, new()
         {
             var node = new XElement("topnode");
-            ((ListGroupXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1617,7 +1616,7 @@ namespace Mutagen.Bethesda.Internals
             where T_TranslMask : class, ITranslationMask, new()
         {
             var node = new XElement("topnode");
-            ((ListGroupXmlWriteTranslation<T>)item.XmlWriteTranslator).Write(
+            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2067,22 +2066,23 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Binary Translation
-    public partial class ListGroupBinaryWriteTranslation<T> : IBinaryWriteTranslator
-        where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+    public partial class ListGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ListGroupBinaryWriteTranslation<T> Instance = new ListGroupBinaryWriteTranslation<T>();
+        public readonly static ListGroupBinaryWriteTranslation Instance = new ListGroupBinaryWriteTranslation();
 
-        static partial void WriteBinaryContainedRecordTypeCustom(
-            MutagenWriter writer,
-            IListGroupGetter<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinaryContainedRecordType(
+        static partial void WriteBinaryContainedRecordTypeCustom<T>(
             MutagenWriter writer,
             IListGroupGetter<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>;
+
+        public static void WriteBinaryContainedRecordType<T>(
+            MutagenWriter writer,
+            IListGroupGetter<T> item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             WriteBinaryContainedRecordTypeCustom(
                 writer: writer,
@@ -2091,13 +2091,14 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Embedded(
+        public static void Write_Embedded<T>(
             IListGroupGetter<T> item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
-            ListGroupBinaryWriteTranslation<T>.WriteBinaryContainedRecordType(
+            ListGroupBinaryWriteTranslation.WriteBinaryContainedRecordType(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -2111,12 +2112,13 @@ namespace Mutagen.Bethesda.Internals
                 item: item.LastModified);
         }
 
-        public static void Write_RecordTypes(
+        public static void Write_RecordTypes<T>(
             IListGroupGetter<T> item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
@@ -2125,7 +2127,7 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask,
                 transl: (MutagenWriter subWriter, T subItem, ErrorMaskBuilder listErrorMask) =>
                 {
-                    ((IBinaryItem)subItem).BinaryWriteTranslator.Write(
+                    ((IBinaryWriteTranslator)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
                         item: subItem,
                         writer: subWriter,
                         errorMask: listErrorMask,
@@ -2134,12 +2136,13 @@ namespace Mutagen.Bethesda.Internals
                 });
         }
 
-        public void Write(
+        public void Write<T>(
             MutagenWriter writer,
             IListGroupGetter<T> item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2167,12 +2170,7 @@ namespace Mutagen.Bethesda.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Write(
-                item: (IListGroupGetter<T>)item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+            throw new NotImplementedException();
         }
 
     }
@@ -2216,7 +2214,7 @@ namespace Mutagen.Bethesda.Internals
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ListGroupBinaryWriteTranslation<T>)item.BinaryWriteTranslator).Write(
+            ((ListGroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2232,7 +2230,7 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask)
             where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
-            ((ListGroupBinaryWriteTranslation<T>)item.BinaryWriteTranslator).Write(
+            ((ListGroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2247,7 +2245,7 @@ namespace Mutagen.Bethesda.Internals
             where T : IXmlItem, IBinaryItem, ILoquiObject<T>
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            ((ListGroupBinaryWriteTranslation<T>)item.BinaryWriteTranslator).Write(
+            ((ListGroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,

@@ -83,15 +83,15 @@ namespace Mutagen.Bethesda.Generation
             string line;
             if (loquiGen.TargetObjectGeneration != null)
             {
-                line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)}{loquiGen.GetGenericTypes(getter: true, typeOverride: LoquiInterfaceType.Direct, additionalMasks: new MaskType[] { MaskType.Normal })})(({nameof(IBinaryItem)}){itemAccessor.DirectAccess}).{this.Module.TranslationWriteItemMember})";
+                line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)})(({nameof(IBinaryItem)}){itemAccessor.DirectAccess}).{this.Module.TranslationWriteItemMember})";
             }
             else
             {
-                line = $"(({nameof(IBinaryItem)}){itemAccessor.DirectAccess}).{this.Module.TranslationWriteItemMember}";
+                line = $"(({this.Module.TranslationWriteInterface})(({nameof(IBinaryItem)}){itemAccessor.DirectAccess}).{this.Module.TranslationWriteItemMember})";
             }
             using (new BraceWrapper(fg, doIt: isGroup))
             {
-                using (var args = new ArgsWrapper(fg, $"{line}.Write"))
+                using (var args = new ArgsWrapper(fg, $"{line}.Write{loquiGen.GetGenericTypes(true, MaskType.Normal)}"))
                 {
                     args.Add($"item: {itemAccessor.DirectAccess}");
                     args.Add($"writer: {writerAccessor}");

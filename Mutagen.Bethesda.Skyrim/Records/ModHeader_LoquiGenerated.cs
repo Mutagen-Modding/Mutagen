@@ -325,8 +325,8 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region Xml Translation
-        protected IXmlWriteTranslator XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
-        IXmlWriteTranslator IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
         public static ModHeader CreateFromXml(
@@ -517,8 +517,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        protected IBinaryWriteTranslator BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
-        IBinaryWriteTranslator IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
         public static ModHeader CreateFromBinary(
@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(ModHeaderXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(ModHeaderXmlWriteTranslation);
         public static readonly RecordType TES4_HEADER = new RecordType("TES4");
         public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
         public static readonly RecordType OFST_HEADER = new RecordType("OFST");
@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = TES4_HEADER;
         public const int NumStructFields = 1;
         public const int NumTypedFields = 7;
-        public static readonly Type BinaryTranslation = typeof(ModHeaderBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1327,7 +1327,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;

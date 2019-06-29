@@ -1,4 +1,4 @@
-﻿using Loqui.Internal;
+using Loqui.Internal;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +17,6 @@ namespace Mutagen.Bethesda.Binary
 
     public interface IBinaryItem
     {
-        IBinaryWriteTranslator BinaryWriteTranslator { get; }
+        object BinaryWriteTranslator { get; }
     }
 }

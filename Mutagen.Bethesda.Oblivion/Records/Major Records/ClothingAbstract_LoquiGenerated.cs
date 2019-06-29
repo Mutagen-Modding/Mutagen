@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlWriteTranslator XmlWriteTranslator => ClothingAbstractXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => ClothingAbstractXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static ClothingAbstract CreateFromXml(
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryWriteTranslator BinaryWriteTranslator => ClothingAbstractBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ClothingAbstractBinaryWriteTranslation.Instance;
         protected static void FillBinaryStructs(
             ClothingAbstract item,
             MutagenFrame frame,
@@ -1646,7 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(ClothingAbstractXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(ClothingAbstractXmlWriteTranslation);
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
         public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
@@ -1709,7 +1709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new RecordType("MO4T")));
         public const int NumStructFields = 0;
         public const int NumTypedFields = 10;
-        public static readonly Type BinaryTranslation = typeof(ClothingAbstractBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ClothingAbstractBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1720,7 +1720,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;

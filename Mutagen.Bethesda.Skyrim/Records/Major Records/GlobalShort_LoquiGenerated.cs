@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region Xml Translation
-        protected override IXmlWriteTranslator XmlWriteTranslator => GlobalShortXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => GlobalShortXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static GlobalShort CreateFromXml(
@@ -347,7 +347,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        protected override IBinaryWriteTranslator BinaryWriteTranslator => GlobalShortBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GlobalShortBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static GlobalShort CreateFromBinary(
@@ -865,13 +865,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(GlobalShortXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(GlobalShortXmlWriteTranslation);
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType FLTV_HEADER = new RecordType("FLTV");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GLOB_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
-        public static readonly Type BinaryTranslation = typeof(GlobalShortBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(GlobalShortBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -882,7 +882,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;

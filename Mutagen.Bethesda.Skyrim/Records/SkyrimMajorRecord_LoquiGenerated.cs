@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region Xml Translation
-        protected override IXmlWriteTranslator XmlWriteTranslator => SkyrimMajorRecordXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => SkyrimMajorRecordXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static SkyrimMajorRecord CreateFromXml(
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        protected override IBinaryWriteTranslator BinaryWriteTranslator => SkyrimMajorRecordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SkyrimMajorRecordBinaryWriteTranslation.Instance;
         protected static void FillBinaryStructs(
             SkyrimMajorRecord item,
             MutagenFrame frame,
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(SkyrimMajorRecordXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(SkyrimMajorRecordXmlWriteTranslation);
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryTranslation = typeof(SkyrimMajorRecordBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(SkyrimMajorRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -715,7 +715,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;

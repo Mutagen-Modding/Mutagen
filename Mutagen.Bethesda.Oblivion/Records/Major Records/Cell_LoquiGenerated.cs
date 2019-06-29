@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        protected override IXmlWriteTranslator XmlWriteTranslator => CellXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => CellXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
         public static Cell CreateFromXml(
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        protected override IBinaryWriteTranslator BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
         public static async Task<Cell> CreateFromBinary(
@@ -2179,7 +2179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlTranslation = typeof(CellXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(CellXmlWriteTranslation);
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
@@ -2201,7 +2201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CELL_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 17;
-        public static readonly Type BinaryTranslation = typeof(CellBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2212,7 +2212,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
+        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
+        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
         Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
@@ -3474,7 +3476,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Persistent),
                     transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((IXmlItem)subItem).XmlWriteTranslator.Write(
+                        ((IXmlWriteTranslator)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -3503,7 +3505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Temporary),
                     transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((IXmlItem)subItem).XmlWriteTranslator.Write(
+                        ((IXmlWriteTranslator)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
@@ -3532,7 +3534,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.VisibleWhenDistant),
                     transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((IXmlItem)subItem).XmlWriteTranslator.Write(
+                        ((IXmlWriteTranslator)((IXmlItem)subItem).XmlWriteTranslator).Write(
                             item: subItem,
                             node: subNode,
                             name: null,
