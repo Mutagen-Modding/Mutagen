@@ -16,6 +16,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             BenchmarkRunner.Run<StringParsing>();
             BenchmarkRunner.Run<MiscOverhead>();
             BenchmarkRunner.Run<Locators>();
+            BenchmarkRunner.Run<HeaderParsing>();
         }
     }
 }

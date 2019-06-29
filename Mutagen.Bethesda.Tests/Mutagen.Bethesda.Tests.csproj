@@ -27,6 +27,7 @@
   <ItemGroup>
     <Compile Include="Benchmarks\Benchmarks.cs" />
     <Compile Include="Benchmarks\FormKeyParsing.cs" />
+    <Compile Include="Benchmarks\HeaderParsing.cs" />
     <Compile Include="Benchmarks\Locators.cs" />
     <Compile Include="Benchmarks\MiscOverhead.cs" />
     <Compile Include="Benchmarks\OblivionBinaryTranslation.cs" />
