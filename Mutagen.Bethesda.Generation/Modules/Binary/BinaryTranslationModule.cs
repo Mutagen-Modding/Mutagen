@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromStreamOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine("using (var writer = new MutagenWriter(stream))");
+            fg.AppendLine("using (var writer = new MutagenWriter(stream, item.GameMode))");
             using (new BraceWrapper(fg))
             {
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Writer).ToArray());
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine("using (var memStream = new MemoryTributary())");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("using (var writer = new MutagenWriter(memStream, dispose: false))");
+                fg.AppendLine($"using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))");
                 using (new BraceWrapper(fg))
                 {
                     internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Writer).ToArray());

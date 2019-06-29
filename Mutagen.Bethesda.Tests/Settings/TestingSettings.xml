@@ -41,6 +41,17 @@
       <UInt8 name="NumMasters" />
       <Enum name="GameMode" enumName="Mutagen.Bethesda.GameMode" />
       <UInt8 name="ExpectedBaseGroupCount" hasBeenSet="True" />
+      <RefDirect name="Interest" refName="RecordInterest" />
+    </Fields>
+  </Object>
+  <Object name="RecordInterest" GUID="322c3a4b-66d2-4d4d-855f-5219460ded5c" ID="6">
+    <Fields>
+      <List name="InterestingTypes">
+        <String />
+      </List>
+      <List name="UninterestingTypes">
+        <String />
+      </List>
     </Fields>
   </Object>
 </Loqui>

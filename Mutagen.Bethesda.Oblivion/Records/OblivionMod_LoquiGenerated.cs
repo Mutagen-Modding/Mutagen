@@ -972,6 +972,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
+        public GameMode GameMode => GameMode.Oblivion;
         private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);
         public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;
         public IMajorRecord this[FormKey id]
@@ -14011,7 +14012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
+                using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))
                 {
                     WriteToBinary(
                         item: item,
@@ -14039,7 +14040,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
+                using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))
                 {
                     WriteToBinary(
                         item: item,
@@ -14064,7 +14065,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true,
             GroupMask importMask = null)
         {
-            using (var writer = new MutagenWriter(stream))
+            using (var writer = new MutagenWriter(stream, item.GameMode))
             {
                 WriteToBinary(
                     item: item,
@@ -14084,7 +14085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks = true,
             GroupMask importMask = null)
         {
-            using (var writer = new MutagenWriter(stream))
+            using (var writer = new MutagenWriter(stream, item.GameMode))
             {
                 WriteToBinary(
                     item: item,
@@ -14134,7 +14135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
+                using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))
                 {
                     OblivionModBinaryWriteTranslation.Instance.Write(
                         item: item,
@@ -14158,7 +14159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModKey modKey,
             GroupMask importMask = null)
         {
-            using (var writer = new MutagenWriter(stream))
+            using (var writer = new MutagenWriter(stream, item.GameMode))
             {
                 OblivionModBinaryWriteTranslation.Instance.Write(
                     item: item,

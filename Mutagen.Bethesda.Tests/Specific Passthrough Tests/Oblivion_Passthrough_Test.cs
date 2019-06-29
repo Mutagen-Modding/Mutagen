@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc.Min + Constants.HEADER_LENGTH;
             var existingLen = stream.ReadUInt16();
             byte[] lenData = new byte[2];
-            using (var writer = new MutagenWriter(new MemoryStream(lenData)))
+            using (var writer = new MutagenWriter(new MemoryStream(lenData), this.GameMode))
             {
                 writer.Write((ushort)(existingLen + amount));
             }
@@ -325,7 +325,7 @@ namespace Mutagen.Bethesda.Tests
                 stream.Position = loc.Min + Constants.HEADER_LENGTH;
                 var existingLen = stream.ReadUInt16();
                 byte[] lenData = new byte[2];
-                using (var writer = new MutagenWriter(new MemoryStream(lenData)))
+                using (var writer = new MutagenWriter(new MemoryStream(lenData), this.GameMode))
                 {
                     writer.Write((ushort)(existingLen - 7));
                 }
@@ -404,7 +404,7 @@ namespace Mutagen.Bethesda.Tests
 
                 // Get icon bytes
                 MemoryStream memStream = new MemoryStream();
-                using (var writer = new MutagenWriter(memStream))
+                using (var writer = new MutagenWriter(memStream, this.GameMode))
                 {
                     using (HeaderExport.ExportHeader(
                         writer,

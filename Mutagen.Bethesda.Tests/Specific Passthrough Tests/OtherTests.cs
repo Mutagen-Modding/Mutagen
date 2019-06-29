@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Tests
             var loc = settings.GetFilePath(locs);
             using (var stream = new MutagenBinaryReadStream(loc.Path))
             {
-                var grups = RecordLocator.IterateBaseGroupLocations(stream).ToArray();
+                var grups = RecordLocator.IterateBaseGroupLocations(stream, settings.GameMode).ToArray();
                 Assert.Equal(settings.ExpectedBaseGroupCount, grups.Length);
             }
         }

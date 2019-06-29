@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda;
+using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,14 +37,14 @@ namespace System
             }
         }
 
-        public static sbyte GetOffset(this ObjectType objType)
+        public static sbyte GetOffset(this ObjectType objType, GameMode mode)
         {
             switch (objType)
             {
                 case ObjectType.Subrecord:
                     return Constants.SUBRECORD_HEADER_OFFSET;
                 case ObjectType.Record:
-                    return Constants.RECORD_META_OFFSET;
+                    return MetaDataConstants.Get(mode).RecordMetaLengthAfterRecordLength;
                 case ObjectType.Group:
                     return Constants.GRUP_HEADER_OFFSET;
                 case ObjectType.Mod:

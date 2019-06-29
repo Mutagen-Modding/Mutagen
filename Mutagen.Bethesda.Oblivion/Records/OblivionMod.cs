@@ -21,7 +21,11 @@ using Loqui.Xml;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class OblivionMod : IMod, ILinkContainer
+    public partial interface IOblivionModGetter : IMod, ILinkContainer
+    {
+    }
+
+    public partial class OblivionMod
     {
         public ISourceList<MasterReference> MasterReferences => this.ModHeader.MasterReferences;
         public ModKey ModKey { get; }

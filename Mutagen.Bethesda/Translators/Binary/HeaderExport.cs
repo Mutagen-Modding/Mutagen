@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Binary
         {
             writer.Write(record.TypeInt);
             var sizePosition = writer.Position;
-            var offset = type.GetOffset();
+            var offset = type.GetOffset(writer.GameMode);
             sbyte metaLen;
             switch (type)
             {

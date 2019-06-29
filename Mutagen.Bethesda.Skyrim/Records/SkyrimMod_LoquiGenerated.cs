@@ -357,6 +357,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Mutagen
+        public GameMode GameMode => GameMode.Skyrim;
         private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);
         public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;
         public IMajorRecord this[FormKey id]
@@ -2403,7 +2404,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
+                using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))
                 {
                     WriteToBinary(
                         item: item,
@@ -2431,7 +2432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
+                using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))
                 {
                     WriteToBinary(
                         item: item,
@@ -2456,7 +2457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool doMasks = true,
             GroupMask importMask = null)
         {
-            using (var writer = new MutagenWriter(stream))
+            using (var writer = new MutagenWriter(stream, item.GameMode))
             {
                 WriteToBinary(
                     item: item,
@@ -2476,7 +2477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool doMasks = true,
             GroupMask importMask = null)
         {
-            using (var writer = new MutagenWriter(stream))
+            using (var writer = new MutagenWriter(stream, item.GameMode))
             {
                 WriteToBinary(
                     item: item,
@@ -2526,7 +2527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
+                using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))
                 {
                     SkyrimModBinaryWriteTranslation.Instance.Write(
                         item: item,
@@ -2550,7 +2551,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ModKey modKey,
             GroupMask importMask = null)
         {
-            using (var writer = new MutagenWriter(stream))
+            using (var writer = new MutagenWriter(stream, item.GameMode))
             {
                 SkyrimModBinaryWriteTranslation.Instance.Write(
                     item: item,

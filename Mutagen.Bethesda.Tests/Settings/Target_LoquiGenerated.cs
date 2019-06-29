@@ -13,6 +13,7 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Tests.Internals;
 using ReactiveUI;
+using Mutagen.Bethesda.Tests;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -105,6 +106,10 @@ namespace Mutagen.Bethesda.Tests
             this.ExpectedBaseGroupCount_Set(default(Byte), false);
         }
         #endregion
+        #region Interest
+        public RecordInterest Interest { get; set; }
+        IRecordInterestGetter ITargetGetter.Interest => Interest;
+        #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITargetGetter)rhs, include);
         #region To String
@@ -145,6 +150,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 if (this.ExpectedBaseGroupCount != rhs.ExpectedBaseGroupCount) return false;
             }
+            if (!object.Equals(this.Interest, rhs.Interest)) return false;
             return true;
         }
 
@@ -159,6 +165,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 ret = HashHelper.GetHashCode(ExpectedBaseGroupCount).CombineHashCode(ret);
             }
+            ret = HashHelper.GetHashCode(Interest).CombineHashCode(ret);
             return ret;
         }
 
@@ -428,6 +435,7 @@ namespace Mutagen.Bethesda.Tests
                 case Target_FieldIndex.Path:
                 case Target_FieldIndex.NumMasters:
                 case Target_FieldIndex.GameMode:
+                case Target_FieldIndex.Interest:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -560,6 +568,9 @@ namespace Mutagen.Bethesda.Tests
                 case Target_FieldIndex.ExpectedBaseGroupCount:
                     this.ExpectedBaseGroupCount = (Byte)obj;
                     break;
+                case Target_FieldIndex.Interest:
+                    this.Interest = (RecordInterest)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -603,6 +614,9 @@ namespace Mutagen.Bethesda.Tests
                 case Target_FieldIndex.ExpectedBaseGroupCount:
                     obj.ExpectedBaseGroupCount = (Byte)pair.Value;
                     break;
+                case Target_FieldIndex.Interest:
+                    obj.Interest = (RecordInterest)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -627,6 +641,8 @@ namespace Mutagen.Bethesda.Tests
         new bool ExpectedBaseGroupCount_IsSet { get; set; }
         void ExpectedBaseGroupCount_Set(Byte value, bool hasBeenSet = true);
         void ExpectedBaseGroupCount_Unset();
+
+        new RecordInterest Interest { get; set; }
 
         void CopyFieldsFrom(
             Target rhs,
@@ -659,6 +675,10 @@ namespace Mutagen.Bethesda.Tests
         #region ExpectedBaseGroupCount
         Byte ExpectedBaseGroupCount { get; }
         bool ExpectedBaseGroupCount_IsSet { get; }
+
+        #endregion
+        #region Interest
+        IRecordInterestGetter Interest { get; }
 
         #endregion
 
@@ -742,6 +762,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         NumMasters = 2,
         GameMode = 3,
         ExpectedBaseGroupCount = 4,
+        Interest = 5,
     }
     #endregion
 
@@ -759,9 +780,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "4eabe8e5-a068-4934-a847-401d92253ade";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(Target_Mask<>);
 
@@ -803,6 +824,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)Target_FieldIndex.GameMode;
                 case "EXPECTEDBASEGROUPCOUNT":
                     return (ushort)Target_FieldIndex.ExpectedBaseGroupCount;
+                case "INTEREST":
+                    return (ushort)Target_FieldIndex.Interest;
                 default:
                     return null;
             }
@@ -818,6 +841,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Target_FieldIndex.NumMasters:
                 case Target_FieldIndex.GameMode:
                 case Target_FieldIndex.ExpectedBaseGroupCount:
+                case Target_FieldIndex.Interest:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -829,6 +853,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             Target_FieldIndex enu = (Target_FieldIndex)index;
             switch (enu)
             {
+                case Target_FieldIndex.Interest:
+                    return true;
                 case Target_FieldIndex.Do:
                 case Target_FieldIndex.Path:
                 case Target_FieldIndex.NumMasters:
@@ -850,6 +876,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Target_FieldIndex.NumMasters:
                 case Target_FieldIndex.GameMode:
                 case Target_FieldIndex.ExpectedBaseGroupCount:
+                case Target_FieldIndex.Interest:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -871,6 +898,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "GameMode";
                 case Target_FieldIndex.ExpectedBaseGroupCount:
                     return "ExpectedBaseGroupCount";
+                case Target_FieldIndex.Interest:
+                    return "Interest";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -886,6 +915,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Target_FieldIndex.NumMasters:
                 case Target_FieldIndex.GameMode:
                 case Target_FieldIndex.ExpectedBaseGroupCount:
+                case Target_FieldIndex.Interest:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -902,6 +932,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Target_FieldIndex.NumMasters:
                 case Target_FieldIndex.GameMode:
                 case Target_FieldIndex.ExpectedBaseGroupCount:
+                case Target_FieldIndex.Interest:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -923,6 +954,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return typeof(Mutagen.Bethesda.GameMode);
                 case Target_FieldIndex.ExpectedBaseGroupCount:
                     return typeof(Byte);
+                case Target_FieldIndex.Interest:
+                    return typeof(RecordInterest);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1072,6 +1105,51 @@ namespace Mutagen.Bethesda.Tests.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if (copyMask?.Interest.Overall != CopyOption.Skip)
+            {
+                errorMask?.PushIndex((int)Target_FieldIndex.Interest);
+                try
+                {
+                    switch (copyMask?.Interest?.Overall ?? CopyOption.Reference)
+                    {
+                        case CopyOption.Reference:
+                            item.Interest = Utility.GetGetterInterfaceReference<RecordInterest>(rhs.Interest);
+                            break;
+                        case CopyOption.CopyIn:
+                            RecordInterestCommon.CopyFieldsFrom(
+                                item: item.Interest,
+                                rhs: rhs.Interest,
+                                def: def?.Interest,
+                                errorMask: errorMask,
+                                copyMask: copyMask?.Interest.Specific);
+                            break;
+                        case CopyOption.MakeCopy:
+                            if (rhs.Interest == null)
+                            {
+                                item.Interest = null;
+                            }
+                            else
+                            {
+                                item.Interest = RecordInterest.Copy(
+                                    rhs.Interest,
+                                    copyMask?.Interest?.Specific,
+                                    def?.Interest);
+                            }
+                            break;
+                        default:
+                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Interest?.Overall}. Cannot execute copy.");
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
 
         #endregion
@@ -1086,6 +1164,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.NumMasters = default(Byte);
             item.GameMode = default(Mutagen.Bethesda.GameMode);
             item.ExpectedBaseGroupCount_Unset();
+            item.Interest = default(RecordInterest);
         }
 
         public Target_Mask<bool> GetEqualsMask(
@@ -1114,6 +1193,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.NumMasters = item.NumMasters == rhs.NumMasters;
             ret.GameMode = item.GameMode == rhs.GameMode;
             ret.ExpectedBaseGroupCount = item.ExpectedBaseGroupCount_IsSet == rhs.ExpectedBaseGroupCount_IsSet && item.ExpectedBaseGroupCount == rhs.ExpectedBaseGroupCount;
+            ret.Interest = MaskItemExt.Factory(item.Interest.GetEqualsMask(rhs.Interest, include), include);
         }
 
         public string ToString(
@@ -1180,6 +1260,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 fg.AppendLine($"ExpectedBaseGroupCount => {item.ExpectedBaseGroupCount}");
             }
+            if (printMask?.Interest?.Overall ?? true)
+            {
+                item.Interest?.ToString(fg, "Interest");
+            }
         }
 
         public bool HasBeenSet(
@@ -1199,6 +1283,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             mask.NumMasters = true;
             mask.GameMode = true;
             mask.ExpectedBaseGroupCount = item.ExpectedBaseGroupCount_IsSet;
+            mask.Interest = new MaskItem<bool, RecordInterest_Mask<bool>>(true, item.Interest.GetHasBeenSetMask());
         }
 
     }
@@ -1261,6 +1346,16 @@ namespace Mutagen.Bethesda.Tests.Internals
                     item: item.ExpectedBaseGroupCount,
                     fieldIndex: (int)Target_FieldIndex.ExpectedBaseGroupCount,
                     errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.Interest) ?? true))
+            {
+                ((RecordInterestXmlWriteTranslation)((IXmlItem)item.Interest).XmlWriteTranslator).Write(
+                    item: item.Interest,
+                    node: node,
+                    name: nameof(item.Interest),
+                    fieldIndex: (int)Target_FieldIndex.Interest,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Target_FieldIndex.Interest));
             }
         }
 
@@ -1513,6 +1608,36 @@ namespace Mutagen.Bethesda.Tests.Internals
                         }
                     }
                     break;
+                case "Interest":
+                    if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.Interest) ?? true))
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)Target_FieldIndex.Interest);
+                            if (LoquiXmlTranslation<RecordInterest>.Instance.Parse(
+                                node: node,
+                                item: out RecordInterest InterestParse,
+                                errorMask: errorMask,
+                                translationMask: translationMask?.GetSubCrystal((int)Target_FieldIndex.Interest)))
+                            {
+                                item.Interest = InterestParse;
+                            }
+                            else
+                            {
+                                item.Interest = default(RecordInterest);
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -1694,6 +1819,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.NumMasters = initialValue;
             this.GameMode = initialValue;
             this.ExpectedBaseGroupCount = initialValue;
+            this.Interest = new MaskItem<T, RecordInterest_Mask<T>>(initialValue, new RecordInterest_Mask<T>(initialValue));
         }
         #endregion
 
@@ -1703,6 +1829,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public T NumMasters;
         public T GameMode;
         public T ExpectedBaseGroupCount;
+        public MaskItem<T, RecordInterest_Mask<T>> Interest { get; set; }
         #endregion
 
         #region Equals
@@ -1720,6 +1847,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!object.Equals(this.NumMasters, rhs.NumMasters)) return false;
             if (!object.Equals(this.GameMode, rhs.GameMode)) return false;
             if (!object.Equals(this.ExpectedBaseGroupCount, rhs.ExpectedBaseGroupCount)) return false;
+            if (!object.Equals(this.Interest, rhs.Interest)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1730,6 +1858,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret = ret.CombineHashCode(this.NumMasters?.GetHashCode());
             ret = ret.CombineHashCode(this.GameMode?.GetHashCode());
             ret = ret.CombineHashCode(this.ExpectedBaseGroupCount?.GetHashCode());
+            ret = ret.CombineHashCode(this.Interest?.GetHashCode());
             return ret;
         }
 
@@ -1743,6 +1872,11 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!eval(this.NumMasters)) return false;
             if (!eval(this.GameMode)) return false;
             if (!eval(this.ExpectedBaseGroupCount)) return false;
+            if (Interest != null)
+            {
+                if (!eval(this.Interest.Overall)) return false;
+                if (this.Interest.Specific != null && !this.Interest.Specific.AllEqual(eval)) return false;
+            }
             return true;
         }
         #endregion
@@ -1762,6 +1896,15 @@ namespace Mutagen.Bethesda.Tests.Internals
             obj.NumMasters = eval(this.NumMasters);
             obj.GameMode = eval(this.GameMode);
             obj.ExpectedBaseGroupCount = eval(this.ExpectedBaseGroupCount);
+            if (this.Interest != null)
+            {
+                obj.Interest = new MaskItem<R, RecordInterest_Mask<R>>();
+                obj.Interest.Overall = eval(this.Interest.Overall);
+                if (this.Interest.Specific != null)
+                {
+                    obj.Interest.Specific = this.Interest.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -1810,6 +1953,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"ExpectedBaseGroupCount => {ExpectedBaseGroupCount}");
                 }
+                if (printMask?.Interest?.Overall ?? true)
+                {
+                    Interest?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -1838,6 +1985,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public Exception NumMasters;
         public Exception GameMode;
         public Exception ExpectedBaseGroupCount;
+        public MaskItem<Exception, RecordInterest_ErrorMask> Interest;
         #endregion
 
         #region IErrorMask
@@ -1856,6 +2004,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return GameMode;
                 case Target_FieldIndex.ExpectedBaseGroupCount:
                     return ExpectedBaseGroupCount;
+                case Target_FieldIndex.Interest:
+                    return Interest;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1880,6 +2030,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                     break;
                 case Target_FieldIndex.ExpectedBaseGroupCount:
                     this.ExpectedBaseGroupCount = ex;
+                    break;
+                case Target_FieldIndex.Interest:
+                    this.Interest = new MaskItem<Exception, RecordInterest_ErrorMask>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1906,6 +2059,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Target_FieldIndex.ExpectedBaseGroupCount:
                     this.ExpectedBaseGroupCount = (Exception)obj;
                     break;
+                case Target_FieldIndex.Interest:
+                    this.Interest = (MaskItem<Exception, RecordInterest_ErrorMask>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1919,6 +2075,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (NumMasters != null) return true;
             if (GameMode != null) return true;
             if (ExpectedBaseGroupCount != null) return true;
+            if (Interest != null) return true;
             return false;
         }
         #endregion
@@ -1958,6 +2115,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine($"NumMasters => {NumMasters}");
             fg.AppendLine($"GameMode => {GameMode}");
             fg.AppendLine($"ExpectedBaseGroupCount => {ExpectedBaseGroupCount}");
+            Interest?.ToString(fg);
         }
         #endregion
 
@@ -1970,6 +2128,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.NumMasters = this.NumMasters.Combine(rhs.NumMasters);
             ret.GameMode = this.GameMode.Combine(rhs.GameMode);
             ret.ExpectedBaseGroupCount = this.ExpectedBaseGroupCount.Combine(rhs.ExpectedBaseGroupCount);
+            ret.Interest = new MaskItem<Exception, RecordInterest_ErrorMask>(this.Interest.Overall.Combine(rhs.Interest.Overall), ((IErrorMask<RecordInterest_ErrorMask>)this.Interest.Specific).Combine(rhs.Interest.Specific));
             return ret;
         }
         public static Target_ErrorMask Combine(Target_ErrorMask lhs, Target_ErrorMask rhs)
@@ -2001,6 +2160,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.NumMasters = defaultOn;
             this.GameMode = defaultOn;
             this.ExpectedBaseGroupCount = defaultOn;
+            this.Interest = new MaskItem<CopyOption, RecordInterest_CopyMask>(deepCopyOption, default);
         }
 
         #region Members
@@ -2009,6 +2169,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool NumMasters;
         public bool GameMode;
         public bool ExpectedBaseGroupCount;
+        public MaskItem<CopyOption, RecordInterest_CopyMask> Interest;
         #endregion
 
     }
@@ -2022,6 +2183,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool NumMasters;
         public bool GameMode;
         public bool ExpectedBaseGroupCount;
+        public MaskItem<bool, RecordInterest_TranslationMask> Interest;
         #endregion
 
         #region Ctors
@@ -2036,6 +2198,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.NumMasters = defaultOn;
             this.GameMode = defaultOn;
             this.ExpectedBaseGroupCount = defaultOn;
+            this.Interest = new MaskItem<bool, RecordInterest_TranslationMask>(defaultOn, null);
         }
 
         #endregion
@@ -2059,6 +2222,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((NumMasters, null));
             ret.Add((GameMode, null));
             ret.Add((ExpectedBaseGroupCount, null));
+            ret.Add((Interest?.Overall ?? true, Interest?.Specific?.GetCrystal()));
         }
     }
     #endregion

@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public object BaseGRUPIterator()
         {
             stream.Position = 0;
-            return RecordLocator.IterateBaseGroupLocations(stream);
+            return RecordLocator.IterateBaseGroupLocations(stream, GameMode.Oblivion);
         }
     }
 }

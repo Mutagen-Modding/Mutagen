@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<xs:schema id="RecordInterest" targetNamespace="Tests" elementFormDefault="qualified" xmlns="Tests" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="Common.xsd" />
+   <xs:element name="RecordInterest" type="RecordInterestType" />
+   <xs:complexType name="RecordInterestType">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:element name="InterestingTypes" type="InterestingTypesType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="UninterestingTypes" type="UninterestingTypesType" minOccurs="0" maxOccurs="1" />
+      </xs:choice>
+   </xs:complexType>
+   <xs:complexType name="InterestingTypesType">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:element name="Item" type="NullableValueType" />
+      </xs:choice>
+   </xs:complexType>
+   <xs:complexType name="UninterestingTypesType">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:element name="Item" type="NullableValueType" />
+      </xs:choice>
+   </xs:complexType>
+</xs:schema>

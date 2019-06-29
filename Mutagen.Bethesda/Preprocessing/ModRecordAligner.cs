@@ -18,13 +18,19 @@ namespace Mutagen.Bethesda.Preprocessing
             public Dictionary<RecordType, Dictionary<RecordType, AlignmentRule>> Alignments = new Dictionary<RecordType, Dictionary<RecordType, AlignmentRule>>();
             public Dictionary<RecordType, IEnumerable<RecordType>> StopMarkers = new Dictionary<RecordType, IEnumerable<RecordType>>();
             public Dictionary<GroupTypeEnum, List<RecordType>> GroupAlignment = new Dictionary<GroupTypeEnum, List<RecordType>>();
+            public GameMode GameMode;
+
+            public AlignmentRules(GameMode gameMode)
+            {
+                this.GameMode = gameMode;
+            }
 
             public void AddAlignments(RecordType type, params RecordType[] recTypes)
             {
                 var subList = new Dictionary<RecordType, AlignmentRule>();
                 foreach (var t in recTypes)
                 {
-                    subList[t] = new AlignmentStraightRecord(t.Type);
+                    subList[t] = new AlignmentStraightRecord(t.Type, this.GameMode);
                 }
                 this.Alignments.Add(
                     type,
@@ -56,10 +62,12 @@ namespace Mutagen.Bethesda.Preprocessing
         public class AlignmentStraightRecord : AlignmentRule
         {
             private RecordType _recordType;
+            private GameMode _gameMode;
 
-            public AlignmentStraightRecord(string str)
+            public AlignmentStraightRecord(string str, GameMode gameMode)
             {
                 _recordType = new RecordType(str);
+                _gameMode = gameMode;
             }
 
             public override RecordType RecordType => _recordType;
@@ -74,7 +82,7 @@ namespace Mutagen.Bethesda.Preprocessing
                     throw new ArgumentException();
                 }
                 var ret = new byte[subLen + 6];
-                MutagenWriter stream = new MutagenWriter(new MemoryStream(ret));
+                MutagenWriter stream = new MutagenWriter(new MemoryStream(ret), this._gameMode);
                 using (HeaderExport.ExportSubRecordHeader(stream, _recordType))
                 {
                     inputStream.WriteTo(stream.BaseStream, subLen);
@@ -86,11 +94,14 @@ namespace Mutagen.Bethesda.Preprocessing
         public class AlignmentSubRule : AlignmentRule
         {
             public List<RecordType> SubTypes = new List<RecordType>();
+            public GameMode GameMode;
 
             public AlignmentSubRule(
+                GameMode gameMode,
                 params RecordType[] types)
             {
                 this.SubTypes = types.ToList();
+                this.GameMode = gameMode;
             }
 
             public override RecordType RecordType => SubTypes[0];
@@ -110,7 +121,7 @@ namespace Mutagen.Bethesda.Preprocessing
                         break;
                     }
                     var data = new byte[subLen + 6];
-                    stream = new MutagenWriter(new MemoryStream(data));
+                    stream = new MutagenWriter(new MemoryStream(data), this.GameMode);
                     using (HeaderExport.ExportSubRecordHeader(stream, subType))
                     {
                         inputStream.WriteTo(stream.BaseStream, subLen);
@@ -118,7 +129,7 @@ namespace Mutagen.Bethesda.Preprocessing
                     dataDict[subType] = data;
                 }
                 byte[] ret = new byte[dataDict.Values.Sum((d) => d.Length)];
-                stream = new MutagenWriter(new MemoryStream(ret));
+                stream = new MutagenWriter(new MemoryStream(ret), this.GameMode);
                 foreach (var alignment in SubTypes)
                 {
                     if (dataDict.TryGetValue(
@@ -147,7 +158,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 var alignedMajorRecordsFile = Path.Combine(temp.Dir.Path, "alignedRules");
                 using (var inputStream = new BinaryReadStream(inputPath.Path))
                 {
-                    using (var writer = new MutagenWriter(new FileStream(alignedMajorRecordsFile, FileMode.Create)))
+                    using (var writer = new MutagenWriter(new FileStream(alignedMajorRecordsFile, FileMode.Create), gameMode))
                     {
                         AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
                     }
@@ -156,7 +167,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 var alignedGroupsFile = Path.Combine(temp.Dir.Path, "alignedGroups");
                 using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile))
                 {
-                    using (var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create)))
+                    using (var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create), gameMode))
                     {
                         AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
                     }
@@ -166,7 +177,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 var alignedCellsFile = Path.Combine(temp.Dir.Path, "alignedCells");
                 using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
                 {
-                    using (var writer = new MutagenWriter(alignedCellsFile))
+                    using (var writer = new MutagenWriter(alignedCellsFile, gameMode))
                     {
                         foreach (var grup in fileLocs.GrupLocations)
                         {
@@ -196,7 +207,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 fileLocs = RecordLocator.GetFileLocations(alignedCellsFile, gameMode, interest);
                 using (var mutaReader = new BinaryReadStream(alignedCellsFile))
                 {
-                    using (var writer = new MutagenWriter(outputPath.Path))
+                    using (var writer = new MutagenWriter(outputPath.Path, gameMode))
                     {
                         foreach (var grup in fileLocs.GrupLocations)
                         {
