@@ -23,13 +23,11 @@ namespace Mutagen.Bethesda
             public FormID LastParsed;
             public long LastLoc;
             public MetaDataConstants MetaData { get; }
-            public GameMode GameMode { get; }
             public Func<IMutagenReadStream, RecordType, uint, bool> AdditionalCriteria;
 
-            public FileLocationConstructor(GameMode mode)
+            public FileLocationConstructor(MetaDataConstants metaData)
             {
-                this.GameMode = mode;
-                this.MetaData = MetaDataConstants.Get(mode);
+                this.MetaData = metaData;
             }
 
             public void Add(
@@ -153,38 +151,34 @@ namespace Mutagen.Bethesda
             GameMode gameMode,
             RecordInterest interest = null)
         {
-            using (var stream = new MutagenBinaryReadStream(filePath))
+            var meta = MetaDataConstants.Get(gameMode);
+            using (var stream = new MutagenBinaryReadStream(filePath, meta))
             {
-                return GetFileLocations(stream, gameMode, interest);
+                return GetFileLocations(stream, interest);
             }
         }
 
-        private static void SkipHeader(
-            IMutagenReadStream reader,
-            MetaDataConstants meta)
+        private static void SkipHeader(IMutagenReadStream reader)
         {
-            if (reader.Length < 8)
+            ModHeaderMeta headerMeta = reader.MetaData.Header(reader);
+            if (!headerMeta.HasContent)
             {
                 reader.Position = reader.Length;
                 return;
             }
-            reader.Position += 4;
-            var headerLen = reader.ReadUInt32();
-            reader.Position += meta.ModHeaderFluffLength;
-            reader.Position += headerLen;
+            reader.Position += headerMeta.TotalLength;
         }
 
         public static FileLocations GetFileLocations(
             IMutagenReadStream reader,
-            GameMode gameMode,
             RecordInterest interest = null,
             Func<IMutagenReadStream, RecordType, uint, bool> additionalCriteria = null)
         {
-            FileLocationConstructor ret = new FileLocationConstructor(gameMode)
+            FileLocationConstructor ret = new FileLocationConstructor(reader.MetaData)
             {
                 AdditionalCriteria = additionalCriteria,
             };
-            SkipHeader(reader, ret.MetaData);
+            SkipHeader(reader);
 
             HashSet<RecordType> remainingTypes = ((interest?.InterestingTypes?.Count ?? 0) <= 0) ? null : new HashSet<RecordType>(interest.InterestingTypes);
             Stack<long> grupPositions = new Stack<long>();
@@ -436,14 +430,12 @@ namespace Mutagen.Bethesda
 
         #region Base GRUP Iterator
         public static IEnumerable<KeyValuePair<RecordType, long>> IterateBaseGroupLocations(
-            IMutagenReadStream reader,
-            GameMode mode)
+            IMutagenReadStream reader)
         {
-            MetaDataConstants meta = MetaDataConstants.Get(mode);
-            SkipHeader(reader, meta);
+            SkipHeader(reader);
             while (!reader.Complete)
             {
-                GroupRecordMeta groupMeta = meta.Group(reader);
+                GroupRecordMeta groupMeta = reader.MetaData.Group(reader);
                 if (!groupMeta.IsGroup)
                 {
                     throw new DataMisalignedException("Group was not read in where expected: 0x" + reader.Position.ToString("X"));

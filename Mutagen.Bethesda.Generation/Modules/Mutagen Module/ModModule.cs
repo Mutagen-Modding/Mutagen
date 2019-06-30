@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 throw new ArgumentException("Mod object must specify game mode enum.");
             }
+            obj.CustomData[Mutagen.Bethesda.Generation.Constants.GAME_MODE] = gameMode;
             fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{gameMode};");
             fg.AppendLine($"private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);");
             fg.AppendLine($"public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;");

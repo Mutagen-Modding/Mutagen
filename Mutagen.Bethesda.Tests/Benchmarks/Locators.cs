@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             System.Console.WriteLine("Target settings: " + settings.ToString());
             var dataPath = Path.Combine(settings.DataFolderLocations.Oblivion, "Oblivion.esm");
             data = File.ReadAllBytes(dataPath);
-            stream = new MutagenMemoryReadStream(data);
+            stream = new MutagenMemoryReadStream(data, MetaDataConstants.Oblivion);
         }
 
         [GlobalCleanup]
@@ -37,14 +37,14 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public object BaseGRUPIterator()
         {
             stream.Position = 0;
-            return RecordLocator.IterateBaseGroupLocations(stream, GameMode.Oblivion);
+            return RecordLocator.IterateBaseGroupLocations(stream);
         }
 
         [Benchmark]
         public object GetFileLocations()
         {
             stream.Position = 0;
-            return RecordLocator.GetFileLocations(stream, GameMode.Oblivion);
+            return RecordLocator.GetFileLocations(stream);
         }
     }
 }

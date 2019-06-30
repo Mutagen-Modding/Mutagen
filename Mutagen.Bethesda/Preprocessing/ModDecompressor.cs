@@ -18,16 +18,16 @@ namespace Mutagen.Bethesda.Preprocessing
             GameMode gameMode,
             RecordInterest interest = null)
         {
-            using (var inputStream = new MutagenBinaryReadStream(streamCreator()))
+            var meta = MetaDataConstants.Get(gameMode);
+            using (var inputStream = new MutagenBinaryReadStream(streamCreator(), meta))
             {
-                using (var inputStreamJumpback = new MutagenBinaryReadStream(streamCreator()))
+                using (var inputStreamJumpback = new MutagenBinaryReadStream(streamCreator(), meta))
                 {
                     using (var writer = new System.IO.BinaryWriter(outputStream, Encoding.Default, leaveOpen: true))
                     {
                         long runningDiff = 0;
                         var fileLocs = RecordLocator.GetFileLocations(
                             inputStream,
-                            gameMode: gameMode,
                             interest: interest,
                             additionalCriteria: (stream, recType, len) =>
                             {
@@ -88,13 +88,13 @@ namespace Mutagen.Bethesda.Preprocessing
                                 // Modify parent group lengths
                                 foreach (var grupLoc in fileLocs.GetContainingGroupLocations(nextRec.Value.FormID))
                                 {
-                                    if (!grupMeta.TryGetValue(grupLoc, out var meta))
+                                    if (!grupMeta.TryGetValue(grupLoc, out var loc))
                                     {
-                                        meta.Offset = runningDiff;
+                                        loc.Offset = runningDiff;
                                         inputStreamJumpback.Position = grupLoc + 4;
-                                        meta.Length = inputStreamJumpback.ReadUInt32();
+                                        loc.Length = inputStreamJumpback.ReadUInt32();
                                     }
-                                    grupMeta[grupLoc] = ((uint)(meta.Length + lengthDiff), meta.Offset);
+                                    grupMeta[grupLoc] = ((uint)(loc.Length + lengthDiff), loc.Offset);
                                 }
                                 runningDiff += lengthDiff;
                             }

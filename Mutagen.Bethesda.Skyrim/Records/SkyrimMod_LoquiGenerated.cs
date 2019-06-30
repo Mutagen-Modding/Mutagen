@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenBinaryReadStream(path))
+            using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
             {
                 var frame = new MutagenFrame(reader);
                 return await CreateFromBinary(
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenBinaryReadStream(path))
+            using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
             {
                 var frame = new MutagenFrame(reader);
                 return await CreateFromBinary_Error(
@@ -660,7 +660,7 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenBinaryReadStream(path))
+            using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
             {
                 var frame = new MutagenFrame(reader);
                 return await CreateFromBinary(
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenBinaryReadStream(stream))
+            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
             {
                 var frame = new MutagenFrame(reader);
                 return await CreateFromBinary(
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenBinaryReadStream(stream))
+            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
             {
                 var frame = new MutagenFrame(reader);
                 return await CreateFromBinary_Error(
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenBinaryReadStream(stream))
+            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
             {
                 var frame = new MutagenFrame(reader);
                 return await CreateFromBinary(

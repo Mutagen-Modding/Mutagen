@@ -19,16 +19,16 @@ namespace Mutagen.Bethesda.Preprocessing
             GameMode gameMode)
         {
             var meta = MetaDataConstants.Get(gameMode);
-            using (var inputStream = new MutagenBinaryReadStream(streamCreator()))
+            using (var inputStream = new MutagenBinaryReadStream(streamCreator(), meta))
             {
-                using (var locatorStream = new MutagenBinaryReadStream(streamCreator()))
+                using (var locatorStream = new MutagenBinaryReadStream(streamCreator(), meta))
                 {
                     using (var writer = new MutagenWriter(outputStream, gameMode, dispose: false))
                     {
                         while (!inputStream.Complete)
                         {
                             long noRecordLength;
-                            foreach (var grupLoc in RecordLocator.IterateBaseGroupLocations(locatorStream, gameMode))
+                            foreach (var grupLoc in RecordLocator.IterateBaseGroupLocations(locatorStream))
                             {
                                 noRecordLength = grupLoc.Value - inputStream.Position;
                                 inputStream.WriteTo(writer.BaseStream, (int)noRecordLength);

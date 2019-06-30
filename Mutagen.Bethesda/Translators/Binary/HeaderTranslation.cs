@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static RecordType GetNextType(
-            IBinaryReadStream reader,
+            IMutagenReadStream reader,
             out int contentLength,
             out long finalPos,
             bool hopGroup = true)

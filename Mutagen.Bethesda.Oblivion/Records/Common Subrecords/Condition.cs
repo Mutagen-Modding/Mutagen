@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
             bytes[3] = (byte)'A';
             Array.Copy(bytes, newBytes, bytes.Length);
             LoquiBinaryTranslation<Condition>.Instance.Parse(
-                frame: new MutagenFrame(new MutagenMemoryReadStream(newBytes, offsetReference: pos)),
+                frame: new MutagenFrame(new MutagenMemoryReadStream(newBytes, frame.MetaData, offsetReference: pos)),
                 item: out var item,
                 errorMask: errorMask,
                 masterReferences: masterReferences,

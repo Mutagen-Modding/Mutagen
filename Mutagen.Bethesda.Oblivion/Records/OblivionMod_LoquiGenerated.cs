@@ -3026,7 +3026,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenBinaryReadStream(path))
+            using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
                 return await CreateFromBinary(
@@ -3041,7 +3041,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenBinaryReadStream(path))
+            using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
                 return await CreateFromBinary_Error(
@@ -3057,7 +3057,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenBinaryReadStream(path))
+            using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
                 return await CreateFromBinary(
@@ -3074,7 +3074,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenBinaryReadStream(stream))
+            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
                 return await CreateFromBinary(
@@ -3089,7 +3089,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenBinaryReadStream(stream))
+            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
                 return await CreateFromBinary_Error(
@@ -3105,7 +3105,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenBinaryReadStream(stream))
+            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
                 return await CreateFromBinary(

@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Tests
                 }
 
                 var alignedGroupsFile = Path.Combine(temp.Dir.Path, "alignedGroups");
-                using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile))
+                using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, gameMode))
                 {
                     using (var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create), gameMode))
                     {

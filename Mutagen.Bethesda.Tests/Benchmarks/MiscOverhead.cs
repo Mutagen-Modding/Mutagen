@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
     public class MiscOverhead
     {
         static byte[] bytes = new byte[] { 1, 2, 3 };
-        static MutagenFrame frame = new MutagenFrame(new MutagenMemoryReadStream(bytes));
+        static MutagenFrame frame = new MutagenFrame(new MutagenMemoryReadStream(bytes, GameMode.Oblivion));
         static ByteBinaryTranslation transl = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance;
 
         [Benchmark]

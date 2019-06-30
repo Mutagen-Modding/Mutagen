@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Tests
 
                 Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
 
-                using (var reader = new MutagenBinaryReadStream(preprocessedPath))
+                using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
                 {
                     foreach (var grup in alignedFileLocs.GrupLocations.And(alignedFileLocs.ListedRecords.Keys))
                     {
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Tests
                     lengthTracker,
                     alignedFileLocs);
 
-                using (var stream = new MutagenBinaryReadStream(preprocessedPath))
+                using (var stream = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
                 {
                     var fileLocs = RecordLocator.GetFileLocations(this.FilePath.Path, this.GameMode);
                     PreProcessorJobs(
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
-                using (var reader = new MutagenBinaryReadStream(preprocessedPath))
+                using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
                 {
                     foreach (var grup in lengthTracker)
                     {
@@ -248,7 +248,7 @@ namespace Mutagen.Bethesda.Tests
                         Mutagen.Bethesda.Oblivion.Constants.Oblivion);
                     GC.Collect();
 
-                    using (var stream = new MutagenBinaryReadStream(processedPath))
+                    using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
                     {
                         var ret = Passthrough_Tests.AssertFilesEqual(
                             stream,
@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Tests
 
                 if (Settings.TestObservable)
                 {
-                    using (var stream = new MutagenBinaryReadStream(processedPath))
+                    using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
                     {
                         var ret = Passthrough_Tests.AssertFilesEqual(
                             stream,
