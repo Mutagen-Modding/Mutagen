@@ -42,12 +42,12 @@ namespace Mutagen.Bethesda.Generation
             {
                 throw new ArgumentException($"{obj.Name} {field.Name} cannot have an optional field if it is not a record typed field.");
             }
+            data.IncludeInLength = node.GetAttribute<bool>("includeInLength", true);
+            data.Vestigial = node.GetAttribute<bool>("vestigial", false);
+            data.Binary = node.GetAttribute<BinaryGenerationType>("binary", BinaryGenerationType.Normal);
+            ModifyGRUPAttributes(field);
+            await base.PostFieldLoad(obj, field, node);
             data.Length = node.GetAttribute<long?>("length", null);
-            if (field is ByteArrayType byteArray
-                && !data.Length.HasValue)
-            {
-                data.Length = 4;
-            }
             if (!data.Length.HasValue
                 && !data.RecordType.HasValue
                 && !(field is NothingType)
@@ -57,11 +57,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 throw new ArgumentException($"{obj.Name} {field.Name} have to define either length or record type.");
             }
-            data.IncludeInLength = node.GetAttribute<bool>("includeInLength", true);
-            data.Vestigial = node.GetAttribute<bool>("vestigial", false);
-            data.Binary = node.GetAttribute<BinaryGenerationType>("binary", BinaryGenerationType.Normal);
-            ModifyGRUPAttributes(field);
-            await base.PostFieldLoad(obj, field, node);
         }
 
         private void ModifyGRUPAttributes(TypeGeneration field)
