@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IClimate :
-        IClimateGetter,
+        IClimateInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IClimateInternal>
     {

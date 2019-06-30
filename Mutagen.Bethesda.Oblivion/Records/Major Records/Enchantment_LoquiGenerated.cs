@@ -840,7 +840,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IEnchantment :
-        IEnchantmentGetter,
+        IEnchantmentInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IEnchantmentInternal>
     {

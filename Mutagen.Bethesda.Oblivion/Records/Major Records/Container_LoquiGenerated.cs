@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IContainer :
-        IContainerGetter,
+        IContainerInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IContainerInternal>
     {

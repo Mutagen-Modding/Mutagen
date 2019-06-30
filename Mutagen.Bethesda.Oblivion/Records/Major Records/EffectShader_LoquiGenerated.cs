@@ -2492,7 +2492,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IEffectShader :
-        IEffectShaderGetter,
+        IEffectShaderInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IEffectShaderInternal>
     {

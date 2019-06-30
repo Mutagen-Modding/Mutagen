@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILoadScreen :
-        ILoadScreenGetter,
+        ILoadScreenInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<ILoadScreenInternal>
     {

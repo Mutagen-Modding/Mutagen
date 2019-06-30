@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILeveledSpell :
-        ILeveledSpellGetter,
+        ILeveledSpellInternalGetter,
         ISpellAbstract,
         ILoquiObjectSetter<ILeveledSpellInternal>
     {

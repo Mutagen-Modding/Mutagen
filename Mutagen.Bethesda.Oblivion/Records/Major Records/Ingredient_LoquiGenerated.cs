@@ -1005,7 +1005,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IIngredient :
-        IIngredientGetter,
+        IIngredientInternalGetter,
         IItemAbstract,
         ILoquiObjectSetter<IIngredientInternal>
     {

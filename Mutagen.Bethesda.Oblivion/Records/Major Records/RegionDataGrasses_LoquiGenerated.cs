@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRegionDataGrasses :
-        IRegionDataGrassesGetter,
+        IRegionDataGrassesInternalGetter,
         IRegionData,
         ILoquiObjectSetter<IRegionDataGrassesInternal>
     {

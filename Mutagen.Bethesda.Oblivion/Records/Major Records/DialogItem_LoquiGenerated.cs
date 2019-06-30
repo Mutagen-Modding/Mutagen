@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IDialogItem :
-        IDialogItemGetter,
+        IDialogItemInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IDialogItemInternal>
     {

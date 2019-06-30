@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISoundData :
-        ISoundDataGetter,
+        ISoundDataInternalGetter,
         ILoquiObjectSetter<ISoundDataInternal>
     {
         new UInt16 MinimumAttenuationDistance { get; set; }

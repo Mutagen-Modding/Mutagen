@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IClothingAbstract :
-        IClothingAbstractGetter,
+        IClothingAbstractInternalGetter,
         IItemAbstract,
         ILoquiObjectSetter<IClothingAbstractInternal>
     {

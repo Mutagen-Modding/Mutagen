@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IAmmo :
-        IAmmoGetter,
+        IAmmoInternalGetter,
         IItemAbstract,
         ILoquiObjectSetter<IAmmoInternal>
     {

@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IEffect :
-        IEffectGetter,
+        IEffectInternalGetter,
         ILoquiObjectSetter<IEffectInternal>
     {
         new MagicEffect MagicEffect { get; set; }

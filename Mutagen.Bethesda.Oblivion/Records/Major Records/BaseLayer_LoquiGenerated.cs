@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IBaseLayer :
-        IBaseLayerGetter,
+        IBaseLayerInternalGetter,
         ILoquiObjectSetter<IBaseLayerInternal>
     {
         new LandTexture Texture { get; set; }

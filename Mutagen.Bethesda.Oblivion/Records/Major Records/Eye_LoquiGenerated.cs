@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IEye :
-        IEyeGetter,
+        IEyeInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IEyeInternal>
     {

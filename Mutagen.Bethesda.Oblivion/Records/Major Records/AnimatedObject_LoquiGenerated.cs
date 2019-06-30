@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IAnimatedObject :
-        IAnimatedObjectGetter,
+        IAnimatedObjectInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IAnimatedObjectInternal>
     {

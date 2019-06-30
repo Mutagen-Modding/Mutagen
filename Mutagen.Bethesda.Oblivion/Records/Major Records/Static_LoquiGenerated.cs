@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IStatic :
-        IStaticGetter,
+        IStaticInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IStaticInternal>
     {

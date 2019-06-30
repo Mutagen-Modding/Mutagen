@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>ef2473c1a98741e3d6e558f92d25ff550dfda4f4</Sha>
+         <Sha>0164ede0ed8629ed18372c237ec34342ae18d9d1</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>06-25-2019 21:05:34</CommitDate>
-         <Description>TryGetAttribute enum improvements.  Tests</Description>
+         <CommitDate>06-29-2019 21:58:00</CommitDate>
+         <Description>Some has been set covariance</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>db5cb246be45a3db1579159c25e76c9a9dcb5c24</Sha>
+         <Sha>7bf5b82ba0c68f0d99c835a4bc02b34c0263eec3</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>06-25-2019 22:47:17</CommitDate>
-         <Description>Refactors to support LoquiInterfaceType for containers</Description>
+         <CommitDate>06-29-2019 22:07:45</CommitDate>
+         <Description>Bugfix for setter interface not implementing internal getter</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

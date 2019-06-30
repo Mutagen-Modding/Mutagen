@@ -789,7 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISpellUnleveled :
-        ISpellUnleveledGetter,
+        ISpellUnleveledInternalGetter,
         ISpell,
         ILoquiObjectSetter<ISpellUnleveledInternal>
     {

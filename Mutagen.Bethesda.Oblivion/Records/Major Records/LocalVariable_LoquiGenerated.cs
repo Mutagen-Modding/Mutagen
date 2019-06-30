@@ -714,7 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILocalVariable :
-        ILocalVariableGetter,
+        ILocalVariableInternalGetter,
         ILoquiObjectSetter<ILocalVariableInternal>
     {
         new Int32 Index { get; set; }

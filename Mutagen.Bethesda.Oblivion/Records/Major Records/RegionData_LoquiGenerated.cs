@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRegionData :
-        IRegionDataGetter,
+        IRegionDataInternalGetter,
         ILoquiObjectSetter<IRegionDataInternal>
     {
         new RegionData.RegionDataFlag Flags { get; set; }

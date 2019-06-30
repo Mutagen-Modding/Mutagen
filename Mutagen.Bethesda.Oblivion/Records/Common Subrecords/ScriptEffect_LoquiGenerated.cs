@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IScriptEffect :
-        IScriptEffectGetter,
+        IScriptEffectInternalGetter,
         ILoquiObjectSetter<IScriptEffectInternal>
     {
         new Script Script { get; set; }

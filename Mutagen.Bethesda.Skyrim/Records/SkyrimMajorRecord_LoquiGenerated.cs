@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISkyrimMajorRecord :
-        ISkyrimMajorRecordGetter,
+        ISkyrimMajorRecordInternalGetter,
         IMajorRecord,
         ILoquiObjectSetter<ISkyrimMajorRecordInternal>
     {

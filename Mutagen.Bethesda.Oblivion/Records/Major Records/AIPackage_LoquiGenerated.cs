@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IAIPackage :
-        IAIPackageGetter,
+        IAIPackageInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IAIPackageInternal>
     {

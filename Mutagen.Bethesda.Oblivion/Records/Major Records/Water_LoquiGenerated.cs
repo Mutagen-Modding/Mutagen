@@ -1852,7 +1852,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWater :
-        IWaterGetter,
+        IWaterInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IWaterInternal>
     {

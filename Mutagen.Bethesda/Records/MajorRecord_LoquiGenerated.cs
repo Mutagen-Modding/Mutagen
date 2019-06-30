@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda
 
     #region Interface
     public partial interface IMajorRecord :
-        IMajorRecordGetter,
+        IMajorRecordInternalGetter,
         ILoquiObjectSetter<IMajorRecordInternal>
     {
         new Int32 MajorRecordFlagsRaw { get; set; }

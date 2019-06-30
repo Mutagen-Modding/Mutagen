@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILandTexture :
-        ILandTextureGetter,
+        ILandTextureInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<ILandTextureInternal>
     {

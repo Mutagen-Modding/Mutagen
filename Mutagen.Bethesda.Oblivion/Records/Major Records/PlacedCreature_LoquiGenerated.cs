@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPlacedCreature :
-        IPlacedCreatureGetter,
+        IPlacedCreatureInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IPlacedCreatureInternal>
     {

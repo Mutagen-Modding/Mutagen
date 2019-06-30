@@ -794,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IDialogResponse :
-        IDialogResponseGetter,
+        IDialogResponseInternalGetter,
         ILoquiObjectSetter<IDialogResponseInternal>
     {
         new EmotionType Emotion { get; set; }

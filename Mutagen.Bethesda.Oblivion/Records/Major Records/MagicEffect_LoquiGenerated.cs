@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IMagicEffect :
-        IMagicEffectGetter,
+        IMagicEffectInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IMagicEffectInternal>
     {

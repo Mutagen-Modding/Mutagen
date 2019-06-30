@@ -1885,7 +1885,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPlacedObject :
-        IPlacedObjectGetter,
+        IPlacedObjectInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IPlacedObjectInternal>
     {

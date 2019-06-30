@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISkillRecord :
-        ISkillRecordGetter,
+        ISkillRecordInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<ISkillRecordInternal>
     {

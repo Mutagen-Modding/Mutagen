@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISigilStone :
-        ISigilStoneGetter,
+        ISigilStoneInternalGetter,
         IItemAbstract,
         ILoquiObjectSetter<ISigilStoneInternal>
     {

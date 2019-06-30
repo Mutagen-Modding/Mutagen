@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRoad :
-        IRoadGetter,
+        IRoadInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IRoadInternal>
     {

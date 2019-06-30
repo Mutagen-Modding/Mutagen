@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IBirthsign :
-        IBirthsignGetter,
+        IBirthsignInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IBirthsignInternal>
     {

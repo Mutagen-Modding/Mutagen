@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IClass :
-        IClassGetter,
+        IClassInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IClassInternal>
     {

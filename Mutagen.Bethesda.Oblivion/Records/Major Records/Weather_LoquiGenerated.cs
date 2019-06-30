@@ -1856,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWeather :
-        IWeatherGetter,
+        IWeatherInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IWeatherInternal>
     {

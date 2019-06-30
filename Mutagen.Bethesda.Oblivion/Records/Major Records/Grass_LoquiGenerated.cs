@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IGrass :
-        IGrassGetter,
+        IGrassInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IGrassInternal>
     {

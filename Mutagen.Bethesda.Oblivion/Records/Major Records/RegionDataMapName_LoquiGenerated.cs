@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRegionDataMapName :
-        IRegionDataMapNameGetter,
+        IRegionDataMapNameInternalGetter,
         IRegionData,
         ILoquiObjectSetter<IRegionDataMapNameInternal>
     {

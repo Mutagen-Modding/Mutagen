@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGlobalShort :
-        IGlobalShortGetter,
+        IGlobalShortInternalGetter,
         IGlobal,
         ILoquiObjectSetter<IGlobalShortInternal>
     {

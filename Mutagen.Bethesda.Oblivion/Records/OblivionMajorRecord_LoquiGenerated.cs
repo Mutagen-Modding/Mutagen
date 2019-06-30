@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IOblivionMajorRecord :
-        IOblivionMajorRecordGetter,
+        IOblivionMajorRecordInternalGetter,
         IMajorRecord,
         ILoquiObjectSetter<IOblivionMajorRecordInternal>
     {

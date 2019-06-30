@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IHair :
-        IHairGetter,
+        IHairInternalGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IHairInternal>
     {

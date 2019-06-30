@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IAlphaLayer :
-        IAlphaLayerGetter,
+        IAlphaLayerInternalGetter,
         IBaseLayer,
         ILoquiObjectSetter<IAlphaLayerInternal>
     {
