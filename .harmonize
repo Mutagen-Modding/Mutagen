@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>7bf5b82ba0c68f0d99c835a4bc02b34c0263eec3</Sha>
+         <Sha>d039083ab50d91fd4f1efb40df68858d54797b49</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>06-29-2019 22:07:45</CommitDate>
-         <Description>Bugfix for setter interface not implementing internal getter</Description>
+         <CommitDate>06-29-2019 23:55:44</CommitDate>
+         <Description>Generate in mixin for modules</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

@@ -21,13 +21,20 @@ using Loqui.Xml;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial interface IOblivionModGetter : IMod, ILinkContainer
+    public partial interface IOblivionModGetter : IModGetter
+    {
+    }
+
+    public partial interface IOblivionMod : IMod
     {
     }
 
     public partial class OblivionMod
     {
         public ISourceList<MasterReference> MasterReferences => this.ModHeader.MasterReferences;
+        IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
+        IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => this.MajorRecords;
+        
         public ModKey ModKey { get; }
 
         public OblivionMod(ModKey modKey)
@@ -55,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
                 .PopulateInto(this._majorRecords);
         }
 
-        void IMod.WriteToBinary(string path, ModKey modKey)
+        void IModGetter.WriteToBinary(string path, ModKey modKey)
         {
             this.WriteToBinary(path, modKey, importMask: null);
         }

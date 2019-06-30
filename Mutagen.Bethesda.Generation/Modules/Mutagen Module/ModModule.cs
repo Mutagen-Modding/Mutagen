@@ -29,6 +29,8 @@ namespace Mutagen.Bethesda.Generation
             }
             obj.CustomData[Mutagen.Bethesda.Generation.Constants.GAME_MODE] = gameMode;
             fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{gameMode};");
+            fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroup)}<T>() => this.GetGroup<T>();");
+            fg.AppendLine($"ISourceCache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IModGetter.GetGroup)}<T>() => this.GetGroup<T>();");
             fg.AppendLine($"private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);");
             fg.AppendLine($"public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;");
             fg.AppendLine($"public IMajorRecord this[FormKey id]");
@@ -71,32 +73,6 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"throw new ArgumentException($\"Unknown settable MajorRecord type: {{record?.GetType()}}\");");
                     }
                 }
-            }
-            fg.AppendLine();
-
-            using (var args = new FunctionWrapper(fg,
-                "public ISourceCache<T, FormKey> GetGroup<T>",
-                wheres: $"where T : {nameof(IMajorRecordInternalGetter)}"))
-            {
-            }
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine("var t = typeof(T);");
-                foreach (var field in obj.IterateFields())
-                {
-                    if (!(field is LoquiType loqui)) continue;
-                    if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
-                    if (!loqui.TryGetSpecificationAsObject("T", out var subObj))
-                    {
-                        throw new ArgumentException();
-                    }
-                    fg.AppendLine($"if (t.Equals(typeof({subObj.Name})))");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"return (ISourceCache<T, FormKey>){field.Name}.Items;");
-                    }
-                }
-                fg.AppendLine("throw new ArgumentException($\"Unkown group type: {t}\");");
             }
             fg.AppendLine();
 
@@ -288,6 +264,67 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
+        }
+
+        public override async Task GenerateInCommonMixin(ObjectGeneration obj, FileGeneration fg)
+        {
+            await base.GenerateInCommonMixin(obj, fg);
+
+            if (obj.GetObjectType() != ObjectType.Mod) return;
+            using (var args = new FunctionWrapper(fg,
+                "public static ISourceCache<T, FormKey> GetGroup<T>",
+                wheres: $"where T : {nameof(IMajorRecordInternalGetter)}"))
+            {
+                args.Add($"this {obj.Interface(getter: true)} obj");
+            }
+            using (new BraceWrapper(fg))
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"return {obj.CommonClassInstance("obj")}.GetGroup<T>"))
+                {
+                    args.AddPassArg("obj");
+                }
+            }
+        }
+
+        public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg)
+        {
+            await base.GenerateInCommon(obj, fg);
+
+            if (obj.GetObjectType() != ObjectType.Mod) return;
+            using (var args = new FunctionWrapper(fg,
+                "public ISourceCache<T, FormKey> GetGroup<T>",
+                wheres: $"where T : {nameof(IMajorRecordInternalGetter)}"))
+            {
+                args.Add($"{obj.Interface(getter: true)} obj");
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("switch (typeof(T).Name)");
+                using (new BraceWrapper(fg))
+                {
+                    foreach (var field in obj.IterateFields())
+                    {
+                        if (!(field is LoquiType loqui)) continue;
+                        if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
+                        if (!loqui.TryGetSpecificationAsObject("T", out var subObj))
+                        {
+                            throw new ArgumentException();
+                        }
+                        fg.AppendLine($"case \"{subObj.Name}\":");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"return (ISourceCache<T, FormKey>)obj.{field.Name}.Items;");
+                        }
+                    }
+                    fg.AppendLine("default:");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendLine("throw new ArgumentException($\"Unknown group type: {typeof(T)}\");");
+                    }
+                }
+            }
+            fg.AppendLine();
         }
     }
 }

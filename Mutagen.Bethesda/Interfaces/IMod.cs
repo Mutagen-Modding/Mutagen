@@ -9,16 +9,23 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public interface IMod : ILinkContainer
+    public interface IModGetter
     {
         GameMode GameMode { get; }
-        ISourceList<MasterReference> MasterReferences { get; }
-        IObservableCache<IMajorRecord, FormKey> MajorRecords { get; }
-        ISourceCache<T, FormKey> GetGroup<T>() where T : IMajorRecordInternalGetter;
+        IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
+        IReadOnlyCache<IMajorRecordInternalGetter, FormKey> MajorRecords { get; }
+        IReadOnlyCache<T, FormKey> GetGroup<T>() where T : IMajorRecordInternalGetter;
         void WriteToBinary(
             string path,
             ModKey modKey);
         ModKey ModKey { get; }
+    }
+
+    public interface IMod : IModGetter, ILinkContainer
+    {
+        new ISourceList<MasterReference> MasterReferences { get; }
+        new IObservableCache<IMajorRecord, FormKey> MajorRecords { get; }
+        new ISourceCache<T, FormKey> GetGroup<T>() where T : IMajorRecordInternalGetter;
         FormKey GetNextFormKey();
         void SyncRecordCount();
     }

@@ -358,6 +358,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public GameMode GameMode => GameMode.Skyrim;
+        IReadOnlyCache<T, FormKey> IModGetter.GetGroup<T>() => this.GetGroup<T>();
+        ISourceCache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);
         public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;
         public IMajorRecord this[FormKey id]
@@ -380,21 +382,6 @@ namespace Mutagen.Bethesda.Skyrim
                 default:
                     throw new ArgumentException($"Unknown settable MajorRecord type: {record?.GetType()}");
             }
-        }
-
-        public ISourceCache<T, FormKey> GetGroup<T>()
-            where T : IMajorRecordInternalGetter
-        {
-            var t = typeof(T);
-            if (t.Equals(typeof(GameSetting)))
-            {
-                return (ISourceCache<T, FormKey>)GameSettings.Items;
-            }
-            if (t.Equals(typeof(Global)))
-            {
-                return (ISourceCache<T, FormKey>)Globals.Items;
-            }
-            throw new ArgumentException($"Unkown group type: {t}");
         }
 
         public void AddRecords(
@@ -1108,6 +1095,14 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
+        #region Mutagen
+        public static ISourceCache<T, FormKey> GetGroup<T>(this ISkyrimModGetter obj)
+            where T : IMajorRecordInternalGetter
+        {
+            return ((SkyrimModCommon)obj.CommonInstance).GetGroup<T>(obj: obj);
+        }
+        #endregion
+
     }
     #endregion
 
@@ -1534,6 +1529,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.GameSettings = new MaskItem<bool, Group_Mask<bool>>(true, item.GameSettings.GetHasBeenSetMask());
             mask.Globals = new MaskItem<bool, Group_Mask<bool>>(true, item.Globals.GetHasBeenSetMask());
         }
+
+        #region Mutagen
+        public ISourceCache<T, FormKey> GetGroup<T>(ISkyrimModGetter obj)
+            where T : IMajorRecordInternalGetter
+        {
+            switch (typeof(T).Name)
+            {
+                case "GameSetting":
+                    return (ISourceCache<T, FormKey>)obj.GameSettings.Items;
+                case "Global":
+                    return (ISourceCache<T, FormKey>)obj.Globals.Items;
+                default:
+                    throw new ArgumentException($"Unknown group type: {typeof(T)}");
+            }
+        }
+
+        #endregion
 
     }
     #endregion

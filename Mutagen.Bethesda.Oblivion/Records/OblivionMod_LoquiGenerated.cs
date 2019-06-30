@@ -973,6 +973,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public GameMode GameMode => GameMode.Oblivion;
+        IReadOnlyCache<T, FormKey> IModGetter.GetGroup<T>() => this.GetGroup<T>();
+        ISourceCache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);
         public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;
         public IMajorRecord this[FormKey id]
@@ -1154,237 +1156,6 @@ namespace Mutagen.Bethesda.Oblivion
                 default:
                     throw new ArgumentException($"Unknown settable MajorRecord type: {record?.GetType()}");
             }
-        }
-
-        public ISourceCache<T, FormKey> GetGroup<T>()
-            where T : IMajorRecordInternalGetter
-        {
-            var t = typeof(T);
-            if (t.Equals(typeof(GameSetting)))
-            {
-                return (ISourceCache<T, FormKey>)GameSettings.Items;
-            }
-            if (t.Equals(typeof(Global)))
-            {
-                return (ISourceCache<T, FormKey>)Globals.Items;
-            }
-            if (t.Equals(typeof(Class)))
-            {
-                return (ISourceCache<T, FormKey>)Classes.Items;
-            }
-            if (t.Equals(typeof(Faction)))
-            {
-                return (ISourceCache<T, FormKey>)Factions.Items;
-            }
-            if (t.Equals(typeof(Hair)))
-            {
-                return (ISourceCache<T, FormKey>)Hairs.Items;
-            }
-            if (t.Equals(typeof(Eye)))
-            {
-                return (ISourceCache<T, FormKey>)Eyes.Items;
-            }
-            if (t.Equals(typeof(Race)))
-            {
-                return (ISourceCache<T, FormKey>)Races.Items;
-            }
-            if (t.Equals(typeof(Sound)))
-            {
-                return (ISourceCache<T, FormKey>)Sounds.Items;
-            }
-            if (t.Equals(typeof(SkillRecord)))
-            {
-                return (ISourceCache<T, FormKey>)Skills.Items;
-            }
-            if (t.Equals(typeof(MagicEffect)))
-            {
-                return (ISourceCache<T, FormKey>)MagicEffects.Items;
-            }
-            if (t.Equals(typeof(Script)))
-            {
-                return (ISourceCache<T, FormKey>)Scripts.Items;
-            }
-            if (t.Equals(typeof(LandTexture)))
-            {
-                return (ISourceCache<T, FormKey>)LandTextures.Items;
-            }
-            if (t.Equals(typeof(Enchantment)))
-            {
-                return (ISourceCache<T, FormKey>)Enchantments.Items;
-            }
-            if (t.Equals(typeof(SpellUnleveled)))
-            {
-                return (ISourceCache<T, FormKey>)Spells.Items;
-            }
-            if (t.Equals(typeof(Birthsign)))
-            {
-                return (ISourceCache<T, FormKey>)Birthsigns.Items;
-            }
-            if (t.Equals(typeof(Activator)))
-            {
-                return (ISourceCache<T, FormKey>)Activators.Items;
-            }
-            if (t.Equals(typeof(AlchemicalApparatus)))
-            {
-                return (ISourceCache<T, FormKey>)AlchemicalApparatus.Items;
-            }
-            if (t.Equals(typeof(Armor)))
-            {
-                return (ISourceCache<T, FormKey>)Armors.Items;
-            }
-            if (t.Equals(typeof(Book)))
-            {
-                return (ISourceCache<T, FormKey>)Books.Items;
-            }
-            if (t.Equals(typeof(Clothing)))
-            {
-                return (ISourceCache<T, FormKey>)Clothes.Items;
-            }
-            if (t.Equals(typeof(Container)))
-            {
-                return (ISourceCache<T, FormKey>)Containers.Items;
-            }
-            if (t.Equals(typeof(Door)))
-            {
-                return (ISourceCache<T, FormKey>)Doors.Items;
-            }
-            if (t.Equals(typeof(Ingredient)))
-            {
-                return (ISourceCache<T, FormKey>)Ingredients.Items;
-            }
-            if (t.Equals(typeof(Light)))
-            {
-                return (ISourceCache<T, FormKey>)Lights.Items;
-            }
-            if (t.Equals(typeof(Miscellaneous)))
-            {
-                return (ISourceCache<T, FormKey>)Miscellaneous.Items;
-            }
-            if (t.Equals(typeof(Static)))
-            {
-                return (ISourceCache<T, FormKey>)Statics.Items;
-            }
-            if (t.Equals(typeof(Grass)))
-            {
-                return (ISourceCache<T, FormKey>)Grasses.Items;
-            }
-            if (t.Equals(typeof(Tree)))
-            {
-                return (ISourceCache<T, FormKey>)Trees.Items;
-            }
-            if (t.Equals(typeof(Flora)))
-            {
-                return (ISourceCache<T, FormKey>)Flora.Items;
-            }
-            if (t.Equals(typeof(Furnature)))
-            {
-                return (ISourceCache<T, FormKey>)Furnature.Items;
-            }
-            if (t.Equals(typeof(Weapon)))
-            {
-                return (ISourceCache<T, FormKey>)Weapons.Items;
-            }
-            if (t.Equals(typeof(Ammo)))
-            {
-                return (ISourceCache<T, FormKey>)Ammo.Items;
-            }
-            if (t.Equals(typeof(NPC)))
-            {
-                return (ISourceCache<T, FormKey>)NPCs.Items;
-            }
-            if (t.Equals(typeof(Creature)))
-            {
-                return (ISourceCache<T, FormKey>)Creatures.Items;
-            }
-            if (t.Equals(typeof(LeveledCreature)))
-            {
-                return (ISourceCache<T, FormKey>)LeveledCreatures.Items;
-            }
-            if (t.Equals(typeof(SoulGem)))
-            {
-                return (ISourceCache<T, FormKey>)SoulGems.Items;
-            }
-            if (t.Equals(typeof(Key)))
-            {
-                return (ISourceCache<T, FormKey>)Keys.Items;
-            }
-            if (t.Equals(typeof(Potion)))
-            {
-                return (ISourceCache<T, FormKey>)Potions.Items;
-            }
-            if (t.Equals(typeof(Subspace)))
-            {
-                return (ISourceCache<T, FormKey>)Subspaces.Items;
-            }
-            if (t.Equals(typeof(SigilStone)))
-            {
-                return (ISourceCache<T, FormKey>)SigilStones.Items;
-            }
-            if (t.Equals(typeof(LeveledItem)))
-            {
-                return (ISourceCache<T, FormKey>)LeveledItems.Items;
-            }
-            if (t.Equals(typeof(Weather)))
-            {
-                return (ISourceCache<T, FormKey>)Weathers.Items;
-            }
-            if (t.Equals(typeof(Climate)))
-            {
-                return (ISourceCache<T, FormKey>)Climates.Items;
-            }
-            if (t.Equals(typeof(Region)))
-            {
-                return (ISourceCache<T, FormKey>)Regions.Items;
-            }
-            if (t.Equals(typeof(CellBlock)))
-            {
-                return (ISourceCache<T, FormKey>)Cells.Items;
-            }
-            if (t.Equals(typeof(Worldspace)))
-            {
-                return (ISourceCache<T, FormKey>)Worldspaces.Items;
-            }
-            if (t.Equals(typeof(DialogTopic)))
-            {
-                return (ISourceCache<T, FormKey>)DialogTopics.Items;
-            }
-            if (t.Equals(typeof(Quest)))
-            {
-                return (ISourceCache<T, FormKey>)Quests.Items;
-            }
-            if (t.Equals(typeof(IdleAnimation)))
-            {
-                return (ISourceCache<T, FormKey>)IdleAnimations.Items;
-            }
-            if (t.Equals(typeof(AIPackage)))
-            {
-                return (ISourceCache<T, FormKey>)AIPackages.Items;
-            }
-            if (t.Equals(typeof(CombatStyle)))
-            {
-                return (ISourceCache<T, FormKey>)CombatStyles.Items;
-            }
-            if (t.Equals(typeof(LoadScreen)))
-            {
-                return (ISourceCache<T, FormKey>)LoadScreens.Items;
-            }
-            if (t.Equals(typeof(LeveledSpell)))
-            {
-                return (ISourceCache<T, FormKey>)LeveledSpells.Items;
-            }
-            if (t.Equals(typeof(AnimatedObject)))
-            {
-                return (ISourceCache<T, FormKey>)AnimatedObjects.Items;
-            }
-            if (t.Equals(typeof(Water)))
-            {
-                return (ISourceCache<T, FormKey>)Waters.Items;
-            }
-            if (t.Equals(typeof(EffectShader)))
-            {
-                return (ISourceCache<T, FormKey>)EffectShaders.Items;
-            }
-            throw new ArgumentException($"Unkown group type: {t}");
         }
 
         public void AddRecords(
@@ -5881,6 +5652,14 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        #region Mutagen
+        public static ISourceCache<T, FormKey> GetGroup<T>(this IOblivionModGetter obj)
+            where T : IMajorRecordInternalGetter
+        {
+            return ((OblivionModCommon)obj.CommonInstance).GetGroup<T>(obj: obj);
+        }
+        #endregion
+
     }
     #endregion
 
@@ -8521,6 +8300,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Waters = new MaskItem<bool, Group_Mask<bool>>(true, item.Waters.GetHasBeenSetMask());
             mask.EffectShaders = new MaskItem<bool, Group_Mask<bool>>(true, item.EffectShaders.GetHasBeenSetMask());
         }
+
+        #region Mutagen
+        public ISourceCache<T, FormKey> GetGroup<T>(IOblivionModGetter obj)
+            where T : IMajorRecordInternalGetter
+        {
+            switch (typeof(T).Name)
+            {
+                case "GameSetting":
+                    return (ISourceCache<T, FormKey>)obj.GameSettings.Items;
+                case "Global":
+                    return (ISourceCache<T, FormKey>)obj.Globals.Items;
+                case "Class":
+                    return (ISourceCache<T, FormKey>)obj.Classes.Items;
+                case "Faction":
+                    return (ISourceCache<T, FormKey>)obj.Factions.Items;
+                case "Hair":
+                    return (ISourceCache<T, FormKey>)obj.Hairs.Items;
+                case "Eye":
+                    return (ISourceCache<T, FormKey>)obj.Eyes.Items;
+                case "Race":
+                    return (ISourceCache<T, FormKey>)obj.Races.Items;
+                case "Sound":
+                    return (ISourceCache<T, FormKey>)obj.Sounds.Items;
+                case "SkillRecord":
+                    return (ISourceCache<T, FormKey>)obj.Skills.Items;
+                case "MagicEffect":
+                    return (ISourceCache<T, FormKey>)obj.MagicEffects.Items;
+                case "Script":
+                    return (ISourceCache<T, FormKey>)obj.Scripts.Items;
+                case "LandTexture":
+                    return (ISourceCache<T, FormKey>)obj.LandTextures.Items;
+                case "Enchantment":
+                    return (ISourceCache<T, FormKey>)obj.Enchantments.Items;
+                case "SpellUnleveled":
+                    return (ISourceCache<T, FormKey>)obj.Spells.Items;
+                case "Birthsign":
+                    return (ISourceCache<T, FormKey>)obj.Birthsigns.Items;
+                case "Activator":
+                    return (ISourceCache<T, FormKey>)obj.Activators.Items;
+                case "AlchemicalApparatus":
+                    return (ISourceCache<T, FormKey>)obj.AlchemicalApparatus.Items;
+                case "Armor":
+                    return (ISourceCache<T, FormKey>)obj.Armors.Items;
+                case "Book":
+                    return (ISourceCache<T, FormKey>)obj.Books.Items;
+                case "Clothing":
+                    return (ISourceCache<T, FormKey>)obj.Clothes.Items;
+                case "Container":
+                    return (ISourceCache<T, FormKey>)obj.Containers.Items;
+                case "Door":
+                    return (ISourceCache<T, FormKey>)obj.Doors.Items;
+                case "Ingredient":
+                    return (ISourceCache<T, FormKey>)obj.Ingredients.Items;
+                case "Light":
+                    return (ISourceCache<T, FormKey>)obj.Lights.Items;
+                case "Miscellaneous":
+                    return (ISourceCache<T, FormKey>)obj.Miscellaneous.Items;
+                case "Static":
+                    return (ISourceCache<T, FormKey>)obj.Statics.Items;
+                case "Grass":
+                    return (ISourceCache<T, FormKey>)obj.Grasses.Items;
+                case "Tree":
+                    return (ISourceCache<T, FormKey>)obj.Trees.Items;
+                case "Flora":
+                    return (ISourceCache<T, FormKey>)obj.Flora.Items;
+                case "Furnature":
+                    return (ISourceCache<T, FormKey>)obj.Furnature.Items;
+                case "Weapon":
+                    return (ISourceCache<T, FormKey>)obj.Weapons.Items;
+                case "Ammo":
+                    return (ISourceCache<T, FormKey>)obj.Ammo.Items;
+                case "NPC":
+                    return (ISourceCache<T, FormKey>)obj.NPCs.Items;
+                case "Creature":
+                    return (ISourceCache<T, FormKey>)obj.Creatures.Items;
+                case "LeveledCreature":
+                    return (ISourceCache<T, FormKey>)obj.LeveledCreatures.Items;
+                case "SoulGem":
+                    return (ISourceCache<T, FormKey>)obj.SoulGems.Items;
+                case "Key":
+                    return (ISourceCache<T, FormKey>)obj.Keys.Items;
+                case "Potion":
+                    return (ISourceCache<T, FormKey>)obj.Potions.Items;
+                case "Subspace":
+                    return (ISourceCache<T, FormKey>)obj.Subspaces.Items;
+                case "SigilStone":
+                    return (ISourceCache<T, FormKey>)obj.SigilStones.Items;
+                case "LeveledItem":
+                    return (ISourceCache<T, FormKey>)obj.LeveledItems.Items;
+                case "Weather":
+                    return (ISourceCache<T, FormKey>)obj.Weathers.Items;
+                case "Climate":
+                    return (ISourceCache<T, FormKey>)obj.Climates.Items;
+                case "Region":
+                    return (ISourceCache<T, FormKey>)obj.Regions.Items;
+                case "CellBlock":
+                    return (ISourceCache<T, FormKey>)obj.Cells.Items;
+                case "Worldspace":
+                    return (ISourceCache<T, FormKey>)obj.Worldspaces.Items;
+                case "DialogTopic":
+                    return (ISourceCache<T, FormKey>)obj.DialogTopics.Items;
+                case "Quest":
+                    return (ISourceCache<T, FormKey>)obj.Quests.Items;
+                case "IdleAnimation":
+                    return (ISourceCache<T, FormKey>)obj.IdleAnimations.Items;
+                case "AIPackage":
+                    return (ISourceCache<T, FormKey>)obj.AIPackages.Items;
+                case "CombatStyle":
+                    return (ISourceCache<T, FormKey>)obj.CombatStyles.Items;
+                case "LoadScreen":
+                    return (ISourceCache<T, FormKey>)obj.LoadScreens.Items;
+                case "LeveledSpell":
+                    return (ISourceCache<T, FormKey>)obj.LeveledSpells.Items;
+                case "AnimatedObject":
+                    return (ISourceCache<T, FormKey>)obj.AnimatedObjects.Items;
+                case "Water":
+                    return (ISourceCache<T, FormKey>)obj.Waters.Items;
+                case "EffectShader":
+                    return (ISourceCache<T, FormKey>)obj.EffectShaders.Items;
+                default:
+                    throw new ArgumentException($"Unknown group type: {typeof(T)}");
+            }
+        }
+
+        #endregion
 
     }
     #endregion

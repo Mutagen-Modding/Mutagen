@@ -28,6 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SkyrimMod
     {
         public ISourceList<MasterReference> MasterReferences => this.ModHeader.MasterReferences;
+        IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
+        IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => this.MajorRecords;
         public ModKey ModKey { get; }
 
         public SkyrimMod(ModKey modKey)
@@ -36,7 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.ModKey = modKey;
         }
 
-        void IMod.WriteToBinary(string path, ModKey modKey)
+        void IModGetter.WriteToBinary(string path, ModKey modKey)
         {
             this.WriteToBinary(path, modKey, importMask: null);
         }
