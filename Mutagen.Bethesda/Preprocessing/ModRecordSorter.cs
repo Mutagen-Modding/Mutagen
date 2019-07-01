@@ -45,13 +45,13 @@ namespace Mutagen.Bethesda.Preprocessing
                                     locatorStream.Position = grupLoc.Value;
                                     foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream, gameMode))
                                     {
-                                        var type = HeaderTranslation.GetNextRecordType(inputStream, out var len);
-                                        storage.TryCreateValue(rec.FormID).Add(inputStream.ReadBytes(len + Constants.RECORD_HEADER_LENGTH));
+                                        MajorRecordMeta majorMeta = meta.MajorRecord(inputStream);
+                                        storage.TryCreateValue(rec.FormID).Add(inputStream.ReadBytes(checked((int)majorMeta.TotalLength)));
                                         if (grupFrame.Complete) continue;
-                                        var nextType = HeaderTranslation.GetNextRecordType(inputStream, out var subGrupLen);
-                                        if (nextType.Equals(Group_Registration.GRUP_HEADER))
+                                        GroupRecordMeta subGroupMeta = meta.Group(inputStream);
+                                        if (subGroupMeta.IsGroup)
                                         {
-                                            storage.TryCreateValue(rec.FormID).Add(inputStream.ReadBytes(subGrupLen));
+                                            storage.TryCreateValue(rec.FormID).Add(inputStream.ReadBytes(checked((int)subGroupMeta.TotalLength)));
                                         }
                                     }
                                 }
