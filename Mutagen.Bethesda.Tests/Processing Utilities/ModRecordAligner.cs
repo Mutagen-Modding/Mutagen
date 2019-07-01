@@ -139,7 +139,10 @@ namespace Mutagen.Bethesda.Tests
             AlignmentRules alignmentRules,
             TempFolder temp = null)
         {
-            var interest = new Mutagen.Bethesda.RecordInterest(alignmentRules.Alignments.Keys);
+            var interest = new Mutagen.Bethesda.RecordInterest(alignmentRules.Alignments.Keys)
+            {
+                EmptyMeansInterested = false
+            };
             var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, gameMode, interest);
             temp = temp ?? new TempFolder();
             using (temp)

@@ -150,7 +150,10 @@ namespace Mutagen.Bethesda.Preprocessing
             AlignmentRules alignmentRules,
             TempFolder temp = null)
         {
-            var interest = new RecordInterest(alignmentRules.Alignments.Keys);
+            var interest = new RecordInterest(alignmentRules.Alignments.Keys)
+            {
+                EmptyMeansInterested = false
+            };
             var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, gameMode, interest);
             temp = temp ?? new TempFolder();
             using (temp)
