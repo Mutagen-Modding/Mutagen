@@ -168,60 +168,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is LogEntry rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ILogEntryGetter rhs)) return false;
+            return ((LogEntryCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(LogEntry rhs)
+        public bool Equals(LogEntry obj)
         {
-            if (rhs == null) return false;
-            if (Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (Flags_IsSet)
-            {
-                if (this.Flags != rhs.Flags) return false;
-            }
-            if (Conditions.HasBeenSet != rhs.Conditions.HasBeenSet) return false;
-            if (Conditions.HasBeenSet)
-            {
-                if (!this.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            }
-            if (Entry_IsSet != rhs.Entry_IsSet) return false;
-            if (Entry_IsSet)
-            {
-                if (!string.Equals(this.Entry, rhs.Entry)) return false;
-            }
-            if (ResultScript_IsSet != rhs.ResultScript_IsSet) return false;
-            if (ResultScript_IsSet)
-            {
-                if (!object.Equals(this.ResultScript, rhs.ResultScript)) return false;
-            }
-            return true;
+            return ((LogEntryCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
-            if (Conditions.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Conditions).CombineHashCode(ret);
-            }
-            if (Entry_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Entry).CombineHashCode(ret);
-            }
-            if (ResultScript_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ResultScript).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((LogEntryCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => LogEntryXmlWriteTranslation.Instance;
@@ -702,7 +660,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (LogEntry.Flag)obj;
                     break;
                 case LogEntry_FieldIndex.Conditions:
-                    this._Conditions.SetTo((IEnumerable<Condition>)obj);
+                    this._Conditions.SetTo((SourceSetList<Condition>)obj);
                     break;
                 case LogEntry_FieldIndex.Entry:
                     this.Entry = (String)obj;
@@ -742,7 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (LogEntry.Flag)pair.Value;
                     break;
                 case LogEntry_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value);
+                    obj._Conditions.SetTo((SourceSetList<Condition>)pair.Value);
                     break;
                 case LogEntry_FieldIndex.Entry:
                     obj.Entry = (String)pair.Value;
@@ -873,6 +831,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ILogEntryGetter item,
+            ILogEntryGetter rhs)
+        {
+            return ((LogEntryCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1439,6 +1406,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Entry = item.Entry_IsSet;
             mask.ResultScript = new MaskItem<bool, ScriptFields_Mask<bool>>(item.ResultScript_IsSet, item.ResultScript.GetHasBeenSetMask());
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILogEntryGetter lhs,
+            ILogEntryGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.Conditions.HasBeenSet != rhs.Conditions.HasBeenSet) return false;
+            if (lhs.Conditions.HasBeenSet)
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            }
+            if (lhs.Entry_IsSet != rhs.Entry_IsSet) return false;
+            if (lhs.Entry_IsSet)
+            {
+                if (!string.Equals(lhs.Entry, rhs.Entry)) return false;
+            }
+            if (lhs.ResultScript_IsSet != rhs.ResultScript_IsSet) return false;
+            if (lhs.ResultScript_IsSet)
+            {
+                if (!object.Equals(lhs.ResultScript, rhs.ResultScript)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(ILogEntryGetter item)
+        {
+            int ret = 0;
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.Conditions.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
+            }
+            if (item.Entry_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Entry).CombineHashCode(ret);
+            }
+            if (item.ResultScript_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ResultScript).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

@@ -84,35 +84,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Script rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IScriptInternalGetter rhs)) return false;
+            return ((ScriptCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Script rhs)
+        public bool Equals(Script obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Fields_IsSet != rhs.Fields_IsSet) return false;
-            if (Fields_IsSet)
-            {
-                if (!object.Equals(this.Fields, rhs.Fields)) return false;
-            }
-            return true;
+            return ((ScriptCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Fields_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Fields).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((ScriptCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ScriptXmlWriteTranslation.Instance;
@@ -768,6 +751,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IScriptInternalGetter item,
+            IScriptInternalGetter rhs)
+        {
+            return ((ScriptCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1174,6 +1166,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IScriptInternalGetter lhs,
+            IScriptInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Fields_IsSet != rhs.Fields_IsSet) return false;
+            if (lhs.Fields_IsSet)
+            {
+                if (!object.Equals(lhs.Fields, rhs.Fields)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IScriptInternalGetter)lhs,
+                rhs: rhs as IScriptInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IScriptInternalGetter)lhs,
+                rhs: rhs as IScriptInternalGetter);
+        }
+
+        public virtual int GetHashCode(IScriptInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Fields_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Fields).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IScriptInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IScriptInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

@@ -120,36 +120,18 @@ namespace Mutagen.Bethesda.Tests
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is PassthroughSettings rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IPassthroughSettingsGetter rhs)) return false;
+            return ((PassthroughSettingsCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(PassthroughSettings rhs)
+        public bool Equals(PassthroughSettings obj)
         {
-            if (rhs == null) return false;
-            if (this.ReuseCaches != rhs.ReuseCaches) return false;
-            if (this.DeleteCachesAfter != rhs.DeleteCachesAfter) return false;
-            if (this.TestNormal != rhs.TestNormal) return false;
-            if (this.TestImport != rhs.TestImport) return false;
-            if (this.TestObservable != rhs.TestObservable) return false;
-            if (this.TestFolder != rhs.TestFolder) return false;
-            return true;
+            return ((PassthroughSettingsCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(ReuseCaches).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DeleteCachesAfter).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(TestNormal).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(TestImport).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(TestObservable).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(TestFolder).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((PassthroughSettingsCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => PassthroughSettingsXmlWriteTranslation.Instance;
@@ -721,6 +703,15 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
+        public static bool Equals(
+            this IPassthroughSettingsGetter item,
+            IPassthroughSettingsGetter rhs)
+        {
+            return ((PassthroughSettingsCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1216,6 +1207,37 @@ namespace Mutagen.Bethesda.Tests.Internals
             mask.TestObservable = true;
             mask.TestFolder = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IPassthroughSettingsGetter lhs,
+            IPassthroughSettingsGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.ReuseCaches != rhs.ReuseCaches) return false;
+            if (lhs.DeleteCachesAfter != rhs.DeleteCachesAfter) return false;
+            if (lhs.TestNormal != rhs.TestNormal) return false;
+            if (lhs.TestImport != rhs.TestImport) return false;
+            if (lhs.TestObservable != rhs.TestObservable) return false;
+            if (lhs.TestFolder != rhs.TestFolder) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IPassthroughSettingsGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.ReuseCaches).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DeleteCachesAfter).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TestNormal).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TestImport).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TestObservable).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TestFolder).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

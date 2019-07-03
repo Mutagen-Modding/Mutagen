@@ -180,54 +180,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Enchantment rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IEnchantmentInternalGetter rhs)) return false;
+            return ((EnchantmentCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Enchantment rhs)
+        public bool Equals(Enchantment obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (this.Type != rhs.Type) return false;
-            if (this.ChargeAmount != rhs.ChargeAmount) return false;
-            if (this.EnchantCost != rhs.EnchantCost) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
-            if (Effects.HasBeenSet)
-            {
-                if (!this.Effects.SequenceEqual(rhs.Effects)) return false;
-            }
-            if (this.ENITDataTypeState != rhs.ENITDataTypeState) return false;
-            return true;
+            return ((EnchantmentCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ChargeAmount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(EnchantCost).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            if (Effects.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Effects).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(ENITDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((EnchantmentCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => EnchantmentXmlWriteTranslation.Instance;
@@ -776,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (Enchantment.Flag)obj;
                     break;
                 case Enchantment_FieldIndex.Effects:
-                    this._Effects.SetTo((IEnumerable<Effect>)obj);
+                    this._Effects.SetTo((SourceSetList<Effect>)obj);
                     break;
                 case Enchantment_FieldIndex.ENITDataTypeState:
                     this.ENITDataTypeState = (Enchantment.ENITDataType)obj;
@@ -826,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (Enchantment.Flag)pair.Value;
                     break;
                 case Enchantment_FieldIndex.Effects:
-                    obj._Effects.SetTo((IEnumerable<Effect>)pair.Value);
+                    obj._Effects.SetTo((SourceSetList<Effect>)pair.Value);
                     break;
                 case Enchantment_FieldIndex.ENITDataTypeState:
                     obj.ENITDataTypeState = (Enchantment.ENITDataType)pair.Value;
@@ -979,6 +943,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IEnchantmentInternalGetter item,
+            IEnchantmentInternalGetter rhs)
+        {
+            return ((EnchantmentCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1619,6 +1592,83 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IEnchantmentInternalGetter lhs,
+            IEnchantmentInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Type != rhs.Type) return false;
+            if (lhs.ChargeAmount != rhs.ChargeAmount) return false;
+            if (lhs.EnchantCost != rhs.EnchantCost) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
+            if (lhs.Effects.HasBeenSet)
+            {
+                if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            }
+            if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IEnchantmentInternalGetter)lhs,
+                rhs: rhs as IEnchantmentInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IEnchantmentInternalGetter)lhs,
+                rhs: rhs as IEnchantmentInternalGetter);
+        }
+
+        public virtual int GetHashCode(IEnchantmentInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ChargeAmount).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.EnchantCost).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            if (item.Effects.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Effects).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.ENITDataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IEnchantmentInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IEnchantmentInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

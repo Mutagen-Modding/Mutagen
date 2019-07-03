@@ -97,30 +97,18 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ModStats rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IModStatsGetter rhs)) return false;
+            return ((ModStatsCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ModStats rhs)
+        public bool Equals(ModStats obj)
         {
-            if (rhs == null) return false;
-            if (!this.Version.EqualsWithin(rhs.Version)) return false;
-            if (this.NumRecords != rhs.NumRecords) return false;
-            if (this.NextObjectID != rhs.NextObjectID) return false;
-            return true;
+            return ((ModStatsCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(NumRecords).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(NextObjectID).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((ModStatsCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => ModStatsXmlWriteTranslation.Instance;
@@ -639,6 +627,15 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
+        public static bool Equals(
+            this IModStatsGetter item,
+            IModStatsGetter rhs)
+        {
+            return ((ModStatsCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1031,6 +1028,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.NumRecords = true;
             mask.NextObjectID = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IModStatsGetter lhs,
+            IModStatsGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Version.EqualsWithin(rhs.Version)) return false;
+            if (lhs.NumRecords != rhs.NumRecords) return false;
+            if (lhs.NextObjectID != rhs.NextObjectID) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IModStatsGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.NumRecords).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.NextObjectID).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

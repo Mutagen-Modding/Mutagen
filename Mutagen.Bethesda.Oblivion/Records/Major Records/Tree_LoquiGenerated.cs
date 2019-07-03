@@ -294,77 +294,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Tree rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ITreeInternalGetter rhs)) return false;
+            return ((TreeCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Tree rhs)
+        public bool Equals(Tree obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            if (SpeedTreeSeeds.HasBeenSet != rhs.SpeedTreeSeeds.HasBeenSet) return false;
-            if (SpeedTreeSeeds.HasBeenSet)
-            {
-                if (!this.SpeedTreeSeeds.SequenceEqual(rhs.SpeedTreeSeeds)) return false;
-            }
-            if (!this.LeafCurvature.EqualsWithin(rhs.LeafCurvature)) return false;
-            if (!this.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle)) return false;
-            if (!this.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle)) return false;
-            if (!this.BranchDimmingValue.EqualsWithin(rhs.BranchDimmingValue)) return false;
-            if (!this.LeafDimmingValue.EqualsWithin(rhs.LeafDimmingValue)) return false;
-            if (this.ShadowRadius != rhs.ShadowRadius) return false;
-            if (!this.RockingSpeed.EqualsWithin(rhs.RockingSpeed)) return false;
-            if (!this.RustleSpeed.EqualsWithin(rhs.RustleSpeed)) return false;
-            if (!this.BillboardWidth.EqualsWithin(rhs.BillboardWidth)) return false;
-            if (!this.BillboardHeight.EqualsWithin(rhs.BillboardHeight)) return false;
-            if (this.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
-            if (this.BNAMDataTypeState != rhs.BNAMDataTypeState) return false;
-            return true;
+            return ((TreeCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            if (SpeedTreeSeeds.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(SpeedTreeSeeds).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(LeafCurvature).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MinimumLeafAngle).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MaximumLeafAngle).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BranchDimmingValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LeafDimmingValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ShadowRadius).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RockingSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RustleSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BillboardWidth).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BillboardHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CNAMDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BNAMDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((TreeCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => TreeXmlWriteTranslation.Instance;
@@ -982,7 +923,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Icon = (String)obj;
                     break;
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                    this._SpeedTreeSeeds.SetTo((IEnumerable<UInt32>)obj);
+                    this._SpeedTreeSeeds.SetTo((SourceSetList<UInt32>)obj);
                     break;
                 case Tree_FieldIndex.LeafCurvature:
                     this.LeafCurvature = (Single)obj;
@@ -1056,7 +997,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Icon = (String)pair.Value;
                     break;
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                    obj._SpeedTreeSeeds.SetTo((IEnumerable<UInt32>)pair.Value);
+                    obj._SpeedTreeSeeds.SetTo((SourceSetList<UInt32>)pair.Value);
                     break;
                 case Tree_FieldIndex.LeafCurvature:
                     obj.LeafCurvature = (Single)pair.Value;
@@ -1294,6 +1235,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ITreeInternalGetter item,
+            ITreeInternalGetter rhs)
+        {
+            return ((TreeCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -2232,6 +2182,106 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ITreeInternalGetter lhs,
+            ITreeInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.SpeedTreeSeeds.HasBeenSet != rhs.SpeedTreeSeeds.HasBeenSet) return false;
+            if (lhs.SpeedTreeSeeds.HasBeenSet)
+            {
+                if (!lhs.SpeedTreeSeeds.SequenceEqual(rhs.SpeedTreeSeeds)) return false;
+            }
+            if (!lhs.LeafCurvature.EqualsWithin(rhs.LeafCurvature)) return false;
+            if (!lhs.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle)) return false;
+            if (!lhs.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle)) return false;
+            if (!lhs.BranchDimmingValue.EqualsWithin(rhs.BranchDimmingValue)) return false;
+            if (!lhs.LeafDimmingValue.EqualsWithin(rhs.LeafDimmingValue)) return false;
+            if (lhs.ShadowRadius != rhs.ShadowRadius) return false;
+            if (!lhs.RockingSpeed.EqualsWithin(rhs.RockingSpeed)) return false;
+            if (!lhs.RustleSpeed.EqualsWithin(rhs.RustleSpeed)) return false;
+            if (!lhs.BillboardWidth.EqualsWithin(rhs.BillboardWidth)) return false;
+            if (!lhs.BillboardHeight.EqualsWithin(rhs.BillboardHeight)) return false;
+            if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
+            if (lhs.BNAMDataTypeState != rhs.BNAMDataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ITreeInternalGetter)lhs,
+                rhs: rhs as ITreeInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ITreeInternalGetter)lhs,
+                rhs: rhs as ITreeInternalGetter);
+        }
+
+        public virtual int GetHashCode(ITreeInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.SpeedTreeSeeds.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.SpeedTreeSeeds).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.LeafCurvature).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MinimumLeafAngle).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaximumLeafAngle).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BranchDimmingValue).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LeafDimmingValue).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ShadowRadius).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RockingSpeed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RustleSpeed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BillboardWidth).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BillboardHeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CNAMDataTypeState).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BNAMDataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ITreeInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ITreeInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

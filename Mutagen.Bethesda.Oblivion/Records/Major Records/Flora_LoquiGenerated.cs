@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Script> IFlora.Script_Property => this.Script_Property;
         IScriptInternalGetter IFloraGetter.Script => this.Script_Property.Item;
-        IFormIDSetLinkGetter<Script> IFloraGetter.Script_Property => this.Script_Property;
+        IFormIDSetLinkGetter<IScriptInternalGetter> IFloraGetter.Script_Property => this.Script_Property;
         #endregion
         #region Ingredient
         public IFormIDSetLink<Ingredient> Ingredient_Property { get; } = new FormIDSetLink<Ingredient>();
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Ingredient> IFlora.Ingredient_Property => this.Ingredient_Property;
         IIngredientInternalGetter IFloraGetter.Ingredient => this.Ingredient_Property.Item;
-        IFormIDSetLinkGetter<Ingredient> IFloraGetter.Ingredient_Property => this.Ingredient_Property;
+        IFormIDSetLinkGetter<IIngredientInternalGetter> IFloraGetter.Ingredient_Property => this.Ingredient_Property;
         #endregion
         #region Spring
         private Byte _Spring;
@@ -209,72 +209,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Flora rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IFloraInternalGetter rhs)) return false;
+            return ((FloraCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Flora rhs)
+        public bool Equals(Flora obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (Script_Property.HasBeenSet)
-            {
-                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (Ingredient_Property.HasBeenSet != rhs.Ingredient_Property.HasBeenSet) return false;
-            if (Ingredient_Property.HasBeenSet)
-            {
-                if (!this.Ingredient_Property.Equals(rhs.Ingredient_Property)) return false;
-            }
-            if (this.Spring != rhs.Spring) return false;
-            if (this.Summer != rhs.Summer) return false;
-            if (this.Fall != rhs.Fall) return false;
-            if (this.Winter != rhs.Winter) return false;
-            if (this.PFPCDataTypeState != rhs.PFPCDataTypeState) return false;
-            return true;
+            return ((FloraCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
-            }
-            if (Ingredient_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Ingredient).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Spring).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Summer).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fall).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Winter).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PFPCDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((FloraCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => FloraXmlWriteTranslation.Instance;
@@ -967,12 +913,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         IScriptInternalGetter Script { get; }
-        IFormIDSetLinkGetter<Script> Script_Property { get; }
+        IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property { get; }
 
         #endregion
         #region Ingredient
         IIngredientInternalGetter Ingredient { get; }
-        IFormIDSetLinkGetter<Ingredient> Ingredient_Property { get; }
+        IFormIDSetLinkGetter<IIngredientInternalGetter> Ingredient_Property { get; }
 
         #endregion
         #region Spring
@@ -1066,6 +1012,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IFloraInternalGetter item,
+            IFloraInternalGetter rhs)
+        {
+            return ((FloraCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1793,6 +1748,101 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IFloraInternalGetter lhs,
+            IFloraInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Ingredient_Property.HasBeenSet != rhs.Ingredient_Property.HasBeenSet) return false;
+            if (lhs.Ingredient_Property.HasBeenSet)
+            {
+                if (!lhs.Ingredient_Property.Equals(rhs.Ingredient_Property)) return false;
+            }
+            if (lhs.Spring != rhs.Spring) return false;
+            if (lhs.Summer != rhs.Summer) return false;
+            if (lhs.Fall != rhs.Fall) return false;
+            if (lhs.Winter != rhs.Winter) return false;
+            if (lhs.PFPCDataTypeState != rhs.PFPCDataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IFloraInternalGetter)lhs,
+                rhs: rhs as IFloraInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IFloraInternalGetter)lhs,
+                rhs: rhs as IFloraInternalGetter);
+        }
+
+        public virtual int GetHashCode(IFloraInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.Ingredient_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Ingredient).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Spring).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Summer).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fall).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Winter).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PFPCDataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IFloraInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IFloraInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

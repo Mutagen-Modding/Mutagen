@@ -93,6 +93,7 @@ namespace Mutagen.Bethesda
                 }
             }
         }
+        ReadOnlySpan<Byte> IGroupGetter<T>.LastModified => this.LastModified;
         #endregion
         #region Items
         private readonly SourceSetCache<T, FormKey> _Items = new SourceSetCache<T, FormKey>((item) => item.FormKey);
@@ -122,32 +123,18 @@ namespace Mutagen.Bethesda
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Group<T> rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IGroupGetter<T> rhs)) return false;
+            return ((GroupCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Group<T> rhs)
+        public bool Equals(Group<T> obj)
         {
-            if (rhs == null) return false;
-            if (!string.Equals(this.ContainedRecordType, rhs.ContainedRecordType)) return false;
-            if (this.GroupType != rhs.GroupType) return false;
-            if (!ByteExt.EqualsFast(this.LastModified, rhs.LastModified)) return false;
-            if (!this.Items.SequenceEqual(rhs.Items)) return false;
-            return true;
+            return ((GroupCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(ContainedRecordType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(GroupType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LastModified).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((GroupCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
@@ -712,7 +699,7 @@ namespace Mutagen.Bethesda
 
         #endregion
         #region LastModified
-        Byte[] LastModified { get; }
+        ReadOnlySpan<Byte> LastModified { get; }
 
         #endregion
         #region Items
@@ -788,6 +775,16 @@ namespace Mutagen.Bethesda
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals<T>(
+            this IGroupGetter<T> item,
+            IGroupGetter<T> rhs)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
+        {
+            return ((GroupCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1148,7 +1145,7 @@ namespace Mutagen.Bethesda.Internals
             if (rhs == null) return;
             ret.ContainedRecordType = string.Equals(item.ContainedRecordType, rhs.ContainedRecordType);
             ret.GroupType = item.GroupType == rhs.GroupType;
-            ret.LastModified = ByteExt.EqualsFast(item.LastModified, rhs.LastModified);
+            ret.LastModified = MemoryExtensions.SequenceEqual(item.LastModified, rhs.LastModified);
             ret.Items = EqualsMaskHelper.CacheEqualsHelper(
                 lhs: item.Items,
                 rhs: rhs.Items,
@@ -1213,7 +1210,7 @@ namespace Mutagen.Bethesda.Internals
             }
             if (printMask?.LastModified ?? true)
             {
-                fg.AppendLine($"LastModified => {item.LastModified}");
+                fg.AppendLine($"LastModified => {SpanExt.ToHexString(item.LastModified)}");
             }
             if (printMask?.Items?.Overall ?? true)
             {
@@ -1253,6 +1250,35 @@ namespace Mutagen.Bethesda.Internals
             mask.LastModified = true;
             mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, MajorRecord_Mask<bool>>>>(true, item.Items.Values.Select((i) => new MaskItemIndexed<FormKey, bool, MajorRecord_Mask<bool>>(i.FormKey, true, i.GetHasBeenSetMask())));
         }
+
+        #region Equals and Hash
+        public virtual bool Equals<T>(
+            IGroupGetter<T> lhs,
+            IGroupGetter<T> rhs)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!string.Equals(lhs.ContainedRecordType, rhs.ContainedRecordType)) return false;
+            if (lhs.GroupType != rhs.GroupType) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.LastModified, rhs.LastModified)) return false;
+            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode<T>(IGroupGetter<T> item)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.ContainedRecordType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

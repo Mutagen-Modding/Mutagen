@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<LandTexture> IBaseLayer.Texture_Property => this.Texture_Property;
         ILandTextureInternalGetter IBaseLayerGetter.Texture => this.Texture_Property.Item;
-        IFormIDLinkGetter<LandTexture> IBaseLayerGetter.Texture_Property => this.Texture_Property;
+        IFormIDLinkGetter<ILandTextureInternalGetter> IBaseLayerGetter.Texture_Property => this.Texture_Property;
         #endregion
         #region Quadrant
         private AlphaLayer.QuadrantEnum _Quadrant;
@@ -123,32 +123,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is BaseLayer rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IBaseLayerInternalGetter rhs)) return false;
+            return ((BaseLayerCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(BaseLayer rhs)
+        public bool Equals(BaseLayer obj)
         {
-            if (rhs == null) return false;
-            if (!this.Texture_Property.Equals(rhs.Texture_Property)) return false;
-            if (this.Quadrant != rhs.Quadrant) return false;
-            if (this.LayerNumber != rhs.LayerNumber) return false;
-            if (this.BTXTDataTypeState != rhs.BTXTDataTypeState) return false;
-            return true;
+            return ((BaseLayerCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Texture).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Quadrant).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LayerNumber).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BTXTDataTypeState).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((BaseLayerCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected virtual object XmlWriteTranslator => BaseLayerXmlWriteTranslation.Instance;
@@ -706,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Texture
         ILandTextureInternalGetter Texture { get; }
-        IFormIDLinkGetter<LandTexture> Texture_Property { get; }
+        IFormIDLinkGetter<ILandTextureInternalGetter> Texture_Property { get; }
 
         #endregion
         #region Quadrant
@@ -790,6 +776,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IBaseLayerInternalGetter item,
+            IBaseLayerInternalGetter rhs)
+        {
+            return ((BaseLayerCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1195,6 +1190,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.LayerNumber = true;
             mask.BTXTDataTypeState = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IBaseLayerInternalGetter lhs,
+            IBaseLayerInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Texture_Property.Equals(rhs.Texture_Property)) return false;
+            if (lhs.Quadrant != rhs.Quadrant) return false;
+            if (lhs.LayerNumber != rhs.LayerNumber) return false;
+            if (lhs.BTXTDataTypeState != rhs.BTXTDataTypeState) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IBaseLayerInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Texture).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Quadrant).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LayerNumber).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BTXTDataTypeState).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

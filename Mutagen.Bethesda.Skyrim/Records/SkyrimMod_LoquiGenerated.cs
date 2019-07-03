@@ -106,37 +106,18 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is SkyrimMod rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ISkyrimModGetter rhs)) return false;
+            return ((SkyrimModCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(SkyrimMod rhs)
+        public bool Equals(SkyrimMod obj)
         {
-            if (rhs == null) return false;
-            if (ModHeader_IsSet != rhs.ModHeader_IsSet) return false;
-            if (ModHeader_IsSet)
-            {
-                if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
-            }
-            if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
-            if (!object.Equals(this.Globals, rhs.Globals)) return false;
-            return true;
+            return ((SkyrimModCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (ModHeader_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ModHeader).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(GameSettings).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Globals).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((SkyrimModCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
@@ -1095,6 +1076,15 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
+        public static bool Equals(
+            this ISkyrimModGetter item,
+            ISkyrimModGetter rhs)
+        {
+            return ((SkyrimModCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
         #region Mutagen
         public static ISourceCache<T, FormKey> GetGroup<T>(this ISkyrimModGetter obj)
             where T : IMajorRecordInternalGetter
@@ -1529,6 +1519,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.GameSettings = new MaskItem<bool, Group_Mask<bool>>(true, item.GameSettings.GetHasBeenSetMask());
             mask.Globals = new MaskItem<bool, Group_Mask<bool>>(true, item.Globals.GetHasBeenSetMask());
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISkyrimModGetter lhs,
+            ISkyrimModGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.ModHeader_IsSet != rhs.ModHeader_IsSet) return false;
+            if (lhs.ModHeader_IsSet)
+            {
+                if (!object.Equals(lhs.ModHeader, rhs.ModHeader)) return false;
+            }
+            if (!object.Equals(lhs.GameSettings, rhs.GameSettings)) return false;
+            if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(ISkyrimModGetter item)
+        {
+            int ret = 0;
+            if (item.ModHeader_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ModHeader).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.GameSettings).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Globals).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
         #region Mutagen
         public ISourceCache<T, FormKey> GetGroup<T>(ISkyrimModGetter obj)

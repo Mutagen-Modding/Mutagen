@@ -128,39 +128,18 @@ namespace Mutagen.Bethesda
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is MajorRecord rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IMajorRecordInternalGetter rhs)) return false;
+            return ((MajorRecordCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(MajorRecord rhs)
+        public bool Equals(MajorRecord obj)
         {
-            if (rhs == null) return false;
-            if (this.MajorRecordFlagsRaw != rhs.MajorRecordFlagsRaw) return false;
-            if (this.FormKey != rhs.FormKey) return false;
-            if (this.Version != rhs.Version) return false;
-            if (EditorID_IsSet != rhs.EditorID_IsSet) return false;
-            if (EditorID_IsSet)
-            {
-                if (!string.Equals(this.EditorID, rhs.EditorID)) return false;
-            }
-            return true;
+            return ((MajorRecordCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(MajorRecordFlagsRaw).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FormKey).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
-            if (EditorID_IsSet)
-            {
-                ret = HashHelper.GetHashCode(EditorID).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((MajorRecordCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected virtual object XmlWriteTranslator => MajorRecordXmlWriteTranslation.Instance;
@@ -726,6 +705,15 @@ namespace Mutagen.Bethesda
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IMajorRecordInternalGetter item,
+            IMajorRecordInternalGetter rhs)
+        {
+            return ((MajorRecordCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1296,6 +1284,40 @@ namespace Mutagen.Bethesda.Internals
             mask.Version = true;
             mask.EditorID = item.EditorID_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.MajorRecordFlagsRaw != rhs.MajorRecordFlagsRaw) return false;
+            if (lhs.FormKey != rhs.FormKey) return false;
+            if (lhs.Version != rhs.Version) return false;
+            if (lhs.EditorID_IsSet != rhs.EditorID_IsSet) return false;
+            if (lhs.EditorID_IsSet)
+            {
+                if (!string.Equals(lhs.EditorID, rhs.EditorID)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.MajorRecordFlagsRaw).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FormKey).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
+            if (item.EditorID_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.EditorID).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

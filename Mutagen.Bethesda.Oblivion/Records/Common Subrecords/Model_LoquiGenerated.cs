@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => Hashes_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IModelGetter.Hashes => this.Hashes;
+        ReadOnlySpan<Byte> IModelGetter.Hashes => this.Hashes;
         public void Hashes_Set(
             Byte[] value,
             bool markSet = true)
@@ -117,37 +117,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Model rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IModelGetter rhs)) return false;
+            return ((ModelCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Model rhs)
+        public bool Equals(Model obj)
         {
-            if (rhs == null) return false;
-            if (!string.Equals(this.File, rhs.File)) return false;
-            if (!this.BoundRadius.EqualsWithin(rhs.BoundRadius)) return false;
-            if (Hashes_IsSet != rhs.Hashes_IsSet) return false;
-            if (Hashes_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.Hashes, rhs.Hashes)) return false;
-            }
-            return true;
+            return ((ModelCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(File).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BoundRadius).CombineHashCode(ret);
-            if (Hashes_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Hashes).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((ModelCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => ModelXmlWriteTranslation.Instance;
@@ -652,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Hashes
-        Byte[] Hashes { get; }
+        ReadOnlySpan<Byte> Hashes { get; }
         bool Hashes_IsSet { get; }
 
         #endregion
@@ -720,6 +701,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IModelGetter item,
+            IModelGetter rhs)
+        {
+            return ((ModelCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1053,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.File = string.Equals(item.File, rhs.File);
             ret.BoundRadius = item.BoundRadius.EqualsWithin(rhs.BoundRadius);
-            ret.Hashes = item.Hashes_IsSet == rhs.Hashes_IsSet && ByteExt.EqualsFast(item.Hashes, rhs.Hashes);
+            ret.Hashes = item.Hashes_IsSet == rhs.Hashes_IsSet && MemoryExtensions.SequenceEqual(item.Hashes, rhs.Hashes);
         }
 
         public string ToString(
@@ -1110,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Hashes ?? true)
             {
-                fg.AppendLine($"Hashes => {item.Hashes}");
+                fg.AppendLine($"Hashes => {SpanExt.ToHexString(item.Hashes)}");
             }
         }
 
@@ -1130,6 +1120,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.BoundRadius = true;
             mask.Hashes = item.Hashes_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IModelGetter lhs,
+            IModelGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!string.Equals(lhs.File, rhs.File)) return false;
+            if (!lhs.BoundRadius.EqualsWithin(rhs.BoundRadius)) return false;
+            if (lhs.Hashes_IsSet != rhs.Hashes_IsSet) return false;
+            if (lhs.Hashes_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Hashes, rhs.Hashes)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IModelGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.File).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BoundRadius).CombineHashCode(ret);
+            if (item.Hashes_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Hashes).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

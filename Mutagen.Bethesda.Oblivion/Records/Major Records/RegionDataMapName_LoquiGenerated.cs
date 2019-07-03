@@ -98,35 +98,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RegionDataMapName rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRegionDataMapNameInternalGetter rhs)) return false;
+            return ((RegionDataMapNameCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RegionDataMapName rhs)
+        public bool Equals(RegionDataMapName obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (MapName_IsSet != rhs.MapName_IsSet) return false;
-            if (MapName_IsSet)
-            {
-                if (!string.Equals(this.MapName, rhs.MapName)) return false;
-            }
-            return true;
+            return ((RegionDataMapNameCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (MapName_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MapName).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((RegionDataMapNameCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => RegionDataMapNameXmlWriteTranslation.Instance;
@@ -694,6 +677,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IRegionDataMapNameInternalGetter item,
+            IRegionDataMapNameInternalGetter rhs)
+        {
+            return ((RegionDataMapNameCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1072,6 +1064,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRegionDataMapNameInternalGetter lhs,
+            IRegionDataMapNameInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.MapName_IsSet != rhs.MapName_IsSet) return false;
+            if (lhs.MapName_IsSet)
+            {
+                if (!string.Equals(lhs.MapName, rhs.MapName)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IRegionDataInternalGetter lhs,
+            IRegionDataInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRegionDataMapNameInternalGetter)lhs,
+                rhs: rhs as IRegionDataMapNameInternalGetter);
+        }
+
+        public virtual int GetHashCode(IRegionDataMapNameInternalGetter item)
+        {
+            int ret = 0;
+            if (item.MapName_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MapName).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IRegionDataInternalGetter item)
+        {
+            return GetHashCode(item: (IRegionDataMapNameInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

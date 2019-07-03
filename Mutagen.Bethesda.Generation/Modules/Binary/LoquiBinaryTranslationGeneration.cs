@@ -41,12 +41,12 @@ namespace Mutagen.Bethesda.Generation
             return false;
         }
 
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             var loquiGen = typeGen as LoquiType;
             if (loquiGen.CanStronglyType)
             {
-                return $"LoquiBinaryTranslation<{loquiGen.TypeName}>.Instance";
+                return $"LoquiBinaryTranslation<{loquiGen.TypeName(getter)}>.Instance";
             }
             else
             {
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Generation
                         if (loquiGen.SingletonType == SingletonLevel.Singleton)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"var tmp{typeGen.Name} = {Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{loquiGen.TypeName}.{this.Module.CreateFromPrefix}{ModNickname}"))
+                                $"var tmp{typeGen.Name} = {Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{loquiGen.TypeName(getter: false)}.{this.Module.CreateFromPrefix}{ModNickname}"))
                             {
                                 args.Add($"frame: {frameAccessor}");
                                 args.Add($"errorMask: {errorMaskAccessor}");

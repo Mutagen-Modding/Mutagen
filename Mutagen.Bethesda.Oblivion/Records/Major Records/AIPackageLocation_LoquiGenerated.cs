@@ -98,30 +98,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is AIPackageLocation rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IAIPackageLocationGetter rhs)) return false;
+            return ((AIPackageLocationCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(AIPackageLocation rhs)
+        public bool Equals(AIPackageLocation obj)
         {
-            if (rhs == null) return false;
-            if (this.Type != rhs.Type) return false;
-            if (!this.LocationReference_Property.Equals(rhs.LocationReference_Property)) return false;
-            if (!this.Radius.EqualsWithin(rhs.Radius)) return false;
-            return true;
+            return ((AIPackageLocationCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LocationReference).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Radius).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((AIPackageLocationCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => AIPackageLocationXmlWriteTranslation.Instance;
@@ -670,6 +658,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IAIPackageLocationGetter item,
+            IAIPackageLocationGetter rhs)
+        {
+            return ((AIPackageLocationCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1062,6 +1059,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.LocationReference = true;
             mask.Radius = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IAIPackageLocationGetter lhs,
+            IAIPackageLocationGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Type != rhs.Type) return false;
+            if (!lhs.LocationReference_Property.Equals(rhs.LocationReference_Property)) return false;
+            if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IAIPackageLocationGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LocationReference).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Radius).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

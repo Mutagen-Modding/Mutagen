@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<OblivionMajorRecord> IScriptObjectReference.Reference_Property => this.Reference_Property;
         IOblivionMajorRecordInternalGetter IScriptObjectReferenceGetter.Reference => this.Reference_Property.Item;
-        IFormIDLinkGetter<OblivionMajorRecord> IScriptObjectReferenceGetter.Reference_Property => this.Reference_Property;
+        IFormIDLinkGetter<IOblivionMajorRecordInternalGetter> IScriptObjectReferenceGetter.Reference_Property => this.Reference_Property;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptObjectReferenceGetter)rhs, include);
@@ -81,28 +81,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ScriptObjectReference rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IScriptObjectReferenceGetter rhs)) return false;
+            return ((ScriptObjectReferenceCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptObjectReference rhs)
+        public bool Equals(ScriptObjectReference obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!this.Reference_Property.Equals(rhs.Reference_Property)) return false;
-            return true;
+            return ((ScriptObjectReferenceCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Reference).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((ScriptObjectReferenceCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ScriptObjectReferenceXmlWriteTranslation.Instance;
@@ -553,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Reference
         IOblivionMajorRecordInternalGetter Reference { get; }
-        IFormIDLinkGetter<OblivionMajorRecord> Reference_Property { get; }
+        IFormIDLinkGetter<IOblivionMajorRecordInternalGetter> Reference_Property { get; }
 
         #endregion
 
@@ -620,6 +610,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IScriptObjectReferenceGetter item,
+            IScriptObjectReferenceGetter rhs)
+        {
+            return ((ScriptObjectReferenceCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -973,6 +972,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IScriptObjectReferenceGetter lhs,
+            IScriptObjectReferenceGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (!lhs.Reference_Property.Equals(rhs.Reference_Property)) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IScriptReferenceGetter lhs,
+            IScriptReferenceGetter rhs)
+        {
+            return Equals(
+                lhs: (IScriptObjectReferenceGetter)lhs,
+                rhs: rhs as IScriptObjectReferenceGetter);
+        }
+
+        public virtual int GetHashCode(IScriptObjectReferenceGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Reference).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IScriptReferenceGetter item)
+        {
+            return GetHashCode(item: (IScriptObjectReferenceGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

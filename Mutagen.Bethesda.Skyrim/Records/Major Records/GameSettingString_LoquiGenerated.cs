@@ -99,35 +99,18 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is GameSettingString rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IGameSettingStringInternalGetter rhs)) return false;
+            return ((GameSettingStringCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(GameSettingString rhs)
+        public bool Equals(GameSettingString obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Data_IsSet != rhs.Data_IsSet) return false;
-            if (Data_IsSet)
-            {
-                if (!string.Equals(this.Data, rhs.Data)) return false;
-            }
-            return true;
+            return ((GameSettingStringCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Data_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((GameSettingStringCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => GameSettingStringXmlWriteTranslation.Instance;
@@ -714,6 +697,15 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
+        public static bool Equals(
+            this IGameSettingStringInternalGetter item,
+            IGameSettingStringInternalGetter rhs)
+        {
+            return ((GameSettingStringCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1141,6 +1133,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IGameSettingStringInternalGetter lhs,
+            IGameSettingStringInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Data_IsSet != rhs.Data_IsSet) return false;
+            if (lhs.Data_IsSet)
+            {
+                if (!string.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IGameSettingInternalGetter lhs,
+            IGameSettingInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGameSettingStringInternalGetter)lhs,
+                rhs: rhs as IGameSettingStringInternalGetter);
+        }
+
+        public override bool Equals(
+            ISkyrimMajorRecordInternalGetter lhs,
+            ISkyrimMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGameSettingStringInternalGetter)lhs,
+                rhs: rhs as IGameSettingStringInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGameSettingStringInternalGetter)lhs,
+                rhs: rhs as IGameSettingStringInternalGetter);
+        }
+
+        public virtual int GetHashCode(IGameSettingStringInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Data_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Data).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IGameSettingInternalGetter item)
+        {
+            return GetHashCode(item: (IGameSettingStringInternalGetter)item);
+        }
+
+        public override int GetHashCode(ISkyrimMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGameSettingStringInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGameSettingStringInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

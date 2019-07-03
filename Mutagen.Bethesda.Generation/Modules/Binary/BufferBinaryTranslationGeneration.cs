@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class BufferBinaryTranslationGeneration : BinaryTranslationGeneration
     {
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             return $"ByteArrayBinaryTranslation.Instance";
         }

@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Grass>> IRegionDataGrasses.Grasses => _Grasses;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDLink<Grass>> IRegionDataGrassesGetter.Grasses => _Grasses;
+        IReadOnlySetList<IFormIDLinkGetter<IGrassInternalGetter>> IRegionDataGrassesGetter.Grasses => _Grasses;
         #endregion
 
         #endregion
@@ -87,35 +87,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RegionDataGrasses rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRegionDataGrassesInternalGetter rhs)) return false;
+            return ((RegionDataGrassesCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RegionDataGrasses rhs)
+        public bool Equals(RegionDataGrasses obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Grasses.HasBeenSet != rhs.Grasses.HasBeenSet) return false;
-            if (Grasses.HasBeenSet)
-            {
-                if (!this.Grasses.SequenceEqual(rhs.Grasses)) return false;
-            }
-            return true;
+            return ((RegionDataGrassesCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Grasses.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Grasses).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((RegionDataGrassesCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => RegionDataGrassesXmlWriteTranslation.Instance;
@@ -547,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataGrasses_FieldIndex.Grasses:
-                    this._Grasses.SetTo((IEnumerable<IFormIDLink<Grass>>)obj);
+                    this._Grasses.SetTo((SourceSetList<IFormIDLink<Grass>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -579,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataGrasses_FieldIndex.Grasses:
-                    obj._Grasses.SetTo((IEnumerable<IFormIDLink<Grass>>)pair.Value);
+                    obj._Grasses.SetTo((SourceSetList<IFormIDLink<Grass>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -616,7 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Grasses
-        IReadOnlySetList<IFormIDLink<Grass>> Grasses { get; }
+        IReadOnlySetList<IFormIDLinkGetter<IGrassInternalGetter>> Grasses { get; }
         #endregion
 
     }
@@ -689,6 +672,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRegionDataGrassesInternalGetter item,
+            IRegionDataGrassesInternalGetter rhs)
+        {
+            return ((RegionDataGrassesCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1076,6 +1068,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRegionDataGrassesInternalGetter lhs,
+            IRegionDataGrassesInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Grasses.HasBeenSet != rhs.Grasses.HasBeenSet) return false;
+            if (lhs.Grasses.HasBeenSet)
+            {
+                if (!lhs.Grasses.SequenceEqual(rhs.Grasses)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IRegionDataInternalGetter lhs,
+            IRegionDataInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRegionDataGrassesInternalGetter)lhs,
+                rhs: rhs as IRegionDataGrassesInternalGetter);
+        }
+
+        public virtual int GetHashCode(IRegionDataGrassesInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Grasses.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Grasses).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IRegionDataInternalGetter item)
+        {
+            return GetHashCode(item: (IRegionDataGrassesInternalGetter)item);
+        }
+
+        #endregion
+
+
     }
     #endregion
 
@@ -1101,14 +1137,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Grasses.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)RegionDataGrasses_FieldIndex.Grasses) ?? true))
             {
-                ListXmlTranslation<IFormIDLink<Grass>>.Instance.Write(
+                ListXmlTranslation<IFormIDLinkGetter<IGrassInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Grasses),
                     item: item.Grasses,
                     fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)RegionDataGrasses_FieldIndex.Grasses),
-                    transl: (XElement subNode, IFormIDLink<Grass> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDLinkGetter<IGrassInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -1666,11 +1702,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
             if (item.Grasses.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Grass>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IGrassInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.Grasses,
                     recordType: RegionDataGrasses_Registration.RDGS_HEADER,
-                    transl: (MutagenWriter subWriter, IFormIDLink<Grass> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDLinkGetter<IGrassInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,

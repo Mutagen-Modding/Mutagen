@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<IdleAnimation> IAnimatedObject.IdleAnimation_Property => this.IdleAnimation_Property;
         IIdleAnimationInternalGetter IAnimatedObjectGetter.IdleAnimation => this.IdleAnimation_Property.Item;
-        IFormIDSetLinkGetter<IdleAnimation> IAnimatedObjectGetter.IdleAnimation_Property => this.IdleAnimation_Property;
+        IFormIDSetLinkGetter<IIdleAnimationInternalGetter> IAnimatedObjectGetter.IdleAnimation_Property => this.IdleAnimation_Property;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAnimatedObjectInternalGetter)rhs, include);
@@ -109,44 +109,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is AnimatedObject rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IAnimatedObjectInternalGetter rhs)) return false;
+            return ((AnimatedObjectCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(AnimatedObject rhs)
+        public bool Equals(AnimatedObject obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (IdleAnimation_Property.HasBeenSet != rhs.IdleAnimation_Property.HasBeenSet) return false;
-            if (IdleAnimation_Property.HasBeenSet)
-            {
-                if (!this.IdleAnimation_Property.Equals(rhs.IdleAnimation_Property)) return false;
-            }
-            return true;
+            return ((AnimatedObjectCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (IdleAnimation_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(IdleAnimation).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((AnimatedObjectCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => AnimatedObjectXmlWriteTranslation.Instance;
@@ -713,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region IdleAnimation
         IIdleAnimationInternalGetter IdleAnimation { get; }
-        IFormIDSetLinkGetter<IdleAnimation> IdleAnimation_Property { get; }
+        IFormIDSetLinkGetter<IIdleAnimationInternalGetter> IdleAnimation_Property { get; }
 
         #endregion
 
@@ -787,6 +761,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IAnimatedObjectInternalGetter item,
+            IAnimatedObjectInternalGetter rhs)
+        {
+            return ((AnimatedObjectCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1262,6 +1245,73 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IAnimatedObjectInternalGetter lhs,
+            IAnimatedObjectInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.IdleAnimation_Property.HasBeenSet != rhs.IdleAnimation_Property.HasBeenSet) return false;
+            if (lhs.IdleAnimation_Property.HasBeenSet)
+            {
+                if (!lhs.IdleAnimation_Property.Equals(rhs.IdleAnimation_Property)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IAnimatedObjectInternalGetter)lhs,
+                rhs: rhs as IAnimatedObjectInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IAnimatedObjectInternalGetter)lhs,
+                rhs: rhs as IAnimatedObjectInternalGetter);
+        }
+
+        public virtual int GetHashCode(IAnimatedObjectInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.IdleAnimation_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.IdleAnimation).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IAnimatedObjectInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IAnimatedObjectInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

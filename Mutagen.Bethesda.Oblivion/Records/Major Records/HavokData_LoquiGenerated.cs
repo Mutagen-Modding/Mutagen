@@ -97,30 +97,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is HavokData rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IHavokDataGetter rhs)) return false;
+            return ((HavokDataCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(HavokData rhs)
+        public bool Equals(HavokData obj)
         {
-            if (rhs == null) return false;
-            if (this.Material != rhs.Material) return false;
-            if (this.Friction != rhs.Friction) return false;
-            if (this.Restitution != rhs.Restitution) return false;
-            return true;
+            return ((HavokDataCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Material).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Friction).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Restitution).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((HavokDataCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => HavokDataXmlWriteTranslation.Instance;
@@ -639,6 +627,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IHavokDataGetter item,
+            IHavokDataGetter rhs)
+        {
+            return ((HavokDataCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1031,6 +1028,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Friction = true;
             mask.Restitution = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IHavokDataGetter lhs,
+            IHavokDataGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Material != rhs.Material) return false;
+            if (lhs.Friction != rhs.Friction) return false;
+            if (lhs.Restitution != rhs.Restitution) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IHavokDataGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Material).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Friction).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Restitution).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

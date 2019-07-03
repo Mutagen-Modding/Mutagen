@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Race> IRaceVoices.Male_Property => this.Male_Property;
         IRaceInternalGetter IRaceVoicesGetter.Male => this.Male_Property.Item;
-        IFormIDLinkGetter<Race> IRaceVoicesGetter.Male_Property => this.Male_Property;
+        IFormIDLinkGetter<IRaceInternalGetter> IRaceVoicesGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
         public IFormIDLink<Race> Female_Property { get; } = new FormIDLink<Race>();
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Race> IRaceVoices.Female_Property => this.Female_Property;
         IRaceInternalGetter IRaceVoicesGetter.Female => this.Female_Property.Item;
-        IFormIDLinkGetter<Race> IRaceVoicesGetter.Female_Property => this.Female_Property;
+        IFormIDLinkGetter<IRaceInternalGetter> IRaceVoicesGetter.Female_Property => this.Female_Property;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceVoicesGetter)rhs, include);
@@ -89,28 +89,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RaceVoices rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRaceVoicesGetter rhs)) return false;
+            return ((RaceVoicesCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RaceVoices rhs)
+        public bool Equals(RaceVoices obj)
         {
-            if (rhs == null) return false;
-            if (!this.Male_Property.Equals(rhs.Male_Property)) return false;
-            if (!this.Female_Property.Equals(rhs.Female_Property)) return false;
-            return true;
+            return ((RaceVoicesCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Male).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Female).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((RaceVoicesCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RaceVoicesXmlWriteTranslation.Instance;
@@ -548,12 +538,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Male
         IRaceInternalGetter Male { get; }
-        IFormIDLinkGetter<Race> Male_Property { get; }
+        IFormIDLinkGetter<IRaceInternalGetter> Male_Property { get; }
 
         #endregion
         #region Female
         IRaceInternalGetter Female { get; }
-        IFormIDLinkGetter<Race> Female_Property { get; }
+        IFormIDLinkGetter<IRaceInternalGetter> Female_Property { get; }
 
         #endregion
 
@@ -620,6 +610,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRaceVoicesGetter item,
+            IRaceVoicesGetter rhs)
+        {
+            return ((RaceVoicesCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -978,6 +977,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Male = true;
             mask.Female = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRaceVoicesGetter lhs,
+            IRaceVoicesGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Male_Property.Equals(rhs.Male_Property)) return false;
+            if (!lhs.Female_Property.Equals(rhs.Female_Property)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IRaceVoicesGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Male).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Female).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

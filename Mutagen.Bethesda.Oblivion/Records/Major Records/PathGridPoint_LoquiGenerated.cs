@@ -78,6 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IPathGridPointGetter.NumConnectionsFluffBytes => this.NumConnectionsFluffBytes;
         #endregion
         #region Connections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -110,30 +111,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is PathGridPoint rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IPathGridPointGetter rhs)) return false;
+            return ((PathGridPointCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(PathGridPoint rhs)
+        public bool Equals(PathGridPoint obj)
         {
-            if (rhs == null) return false;
-            if (!this.Point.Equals(rhs.Point)) return false;
-            if (!ByteExt.EqualsFast(this.NumConnectionsFluffBytes, rhs.NumConnectionsFluffBytes)) return false;
-            if (!this.Connections.SequenceEqual(rhs.Connections)) return false;
-            return true;
+            return ((PathGridPointCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Point).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(NumConnectionsFluffBytes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Connections).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((PathGridPointCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => PathGridPointXmlWriteTranslation.Instance;
@@ -510,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.NumConnectionsFluffBytes = (Byte[])obj;
                     break;
                 case PathGridPoint_FieldIndex.Connections:
-                    this._Connections.SetTo((IEnumerable<Int16>)obj);
+                    this._Connections.SetTo((SourceSetList<Int16>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -547,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.NumConnectionsFluffBytes = (Byte[])pair.Value;
                     break;
                 case PathGridPoint_FieldIndex.Connections:
-                    obj._Connections.SetTo((IEnumerable<Int16>)pair.Value);
+                    obj._Connections.SetTo((SourceSetList<Int16>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -584,7 +573,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region NumConnectionsFluffBytes
-        Byte[] NumConnectionsFluffBytes { get; }
+        ReadOnlySpan<Byte> NumConnectionsFluffBytes { get; }
 
         #endregion
         #region Connections
@@ -654,6 +643,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IPathGridPointGetter item,
+            IPathGridPointGetter rhs)
+        {
+            return ((PathGridPointCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -972,7 +970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Point = item.Point.Equals(rhs.Point);
-            ret.NumConnectionsFluffBytes = ByteExt.EqualsFast(item.NumConnectionsFluffBytes, rhs.NumConnectionsFluffBytes);
+            ret.NumConnectionsFluffBytes = MemoryExtensions.SequenceEqual(item.NumConnectionsFluffBytes, rhs.NumConnectionsFluffBytes);
             ret.Connections = item.Connections.CollectionEqualsHelper(
                 rhs.Connections,
                 (l, r) => l == r,
@@ -1029,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.NumConnectionsFluffBytes ?? true)
             {
-                fg.AppendLine($"NumConnectionsFluffBytes => {item.NumConnectionsFluffBytes}");
+                fg.AppendLine($"NumConnectionsFluffBytes => {SpanExt.ToHexString(item.NumConnectionsFluffBytes)}");
             }
             if (printMask?.Connections?.Overall ?? true)
             {
@@ -1066,6 +1064,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.NumConnectionsFluffBytes = true;
             mask.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IPathGridPointGetter lhs,
+            IPathGridPointGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Point.Equals(rhs.Point)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.NumConnectionsFluffBytes, rhs.NumConnectionsFluffBytes)) return false;
+            if (!lhs.Connections.SequenceEqual(rhs.Connections)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IPathGridPointGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Point).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.NumConnectionsFluffBytes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Connections).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

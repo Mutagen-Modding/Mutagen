@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Generation
         public Action<FileGeneration, Accessor, Accessor> customRead;
         public Action<FileGeneration, Accessor, Accessor> customWrite;
 
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             return $"{Typename(typeGen)}BinaryTranslation.Instance";
         }

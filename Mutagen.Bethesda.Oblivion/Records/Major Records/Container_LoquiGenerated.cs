@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Script> IContainer.Script_Property => this.Script_Property;
         IScriptInternalGetter IContainerGetter.Script => this.Script_Property.Item;
-        IFormIDSetLinkGetter<Script> IContainerGetter.Script_Property => this.Script_Property;
+        IFormIDSetLinkGetter<IScriptInternalGetter> IContainerGetter.Script_Property => this.Script_Property;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Sound> IContainer.OpenSound_Property => this.OpenSound_Property;
         ISoundInternalGetter IContainerGetter.OpenSound => this.OpenSound_Property.Item;
-        IFormIDSetLinkGetter<Sound> IContainerGetter.OpenSound_Property => this.OpenSound_Property;
+        IFormIDSetLinkGetter<ISoundInternalGetter> IContainerGetter.OpenSound_Property => this.OpenSound_Property;
         #endregion
         #region CloseSound
         public IFormIDSetLink<Sound> CloseSound_Property { get; } = new FormIDSetLink<Sound>();
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Sound> IContainer.CloseSound_Property => this.CloseSound_Property;
         ISoundInternalGetter IContainerGetter.CloseSound => this.CloseSound_Property.Item;
-        IFormIDSetLinkGetter<Sound> IContainerGetter.CloseSound_Property => this.CloseSound_Property;
+        IFormIDSetLinkGetter<ISoundInternalGetter> IContainerGetter.CloseSound_Property => this.CloseSound_Property;
         #endregion
         #region DATADataTypeState
         private Container.DATADataType _DATADataTypeState;
@@ -207,86 +207,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Container rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IContainerInternalGetter rhs)) return false;
+            return ((ContainerCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Container rhs)
+        public bool Equals(Container obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (Script_Property.HasBeenSet)
-            {
-                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
-            if (Items.HasBeenSet)
-            {
-                if (!this.Items.SequenceEqual(rhs.Items)) return false;
-            }
-            if (this.Flags != rhs.Flags) return false;
-            if (!this.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (OpenSound_Property.HasBeenSet != rhs.OpenSound_Property.HasBeenSet) return false;
-            if (OpenSound_Property.HasBeenSet)
-            {
-                if (!this.OpenSound_Property.Equals(rhs.OpenSound_Property)) return false;
-            }
-            if (CloseSound_Property.HasBeenSet != rhs.CloseSound_Property.HasBeenSet) return false;
-            if (CloseSound_Property.HasBeenSet)
-            {
-                if (!this.CloseSound_Property.Equals(rhs.CloseSound_Property)) return false;
-            }
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((ContainerCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
-            }
-            if (Items.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            if (OpenSound_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(OpenSound).CombineHashCode(ret);
-            }
-            if (CloseSound_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(CloseSound).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((ContainerCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ContainerXmlWriteTranslation.Instance;
@@ -893,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Script_Property.Set((IFormIDSetLink<Script>)obj);
                     break;
                 case Container_FieldIndex.Items:
-                    this._Items.SetTo((IEnumerable<ContainerItem>)obj);
+                    this._Items.SetTo((SourceSetList<ContainerItem>)obj);
                     break;
                 case Container_FieldIndex.Flags:
                     this.Flags = (Container.ContainerFlag)obj;
@@ -949,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
                     break;
                 case Container_FieldIndex.Items:
-                    obj._Items.SetTo((IEnumerable<ContainerItem>)pair.Value);
+                    obj._Items.SetTo((SourceSetList<ContainerItem>)pair.Value);
                     break;
                 case Container_FieldIndex.Flags:
                     obj.Flags = (Container.ContainerFlag)pair.Value;
@@ -1040,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         IScriptInternalGetter Script { get; }
-        IFormIDSetLinkGetter<Script> Script_Property { get; }
+        IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property { get; }
 
         #endregion
         #region Items
@@ -1056,12 +988,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region OpenSound
         ISoundInternalGetter OpenSound { get; }
-        IFormIDSetLinkGetter<Sound> OpenSound_Property { get; }
+        IFormIDSetLinkGetter<ISoundInternalGetter> OpenSound_Property { get; }
 
         #endregion
         #region CloseSound
         ISoundInternalGetter CloseSound { get; }
-        IFormIDSetLinkGetter<Sound> CloseSound_Property { get; }
+        IFormIDSetLinkGetter<ISoundInternalGetter> CloseSound_Property { get; }
 
         #endregion
 
@@ -1139,6 +1071,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IContainerInternalGetter item,
+            IContainerInternalGetter rhs)
+        {
+            return ((ContainerCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1907,6 +1848,115 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IContainerInternalGetter lhs,
+            IContainerInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
+            if (lhs.Items.HasBeenSet)
+            {
+                if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            }
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (lhs.OpenSound_Property.HasBeenSet != rhs.OpenSound_Property.HasBeenSet) return false;
+            if (lhs.OpenSound_Property.HasBeenSet)
+            {
+                if (!lhs.OpenSound_Property.Equals(rhs.OpenSound_Property)) return false;
+            }
+            if (lhs.CloseSound_Property.HasBeenSet != rhs.CloseSound_Property.HasBeenSet) return false;
+            if (lhs.CloseSound_Property.HasBeenSet)
+            {
+                if (!lhs.CloseSound_Property.Equals(rhs.CloseSound_Property)) return false;
+            }
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IContainerInternalGetter)lhs,
+                rhs: rhs as IContainerInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IContainerInternalGetter)lhs,
+                rhs: rhs as IContainerInternalGetter);
+        }
+
+        public virtual int GetHashCode(IContainerInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.Items.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
+            if (item.OpenSound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.OpenSound).CombineHashCode(ret);
+            }
+            if (item.CloseSound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.CloseSound).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IContainerInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IContainerInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

@@ -261,61 +261,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Grass rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IGrassInternalGetter rhs)) return false;
+            return ((GrassCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Grass rhs)
+        public bool Equals(Grass obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (this.Density != rhs.Density) return false;
-            if (this.MinSlope != rhs.MinSlope) return false;
-            if (this.MaxSlope != rhs.MaxSlope) return false;
-            if (this.Fluff1 != rhs.Fluff1) return false;
-            if (this.UnitFromWaterAmount != rhs.UnitFromWaterAmount) return false;
-            if (this.Fluff2 != rhs.Fluff2) return false;
-            if (this.UnitFromWaterMode != rhs.UnitFromWaterMode) return false;
-            if (!this.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
-            if (!this.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
-            if (!this.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
-            if (!this.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((GrassCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Density).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MinSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MaxSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff1).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(UnitFromWaterAmount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff2).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(UnitFromWaterMode).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PositionRange).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HeightRange).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ColorRange).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(WavePeriod).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((GrassCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => GrassXmlWriteTranslation.Instance;
@@ -1160,6 +1117,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IGrassInternalGetter item,
+            IGrassInternalGetter rhs)
+        {
+            return ((GrassCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -2044,6 +2010,90 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IGrassInternalGetter lhs,
+            IGrassInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Density != rhs.Density) return false;
+            if (lhs.MinSlope != rhs.MinSlope) return false;
+            if (lhs.MaxSlope != rhs.MaxSlope) return false;
+            if (lhs.Fluff1 != rhs.Fluff1) return false;
+            if (lhs.UnitFromWaterAmount != rhs.UnitFromWaterAmount) return false;
+            if (lhs.Fluff2 != rhs.Fluff2) return false;
+            if (lhs.UnitFromWaterMode != rhs.UnitFromWaterMode) return false;
+            if (!lhs.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
+            if (!lhs.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
+            if (!lhs.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
+            if (!lhs.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGrassInternalGetter)lhs,
+                rhs: rhs as IGrassInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGrassInternalGetter)lhs,
+                rhs: rhs as IGrassInternalGetter);
+        }
+
+        public virtual int GetHashCode(IGrassInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Density).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MinSlope).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaxSlope).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff1).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.UnitFromWaterAmount).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff2).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.UnitFromWaterMode).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PositionRange).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HeightRange).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ColorRange).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.WavePeriod).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGrassInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGrassInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

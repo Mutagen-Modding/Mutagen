@@ -115,42 +115,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is BodyData rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IBodyDataGetter rhs)) return false;
+            return ((BodyDataCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(BodyData rhs)
+        public bool Equals(BodyData obj)
         {
-            if (rhs == null) return false;
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (BodyParts.HasBeenSet != rhs.BodyParts.HasBeenSet) return false;
-            if (BodyParts.HasBeenSet)
-            {
-                if (!this.BodyParts.SequenceEqual(rhs.BodyParts)) return false;
-            }
-            return true;
+            return ((BodyDataCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (BodyParts.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(BodyParts).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((BodyDataCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => BodyDataXmlWriteTranslation.Instance;
@@ -562,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case BodyData_FieldIndex.BodyParts:
-                    this._BodyParts.SetTo((IEnumerable<BodyPart>)obj);
+                    this._BodyParts.SetTo((SourceSetList<BodyPart>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -596,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case BodyData_FieldIndex.BodyParts:
-                    obj._BodyParts.SetTo((IEnumerable<BodyPart>)pair.Value);
+                    obj._BodyParts.SetTo((SourceSetList<BodyPart>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -701,6 +677,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IBodyDataGetter item,
+            IBodyDataGetter rhs)
+        {
+            return ((BodyDataCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1152,6 +1137,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
             mask.BodyParts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BodyPart_Mask<bool>>>>(item.BodyParts.HasBeenSet, item.BodyParts.WithIndex().Select((i) => new MaskItemIndexed<bool, BodyPart_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IBodyDataGetter lhs,
+            IBodyDataGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.BodyParts.HasBeenSet != rhs.BodyParts.HasBeenSet) return false;
+            if (lhs.BodyParts.HasBeenSet)
+            {
+                if (!lhs.BodyParts.SequenceEqual(rhs.BodyParts)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IBodyDataGetter item)
+        {
+            int ret = 0;
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.BodyParts.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.BodyParts).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

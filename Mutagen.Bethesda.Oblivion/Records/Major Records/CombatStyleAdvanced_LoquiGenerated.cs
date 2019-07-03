@@ -241,66 +241,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is CombatStyleAdvanced rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ICombatStyleAdvancedGetter rhs)) return false;
+            return ((CombatStyleAdvancedCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(CombatStyleAdvanced rhs)
+        public bool Equals(CombatStyleAdvanced obj)
         {
-            if (rhs == null) return false;
-            if (!this.DodgeFatigueModMult.EqualsWithin(rhs.DodgeFatigueModMult)) return false;
-            if (!this.DodgeFatigueModBase.EqualsWithin(rhs.DodgeFatigueModBase)) return false;
-            if (!this.EncumbSpeedModBase.EqualsWithin(rhs.EncumbSpeedModBase)) return false;
-            if (!this.EncumbSpeedModMult.EqualsWithin(rhs.EncumbSpeedModMult)) return false;
-            if (!this.DodgeWhileUnderAttackMult.EqualsWithin(rhs.DodgeWhileUnderAttackMult)) return false;
-            if (!this.DodgeNotUnderAttackMult.EqualsWithin(rhs.DodgeNotUnderAttackMult)) return false;
-            if (!this.DodgeBackWhileUnderAttackMult.EqualsWithin(rhs.DodgeBackWhileUnderAttackMult)) return false;
-            if (!this.DodgeBackNotUnderAttackMult.EqualsWithin(rhs.DodgeBackNotUnderAttackMult)) return false;
-            if (!this.DodgeForwardWhileUnderAttackMult.EqualsWithin(rhs.DodgeForwardWhileUnderAttackMult)) return false;
-            if (!this.DodgeForwardNotUnderAttackMult.EqualsWithin(rhs.DodgeForwardNotUnderAttackMult)) return false;
-            if (!this.BlockSkillModifierMult.EqualsWithin(rhs.BlockSkillModifierMult)) return false;
-            if (!this.BlockSkillModifierBase.EqualsWithin(rhs.BlockSkillModifierBase)) return false;
-            if (!this.BlockWhileUnderAttackMult.EqualsWithin(rhs.BlockWhileUnderAttackMult)) return false;
-            if (!this.BlockNotUnderAttackMult.EqualsWithin(rhs.BlockNotUnderAttackMult)) return false;
-            if (!this.AttackSkillModifierMult.EqualsWithin(rhs.AttackSkillModifierMult)) return false;
-            if (!this.AttackSkillModifierBase.EqualsWithin(rhs.AttackSkillModifierBase)) return false;
-            if (!this.AttackWhileUnderAttackMult.EqualsWithin(rhs.AttackWhileUnderAttackMult)) return false;
-            if (!this.AttackNotUnderAttackMult.EqualsWithin(rhs.AttackNotUnderAttackMult)) return false;
-            if (!this.AttackDuringBlockMult.EqualsWithin(rhs.AttackDuringBlockMult)) return false;
-            if (!this.PowerAttackFatigueModBase.EqualsWithin(rhs.PowerAttackFatigueModBase)) return false;
-            if (!this.PowerAttackFatigueModMult.EqualsWithin(rhs.PowerAttackFatigueModMult)) return false;
-            return true;
+            return ((CombatStyleAdvancedCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(DodgeFatigueModMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DodgeFatigueModBase).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(EncumbSpeedModBase).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(EncumbSpeedModMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DodgeWhileUnderAttackMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DodgeNotUnderAttackMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DodgeBackWhileUnderAttackMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DodgeBackNotUnderAttackMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DodgeForwardWhileUnderAttackMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DodgeForwardNotUnderAttackMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BlockSkillModifierMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BlockSkillModifierBase).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BlockWhileUnderAttackMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BlockNotUnderAttackMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AttackSkillModifierMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AttackSkillModifierBase).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AttackWhileUnderAttackMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AttackNotUnderAttackMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AttackDuringBlockMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PowerAttackFatigueModBase).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PowerAttackFatigueModMult).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((CombatStyleAdvancedCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => CombatStyleAdvancedXmlWriteTranslation.Instance;
@@ -1249,6 +1201,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ICombatStyleAdvancedGetter item,
+            ICombatStyleAdvancedGetter rhs)
+        {
+            return ((CombatStyleAdvancedCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -2291,6 +2252,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.PowerAttackFatigueModBase = true;
             mask.PowerAttackFatigueModMult = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ICombatStyleAdvancedGetter lhs,
+            ICombatStyleAdvancedGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.DodgeFatigueModMult.EqualsWithin(rhs.DodgeFatigueModMult)) return false;
+            if (!lhs.DodgeFatigueModBase.EqualsWithin(rhs.DodgeFatigueModBase)) return false;
+            if (!lhs.EncumbSpeedModBase.EqualsWithin(rhs.EncumbSpeedModBase)) return false;
+            if (!lhs.EncumbSpeedModMult.EqualsWithin(rhs.EncumbSpeedModMult)) return false;
+            if (!lhs.DodgeWhileUnderAttackMult.EqualsWithin(rhs.DodgeWhileUnderAttackMult)) return false;
+            if (!lhs.DodgeNotUnderAttackMult.EqualsWithin(rhs.DodgeNotUnderAttackMult)) return false;
+            if (!lhs.DodgeBackWhileUnderAttackMult.EqualsWithin(rhs.DodgeBackWhileUnderAttackMult)) return false;
+            if (!lhs.DodgeBackNotUnderAttackMult.EqualsWithin(rhs.DodgeBackNotUnderAttackMult)) return false;
+            if (!lhs.DodgeForwardWhileUnderAttackMult.EqualsWithin(rhs.DodgeForwardWhileUnderAttackMult)) return false;
+            if (!lhs.DodgeForwardNotUnderAttackMult.EqualsWithin(rhs.DodgeForwardNotUnderAttackMult)) return false;
+            if (!lhs.BlockSkillModifierMult.EqualsWithin(rhs.BlockSkillModifierMult)) return false;
+            if (!lhs.BlockSkillModifierBase.EqualsWithin(rhs.BlockSkillModifierBase)) return false;
+            if (!lhs.BlockWhileUnderAttackMult.EqualsWithin(rhs.BlockWhileUnderAttackMult)) return false;
+            if (!lhs.BlockNotUnderAttackMult.EqualsWithin(rhs.BlockNotUnderAttackMult)) return false;
+            if (!lhs.AttackSkillModifierMult.EqualsWithin(rhs.AttackSkillModifierMult)) return false;
+            if (!lhs.AttackSkillModifierBase.EqualsWithin(rhs.AttackSkillModifierBase)) return false;
+            if (!lhs.AttackWhileUnderAttackMult.EqualsWithin(rhs.AttackWhileUnderAttackMult)) return false;
+            if (!lhs.AttackNotUnderAttackMult.EqualsWithin(rhs.AttackNotUnderAttackMult)) return false;
+            if (!lhs.AttackDuringBlockMult.EqualsWithin(rhs.AttackDuringBlockMult)) return false;
+            if (!lhs.PowerAttackFatigueModBase.EqualsWithin(rhs.PowerAttackFatigueModBase)) return false;
+            if (!lhs.PowerAttackFatigueModMult.EqualsWithin(rhs.PowerAttackFatigueModMult)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(ICombatStyleAdvancedGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.DodgeFatigueModMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DodgeFatigueModBase).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.EncumbSpeedModBase).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.EncumbSpeedModMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DodgeWhileUnderAttackMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DodgeNotUnderAttackMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DodgeBackWhileUnderAttackMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DodgeBackNotUnderAttackMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DodgeForwardWhileUnderAttackMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DodgeForwardNotUnderAttackMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BlockSkillModifierMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BlockSkillModifierBase).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BlockWhileUnderAttackMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BlockNotUnderAttackMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AttackSkillModifierMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AttackSkillModifierBase).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AttackWhileUnderAttackMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AttackNotUnderAttackMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AttackDuringBlockMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PowerAttackFatigueModBase).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PowerAttackFatigueModMult).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

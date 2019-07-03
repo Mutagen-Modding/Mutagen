@@ -80,6 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> ILocalVariableGetter.Fluff => this.Fluff;
         #endregion
         #region Flags
         private Script.LocalVariableFlag _Flags;
@@ -107,6 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> ILocalVariableGetter.Fluff2 => this.Fluff2;
         #endregion
         #region Name
         public bool Name_IsSet
@@ -170,43 +172,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is LocalVariable rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ILocalVariableInternalGetter rhs)) return false;
+            return ((LocalVariableCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(LocalVariable rhs)
+        public bool Equals(LocalVariable obj)
         {
-            if (rhs == null) return false;
-            if (this.Index != rhs.Index) return false;
-            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (!ByteExt.EqualsFast(this.Fluff2, rhs.Fluff2)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (this.SLSDDataTypeState != rhs.SLSDDataTypeState) return false;
-            return true;
+            return ((LocalVariableCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Index).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff2).CombineHashCode(ret);
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(SLSDDataTypeState).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((LocalVariableCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => LocalVariableXmlWriteTranslation.Instance;
@@ -756,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff
-        Byte[] Fluff { get; }
+        ReadOnlySpan<Byte> Fluff { get; }
 
         #endregion
         #region Flags
@@ -764,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff2
-        Byte[] Fluff2 { get; }
+        ReadOnlySpan<Byte> Fluff2 { get; }
 
         #endregion
         #region Name
@@ -845,6 +822,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ILocalVariableInternalGetter item,
+            ILocalVariableInternalGetter rhs)
+        {
+            return ((LocalVariableCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1248,9 +1234,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Index = item.Index == rhs.Index;
-            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Fluff2 = ByteExt.EqualsFast(item.Fluff2, rhs.Fluff2);
+            ret.Fluff2 = MemoryExtensions.SequenceEqual(item.Fluff2, rhs.Fluff2);
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
         }
 
@@ -1304,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Fluff ?? true)
             {
-                fg.AppendLine($"Fluff => {item.Fluff}");
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1312,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Fluff2 ?? true)
             {
-                fg.AppendLine($"Fluff2 => {item.Fluff2}");
+                fg.AppendLine($"Fluff2 => {SpanExt.ToHexString(item.Fluff2)}");
             }
             if (printMask?.Name ?? true)
             {
@@ -1342,6 +1328,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Name = item.Name_IsSet;
             mask.SLSDDataTypeState = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILocalVariableInternalGetter lhs,
+            ILocalVariableInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Index != rhs.Index) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff2, rhs.Fluff2)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.SLSDDataTypeState != rhs.SLSDDataTypeState) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(ILocalVariableInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Index).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff2).CombineHashCode(ret);
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.SLSDDataTypeState).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

@@ -87,35 +87,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Road rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRoadInternalGetter rhs)) return false;
+            return ((RoadCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Road rhs)
+        public bool Equals(Road obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Points.HasBeenSet != rhs.Points.HasBeenSet) return false;
-            if (Points.HasBeenSet)
-            {
-                if (!this.Points.SequenceEqual(rhs.Points)) return false;
-            }
-            return true;
+            return ((RoadCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Points.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Points).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((RoadCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => RoadXmlWriteTranslation.Instance;
@@ -534,7 +517,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Road_FieldIndex.Points:
-                    this._Points.SetTo((IEnumerable<RoadPoint>)obj);
+                    this._Points.SetTo((SourceSetList<RoadPoint>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -566,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Road_FieldIndex.Points:
-                    obj._Points.SetTo((IEnumerable<RoadPoint>)pair.Value);
+                    obj._Points.SetTo((SourceSetList<RoadPoint>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -676,6 +659,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRoadInternalGetter item,
+            IRoadInternalGetter rhs)
+        {
+            return ((RoadCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1102,6 +1094,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRoadInternalGetter lhs,
+            IRoadInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Points.HasBeenSet != rhs.Points.HasBeenSet) return false;
+            if (lhs.Points.HasBeenSet)
+            {
+                if (!lhs.Points.SequenceEqual(rhs.Points)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRoadInternalGetter)lhs,
+                rhs: rhs as IRoadInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRoadInternalGetter)lhs,
+                rhs: rhs as IRoadInternalGetter);
+        }
+
+        public virtual int GetHashCode(IRoadInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Points.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Points).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IRoadInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IRoadInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

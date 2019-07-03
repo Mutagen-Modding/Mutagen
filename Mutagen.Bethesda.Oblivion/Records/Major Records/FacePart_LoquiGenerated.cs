@@ -153,51 +153,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is FacePart rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IFacePartGetter rhs)) return false;
+            return ((FacePartCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(FacePart rhs)
+        public bool Equals(FacePart obj)
         {
-            if (rhs == null) return false;
-            if (Index_IsSet != rhs.Index_IsSet) return false;
-            if (Index_IsSet)
-            {
-                if (this.Index != rhs.Index) return false;
-            }
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            return true;
+            return ((FacePartCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Index_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Index).CombineHashCode(ret);
-            }
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((FacePartCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => FacePartXmlWriteTranslation.Instance;
@@ -784,6 +751,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IFacePartGetter item,
+            IFacePartGetter rhs)
+        {
+            return ((FacePartCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1262,6 +1238,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
             mask.Icon = item.Icon_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IFacePartGetter lhs,
+            IFacePartGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Index_IsSet != rhs.Index_IsSet) return false;
+            if (lhs.Index_IsSet)
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IFacePartGetter item)
+        {
+            int ret = 0;
+            if (item.Index_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Index).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

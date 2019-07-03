@@ -77,6 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> ILockInformationGetter.Fluff => this.Fluff;
         #endregion
         #region Key
         public IFormIDLink<Key> Key_Property { get; } = new FormIDLink<Key>();
@@ -84,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Key> ILockInformation.Key_Property => this.Key_Property;
         IKeyInternalGetter ILockInformationGetter.Key => this.Key_Property.Item;
-        IFormIDLinkGetter<Key> ILockInformationGetter.Key_Property => this.Key_Property;
+        IFormIDLinkGetter<IKeyInternalGetter> ILockInformationGetter.Key_Property => this.Key_Property;
         #endregion
         #region Flags
         private LockInformation.Flag _Flags;
@@ -113,32 +114,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is LockInformation rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ILockInformationGetter rhs)) return false;
+            return ((LockInformationCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(LockInformation rhs)
+        public bool Equals(LockInformation obj)
         {
-            if (rhs == null) return false;
-            if (this.LockLevel != rhs.LockLevel) return false;
-            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
-            if (!this.Key_Property.Equals(rhs.Key_Property)) return false;
-            if (this.Flags != rhs.Flags) return false;
-            return true;
+            return ((LockInformationCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(LockLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Key).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((LockInformationCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => LockInformationXmlWriteTranslation.Instance;
@@ -623,12 +610,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff
-        Byte[] Fluff { get; }
+        ReadOnlySpan<Byte> Fluff { get; }
 
         #endregion
         #region Key
         IKeyInternalGetter Key { get; }
-        IFormIDLinkGetter<Key> Key_Property { get; }
+        IFormIDLinkGetter<IKeyInternalGetter> Key_Property { get; }
 
         #endregion
         #region Flags
@@ -699,6 +686,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ILockInformationGetter item,
+            ILockInformationGetter rhs)
+        {
+            return ((LockInformationCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1046,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.LockLevel = item.LockLevel == rhs.LockLevel;
-            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
             ret.Key = item.Key_Property.FormKey == rhs.Key_Property.FormKey;
             ret.Flags = item.Flags == rhs.Flags;
         }
@@ -1101,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Fluff ?? true)
             {
-                fg.AppendLine($"Fluff => {item.Fluff}");
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
             if (printMask?.Key ?? true)
             {
@@ -1129,6 +1125,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Key = true;
             mask.Flags = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILockInformationGetter lhs,
+            ILockInformationGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.LockLevel != rhs.LockLevel) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!lhs.Key_Property.Equals(rhs.Key_Property)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(ILockInformationGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.LockLevel).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Key).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

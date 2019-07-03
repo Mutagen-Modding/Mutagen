@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Weather> IWeatherChance.Weather_Property => this.Weather_Property;
         IWeatherInternalGetter IWeatherChanceGetter.Weather => this.Weather_Property.Item;
-        IFormIDLinkGetter<Weather> IWeatherChanceGetter.Weather_Property => this.Weather_Property;
+        IFormIDLinkGetter<IWeatherInternalGetter> IWeatherChanceGetter.Weather_Property => this.Weather_Property;
         #endregion
         #region Chance
         private Int32 _Chance;
@@ -90,28 +90,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is WeatherChance rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IWeatherChanceGetter rhs)) return false;
+            return ((WeatherChanceCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(WeatherChance rhs)
+        public bool Equals(WeatherChance obj)
         {
-            if (rhs == null) return false;
-            if (!this.Weather_Property.Equals(rhs.Weather_Property)) return false;
-            if (this.Chance != rhs.Chance) return false;
-            return true;
+            return ((WeatherChanceCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Weather).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Chance).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((WeatherChanceCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => WeatherChanceXmlWriteTranslation.Instance;
@@ -551,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Weather
         IWeatherInternalGetter Weather { get; }
-        IFormIDLinkGetter<Weather> Weather_Property { get; }
+        IFormIDLinkGetter<IWeatherInternalGetter> Weather_Property { get; }
 
         #endregion
         #region Chance
@@ -622,6 +612,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IWeatherChanceGetter item,
+            IWeatherChanceGetter rhs)
+        {
+            return ((WeatherChanceCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -978,6 +977,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Weather = true;
             mask.Chance = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IWeatherChanceGetter lhs,
+            IWeatherChanceGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Weather_Property.Equals(rhs.Weather_Property)) return false;
+            if (lhs.Chance != rhs.Chance) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IWeatherChanceGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Weather).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Chance).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

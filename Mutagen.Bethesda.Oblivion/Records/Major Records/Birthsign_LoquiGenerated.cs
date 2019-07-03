@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDSetLink<Spell>> IBirthsign.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDSetLink<Spell>> IBirthsignGetter.Spells => _Spells;
+        IReadOnlySetList<IFormIDSetLinkGetter<ISpellInternalGetter>> IBirthsignGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -167,62 +167,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Birthsign rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IBirthsignInternalGetter rhs)) return false;
+            return ((BirthsignCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Birthsign rhs)
+        public bool Equals(Birthsign obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            if (Description_IsSet != rhs.Description_IsSet) return false;
-            if (Description_IsSet)
-            {
-                if (!string.Equals(this.Description, rhs.Description)) return false;
-            }
-            if (Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
-            if (Spells.HasBeenSet)
-            {
-                if (!this.Spells.SequenceEqual(rhs.Spells)) return false;
-            }
-            return true;
+            return ((BirthsignCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            if (Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
-            }
-            if (Spells.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Spells).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((BirthsignCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => BirthsignXmlWriteTranslation.Instance;
@@ -745,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case Birthsign_FieldIndex.Spells:
-                    this._Spells.SetTo((IEnumerable<IFormIDSetLink<Spell>>)obj);
+                    this._Spells.SetTo((SourceSetList<IFormIDSetLink<Spell>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -786,7 +742,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case Birthsign_FieldIndex.Spells:
-                    obj._Spells.SetTo((IEnumerable<IFormIDSetLink<Spell>>)pair.Value);
+                    obj._Spells.SetTo((SourceSetList<IFormIDSetLink<Spell>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -853,7 +809,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Spells
-        IReadOnlySetList<IFormIDSetLink<Spell>> Spells { get; }
+        IReadOnlySetList<IFormIDSetLinkGetter<ISpellInternalGetter>> Spells { get; }
         #endregion
 
     }
@@ -926,6 +882,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IBirthsignInternalGetter item,
+            IBirthsignInternalGetter rhs)
+        {
+            return ((BirthsignCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1492,6 +1457,91 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        #region Equals and Hash
+        public virtual bool Equals(
+            IBirthsignInternalGetter lhs,
+            IBirthsignInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
+            if (lhs.Spells.HasBeenSet)
+            {
+                if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IBirthsignInternalGetter)lhs,
+                rhs: rhs as IBirthsignInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IBirthsignInternalGetter)lhs,
+                rhs: rhs as IBirthsignInternalGetter);
+        }
+
+        public virtual int GetHashCode(IBirthsignInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            if (item.Spells.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Spells).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IBirthsignInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IBirthsignInternalGetter)item);
+        }
+
+        #endregion
+
+
     }
     #endregion
 
@@ -1547,14 +1597,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Spells.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Birthsign_FieldIndex.Spells) ?? true))
             {
-                ListXmlTranslation<IFormIDSetLink<Spell>>.Instance.Write(
+                ListXmlTranslation<IFormIDSetLinkGetter<ISpellInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Spells),
                     item: item.Spells,
                     fieldIndex: (int)Birthsign_FieldIndex.Spells,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Birthsign_FieldIndex.Spells),
-                    transl: (XElement subNode, IFormIDSetLink<Spell> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDSetLinkGetter<ISpellInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -2310,10 +2360,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Spells.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLink<Spell>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLinkGetter<ISpellInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.Spells,
-                    transl: (MutagenWriter subWriter, IFormIDSetLink<Spell> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDSetLinkGetter<ISpellInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,

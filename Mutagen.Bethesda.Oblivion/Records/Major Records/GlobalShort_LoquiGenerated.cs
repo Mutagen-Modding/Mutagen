@@ -99,35 +99,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is GlobalShort rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IGlobalShortInternalGetter rhs)) return false;
+            return ((GlobalShortCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(GlobalShort rhs)
+        public bool Equals(GlobalShort obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Data_IsSet != rhs.Data_IsSet) return false;
-            if (Data_IsSet)
-            {
-                if (this.Data != rhs.Data) return false;
-            }
-            return true;
+            return ((GlobalShortCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Data_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((GlobalShortCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => GlobalShortXmlWriteTranslation.Instance;
@@ -707,6 +690,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IGlobalShortInternalGetter item,
+            IGlobalShortInternalGetter rhs)
+        {
+            return ((GlobalShortCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1134,6 +1126,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IGlobalShortInternalGetter lhs,
+            IGlobalShortInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Data_IsSet != rhs.Data_IsSet) return false;
+            if (lhs.Data_IsSet)
+            {
+                if (lhs.Data != rhs.Data) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IGlobalInternalGetter lhs,
+            IGlobalInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGlobalShortInternalGetter)lhs,
+                rhs: rhs as IGlobalShortInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGlobalShortInternalGetter)lhs,
+                rhs: rhs as IGlobalShortInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGlobalShortInternalGetter)lhs,
+                rhs: rhs as IGlobalShortInternalGetter);
+        }
+
+        public virtual int GetHashCode(IGlobalShortInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Data_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Data).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IGlobalInternalGetter item)
+        {
+            return GetHashCode(item: (IGlobalShortInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGlobalShortInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGlobalShortInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

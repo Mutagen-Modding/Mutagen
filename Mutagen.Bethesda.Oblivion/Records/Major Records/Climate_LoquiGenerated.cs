@@ -268,78 +268,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Climate rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IClimateInternalGetter rhs)) return false;
+            return ((ClimateCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Climate rhs)
+        public bool Equals(Climate obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Weathers.HasBeenSet != rhs.Weathers.HasBeenSet) return false;
-            if (Weathers.HasBeenSet)
-            {
-                if (!this.Weathers.SequenceEqual(rhs.Weathers)) return false;
-            }
-            if (SunTexture_IsSet != rhs.SunTexture_IsSet) return false;
-            if (SunTexture_IsSet)
-            {
-                if (!string.Equals(this.SunTexture, rhs.SunTexture)) return false;
-            }
-            if (SunGlareTexture_IsSet != rhs.SunGlareTexture_IsSet) return false;
-            if (SunGlareTexture_IsSet)
-            {
-                if (!string.Equals(this.SunGlareTexture, rhs.SunGlareTexture)) return false;
-            }
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (this.SunriseBegin != rhs.SunriseBegin) return false;
-            if (this.SunriseEnd != rhs.SunriseEnd) return false;
-            if (this.SunsetBegin != rhs.SunsetBegin) return false;
-            if (this.SunsetEnd != rhs.SunsetEnd) return false;
-            if (this.Volatility != rhs.Volatility) return false;
-            if (this.Phase != rhs.Phase) return false;
-            if (this.PhaseLength != rhs.PhaseLength) return false;
-            if (this.TNAMDataTypeState != rhs.TNAMDataTypeState) return false;
-            return true;
+            return ((ClimateCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Weathers.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Weathers).CombineHashCode(ret);
-            }
-            if (SunTexture_IsSet)
-            {
-                ret = HashHelper.GetHashCode(SunTexture).CombineHashCode(ret);
-            }
-            if (SunGlareTexture_IsSet)
-            {
-                ret = HashHelper.GetHashCode(SunGlareTexture).CombineHashCode(ret);
-            }
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(SunriseBegin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SunriseEnd).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SunsetBegin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SunsetEnd).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Volatility).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Phase).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PhaseLength).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(TNAMDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((ClimateCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ClimateXmlWriteTranslation.Instance;
@@ -925,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Climate_FieldIndex.Weathers:
-                    this._Weathers.SetTo((IEnumerable<WeatherChance>)obj);
+                    this._Weathers.SetTo((SourceSetList<WeatherChance>)obj);
                     break;
                 case Climate_FieldIndex.SunTexture:
                     this.SunTexture = (String)obj;
@@ -990,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Climate_FieldIndex.Weathers:
-                    obj._Weathers.SetTo((IEnumerable<WeatherChance>)pair.Value);
+                    obj._Weathers.SetTo((SourceSetList<WeatherChance>)pair.Value);
                     break;
                 case Climate_FieldIndex.SunTexture:
                     obj.SunTexture = (String)pair.Value;
@@ -1211,6 +1151,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IClimateInternalGetter item,
+            IClimateInternalGetter rhs)
+        {
+            return ((ClimateCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -2090,6 +2039,107 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IClimateInternalGetter lhs,
+            IClimateInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Weathers.HasBeenSet != rhs.Weathers.HasBeenSet) return false;
+            if (lhs.Weathers.HasBeenSet)
+            {
+                if (!lhs.Weathers.SequenceEqual(rhs.Weathers)) return false;
+            }
+            if (lhs.SunTexture_IsSet != rhs.SunTexture_IsSet) return false;
+            if (lhs.SunTexture_IsSet)
+            {
+                if (!string.Equals(lhs.SunTexture, rhs.SunTexture)) return false;
+            }
+            if (lhs.SunGlareTexture_IsSet != rhs.SunGlareTexture_IsSet) return false;
+            if (lhs.SunGlareTexture_IsSet)
+            {
+                if (!string.Equals(lhs.SunGlareTexture, rhs.SunGlareTexture)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.SunriseBegin != rhs.SunriseBegin) return false;
+            if (lhs.SunriseEnd != rhs.SunriseEnd) return false;
+            if (lhs.SunsetBegin != rhs.SunsetBegin) return false;
+            if (lhs.SunsetEnd != rhs.SunsetEnd) return false;
+            if (lhs.Volatility != rhs.Volatility) return false;
+            if (lhs.Phase != rhs.Phase) return false;
+            if (lhs.PhaseLength != rhs.PhaseLength) return false;
+            if (lhs.TNAMDataTypeState != rhs.TNAMDataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IClimateInternalGetter)lhs,
+                rhs: rhs as IClimateInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IClimateInternalGetter)lhs,
+                rhs: rhs as IClimateInternalGetter);
+        }
+
+        public virtual int GetHashCode(IClimateInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Weathers.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Weathers).CombineHashCode(ret);
+            }
+            if (item.SunTexture_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.SunTexture).CombineHashCode(ret);
+            }
+            if (item.SunGlareTexture_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.SunGlareTexture).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.SunriseBegin).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SunriseEnd).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SunsetBegin).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SunsetEnd).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Volatility).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Phase).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PhaseLength).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TNAMDataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IClimateInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IClimateInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

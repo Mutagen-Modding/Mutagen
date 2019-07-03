@@ -107,32 +107,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is WeatherType rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IWeatherTypeGetter rhs)) return false;
+            return ((WeatherTypeCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(WeatherType rhs)
+        public bool Equals(WeatherType obj)
         {
-            if (rhs == null) return false;
-            if (!this.Sunrise.ColorOnlyEquals(rhs.Sunrise)) return false;
-            if (!this.Day.ColorOnlyEquals(rhs.Day)) return false;
-            if (!this.Sunset.ColorOnlyEquals(rhs.Sunset)) return false;
-            if (!this.Night.ColorOnlyEquals(rhs.Night)) return false;
-            return true;
+            return ((WeatherTypeCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Sunrise).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Day).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Sunset).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Night).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((WeatherTypeCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => WeatherTypeXmlWriteTranslation.Instance;
@@ -689,6 +675,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IWeatherTypeGetter item,
+            IWeatherTypeGetter rhs)
+        {
+            return ((WeatherTypeCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1115,6 +1110,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Sunset = true;
             mask.Night = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IWeatherTypeGetter lhs,
+            IWeatherTypeGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Sunrise.ColorOnlyEquals(rhs.Sunrise)) return false;
+            if (!lhs.Day.ColorOnlyEquals(rhs.Day)) return false;
+            if (!lhs.Sunset.ColorOnlyEquals(rhs.Sunset)) return false;
+            if (!lhs.Night.ColorOnlyEquals(rhs.Night)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IWeatherTypeGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Sunrise).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Day).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Sunset).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Night).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

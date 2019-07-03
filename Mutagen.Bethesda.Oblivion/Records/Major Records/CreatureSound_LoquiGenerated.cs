@@ -114,42 +114,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is CreatureSound rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ICreatureSoundGetter rhs)) return false;
+            return ((CreatureSoundCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(CreatureSound rhs)
+        public bool Equals(CreatureSound obj)
         {
-            if (rhs == null) return false;
-            if (SoundType_IsSet != rhs.SoundType_IsSet) return false;
-            if (SoundType_IsSet)
-            {
-                if (this.SoundType != rhs.SoundType) return false;
-            }
-            if (Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
-            if (Sounds.HasBeenSet)
-            {
-                if (!this.Sounds.SequenceEqual(rhs.Sounds)) return false;
-            }
-            return true;
+            return ((CreatureSoundCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (SoundType_IsSet)
-            {
-                ret = HashHelper.GetHashCode(SoundType).CombineHashCode(ret);
-            }
-            if (Sounds.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Sounds).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((CreatureSoundCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => CreatureSoundXmlWriteTranslation.Instance;
@@ -580,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.SoundType = (CreatureSound.CreatureSoundType)obj;
                     break;
                 case CreatureSound_FieldIndex.Sounds:
-                    this._Sounds.SetTo((IEnumerable<SoundItem>)obj);
+                    this._Sounds.SetTo((SourceSetList<SoundItem>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -614,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.SoundType = (CreatureSound.CreatureSoundType)pair.Value;
                     break;
                 case CreatureSound_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((IEnumerable<SoundItem>)pair.Value);
+                    obj._Sounds.SetTo((SourceSetList<SoundItem>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -719,6 +695,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ICreatureSoundGetter item,
+            ICreatureSoundGetter rhs)
+        {
+            return ((CreatureSoundCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1142,6 +1127,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.SoundType = item.SoundType_IsSet;
             mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, SoundItem_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, SoundItem_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ICreatureSoundGetter lhs,
+            ICreatureSoundGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.SoundType_IsSet != rhs.SoundType_IsSet) return false;
+            if (lhs.SoundType_IsSet)
+            {
+                if (lhs.SoundType != rhs.SoundType) return false;
+            }
+            if (lhs.Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
+            if (lhs.Sounds.HasBeenSet)
+            {
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(ICreatureSoundGetter item)
+        {
+            int ret = 0;
+            if (item.SoundType_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.SoundType).CombineHashCode(ret);
+            }
+            if (item.Sounds.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Sounds).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

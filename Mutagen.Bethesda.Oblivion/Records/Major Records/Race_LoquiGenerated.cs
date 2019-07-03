@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDSetLink<Spell>> IRace.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDSetLink<Spell>> IRaceGetter.Spells => _Spells;
+        IReadOnlySetList<IFormIDSetLinkGetter<ISpellInternalGetter>> IRaceGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -160,6 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IRaceGetter.Fluff => this.Fluff;
         #endregion
         #region MaleHeight
         private Single _MaleHeight;
@@ -427,7 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Hair>> IRace.Hairs => _Hairs;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDLink<Hair>> IRaceGetter.Hairs => _Hairs;
+        IReadOnlySetList<IFormIDLinkGetter<IHairInternalGetter>> IRaceGetter.Hairs => _Hairs;
         #endregion
 
         #endregion
@@ -439,7 +440,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Eye>> IRace.Eyes => _Eyes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDLink<Eye>> IRaceGetter.Eyes => _Eyes;
+        IReadOnlySetList<IFormIDLinkGetter<IEyeInternalGetter>> IRaceGetter.Eyes => _Eyes;
         #endregion
 
         #endregion
@@ -486,7 +487,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => Unknown_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IRaceGetter.Unknown => this.Unknown;
+        ReadOnlySpan<Byte> IRaceGetter.Unknown => this.Unknown;
         public void Unknown_Set(
             Byte[] value,
             bool markSet = true)
@@ -534,186 +535,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Race rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRaceInternalGetter rhs)) return false;
+            return ((RaceCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Race rhs)
+        public bool Equals(Race obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Description_IsSet != rhs.Description_IsSet) return false;
-            if (Description_IsSet)
-            {
-                if (!string.Equals(this.Description, rhs.Description)) return false;
-            }
-            if (Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
-            if (Spells.HasBeenSet)
-            {
-                if (!this.Spells.SequenceEqual(rhs.Spells)) return false;
-            }
-            if (Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
-            if (Relations.HasBeenSet)
-            {
-                if (!this.Relations.SequenceEqual(rhs.Relations)) return false;
-            }
-            if (!this.SkillBoosts.SequenceEqual(rhs.SkillBoosts)) return false;
-            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
-            if (!this.MaleHeight.EqualsWithin(rhs.MaleHeight)) return false;
-            if (!this.FemaleHeight.EqualsWithin(rhs.FemaleHeight)) return false;
-            if (!this.MaleWeight.EqualsWithin(rhs.MaleWeight)) return false;
-            if (!this.FemaleWeight.EqualsWithin(rhs.FemaleWeight)) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (Voices_IsSet != rhs.Voices_IsSet) return false;
-            if (Voices_IsSet)
-            {
-                if (!object.Equals(this.Voices, rhs.Voices)) return false;
-            }
-            if (DefaultHair_IsSet != rhs.DefaultHair_IsSet) return false;
-            if (DefaultHair_IsSet)
-            {
-                if (!object.Equals(this.DefaultHair, rhs.DefaultHair)) return false;
-            }
-            if (DefaultHairColor_IsSet != rhs.DefaultHairColor_IsSet) return false;
-            if (DefaultHairColor_IsSet)
-            {
-                if (this.DefaultHairColor != rhs.DefaultHairColor) return false;
-            }
-            if (FaceGenMainClamp_IsSet != rhs.FaceGenMainClamp_IsSet) return false;
-            if (FaceGenMainClamp_IsSet)
-            {
-                if (this.FaceGenMainClamp != rhs.FaceGenMainClamp) return false;
-            }
-            if (FaceGenFaceClamp_IsSet != rhs.FaceGenFaceClamp_IsSet) return false;
-            if (FaceGenFaceClamp_IsSet)
-            {
-                if (this.FaceGenFaceClamp != rhs.FaceGenFaceClamp) return false;
-            }
-            if (RaceStats_IsSet != rhs.RaceStats_IsSet) return false;
-            if (RaceStats_IsSet)
-            {
-                if (!object.Equals(this.RaceStats, rhs.RaceStats)) return false;
-            }
-            if (FaceData.HasBeenSet != rhs.FaceData.HasBeenSet) return false;
-            if (FaceData.HasBeenSet)
-            {
-                if (!this.FaceData.SequenceEqual(rhs.FaceData)) return false;
-            }
-            if (BodyData_IsSet != rhs.BodyData_IsSet) return false;
-            if (BodyData_IsSet)
-            {
-                if (!object.Equals(this.BodyData, rhs.BodyData)) return false;
-            }
-            if (Hairs.HasBeenSet != rhs.Hairs.HasBeenSet) return false;
-            if (Hairs.HasBeenSet)
-            {
-                if (!this.Hairs.SequenceEqual(rhs.Hairs)) return false;
-            }
-            if (Eyes.HasBeenSet != rhs.Eyes.HasBeenSet) return false;
-            if (Eyes.HasBeenSet)
-            {
-                if (!this.Eyes.SequenceEqual(rhs.Eyes)) return false;
-            }
-            if (FaceGenData_IsSet != rhs.FaceGenData_IsSet) return false;
-            if (FaceGenData_IsSet)
-            {
-                if (!object.Equals(this.FaceGenData, rhs.FaceGenData)) return false;
-            }
-            if (Unknown_IsSet != rhs.Unknown_IsSet) return false;
-            if (Unknown_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.Unknown, rhs.Unknown)) return false;
-            }
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((RaceCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
-            }
-            if (Spells.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Spells).CombineHashCode(ret);
-            }
-            if (Relations.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Relations).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(SkillBoosts).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MaleHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FemaleHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MaleWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FemaleWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            if (Voices_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Voices).CombineHashCode(ret);
-            }
-            if (DefaultHair_IsSet)
-            {
-                ret = HashHelper.GetHashCode(DefaultHair).CombineHashCode(ret);
-            }
-            if (DefaultHairColor_IsSet)
-            {
-                ret = HashHelper.GetHashCode(DefaultHairColor).CombineHashCode(ret);
-            }
-            if (FaceGenMainClamp_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FaceGenMainClamp).CombineHashCode(ret);
-            }
-            if (FaceGenFaceClamp_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FaceGenFaceClamp).CombineHashCode(ret);
-            }
-            if (RaceStats_IsSet)
-            {
-                ret = HashHelper.GetHashCode(RaceStats).CombineHashCode(ret);
-            }
-            if (FaceData.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(FaceData).CombineHashCode(ret);
-            }
-            if (BodyData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(BodyData).CombineHashCode(ret);
-            }
-            if (Hairs.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Hairs).CombineHashCode(ret);
-            }
-            if (Eyes.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Eyes).CombineHashCode(ret);
-            }
-            if (FaceGenData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FaceGenData).CombineHashCode(ret);
-            }
-            if (Unknown_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Unknown).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((RaceCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => RaceXmlWriteTranslation.Instance;
@@ -1597,13 +1430,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case Race_FieldIndex.Spells:
-                    this._Spells.SetTo((IEnumerable<IFormIDSetLink<Spell>>)obj);
+                    this._Spells.SetTo((SourceSetList<IFormIDSetLink<Spell>>)obj);
                     break;
                 case Race_FieldIndex.Relations:
-                    this._Relations.SetTo((IEnumerable<RaceRelation>)obj);
+                    this._Relations.SetTo((SourceSetList<RaceRelation>)obj);
                     break;
                 case Race_FieldIndex.SkillBoosts:
-                    this._SkillBoosts.SetTo((IEnumerable<SkillBoost>)obj);
+                    this._SkillBoosts.SetTo((SourceSetList<SkillBoost>)obj);
                     break;
                 case Race_FieldIndex.Fluff:
                     this.Fluff = (Byte[])obj;
@@ -1642,16 +1475,16 @@ namespace Mutagen.Bethesda.Oblivion
                     this.RaceStats = (RaceStatsGendered)obj;
                     break;
                 case Race_FieldIndex.FaceData:
-                    this._FaceData.SetTo((IEnumerable<FacePart>)obj);
+                    this._FaceData.SetTo((SourceSetList<FacePart>)obj);
                     break;
                 case Race_FieldIndex.BodyData:
                     this.BodyData = (GenderedBodyData)obj;
                     break;
                 case Race_FieldIndex.Hairs:
-                    this._Hairs.SetTo((IEnumerable<IFormIDLink<Hair>>)obj);
+                    this._Hairs.SetTo((SourceSetList<IFormIDLink<Hair>>)obj);
                     break;
                 case Race_FieldIndex.Eyes:
-                    this._Eyes.SetTo((IEnumerable<IFormIDLink<Eye>>)obj);
+                    this._Eyes.SetTo((SourceSetList<IFormIDLink<Eye>>)obj);
                     break;
                 case Race_FieldIndex.FaceGenData:
                     this.FaceGenData = (FaceGenData)obj;
@@ -1698,13 +1531,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case Race_FieldIndex.Spells:
-                    obj._Spells.SetTo((IEnumerable<IFormIDSetLink<Spell>>)pair.Value);
+                    obj._Spells.SetTo((SourceSetList<IFormIDSetLink<Spell>>)pair.Value);
                     break;
                 case Race_FieldIndex.Relations:
-                    obj._Relations.SetTo((IEnumerable<RaceRelation>)pair.Value);
+                    obj._Relations.SetTo((SourceSetList<RaceRelation>)pair.Value);
                     break;
                 case Race_FieldIndex.SkillBoosts:
-                    obj._SkillBoosts.SetTo((IEnumerable<SkillBoost>)pair.Value);
+                    obj._SkillBoosts.SetTo((SourceSetList<SkillBoost>)pair.Value);
                     break;
                 case Race_FieldIndex.Fluff:
                     obj.Fluff = (Byte[])pair.Value;
@@ -1743,16 +1576,16 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.RaceStats = (RaceStatsGendered)pair.Value;
                     break;
                 case Race_FieldIndex.FaceData:
-                    obj._FaceData.SetTo((IEnumerable<FacePart>)pair.Value);
+                    obj._FaceData.SetTo((SourceSetList<FacePart>)pair.Value);
                     break;
                 case Race_FieldIndex.BodyData:
                     obj.BodyData = (GenderedBodyData)pair.Value;
                     break;
                 case Race_FieldIndex.Hairs:
-                    obj._Hairs.SetTo((IEnumerable<IFormIDLink<Hair>>)pair.Value);
+                    obj._Hairs.SetTo((SourceSetList<IFormIDLink<Hair>>)pair.Value);
                     break;
                 case Race_FieldIndex.Eyes:
-                    obj._Eyes.SetTo((IEnumerable<IFormIDLink<Eye>>)pair.Value);
+                    obj._Eyes.SetTo((SourceSetList<IFormIDLink<Eye>>)pair.Value);
                     break;
                 case Race_FieldIndex.FaceGenData:
                     obj.FaceGenData = (FaceGenData)pair.Value;
@@ -1882,7 +1715,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Spells
-        IReadOnlySetList<IFormIDSetLink<Spell>> Spells { get; }
+        IReadOnlySetList<IFormIDSetLinkGetter<ISpellInternalGetter>> Spells { get; }
         #endregion
         #region Relations
         IReadOnlySetList<IRaceRelationGetter> Relations { get; }
@@ -1891,7 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlyList<ISkillBoostGetter> SkillBoosts { get; }
         #endregion
         #region Fluff
-        Byte[] Fluff { get; }
+        ReadOnlySpan<Byte> Fluff { get; }
 
         #endregion
         #region MaleHeight
@@ -1953,10 +1786,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Hairs
-        IReadOnlySetList<IFormIDLink<Hair>> Hairs { get; }
+        IReadOnlySetList<IFormIDLinkGetter<IHairInternalGetter>> Hairs { get; }
         #endregion
         #region Eyes
-        IReadOnlySetList<IFormIDLink<Eye>> Eyes { get; }
+        IReadOnlySetList<IFormIDLinkGetter<IEyeInternalGetter>> Eyes { get; }
         #endregion
         #region FaceGenData
         IFaceGenDataGetter FaceGenData { get; }
@@ -1964,7 +1797,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Unknown
-        Byte[] Unknown { get; }
+        ReadOnlySpan<Byte> Unknown { get; }
         bool Unknown_IsSet { get; }
 
         #endregion
@@ -2043,6 +1876,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRaceInternalGetter item,
+            IRaceInternalGetter rhs)
+        {
+            return ((RaceCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -3341,7 +3183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.SkillBoosts,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
             ret.MaleHeight = item.MaleHeight.EqualsWithin(rhs.MaleHeight);
             ret.FemaleHeight = item.FemaleHeight.EqualsWithin(rhs.FemaleHeight);
             ret.MaleWeight = item.MaleWeight.EqualsWithin(rhs.MaleWeight);
@@ -3397,7 +3239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.FaceGenData,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && ByteExt.EqualsFast(item.Unknown, rhs.Unknown);
+            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && MemoryExtensions.SequenceEqual(item.Unknown, rhs.Unknown);
             base.FillEqualsMask(item, rhs, ret, include);
         }
 
@@ -3513,7 +3355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Fluff ?? true)
             {
-                fg.AppendLine($"Fluff => {item.Fluff}");
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
             if (printMask?.MaleHeight ?? true)
             {
@@ -3623,7 +3465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {item.Unknown}");
+                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
@@ -3729,6 +3571,215 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRaceInternalGetter lhs,
+            IRaceInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
+            if (lhs.Spells.HasBeenSet)
+            {
+                if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
+            }
+            if (lhs.Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
+            if (lhs.Relations.HasBeenSet)
+            {
+                if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
+            }
+            if (!lhs.SkillBoosts.SequenceEqual(rhs.SkillBoosts)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!lhs.MaleHeight.EqualsWithin(rhs.MaleHeight)) return false;
+            if (!lhs.FemaleHeight.EqualsWithin(rhs.FemaleHeight)) return false;
+            if (!lhs.MaleWeight.EqualsWithin(rhs.MaleWeight)) return false;
+            if (!lhs.FemaleWeight.EqualsWithin(rhs.FemaleWeight)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Voices_IsSet != rhs.Voices_IsSet) return false;
+            if (lhs.Voices_IsSet)
+            {
+                if (!object.Equals(lhs.Voices, rhs.Voices)) return false;
+            }
+            if (lhs.DefaultHair_IsSet != rhs.DefaultHair_IsSet) return false;
+            if (lhs.DefaultHair_IsSet)
+            {
+                if (!object.Equals(lhs.DefaultHair, rhs.DefaultHair)) return false;
+            }
+            if (lhs.DefaultHairColor_IsSet != rhs.DefaultHairColor_IsSet) return false;
+            if (lhs.DefaultHairColor_IsSet)
+            {
+                if (lhs.DefaultHairColor != rhs.DefaultHairColor) return false;
+            }
+            if (lhs.FaceGenMainClamp_IsSet != rhs.FaceGenMainClamp_IsSet) return false;
+            if (lhs.FaceGenMainClamp_IsSet)
+            {
+                if (lhs.FaceGenMainClamp != rhs.FaceGenMainClamp) return false;
+            }
+            if (lhs.FaceGenFaceClamp_IsSet != rhs.FaceGenFaceClamp_IsSet) return false;
+            if (lhs.FaceGenFaceClamp_IsSet)
+            {
+                if (lhs.FaceGenFaceClamp != rhs.FaceGenFaceClamp) return false;
+            }
+            if (lhs.RaceStats_IsSet != rhs.RaceStats_IsSet) return false;
+            if (lhs.RaceStats_IsSet)
+            {
+                if (!object.Equals(lhs.RaceStats, rhs.RaceStats)) return false;
+            }
+            if (lhs.FaceData.HasBeenSet != rhs.FaceData.HasBeenSet) return false;
+            if (lhs.FaceData.HasBeenSet)
+            {
+                if (!lhs.FaceData.SequenceEqual(rhs.FaceData)) return false;
+            }
+            if (lhs.BodyData_IsSet != rhs.BodyData_IsSet) return false;
+            if (lhs.BodyData_IsSet)
+            {
+                if (!object.Equals(lhs.BodyData, rhs.BodyData)) return false;
+            }
+            if (lhs.Hairs.HasBeenSet != rhs.Hairs.HasBeenSet) return false;
+            if (lhs.Hairs.HasBeenSet)
+            {
+                if (!lhs.Hairs.SequenceEqual(rhs.Hairs)) return false;
+            }
+            if (lhs.Eyes.HasBeenSet != rhs.Eyes.HasBeenSet) return false;
+            if (lhs.Eyes.HasBeenSet)
+            {
+                if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
+            }
+            if (lhs.FaceGenData_IsSet != rhs.FaceGenData_IsSet) return false;
+            if (lhs.FaceGenData_IsSet)
+            {
+                if (!object.Equals(lhs.FaceGenData, rhs.FaceGenData)) return false;
+            }
+            if (lhs.Unknown_IsSet != rhs.Unknown_IsSet) return false;
+            if (lhs.Unknown_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
+            }
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRaceInternalGetter)lhs,
+                rhs: rhs as IRaceInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRaceInternalGetter)lhs,
+                rhs: rhs as IRaceInternalGetter);
+        }
+
+        public virtual int GetHashCode(IRaceInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            if (item.Spells.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Spells).CombineHashCode(ret);
+            }
+            if (item.Relations.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Relations).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.SkillBoosts).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaleHeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FemaleHeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaleWeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FemaleWeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            if (item.Voices_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Voices).CombineHashCode(ret);
+            }
+            if (item.DefaultHair_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.DefaultHair).CombineHashCode(ret);
+            }
+            if (item.DefaultHairColor_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.DefaultHairColor).CombineHashCode(ret);
+            }
+            if (item.FaceGenMainClamp_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FaceGenMainClamp).CombineHashCode(ret);
+            }
+            if (item.FaceGenFaceClamp_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FaceGenFaceClamp).CombineHashCode(ret);
+            }
+            if (item.RaceStats_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.RaceStats).CombineHashCode(ret);
+            }
+            if (item.FaceData.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.FaceData).CombineHashCode(ret);
+            }
+            if (item.BodyData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.BodyData).CombineHashCode(ret);
+            }
+            if (item.Hairs.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Hairs).CombineHashCode(ret);
+            }
+            if (item.Eyes.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Eyes).CombineHashCode(ret);
+            }
+            if (item.FaceGenData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FaceGenData).CombineHashCode(ret);
+            }
+            if (item.Unknown_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IRaceInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IRaceInternalGetter)item);
+        }
+
+        #endregion
+
+
     }
     #endregion
 
@@ -3774,14 +3825,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Spells.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Spells) ?? true))
             {
-                ListXmlTranslation<IFormIDSetLink<Spell>>.Instance.Write(
+                ListXmlTranslation<IFormIDSetLinkGetter<ISpellInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Spells),
                     item: item.Spells,
                     fieldIndex: (int)Race_FieldIndex.Spells,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Spells),
-                    transl: (XElement subNode, IFormIDSetLink<Spell> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDSetLinkGetter<ISpellInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -3983,14 +4034,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Hairs.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
             {
-                ListXmlTranslation<IFormIDLink<Hair>>.Instance.Write(
+                ListXmlTranslation<IFormIDLinkGetter<IHairInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Hairs),
                     item: item.Hairs,
                     fieldIndex: (int)Race_FieldIndex.Hairs,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Hairs),
-                    transl: (XElement subNode, IFormIDLink<Hair> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDLinkGetter<IHairInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -4002,14 +4053,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Eyes.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Eyes) ?? true))
             {
-                ListXmlTranslation<IFormIDLink<Eye>>.Instance.Write(
+                ListXmlTranslation<IFormIDLinkGetter<IEyeInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Eyes),
                     item: item.Eyes,
                     fieldIndex: (int)Race_FieldIndex.Eyes,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Eyes),
-                    transl: (XElement subNode, IFormIDLink<Eye> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDLinkGetter<IEyeInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -6308,10 +6359,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Spells.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLink<Spell>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLinkGetter<ISpellInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.Spells,
-                    transl: (MutagenWriter subWriter, IFormIDSetLink<Spell> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDSetLinkGetter<ISpellInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
@@ -6458,11 +6509,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Hairs.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Hair>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IHairInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.Hairs,
                     recordType: Race_Registration.HNAM_HEADER,
-                    transl: (MutagenWriter subWriter, IFormIDLink<Hair> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDLinkGetter<IHairInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
@@ -6472,11 +6523,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Eyes.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Eye>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IEyeInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.Eyes,
                     recordType: Race_Registration.ENAM_HEADER,
-                    transl: (MutagenWriter subWriter, IFormIDLink<Eye> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDLinkGetter<IEyeInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,

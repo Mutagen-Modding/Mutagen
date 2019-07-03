@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => AlphaLayerData_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IAlphaLayerGetter.AlphaLayerData => this.AlphaLayerData;
+        ReadOnlySpan<Byte> IAlphaLayerGetter.AlphaLayerData => this.AlphaLayerData;
         public void AlphaLayerData_Set(
             Byte[] value,
             bool markSet = true)
@@ -100,35 +100,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is AlphaLayer rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IAlphaLayerInternalGetter rhs)) return false;
+            return ((AlphaLayerCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(AlphaLayer rhs)
+        public bool Equals(AlphaLayer obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (AlphaLayerData_IsSet != rhs.AlphaLayerData_IsSet) return false;
-            if (AlphaLayerData_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.AlphaLayerData, rhs.AlphaLayerData)) return false;
-            }
-            return true;
+            return ((AlphaLayerCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (AlphaLayerData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(AlphaLayerData).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((AlphaLayerCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => AlphaLayerXmlWriteTranslation.Instance;
@@ -606,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region AlphaLayerData
-        Byte[] AlphaLayerData { get; }
+        ReadOnlySpan<Byte> AlphaLayerData { get; }
         bool AlphaLayerData_IsSet { get; }
 
         #endregion
@@ -681,6 +664,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IAlphaLayerInternalGetter item,
+            IAlphaLayerInternalGetter rhs)
+        {
+            return ((AlphaLayerCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -971,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.AlphaLayerData = item.AlphaLayerData_IsSet == rhs.AlphaLayerData_IsSet && ByteExt.EqualsFast(item.AlphaLayerData, rhs.AlphaLayerData);
+            ret.AlphaLayerData = item.AlphaLayerData_IsSet == rhs.AlphaLayerData_IsSet && MemoryExtensions.SequenceEqual(item.AlphaLayerData, rhs.AlphaLayerData);
             base.FillEqualsMask(item, rhs, ret, include);
         }
 
@@ -1025,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.AlphaLayerData ?? true)
             {
-                fg.AppendLine($"AlphaLayerData => {item.AlphaLayerData}");
+                fg.AppendLine($"AlphaLayerData => {SpanExt.ToHexString(item.AlphaLayerData)}");
             }
         }
 
@@ -1065,6 +1057,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IAlphaLayerInternalGetter lhs,
+            IAlphaLayerInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.AlphaLayerData_IsSet != rhs.AlphaLayerData_IsSet) return false;
+            if (lhs.AlphaLayerData_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IBaseLayerInternalGetter lhs,
+            IBaseLayerInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IAlphaLayerInternalGetter)lhs,
+                rhs: rhs as IAlphaLayerInternalGetter);
+        }
+
+        public virtual int GetHashCode(IAlphaLayerInternalGetter item)
+        {
+            int ret = 0;
+            if (item.AlphaLayerData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.AlphaLayerData).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IBaseLayerInternalGetter item)
+        {
+            return GetHashCode(item: (IAlphaLayerInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

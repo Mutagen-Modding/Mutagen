@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class FormIDType : PrimitiveType
     {
-        public override Type Type => typeof(FormID);
+        public override Type Type(bool getter) => typeof(FormID);
 
         public override bool HasProperty => true;
 

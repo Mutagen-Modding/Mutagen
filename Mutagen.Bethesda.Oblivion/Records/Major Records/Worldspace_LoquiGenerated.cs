@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Worldspace> IWorldspace.Parent_Property => this.Parent_Property;
         IWorldspaceInternalGetter IWorldspaceGetter.Parent => this.Parent_Property.Item;
-        IFormIDSetLinkGetter<Worldspace> IWorldspaceGetter.Parent_Property => this.Parent_Property;
+        IFormIDSetLinkGetter<IWorldspaceInternalGetter> IWorldspaceGetter.Parent_Property => this.Parent_Property;
         #endregion
         #region Climate
         public IFormIDSetLink<Climate> Climate_Property { get; } = new FormIDSetLink<Climate>();
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Climate> IWorldspace.Climate_Property => this.Climate_Property;
         IClimateInternalGetter IWorldspaceGetter.Climate => this.Climate_Property.Item;
-        IFormIDSetLinkGetter<Climate> IWorldspaceGetter.Climate_Property => this.Climate_Property;
+        IFormIDSetLinkGetter<IClimateInternalGetter> IWorldspaceGetter.Climate_Property => this.Climate_Property;
         #endregion
         #region Water
         public IFormIDSetLink<Water> Water_Property { get; } = new FormIDSetLink<Water>();
@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Water> IWorldspace.Water_Property => this.Water_Property;
         IWaterInternalGetter IWorldspaceGetter.Water => this.Water_Property.Item;
-        IFormIDSetLinkGetter<Water> IWorldspaceGetter.Water_Property => this.Water_Property;
+        IFormIDSetLinkGetter<IWaterInternalGetter> IWorldspaceGetter.Water_Property => this.Water_Property;
         #endregion
         #region Icon
         public bool Icon_IsSet
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => OffsetData_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IWorldspaceGetter.OffsetData => this.OffsetData;
+        ReadOnlySpan<Byte> IWorldspaceGetter.OffsetData => this.OffsetData;
         public void OffsetData_Set(
             Byte[] value,
             bool markSet = true)
@@ -362,6 +362,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IWorldspaceGetter.SubCellsTimestamp => this.SubCellsTimestamp;
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -402,156 +403,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Worldspace rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IWorldspaceInternalGetter rhs)) return false;
+            return ((WorldspaceCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Worldspace rhs)
+        public bool Equals(Worldspace obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Parent_Property.HasBeenSet != rhs.Parent_Property.HasBeenSet) return false;
-            if (Parent_Property.HasBeenSet)
-            {
-                if (!this.Parent_Property.Equals(rhs.Parent_Property)) return false;
-            }
-            if (Climate_Property.HasBeenSet != rhs.Climate_Property.HasBeenSet) return false;
-            if (Climate_Property.HasBeenSet)
-            {
-                if (!this.Climate_Property.Equals(rhs.Climate_Property)) return false;
-            }
-            if (Water_Property.HasBeenSet != rhs.Water_Property.HasBeenSet) return false;
-            if (Water_Property.HasBeenSet)
-            {
-                if (!this.Water_Property.Equals(rhs.Water_Property)) return false;
-            }
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            if (MapData_IsSet != rhs.MapData_IsSet) return false;
-            if (MapData_IsSet)
-            {
-                if (!object.Equals(this.MapData, rhs.MapData)) return false;
-            }
-            if (Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (Flags_IsSet)
-            {
-                if (this.Flags != rhs.Flags) return false;
-            }
-            if (ObjectBoundsMin_IsSet != rhs.ObjectBoundsMin_IsSet) return false;
-            if (ObjectBoundsMin_IsSet)
-            {
-                if (!this.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin)) return false;
-            }
-            if (ObjectBoundsMax_IsSet != rhs.ObjectBoundsMax_IsSet) return false;
-            if (ObjectBoundsMax_IsSet)
-            {
-                if (!this.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax)) return false;
-            }
-            if (Music_IsSet != rhs.Music_IsSet) return false;
-            if (Music_IsSet)
-            {
-                if (this.Music != rhs.Music) return false;
-            }
-            if (OffsetData_IsSet != rhs.OffsetData_IsSet) return false;
-            if (OffsetData_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.OffsetData, rhs.OffsetData)) return false;
-            }
-            if (Road_IsSet != rhs.Road_IsSet) return false;
-            if (Road_IsSet)
-            {
-                if (!object.Equals(this.Road, rhs.Road)) return false;
-            }
-            if (TopCell_IsSet != rhs.TopCell_IsSet) return false;
-            if (TopCell_IsSet)
-            {
-                if (!object.Equals(this.TopCell, rhs.TopCell)) return false;
-            }
-            if (!ByteExt.EqualsFast(this.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
-            if (SubCells.HasBeenSet != rhs.SubCells.HasBeenSet) return false;
-            if (SubCells.HasBeenSet)
-            {
-                if (!this.SubCells.SequenceEqual(rhs.SubCells)) return false;
-            }
-            if (this.UsingOffsetLength != rhs.UsingOffsetLength) return false;
-            return true;
+            return ((WorldspaceCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Parent_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Parent).CombineHashCode(ret);
-            }
-            if (Climate_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Climate).CombineHashCode(ret);
-            }
-            if (Water_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Water).CombineHashCode(ret);
-            }
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            if (MapData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MapData).CombineHashCode(ret);
-            }
-            if (Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
-            if (ObjectBoundsMin_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ObjectBoundsMin).CombineHashCode(ret);
-            }
-            if (ObjectBoundsMax_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ObjectBoundsMax).CombineHashCode(ret);
-            }
-            if (Music_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Music).CombineHashCode(ret);
-            }
-            if (OffsetData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(OffsetData).CombineHashCode(ret);
-            }
-            if (Road_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Road).CombineHashCode(ret);
-            }
-            if (TopCell_IsSet)
-            {
-                ret = HashHelper.GetHashCode(TopCell).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(SubCellsTimestamp).CombineHashCode(ret);
-            if (SubCells.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(SubCells).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(UsingOffsetLength).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((WorldspaceCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => WorldspaceXmlWriteTranslation.Instance;
@@ -1260,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.SubCellsTimestamp = (Byte[])obj;
                     break;
                 case Worldspace_FieldIndex.SubCells:
-                    this._SubCells.SetTo((IEnumerable<WorldspaceBlock>)obj);
+                    this._SubCells.SetTo((SourceSetList<WorldspaceBlock>)obj);
                     break;
                 case Worldspace_FieldIndex.UsingOffsetLength:
                     this.UsingOffsetLength = (Boolean)obj;
@@ -1337,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.SubCellsTimestamp = (Byte[])pair.Value;
                     break;
                 case Worldspace_FieldIndex.SubCells:
-                    obj._SubCells.SetTo((IEnumerable<WorldspaceBlock>)pair.Value);
+                    obj._SubCells.SetTo((SourceSetList<WorldspaceBlock>)pair.Value);
                     break;
                 case Worldspace_FieldIndex.UsingOffsetLength:
                     obj.UsingOffsetLength = (Boolean)pair.Value;
@@ -1449,17 +1312,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Parent
         IWorldspaceInternalGetter Parent { get; }
-        IFormIDSetLinkGetter<Worldspace> Parent_Property { get; }
+        IFormIDSetLinkGetter<IWorldspaceInternalGetter> Parent_Property { get; }
 
         #endregion
         #region Climate
         IClimateInternalGetter Climate { get; }
-        IFormIDSetLinkGetter<Climate> Climate_Property { get; }
+        IFormIDSetLinkGetter<IClimateInternalGetter> Climate_Property { get; }
 
         #endregion
         #region Water
         IWaterInternalGetter Water { get; }
-        IFormIDSetLinkGetter<Water> Water_Property { get; }
+        IFormIDSetLinkGetter<IWaterInternalGetter> Water_Property { get; }
 
         #endregion
         #region Icon
@@ -1493,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region OffsetData
-        Byte[] OffsetData { get; }
+        ReadOnlySpan<Byte> OffsetData { get; }
         bool OffsetData_IsSet { get; }
 
         #endregion
@@ -1508,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region SubCellsTimestamp
-        Byte[] SubCellsTimestamp { get; }
+        ReadOnlySpan<Byte> SubCellsTimestamp { get; }
 
         #endregion
         #region SubCells
@@ -1589,6 +1452,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IWorldspaceInternalGetter item,
+            IWorldspaceInternalGetter rhs)
+        {
+            return ((WorldspaceCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -2574,7 +2446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ObjectBoundsMin = item.ObjectBoundsMin_IsSet == rhs.ObjectBoundsMin_IsSet && item.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin);
             ret.ObjectBoundsMax = item.ObjectBoundsMax_IsSet == rhs.ObjectBoundsMax_IsSet && item.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax);
             ret.Music = item.Music_IsSet == rhs.Music_IsSet && item.Music == rhs.Music;
-            ret.OffsetData = item.OffsetData_IsSet == rhs.OffsetData_IsSet && ByteExt.EqualsFast(item.OffsetData, rhs.OffsetData);
+            ret.OffsetData = item.OffsetData_IsSet == rhs.OffsetData_IsSet && MemoryExtensions.SequenceEqual(item.OffsetData, rhs.OffsetData);
             ret.Road = EqualsMaskHelper.EqualsHelper(
                 item.Road_IsSet,
                 rhs.Road_IsSet,
@@ -2589,7 +2461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.TopCell,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.SubCellsTimestamp = ByteExt.EqualsFast(item.SubCellsTimestamp, rhs.SubCellsTimestamp);
+            ret.SubCellsTimestamp = MemoryExtensions.SequenceEqual(item.SubCellsTimestamp, rhs.SubCellsTimestamp);
             ret.SubCells = item.SubCells.CollectionEqualsHelper(
                 rhs.SubCells,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2688,7 +2560,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.OffsetData ?? true)
             {
-                fg.AppendLine($"OffsetData => {item.OffsetData}");
+                fg.AppendLine($"OffsetData => {SpanExt.ToHexString(item.OffsetData)}");
             }
             if (printMask?.Road?.Overall ?? true)
             {
@@ -2700,7 +2572,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.SubCellsTimestamp ?? true)
             {
-                fg.AppendLine($"SubCellsTimestamp => {item.SubCellsTimestamp}");
+                fg.AppendLine($"SubCellsTimestamp => {SpanExt.ToHexString(item.SubCellsTimestamp)}");
             }
             if (printMask?.SubCells?.Overall ?? true)
             {
@@ -2831,6 +2703,199 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IWorldspaceInternalGetter lhs,
+            IWorldspaceInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Parent_Property.HasBeenSet != rhs.Parent_Property.HasBeenSet) return false;
+            if (lhs.Parent_Property.HasBeenSet)
+            {
+                if (!lhs.Parent_Property.Equals(rhs.Parent_Property)) return false;
+            }
+            if (lhs.Climate_Property.HasBeenSet != rhs.Climate_Property.HasBeenSet) return false;
+            if (lhs.Climate_Property.HasBeenSet)
+            {
+                if (!lhs.Climate_Property.Equals(rhs.Climate_Property)) return false;
+            }
+            if (lhs.Water_Property.HasBeenSet != rhs.Water_Property.HasBeenSet) return false;
+            if (lhs.Water_Property.HasBeenSet)
+            {
+                if (!lhs.Water_Property.Equals(rhs.Water_Property)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.MapData_IsSet != rhs.MapData_IsSet) return false;
+            if (lhs.MapData_IsSet)
+            {
+                if (!object.Equals(lhs.MapData, rhs.MapData)) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.ObjectBoundsMin_IsSet != rhs.ObjectBoundsMin_IsSet) return false;
+            if (lhs.ObjectBoundsMin_IsSet)
+            {
+                if (!lhs.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin)) return false;
+            }
+            if (lhs.ObjectBoundsMax_IsSet != rhs.ObjectBoundsMax_IsSet) return false;
+            if (lhs.ObjectBoundsMax_IsSet)
+            {
+                if (!lhs.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax)) return false;
+            }
+            if (lhs.Music_IsSet != rhs.Music_IsSet) return false;
+            if (lhs.Music_IsSet)
+            {
+                if (lhs.Music != rhs.Music) return false;
+            }
+            if (lhs.OffsetData_IsSet != rhs.OffsetData_IsSet) return false;
+            if (lhs.OffsetData_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.OffsetData, rhs.OffsetData)) return false;
+            }
+            if (lhs.Road_IsSet != rhs.Road_IsSet) return false;
+            if (lhs.Road_IsSet)
+            {
+                if (!object.Equals(lhs.Road, rhs.Road)) return false;
+            }
+            if (lhs.TopCell_IsSet != rhs.TopCell_IsSet) return false;
+            if (lhs.TopCell_IsSet)
+            {
+                if (!object.Equals(lhs.TopCell, rhs.TopCell)) return false;
+            }
+            if (!MemoryExtensions.SequenceEqual(lhs.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
+            if (lhs.SubCells.HasBeenSet != rhs.SubCells.HasBeenSet) return false;
+            if (lhs.SubCells.HasBeenSet)
+            {
+                if (!lhs.SubCells.SequenceEqual(rhs.SubCells)) return false;
+            }
+            if (lhs.UsingOffsetLength != rhs.UsingOffsetLength) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IPlaceInternalGetter lhs,
+            IPlaceInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IWorldspaceInternalGetter)lhs,
+                rhs: rhs as IWorldspaceInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IWorldspaceInternalGetter)lhs,
+                rhs: rhs as IWorldspaceInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IWorldspaceInternalGetter)lhs,
+                rhs: rhs as IWorldspaceInternalGetter);
+        }
+
+        public virtual int GetHashCode(IWorldspaceInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Parent_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Parent).CombineHashCode(ret);
+            }
+            if (item.Climate_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Climate).CombineHashCode(ret);
+            }
+            if (item.Water_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Water).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.MapData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MapData).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.ObjectBoundsMin_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ObjectBoundsMin).CombineHashCode(ret);
+            }
+            if (item.ObjectBoundsMax_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ObjectBoundsMax).CombineHashCode(ret);
+            }
+            if (item.Music_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Music).CombineHashCode(ret);
+            }
+            if (item.OffsetData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.OffsetData).CombineHashCode(ret);
+            }
+            if (item.Road_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Road).CombineHashCode(ret);
+            }
+            if (item.TopCell_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.TopCell).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.SubCellsTimestamp).CombineHashCode(ret);
+            if (item.SubCells.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.SubCells).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.UsingOffsetLength).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IPlaceInternalGetter item)
+        {
+            return GetHashCode(item: (IWorldspaceInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IWorldspaceInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IWorldspaceInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

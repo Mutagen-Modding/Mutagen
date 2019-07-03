@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Script> ILeveledCreature.Script_Property => this.Script_Property;
         IScriptInternalGetter ILeveledCreatureGetter.Script => this.Script_Property.Item;
-        IFormIDSetLinkGetter<Script> ILeveledCreatureGetter.Script_Property => this.Script_Property;
+        IFormIDSetLinkGetter<IScriptInternalGetter> ILeveledCreatureGetter.Script_Property => this.Script_Property;
         #endregion
         #region Template
         public IFormIDSetLink<NPCAbstract> Template_Property { get; } = new FormIDSetLink<NPCAbstract>();
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<NPCAbstract> ILeveledCreature.Template_Property => this.Template_Property;
         INPCAbstractInternalGetter ILeveledCreatureGetter.Template => this.Template_Property.Item;
-        IFormIDSetLinkGetter<NPCAbstract> ILeveledCreatureGetter.Template_Property => this.Template_Property;
+        IFormIDSetLinkGetter<INPCAbstractInternalGetter> ILeveledCreatureGetter.Template_Property => this.Template_Property;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledCreatureInternalGetter)rhs, include);
@@ -156,71 +156,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is LeveledCreature rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ILeveledCreatureInternalGetter rhs)) return false;
+            return ((LeveledCreatureCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledCreature rhs)
+        public bool Equals(LeveledCreature obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (ChanceNone_IsSet != rhs.ChanceNone_IsSet) return false;
-            if (ChanceNone_IsSet)
-            {
-                if (this.ChanceNone != rhs.ChanceNone) return false;
-            }
-            if (Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (Flags_IsSet)
-            {
-                if (this.Flags != rhs.Flags) return false;
-            }
-            if (Entries.HasBeenSet != rhs.Entries.HasBeenSet) return false;
-            if (Entries.HasBeenSet)
-            {
-                if (!this.Entries.SequenceEqual(rhs.Entries)) return false;
-            }
-            if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (Script_Property.HasBeenSet)
-            {
-                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (Template_Property.HasBeenSet != rhs.Template_Property.HasBeenSet) return false;
-            if (Template_Property.HasBeenSet)
-            {
-                if (!this.Template_Property.Equals(rhs.Template_Property)) return false;
-            }
-            return true;
+            return ((LeveledCreatureCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (ChanceNone_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ChanceNone).CombineHashCode(ret);
-            }
-            if (Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
-            if (Entries.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Entries).CombineHashCode(ret);
-            }
-            if (Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
-            }
-            if (Template_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Template).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((LeveledCreatureCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => LeveledCreatureXmlWriteTranslation.Instance;
@@ -750,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (LeveledFlag)obj;
                     break;
                 case LeveledCreature_FieldIndex.Entries:
-                    this._Entries.SetTo((IEnumerable<LeveledEntry<NPCSpawn>>)obj);
+                    this._Entries.SetTo((SourceSetList<LeveledEntry<NPCSpawn>>)obj);
                     break;
                 case LeveledCreature_FieldIndex.Script:
                     this.Script_Property.Set((IFormIDSetLink<Script>)obj);
@@ -794,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (LeveledFlag)pair.Value;
                     break;
                 case LeveledCreature_FieldIndex.Entries:
-                    obj._Entries.SetTo((IEnumerable<LeveledEntry<NPCSpawn>>)pair.Value);
+                    obj._Entries.SetTo((SourceSetList<LeveledEntry<NPCSpawn>>)pair.Value);
                     break;
                 case LeveledCreature_FieldIndex.Script:
                     obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
@@ -869,12 +816,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         IScriptInternalGetter Script { get; }
-        IFormIDSetLinkGetter<Script> Script_Property { get; }
+        IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property { get; }
 
         #endregion
         #region Template
         INPCAbstractInternalGetter Template { get; }
-        IFormIDSetLinkGetter<NPCAbstract> Template_Property { get; }
+        IFormIDSetLinkGetter<INPCAbstractInternalGetter> Template_Property { get; }
 
         #endregion
 
@@ -948,6 +895,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ILeveledCreatureInternalGetter item,
+            ILeveledCreatureInternalGetter rhs)
+        {
+            return ((LeveledCreatureCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1582,6 +1538,114 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILeveledCreatureInternalGetter lhs,
+            ILeveledCreatureInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.ChanceNone_IsSet != rhs.ChanceNone_IsSet) return false;
+            if (lhs.ChanceNone_IsSet)
+            {
+                if (lhs.ChanceNone != rhs.ChanceNone) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.Entries.HasBeenSet != rhs.Entries.HasBeenSet) return false;
+            if (lhs.Entries.HasBeenSet)
+            {
+                if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Template_Property.HasBeenSet != rhs.Template_Property.HasBeenSet) return false;
+            if (lhs.Template_Property.HasBeenSet)
+            {
+                if (!lhs.Template_Property.Equals(rhs.Template_Property)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            INPCSpawnInternalGetter lhs,
+            INPCSpawnInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILeveledCreatureInternalGetter)lhs,
+                rhs: rhs as ILeveledCreatureInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILeveledCreatureInternalGetter)lhs,
+                rhs: rhs as ILeveledCreatureInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILeveledCreatureInternalGetter)lhs,
+                rhs: rhs as ILeveledCreatureInternalGetter);
+        }
+
+        public virtual int GetHashCode(ILeveledCreatureInternalGetter item)
+        {
+            int ret = 0;
+            if (item.ChanceNone_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ChanceNone).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.Entries.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Entries).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.Template_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Template).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(INPCSpawnInternalGetter item)
+        {
+            return GetHashCode(item: (ILeveledCreatureInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILeveledCreatureInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILeveledCreatureInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

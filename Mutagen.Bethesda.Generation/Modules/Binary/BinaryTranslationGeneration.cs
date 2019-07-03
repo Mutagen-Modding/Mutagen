@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationAccessor);
 
-        public abstract string GetTranslatorInstance(TypeGeneration typeGen);
+        public abstract string GetTranslatorInstance(TypeGeneration typeGen, bool getter);
 
         public abstract void GenerateCopyIn(
             FileGeneration fg,

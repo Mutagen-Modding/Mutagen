@@ -125,42 +125,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is BodyPart rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IBodyPartGetter rhs)) return false;
+            return ((BodyPartCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(BodyPart rhs)
+        public bool Equals(BodyPart obj)
         {
-            if (rhs == null) return false;
-            if (Index_IsSet != rhs.Index_IsSet) return false;
-            if (Index_IsSet)
-            {
-                if (this.Index != rhs.Index) return false;
-            }
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            return true;
+            return ((BodyPartCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Index_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Index).CombineHashCode(ret);
-            }
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((BodyPartCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => BodyPartXmlWriteTranslation.Instance;
@@ -707,6 +683,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IBodyPartGetter item,
+            IBodyPartGetter rhs)
+        {
+            return ((BodyPartCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1103,6 +1088,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Index = item.Index_IsSet;
             mask.Icon = item.Icon_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IBodyPartGetter lhs,
+            IBodyPartGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Index_IsSet != rhs.Index_IsSet) return false;
+            if (lhs.Index_IsSet)
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IBodyPartGetter item)
+        {
+            int ret = 0;
+            if (item.Index_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Index).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

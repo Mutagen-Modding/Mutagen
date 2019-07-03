@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Script> IBook.Script_Property => this.Script_Property;
         IScriptInternalGetter IBookGetter.Script => this.Script_Property.Item;
-        IFormIDSetLinkGetter<Script> IBookGetter.Script_Property => this.Script_Property;
+        IFormIDSetLinkGetter<IScriptInternalGetter> IBookGetter.Script_Property => this.Script_Property;
         #endregion
         #region Enchantment
         public IFormIDSetLink<Enchantment> Enchantment_Property { get; } = new FormIDSetLink<Enchantment>();
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Enchantment> IBook.Enchantment_Property => this.Enchantment_Property;
         IEnchantmentInternalGetter IBookGetter.Enchantment => this.Enchantment_Property.Item;
-        IFormIDSetLinkGetter<Enchantment> IBookGetter.Enchantment_Property => this.Enchantment_Property;
+        IFormIDSetLinkGetter<IEnchantmentInternalGetter> IBookGetter.Enchantment_Property => this.Enchantment_Property;
         #endregion
         #region EnchantmentPoints
         public bool EnchantmentPoints_IsSet
@@ -287,99 +287,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Book rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IBookInternalGetter rhs)) return false;
+            return ((BookCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Book rhs)
+        public bool Equals(Book obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (Script_Property.HasBeenSet)
-            {
-                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (Enchantment_Property.HasBeenSet != rhs.Enchantment_Property.HasBeenSet) return false;
-            if (Enchantment_Property.HasBeenSet)
-            {
-                if (!this.Enchantment_Property.Equals(rhs.Enchantment_Property)) return false;
-            }
-            if (EnchantmentPoints_IsSet != rhs.EnchantmentPoints_IsSet) return false;
-            if (EnchantmentPoints_IsSet)
-            {
-                if (this.EnchantmentPoints != rhs.EnchantmentPoints) return false;
-            }
-            if (Description_IsSet != rhs.Description_IsSet) return false;
-            if (Description_IsSet)
-            {
-                if (!string.Equals(this.Description, rhs.Description)) return false;
-            }
-            if (this.Flags != rhs.Flags) return false;
-            if (this.Teaches != rhs.Teaches) return false;
-            if (!this.Value.EqualsWithin(rhs.Value)) return false;
-            if (!this.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((BookCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            if (Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
-            }
-            if (Enchantment_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Enchantment).CombineHashCode(ret);
-            }
-            if (EnchantmentPoints_IsSet)
-            {
-                ret = HashHelper.GetHashCode(EnchantmentPoints).CombineHashCode(ret);
-            }
-            if (Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Teaches).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((BookCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => BookXmlWriteTranslation.Instance;
@@ -1187,12 +1106,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         IScriptInternalGetter Script { get; }
-        IFormIDSetLinkGetter<Script> Script_Property { get; }
+        IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property { get; }
 
         #endregion
         #region Enchantment
         IEnchantmentInternalGetter Enchantment { get; }
-        IFormIDSetLinkGetter<Enchantment> Enchantment_Property { get; }
+        IFormIDSetLinkGetter<IEnchantmentInternalGetter> Enchantment_Property { get; }
 
         #endregion
         #region EnchantmentPoints
@@ -1296,6 +1215,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IBookInternalGetter item,
+            IBookInternalGetter rhs)
+        {
+            return ((BookCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -2200,6 +2128,142 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IBookInternalGetter lhs,
+            IBookInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Enchantment_Property.HasBeenSet != rhs.Enchantment_Property.HasBeenSet) return false;
+            if (lhs.Enchantment_Property.HasBeenSet)
+            {
+                if (!lhs.Enchantment_Property.Equals(rhs.Enchantment_Property)) return false;
+            }
+            if (lhs.EnchantmentPoints_IsSet != rhs.EnchantmentPoints_IsSet) return false;
+            if (lhs.EnchantmentPoints_IsSet)
+            {
+                if (lhs.EnchantmentPoints != rhs.EnchantmentPoints) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Teaches != rhs.Teaches) return false;
+            if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IItemAbstractInternalGetter lhs,
+            IItemAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IBookInternalGetter)lhs,
+                rhs: rhs as IBookInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IBookInternalGetter)lhs,
+                rhs: rhs as IBookInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IBookInternalGetter)lhs,
+                rhs: rhs as IBookInternalGetter);
+        }
+
+        public virtual int GetHashCode(IBookInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.Enchantment_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Enchantment).CombineHashCode(ret);
+            }
+            if (item.EnchantmentPoints_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.EnchantmentPoints).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Teaches).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IItemAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (IBookInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IBookInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IBookInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

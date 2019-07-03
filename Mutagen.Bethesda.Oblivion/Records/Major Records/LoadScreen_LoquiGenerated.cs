@@ -140,53 +140,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is LoadScreen rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ILoadScreenInternalGetter rhs)) return false;
+            return ((LoadScreenCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(LoadScreen rhs)
+        public bool Equals(LoadScreen obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            if (Description_IsSet != rhs.Description_IsSet) return false;
-            if (Description_IsSet)
-            {
-                if (!string.Equals(this.Description, rhs.Description)) return false;
-            }
-            if (Locations.HasBeenSet != rhs.Locations.HasBeenSet) return false;
-            if (Locations.HasBeenSet)
-            {
-                if (!this.Locations.SequenceEqual(rhs.Locations)) return false;
-            }
-            return true;
+            return ((LoadScreenCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            if (Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
-            }
-            if (Locations.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Locations).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((LoadScreenCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => LoadScreenXmlWriteTranslation.Instance;
@@ -697,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case LoadScreen_FieldIndex.Locations:
-                    this._Locations.SetTo((IEnumerable<LoadScreenLocation>)obj);
+                    this._Locations.SetTo((SourceSetList<LoadScreenLocation>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -735,7 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case LoadScreen_FieldIndex.Locations:
-                    obj._Locations.SetTo((IEnumerable<LoadScreenLocation>)pair.Value);
+                    obj._Locations.SetTo((SourceSetList<LoadScreenLocation>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -865,6 +830,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ILoadScreenInternalGetter item,
+            ILoadScreenInternalGetter rhs)
+        {
+            return ((LoadScreenCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1395,6 +1369,82 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILoadScreenInternalGetter lhs,
+            ILoadScreenInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.Locations.HasBeenSet != rhs.Locations.HasBeenSet) return false;
+            if (lhs.Locations.HasBeenSet)
+            {
+                if (!lhs.Locations.SequenceEqual(rhs.Locations)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILoadScreenInternalGetter)lhs,
+                rhs: rhs as ILoadScreenInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILoadScreenInternalGetter)lhs,
+                rhs: rhs as ILoadScreenInternalGetter);
+        }
+
+        public virtual int GetHashCode(ILoadScreenInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            if (item.Locations.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Locations).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILoadScreenInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILoadScreenInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

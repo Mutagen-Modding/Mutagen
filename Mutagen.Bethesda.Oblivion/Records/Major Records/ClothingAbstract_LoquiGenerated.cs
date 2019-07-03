@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Script> IClothingAbstract.Script_Property => this.Script_Property;
         IScriptInternalGetter IClothingAbstractGetter.Script => this.Script_Property.Item;
-        IFormIDSetLinkGetter<Script> IClothingAbstractGetter.Script_Property => this.Script_Property;
+        IFormIDSetLinkGetter<IScriptInternalGetter> IClothingAbstractGetter.Script_Property => this.Script_Property;
         #endregion
         #region Enchantment
         public IFormIDSetLink<Enchantment> Enchantment_Property { get; } = new FormIDSetLink<Enchantment>();
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Enchantment> IClothingAbstract.Enchantment_Property => this.Enchantment_Property;
         IEnchantmentInternalGetter IClothingAbstractGetter.Enchantment => this.Enchantment_Property.Item;
-        IFormIDSetLinkGetter<Enchantment> IClothingAbstractGetter.Enchantment_Property => this.Enchantment_Property;
+        IFormIDSetLinkGetter<IEnchantmentInternalGetter> IClothingAbstractGetter.Enchantment_Property => this.Enchantment_Property;
         #endregion
         #region EnchantmentPoints
         public bool EnchantmentPoints_IsSet
@@ -344,122 +344,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ClothingAbstract rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IClothingAbstractInternalGetter rhs)) return false;
+            return ((ClothingAbstractCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ClothingAbstract rhs)
+        public bool Equals(ClothingAbstract obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (Script_Property.HasBeenSet)
-            {
-                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (Enchantment_Property.HasBeenSet != rhs.Enchantment_Property.HasBeenSet) return false;
-            if (Enchantment_Property.HasBeenSet)
-            {
-                if (!this.Enchantment_Property.Equals(rhs.Enchantment_Property)) return false;
-            }
-            if (EnchantmentPoints_IsSet != rhs.EnchantmentPoints_IsSet) return false;
-            if (EnchantmentPoints_IsSet)
-            {
-                if (this.EnchantmentPoints != rhs.EnchantmentPoints) return false;
-            }
-            if (this.BipedFlags != rhs.BipedFlags) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (MaleBipedModel_IsSet != rhs.MaleBipedModel_IsSet) return false;
-            if (MaleBipedModel_IsSet)
-            {
-                if (!object.Equals(this.MaleBipedModel, rhs.MaleBipedModel)) return false;
-            }
-            if (MaleWorldModel_IsSet != rhs.MaleWorldModel_IsSet) return false;
-            if (MaleWorldModel_IsSet)
-            {
-                if (!object.Equals(this.MaleWorldModel, rhs.MaleWorldModel)) return false;
-            }
-            if (MaleIcon_IsSet != rhs.MaleIcon_IsSet) return false;
-            if (MaleIcon_IsSet)
-            {
-                if (!string.Equals(this.MaleIcon, rhs.MaleIcon)) return false;
-            }
-            if (FemaleBipedModel_IsSet != rhs.FemaleBipedModel_IsSet) return false;
-            if (FemaleBipedModel_IsSet)
-            {
-                if (!object.Equals(this.FemaleBipedModel, rhs.FemaleBipedModel)) return false;
-            }
-            if (FemaleWorldModel_IsSet != rhs.FemaleWorldModel_IsSet) return false;
-            if (FemaleWorldModel_IsSet)
-            {
-                if (!object.Equals(this.FemaleWorldModel, rhs.FemaleWorldModel)) return false;
-            }
-            if (FemaleIcon_IsSet != rhs.FemaleIcon_IsSet) return false;
-            if (FemaleIcon_IsSet)
-            {
-                if (!string.Equals(this.FemaleIcon, rhs.FemaleIcon)) return false;
-            }
-            if (this.BMDTDataTypeState != rhs.BMDTDataTypeState) return false;
-            return true;
+            return ((ClothingAbstractCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
-            }
-            if (Enchantment_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Enchantment).CombineHashCode(ret);
-            }
-            if (EnchantmentPoints_IsSet)
-            {
-                ret = HashHelper.GetHashCode(EnchantmentPoints).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(BipedFlags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            if (MaleBipedModel_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MaleBipedModel).CombineHashCode(ret);
-            }
-            if (MaleWorldModel_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MaleWorldModel).CombineHashCode(ret);
-            }
-            if (MaleIcon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MaleIcon).CombineHashCode(ret);
-            }
-            if (FemaleBipedModel_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FemaleBipedModel).CombineHashCode(ret);
-            }
-            if (FemaleWorldModel_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FemaleWorldModel).CombineHashCode(ret);
-            }
-            if (FemaleIcon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FemaleIcon).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(BMDTDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((ClothingAbstractCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ClothingAbstractXmlWriteTranslation.Instance;
@@ -1215,12 +1111,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         IScriptInternalGetter Script { get; }
-        IFormIDSetLinkGetter<Script> Script_Property { get; }
+        IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property { get; }
 
         #endregion
         #region Enchantment
         IEnchantmentInternalGetter Enchantment { get; }
-        IFormIDSetLinkGetter<Enchantment> Enchantment_Property { get; }
+        IFormIDSetLinkGetter<IEnchantmentInternalGetter> Enchantment_Property { get; }
 
         #endregion
         #region EnchantmentPoints
@@ -1341,6 +1237,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IClothingAbstractInternalGetter item,
+            IClothingAbstractInternalGetter rhs)
+        {
+            return ((ClothingAbstractCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -2460,6 +2365,165 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IClothingAbstractInternalGetter lhs,
+            IClothingAbstractInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Enchantment_Property.HasBeenSet != rhs.Enchantment_Property.HasBeenSet) return false;
+            if (lhs.Enchantment_Property.HasBeenSet)
+            {
+                if (!lhs.Enchantment_Property.Equals(rhs.Enchantment_Property)) return false;
+            }
+            if (lhs.EnchantmentPoints_IsSet != rhs.EnchantmentPoints_IsSet) return false;
+            if (lhs.EnchantmentPoints_IsSet)
+            {
+                if (lhs.EnchantmentPoints != rhs.EnchantmentPoints) return false;
+            }
+            if (lhs.BipedFlags != rhs.BipedFlags) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.MaleBipedModel_IsSet != rhs.MaleBipedModel_IsSet) return false;
+            if (lhs.MaleBipedModel_IsSet)
+            {
+                if (!object.Equals(lhs.MaleBipedModel, rhs.MaleBipedModel)) return false;
+            }
+            if (lhs.MaleWorldModel_IsSet != rhs.MaleWorldModel_IsSet) return false;
+            if (lhs.MaleWorldModel_IsSet)
+            {
+                if (!object.Equals(lhs.MaleWorldModel, rhs.MaleWorldModel)) return false;
+            }
+            if (lhs.MaleIcon_IsSet != rhs.MaleIcon_IsSet) return false;
+            if (lhs.MaleIcon_IsSet)
+            {
+                if (!string.Equals(lhs.MaleIcon, rhs.MaleIcon)) return false;
+            }
+            if (lhs.FemaleBipedModel_IsSet != rhs.FemaleBipedModel_IsSet) return false;
+            if (lhs.FemaleBipedModel_IsSet)
+            {
+                if (!object.Equals(lhs.FemaleBipedModel, rhs.FemaleBipedModel)) return false;
+            }
+            if (lhs.FemaleWorldModel_IsSet != rhs.FemaleWorldModel_IsSet) return false;
+            if (lhs.FemaleWorldModel_IsSet)
+            {
+                if (!object.Equals(lhs.FemaleWorldModel, rhs.FemaleWorldModel)) return false;
+            }
+            if (lhs.FemaleIcon_IsSet != rhs.FemaleIcon_IsSet) return false;
+            if (lhs.FemaleIcon_IsSet)
+            {
+                if (!string.Equals(lhs.FemaleIcon, rhs.FemaleIcon)) return false;
+            }
+            if (lhs.BMDTDataTypeState != rhs.BMDTDataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IItemAbstractInternalGetter lhs,
+            IItemAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IClothingAbstractInternalGetter)lhs,
+                rhs: rhs as IClothingAbstractInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IClothingAbstractInternalGetter)lhs,
+                rhs: rhs as IClothingAbstractInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IClothingAbstractInternalGetter)lhs,
+                rhs: rhs as IClothingAbstractInternalGetter);
+        }
+
+        public virtual int GetHashCode(IClothingAbstractInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.Enchantment_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Enchantment).CombineHashCode(ret);
+            }
+            if (item.EnchantmentPoints_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.EnchantmentPoints).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.BipedFlags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            if (item.MaleBipedModel_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MaleBipedModel).CombineHashCode(ret);
+            }
+            if (item.MaleWorldModel_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MaleWorldModel).CombineHashCode(ret);
+            }
+            if (item.MaleIcon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MaleIcon).CombineHashCode(ret);
+            }
+            if (item.FemaleBipedModel_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FemaleBipedModel).CombineHashCode(ret);
+            }
+            if (item.FemaleWorldModel_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FemaleWorldModel).CombineHashCode(ret);
+            }
+            if (item.FemaleIcon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FemaleIcon).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.BMDTDataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IItemAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (IClothingAbstractInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IClothingAbstractInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IClothingAbstractInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

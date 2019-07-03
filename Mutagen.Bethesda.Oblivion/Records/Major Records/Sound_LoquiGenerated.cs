@@ -126,44 +126,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Sound rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ISoundInternalGetter rhs)) return false;
+            return ((SoundCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Sound rhs)
+        public bool Equals(Sound obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (File_IsSet != rhs.File_IsSet) return false;
-            if (File_IsSet)
-            {
-                if (!string.Equals(this.File, rhs.File)) return false;
-            }
-            if (Data_IsSet != rhs.Data_IsSet) return false;
-            if (Data_IsSet)
-            {
-                if (!object.Equals(this.Data, rhs.Data)) return false;
-            }
-            return true;
+            return ((SoundCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (File_IsSet)
-            {
-                ret = HashHelper.GetHashCode(File).CombineHashCode(ret);
-            }
-            if (Data_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((SoundCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => SoundXmlWriteTranslation.Instance;
@@ -811,6 +785,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this ISoundInternalGetter item,
+            ISoundInternalGetter rhs)
+        {
+            return ((SoundCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1296,6 +1279,73 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISoundInternalGetter lhs,
+            ISoundInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.File_IsSet != rhs.File_IsSet) return false;
+            if (lhs.File_IsSet)
+            {
+                if (!string.Equals(lhs.File, rhs.File)) return false;
+            }
+            if (lhs.Data_IsSet != rhs.Data_IsSet) return false;
+            if (lhs.Data_IsSet)
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISoundInternalGetter)lhs,
+                rhs: rhs as ISoundInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISoundInternalGetter)lhs,
+                rhs: rhs as ISoundInternalGetter);
+        }
+
+        public virtual int GetHashCode(ISoundInternalGetter item)
+        {
+            int ret = 0;
+            if (item.File_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.File).CombineHashCode(ret);
+            }
+            if (item.Data_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Data).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISoundInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISoundInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

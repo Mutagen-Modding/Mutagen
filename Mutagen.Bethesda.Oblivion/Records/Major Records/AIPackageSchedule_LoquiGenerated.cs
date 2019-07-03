@@ -113,34 +113,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is AIPackageSchedule rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IAIPackageScheduleGetter rhs)) return false;
+            return ((AIPackageScheduleCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(AIPackageSchedule rhs)
+        public bool Equals(AIPackageSchedule obj)
         {
-            if (rhs == null) return false;
-            if (this.Month != rhs.Month) return false;
-            if (this.DayOfWeek != rhs.DayOfWeek) return false;
-            if (this.Day != rhs.Day) return false;
-            if (this.Time != rhs.Time) return false;
-            if (this.Duration != rhs.Duration) return false;
-            return true;
+            return ((AIPackageScheduleCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Month).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DayOfWeek).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Day).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Time).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Duration).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((AIPackageScheduleCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => AIPackageScheduleXmlWriteTranslation.Instance;
@@ -696,6 +680,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IAIPackageScheduleGetter item,
+            IAIPackageScheduleGetter rhs)
+        {
+            return ((AIPackageScheduleCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1160,6 +1153,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Time = true;
             mask.Duration = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IAIPackageScheduleGetter lhs,
+            IAIPackageScheduleGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Month != rhs.Month) return false;
+            if (lhs.DayOfWeek != rhs.DayOfWeek) return false;
+            if (lhs.Day != rhs.Day) return false;
+            if (lhs.Time != rhs.Time) return false;
+            if (lhs.Duration != rhs.Duration) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IAIPackageScheduleGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Month).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DayOfWeek).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Day).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Time).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Duration).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

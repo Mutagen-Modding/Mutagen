@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Generation
                     break;
                 case FormIDLinkType.FormIDTypeEnum.EDIDChars:
                     fg.AppendLine($"{errorMaskAccessor} = null;");
-                    fg.AppendLine($"{outItemAccessor.DirectAccess} = new {linkType.TypeName}(HeaderTranslation.ReadNextRecordType(r.Reader));");
+                    fg.AppendLine($"{outItemAccessor.DirectAccess} = new {linkType.TypeName(getter: false)}(HeaderTranslation.ReadNextRecordType(r.Reader));");
                     fg.AppendLine($"return true;");
                     break;
                 default:

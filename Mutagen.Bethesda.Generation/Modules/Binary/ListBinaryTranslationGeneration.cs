@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Generation
         const string AsyncItemKey = "ListAsyncItem";
         const string ThreadKey = "ListThread";
 
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             var list = typeGen as ListType;
             if (!Module.TryGetTypeGeneration(list.SubTypeGeneration.GetType(), out var subTransl))
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Generation
             }
 
             var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
-            return $"{TranslatorName}<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance";
+            return $"{TranslatorName}<{list.SubTypeGeneration.TypeName(getter)}, {subMaskStr}>.Instance";
         }
 
         public override bool IsAsync(TypeGeneration gen, bool read)
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Generation
                 && allowDirectWrite;
 
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{list.SubGetterTypeName}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
+                $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName(getter: true)}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {itemAccessor.PropertyOrDirectAccess}");
@@ -138,14 +138,14 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (allowDirectWrite)
                 {
-                    args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Write");
+                    args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: true)}.Write");
                 }
                 else
                 {
                     args.Add((gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(list.SubTypeGeneration);
-                        gen.AppendLine($"transl: (MutagenWriter subWriter, {list.SubGetterTypeName} subItem{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrorMask" : null)}) =>");
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {list.SubTypeGeneration.TypeName(getter: true)} subItem{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrorMask" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             subTransl.GenerateWrite(
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Generation
                 && (bool)t;
 
             using (var args = new ArgsWrapper(fg,
-                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName}>.Instance.ParseRepeatedItem",
+                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false)}>.Instance.ParseRepeatedItem",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
             {
                 if (listBinaryType == ListBinaryType.Amount)
@@ -274,18 +274,18 @@ namespace Mutagen.Bethesda.Generation
                     if (list.SubTypeGeneration is LoquiType loqui
                         && !loqui.CanStronglyType)
                     {
-                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Parse<{loqui.TypeName}>");
+                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: false)}.Parse<{loqui.TypeName(getter: false)}>");
                     }
                     else
                     {
-                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Parse");
+                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: false)}.Parse");
                     }
                 }
                 else
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName} listSubItem")}{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrMask" : null)}) =>");
+                        gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false)} listSubItem")}{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrMask" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             if (subGenTypes.Count <= 1)

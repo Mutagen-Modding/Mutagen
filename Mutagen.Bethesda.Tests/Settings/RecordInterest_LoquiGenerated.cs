@@ -96,28 +96,18 @@ namespace Mutagen.Bethesda.Tests
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RecordInterest rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRecordInterestGetter rhs)) return false;
+            return ((RecordInterestCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RecordInterest rhs)
+        public bool Equals(RecordInterest obj)
         {
-            if (rhs == null) return false;
-            if (!this.InterestingTypes.SequenceEqual(rhs.InterestingTypes)) return false;
-            if (!this.UninterestingTypes.SequenceEqual(rhs.UninterestingTypes)) return false;
-            return true;
+            return ((RecordInterestCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(InterestingTypes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(UninterestingTypes).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((RecordInterestCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RecordInterestXmlWriteTranslation.Instance;
@@ -483,10 +473,10 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case RecordInterest_FieldIndex.InterestingTypes:
-                    this._InterestingTypes.SetTo((IEnumerable<String>)obj);
+                    this._InterestingTypes.SetTo((SourceSetList<String>)obj);
                     break;
                 case RecordInterest_FieldIndex.UninterestingTypes:
-                    this._UninterestingTypes.SetTo((IEnumerable<String>)obj);
+                    this._UninterestingTypes.SetTo((SourceSetList<String>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -517,10 +507,10 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case RecordInterest_FieldIndex.InterestingTypes:
-                    obj._InterestingTypes.SetTo((IEnumerable<String>)pair.Value);
+                    obj._InterestingTypes.SetTo((SourceSetList<String>)pair.Value);
                     break;
                 case RecordInterest_FieldIndex.UninterestingTypes:
-                    obj._UninterestingTypes.SetTo((IEnumerable<String>)pair.Value);
+                    obj._UninterestingTypes.SetTo((SourceSetList<String>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -618,6 +608,15 @@ namespace Mutagen.Bethesda.Tests
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRecordInterestGetter item,
+            IRecordInterestGetter rhs)
+        {
+            return ((RecordInterestCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1009,6 +1008,29 @@ namespace Mutagen.Bethesda.Tests.Internals
             mask.InterestingTypes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
             mask.UninterestingTypes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRecordInterestGetter lhs,
+            IRecordInterestGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.InterestingTypes.SequenceEqual(rhs.InterestingTypes)) return false;
+            if (!lhs.UninterestingTypes.SequenceEqual(rhs.UninterestingTypes)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IRecordInterestGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.InterestingTypes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.UninterestingTypes).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

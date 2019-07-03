@@ -177,60 +177,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Rank rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRankGetter rhs)) return false;
+            return ((RankCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Rank rhs)
+        public bool Equals(Rank obj)
         {
-            if (rhs == null) return false;
-            if (RankNumber_IsSet != rhs.RankNumber_IsSet) return false;
-            if (RankNumber_IsSet)
-            {
-                if (this.RankNumber != rhs.RankNumber) return false;
-            }
-            if (MaleName_IsSet != rhs.MaleName_IsSet) return false;
-            if (MaleName_IsSet)
-            {
-                if (!string.Equals(this.MaleName, rhs.MaleName)) return false;
-            }
-            if (FemaleName_IsSet != rhs.FemaleName_IsSet) return false;
-            if (FemaleName_IsSet)
-            {
-                if (!string.Equals(this.FemaleName, rhs.FemaleName)) return false;
-            }
-            if (Insignia_IsSet != rhs.Insignia_IsSet) return false;
-            if (Insignia_IsSet)
-            {
-                if (!string.Equals(this.Insignia, rhs.Insignia)) return false;
-            }
-            return true;
+            return ((RankCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (RankNumber_IsSet)
-            {
-                ret = HashHelper.GetHashCode(RankNumber).CombineHashCode(ret);
-            }
-            if (MaleName_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MaleName).CombineHashCode(ret);
-            }
-            if (FemaleName_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FemaleName).CombineHashCode(ret);
-            }
-            if (Insignia_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Insignia).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((RankCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RankXmlWriteTranslation.Instance;
@@ -836,6 +794,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IRankGetter item,
+            IRankGetter rhs)
+        {
+            return ((RankCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1336,6 +1303,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.FemaleName = item.FemaleName_IsSet;
             mask.Insignia = item.Insignia_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRankGetter lhs,
+            IRankGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.RankNumber_IsSet != rhs.RankNumber_IsSet) return false;
+            if (lhs.RankNumber_IsSet)
+            {
+                if (lhs.RankNumber != rhs.RankNumber) return false;
+            }
+            if (lhs.MaleName_IsSet != rhs.MaleName_IsSet) return false;
+            if (lhs.MaleName_IsSet)
+            {
+                if (!string.Equals(lhs.MaleName, rhs.MaleName)) return false;
+            }
+            if (lhs.FemaleName_IsSet != rhs.FemaleName_IsSet) return false;
+            if (lhs.FemaleName_IsSet)
+            {
+                if (!string.Equals(lhs.FemaleName, rhs.FemaleName)) return false;
+            }
+            if (lhs.Insignia_IsSet != rhs.Insignia_IsSet) return false;
+            if (lhs.Insignia_IsSet)
+            {
+                if (!string.Equals(lhs.Insignia, rhs.Insignia)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IRankGetter item)
+        {
+            int ret = 0;
+            if (item.RankNumber_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.RankNumber).CombineHashCode(ret);
+            }
+            if (item.MaleName_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MaleName).CombineHashCode(ret);
+            }
+            if (item.FemaleName_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FemaleName).CombineHashCode(ret);
+            }
+            if (item.Insignia_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Insignia).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

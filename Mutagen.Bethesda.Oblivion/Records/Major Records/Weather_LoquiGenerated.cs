@@ -604,139 +604,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Weather rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IWeatherInternalGetter rhs)) return false;
+            return ((WeatherCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Weather rhs)
+        public bool Equals(Weather obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (TextureLowerLayer_IsSet != rhs.TextureLowerLayer_IsSet) return false;
-            if (TextureLowerLayer_IsSet)
-            {
-                if (!string.Equals(this.TextureLowerLayer, rhs.TextureLowerLayer)) return false;
-            }
-            if (TextureUpperLayer_IsSet != rhs.TextureUpperLayer_IsSet) return false;
-            if (TextureUpperLayer_IsSet)
-            {
-                if (!string.Equals(this.TextureUpperLayer, rhs.TextureUpperLayer)) return false;
-            }
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (WeatherTypes.HasBeenSet != rhs.WeatherTypes.HasBeenSet) return false;
-            if (WeatherTypes.HasBeenSet)
-            {
-                if (!this.WeatherTypes.SequenceEqual(rhs.WeatherTypes)) return false;
-            }
-            if (!this.FogDayNear.EqualsWithin(rhs.FogDayNear)) return false;
-            if (!this.FogDayFar.EqualsWithin(rhs.FogDayFar)) return false;
-            if (!this.FogNightNear.EqualsWithin(rhs.FogNightNear)) return false;
-            if (!this.FogNightFar.EqualsWithin(rhs.FogNightFar)) return false;
-            if (!this.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed)) return false;
-            if (!this.HdrBlurRadius.EqualsWithin(rhs.HdrBlurRadius)) return false;
-            if (!this.HdrBlurPasses.EqualsWithin(rhs.HdrBlurPasses)) return false;
-            if (!this.HdrEmissiveMult.EqualsWithin(rhs.HdrEmissiveMult)) return false;
-            if (!this.HdrTargetLum.EqualsWithin(rhs.HdrTargetLum)) return false;
-            if (!this.HdrUpperLumClamp.EqualsWithin(rhs.HdrUpperLumClamp)) return false;
-            if (!this.HdrBrightScale.EqualsWithin(rhs.HdrBrightScale)) return false;
-            if (!this.HdrBrightClamp.EqualsWithin(rhs.HdrBrightClamp)) return false;
-            if (!this.HdrLumRampNoTex.EqualsWithin(rhs.HdrLumRampNoTex)) return false;
-            if (!this.HdrLumRampMin.EqualsWithin(rhs.HdrLumRampMin)) return false;
-            if (!this.HdrLumRampMax.EqualsWithin(rhs.HdrLumRampMax)) return false;
-            if (!this.HdrSunlightDimmer.EqualsWithin(rhs.HdrSunlightDimmer)) return false;
-            if (!this.HdrGrassDimmer.EqualsWithin(rhs.HdrGrassDimmer)) return false;
-            if (!this.HdrTreeDimmer.EqualsWithin(rhs.HdrTreeDimmer)) return false;
-            if (this.WindSpeed != rhs.WindSpeed) return false;
-            if (this.CloudSpeedLower != rhs.CloudSpeedLower) return false;
-            if (this.CloudSpeedUpper != rhs.CloudSpeedUpper) return false;
-            if (this.TransDelta != rhs.TransDelta) return false;
-            if (this.SunGlare != rhs.SunGlare) return false;
-            if (this.SunDamage != rhs.SunDamage) return false;
-            if (this.PrecipitationBeginFadeIn != rhs.PrecipitationBeginFadeIn) return false;
-            if (this.PrecipitationEndFadeOut != rhs.PrecipitationEndFadeOut) return false;
-            if (this.ThunderLightningBeginFadeIn != rhs.ThunderLightningBeginFadeIn) return false;
-            if (this.ThunderLightningEndFadeOut != rhs.ThunderLightningEndFadeOut) return false;
-            if (this.ThunderLightningFrequency != rhs.ThunderLightningFrequency) return false;
-            if (this.Classification != rhs.Classification) return false;
-            if (!this.LightningColor.ColorOnlyEquals(rhs.LightningColor)) return false;
-            if (Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
-            if (Sounds.HasBeenSet)
-            {
-                if (!this.Sounds.SequenceEqual(rhs.Sounds)) return false;
-            }
-            if (this.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
-            if (this.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((WeatherCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (TextureLowerLayer_IsSet)
-            {
-                ret = HashHelper.GetHashCode(TextureLowerLayer).CombineHashCode(ret);
-            }
-            if (TextureUpperLayer_IsSet)
-            {
-                ret = HashHelper.GetHashCode(TextureUpperLayer).CombineHashCode(ret);
-            }
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (WeatherTypes.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(WeatherTypes).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(FogDayNear).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FogDayFar).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FogNightNear).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FogNightFar).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrEyeAdaptSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrBlurRadius).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrBlurPasses).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrEmissiveMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrTargetLum).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrUpperLumClamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrBrightScale).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrBrightClamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrLumRampNoTex).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrLumRampMin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrLumRampMax).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrSunlightDimmer).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrGrassDimmer).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HdrTreeDimmer).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(WindSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CloudSpeedLower).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CloudSpeedUpper).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(TransDelta).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SunGlare).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SunDamage).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PrecipitationBeginFadeIn).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PrecipitationEndFadeOut).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ThunderLightningBeginFadeIn).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ThunderLightningEndFadeOut).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ThunderLightningFrequency).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Classification).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LightningColor).CombineHashCode(ret);
-            if (Sounds.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Sounds).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(FNAMDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HNAMDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((WeatherCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => WeatherXmlWriteTranslation.Instance;
@@ -1594,7 +1473,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case Weather_FieldIndex.WeatherTypes:
-                    this._WeatherTypes.SetTo((IEnumerable<WeatherType>)obj);
+                    this._WeatherTypes.SetTo((SourceSetList<WeatherType>)obj);
                     break;
                 case Weather_FieldIndex.FogDayNear:
                     this.FogDayNear = (Single)obj;
@@ -1690,7 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LightningColor = (Color)obj;
                     break;
                 case Weather_FieldIndex.Sounds:
-                    this._Sounds.SetTo((IEnumerable<WeatherSound>)obj);
+                    this._Sounds.SetTo((SourceSetList<WeatherSound>)obj);
                     break;
                 case Weather_FieldIndex.FNAMDataTypeState:
                     this.FNAMDataTypeState = (Weather.FNAMDataType)obj;
@@ -1740,7 +1619,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case Weather_FieldIndex.WeatherTypes:
-                    obj._WeatherTypes.SetTo((IEnumerable<WeatherType>)pair.Value);
+                    obj._WeatherTypes.SetTo((SourceSetList<WeatherType>)pair.Value);
                     break;
                 case Weather_FieldIndex.FogDayNear:
                     obj.FogDayNear = (Single)pair.Value;
@@ -1836,7 +1715,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LightningColor = (Color)pair.Value;
                     break;
                 case Weather_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((IEnumerable<WeatherSound>)pair.Value);
+                    obj._Sounds.SetTo((SourceSetList<WeatherSound>)pair.Value);
                     break;
                 case Weather_FieldIndex.FNAMDataTypeState:
                     obj.FNAMDataTypeState = (Weather.FNAMDataType)pair.Value;
@@ -2193,6 +2072,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IWeatherInternalGetter item,
+            IWeatherInternalGetter rhs)
+        {
+            return ((WeatherCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -4042,6 +3930,168 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IWeatherInternalGetter lhs,
+            IWeatherInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.TextureLowerLayer_IsSet != rhs.TextureLowerLayer_IsSet) return false;
+            if (lhs.TextureLowerLayer_IsSet)
+            {
+                if (!string.Equals(lhs.TextureLowerLayer, rhs.TextureLowerLayer)) return false;
+            }
+            if (lhs.TextureUpperLayer_IsSet != rhs.TextureUpperLayer_IsSet) return false;
+            if (lhs.TextureUpperLayer_IsSet)
+            {
+                if (!string.Equals(lhs.TextureUpperLayer, rhs.TextureUpperLayer)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.WeatherTypes.HasBeenSet != rhs.WeatherTypes.HasBeenSet) return false;
+            if (lhs.WeatherTypes.HasBeenSet)
+            {
+                if (!lhs.WeatherTypes.SequenceEqual(rhs.WeatherTypes)) return false;
+            }
+            if (!lhs.FogDayNear.EqualsWithin(rhs.FogDayNear)) return false;
+            if (!lhs.FogDayFar.EqualsWithin(rhs.FogDayFar)) return false;
+            if (!lhs.FogNightNear.EqualsWithin(rhs.FogNightNear)) return false;
+            if (!lhs.FogNightFar.EqualsWithin(rhs.FogNightFar)) return false;
+            if (!lhs.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed)) return false;
+            if (!lhs.HdrBlurRadius.EqualsWithin(rhs.HdrBlurRadius)) return false;
+            if (!lhs.HdrBlurPasses.EqualsWithin(rhs.HdrBlurPasses)) return false;
+            if (!lhs.HdrEmissiveMult.EqualsWithin(rhs.HdrEmissiveMult)) return false;
+            if (!lhs.HdrTargetLum.EqualsWithin(rhs.HdrTargetLum)) return false;
+            if (!lhs.HdrUpperLumClamp.EqualsWithin(rhs.HdrUpperLumClamp)) return false;
+            if (!lhs.HdrBrightScale.EqualsWithin(rhs.HdrBrightScale)) return false;
+            if (!lhs.HdrBrightClamp.EqualsWithin(rhs.HdrBrightClamp)) return false;
+            if (!lhs.HdrLumRampNoTex.EqualsWithin(rhs.HdrLumRampNoTex)) return false;
+            if (!lhs.HdrLumRampMin.EqualsWithin(rhs.HdrLumRampMin)) return false;
+            if (!lhs.HdrLumRampMax.EqualsWithin(rhs.HdrLumRampMax)) return false;
+            if (!lhs.HdrSunlightDimmer.EqualsWithin(rhs.HdrSunlightDimmer)) return false;
+            if (!lhs.HdrGrassDimmer.EqualsWithin(rhs.HdrGrassDimmer)) return false;
+            if (!lhs.HdrTreeDimmer.EqualsWithin(rhs.HdrTreeDimmer)) return false;
+            if (lhs.WindSpeed != rhs.WindSpeed) return false;
+            if (lhs.CloudSpeedLower != rhs.CloudSpeedLower) return false;
+            if (lhs.CloudSpeedUpper != rhs.CloudSpeedUpper) return false;
+            if (lhs.TransDelta != rhs.TransDelta) return false;
+            if (lhs.SunGlare != rhs.SunGlare) return false;
+            if (lhs.SunDamage != rhs.SunDamage) return false;
+            if (lhs.PrecipitationBeginFadeIn != rhs.PrecipitationBeginFadeIn) return false;
+            if (lhs.PrecipitationEndFadeOut != rhs.PrecipitationEndFadeOut) return false;
+            if (lhs.ThunderLightningBeginFadeIn != rhs.ThunderLightningBeginFadeIn) return false;
+            if (lhs.ThunderLightningEndFadeOut != rhs.ThunderLightningEndFadeOut) return false;
+            if (lhs.ThunderLightningFrequency != rhs.ThunderLightningFrequency) return false;
+            if (lhs.Classification != rhs.Classification) return false;
+            if (!lhs.LightningColor.ColorOnlyEquals(rhs.LightningColor)) return false;
+            if (lhs.Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
+            if (lhs.Sounds.HasBeenSet)
+            {
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
+            }
+            if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
+            if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IWeatherInternalGetter)lhs,
+                rhs: rhs as IWeatherInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IWeatherInternalGetter)lhs,
+                rhs: rhs as IWeatherInternalGetter);
+        }
+
+        public virtual int GetHashCode(IWeatherInternalGetter item)
+        {
+            int ret = 0;
+            if (item.TextureLowerLayer_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.TextureLowerLayer).CombineHashCode(ret);
+            }
+            if (item.TextureUpperLayer_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.TextureUpperLayer).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.WeatherTypes.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.WeatherTypes).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.FogDayNear).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FogDayFar).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FogNightNear).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FogNightFar).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrEyeAdaptSpeed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrBlurRadius).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrBlurPasses).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrEmissiveMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrTargetLum).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrUpperLumClamp).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrBrightScale).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrBrightClamp).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrLumRampNoTex).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrLumRampMin).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrLumRampMax).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrSunlightDimmer).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrGrassDimmer).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrTreeDimmer).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.WindSpeed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CloudSpeedLower).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CloudSpeedUpper).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TransDelta).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SunGlare).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SunDamage).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PrecipitationBeginFadeIn).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PrecipitationEndFadeOut).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ThunderLightningBeginFadeIn).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ThunderLightningEndFadeOut).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ThunderLightningFrequency).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Classification).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LightningColor).CombineHashCode(ret);
+            if (item.Sounds.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Sounds).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.FNAMDataTypeState).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HNAMDataTypeState).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IWeatherInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IWeatherInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

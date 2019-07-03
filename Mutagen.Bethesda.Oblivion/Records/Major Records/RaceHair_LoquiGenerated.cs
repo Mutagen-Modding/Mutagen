@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Hair> IRaceHair.Male_Property => this.Male_Property;
         IHairInternalGetter IRaceHairGetter.Male => this.Male_Property.Item;
-        IFormIDLinkGetter<Hair> IRaceHairGetter.Male_Property => this.Male_Property;
+        IFormIDLinkGetter<IHairInternalGetter> IRaceHairGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
         public IFormIDLink<Hair> Female_Property { get; } = new FormIDLink<Hair>();
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Hair> IRaceHair.Female_Property => this.Female_Property;
         IHairInternalGetter IRaceHairGetter.Female => this.Female_Property.Item;
-        IFormIDLinkGetter<Hair> IRaceHairGetter.Female_Property => this.Female_Property;
+        IFormIDLinkGetter<IHairInternalGetter> IRaceHairGetter.Female_Property => this.Female_Property;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceHairGetter)rhs, include);
@@ -89,28 +89,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RaceHair rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRaceHairGetter rhs)) return false;
+            return ((RaceHairCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RaceHair rhs)
+        public bool Equals(RaceHair obj)
         {
-            if (rhs == null) return false;
-            if (!this.Male_Property.Equals(rhs.Male_Property)) return false;
-            if (!this.Female_Property.Equals(rhs.Female_Property)) return false;
-            return true;
+            return ((RaceHairCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Male).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Female).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((RaceHairCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RaceHairXmlWriteTranslation.Instance;
@@ -548,12 +538,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Male
         IHairInternalGetter Male { get; }
-        IFormIDLinkGetter<Hair> Male_Property { get; }
+        IFormIDLinkGetter<IHairInternalGetter> Male_Property { get; }
 
         #endregion
         #region Female
         IHairInternalGetter Female { get; }
-        IFormIDLinkGetter<Hair> Female_Property { get; }
+        IFormIDLinkGetter<IHairInternalGetter> Female_Property { get; }
 
         #endregion
 
@@ -620,6 +610,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRaceHairGetter item,
+            IRaceHairGetter rhs)
+        {
+            return ((RaceHairCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -978,6 +977,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Male = true;
             mask.Female = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRaceHairGetter lhs,
+            IRaceHairGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Male_Property.Equals(rhs.Male_Property)) return false;
+            if (!lhs.Female_Property.Equals(rhs.Female_Property)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IRaceHairGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Male).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Female).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

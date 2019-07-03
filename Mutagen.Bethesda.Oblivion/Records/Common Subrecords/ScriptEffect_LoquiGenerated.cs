@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Script> IScriptEffect.Script_Property => this.Script_Property;
         IScriptInternalGetter IScriptEffectGetter.Script => this.Script_Property.Item;
-        IFormIDLinkGetter<Script> IScriptEffectGetter.Script_Property => this.Script_Property;
+        IFormIDLinkGetter<IScriptInternalGetter> IScriptEffectGetter.Script_Property => this.Script_Property;
         #endregion
         #region MagicSchool
         private MagicSchool _MagicSchool;
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEDIDLink<MagicEffect> IScriptEffect.VisualEffect_Property => this.VisualEffect_Property;
         IMagicEffectInternalGetter IScriptEffectGetter.VisualEffect => this.VisualEffect_Property.Item;
-        IEDIDLinkGetter<MagicEffect> IScriptEffectGetter.VisualEffect_Property => this.VisualEffect_Property;
+        IEDIDLinkGetter<IMagicEffectInternalGetter> IScriptEffectGetter.VisualEffect_Property => this.VisualEffect_Property;
         #endregion
         #region Flags
         private ScriptEffect.Flag _Flags;
@@ -161,43 +161,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ScriptEffect rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IScriptEffectInternalGetter rhs)) return false;
+            return ((ScriptEffectCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptEffect rhs)
+        public bool Equals(ScriptEffect obj)
         {
-            if (rhs == null) return false;
-            if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
-            if (this.MagicSchool != rhs.MagicSchool) return false;
-            if (!this.VisualEffect_Property.Equals(rhs.VisualEffect_Property)) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (this.SCITDataTypeState != rhs.SCITDataTypeState) return false;
-            return true;
+            return ((ScriptEffectCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MagicSchool).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(VisualEffect).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(SCITDataTypeState).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((ScriptEffectCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => ScriptEffectXmlWriteTranslation.Instance;
@@ -779,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Script
         IScriptInternalGetter Script { get; }
-        IFormIDLinkGetter<Script> Script_Property { get; }
+        IFormIDLinkGetter<IScriptInternalGetter> Script_Property { get; }
 
         #endregion
         #region MagicSchool
@@ -788,7 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region VisualEffect
         IMagicEffectInternalGetter VisualEffect { get; }
-        IEDIDLinkGetter<MagicEffect> VisualEffect_Property { get; }
+        IEDIDLinkGetter<IMagicEffectInternalGetter> VisualEffect_Property { get; }
 
         #endregion
         #region Flags
@@ -873,6 +848,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IScriptEffectInternalGetter item,
+            IScriptEffectInternalGetter rhs)
+        {
+            return ((ScriptEffectCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1370,6 +1354,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Name = item.Name_IsSet;
             mask.SCITDataTypeState = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IScriptEffectInternalGetter lhs,
+            IScriptEffectInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            if (lhs.MagicSchool != rhs.MagicSchool) return false;
+            if (!lhs.VisualEffect_Property.Equals(rhs.VisualEffect_Property)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.SCITDataTypeState != rhs.SCITDataTypeState) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IScriptEffectInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MagicSchool).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.VisualEffect).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.SCITDataTypeState).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

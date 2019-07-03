@@ -128,42 +128,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is GenderedBodyData rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IGenderedBodyDataGetter rhs)) return false;
+            return ((GenderedBodyDataCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(GenderedBodyData rhs)
+        public bool Equals(GenderedBodyData obj)
         {
-            if (rhs == null) return false;
-            if (Male_IsSet != rhs.Male_IsSet) return false;
-            if (Male_IsSet)
-            {
-                if (!object.Equals(this.Male, rhs.Male)) return false;
-            }
-            if (Female_IsSet != rhs.Female_IsSet) return false;
-            if (Female_IsSet)
-            {
-                if (!object.Equals(this.Female, rhs.Female)) return false;
-            }
-            return true;
+            return ((GenderedBodyDataCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Male_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Male).CombineHashCode(ret);
-            }
-            if (Female_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Female).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((GenderedBodyDataCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => GenderedBodyDataXmlWriteTranslation.Instance;
@@ -725,6 +701,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IGenderedBodyDataGetter item,
+            IGenderedBodyDataGetter rhs)
+        {
+            return ((GenderedBodyDataCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1179,6 +1164,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Male = new MaskItem<bool, BodyData_Mask<bool>>(item.Male_IsSet, item.Male.GetHasBeenSetMask());
             mask.Female = new MaskItem<bool, BodyData_Mask<bool>>(item.Female_IsSet, item.Female.GetHasBeenSetMask());
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IGenderedBodyDataGetter lhs,
+            IGenderedBodyDataGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Male_IsSet != rhs.Male_IsSet) return false;
+            if (lhs.Male_IsSet)
+            {
+                if (!object.Equals(lhs.Male, rhs.Male)) return false;
+            }
+            if (lhs.Female_IsSet != rhs.Female_IsSet) return false;
+            if (lhs.Female_IsSet)
+            {
+                if (!object.Equals(lhs.Female, rhs.Female)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IGenderedBodyDataGetter item)
+        {
+            int ret = 0;
+            if (item.Male_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Male).CombineHashCode(ret);
+            }
+            if (item.Female_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Female).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

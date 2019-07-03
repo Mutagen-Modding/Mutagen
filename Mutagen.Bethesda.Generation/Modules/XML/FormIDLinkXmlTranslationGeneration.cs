@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Generation
             FormIDLinkType linkType = typeGen as FormIDLinkType;
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor.DirectAccess}{this.TypeName}XmlTranslation.Instance.Parse",
-                $".Bubble((o) => new {linkType.TypeName}(o.Value))"))
+                $".Bubble((o) => new {linkType.TypeName(getter: false)}(o.Value))"))
             {
                 args.Add(nodeAccessor.DirectAccess);
                 args.Add($"item: out {outItemAccessor}");

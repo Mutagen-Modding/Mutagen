@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Sound> IRegionSound.Sound_Property => this.Sound_Property;
         ISoundInternalGetter IRegionSoundGetter.Sound => this.Sound_Property.Item;
-        IFormIDLinkGetter<Sound> IRegionSoundGetter.Sound_Property => this.Sound_Property;
+        IFormIDLinkGetter<ISoundInternalGetter> IRegionSoundGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region Flags
         private RegionSound.Flag _Flags;
@@ -102,30 +102,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RegionSound rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRegionSoundGetter rhs)) return false;
+            return ((RegionSoundCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RegionSound rhs)
+        public bool Equals(RegionSound obj)
         {
-            if (rhs == null) return false;
-            if (!this.Sound_Property.Equals(rhs.Sound_Property)) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (!this.Chance.EqualsWithin(rhs.Chance)) return false;
-            return true;
+            return ((RegionSoundCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Sound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Chance).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((RegionSoundCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RegionSoundXmlWriteTranslation.Instance;
@@ -593,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Sound
         ISoundInternalGetter Sound { get; }
-        IFormIDLinkGetter<Sound> Sound_Property { get; }
+        IFormIDLinkGetter<ISoundInternalGetter> Sound_Property { get; }
 
         #endregion
         #region Flags
@@ -668,6 +656,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRegionSoundGetter item,
+            IRegionSoundGetter rhs)
+        {
+            return ((RegionSoundCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1060,6 +1057,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Flags = true;
             mask.Chance = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRegionSoundGetter lhs,
+            IRegionSoundGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Sound_Property.Equals(rhs.Sound_Property)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.Chance.EqualsWithin(rhs.Chance)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IRegionSoundGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Sound).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Chance).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

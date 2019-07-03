@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Script> ISigilStone.Script_Property => this.Script_Property;
         IScriptInternalGetter ISigilStoneGetter.Script => this.Script_Property.Item;
-        IFormIDSetLinkGetter<Script> ISigilStoneGetter.Script_Property => this.Script_Property;
+        IFormIDSetLinkGetter<IScriptInternalGetter> ISigilStoneGetter.Script_Property => this.Script_Property;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -229,79 +229,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is SigilStone rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ISigilStoneInternalGetter rhs)) return false;
+            return ((SigilStoneCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(SigilStone rhs)
+        public bool Equals(SigilStone obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (Script_Property.HasBeenSet)
-            {
-                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
-            if (Effects.HasBeenSet)
-            {
-                if (!this.Effects.SequenceEqual(rhs.Effects)) return false;
-            }
-            if (this.Uses != rhs.Uses) return false;
-            if (this.Value != rhs.Value) return false;
-            if (!this.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((SigilStoneCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            if (Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
-            }
-            if (Effects.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Effects).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Uses).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((SigilStoneCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => SigilStoneXmlWriteTranslation.Instance;
@@ -891,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Script_Property.Set((IFormIDSetLink<Script>)obj);
                     break;
                 case SigilStone_FieldIndex.Effects:
-                    this._Effects.SetTo((IEnumerable<Effect>)obj);
+                    this._Effects.SetTo((SourceSetList<Effect>)obj);
                     break;
                 case SigilStone_FieldIndex.Uses:
                     this.Uses = (Byte)obj;
@@ -947,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
                     break;
                 case SigilStone_FieldIndex.Effects:
-                    obj._Effects.SetTo((IEnumerable<Effect>)pair.Value);
+                    obj._Effects.SetTo((SourceSetList<Effect>)pair.Value);
                     break;
                 case SigilStone_FieldIndex.Uses:
                     obj.Uses = (Byte)pair.Value;
@@ -1039,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         IScriptInternalGetter Script { get; }
-        IFormIDSetLinkGetter<Script> Script_Property { get; }
+        IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property { get; }
 
         #endregion
         #region Effects
@@ -1132,6 +1071,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ISigilStoneInternalGetter item,
+            ISigilStoneInternalGetter rhs)
+        {
+            return ((SigilStoneCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1931,6 +1879,122 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISigilStoneInternalGetter lhs,
+            ISigilStoneInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
+            if (lhs.Effects.HasBeenSet)
+            {
+                if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            }
+            if (lhs.Uses != rhs.Uses) return false;
+            if (lhs.Value != rhs.Value) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IItemAbstractInternalGetter lhs,
+            IItemAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISigilStoneInternalGetter)lhs,
+                rhs: rhs as ISigilStoneInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISigilStoneInternalGetter)lhs,
+                rhs: rhs as ISigilStoneInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISigilStoneInternalGetter)lhs,
+                rhs: rhs as ISigilStoneInternalGetter);
+        }
+
+        public virtual int GetHashCode(ISigilStoneInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.Effects.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Effects).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Uses).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IItemAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (ISigilStoneInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISigilStoneInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISigilStoneInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

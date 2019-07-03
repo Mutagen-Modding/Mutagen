@@ -134,43 +134,18 @@ namespace Mutagen.Bethesda.Tests
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Target rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ITargetGetter rhs)) return false;
+            return ((TargetCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Target rhs)
+        public bool Equals(Target obj)
         {
-            if (rhs == null) return false;
-            if (this.Do != rhs.Do) return false;
-            if (!string.Equals(this.Path, rhs.Path)) return false;
-            if (this.NumMasters != rhs.NumMasters) return false;
-            if (this.GameMode != rhs.GameMode) return false;
-            if (ExpectedBaseGroupCount_IsSet != rhs.ExpectedBaseGroupCount_IsSet) return false;
-            if (ExpectedBaseGroupCount_IsSet)
-            {
-                if (this.ExpectedBaseGroupCount != rhs.ExpectedBaseGroupCount) return false;
-            }
-            if (!object.Equals(this.Interest, rhs.Interest)) return false;
-            return true;
+            return ((TargetCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Do).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Path).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(NumMasters).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(GameMode).CombineHashCode(ret);
-            if (ExpectedBaseGroupCount_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ExpectedBaseGroupCount).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Interest).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((TargetCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => TargetXmlWriteTranslation.Instance;
@@ -747,6 +722,15 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
+        public static bool Equals(
+            this ITargetGetter item,
+            ITargetGetter rhs)
+        {
+            return ((TargetCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1285,6 +1269,44 @@ namespace Mutagen.Bethesda.Tests.Internals
             mask.ExpectedBaseGroupCount = item.ExpectedBaseGroupCount_IsSet;
             mask.Interest = new MaskItem<bool, RecordInterest_Mask<bool>>(true, item.Interest.GetHasBeenSetMask());
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ITargetGetter lhs,
+            ITargetGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Do != rhs.Do) return false;
+            if (!string.Equals(lhs.Path, rhs.Path)) return false;
+            if (lhs.NumMasters != rhs.NumMasters) return false;
+            if (lhs.GameMode != rhs.GameMode) return false;
+            if (lhs.ExpectedBaseGroupCount_IsSet != rhs.ExpectedBaseGroupCount_IsSet) return false;
+            if (lhs.ExpectedBaseGroupCount_IsSet)
+            {
+                if (lhs.ExpectedBaseGroupCount != rhs.ExpectedBaseGroupCount) return false;
+            }
+            if (!object.Equals(lhs.Interest, rhs.Interest)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(ITargetGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Do).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Path).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.NumMasters).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.GameMode).CombineHashCode(ret);
+            if (item.ExpectedBaseGroupCount_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ExpectedBaseGroupCount).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Interest).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

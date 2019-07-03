@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Script> IActivator.Script_Property => this.Script_Property;
         IScriptInternalGetter IActivatorGetter.Script => this.Script_Property.Item;
-        IFormIDSetLinkGetter<Script> IActivatorGetter.Script_Property => this.Script_Property;
+        IFormIDSetLinkGetter<IScriptInternalGetter> IActivatorGetter.Script_Property => this.Script_Property;
         #endregion
         #region Sound
         public IFormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Sound> IActivator.Sound_Property => this.Sound_Property;
         ISoundInternalGetter IActivatorGetter.Sound => this.Sound_Property.Item;
-        IFormIDSetLinkGetter<Sound> IActivatorGetter.Sound_Property => this.Sound_Property;
+        IFormIDSetLinkGetter<ISoundInternalGetter> IActivatorGetter.Sound_Property => this.Sound_Property;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActivatorInternalGetter)rhs, include);
@@ -144,62 +144,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Activator rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IActivatorInternalGetter rhs)) return false;
+            return ((ActivatorCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Activator rhs)
+        public bool Equals(Activator obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (Script_Property.HasBeenSet)
-            {
-                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (Sound_Property.HasBeenSet != rhs.Sound_Property.HasBeenSet) return false;
-            if (Sound_Property.HasBeenSet)
-            {
-                if (!this.Sound_Property.Equals(rhs.Sound_Property)) return false;
-            }
-            return true;
+            return ((ActivatorCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
-            }
-            if (Sound_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Sound).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((ActivatorCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ActivatorXmlWriteTranslation.Instance;
@@ -824,12 +780,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         IScriptInternalGetter Script { get; }
-        IFormIDSetLinkGetter<Script> Script_Property { get; }
+        IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property { get; }
 
         #endregion
         #region Sound
         ISoundInternalGetter Sound { get; }
-        IFormIDSetLinkGetter<Sound> Sound_Property { get; }
+        IFormIDSetLinkGetter<ISoundInternalGetter> Sound_Property { get; }
 
         #endregion
 
@@ -903,6 +859,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IActivatorInternalGetter item,
+            IActivatorInternalGetter rhs)
+        {
+            return ((ActivatorCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1469,6 +1434,91 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IActivatorInternalGetter lhs,
+            IActivatorInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Sound_Property.HasBeenSet != rhs.Sound_Property.HasBeenSet) return false;
+            if (lhs.Sound_Property.HasBeenSet)
+            {
+                if (!lhs.Sound_Property.Equals(rhs.Sound_Property)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IActivatorInternalGetter)lhs,
+                rhs: rhs as IActivatorInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IActivatorInternalGetter)lhs,
+                rhs: rhs as IActivatorInternalGetter);
+        }
+
+        public virtual int GetHashCode(IActivatorInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.Sound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Sound).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IActivatorInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IActivatorInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

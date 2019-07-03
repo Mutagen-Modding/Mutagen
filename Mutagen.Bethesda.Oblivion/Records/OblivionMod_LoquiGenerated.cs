@@ -536,145 +536,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is OblivionMod rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IOblivionModGetter rhs)) return false;
+            return ((OblivionModCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(OblivionMod rhs)
+        public bool Equals(OblivionMod obj)
         {
-            if (rhs == null) return false;
-            if (ModHeader_IsSet != rhs.ModHeader_IsSet) return false;
-            if (ModHeader_IsSet)
-            {
-                if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
-            }
-            if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
-            if (!object.Equals(this.Globals, rhs.Globals)) return false;
-            if (!object.Equals(this.Classes, rhs.Classes)) return false;
-            if (!object.Equals(this.Factions, rhs.Factions)) return false;
-            if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
-            if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
-            if (!object.Equals(this.Races, rhs.Races)) return false;
-            if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
-            if (!object.Equals(this.Skills, rhs.Skills)) return false;
-            if (!object.Equals(this.MagicEffects, rhs.MagicEffects)) return false;
-            if (!object.Equals(this.Scripts, rhs.Scripts)) return false;
-            if (!object.Equals(this.LandTextures, rhs.LandTextures)) return false;
-            if (!object.Equals(this.Enchantments, rhs.Enchantments)) return false;
-            if (!object.Equals(this.Spells, rhs.Spells)) return false;
-            if (!object.Equals(this.Birthsigns, rhs.Birthsigns)) return false;
-            if (!object.Equals(this.Activators, rhs.Activators)) return false;
-            if (!object.Equals(this.AlchemicalApparatus, rhs.AlchemicalApparatus)) return false;
-            if (!object.Equals(this.Armors, rhs.Armors)) return false;
-            if (!object.Equals(this.Books, rhs.Books)) return false;
-            if (!object.Equals(this.Clothes, rhs.Clothes)) return false;
-            if (!object.Equals(this.Containers, rhs.Containers)) return false;
-            if (!object.Equals(this.Doors, rhs.Doors)) return false;
-            if (!object.Equals(this.Ingredients, rhs.Ingredients)) return false;
-            if (!object.Equals(this.Lights, rhs.Lights)) return false;
-            if (!object.Equals(this.Miscellaneous, rhs.Miscellaneous)) return false;
-            if (!object.Equals(this.Statics, rhs.Statics)) return false;
-            if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
-            if (!object.Equals(this.Trees, rhs.Trees)) return false;
-            if (!object.Equals(this.Flora, rhs.Flora)) return false;
-            if (!object.Equals(this.Furnature, rhs.Furnature)) return false;
-            if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
-            if (!object.Equals(this.Ammo, rhs.Ammo)) return false;
-            if (!object.Equals(this.NPCs, rhs.NPCs)) return false;
-            if (!object.Equals(this.Creatures, rhs.Creatures)) return false;
-            if (!object.Equals(this.LeveledCreatures, rhs.LeveledCreatures)) return false;
-            if (!object.Equals(this.SoulGems, rhs.SoulGems)) return false;
-            if (!object.Equals(this.Keys, rhs.Keys)) return false;
-            if (!object.Equals(this.Potions, rhs.Potions)) return false;
-            if (!object.Equals(this.Subspaces, rhs.Subspaces)) return false;
-            if (!object.Equals(this.SigilStones, rhs.SigilStones)) return false;
-            if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
-            if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
-            if (!object.Equals(this.Climates, rhs.Climates)) return false;
-            if (!object.Equals(this.Regions, rhs.Regions)) return false;
-            if (!object.Equals(this.Cells, rhs.Cells)) return false;
-            if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
-            if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
-            if (!object.Equals(this.Quests, rhs.Quests)) return false;
-            if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
-            if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
-            if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
-            if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
-            if (!object.Equals(this.LeveledSpells, rhs.LeveledSpells)) return false;
-            if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
-            if (!object.Equals(this.Waters, rhs.Waters)) return false;
-            if (!object.Equals(this.EffectShaders, rhs.EffectShaders)) return false;
-            return true;
+            return ((OblivionModCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (ModHeader_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ModHeader).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(GameSettings).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Globals).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Classes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Factions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Hairs).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Eyes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Races).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Sounds).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Skills).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MagicEffects).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Scripts).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LandTextures).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Enchantments).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Spells).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Birthsigns).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Activators).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AlchemicalApparatus).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Armors).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Books).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Clothes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Containers).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Doors).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Ingredients).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Lights).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Miscellaneous).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Statics).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Grasses).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Trees).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flora).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Furnature).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Weapons).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Ammo).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(NPCs).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Creatures).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LeveledCreatures).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SoulGems).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Keys).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Potions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Subspaces).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SigilStones).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LeveledItems).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Weathers).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Climates).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Regions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Cells).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Worldspaces).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DialogTopics).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Quests).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(IdleAnimations).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AIPackages).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CombatStyles).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LoadScreens).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LeveledSpells).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AnimatedObjects).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Waters).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(EffectShaders).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((OblivionModCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;
@@ -5652,6 +5525,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IOblivionModGetter item,
+            IOblivionModGetter rhs)
+        {
+            return ((OblivionModCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
         #region Mutagen
         public static ISourceCache<T, FormKey> GetGroup<T>(this IOblivionModGetter obj)
             where T : IMajorRecordInternalGetter
@@ -8300,6 +8182,146 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Waters = new MaskItem<bool, Group_Mask<bool>>(true, item.Waters.GetHasBeenSetMask());
             mask.EffectShaders = new MaskItem<bool, Group_Mask<bool>>(true, item.EffectShaders.GetHasBeenSetMask());
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IOblivionModGetter lhs,
+            IOblivionModGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.ModHeader_IsSet != rhs.ModHeader_IsSet) return false;
+            if (lhs.ModHeader_IsSet)
+            {
+                if (!object.Equals(lhs.ModHeader, rhs.ModHeader)) return false;
+            }
+            if (!object.Equals(lhs.GameSettings, rhs.GameSettings)) return false;
+            if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
+            if (!object.Equals(lhs.Classes, rhs.Classes)) return false;
+            if (!object.Equals(lhs.Factions, rhs.Factions)) return false;
+            if (!object.Equals(lhs.Hairs, rhs.Hairs)) return false;
+            if (!object.Equals(lhs.Eyes, rhs.Eyes)) return false;
+            if (!object.Equals(lhs.Races, rhs.Races)) return false;
+            if (!object.Equals(lhs.Sounds, rhs.Sounds)) return false;
+            if (!object.Equals(lhs.Skills, rhs.Skills)) return false;
+            if (!object.Equals(lhs.MagicEffects, rhs.MagicEffects)) return false;
+            if (!object.Equals(lhs.Scripts, rhs.Scripts)) return false;
+            if (!object.Equals(lhs.LandTextures, rhs.LandTextures)) return false;
+            if (!object.Equals(lhs.Enchantments, rhs.Enchantments)) return false;
+            if (!object.Equals(lhs.Spells, rhs.Spells)) return false;
+            if (!object.Equals(lhs.Birthsigns, rhs.Birthsigns)) return false;
+            if (!object.Equals(lhs.Activators, rhs.Activators)) return false;
+            if (!object.Equals(lhs.AlchemicalApparatus, rhs.AlchemicalApparatus)) return false;
+            if (!object.Equals(lhs.Armors, rhs.Armors)) return false;
+            if (!object.Equals(lhs.Books, rhs.Books)) return false;
+            if (!object.Equals(lhs.Clothes, rhs.Clothes)) return false;
+            if (!object.Equals(lhs.Containers, rhs.Containers)) return false;
+            if (!object.Equals(lhs.Doors, rhs.Doors)) return false;
+            if (!object.Equals(lhs.Ingredients, rhs.Ingredients)) return false;
+            if (!object.Equals(lhs.Lights, rhs.Lights)) return false;
+            if (!object.Equals(lhs.Miscellaneous, rhs.Miscellaneous)) return false;
+            if (!object.Equals(lhs.Statics, rhs.Statics)) return false;
+            if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
+            if (!object.Equals(lhs.Trees, rhs.Trees)) return false;
+            if (!object.Equals(lhs.Flora, rhs.Flora)) return false;
+            if (!object.Equals(lhs.Furnature, rhs.Furnature)) return false;
+            if (!object.Equals(lhs.Weapons, rhs.Weapons)) return false;
+            if (!object.Equals(lhs.Ammo, rhs.Ammo)) return false;
+            if (!object.Equals(lhs.NPCs, rhs.NPCs)) return false;
+            if (!object.Equals(lhs.Creatures, rhs.Creatures)) return false;
+            if (!object.Equals(lhs.LeveledCreatures, rhs.LeveledCreatures)) return false;
+            if (!object.Equals(lhs.SoulGems, rhs.SoulGems)) return false;
+            if (!object.Equals(lhs.Keys, rhs.Keys)) return false;
+            if (!object.Equals(lhs.Potions, rhs.Potions)) return false;
+            if (!object.Equals(lhs.Subspaces, rhs.Subspaces)) return false;
+            if (!object.Equals(lhs.SigilStones, rhs.SigilStones)) return false;
+            if (!object.Equals(lhs.LeveledItems, rhs.LeveledItems)) return false;
+            if (!object.Equals(lhs.Weathers, rhs.Weathers)) return false;
+            if (!object.Equals(lhs.Climates, rhs.Climates)) return false;
+            if (!object.Equals(lhs.Regions, rhs.Regions)) return false;
+            if (!object.Equals(lhs.Cells, rhs.Cells)) return false;
+            if (!object.Equals(lhs.Worldspaces, rhs.Worldspaces)) return false;
+            if (!object.Equals(lhs.DialogTopics, rhs.DialogTopics)) return false;
+            if (!object.Equals(lhs.Quests, rhs.Quests)) return false;
+            if (!object.Equals(lhs.IdleAnimations, rhs.IdleAnimations)) return false;
+            if (!object.Equals(lhs.AIPackages, rhs.AIPackages)) return false;
+            if (!object.Equals(lhs.CombatStyles, rhs.CombatStyles)) return false;
+            if (!object.Equals(lhs.LoadScreens, rhs.LoadScreens)) return false;
+            if (!object.Equals(lhs.LeveledSpells, rhs.LeveledSpells)) return false;
+            if (!object.Equals(lhs.AnimatedObjects, rhs.AnimatedObjects)) return false;
+            if (!object.Equals(lhs.Waters, rhs.Waters)) return false;
+            if (!object.Equals(lhs.EffectShaders, rhs.EffectShaders)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IOblivionModGetter item)
+        {
+            int ret = 0;
+            if (item.ModHeader_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ModHeader).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.GameSettings).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Globals).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Classes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Factions).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Hairs).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Eyes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Races).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Sounds).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Skills).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MagicEffects).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Scripts).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LandTextures).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Enchantments).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Spells).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Birthsigns).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Activators).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AlchemicalApparatus).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Armors).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Books).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Clothes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Containers).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Doors).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Ingredients).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Lights).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Miscellaneous).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Statics).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Grasses).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Trees).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flora).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Furnature).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Weapons).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Ammo).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.NPCs).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Creatures).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LeveledCreatures).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SoulGems).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Keys).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Potions).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Subspaces).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SigilStones).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LeveledItems).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Weathers).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Climates).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Regions).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Cells).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Worldspaces).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DialogTopics).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Quests).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.IdleAnimations).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AIPackages).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CombatStyles).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LoadScreens).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LeveledSpells).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AnimatedObjects).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Waters).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.EffectShaders).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
         #region Mutagen
         public ISourceCache<T, FormKey> GetGroup<T>(IOblivionModGetter obj)

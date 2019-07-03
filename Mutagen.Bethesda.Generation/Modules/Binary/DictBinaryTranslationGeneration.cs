@@ -15,12 +15,12 @@ namespace Mutagen.Bethesda.Generation
         
         const string ThreadKey = "DictThread";
 
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             var dictType = typeGen as DictType;
             var keyMask = this.MaskModule.GetMaskModule(dictType.KeyTypeGen.GetType()).GetErrorMaskTypeStr(dictType.KeyTypeGen);
             var valMask = this.MaskModule.GetMaskModule(dictType.ValueTypeGen.GetType()).GetErrorMaskTypeStr(dictType.ValueTypeGen);
-            return $"{TranslatorName}<{dictType.KeyTypeGen.TypeName}, {dictType.ValueTypeGen.TypeName}, {keyMask}, {valMask}>.Instance";
+            return $"{TranslatorName}<{dictType.KeyTypeGen.TypeName(getter)}, {dictType.ValueTypeGen.TypeName(getter)}, {keyMask}, {valMask}>.Instance";
         }
 
         public override bool IsAsync(TypeGeneration gen, bool read)
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Generation
             ListBinaryType listBinaryType = GetDictType(dict, data, subData);
 
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{dict.ValueTypeGen.TypeName}>.Instance.Write"))
+                $"{this.Namespace}ListBinaryTranslation<{dict.ValueTypeGen.TypeName(getter: true)}>.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {itemAccessor.PropertyOrDirectAccess}.Values");
@@ -107,13 +107,13 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"errorMask: {errorMaskAccessor}");
                 if (subTransl.AllowDirectWrite(objGen, typeGen))
                 {
-                    args.Add($"transl: {subTransl.GetTranslatorInstance(dict.ValueTypeGen)}.Write");
+                    args.Add($"transl: {subTransl.GetTranslatorInstance(dict.ValueTypeGen, getter: true)}.Write");
                 }
                 else
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: (MutagenWriter r, {dict.ValueTypeGen.TypeName} dictSubItem, ErrorMaskBuilder dictSubMask) =>");
+                        gen.AppendLine($"transl: (MutagenWriter r, {dict.ValueTypeGen.TypeName(getter: true)} dictSubItem, ErrorMaskBuilder dictSubMask) =>");
                         using (new BraceWrapper(gen))
                         {
                             LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Generation
             }
 
             using (var args = new ArgsWrapper(fg,
-                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName}>.Instance.ParseRepeatedItem",
+                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.ParseRepeatedItem",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
             {
                 if (listBinaryType == ListBinaryType.SubTrigger)
@@ -209,13 +209,13 @@ namespace Mutagen.Bethesda.Generation
                 if (subGenTypes.Count <= 1
                     && subTransl.AllowDirectParse(objGen, typeGen, squashedRepeatedList: false))
                 {
-                    args.Add($"transl: {subTransl.GetTranslatorInstance(dict.ValueTypeGen)}.Parse");
+                    args.Add($"transl: {subTransl.GetTranslatorInstance(dict.ValueTypeGen, getter: false)}.Parse");
                 }
                 else if (subGenTypes.Count > 1)
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: (MutagenFrame r, RecordType header, {(isAsync ? null : $"out {dict.ValueTypeGen.TypeName} dictSubItem, ")}ErrorMaskBuilder dictSubMask) =>");
+                        gen.AppendLine($"transl: (MutagenFrame r, RecordType header, {(isAsync ? null : $"out {dict.ValueTypeGen.TypeName(getter: false)} dictSubItem, ")}ErrorMaskBuilder dictSubMask) =>");
                         using (new BraceWrapper(gen))
                         {
                             gen.AppendLine("switch (header.Type)");
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: (MutagenFrame r, {(isAsync ? null : $"out {dict.ValueTypeGen.TypeName} dictSubItem, ")}ErrorMaskBuilder dictSubMask) =>");
+                        gen.AppendLine($"transl: (MutagenFrame r, {(isAsync ? null : $"out {dict.ValueTypeGen.TypeName(getter: false)} dictSubItem, ")}ErrorMaskBuilder dictSubMask) =>");
                         using (new BraceWrapper(gen))
                         {
                             LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;

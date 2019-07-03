@@ -87,35 +87,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RegionDataObjects rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRegionDataObjectsInternalGetter rhs)) return false;
+            return ((RegionDataObjectsCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RegionDataObjects rhs)
+        public bool Equals(RegionDataObjects obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Objects.HasBeenSet != rhs.Objects.HasBeenSet) return false;
-            if (Objects.HasBeenSet)
-            {
-                if (!this.Objects.SequenceEqual(rhs.Objects)) return false;
-            }
-            return true;
+            return ((RegionDataObjectsCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Objects.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Objects).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((RegionDataObjectsCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => RegionDataObjectsXmlWriteTranslation.Instance;
@@ -555,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataObjects_FieldIndex.Objects:
-                    this._Objects.SetTo((IEnumerable<RegionDataObject>)obj);
+                    this._Objects.SetTo((SourceSetList<RegionDataObject>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -587,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataObjects_FieldIndex.Objects:
-                    obj._Objects.SetTo((IEnumerable<RegionDataObject>)pair.Value);
+                    obj._Objects.SetTo((SourceSetList<RegionDataObject>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -697,6 +680,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRegionDataObjectsInternalGetter item,
+            IRegionDataObjectsInternalGetter rhs)
+        {
+            return ((RegionDataObjectsCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1098,6 +1090,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRegionDataObjectsInternalGetter lhs,
+            IRegionDataObjectsInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Objects.HasBeenSet != rhs.Objects.HasBeenSet) return false;
+            if (lhs.Objects.HasBeenSet)
+            {
+                if (!lhs.Objects.SequenceEqual(rhs.Objects)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IRegionDataInternalGetter lhs,
+            IRegionDataInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRegionDataObjectsInternalGetter)lhs,
+                rhs: rhs as IRegionDataObjectsInternalGetter);
+        }
+
+        public virtual int GetHashCode(IRegionDataObjectsInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Objects.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Objects).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IRegionDataInternalGetter item)
+        {
+            return GetHashCode(item: (IRegionDataObjectsInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

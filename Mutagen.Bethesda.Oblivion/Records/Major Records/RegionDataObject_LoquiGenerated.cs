@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<OblivionMajorRecord> IRegionDataObject.Object_Property => this.Object_Property;
         IOblivionMajorRecordInternalGetter IRegionDataObjectGetter.Object => this.Object_Property.Item;
-        IFormIDLinkGetter<OblivionMajorRecord> IRegionDataObjectGetter.Object_Property => this.Object_Property;
+        IFormIDLinkGetter<IOblivionMajorRecordInternalGetter> IRegionDataObjectGetter.Object_Property => this.Object_Property;
         #endregion
         #region ParentIndex
         private UInt16 _ParentIndex;
@@ -85,6 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknown1 => this.Unknown1;
         #endregion
         #region Density
         private Single _Density;
@@ -204,6 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknow2n => this.Unknow2n;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectGetter)rhs, include);
@@ -224,58 +226,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RegionDataObject rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRegionDataObjectGetter rhs)) return false;
+            return ((RegionDataObjectCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RegionDataObject rhs)
+        public bool Equals(RegionDataObject obj)
         {
-            if (rhs == null) return false;
-            if (!this.Object_Property.Equals(rhs.Object_Property)) return false;
-            if (this.ParentIndex != rhs.ParentIndex) return false;
-            if (!ByteExt.EqualsFast(this.Unknown1, rhs.Unknown1)) return false;
-            if (!this.Density.EqualsWithin(rhs.Density)) return false;
-            if (this.Clustering != rhs.Clustering) return false;
-            if (this.MinSlope != rhs.MinSlope) return false;
-            if (this.MaxSlope != rhs.MaxSlope) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (this.RadiusWrtPercent != rhs.RadiusWrtPercent) return false;
-            if (this.Radius != rhs.Radius) return false;
-            if (!this.MinHeight.EqualsWithin(rhs.MinHeight)) return false;
-            if (!this.MaxHeight.EqualsWithin(rhs.MaxHeight)) return false;
-            if (!this.Sink.EqualsWithin(rhs.Sink)) return false;
-            if (!this.SinkVariance.EqualsWithin(rhs.SinkVariance)) return false;
-            if (!this.SizeVariance.EqualsWithin(rhs.SizeVariance)) return false;
-            if (!this.AngleVariance.Equals(rhs.AngleVariance)) return false;
-            if (!ByteExt.EqualsFast(this.Unknow2n, rhs.Unknow2n)) return false;
-            return true;
+            return ((RegionDataObjectCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Object).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ParentIndex).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Unknown1).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Density).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Clustering).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MinSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MaxSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RadiusWrtPercent).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Radius).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MinHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MaxHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Sink).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SinkVariance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SizeVariance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AngleVariance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Unknow2n).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((RegionDataObjectCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RegionDataObjectXmlWriteTranslation.Instance;
@@ -955,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Object
         IOblivionMajorRecordInternalGetter Object { get; }
-        IFormIDLinkGetter<OblivionMajorRecord> Object_Property { get; }
+        IFormIDLinkGetter<IOblivionMajorRecordInternalGetter> Object_Property { get; }
 
         #endregion
         #region ParentIndex
@@ -963,7 +925,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Unknown1
-        Byte[] Unknown1 { get; }
+        ReadOnlySpan<Byte> Unknown1 { get; }
 
         #endregion
         #region Density
@@ -1019,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Unknow2n
-        Byte[] Unknow2n { get; }
+        ReadOnlySpan<Byte> Unknow2n { get; }
 
         #endregion
 
@@ -1086,6 +1048,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRegionDataObjectGetter item,
+            IRegionDataObjectGetter rhs)
+        {
+            return ((RegionDataObjectCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1822,7 +1793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Object = item.Object_Property.FormKey == rhs.Object_Property.FormKey;
             ret.ParentIndex = item.ParentIndex == rhs.ParentIndex;
-            ret.Unknown1 = ByteExt.EqualsFast(item.Unknown1, rhs.Unknown1);
+            ret.Unknown1 = MemoryExtensions.SequenceEqual(item.Unknown1, rhs.Unknown1);
             ret.Density = item.Density.EqualsWithin(rhs.Density);
             ret.Clustering = item.Clustering == rhs.Clustering;
             ret.MinSlope = item.MinSlope == rhs.MinSlope;
@@ -1836,7 +1807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.SinkVariance = item.SinkVariance.EqualsWithin(rhs.SinkVariance);
             ret.SizeVariance = item.SizeVariance.EqualsWithin(rhs.SizeVariance);
             ret.AngleVariance = item.AngleVariance.Equals(rhs.AngleVariance);
-            ret.Unknow2n = ByteExt.EqualsFast(item.Unknow2n, rhs.Unknow2n);
+            ret.Unknow2n = MemoryExtensions.SequenceEqual(item.Unknow2n, rhs.Unknow2n);
         }
 
         public string ToString(
@@ -1893,7 +1864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Unknown1 ?? true)
             {
-                fg.AppendLine($"Unknown1 => {item.Unknown1}");
+                fg.AppendLine($"Unknown1 => {SpanExt.ToHexString(item.Unknown1)}");
             }
             if (printMask?.Density ?? true)
             {
@@ -1949,7 +1920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Unknow2n ?? true)
             {
-                fg.AppendLine($"Unknow2n => {item.Unknow2n}");
+                fg.AppendLine($"Unknow2n => {SpanExt.ToHexString(item.Unknow2n)}");
             }
         }
 
@@ -1982,6 +1953,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.AngleVariance = true;
             mask.Unknow2n = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRegionDataObjectGetter lhs,
+            IRegionDataObjectGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Object_Property.Equals(rhs.Object_Property)) return false;
+            if (lhs.ParentIndex != rhs.ParentIndex) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown1, rhs.Unknown1)) return false;
+            if (!lhs.Density.EqualsWithin(rhs.Density)) return false;
+            if (lhs.Clustering != rhs.Clustering) return false;
+            if (lhs.MinSlope != rhs.MinSlope) return false;
+            if (lhs.MaxSlope != rhs.MaxSlope) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.RadiusWrtPercent != rhs.RadiusWrtPercent) return false;
+            if (lhs.Radius != rhs.Radius) return false;
+            if (!lhs.MinHeight.EqualsWithin(rhs.MinHeight)) return false;
+            if (!lhs.MaxHeight.EqualsWithin(rhs.MaxHeight)) return false;
+            if (!lhs.Sink.EqualsWithin(rhs.Sink)) return false;
+            if (!lhs.SinkVariance.EqualsWithin(rhs.SinkVariance)) return false;
+            if (!lhs.SizeVariance.EqualsWithin(rhs.SizeVariance)) return false;
+            if (!lhs.AngleVariance.Equals(rhs.AngleVariance)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknow2n, rhs.Unknow2n)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IRegionDataObjectGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Object).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ParentIndex).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Unknown1).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Density).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Clustering).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MinSlope).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaxSlope).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RadiusWrtPercent).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Radius).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MinHeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaxHeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Sink).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SinkVariance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SizeVariance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AngleVariance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Unknow2n).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

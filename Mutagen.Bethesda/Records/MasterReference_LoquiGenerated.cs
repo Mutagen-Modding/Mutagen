@@ -106,35 +106,18 @@ namespace Mutagen.Bethesda
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is MasterReference rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IMasterReferenceGetter rhs)) return false;
+            return ((MasterReferenceCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(MasterReference rhs)
+        public bool Equals(MasterReference obj)
         {
-            if (rhs == null) return false;
-            if (this.Master != rhs.Master) return false;
-            if (FileSize_IsSet != rhs.FileSize_IsSet) return false;
-            if (FileSize_IsSet)
-            {
-                if (this.FileSize != rhs.FileSize) return false;
-            }
-            return true;
+            return ((MasterReferenceCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Master).CombineHashCode(ret);
-            if (FileSize_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FileSize).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((MasterReferenceCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => MasterReferenceXmlWriteTranslation.Instance;
@@ -671,6 +654,15 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
+        public static bool Equals(
+            this IMasterReferenceGetter item,
+            IMasterReferenceGetter rhs)
+        {
+            return ((MasterReferenceCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1042,6 +1034,36 @@ namespace Mutagen.Bethesda.Internals
             mask.Master = true;
             mask.FileSize = item.FileSize_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IMasterReferenceGetter lhs,
+            IMasterReferenceGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Master != rhs.Master) return false;
+            if (lhs.FileSize_IsSet != rhs.FileSize_IsSet) return false;
+            if (lhs.FileSize_IsSet)
+            {
+                if (lhs.FileSize != rhs.FileSize) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IMasterReferenceGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Master).CombineHashCode(ret);
+            if (item.FileSize_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FileSize).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

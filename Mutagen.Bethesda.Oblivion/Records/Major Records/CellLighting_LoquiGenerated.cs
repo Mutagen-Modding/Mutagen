@@ -147,42 +147,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is CellLighting rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ICellLightingGetter rhs)) return false;
+            return ((CellLightingCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(CellLighting rhs)
+        public bool Equals(CellLighting obj)
         {
-            if (rhs == null) return false;
-            if (!this.AmbientColor.ColorOnlyEquals(rhs.AmbientColor)) return false;
-            if (!this.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor)) return false;
-            if (!this.FogColor.ColorOnlyEquals(rhs.FogColor)) return false;
-            if (!this.FogNear.EqualsWithin(rhs.FogNear)) return false;
-            if (!this.FogFar.EqualsWithin(rhs.FogFar)) return false;
-            if (this.DirectionalRotationXY != rhs.DirectionalRotationXY) return false;
-            if (this.DirectionalRotationZ != rhs.DirectionalRotationZ) return false;
-            if (!this.DirectionalFade.EqualsWithin(rhs.DirectionalFade)) return false;
-            if (!this.FogClipDistance.EqualsWithin(rhs.FogClipDistance)) return false;
-            return true;
+            return ((CellLightingCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(AmbientColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DirectionalColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FogColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FogNear).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FogFar).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DirectionalRotationXY).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DirectionalRotationZ).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DirectionalFade).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FogClipDistance).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((CellLightingCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => CellLightingXmlWriteTranslation.Instance;
@@ -842,6 +818,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this ICellLightingGetter item,
+            ICellLightingGetter rhs)
+        {
+            return ((CellLightingCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1450,6 +1435,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.DirectionalFade = true;
             mask.FogClipDistance = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ICellLightingGetter lhs,
+            ICellLightingGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.AmbientColor.ColorOnlyEquals(rhs.AmbientColor)) return false;
+            if (!lhs.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor)) return false;
+            if (!lhs.FogColor.ColorOnlyEquals(rhs.FogColor)) return false;
+            if (!lhs.FogNear.EqualsWithin(rhs.FogNear)) return false;
+            if (!lhs.FogFar.EqualsWithin(rhs.FogFar)) return false;
+            if (lhs.DirectionalRotationXY != rhs.DirectionalRotationXY) return false;
+            if (lhs.DirectionalRotationZ != rhs.DirectionalRotationZ) return false;
+            if (!lhs.DirectionalFade.EqualsWithin(rhs.DirectionalFade)) return false;
+            if (!lhs.FogClipDistance.EqualsWithin(rhs.FogClipDistance)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(ICellLightingGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.AmbientColor).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DirectionalColor).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FogColor).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FogNear).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FogFar).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DirectionalRotationXY).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DirectionalRotationZ).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DirectionalFade).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FogClipDistance).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

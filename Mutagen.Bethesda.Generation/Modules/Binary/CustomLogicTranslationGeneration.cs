@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
         public override bool DoErrorMasks => true;
         public const bool DoErrorMasksStatic = true;
 
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             throw new NotImplementedException();
         }

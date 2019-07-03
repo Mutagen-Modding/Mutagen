@@ -81,28 +81,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ScriptVariableReference rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IScriptVariableReferenceGetter rhs)) return false;
+            return ((ScriptVariableReferenceCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptVariableReference rhs)
+        public bool Equals(ScriptVariableReference obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (this.VariableIndex != rhs.VariableIndex) return false;
-            return true;
+            return ((ScriptVariableReferenceCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(VariableIndex).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((ScriptVariableReferenceCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ScriptVariableReferenceXmlWriteTranslation.Instance;
@@ -606,6 +596,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IScriptVariableReferenceGetter item,
+            IScriptVariableReferenceGetter rhs)
+        {
+            return ((ScriptVariableReferenceCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -957,6 +956,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IScriptVariableReferenceGetter lhs,
+            IScriptVariableReferenceGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.VariableIndex != rhs.VariableIndex) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IScriptReferenceGetter lhs,
+            IScriptReferenceGetter rhs)
+        {
+            return Equals(
+                lhs: (IScriptVariableReferenceGetter)lhs,
+                rhs: rhs as IScriptVariableReferenceGetter);
+        }
+
+        public virtual int GetHashCode(IScriptVariableReferenceGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.VariableIndex).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IScriptReferenceGetter item)
+        {
+            return GetHashCode(item: (IScriptVariableReferenceGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<EffectShader> IMagicEffectSubData.EnchantEffect_Property => this.EnchantEffect_Property;
         IEffectShaderInternalGetter IMagicEffectSubDataGetter.EnchantEffect => this.EnchantEffect_Property.Item;
-        IFormIDLinkGetter<EffectShader> IMagicEffectSubDataGetter.EnchantEffect_Property => this.EnchantEffect_Property;
+        IFormIDLinkGetter<IEffectShaderInternalGetter> IMagicEffectSubDataGetter.EnchantEffect_Property => this.EnchantEffect_Property;
         #endregion
         #region CastingSound
         public IFormIDLink<Sound> CastingSound_Property { get; } = new FormIDLink<Sound>();
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Sound> IMagicEffectSubData.CastingSound_Property => this.CastingSound_Property;
         ISoundInternalGetter IMagicEffectSubDataGetter.CastingSound => this.CastingSound_Property.Item;
-        IFormIDLinkGetter<Sound> IMagicEffectSubDataGetter.CastingSound_Property => this.CastingSound_Property;
+        IFormIDLinkGetter<ISoundInternalGetter> IMagicEffectSubDataGetter.CastingSound_Property => this.CastingSound_Property;
         #endregion
         #region BoltSound
         public IFormIDLink<Sound> BoltSound_Property { get; } = new FormIDLink<Sound>();
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Sound> IMagicEffectSubData.BoltSound_Property => this.BoltSound_Property;
         ISoundInternalGetter IMagicEffectSubDataGetter.BoltSound => this.BoltSound_Property.Item;
-        IFormIDLinkGetter<Sound> IMagicEffectSubDataGetter.BoltSound_Property => this.BoltSound_Property;
+        IFormIDLinkGetter<ISoundInternalGetter> IMagicEffectSubDataGetter.BoltSound_Property => this.BoltSound_Property;
         #endregion
         #region HitSound
         public IFormIDLink<Sound> HitSound_Property { get; } = new FormIDLink<Sound>();
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Sound> IMagicEffectSubData.HitSound_Property => this.HitSound_Property;
         ISoundInternalGetter IMagicEffectSubDataGetter.HitSound => this.HitSound_Property.Item;
-        IFormIDLinkGetter<Sound> IMagicEffectSubDataGetter.HitSound_Property => this.HitSound_Property;
+        IFormIDLinkGetter<ISoundInternalGetter> IMagicEffectSubDataGetter.HitSound_Property => this.HitSound_Property;
         #endregion
         #region AreaSound
         public IFormIDLink<Sound> AreaSound_Property { get; } = new FormIDLink<Sound>();
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Sound> IMagicEffectSubData.AreaSound_Property => this.AreaSound_Property;
         ISoundInternalGetter IMagicEffectSubDataGetter.AreaSound => this.AreaSound_Property.Item;
-        IFormIDLinkGetter<Sound> IMagicEffectSubDataGetter.AreaSound_Property => this.AreaSound_Property;
+        IFormIDLinkGetter<ISoundInternalGetter> IMagicEffectSubDataGetter.AreaSound_Property => this.AreaSound_Property;
         #endregion
         #region ConstantEffectEnchantmentFactor
         private Single _ConstantEffectEnchantmentFactor;
@@ -130,38 +130,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is MagicEffectSubData rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IMagicEffectSubDataGetter rhs)) return false;
+            return ((MagicEffectSubDataCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectSubData rhs)
+        public bool Equals(MagicEffectSubData obj)
         {
-            if (rhs == null) return false;
-            if (!this.EnchantEffect_Property.Equals(rhs.EnchantEffect_Property)) return false;
-            if (!this.CastingSound_Property.Equals(rhs.CastingSound_Property)) return false;
-            if (!this.BoltSound_Property.Equals(rhs.BoltSound_Property)) return false;
-            if (!this.HitSound_Property.Equals(rhs.HitSound_Property)) return false;
-            if (!this.AreaSound_Property.Equals(rhs.AreaSound_Property)) return false;
-            if (!this.ConstantEffectEnchantmentFactor.EqualsWithin(rhs.ConstantEffectEnchantmentFactor)) return false;
-            if (!this.ConstantEffectBarterFactor.EqualsWithin(rhs.ConstantEffectBarterFactor)) return false;
-            return true;
+            return ((MagicEffectSubDataCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(EnchantEffect).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CastingSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BoltSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HitSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AreaSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ConstantEffectEnchantmentFactor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ConstantEffectBarterFactor).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((MagicEffectSubDataCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => MagicEffectSubDataXmlWriteTranslation.Instance;
@@ -697,27 +677,27 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region EnchantEffect
         IEffectShaderInternalGetter EnchantEffect { get; }
-        IFormIDLinkGetter<EffectShader> EnchantEffect_Property { get; }
+        IFormIDLinkGetter<IEffectShaderInternalGetter> EnchantEffect_Property { get; }
 
         #endregion
         #region CastingSound
         ISoundInternalGetter CastingSound { get; }
-        IFormIDLinkGetter<Sound> CastingSound_Property { get; }
+        IFormIDLinkGetter<ISoundInternalGetter> CastingSound_Property { get; }
 
         #endregion
         #region BoltSound
         ISoundInternalGetter BoltSound { get; }
-        IFormIDLinkGetter<Sound> BoltSound_Property { get; }
+        IFormIDLinkGetter<ISoundInternalGetter> BoltSound_Property { get; }
 
         #endregion
         #region HitSound
         ISoundInternalGetter HitSound { get; }
-        IFormIDLinkGetter<Sound> HitSound_Property { get; }
+        IFormIDLinkGetter<ISoundInternalGetter> HitSound_Property { get; }
 
         #endregion
         #region AreaSound
         ISoundInternalGetter AreaSound { get; }
-        IFormIDLinkGetter<Sound> AreaSound_Property { get; }
+        IFormIDLinkGetter<ISoundInternalGetter> AreaSound_Property { get; }
 
         #endregion
         #region ConstantEffectEnchantmentFactor
@@ -792,6 +772,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IMagicEffectSubDataGetter item,
+            IMagicEffectSubDataGetter rhs)
+        {
+            return ((MagicEffectSubDataCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1328,6 +1317,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.ConstantEffectEnchantmentFactor = true;
             mask.ConstantEffectBarterFactor = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IMagicEffectSubDataGetter lhs,
+            IMagicEffectSubDataGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.EnchantEffect_Property.Equals(rhs.EnchantEffect_Property)) return false;
+            if (!lhs.CastingSound_Property.Equals(rhs.CastingSound_Property)) return false;
+            if (!lhs.BoltSound_Property.Equals(rhs.BoltSound_Property)) return false;
+            if (!lhs.HitSound_Property.Equals(rhs.HitSound_Property)) return false;
+            if (!lhs.AreaSound_Property.Equals(rhs.AreaSound_Property)) return false;
+            if (!lhs.ConstantEffectEnchantmentFactor.EqualsWithin(rhs.ConstantEffectEnchantmentFactor)) return false;
+            if (!lhs.ConstantEffectBarterFactor.EqualsWithin(rhs.ConstantEffectBarterFactor)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IMagicEffectSubDataGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.EnchantEffect).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CastingSound).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BoltSound).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HitSound).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AreaSound).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ConstantEffectEnchantmentFactor).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ConstantEffectBarterFactor).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

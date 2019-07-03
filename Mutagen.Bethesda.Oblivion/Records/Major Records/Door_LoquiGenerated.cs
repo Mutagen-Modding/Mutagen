@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Script> IDoor.Script_Property => this.Script_Property;
         IScriptInternalGetter IDoorGetter.Script => this.Script_Property.Item;
-        IFormIDSetLinkGetter<Script> IDoorGetter.Script_Property => this.Script_Property;
+        IFormIDSetLinkGetter<IScriptInternalGetter> IDoorGetter.Script_Property => this.Script_Property;
         #endregion
         #region OpenSound
         public IFormIDSetLink<Sound> OpenSound_Property { get; } = new FormIDSetLink<Sound>();
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Sound> IDoor.OpenSound_Property => this.OpenSound_Property;
         ISoundInternalGetter IDoorGetter.OpenSound => this.OpenSound_Property.Item;
-        IFormIDSetLinkGetter<Sound> IDoorGetter.OpenSound_Property => this.OpenSound_Property;
+        IFormIDSetLinkGetter<ISoundInternalGetter> IDoorGetter.OpenSound_Property => this.OpenSound_Property;
         #endregion
         #region CloseSound
         public IFormIDSetLink<Sound> CloseSound_Property { get; } = new FormIDSetLink<Sound>();
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Sound> IDoor.CloseSound_Property => this.CloseSound_Property;
         ISoundInternalGetter IDoorGetter.CloseSound => this.CloseSound_Property.Item;
-        IFormIDSetLinkGetter<Sound> IDoorGetter.CloseSound_Property => this.CloseSound_Property;
+        IFormIDSetLinkGetter<ISoundInternalGetter> IDoorGetter.CloseSound_Property => this.CloseSound_Property;
         #endregion
         #region LoopSound
         public IFormIDSetLink<Sound> LoopSound_Property { get; } = new FormIDSetLink<Sound>();
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Sound> IDoor.LoopSound_Property => this.LoopSound_Property;
         ISoundInternalGetter IDoorGetter.LoopSound => this.LoopSound_Property.Item;
-        IFormIDSetLinkGetter<Sound> IDoorGetter.LoopSound_Property => this.LoopSound_Property;
+        IFormIDSetLinkGetter<ISoundInternalGetter> IDoorGetter.LoopSound_Property => this.LoopSound_Property;
         #endregion
         #region Flags
         public bool Flags_IsSet
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDSetLink<Place>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDSetLink<Place>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
+        IReadOnlySetList<IFormIDSetLinkGetter<IPlaceInternalGetter>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
         #endregion
 
         #endregion
@@ -200,98 +200,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Door rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IDoorInternalGetter rhs)) return false;
+            return ((DoorCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Door rhs)
+        public bool Equals(Door obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (Script_Property.HasBeenSet)
-            {
-                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (OpenSound_Property.HasBeenSet != rhs.OpenSound_Property.HasBeenSet) return false;
-            if (OpenSound_Property.HasBeenSet)
-            {
-                if (!this.OpenSound_Property.Equals(rhs.OpenSound_Property)) return false;
-            }
-            if (CloseSound_Property.HasBeenSet != rhs.CloseSound_Property.HasBeenSet) return false;
-            if (CloseSound_Property.HasBeenSet)
-            {
-                if (!this.CloseSound_Property.Equals(rhs.CloseSound_Property)) return false;
-            }
-            if (LoopSound_Property.HasBeenSet != rhs.LoopSound_Property.HasBeenSet) return false;
-            if (LoopSound_Property.HasBeenSet)
-            {
-                if (!this.LoopSound_Property.Equals(rhs.LoopSound_Property)) return false;
-            }
-            if (Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (Flags_IsSet)
-            {
-                if (this.Flags != rhs.Flags) return false;
-            }
-            if (RandomTeleportDestinations.HasBeenSet != rhs.RandomTeleportDestinations.HasBeenSet) return false;
-            if (RandomTeleportDestinations.HasBeenSet)
-            {
-                if (!this.RandomTeleportDestinations.SequenceEqual(rhs.RandomTeleportDestinations)) return false;
-            }
-            return true;
+            return ((DoorCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
-            }
-            if (OpenSound_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(OpenSound).CombineHashCode(ret);
-            }
-            if (CloseSound_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(CloseSound).CombineHashCode(ret);
-            }
-            if (LoopSound_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(LoopSound).CombineHashCode(ret);
-            }
-            if (Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
-            if (RandomTeleportDestinations.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(RandomTeleportDestinations).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((DoorCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => DoorXmlWriteTranslation.Instance;
@@ -891,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (Door.DoorFlag)obj;
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    this._RandomTeleportDestinations.SetTo((IEnumerable<IFormIDSetLink<Place>>)obj);
+                    this._RandomTeleportDestinations.SetTo((SourceSetList<IFormIDSetLink<Place>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -944,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (Door.DoorFlag)pair.Value;
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    obj._RandomTeleportDestinations.SetTo((IEnumerable<IFormIDSetLink<Place>>)pair.Value);
+                    obj._RandomTeleportDestinations.SetTo((SourceSetList<IFormIDSetLink<Place>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1023,22 +943,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         IScriptInternalGetter Script { get; }
-        IFormIDSetLinkGetter<Script> Script_Property { get; }
+        IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property { get; }
 
         #endregion
         #region OpenSound
         ISoundInternalGetter OpenSound { get; }
-        IFormIDSetLinkGetter<Sound> OpenSound_Property { get; }
+        IFormIDSetLinkGetter<ISoundInternalGetter> OpenSound_Property { get; }
 
         #endregion
         #region CloseSound
         ISoundInternalGetter CloseSound { get; }
-        IFormIDSetLinkGetter<Sound> CloseSound_Property { get; }
+        IFormIDSetLinkGetter<ISoundInternalGetter> CloseSound_Property { get; }
 
         #endregion
         #region LoopSound
         ISoundInternalGetter LoopSound { get; }
-        IFormIDSetLinkGetter<Sound> LoopSound_Property { get; }
+        IFormIDSetLinkGetter<ISoundInternalGetter> LoopSound_Property { get; }
 
         #endregion
         #region Flags
@@ -1047,7 +967,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RandomTeleportDestinations
-        IReadOnlySetList<IFormIDSetLink<Place>> RandomTeleportDestinations { get; }
+        IReadOnlySetList<IFormIDSetLinkGetter<IPlaceInternalGetter>> RandomTeleportDestinations { get; }
         #endregion
 
     }
@@ -1120,6 +1040,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IDoorInternalGetter item,
+            IDoorInternalGetter rhs)
+        {
+            return ((DoorCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1876,6 +1805,127 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        #region Equals and Hash
+        public virtual bool Equals(
+            IDoorInternalGetter lhs,
+            IDoorInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.OpenSound_Property.HasBeenSet != rhs.OpenSound_Property.HasBeenSet) return false;
+            if (lhs.OpenSound_Property.HasBeenSet)
+            {
+                if (!lhs.OpenSound_Property.Equals(rhs.OpenSound_Property)) return false;
+            }
+            if (lhs.CloseSound_Property.HasBeenSet != rhs.CloseSound_Property.HasBeenSet) return false;
+            if (lhs.CloseSound_Property.HasBeenSet)
+            {
+                if (!lhs.CloseSound_Property.Equals(rhs.CloseSound_Property)) return false;
+            }
+            if (lhs.LoopSound_Property.HasBeenSet != rhs.LoopSound_Property.HasBeenSet) return false;
+            if (lhs.LoopSound_Property.HasBeenSet)
+            {
+                if (!lhs.LoopSound_Property.Equals(rhs.LoopSound_Property)) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.RandomTeleportDestinations.HasBeenSet != rhs.RandomTeleportDestinations.HasBeenSet) return false;
+            if (lhs.RandomTeleportDestinations.HasBeenSet)
+            {
+                if (!lhs.RandomTeleportDestinations.SequenceEqual(rhs.RandomTeleportDestinations)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IDoorInternalGetter)lhs,
+                rhs: rhs as IDoorInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IDoorInternalGetter)lhs,
+                rhs: rhs as IDoorInternalGetter);
+        }
+
+        public virtual int GetHashCode(IDoorInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.OpenSound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.OpenSound).CombineHashCode(ret);
+            }
+            if (item.CloseSound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.CloseSound).CombineHashCode(ret);
+            }
+            if (item.LoopSound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.LoopSound).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.RandomTeleportDestinations.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.RandomTeleportDestinations).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IDoorInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IDoorInternalGetter)item);
+        }
+
+        #endregion
+
+
     }
     #endregion
 
@@ -1972,14 +2022,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.RandomTeleportDestinations.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.RandomTeleportDestinations) ?? true))
             {
-                ListXmlTranslation<IFormIDSetLink<Place>>.Instance.Write(
+                ListXmlTranslation<IFormIDSetLinkGetter<IPlaceInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.RandomTeleportDestinations),
                     item: item.RandomTeleportDestinations,
                     fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Door_FieldIndex.RandomTeleportDestinations),
-                    transl: (XElement subNode, IFormIDSetLink<Place> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDSetLinkGetter<IPlaceInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -2922,10 +2972,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.RandomTeleportDestinations.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLink<Place>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLinkGetter<IPlaceInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.RandomTeleportDestinations,
-                    transl: (MutagenWriter subWriter, IFormIDSetLink<Place> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDSetLinkGetter<IPlaceInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,

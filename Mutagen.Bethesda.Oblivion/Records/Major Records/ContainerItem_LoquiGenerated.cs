@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<ItemAbstract> IContainerItem.Item_Property => this.Item_Property;
         IItemAbstractInternalGetter IContainerItemGetter.Item => this.Item_Property.Item;
-        IFormIDLinkGetter<ItemAbstract> IContainerItemGetter.Item_Property => this.Item_Property;
+        IFormIDLinkGetter<IItemAbstractInternalGetter> IContainerItemGetter.Item_Property => this.Item_Property;
         #endregion
         #region Count
         private UInt32 _Count;
@@ -90,28 +90,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ContainerItem rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IContainerItemGetter rhs)) return false;
+            return ((ContainerItemCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ContainerItem rhs)
+        public bool Equals(ContainerItem obj)
         {
-            if (rhs == null) return false;
-            if (!this.Item_Property.Equals(rhs.Item_Property)) return false;
-            if (this.Count != rhs.Count) return false;
-            return true;
+            return ((ContainerItemCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Item).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Count).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((ContainerItemCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => ContainerItemXmlWriteTranslation.Instance;
@@ -555,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Item
         IItemAbstractInternalGetter Item { get; }
-        IFormIDLinkGetter<ItemAbstract> Item_Property { get; }
+        IFormIDLinkGetter<IItemAbstractInternalGetter> Item_Property { get; }
 
         #endregion
         #region Count
@@ -626,6 +616,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IContainerItemGetter item,
+            IContainerItemGetter rhs)
+        {
+            return ((ContainerItemCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -984,6 +983,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Item = true;
             mask.Count = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IContainerItemGetter lhs,
+            IContainerItemGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Item_Property.Equals(rhs.Item_Property)) return false;
+            if (lhs.Count != rhs.Count) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IContainerItemGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Item).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Count).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

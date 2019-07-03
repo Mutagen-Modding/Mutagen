@@ -95,28 +95,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is PointToReferenceMapping rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IPointToReferenceMappingGetter rhs)) return false;
+            return ((PointToReferenceMappingCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(PointToReferenceMapping rhs)
+        public bool Equals(PointToReferenceMapping obj)
         {
-            if (rhs == null) return false;
-            if (!this.Reference_Property.Equals(rhs.Reference_Property)) return false;
-            if (!this.Points.SequenceEqual(rhs.Points)) return false;
-            return true;
+            return ((PointToReferenceMappingCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Reference).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Points).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((PointToReferenceMappingCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => PointToReferenceMappingXmlWriteTranslation.Instance;
@@ -484,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Reference_Property.Set((IFormIDLink<IPlaced>)obj);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
-                    this._Points.SetTo((IEnumerable<Int16>)obj);
+                    this._Points.SetTo((SourceSetList<Int16>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -518,7 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Reference_Property.Set((IFormIDLink<IPlaced>)pair.Value);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
-                    obj._Points.SetTo((IEnumerable<Int16>)pair.Value);
+                    obj._Points.SetTo((SourceSetList<Int16>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -620,6 +610,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IPointToReferenceMappingGetter item,
+            IPointToReferenceMappingGetter rhs)
+        {
+            return ((PointToReferenceMappingCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -998,6 +997,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Reference = true;
             mask.Points = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IPointToReferenceMappingGetter lhs,
+            IPointToReferenceMappingGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Reference_Property.Equals(rhs.Reference_Property)) return false;
+            if (!lhs.Points.SequenceEqual(rhs.Points)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IPointToReferenceMappingGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Reference).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Points).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

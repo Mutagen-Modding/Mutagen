@@ -84,6 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IConditionGetter.Fluff => this.Fluff;
         #endregion
         #region ComparisonValue
         private Single _ComparisonValue;
@@ -144,40 +145,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Condition rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IConditionGetter rhs)) return false;
+            return ((ConditionCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Condition rhs)
+        public bool Equals(Condition obj)
         {
-            if (rhs == null) return false;
-            if (this.CompareOperator != rhs.CompareOperator) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
-            if (!this.ComparisonValue.EqualsWithin(rhs.ComparisonValue)) return false;
-            if (this.Function != rhs.Function) return false;
-            if (this.FirstParameter != rhs.FirstParameter) return false;
-            if (this.SecondParameter != rhs.SecondParameter) return false;
-            if (this.ThirdParameter != rhs.ThirdParameter) return false;
-            return true;
+            return ((ConditionCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(CompareOperator).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ComparisonValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Function).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FirstParameter).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SecondParameter).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ThirdParameter).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((ConditionCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => ConditionXmlWriteTranslation.Instance;
@@ -710,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff
-        Byte[] Fluff { get; }
+        ReadOnlySpan<Byte> Fluff { get; }
 
         #endregion
         #region ComparisonValue
@@ -797,6 +776,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IConditionGetter item,
+            IConditionGetter rhs)
+        {
+            return ((ConditionCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1277,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.CompareOperator = item.CompareOperator == rhs.CompareOperator;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
             ret.ComparisonValue = item.ComparisonValue.EqualsWithin(rhs.ComparisonValue);
             ret.Function = item.Function == rhs.Function;
             ret.FirstParameter = item.FirstParameter == rhs.FirstParameter;
@@ -1339,7 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Fluff ?? true)
             {
-                fg.AppendLine($"Fluff => {item.Fluff}");
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
             if (printMask?.ComparisonValue ?? true)
             {
@@ -1383,6 +1371,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.SecondParameter = true;
             mask.ThirdParameter = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IConditionGetter lhs,
+            IConditionGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.CompareOperator != rhs.CompareOperator) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!lhs.ComparisonValue.EqualsWithin(rhs.ComparisonValue)) return false;
+            if (lhs.Function != rhs.Function) return false;
+            if (lhs.FirstParameter != rhs.FirstParameter) return false;
+            if (lhs.SecondParameter != rhs.SecondParameter) return false;
+            if (lhs.ThirdParameter != rhs.ThirdParameter) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IConditionGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.CompareOperator).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ComparisonValue).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Function).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FirstParameter).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SecondParameter).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ThirdParameter).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

@@ -114,32 +114,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Clothing rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IClothingInternalGetter rhs)) return false;
+            return ((ClothingCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Clothing rhs)
+        public bool Equals(Clothing obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (this.Value != rhs.Value) return false;
-            if (!this.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((ClothingCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((ClothingCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ClothingXmlWriteTranslation.Instance;
@@ -761,6 +747,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IClothingInternalGetter item,
+            IClothingInternalGetter rhs)
+        {
+            return ((ClothingCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1289,6 +1284,89 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IClothingInternalGetter lhs,
+            IClothingInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Value != rhs.Value) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IClothingAbstractInternalGetter lhs,
+            IClothingAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IClothingInternalGetter)lhs,
+                rhs: rhs as IClothingInternalGetter);
+        }
+
+        public override bool Equals(
+            IItemAbstractInternalGetter lhs,
+            IItemAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IClothingInternalGetter)lhs,
+                rhs: rhs as IClothingInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IClothingInternalGetter)lhs,
+                rhs: rhs as IClothingInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IClothingInternalGetter)lhs,
+                rhs: rhs as IClothingInternalGetter);
+        }
+
+        public virtual int GetHashCode(IClothingInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IClothingAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (IClothingInternalGetter)item);
+        }
+
+        public override int GetHashCode(IItemAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (IClothingInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IClothingInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IClothingInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

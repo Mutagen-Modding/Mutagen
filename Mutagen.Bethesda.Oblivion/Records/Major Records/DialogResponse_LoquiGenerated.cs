@@ -92,6 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IDialogResponseGetter.Fluff1 => this.Fluff1;
         #endregion
         #region ResponseNumber
         private Byte _ResponseNumber;
@@ -119,6 +120,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IDialogResponseGetter.Fluff2 => this.Fluff2;
         #endregion
         #region ResponseText
         public bool ResponseText_IsSet
@@ -208,54 +210,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is DialogResponse rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IDialogResponseInternalGetter rhs)) return false;
+            return ((DialogResponseCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(DialogResponse rhs)
+        public bool Equals(DialogResponse obj)
         {
-            if (rhs == null) return false;
-            if (this.Emotion != rhs.Emotion) return false;
-            if (this.EmotionValue != rhs.EmotionValue) return false;
-            if (!ByteExt.EqualsFast(this.Fluff1, rhs.Fluff1)) return false;
-            if (this.ResponseNumber != rhs.ResponseNumber) return false;
-            if (!ByteExt.EqualsFast(this.Fluff2, rhs.Fluff2)) return false;
-            if (ResponseText_IsSet != rhs.ResponseText_IsSet) return false;
-            if (ResponseText_IsSet)
-            {
-                if (!string.Equals(this.ResponseText, rhs.ResponseText)) return false;
-            }
-            if (ActorNotes_IsSet != rhs.ActorNotes_IsSet) return false;
-            if (ActorNotes_IsSet)
-            {
-                if (!string.Equals(this.ActorNotes, rhs.ActorNotes)) return false;
-            }
-            if (this.TRDTDataTypeState != rhs.TRDTDataTypeState) return false;
-            return true;
+            return ((DialogResponseCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Emotion).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(EmotionValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff1).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ResponseNumber).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff2).CombineHashCode(ret);
-            if (ResponseText_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ResponseText).CombineHashCode(ret);
-            }
-            if (ActorNotes_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ActorNotes).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(TRDTDataTypeState).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((DialogResponseCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => DialogResponseXmlWriteTranslation.Instance;
@@ -847,7 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff1
-        Byte[] Fluff1 { get; }
+        ReadOnlySpan<Byte> Fluff1 { get; }
 
         #endregion
         #region ResponseNumber
@@ -855,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff2
-        Byte[] Fluff2 { get; }
+        ReadOnlySpan<Byte> Fluff2 { get; }
 
         #endregion
         #region ResponseText
@@ -941,6 +907,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IDialogResponseInternalGetter item,
+            IDialogResponseInternalGetter rhs)
+        {
+            return ((DialogResponseCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1419,9 +1394,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Emotion = item.Emotion == rhs.Emotion;
             ret.EmotionValue = item.EmotionValue == rhs.EmotionValue;
-            ret.Fluff1 = ByteExt.EqualsFast(item.Fluff1, rhs.Fluff1);
+            ret.Fluff1 = MemoryExtensions.SequenceEqual(item.Fluff1, rhs.Fluff1);
             ret.ResponseNumber = item.ResponseNumber == rhs.ResponseNumber;
-            ret.Fluff2 = ByteExt.EqualsFast(item.Fluff2, rhs.Fluff2);
+            ret.Fluff2 = MemoryExtensions.SequenceEqual(item.Fluff2, rhs.Fluff2);
             ret.ResponseText = item.ResponseText_IsSet == rhs.ResponseText_IsSet && string.Equals(item.ResponseText, rhs.ResponseText);
             ret.ActorNotes = item.ActorNotes_IsSet == rhs.ActorNotes_IsSet && string.Equals(item.ActorNotes, rhs.ActorNotes);
         }
@@ -1480,7 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Fluff1 ?? true)
             {
-                fg.AppendLine($"Fluff1 => {item.Fluff1}");
+                fg.AppendLine($"Fluff1 => {SpanExt.ToHexString(item.Fluff1)}");
             }
             if (printMask?.ResponseNumber ?? true)
             {
@@ -1488,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Fluff2 ?? true)
             {
-                fg.AppendLine($"Fluff2 => {item.Fluff2}");
+                fg.AppendLine($"Fluff2 => {SpanExt.ToHexString(item.Fluff2)}");
             }
             if (printMask?.ResponseText ?? true)
             {
@@ -1525,6 +1500,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.ActorNotes = item.ActorNotes_IsSet;
             mask.TRDTDataTypeState = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IDialogResponseInternalGetter lhs,
+            IDialogResponseInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Emotion != rhs.Emotion) return false;
+            if (lhs.EmotionValue != rhs.EmotionValue) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff1, rhs.Fluff1)) return false;
+            if (lhs.ResponseNumber != rhs.ResponseNumber) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff2, rhs.Fluff2)) return false;
+            if (lhs.ResponseText_IsSet != rhs.ResponseText_IsSet) return false;
+            if (lhs.ResponseText_IsSet)
+            {
+                if (!string.Equals(lhs.ResponseText, rhs.ResponseText)) return false;
+            }
+            if (lhs.ActorNotes_IsSet != rhs.ActorNotes_IsSet) return false;
+            if (lhs.ActorNotes_IsSet)
+            {
+                if (!string.Equals(lhs.ActorNotes, rhs.ActorNotes)) return false;
+            }
+            if (lhs.TRDTDataTypeState != rhs.TRDTDataTypeState) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IDialogResponseInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Emotion).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.EmotionValue).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff1).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ResponseNumber).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff2).CombineHashCode(ret);
+            if (item.ResponseText_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ResponseText).CombineHashCode(ret);
+            }
+            if (item.ActorNotes_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ActorNotes).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.TRDTDataTypeState).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

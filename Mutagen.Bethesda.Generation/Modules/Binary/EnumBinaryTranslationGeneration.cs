@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
     {
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             var eType = typeGen as EnumType;
             return $"EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance";

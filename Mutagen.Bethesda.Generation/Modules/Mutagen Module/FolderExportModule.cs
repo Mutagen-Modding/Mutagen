@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         case ObjectType.Record:
                             using (var args = new ArgsWrapper(fg,
-                                $"ret.{field.Name}.CopyFieldsFrom({loqui.TypeName}.CreateFromXml",
+                                $"ret.{field.Name}.CopyFieldsFrom({loqui.TypeName(getter: false)}.CreateFromXml",
                                 suffixLine: ");")
                             {
                                 SemiColon = false

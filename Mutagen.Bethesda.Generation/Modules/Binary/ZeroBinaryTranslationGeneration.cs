@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"{writerAccessor}.WriteZeros({zero.Length});");
         }
 
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             throw new NotImplementedException();
         }

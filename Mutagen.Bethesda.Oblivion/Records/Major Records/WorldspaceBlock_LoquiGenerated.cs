@@ -95,6 +95,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IWorldspaceBlockGetter.LastModified => this.LastModified;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -127,41 +128,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is WorldspaceBlock rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IWorldspaceBlockGetter rhs)) return false;
+            return ((WorldspaceBlockCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(WorldspaceBlock rhs)
+        public bool Equals(WorldspaceBlock obj)
         {
-            if (rhs == null) return false;
-            if (this.BlockNumberY != rhs.BlockNumberY) return false;
-            if (this.BlockNumberX != rhs.BlockNumberX) return false;
-            if (this.GroupType != rhs.GroupType) return false;
-            if (!ByteExt.EqualsFast(this.LastModified, rhs.LastModified)) return false;
-            if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
-            if (Items.HasBeenSet)
-            {
-                if (!this.Items.SequenceEqual(rhs.Items)) return false;
-            }
-            return true;
+            return ((WorldspaceBlockCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(BlockNumberY).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BlockNumberX).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(GroupType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LastModified).CombineHashCode(ret);
-            if (Items.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((WorldspaceBlockCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => WorldspaceBlockXmlWriteTranslation.Instance;
@@ -607,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LastModified = (Byte[])obj;
                     break;
                 case WorldspaceBlock_FieldIndex.Items:
-                    this._Items.SetTo((IEnumerable<WorldspaceSubBlock>)obj);
+                    this._Items.SetTo((SourceSetList<WorldspaceSubBlock>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -650,7 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LastModified = (Byte[])pair.Value;
                     break;
                 case WorldspaceBlock_FieldIndex.Items:
-                    obj._Items.SetTo((IEnumerable<WorldspaceSubBlock>)pair.Value);
+                    obj._Items.SetTo((SourceSetList<WorldspaceSubBlock>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -699,7 +677,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region LastModified
-        Byte[] LastModified { get; }
+        ReadOnlySpan<Byte> LastModified { get; }
 
         #endregion
         #region Items
@@ -769,6 +747,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IWorldspaceBlockGetter item,
+            IWorldspaceBlockGetter rhs)
+        {
+            return ((WorldspaceBlockCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1167,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.BlockNumberY = item.BlockNumberY == rhs.BlockNumberY;
             ret.BlockNumberX = item.BlockNumberX == rhs.BlockNumberX;
             ret.GroupType = item.GroupType == rhs.GroupType;
-            ret.LastModified = ByteExt.EqualsFast(item.LastModified, rhs.LastModified);
+            ret.LastModified = MemoryExtensions.SequenceEqual(item.LastModified, rhs.LastModified);
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1232,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.LastModified ?? true)
             {
-                fg.AppendLine($"LastModified => {item.LastModified}");
+                fg.AppendLine($"LastModified => {SpanExt.ToHexString(item.LastModified)}");
             }
             if (printMask?.Items?.Overall ?? true)
             {
@@ -1272,6 +1259,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.LastModified = true;
             mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceSubBlock_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceSubBlock_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IWorldspaceBlockGetter lhs,
+            IWorldspaceBlockGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.BlockNumberY != rhs.BlockNumberY) return false;
+            if (lhs.BlockNumberX != rhs.BlockNumberX) return false;
+            if (lhs.GroupType != rhs.GroupType) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.LastModified, rhs.LastModified)) return false;
+            if (lhs.Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
+            if (lhs.Items.HasBeenSet)
+            {
+                if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IWorldspaceBlockGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.BlockNumberY).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BlockNumberX).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
+            if (item.Items.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

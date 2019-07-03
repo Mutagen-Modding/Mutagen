@@ -88,6 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IClassTrainingGetter.Fluff => this.Fluff;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassTrainingGetter)rhs, include);
@@ -108,30 +109,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ClassTraining rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IClassTrainingGetter rhs)) return false;
+            return ((ClassTrainingCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ClassTraining rhs)
+        public bool Equals(ClassTraining obj)
         {
-            if (rhs == null) return false;
-            if (this.TrainedSkill != rhs.TrainedSkill) return false;
-            if (this.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
-            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
-            return true;
+            return ((ClassTrainingCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(TrainedSkill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MaximumTrainingLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((ClassTrainingCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => ClassTrainingXmlWriteTranslation.Instance;
@@ -583,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff
-        Byte[] Fluff { get; }
+        ReadOnlySpan<Byte> Fluff { get; }
 
         #endregion
 
@@ -650,6 +639,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IClassTrainingGetter item,
+            IClassTrainingGetter rhs)
+        {
+            return ((ClassTrainingCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -966,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.TrainedSkill = item.TrainedSkill == rhs.TrainedSkill;
             ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
-            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
         }
 
         public string ToString(
@@ -1023,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Fluff ?? true)
             {
-                fg.AppendLine($"Fluff => {item.Fluff}");
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
         }
 
@@ -1042,6 +1040,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.MaximumTrainingLevel = true;
             mask.Fluff = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IClassTrainingGetter lhs,
+            IClassTrainingGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.TrainedSkill != rhs.TrainedSkill) return false;
+            if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IClassTrainingGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.TrainedSkill).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaximumTrainingLevel).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

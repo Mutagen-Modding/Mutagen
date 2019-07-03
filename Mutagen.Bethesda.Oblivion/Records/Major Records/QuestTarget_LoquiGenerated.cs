@@ -125,39 +125,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is QuestTarget rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IQuestTargetInternalGetter rhs)) return false;
+            return ((QuestTargetCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(QuestTarget rhs)
+        public bool Equals(QuestTarget obj)
         {
-            if (rhs == null) return false;
-            if (!this.Target_Property.Equals(rhs.Target_Property)) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (Conditions.HasBeenSet != rhs.Conditions.HasBeenSet) return false;
-            if (Conditions.HasBeenSet)
-            {
-                if (!this.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            }
-            if (this.QSTADataTypeState != rhs.QSTADataTypeState) return false;
-            return true;
+            return ((QuestTargetCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Target).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            if (Conditions.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Conditions).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(QSTADataTypeState).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((QuestTargetCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => QuestTargetXmlWriteTranslation.Instance;
@@ -601,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (QuestTarget.Flag)obj;
                     break;
                 case QuestTarget_FieldIndex.Conditions:
-                    this._Conditions.SetTo((IEnumerable<Condition>)obj);
+                    this._Conditions.SetTo((SourceSetList<Condition>)obj);
                     break;
                 case QuestTarget_FieldIndex.QSTADataTypeState:
                     this.QSTADataTypeState = (QuestTarget.QSTADataType)obj;
@@ -641,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (QuestTarget.Flag)pair.Value;
                     break;
                 case QuestTarget_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value);
+                    obj._Conditions.SetTo((SourceSetList<Condition>)pair.Value);
                     break;
                 case QuestTarget_FieldIndex.QSTADataTypeState:
                     obj.QSTADataTypeState = (QuestTarget.QSTADataType)pair.Value;
@@ -771,6 +750,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IQuestTargetInternalGetter item,
+            IQuestTargetInternalGetter rhs)
+        {
+            return ((QuestTargetCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1220,6 +1208,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.QSTADataTypeState = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IQuestTargetInternalGetter lhs,
+            IQuestTargetInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Target_Property.Equals(rhs.Target_Property)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Conditions.HasBeenSet != rhs.Conditions.HasBeenSet) return false;
+            if (lhs.Conditions.HasBeenSet)
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            }
+            if (lhs.QSTADataTypeState != rhs.QSTADataTypeState) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IQuestTargetInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Target).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            if (item.Conditions.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.QSTADataTypeState).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

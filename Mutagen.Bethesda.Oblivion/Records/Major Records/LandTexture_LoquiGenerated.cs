@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDSetLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDSetLink<Grass>> ILandTextureGetter.PotentialGrass => _PotentialGrass;
+        IReadOnlySetList<IFormIDSetLinkGetter<IGrassInternalGetter>> ILandTextureGetter.PotentialGrass => _PotentialGrass;
         #endregion
 
         #endregion
@@ -167,62 +167,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is LandTexture rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ILandTextureInternalGetter rhs)) return false;
+            return ((LandTextureCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(LandTexture rhs)
+        public bool Equals(LandTexture obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            if (Havok_IsSet != rhs.Havok_IsSet) return false;
-            if (Havok_IsSet)
-            {
-                if (!object.Equals(this.Havok, rhs.Havok)) return false;
-            }
-            if (TextureSpecularExponent_IsSet != rhs.TextureSpecularExponent_IsSet) return false;
-            if (TextureSpecularExponent_IsSet)
-            {
-                if (this.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
-            }
-            if (PotentialGrass.HasBeenSet != rhs.PotentialGrass.HasBeenSet) return false;
-            if (PotentialGrass.HasBeenSet)
-            {
-                if (!this.PotentialGrass.SequenceEqual(rhs.PotentialGrass)) return false;
-            }
-            return true;
+            return ((LandTextureCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            if (Havok_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Havok).CombineHashCode(ret);
-            }
-            if (TextureSpecularExponent_IsSet)
-            {
-                ret = HashHelper.GetHashCode(TextureSpecularExponent).CombineHashCode(ret);
-            }
-            if (PotentialGrass.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(PotentialGrass).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((LandTextureCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => LandTextureXmlWriteTranslation.Instance;
@@ -741,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.TextureSpecularExponent = (Byte)obj;
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    this._PotentialGrass.SetTo((IEnumerable<IFormIDSetLink<Grass>>)obj);
+                    this._PotentialGrass.SetTo((SourceSetList<IFormIDSetLink<Grass>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -782,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.TextureSpecularExponent = (Byte)pair.Value;
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    obj._PotentialGrass.SetTo((IEnumerable<IFormIDSetLink<Grass>>)pair.Value);
+                    obj._PotentialGrass.SetTo((SourceSetList<IFormIDSetLink<Grass>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -849,7 +805,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region PotentialGrass
-        IReadOnlySetList<IFormIDSetLink<Grass>> PotentialGrass { get; }
+        IReadOnlySetList<IFormIDSetLinkGetter<IGrassInternalGetter>> PotentialGrass { get; }
         #endregion
 
     }
@@ -922,6 +878,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ILandTextureInternalGetter item,
+            ILandTextureInternalGetter rhs)
+        {
+            return ((LandTextureCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1518,6 +1483,91 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILandTextureInternalGetter lhs,
+            ILandTextureInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.Havok_IsSet != rhs.Havok_IsSet) return false;
+            if (lhs.Havok_IsSet)
+            {
+                if (!object.Equals(lhs.Havok, rhs.Havok)) return false;
+            }
+            if (lhs.TextureSpecularExponent_IsSet != rhs.TextureSpecularExponent_IsSet) return false;
+            if (lhs.TextureSpecularExponent_IsSet)
+            {
+                if (lhs.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
+            }
+            if (lhs.PotentialGrass.HasBeenSet != rhs.PotentialGrass.HasBeenSet) return false;
+            if (lhs.PotentialGrass.HasBeenSet)
+            {
+                if (!lhs.PotentialGrass.SequenceEqual(rhs.PotentialGrass)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILandTextureInternalGetter)lhs,
+                rhs: rhs as ILandTextureInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILandTextureInternalGetter)lhs,
+                rhs: rhs as ILandTextureInternalGetter);
+        }
+
+        public virtual int GetHashCode(ILandTextureInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.Havok_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Havok).CombineHashCode(ret);
+            }
+            if (item.TextureSpecularExponent_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.TextureSpecularExponent).CombineHashCode(ret);
+            }
+            if (item.PotentialGrass.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.PotentialGrass).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILandTextureInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILandTextureInternalGetter)item);
+        }
+
+        #endregion
+
+
     }
     #endregion
 
@@ -1574,14 +1624,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.PotentialGrass.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.PotentialGrass) ?? true))
             {
-                ListXmlTranslation<IFormIDSetLink<Grass>>.Instance.Write(
+                ListXmlTranslation<IFormIDSetLinkGetter<IGrassInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.PotentialGrass),
                     item: item.PotentialGrass,
                     fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)LandTexture_FieldIndex.PotentialGrass),
-                    transl: (XElement subNode, IFormIDSetLink<Grass> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDSetLinkGetter<IGrassInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -2351,10 +2401,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.PotentialGrass.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLink<Grass>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLinkGetter<IGrassInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.PotentialGrass,
-                    transl: (MutagenWriter subWriter, IFormIDSetLink<Grass> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDSetLinkGetter<IGrassInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,

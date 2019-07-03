@@ -96,35 +96,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is QuestStage rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IQuestStageGetter rhs)) return false;
+            return ((QuestStageCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(QuestStage rhs)
+        public bool Equals(QuestStage obj)
         {
-            if (rhs == null) return false;
-            if (this.Stage != rhs.Stage) return false;
-            if (LogEntries.HasBeenSet != rhs.LogEntries.HasBeenSet) return false;
-            if (LogEntries.HasBeenSet)
-            {
-                if (!this.LogEntries.SequenceEqual(rhs.LogEntries)) return false;
-            }
-            return true;
+            return ((QuestStageCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Stage).CombineHashCode(ret);
-            if (LogEntries.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(LogEntries).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((QuestStageCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => QuestStageXmlWriteTranslation.Instance;
@@ -555,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Stage = (UInt16)obj;
                     break;
                 case QuestStage_FieldIndex.LogEntries:
-                    this._LogEntries.SetTo((IEnumerable<LogEntry>)obj);
+                    this._LogEntries.SetTo((SourceSetList<LogEntry>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -589,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Stage = (UInt16)pair.Value;
                     break;
                 case QuestStage_FieldIndex.LogEntries:
-                    obj._LogEntries.SetTo((IEnumerable<LogEntry>)pair.Value);
+                    obj._LogEntries.SetTo((SourceSetList<LogEntry>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -690,6 +673,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IQuestStageGetter item,
+            IQuestStageGetter rhs)
+        {
+            return ((QuestStageCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1095,6 +1087,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Stage = true;
             mask.LogEntries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LogEntry_Mask<bool>>>>(item.LogEntries.HasBeenSet, item.LogEntries.WithIndex().Select((i) => new MaskItemIndexed<bool, LogEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IQuestStageGetter lhs,
+            IQuestStageGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Stage != rhs.Stage) return false;
+            if (lhs.LogEntries.HasBeenSet != rhs.LogEntries.HasBeenSet) return false;
+            if (lhs.LogEntries.HasBeenSet)
+            {
+                if (!lhs.LogEntries.SequenceEqual(rhs.LogEntries)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IQuestStageGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Stage).CombineHashCode(ret);
+            if (item.LogEntries.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.LogEntries).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

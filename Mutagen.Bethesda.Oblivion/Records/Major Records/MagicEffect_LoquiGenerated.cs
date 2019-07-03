@@ -201,6 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IMagicEffectGetter.Unused => this.Unused;
         #endregion
         #region MagicSchool
         private MagicSchool _MagicSchool;
@@ -244,7 +245,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Light> IMagicEffect.Light_Property => this.Light_Property;
         ILightInternalGetter IMagicEffectGetter.Light => this.Light_Property.Item;
-        IFormIDLinkGetter<Light> IMagicEffectGetter.Light_Property => this.Light_Property;
+        IFormIDLinkGetter<ILightInternalGetter> IMagicEffectGetter.Light_Property => this.Light_Property;
         #endregion
         #region ProjectileSpeed
         private Single _ProjectileSpeed;
@@ -264,7 +265,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<EffectShader> IMagicEffect.EffectShader_Property => this.EffectShader_Property;
         IEffectShaderInternalGetter IMagicEffectGetter.EffectShader => this.EffectShader_Property.Item;
-        IFormIDLinkGetter<EffectShader> IMagicEffectGetter.EffectShader_Property => this.EffectShader_Property;
+        IFormIDLinkGetter<IEffectShaderInternalGetter> IMagicEffectGetter.EffectShader_Property => this.EffectShader_Property;
         #endregion
         #region SubData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -284,7 +285,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IEDIDLink<MagicEffect>> IMagicEffect.CounterEffects => _CounterEffects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IEDIDLink<MagicEffect>> IMagicEffectGetter.CounterEffects => _CounterEffects;
+        IReadOnlySetList<IEDIDLinkGetter<IMagicEffectInternalGetter>> IMagicEffectGetter.CounterEffects => _CounterEffects;
         #endregion
 
         #endregion
@@ -324,93 +325,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is MagicEffect rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IMagicEffectInternalGetter rhs)) return false;
+            return ((MagicEffectCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffect rhs)
+        public bool Equals(MagicEffect obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Description_IsSet != rhs.Description_IsSet) return false;
-            if (Description_IsSet)
-            {
-                if (!string.Equals(this.Description, rhs.Description)) return false;
-            }
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (this.Flags != rhs.Flags) return false;
-            if (!this.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
-            if (!ByteExt.EqualsFast(this.Unused, rhs.Unused)) return false;
-            if (this.MagicSchool != rhs.MagicSchool) return false;
-            if (this.Resistance != rhs.Resistance) return false;
-            if (this.CounterEffectCount != rhs.CounterEffectCount) return false;
-            if (!this.Light_Property.Equals(rhs.Light_Property)) return false;
-            if (!this.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed)) return false;
-            if (!this.EffectShader_Property.Equals(rhs.EffectShader_Property)) return false;
-            if (!object.Equals(this.SubData, rhs.SubData)) return false;
-            if (CounterEffects.HasBeenSet != rhs.CounterEffects.HasBeenSet) return false;
-            if (CounterEffects.HasBeenSet)
-            {
-                if (!this.CounterEffects.SequenceEqual(rhs.CounterEffects)) return false;
-            }
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((MagicEffectCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
-            }
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BaseCost).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Unused).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MagicSchool).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Resistance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CounterEffectCount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Light).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ProjectileSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(EffectShader).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SubData).CombineHashCode(ret);
-            if (CounterEffects.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(CounterEffects).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((MagicEffectCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => MagicEffectXmlWriteTranslation.Instance;
@@ -1128,7 +1054,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.SubData = (MagicEffectSubData)obj;
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
-                    this._CounterEffects.SetTo((IEnumerable<IEDIDLink<MagicEffect>>)obj);
+                    this._CounterEffects.SetTo((SourceSetList<IEDIDLink<MagicEffect>>)obj);
                     break;
                 case MagicEffect_FieldIndex.DATADataTypeState:
                     this.DATADataTypeState = (MagicEffect.DATADataType)obj;
@@ -1205,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.SubData = (MagicEffectSubData)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
-                    obj._CounterEffects.SetTo((IEnumerable<IEDIDLink<MagicEffect>>)pair.Value);
+                    obj._CounterEffects.SetTo((SourceSetList<IEDIDLink<MagicEffect>>)pair.Value);
                     break;
                 case MagicEffect_FieldIndex.DATADataTypeState:
                     obj.DATADataTypeState = (MagicEffect.DATADataType)pair.Value;
@@ -1319,7 +1245,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Unused
-        Byte[] Unused { get; }
+        ReadOnlySpan<Byte> Unused { get; }
 
         #endregion
         #region MagicSchool
@@ -1336,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Light
         ILightInternalGetter Light { get; }
-        IFormIDLinkGetter<Light> Light_Property { get; }
+        IFormIDLinkGetter<ILightInternalGetter> Light_Property { get; }
 
         #endregion
         #region ProjectileSpeed
@@ -1345,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region EffectShader
         IEffectShaderInternalGetter EffectShader { get; }
-        IFormIDLinkGetter<EffectShader> EffectShader_Property { get; }
+        IFormIDLinkGetter<IEffectShaderInternalGetter> EffectShader_Property { get; }
 
         #endregion
         #region SubData
@@ -1353,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region CounterEffects
-        IReadOnlySetList<IEDIDLink<MagicEffect>> CounterEffects { get; }
+        IReadOnlySetList<IEDIDLinkGetter<IMagicEffectInternalGetter>> CounterEffects { get; }
         #endregion
 
     }
@@ -1430,6 +1356,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IMagicEffectInternalGetter item,
+            IMagicEffectInternalGetter rhs)
+        {
+            return ((MagicEffectCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -2264,7 +2199,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.Flags = item.Flags == rhs.Flags;
             ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
-            ret.Unused = ByteExt.EqualsFast(item.Unused, rhs.Unused);
+            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused, rhs.Unused);
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
             ret.Resistance = item.Resistance == rhs.Resistance;
             ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
@@ -2353,7 +2288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendLine($"Unused => {item.Unused}");
+                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
             if (printMask?.MagicSchool ?? true)
             {
@@ -2481,6 +2416,122 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IMagicEffectInternalGetter lhs,
+            IMagicEffectInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unused, rhs.Unused)) return false;
+            if (lhs.MagicSchool != rhs.MagicSchool) return false;
+            if (lhs.Resistance != rhs.Resistance) return false;
+            if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
+            if (!lhs.Light_Property.Equals(rhs.Light_Property)) return false;
+            if (!lhs.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed)) return false;
+            if (!lhs.EffectShader_Property.Equals(rhs.EffectShader_Property)) return false;
+            if (!object.Equals(lhs.SubData, rhs.SubData)) return false;
+            if (lhs.CounterEffects.HasBeenSet != rhs.CounterEffects.HasBeenSet) return false;
+            if (lhs.CounterEffects.HasBeenSet)
+            {
+                if (!lhs.CounterEffects.SequenceEqual(rhs.CounterEffects)) return false;
+            }
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IMagicEffectInternalGetter)lhs,
+                rhs: rhs as IMagicEffectInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IMagicEffectInternalGetter)lhs,
+                rhs: rhs as IMagicEffectInternalGetter);
+        }
+
+        public virtual int GetHashCode(IMagicEffectInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BaseCost).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Unused).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MagicSchool).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Resistance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CounterEffectCount).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Light).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ProjectileSpeed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.EffectShader).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SubData).CombineHashCode(ret);
+            if (item.CounterEffects.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.CounterEffects).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IMagicEffectInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IMagicEffectInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -2649,14 +2700,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.CounterEffects.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
             {
-                ListXmlTranslation<IEDIDLink<MagicEffect>>.Instance.Write(
+                ListXmlTranslation<IEDIDLinkGetter<IMagicEffectInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.CounterEffects),
                     item: item.CounterEffects,
                     fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.CounterEffects),
-                    transl: (XElement subNode, IEDIDLink<MagicEffect> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IEDIDLinkGetter<IMagicEffectInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -4114,11 +4165,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.CounterEffects.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLink<MagicEffect>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLinkGetter<IMagicEffectInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.CounterEffects,
                     recordType: MagicEffect_Registration.ESCE_HEADER,
-                    transl: (MutagenWriter subWriter, IEDIDLink<MagicEffect> subItem) =>
+                    transl: (MutagenWriter subWriter, IEDIDLinkGetter<IMagicEffectInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                             writer: subWriter,

@@ -180,71 +180,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Faction rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IFactionInternalGetter rhs)) return false;
+            return ((FactionCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Faction rhs)
+        public bool Equals(Faction obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
-            if (Relations.HasBeenSet)
-            {
-                if (!this.Relations.SequenceEqual(rhs.Relations)) return false;
-            }
-            if (Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (Flags_IsSet)
-            {
-                if (this.Flags != rhs.Flags) return false;
-            }
-            if (CrimeGoldMultiplier_IsSet != rhs.CrimeGoldMultiplier_IsSet) return false;
-            if (CrimeGoldMultiplier_IsSet)
-            {
-                if (!this.CrimeGoldMultiplier.EqualsWithin(rhs.CrimeGoldMultiplier)) return false;
-            }
-            if (Ranks.HasBeenSet != rhs.Ranks.HasBeenSet) return false;
-            if (Ranks.HasBeenSet)
-            {
-                if (!this.Ranks.SequenceEqual(rhs.Ranks)) return false;
-            }
-            return true;
+            return ((FactionCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Relations.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Relations).CombineHashCode(ret);
-            }
-            if (Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
-            if (CrimeGoldMultiplier_IsSet)
-            {
-                ret = HashHelper.GetHashCode(CrimeGoldMultiplier).CombineHashCode(ret);
-            }
-            if (Ranks.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Ranks).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((FactionCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
@@ -791,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Name = (String)obj;
                     break;
                 case Faction_FieldIndex.Relations:
-                    this._Relations.SetTo((IEnumerable<Relation>)obj);
+                    this._Relations.SetTo((SourceSetList<Relation>)obj);
                     break;
                 case Faction_FieldIndex.Flags:
                     this.Flags = (Faction.FactionFlag)obj;
@@ -800,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.CrimeGoldMultiplier = (Single)obj;
                     break;
                 case Faction_FieldIndex.Ranks:
-                    this._Ranks.SetTo((IEnumerable<Rank>)obj);
+                    this._Ranks.SetTo((SourceSetList<Rank>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -835,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Name = (String)pair.Value;
                     break;
                 case Faction_FieldIndex.Relations:
-                    obj._Relations.SetTo((IEnumerable<Relation>)pair.Value);
+                    obj._Relations.SetTo((SourceSetList<Relation>)pair.Value);
                     break;
                 case Faction_FieldIndex.Flags:
                     obj.Flags = (Faction.FactionFlag)pair.Value;
@@ -844,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.CrimeGoldMultiplier = (Single)pair.Value;
                     break;
                 case Faction_FieldIndex.Ranks:
-                    obj._Ranks.SetTo((IEnumerable<Rank>)pair.Value);
+                    obj._Ranks.SetTo((SourceSetList<Rank>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -988,6 +935,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IFactionInternalGetter item,
+            IFactionInternalGetter rhs)
+        {
+            return ((FactionCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1644,6 +1600,100 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IFactionInternalGetter lhs,
+            IFactionInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
+            if (lhs.Relations.HasBeenSet)
+            {
+                if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.CrimeGoldMultiplier_IsSet != rhs.CrimeGoldMultiplier_IsSet) return false;
+            if (lhs.CrimeGoldMultiplier_IsSet)
+            {
+                if (!lhs.CrimeGoldMultiplier.EqualsWithin(rhs.CrimeGoldMultiplier)) return false;
+            }
+            if (lhs.Ranks.HasBeenSet != rhs.Ranks.HasBeenSet) return false;
+            if (lhs.Ranks.HasBeenSet)
+            {
+                if (!lhs.Ranks.SequenceEqual(rhs.Ranks)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IFactionInternalGetter)lhs,
+                rhs: rhs as IFactionInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IFactionInternalGetter)lhs,
+                rhs: rhs as IFactionInternalGetter);
+        }
+
+        public virtual int GetHashCode(IFactionInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Relations.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Relations).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.CrimeGoldMultiplier_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.CrimeGoldMultiplier).CombineHashCode(ret);
+            }
+            if (item.Ranks.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Ranks).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IFactionInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IFactionInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion
