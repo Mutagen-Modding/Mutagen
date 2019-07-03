@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Binary
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(span.Slice(0, 4)));
         public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4, 4));
         public RecordType ContainedRecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(span.Slice(8, 4)));
-        public int GroupFlags => BinaryPrimitives.ReadInt32LittleEndian(span.Slice(12, 4));
+        public int GroupType => BinaryPrimitives.ReadInt32LittleEndian(span.Slice(12, 4));
         public long TotalLength => this.RecordLength;
         public bool IsGroup => this.RecordType == Constants.GRUP;
         public uint ContentLength => checked((uint)(this.TotalLength - this.HeaderLength));

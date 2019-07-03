@@ -2416,7 +2416,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))
+                using (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))
                 {
                     WriteToBinary(
                         item: item,
@@ -2444,7 +2444,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))
+                using (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))
                 {
                     WriteToBinary(
                         item: item,
@@ -2539,7 +2539,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))
+                using (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))
                 {
                     SkyrimModBinaryWriteTranslation.Instance.Write(
                         item: item,

@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Tests
                     modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
                     errorMask: out var outputErrMask);
                 Assert.False(outputErrMask?.IsInError() ?? false);
-                var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, gameMode: GameMode.Oblivion);
+                var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, meta: MetaDataConstants.Get(GameMode.Oblivion));
                 using (var reader = new BinaryReadStream(oblivionOutputPath))
                 {
                     foreach (var rec in fileLocs.ListedRecords.Keys)

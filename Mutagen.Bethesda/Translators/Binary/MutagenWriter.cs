@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Binary
         public System.IO.BinaryWriter Writer;
         private static byte Zero = 0;
         public Stream BaseStream { get; private set; }
-        public GameMode GameMode { get; private set; }
+        public MetaDataConstants Meta { get; private set; }
 
         public long Position
         {
@@ -28,25 +28,25 @@ namespace Mutagen.Bethesda.Binary
             get => this.BaseStream.Length;
         }
 
-        public MutagenWriter(string path, GameMode gameMode)
+        public MutagenWriter(string path, MetaDataConstants meta)
         {
             this.BaseStream = new FileStream(path, FileMode.Create, FileAccess.Write);
             this.Writer = new BinaryWriter(this.BaseStream);
-            this.GameMode = gameMode;
+            this.Meta = meta;
         }
 
-        public MutagenWriter(Stream stream, GameMode gameMode, bool dispose = true)
+        public MutagenWriter(Stream stream, MetaDataConstants meta, bool dispose = true)
         {
             this.dispose = dispose;
             this.BaseStream = stream;
             this.Writer = new BinaryWriter(stream);
-            this.GameMode = gameMode;
+            this.Meta = meta;
         }
 
-        public MutagenWriter(System.IO.BinaryWriter reader, GameMode gameMode)
+        public MutagenWriter(System.IO.BinaryWriter reader, MetaDataConstants meta)
         {
             this.Writer = reader;
-            this.GameMode = gameMode;
+            this.Meta = meta;
         }
 
         public void Write(bool b)

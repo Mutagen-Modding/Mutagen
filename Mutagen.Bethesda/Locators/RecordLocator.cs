@@ -148,10 +148,9 @@ namespace Mutagen.Bethesda
 
         public static FileLocations GetFileLocations(
             string filePath,
-            GameMode gameMode,
+            MetaDataConstants meta,
             RecordInterest interest = null)
         {
-            var meta = MetaDataConstants.Get(gameMode);
             using (var stream = new MutagenBinaryReadStream(filePath, meta))
             {
                 return GetFileLocations(stream, interest);
@@ -286,7 +285,7 @@ namespace Mutagen.Bethesda
             {
                 return false;
             }
-            var grupType = EnumExt<GroupTypeEnum>.Convert(groupMeta.GroupFlags);
+            var grupType = EnumExt<GroupTypeEnum>.Convert(groupMeta.GroupType);
             switch (grupType)
             {
                 case GroupTypeEnum.InteriorCellBlock:
@@ -314,7 +313,7 @@ namespace Mutagen.Bethesda
                 throw new DataMisalignedException("Group was not read in where expected: 0x" + (frame.Position - 4).ToString("X"));
             }
             fileLocs.GrupLocations.Add(grupLoc);
-            switch (EnumExt<GroupTypeEnum>.Convert(groupMeta.GroupFlags))
+            switch (EnumExt<GroupTypeEnum>.Convert(groupMeta.GroupType))
             {
                 case GroupTypeEnum.InteriorCellBlock:
                 case GroupTypeEnum.ExteriorCellBlock:
