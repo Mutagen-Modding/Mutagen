@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!LeveledItem_Registration.LVLI_HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
             var dataIndex = str.IndexOf("DATA");
             if (dataIndex == -1) return;
 
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Region_Registration.REGN_HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
-            var lenToRead = (int)loc.Width + Constants.RECORD_HEADER_LENGTH;
+            var lenToRead = (int)loc.Width + Meta.MajorConstants.HeaderLength;
             var str = stream.ReadZString(lenToRead);
             int amount = 0;
             var rdatIndex = str.IndexOf("RDAT");
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Tests
             if (!DialogItem_Registration.INFO_HEADER.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
             var dataIndex = -1;
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Tests
             if (!IdleAnimation_Registration.IDLE_HEADER.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
             var dataIndex = -1;
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Tests
             if (!AIPackage_Registration.PACK_HEADER.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
             var dataIndex = -1;
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!CombatStyle_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
             var dataIndex = str.IndexOf("CSTD");
             stream.Position = loc.Min + dataIndex + 4;
             var len = stream.ReadUInt16();
@@ -925,7 +925,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Water_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
             var dataIndex = str.IndexOf("DATA");
             stream.Position = loc.Min + dataIndex + 4;
             var amount = 0;
@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!GameSetting_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
 
             var edidIndex = str.IndexOf("EDID");
             stream.Position = loc.Min + edidIndex + 6;
@@ -1035,7 +1035,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Book_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
 
             var dataIndex = str.IndexOf("DATA");
             if (dataIndex != -1)
@@ -1057,7 +1057,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Light_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
 
             var dataIndex = str.IndexOf("DATA");
             if (dataIndex != -1)
@@ -1103,7 +1103,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!SpellUnleveled_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
             foreach (var scitIndex in IterateTypes(str, new RecordType("SCIT")))
             {
                 stream.Position = loc.Min + scitIndex + 4;
@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Tests
             foreach (var rec in rectypes)
             {
                 recTypeIndex++;
-                var index = str.IndexOf(rec.Type, Constants.RECORD_HEADER_LENGTH);
+                var index = str.IndexOf(rec.Type, Meta.MajorConstants.HeaderLength);
                 if (index == -1) continue;
                 list.Add((rec, recTypeIndex, index));
             }
@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Tests
             if (!MagicEffect_Registration.MGEF_HEADER.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
 
             var edidIndex = str.IndexOf("EDID");
             if (edidIndex != -1)
@@ -1320,7 +1320,7 @@ namespace Mutagen.Bethesda.Tests
             if (!MagicEffect_Registration.MGEF_HEADER.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
 
             var edidForms = str.IndexOf("ESCE");
             if (edidForms != -1)
@@ -1350,7 +1350,7 @@ namespace Mutagen.Bethesda.Tests
             RangeInt64 loc)
         {
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
 
             foreach (var index in IterateTypes(str, new RecordType("EFIT")))
             {

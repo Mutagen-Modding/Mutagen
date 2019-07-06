@@ -41,14 +41,14 @@ namespace Mutagen.Bethesda.Preprocessing
                                 Dictionary<FormID, List<byte[]>> storage = new Dictionary<FormID, List<byte[]>>();
                                 using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(grupLen))
                                 {
-                                    inputStream.WriteTo(writer.BaseStream, meta.GroupHeaderLength);
+                                    inputStream.WriteTo(writer.BaseStream, meta.GroupConstants.HeaderLength);
                                     locatorStream.Position = grupLoc.Value;
                                     foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream, gameMode))
                                     {
-                                        MajorRecordMeta majorMeta = meta.MajorRecord(inputStream);
+                                        MajorRecordMeta majorMeta = meta.GetMajorRecord(inputStream);
                                         storage.TryCreateValue(rec.FormID).Add(inputStream.ReadBytes(checked((int)majorMeta.TotalLength)));
                                         if (grupFrame.Complete) continue;
-                                        GroupRecordMeta subGroupMeta = meta.Group(inputStream);
+                                        GroupRecordMeta subGroupMeta = meta.GetGroup(inputStream);
                                         if (subGroupMeta.IsGroup)
                                         {
                                             storage.TryCreateValue(rec.FormID).Add(inputStream.ReadBytes(checked((int)subGroupMeta.TotalLength)));

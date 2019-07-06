@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Tests
         public string ProcessedPath(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
 
         public abstract GameMode GameMode { get; }
+        public readonly MetaDataConstants Meta;
 
         public PassthroughTest(TestingSettings settings, Target target)
         {
@@ -35,6 +36,7 @@ namespace Mutagen.Bethesda.Tests
             this.NumMasters = target.NumMasters;
             this.Settings = settings.PassthroughSettings;
             this.Target = target;
+            this.Meta = MetaDataConstants.Get(this.GameMode);
         }
 
         public abstract ModRecordAligner.AlignmentRules GetAlignmentRules();

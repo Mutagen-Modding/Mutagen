@@ -853,15 +853,13 @@ namespace Mutagen.Bethesda.Binary
             var tasks = new List<Task<TryGet<T>>>();
             while (!frame.Complete && !frame.Reader.Complete)
             {
-                var nextRec = HeaderTranslation.GetNextType(
+                var nextRec = HeaderTranslation.GetNextSubRecordType(
                     reader: frame.Reader,
-                    contentLength: out var contentLen,
-                    finalPos: out var finalPos,
-                    hopGroup: false);
+                    contentLength: out var contentLen);
                 if (nextRec != triggeringRecord) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                 }
 
                 var toDo = transl(frame, errorMask);

@@ -82,18 +82,18 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static long ParseRecord(
-            IBinaryReadStream reader,
+            IMutagenReadStream reader,
             RecordType expectedHeader)
         {
             if (!TryParse(
                 reader,
                 expectedHeader,
                 out var contentLength,
-                Constants.RECORD_LENGTHLENGTH))
+                reader.MetaData.MajorConstants.LengthLength))
             {
                 throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
             }
-            return reader.Position + contentLength + Constants.RECORD_META_SKIP;
+            return reader.Position + contentLength + reader.MetaData.MajorConstants.LengthAfterLength;
         }
 
         public static long ParseSubrecord(
@@ -297,15 +297,16 @@ namespace Mutagen.Bethesda.Binary
             out long finalPos,
             bool hopGroup = true)
         {
-            var ret = new RecordType(reader.GetInt32());
-            contentLength = GetContentLength(reader, Constants.RECORD_LENGTHLENGTH, Constants.HEADER_LENGTH);
-            if (ret.Equals(GRUP_HEADER))
+            GroupRecordMeta groupMeta = reader.MetaData.GetGroup(reader);
+            RecordType ret = groupMeta.RecordType;
+            contentLength = checked((int)groupMeta.RecordLength);
+            if (groupMeta.IsGroup)
             {
                 if (hopGroup)
                 {
-                    ret = new RecordType(reader.GetInt32(offset: Constants.RECORD_LENGTHLENGTH + Constants.HEADER_LENGTH));
+                    ret = groupMeta.ContainedRecordType;
                 }
-                finalPos = reader.Position + Constants.GRUP_HEADER_OFFSET + contentLength;
+                finalPos = reader.Position + groupMeta.TotalLength;
             }
             else
             {

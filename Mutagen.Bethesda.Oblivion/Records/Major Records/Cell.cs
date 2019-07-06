@@ -203,13 +203,14 @@ namespace Mutagen.Bethesda.Oblivion
 
             static bool ParseTemporaryOutliers(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                var nextHeader = HeaderTranslation.GetNextRecordType(frame.Reader, out var pathLen);
+                var majorMeta = frame.MetaData.GetMajorRecord(frame);
+                var nextHeader = majorMeta.RecordType;
                 if (nextHeader.Equals(PathGrid_Registration.PGRD_HEADER))
                 {
                     using (errorMask.PushIndex((int)Cell_FieldIndex.PathGrid))
                     {
                         obj.PathGrid = PathGrid.CreateFromBinary(
-                            frame.SpawnWithLength(pathLen + Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH),
+                            frame.SpawnWithLength(majorMeta.TotalLength),
                             errorMask: errorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
@@ -221,7 +222,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (errorMask.PushIndex((int)Cell_FieldIndex.Landscape))
                     {
                         obj.Landscape = Landscape.CreateFromBinary(
-                            frame.SpawnWithLength(pathLen + Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH),
+                            frame.SpawnWithLength(majorMeta.TotalLength),
                             errorMask: errorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);

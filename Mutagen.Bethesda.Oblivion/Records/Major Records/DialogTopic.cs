@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,30 +27,23 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void CustomBinaryEndImport(MutagenFrame frame, DialogTopic obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (frame.Reader.Complete) return;
-                var next = HeaderTranslation.GetNextType(
-                    reader: frame.Reader,
-                    contentLength: out var len,
-                    finalPos: out var _,
-                    hopGroup: false);
-                if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
-                frame.Reader.Position += 8;
-                var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
-                var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
-                if (grupType == GroupTypeEnum.TopicChildren)
+                GroupRecordMeta groupMeta = frame.MetaData.GetGroup(frame);
+                if (!groupMeta.IsGroup) return;
+                if (groupMeta.GroupType == (int)GroupTypeEnum.TopicChildren)
                 {
-                    obj.Timestamp = frame.Reader.ReadBytes(4);
-                    if (formKey != obj.FormKey)
+                    obj.Timestamp = groupMeta.LastModifiedSpan.ToArray();
+                    if (FormKey.Factory(masterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan)) != obj.FormKey)
                     {
                         throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                     }
                 }
                 else
                 {
-                    frame.Reader.Position -= 16;
                     return;
                 }
+                frame.Reader.Position += groupMeta.HeaderLength;
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.ParseRepeatedItem(
-                    frame: frame.SpawnWithLength(len - Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH),
+                    frame: frame.SpawnWithLength(groupMeta.ContentLength),
                     fieldIndex: (int)DialogTopic_FieldIndex.Items,
                     lengthLength: 4,
                     item: obj.Items,

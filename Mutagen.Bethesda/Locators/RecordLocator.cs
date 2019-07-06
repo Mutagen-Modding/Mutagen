@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda
 
         private static void SkipHeader(IMutagenReadStream reader)
         {
-            ModHeaderMeta headerMeta = reader.MetaData.Header(reader);
+            ModHeaderMeta headerMeta = reader.MetaData.GetHeader(reader);
             if (!headerMeta.HasContent)
             {
                 reader.Position = reader.Length;
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda
             bool checkOverallGrupType)
         {
             var grupLoc = reader.Position;
-            GroupRecordMeta groupMeta = fileLocs.MetaData.Group(reader);
+            GroupRecordMeta groupMeta = fileLocs.MetaData.GetGroup(reader);
             if (!groupMeta.IsGroup)
             {
                 throw new ArgumentException();
@@ -229,11 +229,11 @@ namespace Mutagen.Bethesda
             {
                 while (!frame.Complete)
                 {
-                    MajorRecordMeta majorRecordMeta = fileLocs.MetaData.MajorRecord(frame.Reader);
+                    MajorRecordMeta majorRecordMeta = fileLocs.MetaData.GetMajorRecord(frame.Reader);
                     var targetRec = majorRecordMeta.RecordType;
                     if (targetRec != grupRec)
                     {
-                        if (IsSubLevelGRUP(fileLocs.MetaData.Group(frame.Reader)))
+                        if (IsSubLevelGRUP(fileLocs.MetaData.GetGroup(frame.Reader)))
                         {
                             parentGroupLocations.Push(grupLoc);
                             HandleSubLevelGRUP(
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda
             Stack<long> parentGroupLocations)
         {
             var grupLoc = frame.Position;
-            GroupRecordMeta groupMeta = fileLocs.MetaData.Group(frame.Reader);
+            GroupRecordMeta groupMeta = fileLocs.MetaData.GetGroup(frame.Reader);
             if (!groupMeta.IsGroup)
             {
                 throw new DataMisalignedException("Group was not read in where expected: 0x" + (frame.Position - 4).ToString("X"));
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda
             RecordInterest interest,
             Stack<long> parentGroupLocations)
         {
-            frame.Reader.Position += fileLocs.MetaData.GroupHeaderLength;
+            frame.Reader.Position += fileLocs.MetaData.GroupConstants.HeaderLength;
             while (!frame.Complete)
             {
                 var grupLoc = frame.Position;
@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda
             RecordInterest interest,
             Stack<long> parentGroupLocations)
         {
-            frame.Reader.Position += fileLocs.MetaData.GroupHeaderLength;
+            frame.Reader.Position += fileLocs.MetaData.GroupConstants.HeaderLength;
             while (!frame.Complete)
             {
                 var grupLoc = frame.Position;
@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda
             SkipHeader(reader);
             while (!reader.Complete)
             {
-                GroupRecordMeta groupMeta = reader.MetaData.Group(reader);
+                GroupRecordMeta groupMeta = reader.MetaData.GetGroup(reader);
                 if (!groupMeta.IsGroup)
                 {
                     throw new DataMisalignedException("Group was not read in where expected: 0x" + reader.Position.ToString("X"));
@@ -451,7 +451,7 @@ namespace Mutagen.Bethesda
             bool checkOverallGrupType = true)
         {
             var meta = MetaDataConstants.Get(gameMode);
-            var groupMeta = meta.Group(reader);
+            var groupMeta = meta.GetGroup(reader);
             var grupLoc = reader.Position;
             var targetRec = groupMeta.ContainedRecordType;
             if (!groupMeta.IsGroup)
@@ -466,10 +466,10 @@ namespace Mutagen.Bethesda
                 while (!frame.Complete)
                 {
                     var recordLocation = reader.Position;
-                    MajorRecordMeta majorMeta = meta.MajorRecord(reader);
+                    MajorRecordMeta majorMeta = meta.GetMajorRecord(reader);
                     if (majorMeta.RecordType != targetRec)
                     {
-                        var subGroupMeta = meta.Group(reader);
+                        var subGroupMeta = meta.GetGroup(reader);
                         if (IsSubLevelGRUP(subGroupMeta))
                         {
                             reader.Position += subGroupMeta.TotalLength;
