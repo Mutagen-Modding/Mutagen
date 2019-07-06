@@ -65,9 +65,7 @@ namespace Mutagen.Bethesda.Binary
         {
             if (parseWhole)
             {
-                var span = frame.ReadSpan(checked((int)frame.Remaining));
-                span = BinaryStringUtility.ProcessNullTermination(span);
-                item = BinaryStringUtility.ToZString(span);
+                item = BinaryStringUtility.ProcessWholeToZString(frame.ReadSpan(checked((int)frame.Remaining)));
             }
             else
             {
