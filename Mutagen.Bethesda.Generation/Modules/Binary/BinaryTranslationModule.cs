@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine("using (var memStream = new MemoryTributary())");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))");
+                fg.AppendLine($"using (var writer = new MutagenWriter(memStream, dispose: false, meta: {nameof(MetaDataConstants)}.{nameof(MetaDataConstants.Get)}(item.GameMode)))");
                 using (new BraceWrapper(fg))
                 {
                     internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Writer).ToArray());

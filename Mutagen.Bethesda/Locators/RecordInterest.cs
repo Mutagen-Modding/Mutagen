@@ -10,6 +10,7 @@ namespace Mutagen.Bethesda
     {
         public ICollection<RecordType> InterestingTypes { get; }
         public ICollection<RecordType> UninterestingTypes { get; }
+        public bool EmptyMeansInterested = true;
 
         public RecordInterest(
             IEnumerable<RecordType> interestingTypes = null,
@@ -32,6 +33,10 @@ namespace Mutagen.Bethesda
             if (InterestingTypes?.Count > 0)
             {
                 if (!InterestingTypes.Contains(type)) return false;
+            }
+            else if (UninterestingTypes?.Count <= 0)
+            {
+                return this.EmptyMeansInterested;
             }
             return !UninterestingTypes?.Contains(type) ?? true;
         }

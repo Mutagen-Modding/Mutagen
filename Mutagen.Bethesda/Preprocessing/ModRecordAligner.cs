@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Preprocessing
         {
             public Dictionary<RecordType, Dictionary<RecordType, AlignmentRule>> Alignments = new Dictionary<RecordType, Dictionary<RecordType, AlignmentRule>>();
             public Dictionary<RecordType, IEnumerable<RecordType>> StopMarkers = new Dictionary<RecordType, IEnumerable<RecordType>>();
-            public Dictionary<GroupTypeEnum, List<RecordType>> GroupAlignment = new Dictionary<GroupTypeEnum, List<RecordType>>();
+            public Dictionary<int, List<RecordType>> GroupTypeAlignment = new Dictionary<int, List<RecordType>>();
             public GameMode GameMode;
 
             public AlignmentRules(GameMode gameMode)
@@ -46,9 +46,9 @@ namespace Mutagen.Bethesda.Preprocessing
                 }
             }
 
-            public void SetGroupAlignment(GroupTypeEnum group, params RecordType[] recTypes)
+            public void SetGroupAlignment(int group, params RecordType[] recTypes)
             {
-                GroupAlignment.TryCreateValue(group).SetTo(recTypes);
+                GroupTypeAlignment.TryCreateValue(group).SetTo(recTypes);
             }
         }
 
@@ -150,7 +150,10 @@ namespace Mutagen.Bethesda.Preprocessing
             AlignmentRules alignmentRules,
             TempFolder temp = null)
         {
-            var interest = new RecordInterest(alignmentRules.Alignments.Keys);
+            var interest = new RecordInterest(alignmentRules.Alignments.Keys)
+            {
+                EmptyMeansInterested = false
+            };
             var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, gameMode, interest);
             temp = temp ?? new TempFolder();
             using (temp)
@@ -205,9 +208,10 @@ namespace Mutagen.Bethesda.Preprocessing
                 }
 
                 fileLocs = RecordLocator.GetFileLocations(alignedCellsFile, gameMode, interest);
-                using (var mutaReader = new BinaryReadStream(alignedCellsFile))
+                var meta = MetaDataConstants.Get(gameMode);
+                using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, meta))
                 {
-                    using (var writer = new MutagenWriter(outputPath.Path, gameMode))
+                    using (var writer = new MutagenWriter(outputPath.Path, meta))
                     {
                         foreach (var grup in fileLocs.GrupLocations)
                         {
@@ -343,30 +347,24 @@ namespace Mutagen.Bethesda.Preprocessing
 
                 // If complete overall, return
                 if (inputStream.Complete) break;
-                var recType = HeaderTranslation.ReadNextRecordType(
-                    inputStream,
-                    out var len);
-                writer.Write(recType.TypeInt);
-                writer.Write(len);
-                if (!recType.Equals(Group_Registration.GRUP_HEADER))
+                var groupMeta = writer.Meta.GetGroup(inputStream);
+                if (!groupMeta.IsGroup)
                 {
                     throw new ArgumentException();
                 }
-                inputStream.WriteTo(writer.BaseStream, 4);
-                var groupType = (GroupTypeEnum)inputStream.ReadInt32();
-                writer.Write((int)groupType);
+                inputStream.WriteTo(writer.BaseStream, checked((int)groupMeta.HeaderLength));
 
-                if (!alignmentRules.GroupAlignment.TryGetValue(groupType, out var groupRules)) continue;
-
-                inputStream.WriteTo(writer.BaseStream, 4);
+                if (!alignmentRules.GroupTypeAlignment.TryGetValue(groupMeta.GroupType, out var groupRules)) continue;
+                
                 Dictionary<RecordType, List<byte[]>> storage = new Dictionary<RecordType, List<byte[]>>();
                 List<byte[]> rest = new List<byte[]>();
-                using (var frame = MutagenFrame.ByLength(inputStream, len - 20))
+                using (var frame = MutagenFrame.ByLength(inputStream, groupMeta.ContentLength))
                 {
                     while (!frame.Complete)
                     {
-                        var type = HeaderTranslation.GetNextSubRecordType(inputStream, out var recLength);
-                        var bytes = inputStream.ReadBytes(recLength + Constants.RECORD_HEADER_LENGTH);
+                        var majorMeta = writer.Meta.GetMajorRecord(inputStream);
+                        var bytes = inputStream.ReadBytes(checked((int)majorMeta.TotalLength));
+                        var type = majorMeta.RecordType;
                         if (groupRules.Contains(type))
                         {
                             storage.TryCreateValue(type).Add(bytes);
@@ -434,65 +432,54 @@ namespace Mutagen.Bethesda.Preprocessing
         }
 
         private static void AlignWorldChildren(
-            BinaryReadStream mutaReader,
+            IMutagenReadStream reader,
             MutagenWriter writer)
         {
-            mutaReader.WriteTo(writer.BaseStream, 4);
+            reader.WriteTo(writer.BaseStream, 4);
             byte[] roadStorage = null;
             byte[] cellStorage = null;
             List<byte[]> grupBytes = new List<byte[]>();
             for (int i = 0; i < 3; i++)
             {
-                RecordType type = HeaderTranslation.ReadNextRecordType(mutaReader);
-                switch (type.Type)
+                MajorRecordMeta majorMeta = reader.MetaData.GetMajorRecord(reader);
+                switch (majorMeta.RecordType.Type)
                 {
                     case "ROAD":
-                        var roadLen = mutaReader.ReadUInt32();
-                        mutaReader.Position -= 8;
-                        roadStorage = mutaReader.ReadBytes((int)(Constants.RECORD_HEADER_LENGTH + roadLen));
+                        roadStorage = reader.ReadBytes(checked((int)majorMeta.TotalLength));
                         break;
                     case "CELL":
                         if (cellStorage != null)
                         {
                             throw new ArgumentException();
                         }
-                        var startPos = mutaReader.Position - 4;
-                        var cellLen = mutaReader.ReadUInt32();
-                        mutaReader.Position += Constants.RECORD_HEADER_LENGTH - 8 + cellLen;
-                        var grupPos = mutaReader.Position;
-                        var grup = HeaderTranslation.ReadNextRecordType(mutaReader);
-                        uint cellGrupLen;
-                        if (grup == Group_Registration.GRUP_HEADER)
+                        var startPos = reader.Position;
+                        var cellMeta = reader.MetaData.GetMajorRecord(reader);
+                        reader.Position += cellMeta.TotalLength;
+                        var cellGroupMeta = reader.MetaData.GetGroup(reader);
+                        long cellGrupLen;
+                        if (cellGroupMeta.IsGroup
+                            && cellGroupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
                         {
-                            cellGrupLen = mutaReader.ReadUInt32();
-                            mutaReader.Position += 4;
-                            var grupType = (GroupTypeEnum)mutaReader.ReadInt32();
-                            if (grupType != GroupTypeEnum.CellChildren)
-                            {
-                                cellGrupLen = 0;
-                            }
+                            cellGrupLen = cellGroupMeta.TotalLength;
                         }
                         else
                         {
                             cellGrupLen = 0;
                         }
-                        mutaReader.Position = startPos;
-                        cellStorage = mutaReader.ReadBytes((int)(Constants.RECORD_HEADER_LENGTH + cellLen + cellGrupLen));
+                        reader.Position = startPos;
+                        cellStorage = reader.ReadBytes(checked((int)(cellMeta.TotalLength + cellGrupLen)));
                         break;
                     case "GRUP":
                         if (roadStorage != null
                             && cellStorage != null)
                         {
                             i = 3; // end loop
-                            mutaReader.Position -= 4;
                             continue;
                         }
-                        var grupLen = mutaReader.ReadUInt32();
-                        mutaReader.Position -= 8;
-                        grupBytes.Add(mutaReader.ReadBytes((int)grupLen));
+                        var groupMeta = reader.MetaData.GetGroup(reader);
+                        grupBytes.Add(reader.ReadBytes(checked((int)groupMeta.TotalLength)));
                         break;
                     case "WRLD":
-                        mutaReader.Position -= 4;
                         i = 3; // end loop
                         continue;
                     default:

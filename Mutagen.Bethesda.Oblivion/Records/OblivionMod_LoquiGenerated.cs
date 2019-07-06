@@ -13938,7 +13938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))
+                using (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))
                 {
                     WriteToBinary(
                         item: item,
@@ -13966,7 +13966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))
+                using (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))
                 {
                     WriteToBinary(
                         item: item,
@@ -14061,7 +14061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false, gameMode: item.GameMode))
+                using (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))
                 {
                     OblivionModBinaryWriteTranslation.Instance.Write(
                         item: item,
