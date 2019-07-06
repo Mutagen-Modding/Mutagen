@@ -6210,7 +6210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.RagdollData.ToArray(),
+                    item: item.RagdollData,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRGD_HEADER),
                     nullable: false);
             }
