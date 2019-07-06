@@ -11,13 +11,25 @@ namespace Mutagen.Bethesda.Binary
         sbyte HeaderLength { get; }
         sbyte LengthLength { get; }
         sbyte LengthAfterLength { get; }
+        sbyte TypeAndLengthLength { get; }
     }
 
     public class RecordConstants : IRecordConstants
     {
-        public sbyte HeaderLength { get; set; }
-        public sbyte LengthLength { get; set; }
-        public sbyte LengthAfterLength { get; set; }
+        public sbyte HeaderLength { get; }
+        public sbyte LengthLength { get; }
+        public sbyte LengthAfterLength { get; }
+        public sbyte TypeAndLengthLength { get; }
+
+        public RecordConstants(
+            sbyte headerLength,
+            sbyte lengthLength)
+        {
+            this.HeaderLength = headerLength;
+            this.LengthLength = lengthLength;
+            this.LengthAfterLength = (sbyte)(this.HeaderLength - Constants.HEADER_LENGTH - this.LengthLength);
+            this.TypeAndLengthLength = (sbyte)(Constants.HEADER_LENGTH + this.LengthLength);
+        }
     }
 
     public class MetaDataConstants
@@ -35,24 +47,15 @@ namespace Mutagen.Bethesda.Binary
             GameMode = GameMode.Oblivion,
             ModHeaderLength = 20,
             ModHeaderFluffLength = 12,
-            GroupConstants = new RecordConstants()
-            {
-                HeaderLength = 20,
-                LengthLength = 4,
-                LengthAfterLength = 12,
-            },
-            MajorConstants = new RecordConstants()
-            {
-                HeaderLength = 20,
-                LengthLength = 4,
-                LengthAfterLength = 12,
-            },
-            SubConstants = new RecordConstants()
-            {
-                HeaderLength = 6,
-                LengthLength = 2,
-                LengthAfterLength = 0,
-            }
+            GroupConstants = new RecordConstants(
+                headerLength: 20,
+                lengthLength: 4),
+            MajorConstants = new RecordConstants(
+                headerLength: 20,
+                lengthLength: 4),
+            SubConstants = new RecordConstants(
+                headerLength: 6,
+                lengthLength: 2)
         };
 
         public static readonly MetaDataConstants Skyrim = new MetaDataConstants()
@@ -60,24 +63,15 @@ namespace Mutagen.Bethesda.Binary
             GameMode = GameMode.Skyrim,
             ModHeaderLength = 24,
             ModHeaderFluffLength = 16,
-            GroupConstants = new RecordConstants()
-            {
-                HeaderLength = 24,
-                LengthLength = 4,
-                LengthAfterLength = 16,
-            },
-            MajorConstants = new RecordConstants()
-            {
-                HeaderLength = 24,
-                LengthLength = 4,
-                LengthAfterLength = 16,
-            },
-            SubConstants = new RecordConstants()
-            {
-                HeaderLength = 4,
-                LengthLength = 2,
-                LengthAfterLength = 0,
-            }
+            GroupConstants = new RecordConstants(
+                headerLength: 24,
+                lengthLength: 4),
+            MajorConstants = new RecordConstants(
+                headerLength: 24,
+                lengthLength: 4),
+            SubConstants = new RecordConstants(
+                headerLength: 6,
+                lengthLength: 2)
         };
 
         public ModHeaderMeta Header(ReadOnlySpan<byte> span) => new ModHeaderMeta(this, span);
