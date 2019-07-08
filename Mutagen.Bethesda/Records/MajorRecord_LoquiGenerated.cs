@@ -2249,7 +2249,7 @@ namespace Mutagen.Bethesda.Internals
 
         public virtual TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long offset,
+            int offset,
             RecordType type,
             int? lastParsed)
         {

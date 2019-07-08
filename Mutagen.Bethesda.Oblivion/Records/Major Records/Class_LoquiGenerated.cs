@@ -3449,6 +3449,142 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ClassBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IClassInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Class_Registration.Instance;
+        public new static Class_Registration Registration => Class_Registration.Instance;
+        protected override object CommonInstance => ClassCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => ClassXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ClassBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _meta)) : default;
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public bool Description_IsSet => _DescriptionLocation.HasValue;
+        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _meta)) : default;
+        #endregion
+        #region Icon
+        private int? _IconLocation;
+        public bool Icon_IsSet => _IconLocation.HasValue;
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _meta)) : default;
+        #endregion
+        private int? _DATALocation;
+        public Class.DATADataType DATADataTypeState { get; private set; }
+        public IReadOnlyList<ActorValue> PrimaryAttributes => new NumberedEnumList<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 2);
+        #region Specialization
+        private int _SpecializationLocation => _DATALocation.Value + 8;
+        private bool _Specialization_IsSet => _DATALocation.HasValue;
+        public Class.SpecializationFlag Specialization => _Specialization_IsSet ? (Class.SpecializationFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SpecializationLocation, 4)) : default;
+        #endregion
+        public IReadOnlyList<ActorValue> SecondaryAttributes => new NumberedEnumList<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 12) : default, amount: 7);
+        #region Flags
+        private int _FlagsLocation => _DATALocation.Value + 40;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public ClassFlag Flags => _Flags_IsSet ? (ClassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
+        #endregion
+        #region ClassServices
+        private int _ClassServicesLocation => _DATALocation.Value + 44;
+        private bool _ClassServices_IsSet => _DATALocation.HasValue;
+        public ClassService ClassServices => _ClassServices_IsSet ? (ClassService)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ClassServicesLocation, 4)) : default;
+        #endregion
+        #region Training
+        private int _TrainingLocation => _DATALocation.Value + 48;
+        private bool _Training_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Class.DATADataType.Break0);
+        private IClassTrainingGetter _Training => _Training_IsSet ? ClassTrainingBinaryWrapper.ClassTrainingFactory(new BinaryMemoryReadStream(_data.Slice(_TrainingLocation)), _meta) : default;
+        public IClassTrainingGetter Training => _Training ?? new ClassTraining();
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ClassBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MasterReferences masterReferences,
+            MetaDataConstants meta)
+            : base(
+                bytes: bytes,
+                meta: meta,
+                masterReferences: masterReferences)
+        {
+            this._meta = meta;
+        }
+
+        public static ClassBinaryWrapper ClassFactory(
+            BinaryMemoryReadStream stream,
+            MasterReferences masterReferences,
+            MetaDataConstants meta)
+        {
+            var ret = new ClassBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, meta),
+                masterReferences: masterReferences,
+                meta: meta);
+            var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
+                }
+                case 0x43534544: // DESC
+                {
+                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _IconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = Class.DATADataType.Has;
+                    var subLen = _meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                    if (subLen <= 48)
+                    {
+                        this.DATADataTypeState |= Class.DATADataType.Break0;
+                    }
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Training);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

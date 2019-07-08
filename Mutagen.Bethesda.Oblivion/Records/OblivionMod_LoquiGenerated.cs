@@ -14132,65 +14132,234 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private MasterReferences _masterReferences;
 
         #region ModHeader
-        public IModHeaderGetter ModHeader { get; private set; } = new ModHeader();
+        private IModHeaderGetter _ModHeader;
+        public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
         public bool ModHeader_IsSet => ModHeader != null;
         #endregion
-        public IGroupGetter<IGameSettingInternalGetter> GameSettings { get; private set; }
-        public IGroupGetter<IGlobalInternalGetter> Globals { get; private set; }
-        public IGroupGetter<IClassInternalGetter> Classes { get; private set; }
-        public IGroupGetter<IFactionInternalGetter> Factions { get; private set; }
-        public IGroupGetter<IHairInternalGetter> Hairs { get; private set; }
-        public IGroupGetter<IEyeInternalGetter> Eyes { get; private set; }
-        public IGroupGetter<IRaceInternalGetter> Races { get; private set; }
-        public IGroupGetter<ISoundInternalGetter> Sounds { get; private set; }
-        public IGroupGetter<ISkillRecordInternalGetter> Skills { get; private set; }
-        public IGroupGetter<IMagicEffectInternalGetter> MagicEffects { get; private set; }
-        public IGroupGetter<IScriptInternalGetter> Scripts { get; private set; }
-        public IGroupGetter<ILandTextureInternalGetter> LandTextures { get; private set; }
-        public IGroupGetter<IEnchantmentInternalGetter> Enchantments { get; private set; }
-        public IGroupGetter<ISpellUnleveledInternalGetter> Spells { get; private set; }
-        public IGroupGetter<IBirthsignInternalGetter> Birthsigns { get; private set; }
-        public IGroupGetter<IActivatorInternalGetter> Activators { get; private set; }
-        public IGroupGetter<IAlchemicalApparatusInternalGetter> AlchemicalApparatus { get; private set; }
-        public IGroupGetter<IArmorInternalGetter> Armors { get; private set; }
-        public IGroupGetter<IBookInternalGetter> Books { get; private set; }
-        public IGroupGetter<IClothingInternalGetter> Clothes { get; private set; }
-        public IGroupGetter<IContainerInternalGetter> Containers { get; private set; }
-        public IGroupGetter<IDoorInternalGetter> Doors { get; private set; }
-        public IGroupGetter<IIngredientInternalGetter> Ingredients { get; private set; }
-        public IGroupGetter<ILightInternalGetter> Lights { get; private set; }
-        public IGroupGetter<IMiscellaneousInternalGetter> Miscellaneous { get; private set; }
-        public IGroupGetter<IStaticInternalGetter> Statics { get; private set; }
-        public IGroupGetter<IGrassInternalGetter> Grasses { get; private set; }
-        public IGroupGetter<ITreeInternalGetter> Trees { get; private set; }
-        public IGroupGetter<IFloraInternalGetter> Flora { get; private set; }
-        public IGroupGetter<IFurnatureInternalGetter> Furnature { get; private set; }
-        public IGroupGetter<IWeaponInternalGetter> Weapons { get; private set; }
-        public IGroupGetter<IAmmoInternalGetter> Ammo { get; private set; }
-        public IGroupGetter<INPCInternalGetter> NPCs { get; private set; }
-        public IGroupGetter<ICreatureInternalGetter> Creatures { get; private set; }
-        public IGroupGetter<ILeveledCreatureInternalGetter> LeveledCreatures { get; private set; }
-        public IGroupGetter<ISoulGemInternalGetter> SoulGems { get; private set; }
-        public IGroupGetter<IKeyInternalGetter> Keys { get; private set; }
-        public IGroupGetter<IPotionInternalGetter> Potions { get; private set; }
-        public IGroupGetter<ISubspaceInternalGetter> Subspaces { get; private set; }
-        public IGroupGetter<ISigilStoneInternalGetter> SigilStones { get; private set; }
-        public IGroupGetter<ILeveledItemInternalGetter> LeveledItems { get; private set; }
-        public IGroupGetter<IWeatherInternalGetter> Weathers { get; private set; }
-        public IGroupGetter<IClimateInternalGetter> Climates { get; private set; }
-        public IGroupGetter<IRegionInternalGetter> Regions { get; private set; }
-        public IListGroupGetter<ICellBlockGetter> Cells { get; private set; } = new ListGroup<CellBlock>();
-        public IGroupGetter<IWorldspaceInternalGetter> Worldspaces { get; private set; }
-        public IGroupGetter<IDialogTopicInternalGetter> DialogTopics { get; private set; }
-        public IGroupGetter<IQuestInternalGetter> Quests { get; private set; }
-        public IGroupGetter<IIdleAnimationInternalGetter> IdleAnimations { get; private set; }
-        public IGroupGetter<IAIPackageInternalGetter> AIPackages { get; private set; }
-        public IGroupGetter<ICombatStyleInternalGetter> CombatStyles { get; private set; }
-        public IGroupGetter<ILoadScreenInternalGetter> LoadScreens { get; private set; }
-        public IGroupGetter<ILeveledSpellInternalGetter> LeveledSpells { get; private set; }
-        public IGroupGetter<IAnimatedObjectInternalGetter> AnimatedObjects { get; private set; }
-        public IGroupGetter<IWaterInternalGetter> Waters { get; private set; }
-        public IGroupGetter<IEffectShaderInternalGetter> EffectShaders { get; private set; }
+        #region GameSettings
+        private IGroupGetter<IGameSettingInternalGetter> _GameSettings;
+        public IGroupGetter<IGameSettingInternalGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
+        #endregion
+        #region Globals
+        private IGroupGetter<IGlobalInternalGetter> _Globals;
+        public IGroupGetter<IGlobalInternalGetter> Globals => _Globals ?? new Group<Global>(this);
+        #endregion
+        #region Classes
+        private IGroupGetter<IClassInternalGetter> _Classes;
+        public IGroupGetter<IClassInternalGetter> Classes => _Classes ?? new Group<Class>(this);
+        #endregion
+        #region Factions
+        private IGroupGetter<IFactionInternalGetter> _Factions;
+        public IGroupGetter<IFactionInternalGetter> Factions => _Factions ?? new Group<Faction>(this);
+        #endregion
+        #region Hairs
+        private IGroupGetter<IHairInternalGetter> _Hairs;
+        public IGroupGetter<IHairInternalGetter> Hairs => _Hairs ?? new Group<Hair>(this);
+        #endregion
+        #region Eyes
+        private IGroupGetter<IEyeInternalGetter> _Eyes;
+        public IGroupGetter<IEyeInternalGetter> Eyes => _Eyes ?? new Group<Eye>(this);
+        #endregion
+        #region Races
+        private IGroupGetter<IRaceInternalGetter> _Races;
+        public IGroupGetter<IRaceInternalGetter> Races => _Races ?? new Group<Race>(this);
+        #endregion
+        #region Sounds
+        private IGroupGetter<ISoundInternalGetter> _Sounds;
+        public IGroupGetter<ISoundInternalGetter> Sounds => _Sounds ?? new Group<Sound>(this);
+        #endregion
+        #region Skills
+        private IGroupGetter<ISkillRecordInternalGetter> _Skills;
+        public IGroupGetter<ISkillRecordInternalGetter> Skills => _Skills ?? new Group<SkillRecord>(this);
+        #endregion
+        #region MagicEffects
+        private IGroupGetter<IMagicEffectInternalGetter> _MagicEffects;
+        public IGroupGetter<IMagicEffectInternalGetter> MagicEffects => _MagicEffects ?? new Group<MagicEffect>(this);
+        #endregion
+        #region Scripts
+        private IGroupGetter<IScriptInternalGetter> _Scripts;
+        public IGroupGetter<IScriptInternalGetter> Scripts => _Scripts ?? new Group<Script>(this);
+        #endregion
+        #region LandTextures
+        private IGroupGetter<ILandTextureInternalGetter> _LandTextures;
+        public IGroupGetter<ILandTextureInternalGetter> LandTextures => _LandTextures ?? new Group<LandTexture>(this);
+        #endregion
+        #region Enchantments
+        private IGroupGetter<IEnchantmentInternalGetter> _Enchantments;
+        public IGroupGetter<IEnchantmentInternalGetter> Enchantments => _Enchantments ?? new Group<Enchantment>(this);
+        #endregion
+        #region Spells
+        private IGroupGetter<ISpellUnleveledInternalGetter> _Spells;
+        public IGroupGetter<ISpellUnleveledInternalGetter> Spells => _Spells ?? new Group<SpellUnleveled>(this);
+        #endregion
+        #region Birthsigns
+        private IGroupGetter<IBirthsignInternalGetter> _Birthsigns;
+        public IGroupGetter<IBirthsignInternalGetter> Birthsigns => _Birthsigns ?? new Group<Birthsign>(this);
+        #endregion
+        #region Activators
+        private IGroupGetter<IActivatorInternalGetter> _Activators;
+        public IGroupGetter<IActivatorInternalGetter> Activators => _Activators ?? new Group<Activator>(this);
+        #endregion
+        #region AlchemicalApparatus
+        private IGroupGetter<IAlchemicalApparatusInternalGetter> _AlchemicalApparatus;
+        public IGroupGetter<IAlchemicalApparatusInternalGetter> AlchemicalApparatus => _AlchemicalApparatus ?? new Group<AlchemicalApparatus>(this);
+        #endregion
+        #region Armors
+        private IGroupGetter<IArmorInternalGetter> _Armors;
+        public IGroupGetter<IArmorInternalGetter> Armors => _Armors ?? new Group<Armor>(this);
+        #endregion
+        #region Books
+        private IGroupGetter<IBookInternalGetter> _Books;
+        public IGroupGetter<IBookInternalGetter> Books => _Books ?? new Group<Book>(this);
+        #endregion
+        #region Clothes
+        private IGroupGetter<IClothingInternalGetter> _Clothes;
+        public IGroupGetter<IClothingInternalGetter> Clothes => _Clothes ?? new Group<Clothing>(this);
+        #endregion
+        #region Containers
+        private IGroupGetter<IContainerInternalGetter> _Containers;
+        public IGroupGetter<IContainerInternalGetter> Containers => _Containers ?? new Group<Container>(this);
+        #endregion
+        #region Doors
+        private IGroupGetter<IDoorInternalGetter> _Doors;
+        public IGroupGetter<IDoorInternalGetter> Doors => _Doors ?? new Group<Door>(this);
+        #endregion
+        #region Ingredients
+        private IGroupGetter<IIngredientInternalGetter> _Ingredients;
+        public IGroupGetter<IIngredientInternalGetter> Ingredients => _Ingredients ?? new Group<Ingredient>(this);
+        #endregion
+        #region Lights
+        private IGroupGetter<ILightInternalGetter> _Lights;
+        public IGroupGetter<ILightInternalGetter> Lights => _Lights ?? new Group<Light>(this);
+        #endregion
+        #region Miscellaneous
+        private IGroupGetter<IMiscellaneousInternalGetter> _Miscellaneous;
+        public IGroupGetter<IMiscellaneousInternalGetter> Miscellaneous => _Miscellaneous ?? new Group<Miscellaneous>(this);
+        #endregion
+        #region Statics
+        private IGroupGetter<IStaticInternalGetter> _Statics;
+        public IGroupGetter<IStaticInternalGetter> Statics => _Statics ?? new Group<Static>(this);
+        #endregion
+        #region Grasses
+        private IGroupGetter<IGrassInternalGetter> _Grasses;
+        public IGroupGetter<IGrassInternalGetter> Grasses => _Grasses ?? new Group<Grass>(this);
+        #endregion
+        #region Trees
+        private IGroupGetter<ITreeInternalGetter> _Trees;
+        public IGroupGetter<ITreeInternalGetter> Trees => _Trees ?? new Group<Tree>(this);
+        #endregion
+        #region Flora
+        private IGroupGetter<IFloraInternalGetter> _Flora;
+        public IGroupGetter<IFloraInternalGetter> Flora => _Flora ?? new Group<Flora>(this);
+        #endregion
+        #region Furnature
+        private IGroupGetter<IFurnatureInternalGetter> _Furnature;
+        public IGroupGetter<IFurnatureInternalGetter> Furnature => _Furnature ?? new Group<Furnature>(this);
+        #endregion
+        #region Weapons
+        private IGroupGetter<IWeaponInternalGetter> _Weapons;
+        public IGroupGetter<IWeaponInternalGetter> Weapons => _Weapons ?? new Group<Weapon>(this);
+        #endregion
+        #region Ammo
+        private IGroupGetter<IAmmoInternalGetter> _Ammo;
+        public IGroupGetter<IAmmoInternalGetter> Ammo => _Ammo ?? new Group<Ammo>(this);
+        #endregion
+        #region NPCs
+        private IGroupGetter<INPCInternalGetter> _NPCs;
+        public IGroupGetter<INPCInternalGetter> NPCs => _NPCs ?? new Group<NPC>(this);
+        #endregion
+        #region Creatures
+        private IGroupGetter<ICreatureInternalGetter> _Creatures;
+        public IGroupGetter<ICreatureInternalGetter> Creatures => _Creatures ?? new Group<Creature>(this);
+        #endregion
+        #region LeveledCreatures
+        private IGroupGetter<ILeveledCreatureInternalGetter> _LeveledCreatures;
+        public IGroupGetter<ILeveledCreatureInternalGetter> LeveledCreatures => _LeveledCreatures ?? new Group<LeveledCreature>(this);
+        #endregion
+        #region SoulGems
+        private IGroupGetter<ISoulGemInternalGetter> _SoulGems;
+        public IGroupGetter<ISoulGemInternalGetter> SoulGems => _SoulGems ?? new Group<SoulGem>(this);
+        #endregion
+        #region Keys
+        private IGroupGetter<IKeyInternalGetter> _Keys;
+        public IGroupGetter<IKeyInternalGetter> Keys => _Keys ?? new Group<Key>(this);
+        #endregion
+        #region Potions
+        private IGroupGetter<IPotionInternalGetter> _Potions;
+        public IGroupGetter<IPotionInternalGetter> Potions => _Potions ?? new Group<Potion>(this);
+        #endregion
+        #region Subspaces
+        private IGroupGetter<ISubspaceInternalGetter> _Subspaces;
+        public IGroupGetter<ISubspaceInternalGetter> Subspaces => _Subspaces ?? new Group<Subspace>(this);
+        #endregion
+        #region SigilStones
+        private IGroupGetter<ISigilStoneInternalGetter> _SigilStones;
+        public IGroupGetter<ISigilStoneInternalGetter> SigilStones => _SigilStones ?? new Group<SigilStone>(this);
+        #endregion
+        #region LeveledItems
+        private IGroupGetter<ILeveledItemInternalGetter> _LeveledItems;
+        public IGroupGetter<ILeveledItemInternalGetter> LeveledItems => _LeveledItems ?? new Group<LeveledItem>(this);
+        #endregion
+        #region Weathers
+        private IGroupGetter<IWeatherInternalGetter> _Weathers;
+        public IGroupGetter<IWeatherInternalGetter> Weathers => _Weathers ?? new Group<Weather>(this);
+        #endregion
+        #region Climates
+        private IGroupGetter<IClimateInternalGetter> _Climates;
+        public IGroupGetter<IClimateInternalGetter> Climates => _Climates ?? new Group<Climate>(this);
+        #endregion
+        #region Regions
+        private IGroupGetter<IRegionInternalGetter> _Regions;
+        public IGroupGetter<IRegionInternalGetter> Regions => _Regions ?? new Group<Region>(this);
+        #endregion
+        #region Cells
+        private IListGroupGetter<ICellBlockGetter> _Cells;
+        public IListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new ListGroup<CellBlock>();
+        #endregion
+        #region Worldspaces
+        private IGroupGetter<IWorldspaceInternalGetter> _Worldspaces;
+        public IGroupGetter<IWorldspaceInternalGetter> Worldspaces => _Worldspaces ?? new Group<Worldspace>(this);
+        #endregion
+        #region DialogTopics
+        private IGroupGetter<IDialogTopicInternalGetter> _DialogTopics;
+        public IGroupGetter<IDialogTopicInternalGetter> DialogTopics => _DialogTopics ?? new Group<DialogTopic>(this);
+        #endregion
+        #region Quests
+        private IGroupGetter<IQuestInternalGetter> _Quests;
+        public IGroupGetter<IQuestInternalGetter> Quests => _Quests ?? new Group<Quest>(this);
+        #endregion
+        #region IdleAnimations
+        private IGroupGetter<IIdleAnimationInternalGetter> _IdleAnimations;
+        public IGroupGetter<IIdleAnimationInternalGetter> IdleAnimations => _IdleAnimations ?? new Group<IdleAnimation>(this);
+        #endregion
+        #region AIPackages
+        private IGroupGetter<IAIPackageInternalGetter> _AIPackages;
+        public IGroupGetter<IAIPackageInternalGetter> AIPackages => _AIPackages ?? new Group<AIPackage>(this);
+        #endregion
+        #region CombatStyles
+        private IGroupGetter<ICombatStyleInternalGetter> _CombatStyles;
+        public IGroupGetter<ICombatStyleInternalGetter> CombatStyles => _CombatStyles ?? new Group<CombatStyle>(this);
+        #endregion
+        #region LoadScreens
+        private IGroupGetter<ILoadScreenInternalGetter> _LoadScreens;
+        public IGroupGetter<ILoadScreenInternalGetter> LoadScreens => _LoadScreens ?? new Group<LoadScreen>(this);
+        #endregion
+        #region LeveledSpells
+        private IGroupGetter<ILeveledSpellInternalGetter> _LeveledSpells;
+        public IGroupGetter<ILeveledSpellInternalGetter> LeveledSpells => _LeveledSpells ?? new Group<LeveledSpell>(this);
+        #endregion
+        #region AnimatedObjects
+        private IGroupGetter<IAnimatedObjectInternalGetter> _AnimatedObjects;
+        public IGroupGetter<IAnimatedObjectInternalGetter> AnimatedObjects => _AnimatedObjects ?? new Group<AnimatedObject>(this);
+        #endregion
+        #region Waters
+        private IGroupGetter<IWaterInternalGetter> _Waters;
+        public IGroupGetter<IWaterInternalGetter> Waters => _Waters ?? new Group<Water>(this);
+        #endregion
+        #region EffectShaders
+        private IGroupGetter<IEffectShaderInternalGetter> _EffectShaders;
+        public IGroupGetter<IEffectShaderInternalGetter> EffectShaders => _EffectShaders ?? new Group<EffectShader>(this);
+        #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
         protected OblivionModBinaryWrapper(
@@ -14200,61 +14369,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this._data = bytes;
             this.ModKey = modKey;
             this._meta = MetaDataConstants.Oblivion;
-            this.GameSettings = new Group<GameSetting>(this);
-            this.Globals = new Group<Global>(this);
-            this.Classes = new Group<Class>(this);
-            this.Factions = new Group<Faction>(this);
-            this.Hairs = new Group<Hair>(this);
-            this.Eyes = new Group<Eye>(this);
-            this.Races = new Group<Race>(this);
-            this.Sounds = new Group<Sound>(this);
-            this.Skills = new Group<SkillRecord>(this);
-            this.MagicEffects = new Group<MagicEffect>(this);
-            this.Scripts = new Group<Script>(this);
-            this.LandTextures = new Group<LandTexture>(this);
-            this.Enchantments = new Group<Enchantment>(this);
-            this.Spells = new Group<SpellUnleveled>(this);
-            this.Birthsigns = new Group<Birthsign>(this);
-            this.Activators = new Group<Activator>(this);
-            this.AlchemicalApparatus = new Group<AlchemicalApparatus>(this);
-            this.Armors = new Group<Armor>(this);
-            this.Books = new Group<Book>(this);
-            this.Clothes = new Group<Clothing>(this);
-            this.Containers = new Group<Container>(this);
-            this.Doors = new Group<Door>(this);
-            this.Ingredients = new Group<Ingredient>(this);
-            this.Lights = new Group<Light>(this);
-            this.Miscellaneous = new Group<Miscellaneous>(this);
-            this.Statics = new Group<Static>(this);
-            this.Grasses = new Group<Grass>(this);
-            this.Trees = new Group<Tree>(this);
-            this.Flora = new Group<Flora>(this);
-            this.Furnature = new Group<Furnature>(this);
-            this.Weapons = new Group<Weapon>(this);
-            this.Ammo = new Group<Ammo>(this);
-            this.NPCs = new Group<NPC>(this);
-            this.Creatures = new Group<Creature>(this);
-            this.LeveledCreatures = new Group<LeveledCreature>(this);
-            this.SoulGems = new Group<SoulGem>(this);
-            this.Keys = new Group<Key>(this);
-            this.Potions = new Group<Potion>(this);
-            this.Subspaces = new Group<Subspace>(this);
-            this.SigilStones = new Group<SigilStone>(this);
-            this.LeveledItems = new Group<LeveledItem>(this);
-            this.Weathers = new Group<Weather>(this);
-            this.Climates = new Group<Climate>(this);
-            this.Regions = new Group<Region>(this);
-            this.Worldspaces = new Group<Worldspace>(this);
-            this.DialogTopics = new Group<DialogTopic>(this);
-            this.Quests = new Group<Quest>(this);
-            this.IdleAnimations = new Group<IdleAnimation>(this);
-            this.AIPackages = new Group<AIPackage>(this);
-            this.CombatStyles = new Group<CombatStyle>(this);
-            this.LoadScreens = new Group<LoadScreen>(this);
-            this.LeveledSpells = new Group<LeveledSpell>(this);
-            this.AnimatedObjects = new Group<AnimatedObject>(this);
-            this.Waters = new Group<Water>(this);
-            this.EffectShaders = new Group<EffectShader>(this);
         }
 
         public static OblivionModBinaryWrapper OblivionModFactory(
@@ -14275,7 +14389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long offset,
+            int offset,
             RecordType type,
             int? lastParsed)
         {
@@ -14283,7 +14397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x34534554: // TES4
                 {
-                    this.ModHeader = ModHeaderBinaryWrapper.ModHeaderFactory(
+                    this._ModHeader = ModHeaderBinaryWrapper.ModHeaderFactory(
                         stream: stream,
                         meta: _meta);
                     _masterReferences = new MasterReferences(
@@ -14300,7 +14414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54534D47: // GMST
                 {
-                    this.GameSettings = GroupBinaryWrapper<IGameSettingInternalGetter>.GroupFactory(
+                    this._GameSettings = GroupBinaryWrapper<IGameSettingInternalGetter>.GroupFactory(
                         stream: stream,
                         masterReferences: _masterReferences,
                         meta: _meta);
@@ -14308,11 +14422,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x424F4C47: // GLOB
                 {
-                    this.Globals = GroupBinaryWrapper<IGlobalInternalGetter>.GroupFactory(
+                    this._Globals = GroupBinaryWrapper<IGlobalInternalGetter>.GroupFactory(
                         stream: stream,
                         masterReferences: _masterReferences,
                         meta: _meta);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Globals);
+                }
+                case 0x53414C43: // CLAS
+                {
+                    this._Classes = GroupBinaryWrapper<IClassInternalGetter>.GroupFactory(
+                        stream: stream,
+                        masterReferences: _masterReferences,
+                        meta: _meta);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Classes);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

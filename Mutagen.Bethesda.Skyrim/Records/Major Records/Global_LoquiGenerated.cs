@@ -1553,7 +1553,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long offset,
+            int offset,
             RecordType type,
             int? lastParsed)
         {

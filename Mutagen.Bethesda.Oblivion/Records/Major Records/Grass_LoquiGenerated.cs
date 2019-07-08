@@ -3620,20 +3620,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
-        private ushort? _DATALocation;
+        private int? _DATALocation;
         public Grass.DATADataType DATADataTypeState { get; private set; }
         public Byte Density => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 0] : default;
         public Byte MinSlope => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 1] : default;
         public Byte MaxSlope => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 2] : default;
         public Byte Fluff1 => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 3] : default;
-        public UInt16 UnitFromWaterAmount => _DATALocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_DATALocation.Value + 4, 2)) : default;
-        public UInt16 Fluff2 => _DATALocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_DATALocation.Value + 6, 2)) : default;
-        public Grass.UnitFromWaterType UnitFromWaterMode => _DATALocation.HasValue ? (Grass.UnitFromWaterType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_DATALocation.Value + 8, 4)) : default;
-        public Single PositionRange => _DATALocation.HasValue ? SpanExt.GetFloat(_data.Span.Slice(_DATALocation.Value + 12, 4)) : default;
-        public Single HeightRange => _DATALocation.HasValue ? SpanExt.GetFloat(_data.Span.Slice(_DATALocation.Value + 16, 4)) : default;
-        public Single ColorRange => _DATALocation.HasValue ? SpanExt.GetFloat(_data.Span.Slice(_DATALocation.Value + 20, 4)) : default;
-        public Single WavePeriod => _DATALocation.HasValue ? SpanExt.GetFloat(_data.Span.Slice(_DATALocation.Value + 24, 4)) : default;
-        public Grass.GrassFlag Flags => _DATALocation.HasValue ? (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_DATALocation.Value + 28, 4)) : default;
+        #region UnitFromWaterAmount
+        private int _UnitFromWaterAmountLocation => _DATALocation.Value + 4;
+        private bool _UnitFromWaterAmount_IsSet => _DATALocation.HasValue;
+        public UInt16 UnitFromWaterAmount => _UnitFromWaterAmount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_UnitFromWaterAmountLocation, 2)) : default;
+        #endregion
+        #region Fluff2
+        private int _Fluff2Location => _DATALocation.Value + 6;
+        private bool _Fluff2_IsSet => _DATALocation.HasValue;
+        public UInt16 Fluff2 => _Fluff2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_Fluff2Location, 2)) : default;
+        #endregion
+        #region UnitFromWaterMode
+        private int _UnitFromWaterModeLocation => _DATALocation.Value + 8;
+        private bool _UnitFromWaterMode_IsSet => _DATALocation.HasValue;
+        public Grass.UnitFromWaterType UnitFromWaterMode => _UnitFromWaterMode_IsSet ? (Grass.UnitFromWaterType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_UnitFromWaterModeLocation, 4)) : default;
+        #endregion
+        #region PositionRange
+        private int _PositionRangeLocation => _DATALocation.Value + 12;
+        private bool _PositionRange_IsSet => _DATALocation.HasValue;
+        public Single PositionRange => _PositionRange_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_PositionRangeLocation, 4)) : default;
+        #endregion
+        #region HeightRange
+        private int _HeightRangeLocation => _DATALocation.Value + 16;
+        private bool _HeightRange_IsSet => _DATALocation.HasValue;
+        public Single HeightRange => _HeightRange_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HeightRangeLocation, 4)) : default;
+        #endregion
+        #region ColorRange
+        private int _ColorRangeLocation => _DATALocation.Value + 20;
+        private bool _ColorRange_IsSet => _DATALocation.HasValue;
+        public Single ColorRange => _ColorRange_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorRangeLocation, 4)) : default;
+        #endregion
+        #region WavePeriod
+        private int _WavePeriodLocation => _DATALocation.Value + 24;
+        private bool _WavePeriod_IsSet => _DATALocation.HasValue;
+        public Single WavePeriod => _WavePeriod_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WavePeriodLocation, 4)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation.Value + 28;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Grass.GrassFlag Flags => _Flags_IsSet ? (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
+        #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
         protected GrassBinaryWrapper(
@@ -3658,7 +3690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences,
                 meta: meta);
             var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;
-            var offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
+            int offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
             UtilityTranslation.FillSubrecordTypesForWrapper(
@@ -3672,7 +3704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long offset,
+            int offset,
             RecordType type,
             int? lastParsed)
         {
@@ -3687,7 +3719,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset);
+                    _DATALocation = (ushort)(stream.Position - offset) + _meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = Grass.DATADataType.Has;
+                    var subLen = _meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
                     return TryGet<int?>.Succeed((int)Grass_FieldIndex.Flags);
                 }
                 default:

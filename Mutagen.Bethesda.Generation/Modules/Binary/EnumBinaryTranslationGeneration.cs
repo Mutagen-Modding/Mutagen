@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Generation
             var eType = typeGen as EnumType;
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
 
-            var posStr = dataType == null ? $"{currentPosition}" : $"_{dataType.GetFieldData().RecordType}Location.Value + {currentPosition}";
+            var posStr = dataType == null ? $"{currentPosition}" : $"_{typeGen.Name}Location";
             var slice = $"{dataAccessor}.Span.Slice({posStr}, {eType.ByteLength})";
 
             string getType;
@@ -159,7 +159,8 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => _{dataType.GetFieldData().RecordType}Location.HasValue ? ({eType.TypeName(getter: true)}){getType} : default;");
+                    DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => _{typeGen.Name}_IsSet ? ({eType.TypeName(getter: true)}){getType} : default;");
                 }
             }
 

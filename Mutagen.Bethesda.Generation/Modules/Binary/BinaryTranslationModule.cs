@@ -1451,6 +1451,8 @@ namespace Mutagen.Bethesda.Generation
                 && obj.Name != "Model"
                 && obj.Name != "Group"
                 && obj.Name != "OblivionMod"
+                && obj.Name != "Class"
+                && obj.Name != "ClassTraining"
                 ) return;
 
             var dataAccessor = new Accessor("_data");
@@ -1683,22 +1685,49 @@ namespace Mutagen.Bethesda.Generation
                             switch (obj.GetObjectType())
                             {
                                 case ObjectType.Record:
-                                    args.Add($"bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, meta)");
                                     headerLen = Mutagen.Bethesda.Constants.RECORD_LENGTH;
                                     break;
                                 case ObjectType.Group:
-                                    args.Add($"bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, meta)");
                                     headerLen = Mutagen.Bethesda.Constants.RECORD_LENGTH;
                                     break;
                                 case ObjectType.Subrecord:
-                                    args.Add($"bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, meta)");
                                     headerLen = Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                                     break;
                                 case ObjectType.Mod:
-                                    args.Add($"bytes: bytes");
                                     break;
                                 default:
                                     throw new NotImplementedException();
+                            }
+                            if (obj.IsTypelessStruct())
+                            {
+                                if (anyHasRecordTypes)
+                                {
+                                    args.Add($"bytes: stream.RemainingMemory");
+                                }
+                                else
+                                {
+                                    args.Add($"bytes: stream.RemainingMemory.Slice(0, {passedLength})");
+                                }
+                            }
+                            else
+                            {
+                                switch (obj.GetObjectType())
+                                {
+                                    case ObjectType.Record:
+                                        args.Add($"bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, meta)");
+                                        break;
+                                    case ObjectType.Group:
+                                        args.Add($"bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, meta)");
+                                        break;
+                                    case ObjectType.Subrecord:
+                                        args.Add($"bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, meta)");
+                                        break;
+                                    case ObjectType.Mod:
+                                        args.Add($"bytes: bytes");
+                                        break;
+                                    default:
+                                        throw new NotImplementedException();
+                                }
                             }
                             if (needsMasters)
                             {
@@ -1717,28 +1746,36 @@ namespace Mutagen.Bethesda.Generation
                         {
                             fg.AppendLine($"var stream = new {nameof(BinaryMemoryReadStream)}(bytes);");
                         }
-                        switch (obj.GetObjectType())
+                        if (obj.IsTypelessStruct())
                         {
-                            case ObjectType.Subrecord:
-                                fg.AppendLine($"var finalPos = stream.Position + meta.SubRecord(stream.RemainingSpan).TotalLength;");
-                                fg.AppendLine($"var offset = stream.Position + meta.SubConstants.TypeAndLengthLength;");
-                                break;
-                            case ObjectType.Record:
-                                fg.AppendLine($"var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;");
-                                fg.AppendLine($"var offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;");
-                                break;
-                            case ObjectType.Group:
-                                fg.AppendLine($"var finalPos = stream.Position + meta.Group(stream.RemainingSpan).TotalLength;");
-                                fg.AppendLine($"var offset = stream.Position + meta.GroupConstants.TypeAndLengthLength;");
-                                break;
-                            case ObjectType.Mod:
-                                break;
-                            default:
-                                throw new NotImplementedException();
+                            fg.AppendLine($"int offset = stream.Position;");
+                        }
+                        else
+                        {
+                            switch (obj.GetObjectType())
+                            {
+                                case ObjectType.Subrecord:
+                                    fg.AppendLine($"var finalPos = stream.Position + meta.SubRecord(stream.RemainingSpan).TotalLength;");
+                                    fg.AppendLine($"int offset = stream.Position + meta.SubConstants.TypeAndLengthLength;");
+                                    break;
+                                case ObjectType.Record:
+                                    fg.AppendLine($"var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;");
+                                    fg.AppendLine($"int offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;");
+                                    break;
+                                case ObjectType.Group:
+                                    fg.AppendLine($"var finalPos = stream.Position + meta.Group(stream.RemainingSpan).TotalLength;");
+                                    fg.AppendLine($"int offset = stream.Position + meta.GroupConstants.TypeAndLengthLength;");
+                                    break;
+                                case ObjectType.Mod:
+                                    break;
+                                default:
+                                    throw new NotImplementedException();
+                            }
                         }
                         if (anyHasRecordTypes)
                         {
-                            if (obj.GetObjectType() != ObjectType.Mod)
+                            if (obj.GetObjectType() != ObjectType.Mod
+                                && !obj.IsTypelessStruct())
                             {
                                 switch (obj.GetObjectType())
                                 {
@@ -1767,7 +1804,14 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 case ObjectType.Subrecord:
                                 case ObjectType.Record:
-                                    call = $"{nameof(UtilityTranslation.FillSubrecordTypesForWrapper)}";
+                                    if (obj.IsTypelessStruct())
+                                    {
+                                        call = $"{nameof(UtilityTranslation.FillTypelessSubrecordTypesForWrapper)}";
+                                    }
+                                    else
+                                    {
+                                        call = $"{nameof(UtilityTranslation.FillSubrecordTypesForWrapper)}";
+                                    }
                                     break;
                                 case ObjectType.Group:
                                     call = $"{nameof(UtilityTranslation.FillRecordTypesForWrapper)}";
@@ -1784,7 +1828,10 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add($"stream: stream");
                                 if (obj.GetObjectType() != ObjectType.Mod)
                                 {
-                                    args.Add($"finalPos: finalPos");
+                                    if (!obj.IsTypelessStruct())
+                                    {
+                                        args.Add($"finalPos: finalPos");
+                                    }
                                     args.Add($"offset: offset");
                                 }
                                 args.Add($"meta: ret.{metaAccessor}");
@@ -1793,7 +1840,10 @@ namespace Mutagen.Bethesda.Generation
                         }
                         else
                         {
-                            fg.AppendLine($"stream.Position += 0x{(passedLength + headerLen).ToString("X")};");
+                            if (!obj.IsTypelessStruct())
+                            {
+                                fg.AppendLine($"stream.Position += 0x{(passedLength + headerLen).ToString("X")};");
+                            }
                             fg.AppendLine($"ret.CustomCtor(stream, offset);");
                         }
                         fg.AppendLine("return ret;");
@@ -1807,7 +1857,7 @@ namespace Mutagen.Bethesda.Generation
                         $"public{obj.FunctionOverride()}TryGet<int?> FillRecordType"))
                     {
                         args.Add($"{nameof(BinaryMemoryReadStream)} stream");
-                        args.Add($"long offset");
+                        args.Add($"int offset");
                         args.Add("RecordType type");
                         args.Add("int? lastParsed");
                     }
@@ -1822,7 +1872,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (field.Field.Name == "Classes")
+                                if (field.Field.Name == "Factions")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)

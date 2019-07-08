@@ -69,8 +69,8 @@ namespace Mutagen.Bethesda.Generation
         {
             DataType dataType = typeGen as DataType;
             
-            fg.AppendLine($"private ushort? _{dataType.GetFieldData().RecordType}Location;");
-            fg.AppendLine($"public {objGen.ObjectName}.{dataType.EnumName} {dataType.EnumName}State {{ get; private set; }}");
+            fg.AppendLine($"private int? _{dataType.GetFieldData().RecordType}Location;");
+            fg.AppendLine($"public {objGen.ObjectName}.{dataType.EnumName} {dataType.StateName} {{ get; private set; }}");
 
             var dataPassedLength = 0;
             foreach (var field in dataType.IterateFieldsWithMeta())
@@ -110,13 +110,54 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateWrapperRecordTypeParse(
             FileGeneration fg,
             ObjectGeneration objGen,
-            TypeGeneration typeGen, 
+            TypeGeneration field, 
             Accessor locationAccessor)
         {
-            DataType data = typeGen as DataType;
-            fg.AppendLine($"_{data.GetFieldData().RecordType}Location = (ushort){locationAccessor};");
+            DataType dataType = field as DataType;
+            fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = (ushort){locationAccessor} + _meta.SubConstants.TypeAndLengthLength;");
+            fg.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
+            fg.AppendLine($"var subLen = _meta.SubRecord(_data.Slice({locationAccessor})).RecordLength;");
+            var passedLen = 0;
+            foreach (var item in dataType.IterateFieldsWithMeta())
+            {
+                if (!this.Module.TryGetTypeGeneration(item.Field.GetType(), out var typeGen)) continue;
+                passedLen += typeGen.GetPassedAmount(objGen, item.Field);
+                if (item.BreakIndex != -1)
+                {
+                    fg.AppendLine($"if (subLen <= {passedLen})");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"this.{dataType.StateName} |= {objGen.ObjectName}.{dataType.EnumName}.Break{item.BreakIndex};");
+                    }
+                }
+                if (item.RangeIndex != -1)
+                {
+                    fg.AppendLine($"if (subLen > {passedLen})");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"this.{dataType.StateName} |= {dataType.EnumName}.Range{item.RangeIndex};");
+                    }
+                }
+            }
         }
 
         public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
+
+        public static void GenerateWrapperExtraMembers(FileGeneration fg, DataType dataType, ObjectGeneration objGen, TypeGeneration typeGen, int pos)
+        {
+            var dataMeta = dataType.IterateFieldsWithMeta().First(item => item.Field == typeGen);
+            StringBuilder extraChecks = new StringBuilder();
+            if (dataMeta.EncounteredBreaks.Any())
+            {
+                var breakIndex = dataMeta.EncounteredBreaks.Last();
+                extraChecks.Append($"!{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Break{breakIndex})");
+            }
+            if (dataMeta.RangeIndex != -1)
+            {
+                extraChecks.Append($"{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Range{dataMeta.RangeIndex})");
+            }
+            fg.AppendLine($"private int _{typeGen.Name}Location => _{dataType.GetFieldData().RecordType}Location.Value + {pos};");
+            fg.AppendLine($"private bool _{typeGen.Name}_IsSet => _{dataType.GetFieldData().RecordType}Location.HasValue{(extraChecks.Length > 0 ? $" && {extraChecks}" : null)};");
+        }
     }
 }

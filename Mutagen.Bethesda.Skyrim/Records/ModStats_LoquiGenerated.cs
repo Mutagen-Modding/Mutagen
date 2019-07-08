@@ -1927,7 +1927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, meta),
                 meta: meta);
             var finalPos = stream.Position + meta.SubRecord(stream.RemainingSpan).TotalLength;
-            var offset = stream.Position + meta.SubConstants.TypeAndLengthLength;
+            int offset = stream.Position + meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x12;
             ret.CustomCtor(stream, offset);
             return ret;

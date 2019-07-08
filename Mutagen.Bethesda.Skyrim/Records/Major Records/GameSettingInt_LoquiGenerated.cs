@@ -1906,7 +1906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 masterReferences: masterReferences,
                 meta: meta);
             var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;
-            var offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
+            int offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
             UtilityTranslation.FillSubrecordTypesForWrapper(
@@ -1920,7 +1920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long offset,
+            int offset,
             RecordType type,
             int? lastParsed)
         {

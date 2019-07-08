@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Generation
 
             var allowDirectWrite = subTransl.AllowDirectWrite(objGen, typeGen);
             var isLoqui = list.SubTypeGeneration is LoquiType;
-            var listOfRecords = !isLoqui 
+            var listOfRecords = !isLoqui
                 && listBinaryType == ListBinaryType.SubTrigger
                 && allowDirectWrite;
 
@@ -362,51 +362,65 @@ namespace Mutagen.Bethesda.Generation
         }
 
         public override void GenerateWrapperFields(
-            FileGeneration fg, 
+            FileGeneration fg,
             ObjectGeneration objGen,
-            TypeGeneration typeGen, 
+            TypeGeneration typeGen,
             Accessor dataAccessor,
-            int passedLength,
-            DataType data = null)
+            int currentPosition,
+            DataType dataType = null)
         {
             ListType list = typeGen as ListType;
-            if (!(list.SubTypeGeneration is LoquiType loqui))
-            {
-                throw new NotImplementedException();
-            }
-            if (loqui.TargetObjectGeneration.IsTypelessStruct())
+            if (list.SubTypeGeneration is LoquiType loqui
+                && loqui.TargetObjectGeneration.IsTypelessStruct())
             {
                 var typeName = this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration);
+                string startingVal;
                 if (list.HasBeenSet)
                 {
-                    fg.AppendLine($"private NulledSetList<{typeName}> _{typeGen.Name} = new NulledSetList<{typeName}>();");
+                    startingVal = $"EmptySetList<{typeName}>.Instance";
                 }
                 else
                 {
-                    fg.AppendLine($"private List<{typeName}> _{typeGen.Name} = new List<{typeName}>();");
+                    startingVal = $"new List<{typeName}>()";
                 }
-                fg.AppendLine($"public IReadOnlySetList<{loqui.TypeName(getter: true)}> {typeGen.Name} => _{typeGen.Name};");
+                fg.AppendLine($"public IReadOnlySetList<{loqui.TypeName(getter: true)}> {typeGen.Name} {{ get; private set; }} = {startingVal};");
+            }
+            else if (list.MaxValue.HasValue)
+            {
+                if (!(list.SubTypeGeneration is EnumType)
+                    || list.HasBeenSet
+                    || dataType == null)
+                {
+                    throw new NotImplementedException();
+                }
+                var posStr = $"_{dataType.GetFieldData().RecordType}Location + {currentPosition}";
+                fg.AppendLine($"public IReadOnlyList<{list.SubTypeGeneration.TypeName(getter: true)}> {typeGen.Name} => new NumberedEnumList<{list.SubTypeGeneration.TypeName(getter: true)}>(_{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Slice(_{dataType.GetFieldData().RecordType}Location.Value + {currentPosition}) : default, amount: {list.MaxValue.Value});");
             }
             else
             {
-                if (list.HasBeenSet)
-                {
-                    fg.AppendLine($"private NulledSetList<ushort> _{typeGen.Name}Locations = new NulledSetList<ushort>();");
-                }
-                else
-                {
-                    fg.AppendLine($"private List<ushort> _{typeGen.Name}Locations = new List<ushort>();");
-                }
-                fg.AppendLine($"public IReadOnlySetList<ushort> {typeGen.Name} => _{typeGen.Name};");
+                throw new NotImplementedException();
             }
         }
 
-        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
+        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            ListType list = typeGen as ListType;
+            if (list.MaxValue.HasValue)
+            {
+                if (!(list.SubTypeGeneration is EnumType)
+                    || list.HasBeenSet)
+                {
+                    throw new NotImplementedException();
+                }
+                return list.MaxValue.Value * 4;
+            }
+            return 0;
+        }
 
         public override async Task GenerateWrapperRecordTypeParse(
-            FileGeneration fg, 
+            FileGeneration fg,
             ObjectGeneration objGen,
-            TypeGeneration typeGen, 
+            TypeGeneration typeGen,
             Accessor locationAccessor)
         {
             ListType list = typeGen as ListType;

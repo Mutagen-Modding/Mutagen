@@ -2045,15 +2045,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MetaDataConstants meta)
         {
             var ret = new ModelBinaryWrapper(
-                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, meta),
+                bytes: stream.RemainingMemory,
                 meta: meta);
-            var finalPos = stream.Position + meta.SubRecord(stream.RemainingSpan).TotalLength;
-            var offset = stream.Position + meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x0 + meta.SubConstants.TypeAndLengthLength;
-            ret.CustomCtor(stream, offset);
-            UtilityTranslation.FillSubrecordTypesForWrapper(
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
                 stream: stream,
-                finalPos: finalPos,
                 offset: offset,
                 meta: ret._meta,
                 fill: ret.FillRecordType);
@@ -2062,7 +2059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long offset,
+            int offset,
             RecordType type,
             int? lastParsed)
         {

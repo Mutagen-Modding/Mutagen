@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda
 
         public delegate TryGet<int?> RecordTypeFillWrapper(
             BinaryMemoryReadStream stream,
-            long offset,
+            int offset,
             RecordType type,
             int? lastParsed);
 
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda
         public static void FillRecordTypesForWrapper(
             BinaryMemoryReadStream stream,
             long finalPos,
-            long offset,
+            int offset,
             MetaDataConstants meta,
             RecordTypeFillWrapper fill)
         {
@@ -433,12 +433,37 @@ namespace Mutagen.Bethesda
         public static void FillSubrecordTypesForWrapper(
             BinaryMemoryReadStream stream,
             long finalPos,
-            long offset,
+            int offset,
             MetaDataConstants meta,
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
             while (stream.Position < finalPos)
+            {
+                SubRecordMeta subMeta = meta.SubRecord(stream.RemainingSpan);
+                var startPos = stream.Position;
+                var parsed = fill(
+                    stream: stream,
+                    offset: offset,
+                    type: subMeta.RecordType,
+                    lastParsed: lastParsed);
+                if (parsed.Failed) break;
+                if (startPos == stream.Position)
+                {
+                    stream.Position += checked((int)subMeta.TotalLength);
+                }
+                lastParsed = parsed.Value;
+            }
+        }
+
+        public static void FillTypelessSubrecordTypesForWrapper(
+            BinaryMemoryReadStream stream,
+            int offset,
+            MetaDataConstants meta,
+            RecordTypeFillWrapper fill)
+        {
+            int? lastParsed = null;
+            while (!stream.Complete)
             {
                 SubRecordMeta subMeta = meta.SubRecord(stream.RemainingSpan);
                 var startPos = stream.Position;

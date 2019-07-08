@@ -2275,7 +2275,7 @@ namespace Mutagen.Bethesda.Internals
                 masterReferences: masterReferences,
                 meta: meta);
             var finalPos = stream.Position + meta.Group(stream.RemainingSpan).TotalLength;
-            var offset = stream.Position + meta.GroupConstants.TypeAndLengthLength;
+            int offset = stream.Position + meta.GroupConstants.TypeAndLengthLength;
             stream.Position += 0xC + meta.GroupConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
             UtilityTranslation.FillRecordTypesForWrapper(
@@ -2289,7 +2289,7 @@ namespace Mutagen.Bethesda.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long offset,
+            int offset,
             RecordType type,
             int? lastParsed)
         {

@@ -3152,7 +3152,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected MetaDataConstants _meta;
 
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(0, 12).ToArray();
-        public IModStatsGetter Stats { get; private set; } = new ModStats();
+        #region Stats
+        private IModStatsGetter _Stats;
+        public IModStatsGetter Stats => _Stats ?? new ModStats();
+        #endregion
         #region TypeOffsets
         private int? _TypeOffsetsLocation;
         public bool TypeOffsets_IsSet => _TypeOffsetsLocation.HasValue;
@@ -3173,10 +3176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool Description_IsSet => _DescriptionLocation.HasValue;
         public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _meta)) : default;
         #endregion
-        #region MasterReferences
-        private NulledSetList<MasterReferenceBinaryWrapper> _MasterReferences = new NulledSetList<MasterReferenceBinaryWrapper>();
-        public IReadOnlySetList<IMasterReferenceGetter> MasterReferences => _MasterReferences;
-        #endregion
+        public IReadOnlySetList<IMasterReferenceGetter> MasterReferences { get; private set; } = EmptySetList<MasterReferenceBinaryWrapper>.Instance;
         #region VestigialData
         private int? _VestigialDataLocation;
         public bool VestigialData_IsSet => _VestigialDataLocation.HasValue;
@@ -3200,7 +3200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, meta),
                 meta: meta);
             var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;
-            var offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
+            int offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
             UtilityTranslation.FillSubrecordTypesForWrapper(
@@ -3214,7 +3214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long offset,
+            int offset,
             RecordType type,
             int? lastParsed)
         {
@@ -3222,7 +3222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x52444548: // HEDR
                 {
-                    this.Stats = ModStatsBinaryWrapper.ModStatsFactory(
+                    this._Stats = ModStatsBinaryWrapper.ModStatsFactory(
                         stream: stream,
                         meta: _meta);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);

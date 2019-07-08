@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -241,25 +242,31 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            int passedLength,
-            DataType _)
+            int currentPosition,
+            DataType dataType)
         {
             LoquiType loqui = typeGen as LoquiType;
             switch (loqui.SingletonType)
             {
                 case SingletonLevel.None:
+                    if (dataType != null)
+                    {
+                        throw new NotImplementedException();
+                    }
                     fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} {{ get; private set; }}");
                     break;
                 case SingletonLevel.NotNull:
                 case SingletonLevel.Singleton:
-                    if (loqui.ThisConstruction)
+                    if (dataType == null)
                     {
-                        fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} {{ get; private set; }}");
+                        fg.AppendLine($"private {loqui.Interface(getter: true)} _{typeGen.Name};");
                     }
                     else
                     {
-                        fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} {{ get; private set; }} = new {loqui.DirectTypeName}();");
+                        DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                        fg.AppendLine($"private {loqui.Interface(getter: true)} _{typeGen.Name} => _{typeGen.Name}_IsSet ? {loqui.TargetObjectGeneration.Name}BinaryWrapper.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice(_{typeGen.Name}Location)), _meta) : default;");
                     }
+                    fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} => _{typeGen.Name} ?? new {loqui.DirectTypeName}({(loqui.ThisConstruction ? "this" : null)});");
                     break;
                 default:
                     break;
@@ -272,25 +279,6 @@ namespace Mutagen.Bethesda.Generation
 
         public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
 
-        public override void GenerateWrapperCtor(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen)
-        {
-            LoquiType loqui = typeGen as LoquiType;
-            switch (loqui.SingletonType)
-            {
-                case SingletonLevel.None:
-                    break;
-                case SingletonLevel.NotNull:
-                case SingletonLevel.Singleton:
-                    if (loqui.ThisConstruction)
-                    {
-                        fg.AppendLine($"this.{typeGen.Name} = new {loqui.DirectTypeName}(this);");
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
         public override async Task GenerateWrapperRecordTypeParse(
             FileGeneration fg,
             ObjectGeneration objGen,
@@ -298,8 +286,21 @@ namespace Mutagen.Bethesda.Generation
             Accessor locationAccessor)
         {
             LoquiType loqui = typeGen as LoquiType;
+            string accessor;
+            switch (loqui.SingletonType)
+            {
+                case SingletonLevel.None:
+                    accessor = typeGen.Name;
+                    break;
+                case SingletonLevel.NotNull:
+                case SingletonLevel.Singleton:
+                    accessor = $"_{typeGen.Name}";
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
             using (var args = new ArgsWrapper(fg,
-                $"this.{typeGen.Name} = {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}{loqui.GenericTypes(getter: true)}.{loqui.TargetObjectGeneration.Name}Factory"))
+                $"this.{accessor} = {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}{loqui.GenericTypes(getter: true)}.{loqui.TargetObjectGeneration.Name}Factory"))
             {
                 args.Add($"stream: stream");
                 if (await loqui.TargetObjectGeneration.GetNeedsMasters())

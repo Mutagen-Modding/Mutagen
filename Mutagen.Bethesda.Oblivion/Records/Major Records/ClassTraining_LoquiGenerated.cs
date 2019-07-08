@@ -1896,6 +1896,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ClassTrainingBinaryWrapper : IClassTrainingGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
+        public static ClassTraining_Registration Registration => ClassTraining_Registration.Instance;
+        protected object CommonInstance => ClassTrainingCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassTrainingGetter)rhs, include);
+
+        protected object XmlWriteTranslator => ClassTrainingXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => ClassTrainingBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected MetaDataConstants _meta;
+
+        public Skill TrainedSkill => (Skill)_data.Span.Slice(0, 1)[0];
+        public Byte MaximumTrainingLevel => _data.Span[1];
+        public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(2, 2).ToArray();
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ClassTrainingBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            MetaDataConstants meta)
+        {
+            this._data = bytes;
+            this._meta = meta;
+        }
+
+        public static ClassTrainingBinaryWrapper ClassTrainingFactory(
+            BinaryMemoryReadStream stream,
+            MetaDataConstants meta)
+        {
+            var ret = new ClassTrainingBinaryWrapper(
+                bytes: stream.RemainingMemory.Slice(0, 4),
+                meta: meta);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion
