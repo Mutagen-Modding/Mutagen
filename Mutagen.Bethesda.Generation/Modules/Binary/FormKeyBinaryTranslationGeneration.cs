@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Generation
                 throw new NotImplementedException();
             }
             var posStr = dataType == null ? $"{currentPosition}" : $"_{dataType.GetFieldData().RecordType}Location + {currentPosition}";
-            fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Parse({dataAccessor}.Span.Slice({posStr}, {this.ExpectedLength.Value}), this._masterReferences);");
+            fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Parse({dataAccessor}.Span.Slice({posStr}, {this.ExpectedLength.Value}), this._package.MasterReferences);");
         }
 
         public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)

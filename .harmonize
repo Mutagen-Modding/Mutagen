@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>986cb80c09b00f93f9cfabc8ff1a9de87774766e</Sha>
+         <Sha>5ffc34aa5ba0f9d7eef7cffe586fd56c433c2c61</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-05-2019 18:46:49</CommitDate>
-         <Description>ByteArray getters changed to ReadOnlySpan&lt;byte&gt;</Description>
+         <CommitDate>07-08-2019 20:40:23</CommitDate>
+         <Description>FunctionWrapper.AddPassArg</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

@@ -27,6 +27,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Translators\Binary\Helper Containers\BinaryWrapperFactoryPackage.cs" />
     <Compile Include="Translators\Binary\Helper Containers\EmptySetList.cs" />
     <Compile Include="Translators\Binary\Helper Containers\NumberedEnumList.cs" />
     <Compile Include="Translators\Binary\LoquiBinaryWrapperTranslation.cs" />

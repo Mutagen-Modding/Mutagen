@@ -3149,7 +3149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         protected ReadOnlyMemorySlice<byte> _data;
-        protected MetaDataConstants _meta;
+        protected BinaryWrapperFactoryPackage _package;
 
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(0, 12).ToArray();
         #region Stats
@@ -3159,55 +3159,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region TypeOffsets
         private int? _TypeOffsetsLocation;
         public bool TypeOffsets_IsSet => _TypeOffsetsLocation.HasValue;
-        public ReadOnlySpan<Byte> TypeOffsets => _TypeOffsetsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _TypeOffsetsLocation.Value, _meta).ToArray() : default;
+        public ReadOnlySpan<Byte> TypeOffsets => _TypeOffsetsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _TypeOffsetsLocation.Value, _package.Meta).ToArray() : default;
         #endregion
         #region Deleted
         private int? _DeletedLocation;
         public bool Deleted_IsSet => _DeletedLocation.HasValue;
-        public ReadOnlySpan<Byte> Deleted => _DeletedLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _DeletedLocation.Value, _meta).ToArray() : default;
+        public ReadOnlySpan<Byte> Deleted => _DeletedLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _DeletedLocation.Value, _package.Meta).ToArray() : default;
         #endregion
         #region Author
         private int? _AuthorLocation;
         public bool Author_IsSet => _AuthorLocation.HasValue;
-        public String Author => _AuthorLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _AuthorLocation.Value, _meta)) : default;
+        public String Author => _AuthorLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _AuthorLocation.Value, _package.Meta)) : default;
         #endregion
         #region Description
         private int? _DescriptionLocation;
         public bool Description_IsSet => _DescriptionLocation.HasValue;
-        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _meta)) : default;
+        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
         #endregion
         public IReadOnlySetList<IMasterReferenceGetter> MasterReferences { get; private set; } = EmptySetList<MasterReferenceBinaryWrapper>.Instance;
         #region VestigialData
         private int? _VestigialDataLocation;
         public bool VestigialData_IsSet => _VestigialDataLocation.HasValue;
-        public UInt64 VestigialData => _VestigialDataLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VestigialDataLocation.Value, _meta)) : default;
+        public UInt64 VestigialData => _VestigialDataLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VestigialDataLocation.Value, _package.Meta)) : default;
         #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
         protected ModHeaderBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             this._data = bytes;
-            this._meta = meta;
+            this._package = package;
         }
 
         public static ModHeaderBinaryWrapper ModHeaderFactory(
             BinaryMemoryReadStream stream,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             var ret = new ModHeaderBinaryWrapper(
-                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, meta),
-                meta: meta);
-            var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;
-            int offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
-            stream.Position += 0xC + meta.MajorConstants.TypeAndLengthLength;
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
             UtilityTranslation.FillSubrecordTypesForWrapper(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                meta: ret._meta,
+                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3224,7 +3224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     this._Stats = ModStatsBinaryWrapper.ModStatsFactory(
                         stream: stream,
-                        meta: _meta);
+                        package: _package);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
                 }
                 case 0x5453464F: // OFST

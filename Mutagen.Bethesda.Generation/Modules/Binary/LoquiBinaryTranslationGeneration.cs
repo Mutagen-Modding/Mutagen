@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Generation
                     else
                     {
                         DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
-                        fg.AppendLine($"private {loqui.Interface(getter: true)} _{typeGen.Name} => _{typeGen.Name}_IsSet ? {loqui.TargetObjectGeneration.Name}BinaryWrapper.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice(_{typeGen.Name}Location)), _meta) : default;");
+                        fg.AppendLine($"private {loqui.Interface(getter: true)} _{typeGen.Name} => _{typeGen.Name}_IsSet ? {loqui.TargetObjectGeneration.Name}BinaryWrapper.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice(_{typeGen.Name}Location)), _package) : default;");
                     }
                     fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} => _{typeGen.Name} ?? new {loqui.DirectTypeName}({(loqui.ThisConstruction ? "this" : null)});");
                     break;
@@ -303,11 +303,7 @@ namespace Mutagen.Bethesda.Generation
                 $"this.{accessor} = {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}{loqui.GenericTypes(getter: true)}.{loqui.TargetObjectGeneration.Name}Factory"))
             {
                 args.Add($"stream: stream");
-                if (await loqui.TargetObjectGeneration.GetNeedsMasters())
-                {
-                    args.Add($"masterReferences: _masterReferences");
-                }
-                args.Add($"meta: _meta");
+                args.Add($"package: _package");
             }
         }
     }

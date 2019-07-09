@@ -1456,7 +1456,8 @@ namespace Mutagen.Bethesda.Generation
                 ) return;
 
             var dataAccessor = new Accessor("_data");
-            var metaAccessor = new Accessor("_meta");
+            var packageAccessor = new Accessor("_package");
+            var metaAccessor = new Accessor("_package.Meta");
             var objData = obj.GetObjectData();
             var needsMasters = await obj.GetNeedsMasters();
             var anyHasRecordTypes = (await obj.EntireClassTree()).Any(c => HasRecordTypeFields(c));
@@ -1507,17 +1508,12 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.IsTopClass)
                 {
                     fg.AppendLine($"protected ReadOnlyMemorySlice<byte> {dataAccessor};");
-                    fg.AppendLine($"protected {nameof(MetaDataConstants)} {metaAccessor};");
-                    if (needsMasters)
-                    {
-                        fg.AppendLine("protected MasterReferences _masterReferences;");
-                    }
+                    fg.AppendLine($"protected {nameof(BinaryWrapperFactoryPackage)} {packageAccessor};");
                 }
 
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     fg.AppendLine($"public {nameof(ModKey)} ModKey {{ get; }}");
-                    fg.AppendLine($"private {nameof(MasterReferences)} _masterReferences;");
                 }
 
                 fg.AppendLine();
@@ -1586,17 +1582,13 @@ namespace Mutagen.Bethesda.Generation
                     $"protected {BinaryWrapperClassName(obj)}"))
                 {
                     args.Add($"ReadOnlyMemorySlice<byte> bytes");
-                    if (needsMasters)
-                    {
-                        args.Add("MasterReferences masterReferences");
-                    }
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
                         args.Add("ModKey modKey");
                     }
                     else
                     {
-                        args.Add($"{nameof(MetaDataConstants)} meta");
+                        args.Add($"{nameof(BinaryWrapperFactoryPackage)} package");
                     }
                 }
                 if (obj.HasLoquiBaseObject)
@@ -1606,14 +1598,10 @@ namespace Mutagen.Bethesda.Generation
                         using (var args = new FunctionWrapper(fg,
                             ": base"))
                         {
-                            args.Add("bytes: bytes");
+                            args.AddPassArg("bytes");
                             if (obj.GetObjectType() != ObjectType.Mod)
                             {
-                                args.Add("meta: meta");
-                            }
-                            if (needsMasters)
-                            {
-                                args.Add("masterReferences: masterReferences");
+                                args.AddPassArg("package");
                             }
                         }
                     }
@@ -1623,19 +1611,22 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.IsTopClass)
                     {
                         fg.AppendLine($"this.{dataAccessor} = bytes;");
-                        if (needsMasters)
+                        if (obj.GetObjectType() != ObjectType.Mod)
                         {
-                            fg.AppendLine("this._masterReferences = masterReferences;");
+                            fg.AppendLine($"this.{packageAccessor} = package;");
+                        }
+                        else
+                        {
+                            fg.AppendLine($"this.{packageAccessor} = new {nameof(BinaryWrapperFactoryPackage)}()");
+                            using (new BraceWrapper(fg) { AppendSemicolon = true })
+                            {
+                                fg.AppendLine($"Meta = {nameof(MetaDataConstants)}.Get(this.GameMode)");
+                            }
                         }
                     }
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
                         fg.AppendLine("this.ModKey = modKey;");
-                        fg.AppendLine($"this.{metaAccessor} = {nameof(MetaDataConstants)}.{obj.GetObjectData().GameMode};");
-                    }
-                    else
-                    {
-                        fg.AppendLine($"this.{metaAccessor} = meta;");
                     }
                     foreach (var field in obj.IterateFields(
                         expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
@@ -1663,17 +1654,13 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"{nameof(BinaryMemoryReadStream)} stream");
                         }
-                        if (needsMasters)
-                        {
-                            args.Add("MasterReferences masterReferences");
-                        }
                         if (obj.GetObjectType() == ObjectType.Mod)
                         {
                             args.Add("ModKey modKey");
                         }
                         else
                         {
-                            args.Add($"{nameof(MetaDataConstants)} meta");
+                            args.Add($"{nameof(BinaryWrapperFactoryPackage)} package");
                         }
                     }
                     using (new BraceWrapper(fg))
@@ -1714,13 +1701,13 @@ namespace Mutagen.Bethesda.Generation
                                 switch (obj.GetObjectType())
                                 {
                                     case ObjectType.Record:
-                                        args.Add($"bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, meta)");
+                                        args.Add($"bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta)");
                                         break;
                                     case ObjectType.Group:
-                                        args.Add($"bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, meta)");
+                                        args.Add($"bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta)");
                                         break;
                                     case ObjectType.Subrecord:
-                                        args.Add($"bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, meta)");
+                                        args.Add($"bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta)");
                                         break;
                                     case ObjectType.Mod:
                                         args.Add($"bytes: bytes");
@@ -1729,17 +1716,13 @@ namespace Mutagen.Bethesda.Generation
                                         throw new NotImplementedException();
                                 }
                             }
-                            if (needsMasters)
-                            {
-                                args.AddPassArg("masterReferences");
-                            }
                             if (obj.GetObjectType() == ObjectType.Mod)
                             {
                                 args.AddPassArg("modKey");
                             }
                             else
                             {
-                                args.AddPassArg("meta");
+                                args.AddPassArg("package");
                             }
                         }
                         if (obj.GetObjectType() == ObjectType.Mod)
@@ -1755,16 +1738,16 @@ namespace Mutagen.Bethesda.Generation
                             switch (obj.GetObjectType())
                             {
                                 case ObjectType.Subrecord:
-                                    fg.AppendLine($"var finalPos = stream.Position + meta.SubRecord(stream.RemainingSpan).TotalLength;");
-                                    fg.AppendLine($"int offset = stream.Position + meta.SubConstants.TypeAndLengthLength;");
+                                    fg.AppendLine($"var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;");
+                                    fg.AppendLine($"int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;");
                                     break;
                                 case ObjectType.Record:
-                                    fg.AppendLine($"var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;");
-                                    fg.AppendLine($"int offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;");
+                                    fg.AppendLine($"var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;");
+                                    fg.AppendLine($"int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;");
                                     break;
                                 case ObjectType.Group:
-                                    fg.AppendLine($"var finalPos = stream.Position + meta.Group(stream.RemainingSpan).TotalLength;");
-                                    fg.AppendLine($"int offset = stream.Position + meta.GroupConstants.TypeAndLengthLength;");
+                                    fg.AppendLine($"var finalPos = stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength;");
+                                    fg.AppendLine($"int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;");
                                     break;
                                 case ObjectType.Mod:
                                     break;
@@ -1780,13 +1763,13 @@ namespace Mutagen.Bethesda.Generation
                                 switch (obj.GetObjectType())
                                 {
                                     case ObjectType.Subrecord:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + meta.SubConstants.TypeAndLengthLength;");
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + package.Meta.SubConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Record:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + meta.MajorConstants.TypeAndLengthLength;");
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + package.Meta.MajorConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Group:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + meta.GroupConstants.TypeAndLengthLength;");
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + package.Meta.GroupConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Mod:
                                         break;
@@ -1913,7 +1896,7 @@ namespace Mutagen.Bethesda.Generation
                                                     && field.Field.Name == "ModHeader")
                                                 {
                                                     using (var args = new ArgsWrapper(fg,
-                                                        "_masterReferences = new MasterReferences"))
+                                                        "_package.MasterReferences = new MasterReferences"))
                                                     {
                                                         args.Add((subFg) =>
                                                         {

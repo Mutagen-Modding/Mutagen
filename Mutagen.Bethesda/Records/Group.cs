@@ -215,19 +215,16 @@ namespace Mutagen.Bethesda
             {
                 private readonly IReadOnlyDictionary<FormKey, int> _locs;
                 private readonly ReadOnlyMemorySlice<byte> _data;
-                private readonly MasterReferences _masters;
-                private readonly MetaDataConstants _meta;
+                private readonly BinaryWrapperFactoryPackage _package;
 
                 public GroupMajorRecordCacheWrapper(
                     IReadOnlyDictionary<FormKey, int> locs,
                     ReadOnlyMemorySlice<byte> data,
-                    MasterReferences masters,
-                    MetaDataConstants meta)
+                    BinaryWrapperFactoryPackage package)
                 {
                     this._locs = locs;
                     this._data = data;
-                    this._masters = masters;
-                    this._meta = meta;
+                    this._package = package;
                 }
 
                 public T this[FormKey key] => ConstructWrapper(this._locs[key]);
@@ -254,8 +251,7 @@ namespace Mutagen.Bethesda
                 {
                      return LoquiBinaryWrapperTranslation<T>.Create(
                         stream: new BinaryMemoryReadStream(this._data.Slice(pos)),
-                        masterReferences: this._masters,
-                        meta: _meta);
+                        package: _package);
                 }
             }
 
@@ -266,17 +262,17 @@ namespace Mutagen.Bethesda
             {
                 Dictionary<FormKey, int> locationDict = new Dictionary<FormKey, int>();
 
-                var groupMeta = _meta.Group(stream.Data.Span.Slice(stream.Position - _meta.GroupConstants.HeaderLength));
+                var groupMeta = _package.Meta.Group(stream.Data.Span.Slice(stream.Position - _package.Meta.GroupConstants.HeaderLength));
                 var finalPos = stream.Position + groupMeta.ContentLength;
                 // Parse MajorRecord locations
                 while (stream.Position < finalPos)
                 {
-                    MajorRecordMeta majorMeta = this._meta.MajorRecord(stream.RemainingSpan);
+                    MajorRecordMeta majorMeta = this._package.Meta.MajorRecord(stream.RemainingSpan);
                     if (majorMeta.RecordType != GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE)
                     {
                         throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
                     }
-                    var formKey = FormKey.Factory(_masterReferences, majorMeta.FormID.Raw);
+                    var formKey = FormKey.Factory(_package.MasterReferences, majorMeta.FormID.Raw);
                     locationDict.Add(formKey, stream.Position - offset);
                     stream.Position += checked((int)majorMeta.TotalLength);
                 }
@@ -284,8 +280,7 @@ namespace Mutagen.Bethesda
                 _Items = new GroupMajorRecordCacheWrapper(
                     locs: locationDict,
                     data: this._data,
-                    masters: this._masterReferences,
-                    meta: this._meta);
+                    package: this._package);
             }
         }
     }

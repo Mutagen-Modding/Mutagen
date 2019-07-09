@@ -114,9 +114,9 @@ namespace Mutagen.Bethesda.Generation
             Accessor locationAccessor)
         {
             DataType dataType = field as DataType;
-            fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = (ushort){locationAccessor} + _meta.SubConstants.TypeAndLengthLength;");
+            fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = (ushort){locationAccessor} + _package.Meta.SubConstants.TypeAndLengthLength;");
             fg.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
-            fg.AppendLine($"var subLen = _meta.SubRecord(_data.Slice({locationAccessor})).RecordLength;");
+            fg.AppendLine($"var subLen = _package.Meta.SubRecord(_data.Slice({locationAccessor})).RecordLength;");
             var passedLen = 0;
             foreach (var item in dataType.IterateFieldsWithMeta())
             {

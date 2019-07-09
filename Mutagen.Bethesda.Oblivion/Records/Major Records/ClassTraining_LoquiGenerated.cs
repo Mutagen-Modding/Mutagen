@@ -1913,7 +1913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected object BinaryWriteTranslator => ClassTrainingBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         protected ReadOnlyMemorySlice<byte> _data;
-        protected MetaDataConstants _meta;
+        protected BinaryWrapperFactoryPackage _package;
 
         public Skill TrainedSkill => (Skill)_data.Span.Slice(0, 1)[0];
         public Byte MaximumTrainingLevel => _data.Span[1];
@@ -1922,19 +1922,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected ClassTrainingBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             this._data = bytes;
-            this._meta = meta;
+            this._package = package;
         }
 
         public static ClassTrainingBinaryWrapper ClassTrainingFactory(
             BinaryMemoryReadStream stream,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             var ret = new ClassTrainingBinaryWrapper(
                 bytes: stream.RemainingMemory.Slice(0, 4),
-                meta: meta);
+                package: package);
             int offset = stream.Position;
             ret.CustomCtor(stream, offset);
             return ret;

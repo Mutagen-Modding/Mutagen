@@ -3468,17 +3468,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public bool Name_IsSet => _NameLocation.HasValue;
-        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _meta)) : default;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
         #endregion
         #region Description
         private int? _DescriptionLocation;
         public bool Description_IsSet => _DescriptionLocation.HasValue;
-        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _meta)) : default;
+        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
         #endregion
         #region Icon
         private int? _IconLocation;
         public bool Icon_IsSet => _IconLocation.HasValue;
-        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _meta)) : default;
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
         #endregion
         private int? _DATALocation;
         public Class.DATADataType DATADataTypeState { get; private set; }
@@ -3502,41 +3502,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Training
         private int _TrainingLocation => _DATALocation.Value + 48;
         private bool _Training_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Class.DATADataType.Break0);
-        private IClassTrainingGetter _Training => _Training_IsSet ? ClassTrainingBinaryWrapper.ClassTrainingFactory(new BinaryMemoryReadStream(_data.Slice(_TrainingLocation)), _meta) : default;
+        private IClassTrainingGetter _Training => _Training_IsSet ? ClassTrainingBinaryWrapper.ClassTrainingFactory(new BinaryMemoryReadStream(_data.Slice(_TrainingLocation)), _package) : default;
         public IClassTrainingGetter Training => _Training ?? new ClassTraining();
         #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
         protected ClassBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
-            MasterReferences masterReferences,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
             : base(
                 bytes: bytes,
-                meta: meta,
-                masterReferences: masterReferences)
+                package: package)
         {
-            this._meta = meta;
         }
 
         public static ClassBinaryWrapper ClassFactory(
             BinaryMemoryReadStream stream,
-            MasterReferences masterReferences,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             var ret = new ClassBinaryWrapper(
-                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, meta),
-                masterReferences: masterReferences,
-                meta: meta);
-            var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;
-            int offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
-            stream.Position += 0xC + meta.MajorConstants.TypeAndLengthLength;
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
             UtilityTranslation.FillSubrecordTypesForWrapper(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                meta: ret._meta,
+                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3566,9 +3561,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _meta.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.DATADataTypeState = Class.DATADataType.Has;
-                    var subLen = _meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
                     if (subLen <= 48)
                     {
                         this.DATADataTypeState |= Class.DATADataType.Break0;

@@ -1445,14 +1445,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected GameSettingBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
-            MasterReferences masterReferences,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
             : base(
                 bytes: bytes,
-                meta: meta,
-                masterReferences: masterReferences)
+                package: package)
         {
-            this._meta = meta;
         }
 
     }

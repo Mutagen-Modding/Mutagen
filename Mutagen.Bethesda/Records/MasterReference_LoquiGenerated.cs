@@ -1858,41 +1858,41 @@ namespace Mutagen.Bethesda.Internals
         protected object BinaryWriteTranslator => MasterReferenceBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         protected ReadOnlyMemorySlice<byte> _data;
-        protected MetaDataConstants _meta;
+        protected BinaryWrapperFactoryPackage _package;
 
         #region Master
         private int? _MasterLocation;
         public bool Master_IsSet => _MasterLocation.HasValue;
-        public ModKey Master => _MasterLocation.HasValue ? ModKey.Factory(BinaryStringUtility.ToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MasterLocation.Value, _meta))) : default;
+        public ModKey Master => _MasterLocation.HasValue ? ModKey.Factory(BinaryStringUtility.ToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MasterLocation.Value, _package.Meta))) : default;
         #endregion
         #region FileSize
         private int? _FileSizeLocation;
         public bool FileSize_IsSet => _FileSizeLocation.HasValue;
-        public UInt64 FileSize => _FileSizeLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FileSizeLocation.Value, _meta)) : default;
+        public UInt64 FileSize => _FileSizeLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FileSizeLocation.Value, _package.Meta)) : default;
         #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
         protected MasterReferenceBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             this._data = bytes;
-            this._meta = meta;
+            this._package = package;
         }
 
         public static MasterReferenceBinaryWrapper MasterReferenceFactory(
             BinaryMemoryReadStream stream,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             var ret = new MasterReferenceBinaryWrapper(
                 bytes: stream.RemainingMemory,
-                meta: meta);
+                package: package);
             int offset = stream.Position;
             ret.CustomCtor(stream, offset: 0);
             UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
                 stream: stream,
                 offset: offset,
-                meta: ret._meta,
+                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }

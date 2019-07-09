@@ -2618,7 +2618,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected object BinaryWriteTranslator => ConditionBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         protected ReadOnlyMemorySlice<byte> _data;
-        protected MetaDataConstants _meta;
+        protected BinaryWrapperFactoryPackage _package;
 
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(1, 3).ToArray();
         public Single ComparisonValue => SpanExt.GetFloat(_data.Span.Slice(4, 4));
@@ -2630,21 +2630,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected ConditionBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             this._data = bytes;
-            this._meta = meta;
+            this._package = package;
         }
 
         public static ConditionBinaryWrapper ConditionFactory(
             BinaryMemoryReadStream stream,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             var ret = new ConditionBinaryWrapper(
-                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, meta),
-                meta: meta);
-            var finalPos = stream.Position + meta.SubRecord(stream.RemainingSpan).TotalLength;
-            int offset = stream.Position + meta.SubConstants.TypeAndLengthLength;
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x1E;
             ret.CustomCtor(stream, offset);
             return ret;

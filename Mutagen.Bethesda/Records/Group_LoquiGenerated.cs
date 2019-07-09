@@ -2248,8 +2248,7 @@ namespace Mutagen.Bethesda.Internals
         protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         protected ReadOnlyMemorySlice<byte> _data;
-        protected MetaDataConstants _meta;
-        protected MasterReferences _masterReferences;
+        protected BinaryWrapperFactoryPackage _package;
 
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         public ReadOnlySpan<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
@@ -2257,32 +2256,28 @@ namespace Mutagen.Bethesda.Internals
 
         protected GroupBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
-            MasterReferences masterReferences,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             this._data = bytes;
-            this._masterReferences = masterReferences;
-            this._meta = meta;
+            this._package = package;
         }
 
         public static GroupBinaryWrapper<T> GroupFactory(
             BinaryMemoryReadStream stream,
-            MasterReferences masterReferences,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             var ret = new GroupBinaryWrapper<T>(
-                bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, meta),
-                masterReferences: masterReferences,
-                meta: meta);
-            var finalPos = stream.Position + meta.Group(stream.RemainingSpan).TotalLength;
-            int offset = stream.Position + meta.GroupConstants.TypeAndLengthLength;
-            stream.Position += 0xC + meta.GroupConstants.TypeAndLengthLength;
+                bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.GroupConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
             UtilityTranslation.FillRecordTypesForWrapper(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                meta: ret._meta,
+                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }

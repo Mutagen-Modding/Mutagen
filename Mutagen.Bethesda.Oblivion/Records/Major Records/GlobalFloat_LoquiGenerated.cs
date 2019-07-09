@@ -1889,40 +1889,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private int? _DataLocation;
         public bool Data_IsSet => _DataLocation.HasValue;
-        public Single Data => _DataLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _DataLocation.Value, _meta)) : default;
+        public Single Data => _DataLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _DataLocation.Value, _package.Meta)) : default;
         #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
         protected GlobalFloatBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
-            MasterReferences masterReferences,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
             : base(
                 bytes: bytes,
-                meta: meta,
-                masterReferences: masterReferences)
+                package: package)
         {
-            this._meta = meta;
         }
 
         public static GlobalFloatBinaryWrapper GlobalFloatFactory(
             BinaryMemoryReadStream stream,
-            MasterReferences masterReferences,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             var ret = new GlobalFloatBinaryWrapper(
-                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, meta),
-                masterReferences: masterReferences,
-                meta: meta);
-            var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;
-            int offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
-            stream.Position += 0xC + meta.MajorConstants.TypeAndLengthLength;
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
             UtilityTranslation.FillSubrecordTypesForWrapper(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                meta: ret._meta,
+                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }

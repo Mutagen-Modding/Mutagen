@@ -235,10 +235,10 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"public {field.TypeName(getter: true)} {field.Name} => Get{field.Name}Custom"))
             {
-                args.Add($"span: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{field.Name}Location.Value, _meta)");
+                args.Add($"span: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{field.Name}Location.Value, _package.Meta)");
                 if (doMasters)
                 {
-                    args.Add($"masterReferences: _masterReferences");
+                    args.Add($"masterReferences: _package.MasterReferences");
                 }
             }
         }

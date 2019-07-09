@@ -62,10 +62,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public static GameSettingBinaryWrapper GameSettingFactory(
                 BinaryMemoryReadStream stream,
-                MasterReferences masterReferences,
-                MetaDataConstants meta)
+                BinaryWrapperFactoryPackage package)
             {
-                var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingSpan, meta);
+                var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingSpan, package.Meta);
                 if (settingType.Failed)
                 {
                     throw new ArgumentException($"Error splitting to desired GameSetting type: {settingType.Reason}");
@@ -73,11 +72,11 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (settingType.Value)
                 {
                     case GameSettingType.Float:
-                        return GameSettingFloatBinaryWrapper.GameSettingFloatFactory(stream, masterReferences, meta);
+                        return GameSettingFloatBinaryWrapper.GameSettingFloatFactory(stream, package);
                     case GameSettingType.Int:
-                        return GameSettingIntBinaryWrapper.GameSettingIntFactory(stream, masterReferences, meta);
+                        return GameSettingIntBinaryWrapper.GameSettingIntFactory(stream, package);
                     case GameSettingType.String:
-                        return GameSettingStringBinaryWrapper.GameSettingStringFactory(stream, masterReferences, meta);
+                        return GameSettingStringBinaryWrapper.GameSettingStringFactory(stream, package);
                     default:
                         throw new ArgumentException($"Unknown game type: {settingType.Value}");
                 }

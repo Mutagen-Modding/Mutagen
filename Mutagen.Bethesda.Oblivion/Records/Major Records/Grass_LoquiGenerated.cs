@@ -3670,34 +3670,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected GrassBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
-            MasterReferences masterReferences,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
             : base(
                 bytes: bytes,
-                meta: meta,
-                masterReferences: masterReferences)
+                package: package)
         {
-            this._meta = meta;
         }
 
         public static GrassBinaryWrapper GrassFactory(
             BinaryMemoryReadStream stream,
-            MasterReferences masterReferences,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             var ret = new GrassBinaryWrapper(
-                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, meta),
-                masterReferences: masterReferences,
-                meta: meta);
-            var finalPos = stream.Position + meta.MajorRecord(stream.RemainingSpan).TotalLength;
-            int offset = stream.Position + meta.MajorConstants.TypeAndLengthLength;
-            stream.Position += 0xC + meta.MajorConstants.TypeAndLengthLength;
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
             UtilityTranslation.FillSubrecordTypesForWrapper(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                meta: ret._meta,
+                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3714,14 +3709,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.Model = ModelBinaryWrapper.ModelFactory(
                         stream: stream,
-                        meta: _meta);
+                        package: _package);
                     return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _meta.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.DATADataTypeState = Grass.DATADataType.Has;
-                    var subLen = _meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
                     return TryGet<int?>.Succeed((int)Grass_FieldIndex.Flags);
                 }
                 default:

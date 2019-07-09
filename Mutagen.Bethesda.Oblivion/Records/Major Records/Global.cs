@@ -121,17 +121,16 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static GlobalBinaryWrapper GlobalFactory(
                 BinaryMemoryReadStream stream,
-                MasterReferences masterReferences,
-                MetaDataConstants meta)
+                BinaryWrapperFactoryPackage package)
             {
                 // Skip to FNAM
-                var majorMeta = meta.MajorRecord(stream.RemainingSpan);
+                var majorMeta = package.Meta.MajorRecord(stream.RemainingSpan);
                 if (majorMeta.RecordType != Global_Registration.GLOB_HEADER)
                 {
                     throw new ArgumentException();
                 }
                 int pos = majorMeta.HeaderLength;
-                var edidMeta = meta.SubRecord(stream.RemainingSpan.Slice(pos));
+                var edidMeta = package.Meta.SubRecord(stream.RemainingSpan.Slice(pos));
                 if (edidMeta.RecordType != Mutagen.Bethesda.Constants.EditorID)
                 {
                     throw new ArgumentException();
@@ -139,7 +138,7 @@ namespace Mutagen.Bethesda.Oblivion
                 pos += edidMeta.TotalLength;
 
                 // Confirm FNAM
-                var fnamMeta = meta.SubRecord(stream.RemainingSpan.Slice(pos));
+                var fnamMeta = package.Meta.SubRecord(stream.RemainingSpan.Slice(pos));
                 if (!fnamMeta.RecordType.Equals(Global.FNAM))
                 {
                     throw new ArgumentException($"Could not find FNAM.");
@@ -158,18 +157,15 @@ namespace Mutagen.Bethesda.Oblivion
                     case GlobalInt.TRIGGER_CHAR:
                         return GlobalIntBinaryWrapper.GlobalIntFactory(
                             stream,
-                            masterReferences,
-                            meta);
+                            package);
                     case GlobalShort.TRIGGER_CHAR:
                         return GlobalShortBinaryWrapper.GlobalShortFactory(
                             stream,
-                            masterReferences,
-                            meta);
+                            package);
                     case GlobalFloat.TRIGGER_CHAR:
                         return GlobalFloatBinaryWrapper.GlobalFloatFactory(
                             stream,
-                            masterReferences,
-                            meta);
+                            package);
                     default:
                         throw new ArgumentException($"Unknown trigger char: {triggerChar}");
                 }

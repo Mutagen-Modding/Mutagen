@@ -2224,27 +2224,24 @@ namespace Mutagen.Bethesda.Internals
         protected virtual object BinaryWriteTranslator => MajorRecordBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         protected ReadOnlyMemorySlice<byte> _data;
-        protected MetaDataConstants _meta;
-        protected MasterReferences _masterReferences;
+        protected BinaryWrapperFactoryPackage _package;
 
         public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public FormKey FormKey => FormKeyBinaryTranslation.Parse(_data.Span.Slice(4, 4), this._masterReferences);
+        public FormKey FormKey => FormKeyBinaryTranslation.Parse(_data.Span.Slice(4, 4), this._package.MasterReferences);
         public UInt32 Version => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4));
         #region EditorID
         private int? _EditorIDLocation;
         public bool EditorID_IsSet => _EditorIDLocation.HasValue;
-        public String EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _EditorIDLocation.Value, _meta)) : default;
+        public String EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _EditorIDLocation.Value, _package.Meta)) : default;
         #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
         protected MajorRecordBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
-            MasterReferences masterReferences,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             this._data = bytes;
-            this._masterReferences = masterReferences;
-            this._meta = meta;
+            this._package = package;
         }
 
         public virtual TryGet<int?> FillRecordType(

@@ -2013,46 +2013,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         protected ReadOnlyMemorySlice<byte> _data;
-        protected MetaDataConstants _meta;
+        protected BinaryWrapperFactoryPackage _package;
 
         #region File
         private int? _FileLocation;
         public bool File_IsSet => _FileLocation.HasValue;
-        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FileLocation.Value, _meta)) : default;
+        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FileLocation.Value, _package.Meta)) : default;
         #endregion
         #region BoundRadius
         private int? _BoundRadiusLocation;
         public bool BoundRadius_IsSet => _BoundRadiusLocation.HasValue;
-        public Single BoundRadius => _BoundRadiusLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _BoundRadiusLocation.Value, _meta)) : default;
+        public Single BoundRadius => _BoundRadiusLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _BoundRadiusLocation.Value, _package.Meta)) : default;
         #endregion
         #region Hashes
         private int? _HashesLocation;
         public bool Hashes_IsSet => _HashesLocation.HasValue;
-        public ReadOnlySpan<Byte> Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _HashesLocation.Value, _meta).ToArray() : default;
+        public ReadOnlySpan<Byte> Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _HashesLocation.Value, _package.Meta).ToArray() : default;
         #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
         protected ModelBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             this._data = bytes;
-            this._meta = meta;
+            this._package = package;
         }
 
         public static ModelBinaryWrapper ModelFactory(
             BinaryMemoryReadStream stream,
-            MetaDataConstants meta)
+            BinaryWrapperFactoryPackage package)
         {
             var ret = new ModelBinaryWrapper(
                 bytes: stream.RemainingMemory,
-                meta: meta);
+                package: package);
             int offset = stream.Position;
             ret.CustomCtor(stream, offset: 0);
             UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
                 stream: stream,
                 offset: offset,
-                meta: ret._meta,
+                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }

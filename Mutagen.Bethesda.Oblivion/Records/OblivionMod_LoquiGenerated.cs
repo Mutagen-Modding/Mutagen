@@ -14127,9 +14127,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected ReadOnlyMemorySlice<byte> _data;
-        protected MetaDataConstants _meta;
+        protected BinaryWrapperFactoryPackage _package;
         public ModKey ModKey { get; }
-        private MasterReferences _masterReferences;
 
         #region ModHeader
         private IModHeaderGetter _ModHeader;
@@ -14367,8 +14366,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModKey modKey)
         {
             this._data = bytes;
+            this._package = new BinaryWrapperFactoryPackage()
+            {
+                Meta = MetaDataConstants.Get(this.GameMode)
+            };
             this.ModKey = modKey;
-            this._meta = MetaDataConstants.Oblivion;
         }
 
         public static OblivionModBinaryWrapper OblivionModFactory(
@@ -14382,7 +14384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.CustomCtor(stream, offset: 0);
             UtilityTranslation.FillModTypesForWrapper(
                 stream: stream,
-                meta: ret._meta,
+                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -14399,8 +14401,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this._ModHeader = ModHeaderBinaryWrapper.ModHeaderFactory(
                         stream: stream,
-                        meta: _meta);
-                    _masterReferences = new MasterReferences(
+                        package: _package);
+                    _package.MasterReferences = new MasterReferences(
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
                             {
@@ -14416,24 +14418,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this._GameSettings = GroupBinaryWrapper<IGameSettingInternalGetter>.GroupFactory(
                         stream: stream,
-                        masterReferences: _masterReferences,
-                        meta: _meta);
+                        package: _package);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.GameSettings);
                 }
                 case 0x424F4C47: // GLOB
                 {
                     this._Globals = GroupBinaryWrapper<IGlobalInternalGetter>.GroupFactory(
                         stream: stream,
-                        masterReferences: _masterReferences,
-                        meta: _meta);
+                        package: _package);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Globals);
                 }
                 case 0x53414C43: // CLAS
                 {
                     this._Classes = GroupBinaryWrapper<IClassInternalGetter>.GroupFactory(
                         stream: stream,
-                        masterReferences: _masterReferences,
-                        meta: _meta);
+                        package: _package);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Classes);
                 }
                 default:
