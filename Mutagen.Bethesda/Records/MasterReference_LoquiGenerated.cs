@@ -1917,7 +1917,7 @@ namespace Mutagen.Bethesda.Internals
                     return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
                 }
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return TryGet<int?>.Failure;
             }
         }
     }

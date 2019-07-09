@@ -329,22 +329,10 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public static ReadOnlyMemorySlice<byte> ExtractRecordMemory(ReadOnlyMemorySlice<byte> span, int loc, MetaDataConstants meta)
-        {
-            var majorMeta = meta.MajorRecord(span.Span.Slice(loc));
-            return span.Slice(loc + majorMeta.HeaderLength, checked((int)majorMeta.RecordLength));
-        }
-
         public static ReadOnlySpan<byte> ExtractSubrecordSpan(ReadOnlyMemorySlice<byte> span, int loc, MetaDataConstants meta)
         {
             var subMeta = meta.SubRecord(span.Span.Slice(loc));
             return span.Span.Slice(loc + subMeta.HeaderLength, checked((int)subMeta.RecordLength));
-        }
-
-        public static ReadOnlySpan<byte> ExtractRecordSpan(ReadOnlyMemorySlice<byte> span, int loc, MetaDataConstants meta)
-        {
-            var majorMeta = meta.MajorRecord(span.Span.Slice(loc));
-            return span.Span.Slice(loc + majorMeta.HeaderLength, checked((int)majorMeta.RecordLength));
         }
 
         public static ReadOnlyMemorySlice<byte> ExtractSubrecordWrapperMemory(ReadOnlyMemorySlice<byte> span, MetaDataConstants meta)

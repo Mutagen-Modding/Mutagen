@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>18f3cb014ca8692a74b376af3ede147121c4cef9</Sha>
+         <Sha>cc75f79a687af7a74dc1cd83a25527f8aa789a8c</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>07-07-2019 15:51:22</CommitDate>
-         <Description>ReadOnlyMemorySlice</Description>
+         <CommitDate>07-08-2019 23:22:32</CommitDate>
+         <Description>BinaryMemoryReadStream ctor step through</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

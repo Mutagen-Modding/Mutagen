@@ -20,33 +20,29 @@ namespace Mutagen.Bethesda.Generation
         public override string ProtectedProperty => base.Property;
         public override string ProtectedName => base.ProtectedName;
         private FormIDType _rawFormID;
-        private LoquiType loquiType;
+        public LoquiType LoquiType { get; private set; }
         public FormIDTypeEnum FormIDType;
-
         public override bool HasProperty => true;
-        
-        public override string TypeName(bool getter) =>  $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{loquiType.TypeName(getter)}>";
-
-        public string GetTypeName(bool getter) => $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{loquiType.TypeName(getter)}>";
+        public override string TypeName(bool getter) =>  $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{LoquiType.TypeName(getter)}>";
         public override Type Type(bool getter) => typeof(FormID);
 
         public override async Task Load(XElement node, bool requireName = true)
         {
             await base.Load(node, requireName);
-            loquiType = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<LoquiType>();
+            LoquiType = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<LoquiType>();
             _rawFormID = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<FormIDType>();
             this.NotifyingProperty.Set(NotifyingType.ReactiveUI);
             this.ObjectCentralizedProperty.Set(false);
-            loquiType.SetObjectGeneration(this.ObjectGen, setDefaults: true);
-            await loquiType.Load(node, requireName: false);
-            loquiType.Name = this.Name;
-            loquiType.GetterInterfaceType = LoquiInterfaceType.IGetter;
+            LoquiType.SetObjectGeneration(this.ObjectGen, setDefaults: true);
+            await LoquiType.Load(node, requireName: false);
+            LoquiType.Name = this.Name;
+            LoquiType.GetterInterfaceType = LoquiInterfaceType.IGetter;
             _rawFormID.Name = this.Name;
-            this.NotifyingProperty.Forward(loquiType.NotifyingProperty);
+            this.NotifyingProperty.Forward(LoquiType.NotifyingProperty);
             this.NotifyingProperty.Forward(_rawFormID.NotifyingProperty);
-            this.ObjectCentralizedProperty.Forward(loquiType.ObjectCentralizedProperty);
+            this.ObjectCentralizedProperty.Forward(LoquiType.ObjectCentralizedProperty);
             this.ObjectCentralizedProperty.Forward(_rawFormID.ObjectCentralizedProperty);
-            this.HasBeenSetProperty.Forward(loquiType.HasBeenSetProperty);
+            this.HasBeenSetProperty.Forward(LoquiType.HasBeenSetProperty);
             this.HasBeenSetProperty.Forward(_rawFormID.HasBeenSetProperty);
             this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);
         }
@@ -70,11 +66,11 @@ namespace Mutagen.Bethesda.Generation
                 default:
                     throw new NotImplementedException();
             }
-            fg.AppendLine($"public {TypeName(getter: false)} {this.Property} {{ get; }} = new {linkString}{(this.HasBeenSet ? "Set" : string.Empty)}Link<{loquiType.TypeName(getter: false)}>();");
-            fg.AppendLine($"public {loquiType.TypeName(getter: false)} {this.Name} {{ get => {this.Property}.Item; {(this.ReadOnly ? string.Empty : $"set => {this.Property}.Item = value; ")}}}");
+            fg.AppendLine($"public {TypeName(getter: false)} {this.Property} {{ get; }} = new {linkString}{(this.HasBeenSet ? "Set" : string.Empty)}Link<{LoquiType.TypeName(getter: false)}>();");
+            fg.AppendLine($"public {LoquiType.TypeName(getter: false)} {this.Name} {{ get => {this.Property}.Item; {(this.ReadOnly ? string.Empty : $"set => {this.Property}.Item = value; ")}}}");
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
             fg.AppendLine($"{this.TypeName(getter: false)} {this.ObjectGen.Interface(getter: false, internalInterface: this.InternalGetInterface)}.{this.Property} => this.{this.Property};");
-            fg.AppendLine($"{loquiType.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, internalInterface: this.InternalGetInterface)}.{this.Name} => this.{this.Property}.Item;");
+            fg.AppendLine($"{LoquiType.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, internalInterface: this.InternalGetInterface)}.{this.Name} => this.{this.Property}.Item;");
             fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, internalInterface: this.InternalGetInterface)}.{this.Property} => this.{this.Property};");
         }
 
@@ -84,13 +80,13 @@ namespace Mutagen.Bethesda.Generation
         {
             if (getter)
             {
-                fg.AppendLine($"{loquiType.TypeName(getter: true)} {this.Name} {{ get; }}");
+                fg.AppendLine($"{LoquiType.TypeName(getter: true)} {this.Name} {{ get; }}");
                 fg.AppendLine($"{TypeName(getter: true)} {this.Property} {{ get; }}");
                 fg.AppendLine();
             }
             else
             {
-                fg.AppendLine($"new {loquiType.TypeName(getter: false)} {this.Name} {{ get; set; }}");
+                fg.AppendLine($"new {LoquiType.TypeName(getter: false)} {this.Name} {{ get; set; }}");
                 fg.AppendLine($"new {TypeName(getter: false)} {this.Property} {{ get; }}");
             }
         }
@@ -171,7 +167,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    fg.AppendLine($"{identifier.DirectAccess} = default({loquiType.TypeName(getter: false)});");
+                    fg.AppendLine($"{identifier.DirectAccess} = default({LoquiType.TypeName(getter: false)});");
                 }
             }
             fg.AppendLine("break;");
@@ -188,7 +184,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    fg.AppendLine($"{identifier.DirectAccess} = default({loquiType.TypeName(getter: false)});");
+                    fg.AppendLine($"{identifier.DirectAccess} = default({LoquiType.TypeName(getter: false)});");
                 }
             }
             else
@@ -199,7 +195,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    fg.AppendLine($"{identifier.DirectAccess} = default({loquiType.TypeName(getter: false)});");
+                    fg.AppendLine($"{identifier.DirectAccess} = default({LoquiType.TypeName(getter: false)});");
                 }
             }
         }

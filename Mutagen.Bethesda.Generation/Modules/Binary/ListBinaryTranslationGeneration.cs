@@ -1,5 +1,6 @@
 ﻿using Loqui;
 using Loqui.Generation;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -370,20 +371,26 @@ namespace Mutagen.Bethesda.Generation
             DataType dataType = null)
         {
             ListType list = typeGen as ListType;
-            if (list.SubTypeGeneration is LoquiType loqui
-                && loqui.TargetObjectGeneration.IsTypelessStruct())
+            if (list.SubTypeGeneration is LoquiType loqui)
             {
                 var typeName = this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration);
-                string startingVal;
-                if (list.HasBeenSet)
+                if (loqui.TargetObjectGeneration.IsTypelessStruct())
                 {
-                    startingVal = $"EmptySetList<{typeName}>.Instance";
+                    string startingVal;
+                    if (list.HasBeenSet)
+                    {
+                        startingVal = $"EmptySetList<{typeName}>.Instance";
+                    }
+                    else
+                    {
+                        startingVal = $"new List<{typeName}>()";
+                    }
+                    fg.AppendLine($"public IReadOnlySetList<{loqui.TypeName(getter: true)}> {typeGen.Name} {{ get; private set; }} = {startingVal};");
                 }
                 else
                 {
-                    startingVal = $"new List<{typeName}>()";
+                    fg.AppendLine($"public IReadOnlySetList<{loqui.TypeName(getter: true)}> {typeGen.Name} {{ get; private set; }} = EmptySetList<{typeName}>.Instance;");
                 }
-                fg.AppendLine($"public IReadOnlySetList<{loqui.TypeName(getter: true)}> {typeGen.Name} {{ get; private set; }} = {startingVal};");
             }
             else if (list.MaxValue.HasValue)
             {
@@ -428,23 +435,52 @@ namespace Mutagen.Bethesda.Generation
             {
                 throw new NotImplementedException();
             }
+            var subData = list.SubTypeGeneration.GetFieldData();
+            var typeName = this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration);
+            var needsMasters = await loqui.TargetObjectGeneration.GetNeedsMasters();
+
             if (loqui.TargetObjectGeneration.IsTypelessStruct())
             {
-                fg.AppendLine("throw new NotImplementedException();");
-                //fg.AppendLine($"var list = new List<{this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}>();");
-                //fg.AppendLine($"var span = _data.Slice({locationAccessor});");
-                //fg.AppendLine($"while ({locationAccessor} < _data.Length)");
-                //using (new BraceWrapper(fg))
-                //{
-                //    fg.AppendLine($"var created = {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory(_data.Slice({locationAccessor}), _meta);");
-                //    fg.AppendLine($"list.Add(created.Wrapper);");
-                //    fg.AppendLine($"{locationAccessor} += created.ParsedLength;");
-                //}
-                //fg.AppendLine($"_{typeGen.Name}.WrappedList = list;");
+                using (var args = new ArgsWrapper(fg,
+                    $"this.{typeGen.Name} = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.ParseRepeatedTypelessSubrecord)}<{typeName}>"))
+                {
+                    args.AddPassArg("stream");
+                    args.Add("package: _package");
+                    args.AddPassArg("offset");
+                    args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
+                    args.Add($"factory:  {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory");
+                }
             }
             else
             {
-                throw new NotImplementedException();
+                using (var args = new ArgsWrapper(fg,
+                $"this.{typeGen.Name} = new BinaryWrapperSetList<{typeName}>"))
+                {
+                    args.Add($"mem: stream.RemainingMemory");
+                    args.Add(subGen =>
+                    {
+                        using (var subArgs = new FunctionWrapper(subGen,
+                            $"getter: (subSpan) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory"))
+                        {
+                            subArgs.Add($"stream: new {nameof(BinaryMemoryReadStream)}(subSpan)");
+                            if (needsMasters)
+                            {
+                                subArgs.Add($"masterReferences: _masterReferences");
+                            }
+                            subArgs.Add("package: _package");
+                        }
+                    });
+                    args.Add(subGen =>
+                    {
+                        using (var subArgs = new FunctionWrapper(subGen,
+                            $"locs: UtilityTranslation.ParseSubrecordLocations"))
+                        {
+                            subArgs.AddPassArg("stream");
+                            subArgs.Add("meta: _package.Meta");
+                            subArgs.Add("trigger: type");
+                        }
+                    });
+                }
             }
         }
     }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 
 namespace Mutagen.Bethesda.Generation
@@ -179,6 +180,50 @@ namespace Mutagen.Bethesda.Generation
                 default:
                     break;
             }
+        }
+
+        protected override string GenerateForTypicalWrapper(ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor)
+        {
+            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            return $"new FormIDLink<{linkType.LoquiType.TypeName(getter: true)}>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})))";
+        }
+
+        public override void GenerateWrapperFields(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor, int currentPosition, DataType dataType = null)
+        {
+            var data = typeGen.GetFieldData();
+            if (data.HasTrigger)
+            {
+                fg.AppendLine($"private int? _{typeGen.Name}Location;");
+                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+            }
+            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            
+            if (data.RecordType.HasValue)
+            {
+                if (dataType != null)
+                {
+                    throw new ArgumentException();
+                }
+                dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor)} : default;");
+            }
+            else
+            {
+                if (this.ExpectedLength == null)
+                {
+                    throw new NotImplementedException();
+                }
+                if (dataType == null)
+                {
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength.Value})")};");
+                }
+                else
+                {
+                    DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength.Value})")} : default;");
+                }
+            }
+            fg.AppendLine($"public {linkType.LoquiType.TypeName(getter: true)} {linkType.Name} => default;");
         }
     }
 }

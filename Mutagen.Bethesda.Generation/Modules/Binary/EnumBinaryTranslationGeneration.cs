@@ -1,5 +1,6 @@
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,8 +129,21 @@ namespace Mutagen.Bethesda.Generation
             var eType = typeGen as EnumType;
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
 
+            if (data.HasTrigger)
+            {
+                fg.AppendLine($"private int? _{typeGen.Name}Location;");
+                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+            }
             var posStr = dataType == null ? $"{currentPosition}" : $"_{typeGen.Name}Location";
-            var slice = $"{dataAccessor}.Span.Slice({posStr}, {eType.ByteLength})";
+            string slice;
+            if (data.RecordType.HasValue)
+            {
+                slice = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}.Slice({posStr}), _{typeGen.Name}Location.Value, _package.Meta)";
+            }
+            else
+            {
+                slice = $"{dataAccessor}.Span.Slice({posStr}, {eType.ByteLength})";
+            }
 
             string getType;
             switch (eType.ByteLength)
@@ -149,7 +163,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (data.RecordType.HasValue)
             {
-                throw new NotImplementedException();
+                fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => ({eType.TypeName(getter: true)}){getType};");
             }
             else
             {
@@ -168,8 +182,13 @@ namespace Mutagen.Bethesda.Generation
 
         public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
         {
-            var eType = typeGen as EnumType;
-            return eType.ByteLength;
+            var data = typeGen.GetFieldData();
+            if (!data.RecordType.HasValue)
+            {
+                var eType = typeGen as EnumType;
+                return eType.ByteLength;
+            }
+            return 0;
         }
     }
 }

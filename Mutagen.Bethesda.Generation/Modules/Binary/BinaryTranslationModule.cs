@@ -1453,6 +1453,9 @@ namespace Mutagen.Bethesda.Generation
                 && obj.Name != "OblivionMod"
                 && obj.Name != "Class"
                 && obj.Name != "ClassTraining"
+                && obj.Name != "Faction"
+                && obj.Name != "Relation"
+                && obj.Name != "Rank"
                 ) return;
 
             var dataAccessor = new Accessor("_data");
@@ -1855,7 +1858,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (field.Field.Name == "Factions")
+                                if (field.Field.Name == "Hairs")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)
@@ -1939,7 +1942,19 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 else
                                 {
-                                    fg.AppendLine("return TryGet<int?>.Succeed(null);");
+                                    var failOnUnknown = obj.GetObjectData().FailOnUnknown;
+                                    if (obj.GetObjectType() == ObjectType.Subrecord)
+                                    {
+                                        fg.AppendLine($"return TryGet<int?>.Failure;");
+                                    }
+                                    else if (failOnUnknown)
+                                    {
+                                        fg.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {frame.Position}\");");
+                                    }
+                                    else
+                                    {
+                                        fg.AppendLine($"return TryGet<int?>.Succeed(null);");
+                                    }
                                 }
                             }
                         }

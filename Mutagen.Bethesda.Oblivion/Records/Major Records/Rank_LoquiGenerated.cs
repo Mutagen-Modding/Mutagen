@@ -2281,6 +2281,110 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RankBinaryWrapper : IRankGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
+        public static Rank_Registration Registration => Rank_Registration.Instance;
+        protected object CommonInstance => RankCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRankGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RankXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RankBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region RankNumber
+        private int? _RankNumberLocation;
+        public bool RankNumber_IsSet => _RankNumberLocation.HasValue;
+        public Int32 RankNumber => _RankNumberLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RankNumberLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region MaleName
+        private int? _MaleNameLocation;
+        public bool MaleName_IsSet => _MaleNameLocation.HasValue;
+        public String MaleName => _MaleNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MaleNameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region FemaleName
+        private int? _FemaleNameLocation;
+        public bool FemaleName_IsSet => _FemaleNameLocation.HasValue;
+        public String FemaleName => _FemaleNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FemaleNameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Insignia
+        private int? _InsigniaLocation;
+        public bool Insignia_IsSet => _InsigniaLocation.HasValue;
+        public String Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _InsigniaLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RankBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static RankBinaryWrapper RankFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new RankBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4D414E52: // RNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
+                    _RankNumberLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleName) return TryGet<int?>.Failure;
+                    _MaleNameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleName);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleName) return TryGet<int?>.Failure;
+                    _FemaleNameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleName);
+                }
+                case 0x4D414E49: // INAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
+                    _InsigniaLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

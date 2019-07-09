@@ -3249,7 +3249,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x5453414D: // MAST
                 {
-                    throw new NotImplementedException();
+                    this.MasterReferences = UtilityTranslation.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        offset: offset,
+                        trigger: ModHeader_Registration.MAST_HEADER,
+                        factory:  MasterReferenceBinaryWrapper.MasterReferenceFactory);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }
                 case 0x41544144: // DATA

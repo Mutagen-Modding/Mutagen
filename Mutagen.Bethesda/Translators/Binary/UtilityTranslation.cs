@@ -480,6 +480,61 @@ namespace Mutagen.Bethesda
                 lastParsed = parsed.Value;
             }
         }
+
+        public static int[] ParseSubrecordLocations(
+            BinaryMemoryReadStream stream,
+            MetaDataConstants meta,
+            RecordType trigger)
+        {
+            List<int> ret = new List<int>();
+            var startingPos = stream.Position;
+            while (!stream.Complete)
+            {
+                var subMeta = meta.GetSubRecord(stream);
+                if (subMeta.RecordType != trigger) break;
+                ret.Add(stream.Position - startingPos);
+                stream.Position += subMeta.TotalLength;
+            }
+            return ret.ToArray();
+        }
+
+        public delegate T BinaryWrapperFactory<T>(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package);
+
+        public static IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            int offset,
+            ICollectionGetter<RecordType> trigger,
+            BinaryWrapperFactory<T> factory)
+        {
+            var ret = new ReadOnlySetList<T>();
+            while (!stream.Complete)
+            {
+                var subMeta = package.Meta.GetSubRecord(stream);
+                if (!trigger.Contains(subMeta.RecordType)) break;
+                ret.Add(factory(stream, package));
+            }
+            return ret;
+        }
+
+        public static IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            int offset,
+            RecordType trigger,
+            BinaryWrapperFactory<T> factory)
+        {
+            var ret = new ReadOnlySetList<T>();
+            while (!stream.Complete)
+            {
+                var subMeta = package.Meta.GetSubRecord(stream);
+                if (trigger != subMeta.RecordType) break;
+                ret.Add(factory(stream, package));
+            }
+            return ret;
+        }
     }
 
     public static class UtilityAsyncTranslation

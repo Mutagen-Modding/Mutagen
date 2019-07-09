@@ -14435,6 +14435,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Classes);
                 }
+                case 0x54434146: // FACT
+                {
+                    this._Factions = GroupBinaryWrapper<IFactionInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Factions);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

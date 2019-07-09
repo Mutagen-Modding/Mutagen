@@ -2082,7 +2082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.Hashes);
                 }
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return TryGet<int?>.Failure;
             }
         }
     }

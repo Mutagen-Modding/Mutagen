@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
         {
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.GetFieldData();
             if (!data.RecordType.HasValue)
             {
                 return this.ExpectedLength.Value;
