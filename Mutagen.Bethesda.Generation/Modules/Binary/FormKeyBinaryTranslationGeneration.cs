@@ -37,18 +37,18 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             if (data.RecordType.HasValue
-                || this.ExpectedLength == null)
+                || this.ExpectedLength(typeGen) == null)
             {
                 return;
                 throw new NotImplementedException();
             }
             var posStr = dataType == null ? $"{currentPosition}" : $"_{dataType.GetFieldData().RecordType}Location + {currentPosition}";
-            fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Parse({dataAccessor}.Span.Slice({posStr}, {this.ExpectedLength.Value}), this._package.MasterReferences);");
+            fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Parse({dataAccessor}.Span.Slice({posStr}, {this.ExpectedLength(typeGen).Value}), this._package.MasterReferences);");
         }
 
         public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
         {
-            return this.ExpectedLength.Value;
+            return this.ExpectedLength(typeGen).Value;
         }
     }
 }

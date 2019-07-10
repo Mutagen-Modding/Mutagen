@@ -12,7 +12,8 @@ namespace Mutagen.Bethesda.Generation
 {
     public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGeneration
     {
-        public int? ExpectedLength { get; }
+        private int? _ExpectedLength;
+        public virtual int? ExpectedLength(TypeGeneration typeGen) => _ExpectedLength;
         private string typeName;
         protected bool? nullable;
         public bool Nullable => nullable ?? false || typeof(T).GetName().EndsWith("?");
@@ -27,7 +28,7 @@ namespace Mutagen.Bethesda.Generation
 
         public PrimitiveBinaryTranslationGeneration(int? expectedLen, string typeName = null, bool? nullable = null)
         {
-            this.ExpectedLength = expectedLen;
+            this._ExpectedLength = expectedLen;
             this.nullable = nullable;
             this.typeName = typeName ?? typeof(T).GetName().Replace("?", string.Empty);
         }
@@ -215,18 +216,18 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                if (this.ExpectedLength == null)
+                if (this.ExpectedLength(typeGen) == null)
                 {
                     throw new NotImplementedException();
                 }
                 if (dataType == null)
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength.Value})")};");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(typeGen).Value})")};");
                 }
                 else
                 {
                     DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength.Value})")} : default;");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(typeGen).Value})")} : default;");
                 }
             }
         }
@@ -236,7 +237,7 @@ namespace Mutagen.Bethesda.Generation
             var data = typeGen.GetFieldData();
             if (!data.RecordType.HasValue)
             {
-                return this.ExpectedLength.Value;
+                return this.ExpectedLength(typeGen).Value;
             }
             return 0;
         }

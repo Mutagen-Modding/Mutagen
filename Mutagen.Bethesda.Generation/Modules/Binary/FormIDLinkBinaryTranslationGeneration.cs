@@ -209,18 +209,18 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                if (this.ExpectedLength == null)
+                if (this.ExpectedLength(typeGen) == null)
                 {
                     throw new NotImplementedException();
                 }
                 if (dataType == null)
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength.Value})")};");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(typeGen).Value})")};");
                 }
                 else
                 {
                     DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength.Value})")} : default;");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(typeGen).Value})")} : default;");
                 }
             }
             fg.AppendLine($"public {linkType.LoquiType.TypeName(getter: true)} {linkType.Name} => default;");

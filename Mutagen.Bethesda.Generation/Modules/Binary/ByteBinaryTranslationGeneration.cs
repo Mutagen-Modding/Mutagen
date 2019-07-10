@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             if (data.RecordType.HasValue
-                || this.ExpectedLength == null)
+                || this.ExpectedLength(typeGen) == null)
             {
                 throw new NotImplementedException();
             }
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
         {
-            return this.ExpectedLength.Value;
+            return this.ExpectedLength(typeGen).Value;
         }
     }
 }
