@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             ListType list = typeGen as ListType;
             if (list.MaxValue.HasValue)
@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 return list.MaxValue.Value * 4;
             }
-            return 0;
+            return null;
         }
 
         public override async Task GenerateWrapperRecordTypeParse(

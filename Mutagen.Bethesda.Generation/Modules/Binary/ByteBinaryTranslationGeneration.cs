@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             if (data.RecordType.HasValue
-                || this.ExpectedLength(typeGen) == null)
+                || this.ExpectedLength(objGen, typeGen) == null)
             {
                 throw new NotImplementedException();
             }
@@ -38,11 +38,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Span[_{dataType.GetFieldData().RecordType}Location.Value + {currentPosition}] : default;");
             }
-        }
-
-        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
-        {
-            return this.ExpectedLength(typeGen).Value;
         }
     }
 }

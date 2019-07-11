@@ -259,15 +259,11 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             CustomLogic custom = typeGen as CustomLogic;
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
-            if (!data.RecordType.HasValue)
-            {
-                return custom.ExpectedLength.Value;
-            }
-            return 0;
+            var data = typeGen.GetFieldData();
+            return custom.ExpectedLength;
         }
     }
 }

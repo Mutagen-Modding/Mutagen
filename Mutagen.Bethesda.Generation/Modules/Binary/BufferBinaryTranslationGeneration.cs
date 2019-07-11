@@ -46,8 +46,8 @@ namespace Mutagen.Bethesda.Generation
                 throw new NotImplementedException();
             }
             if (asyncMode == AsyncMode.Direct) throw new NotImplementedException();
-            BufferType zero = typeGen as BufferType;
-            fg.AppendLine($"{readerAccessor}.Position += {zero.Length};");
+            BufferType buf = typeGen as BufferType;
+            fg.AppendLine($"{readerAccessor}.Position += {buf.Length};");
         }
 
         public override void GenerateWrite(
@@ -74,7 +74,11 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
         }
-
-        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
+        
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            BufferType buf = typeGen as BufferType;
+            return buf.Length;
+        }
     }
 }

@@ -13,7 +13,6 @@ namespace Mutagen.Bethesda.Generation
     public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGeneration
     {
         private int? _ExpectedLength;
-        public virtual int? ExpectedLength(TypeGeneration typeGen) => _ExpectedLength;
         private string typeName;
         protected bool? nullable;
         public bool Nullable => nullable ?? false || typeof(T).GetName().EndsWith("?");
@@ -216,30 +215,22 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                if (this.ExpectedLength(typeGen) == null)
+                if (this.ExpectedLength(objGen, typeGen) == null)
                 {
                     throw new NotImplementedException();
                 }
                 if (dataType == null)
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(typeGen).Value})")};");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(objGen, typeGen).Value})")};");
                 }
                 else
                 {
                     DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(typeGen).Value})")} : default;");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(objGen, typeGen).Value})")} : default;");
                 }
             }
         }
 
-        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
-        {
-            var data = typeGen.GetFieldData();
-            if (!data.RecordType.HasValue)
-            {
-                return this.ExpectedLength(typeGen).Value;
-            }
-            return 0;
-        }
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => _ExpectedLength;
     }
 }

@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class ColorBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<Color>
     {
-        public override int? ExpectedLength(TypeGeneration typeGen)
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             return ExtraByte(typeGen) ? 4 : 3;
         }

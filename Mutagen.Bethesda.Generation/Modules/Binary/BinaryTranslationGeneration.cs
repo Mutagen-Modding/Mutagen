@@ -21,6 +21,7 @@ namespace Mutagen.Bethesda.Generation
         public List<ParamTest> AdditionalWriteParams = new List<ParamTest>();
         public List<ParamTest> AdditionalCopyInParams = new List<ParamTest>();
         public List<ParamTest> AdditionalCopyInRetParams = new List<ParamTest>();
+        public abstract int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen);
 
         public virtual bool AllowDirectWrite(
             ObjectGeneration objGen,
@@ -79,10 +80,16 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen)
         {
         }
-
-        public abstract int GetPassedAmount(
-            ObjectGeneration objGen,
-            TypeGeneration typeGen);
+        
+        public virtual int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            var data = typeGen.GetFieldData();
+            if (!data.RecordType.HasValue)
+            {
+                return this.ExpectedLength(objGen, typeGen) ?? 0;
+            }
+            return 0;
+        }
 
         public virtual async Task GenerateWrapperRecordTypeParse(
             FileGeneration fg,

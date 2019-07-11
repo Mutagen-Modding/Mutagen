@@ -307,5 +307,7 @@ namespace Mutagen.Bethesda.Generation
         }
 
         public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
+
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
     }
 }

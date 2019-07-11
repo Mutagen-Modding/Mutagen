@@ -185,10 +185,15 @@ namespace Mutagen.Bethesda.Generation
             var data = typeGen.GetFieldData();
             if (!data.RecordType.HasValue)
             {
-                var eType = typeGen as EnumType;
-                return eType.ByteLength;
+                return this.ExpectedLength(objGen, typeGen) ?? 0;
             }
             return 0;
+        }
+
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            var eType = typeGen as EnumType;
+            return eType.ByteLength;
         }
     }
 }

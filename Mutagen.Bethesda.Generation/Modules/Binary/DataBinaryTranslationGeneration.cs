@@ -143,6 +143,8 @@ namespace Mutagen.Bethesda.Generation
 
         public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
 
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
+
         public static void GenerateWrapperExtraMembers(FileGeneration fg, DataType dataType, ObjectGeneration objGen, TypeGeneration typeGen, int pos)
         {
             var dataMeta = dataType.IterateFieldsWithMeta().First(item => item.Field == typeGen);
