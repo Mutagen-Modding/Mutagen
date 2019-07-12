@@ -305,6 +305,8 @@ namespace Mutagen.Bethesda.Generation
                         data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(subData.RecordType.Value));
                         data.TriggeringRecordTypes.Add(subData.RecordType.Value);
                         data.RecordType = subData.RecordType;
+                        // Don't actually want it to be marked has been set
+                        listType.SubTypeGeneration.HasBeenSetProperty.Set(false);
                     }
                 }
             }

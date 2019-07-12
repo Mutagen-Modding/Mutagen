@@ -60,13 +60,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDSetLink<Quest>> _Quests = new SourceSetList<IFormIDSetLink<Quest>>();
-        public ISourceSetList<IFormIDSetLink<Quest>> Quests => _Quests;
+        private readonly SourceSetList<IFormIDLink<Quest>> _Quests = new SourceSetList<IFormIDLink<Quest>>();
+        public ISourceSetList<IFormIDLink<Quest>> Quests => _Quests;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDSetLink<Quest>> IDialogTopic.Quests => _Quests;
+        ISetList<IFormIDLink<Quest>> IDialogTopic.Quests => _Quests;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDSetLinkGetter<IQuestInternalGetter>> IDialogTopicGetter.Quests => _Quests;
+        IReadOnlySetList<IFormIDLinkGetter<IQuestInternalGetter>> IDialogTopicGetter.Quests => _Quests;
         #endregion
 
         #endregion
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x49545351: // QSTI
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLink<Quest>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Quest>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogTopic_Registration.QSTI_HEADER,
                         masterReferences: masterReferences,
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    this._Quests.SetTo((SourceSetList<IFormIDSetLink<Quest>>)obj);
+                    this._Quests.SetTo((SourceSetList<IFormIDLink<Quest>>)obj);
                     break;
                 case DialogTopic_FieldIndex.Name:
                     this.Name = (String)obj;
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    obj._Quests.SetTo((SourceSetList<IFormIDSetLink<Quest>>)pair.Value);
+                    obj._Quests.SetTo((SourceSetList<IFormIDLink<Quest>>)pair.Value);
                     break;
                 case DialogTopic_FieldIndex.Name:
                     obj.Name = (String)pair.Value;
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IDialogTopicInternal>
     {
-        new ISetList<IFormIDSetLink<Quest>> Quests { get; }
+        new ISetList<IFormIDLink<Quest>> Quests { get; }
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
         void Name_Set(String value, bool hasBeenSet = true);
@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Quests
-        IReadOnlySetList<IFormIDSetLinkGetter<IQuestInternalGetter>> Quests { get; }
+        IReadOnlySetList<IFormIDLinkGetter<IQuestInternalGetter>> Quests { get; }
         #endregion
         #region Name
         String Name { get; }
@@ -1105,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    return typeof(SourceSetList<IFormIDSetLink<Quest>>);
+                    return typeof(SourceSetList<IFormIDLink<Quest>>);
                 case DialogTopic_FieldIndex.Name:
                     return typeof(String);
                 case DialogTopic_FieldIndex.DialogType:
@@ -1645,14 +1645,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Quests.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quests) ?? true))
             {
-                ListXmlTranslation<IFormIDSetLinkGetter<IQuestInternalGetter>>.Instance.Write(
+                ListXmlTranslation<IFormIDLinkGetter<IQuestInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Quests),
                     item: item.Quests,
                     fieldIndex: (int)DialogTopic_FieldIndex.Quests,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)DialogTopic_FieldIndex.Quests),
-                    transl: (XElement subNode, IFormIDSetLinkGetter<IQuestInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDLinkGetter<IQuestInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -1821,7 +1821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogTopic_FieldIndex.Quests);
-                        if (ListXmlTranslation<IFormIDSetLink<Quest>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormIDLink<Quest>>.Instance.Parse(
                             node: node,
                             enumer: out var QuestsItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -2596,10 +2596,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
             if (item.Quests.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLinkGetter<IQuestInternalGetter>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IQuestInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.Quests,
-                    transl: (MutagenWriter subWriter, IFormIDSetLinkGetter<IQuestInternalGetter> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDLinkGetter<IQuestInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,

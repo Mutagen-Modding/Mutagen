@@ -138,13 +138,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PotentialGrass
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDSetLink<Grass>> _PotentialGrass = new SourceSetList<IFormIDSetLink<Grass>>();
-        public ISourceSetList<IFormIDSetLink<Grass>> PotentialGrass => _PotentialGrass;
+        private readonly SourceSetList<IFormIDLink<Grass>> _PotentialGrass = new SourceSetList<IFormIDLink<Grass>>();
+        public ISourceSetList<IFormIDLink<Grass>> PotentialGrass => _PotentialGrass;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDSetLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
+        ISetList<IFormIDLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDSetLinkGetter<IGrassInternalGetter>> ILandTextureGetter.PotentialGrass => _PotentialGrass;
+        IReadOnlySetList<IFormIDLinkGetter<IGrassInternalGetter>> ILandTextureGetter.PotentialGrass => _PotentialGrass;
         #endregion
 
         #endregion
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E47: // GNAM
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLink<Grass>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Grass>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: LandTexture_Registration.GNAM_HEADER,
                         masterReferences: masterReferences,
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.TextureSpecularExponent = (Byte)obj;
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    this._PotentialGrass.SetTo((SourceSetList<IFormIDSetLink<Grass>>)obj);
+                    this._PotentialGrass.SetTo((SourceSetList<IFormIDLink<Grass>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.TextureSpecularExponent = (Byte)pair.Value;
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    obj._PotentialGrass.SetTo((SourceSetList<IFormIDSetLink<Grass>>)pair.Value);
+                    obj._PotentialGrass.SetTo((SourceSetList<IFormIDLink<Grass>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
         void TextureSpecularExponent_Set(Byte value, bool hasBeenSet = true);
         void TextureSpecularExponent_Unset();
 
-        new ISetList<IFormIDSetLink<Grass>> PotentialGrass { get; }
+        new ISetList<IFormIDLink<Grass>> PotentialGrass { get; }
         void CopyFieldsFrom(
             LandTexture rhs,
             ErrorMaskBuilder errorMask = null,
@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region PotentialGrass
-        IReadOnlySetList<IFormIDSetLinkGetter<IGrassInternalGetter>> PotentialGrass { get; }
+        IReadOnlySetList<IFormIDLinkGetter<IGrassInternalGetter>> PotentialGrass { get; }
         #endregion
 
     }
@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LandTexture_FieldIndex.TextureSpecularExponent:
                     return typeof(Byte);
                 case LandTexture_FieldIndex.PotentialGrass:
-                    return typeof(SourceSetList<IFormIDSetLink<Grass>>);
+                    return typeof(SourceSetList<IFormIDLink<Grass>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1624,14 +1624,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.PotentialGrass.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.PotentialGrass) ?? true))
             {
-                ListXmlTranslation<IFormIDSetLinkGetter<IGrassInternalGetter>>.Instance.Write(
+                ListXmlTranslation<IFormIDLinkGetter<IGrassInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.PotentialGrass),
                     item: item.PotentialGrass,
                     fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)LandTexture_FieldIndex.PotentialGrass),
-                    transl: (XElement subNode, IFormIDSetLinkGetter<IGrassInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDLinkGetter<IGrassInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -1830,7 +1830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LandTexture_FieldIndex.PotentialGrass);
-                        if (ListXmlTranslation<IFormIDSetLink<Grass>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormIDLink<Grass>>.Instance.Parse(
                             node: node,
                             enumer: out var PotentialGrassItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -2401,10 +2401,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.PotentialGrass.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLinkGetter<IGrassInternalGetter>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IGrassInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.PotentialGrass,
-                    transl: (MutagenWriter subWriter, IFormIDSetLinkGetter<IGrassInternalGetter> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDLinkGetter<IGrassInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,

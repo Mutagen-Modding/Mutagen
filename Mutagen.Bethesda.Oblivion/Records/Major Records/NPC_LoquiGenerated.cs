@@ -228,13 +228,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDSetLink<SpellAbstract>> _Spells = new SourceSetList<IFormIDSetLink<SpellAbstract>>();
-        public ISourceSetList<IFormIDSetLink<SpellAbstract>> Spells => _Spells;
+        private readonly SourceSetList<IFormIDLink<SpellAbstract>> _Spells = new SourceSetList<IFormIDLink<SpellAbstract>>();
+        public ISourceSetList<IFormIDLink<SpellAbstract>> Spells => _Spells;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDSetLink<SpellAbstract>> INPC.Spells => _Spells;
+        ISetList<IFormIDLink<SpellAbstract>> INPC.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDSetLinkGetter<ISpellAbstractInternalGetter>> INPCGetter.Spells => _Spells;
+        IReadOnlySetList<IFormIDLinkGetter<ISpellAbstractInternalGetter>> INPCGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -360,13 +360,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDSetLink<AIPackage>> _AIPackages = new SourceSetList<IFormIDSetLink<AIPackage>>();
-        public ISourceSetList<IFormIDSetLink<AIPackage>> AIPackages => _AIPackages;
+        private readonly SourceSetList<IFormIDLink<AIPackage>> _AIPackages = new SourceSetList<IFormIDLink<AIPackage>>();
+        public ISourceSetList<IFormIDLink<AIPackage>> AIPackages => _AIPackages;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDSetLink<AIPackage>> INPC.AIPackages => _AIPackages;
+        ISetList<IFormIDLink<AIPackage>> INPC.AIPackages => _AIPackages;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDSetLinkGetter<IAIPackageInternalGetter>> INPCGetter.AIPackages => _AIPackages;
+        IReadOnlySetList<IFormIDLinkGetter<IAIPackageInternalGetter>> INPCGetter.AIPackages => _AIPackages;
         #endregion
 
         #endregion
@@ -1619,7 +1619,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLink<SpellAbstract>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<SpellAbstract>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: NPC_Registration.SPLO_HEADER,
                         masterReferences: masterReferences,
@@ -1703,7 +1703,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x44494B50: // PKID
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLink<AIPackage>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<AIPackage>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: NPC_Registration.PKID_HEADER,
                         masterReferences: masterReferences,
@@ -2059,7 +2059,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Race_Property.Set((IFormIDSetLink<Race>)obj);
                     break;
                 case NPC_FieldIndex.Spells:
-                    this._Spells.SetTo((SourceSetList<IFormIDSetLink<SpellAbstract>>)obj);
+                    this._Spells.SetTo((SourceSetList<IFormIDLink<SpellAbstract>>)obj);
                     break;
                 case NPC_FieldIndex.Script:
                     this.Script_Property.Set((IFormIDSetLink<Script>)obj);
@@ -2092,7 +2092,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Fluff = (Byte[])obj;
                     break;
                 case NPC_FieldIndex.AIPackages:
-                    this._AIPackages.SetTo((SourceSetList<IFormIDSetLink<AIPackage>>)obj);
+                    this._AIPackages.SetTo((SourceSetList<IFormIDLink<AIPackage>>)obj);
                     break;
                 case NPC_FieldIndex.Animations:
                     this._Animations.SetTo((SourceSetList<String>)obj);
@@ -2292,7 +2292,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Race_Property.Set((IFormIDSetLink<Race>)pair.Value);
                     break;
                 case NPC_FieldIndex.Spells:
-                    obj._Spells.SetTo((SourceSetList<IFormIDSetLink<SpellAbstract>>)pair.Value);
+                    obj._Spells.SetTo((SourceSetList<IFormIDLink<SpellAbstract>>)pair.Value);
                     break;
                 case NPC_FieldIndex.Script:
                     obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
@@ -2325,7 +2325,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Fluff = (Byte[])pair.Value;
                     break;
                 case NPC_FieldIndex.AIPackages:
-                    obj._AIPackages.SetTo((SourceSetList<IFormIDSetLink<AIPackage>>)pair.Value);
+                    obj._AIPackages.SetTo((SourceSetList<IFormIDLink<AIPackage>>)pair.Value);
                     break;
                 case NPC_FieldIndex.Animations:
                     obj._Animations.SetTo((SourceSetList<String>)pair.Value);
@@ -2501,7 +2501,7 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormIDSetLink<ItemAbstract> DeathItem_Property { get; }
         new Race Race { get; set; }
         new IFormIDSetLink<Race> Race_Property { get; }
-        new ISetList<IFormIDSetLink<SpellAbstract>> Spells { get; }
+        new ISetList<IFormIDLink<SpellAbstract>> Spells { get; }
         new Script Script { get; set; }
         new IFormIDSetLink<Script> Script_Property { get; }
         new ISetList<ItemEntry> Items { get; }
@@ -2521,7 +2521,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] Fluff { get; set; }
 
-        new ISetList<IFormIDSetLink<AIPackage>> AIPackages { get; }
+        new ISetList<IFormIDLink<AIPackage>> AIPackages { get; }
         new ISetList<String> Animations { get; }
         new Class Class { get; set; }
         new IFormIDSetLink<Class> Class_Property { get; }
@@ -2710,7 +2710,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Spells
-        IReadOnlySetList<IFormIDSetLinkGetter<ISpellAbstractInternalGetter>> Spells { get; }
+        IReadOnlySetList<IFormIDLinkGetter<ISpellAbstractInternalGetter>> Spells { get; }
         #endregion
         #region Script
         IScriptInternalGetter Script { get; }
@@ -2753,7 +2753,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region AIPackages
-        IReadOnlySetList<IFormIDSetLinkGetter<IAIPackageInternalGetter>> AIPackages { get; }
+        IReadOnlySetList<IFormIDLinkGetter<IAIPackageInternalGetter>> AIPackages { get; }
         #endregion
         #region Animations
         IReadOnlySetList<String> Animations { get; }
@@ -3868,7 +3868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Race:
                     return typeof(IFormIDSetLink<Race>);
                 case NPC_FieldIndex.Spells:
-                    return typeof(SourceSetList<IFormIDSetLink<SpellAbstract>>);
+                    return typeof(SourceSetList<IFormIDLink<SpellAbstract>>);
                 case NPC_FieldIndex.Script:
                     return typeof(IFormIDSetLink<Script>);
                 case NPC_FieldIndex.Items:
@@ -3890,7 +3890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Fluff:
                     return typeof(Byte[]);
                 case NPC_FieldIndex.AIPackages:
-                    return typeof(SourceSetList<IFormIDSetLink<AIPackage>>);
+                    return typeof(SourceSetList<IFormIDLink<AIPackage>>);
                 case NPC_FieldIndex.Animations:
                     return typeof(SourceSetList<String>);
                 case NPC_FieldIndex.Class:
@@ -6648,14 +6648,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Spells.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Spells) ?? true))
             {
-                ListXmlTranslation<IFormIDSetLinkGetter<ISpellAbstractInternalGetter>>.Instance.Write(
+                ListXmlTranslation<IFormIDLinkGetter<ISpellAbstractInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Spells),
                     item: item.Spells,
                     fieldIndex: (int)NPC_FieldIndex.Spells,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)NPC_FieldIndex.Spells),
-                    transl: (XElement subNode, IFormIDSetLinkGetter<ISpellAbstractInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDLinkGetter<ISpellAbstractInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -6772,14 +6772,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.AIPackages.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.AIPackages) ?? true))
             {
-                ListXmlTranslation<IFormIDSetLinkGetter<IAIPackageInternalGetter>>.Instance.Write(
+                ListXmlTranslation<IFormIDLinkGetter<IAIPackageInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.AIPackages),
                     item: item.AIPackages,
                     fieldIndex: (int)NPC_FieldIndex.AIPackages,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)NPC_FieldIndex.AIPackages),
-                    transl: (XElement subNode, IFormIDSetLinkGetter<IAIPackageInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDLinkGetter<IAIPackageInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -7635,7 +7635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Spells);
-                        if (ListXmlTranslation<IFormIDSetLink<SpellAbstract>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormIDLink<SpellAbstract>>.Instance.Parse(
                             node: node,
                             enumer: out var SpellsItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -7907,7 +7907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.AIPackages);
-                        if (ListXmlTranslation<IFormIDSetLink<AIPackage>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormIDLink<AIPackage>>.Instance.Parse(
                             node: node,
                             enumer: out var AIPackagesItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -11717,10 +11717,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Spells.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLinkGetter<ISpellAbstractInternalGetter>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<ISpellAbstractInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.Spells,
-                    transl: (MutagenWriter subWriter, IFormIDSetLinkGetter<ISpellAbstractInternalGetter> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDLinkGetter<ISpellAbstractInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
@@ -11780,10 +11780,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.AIPackages.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLinkGetter<IAIPackageInternalGetter>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IAIPackageInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.AIPackages,
-                    transl: (MutagenWriter subWriter, IFormIDSetLinkGetter<IAIPackageInternalGetter> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDLinkGetter<IAIPackageInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
