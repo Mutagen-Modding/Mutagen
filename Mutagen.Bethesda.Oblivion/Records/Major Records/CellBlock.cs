@@ -15,6 +15,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CellBlock : IXmlFolderItem
     {
+        public static readonly CellBlock_TranslationMask XmlFolderTranslationMask = new CellBlock_TranslationMask(true)
+        {
+            Items = new MaskItem<bool, CellSubBlock_TranslationMask>(false, default)
+        };
+        public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
+
         public static CellBlock_CopyMask duplicateMask = new CellBlock_CopyMask(true)
         {
             Items = new Loqui.MaskItem<Loqui.CopyOption, CellSubBlock_CopyMask>(Loqui.CopyOption.Skip, null)
@@ -32,7 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.WriteToXml(
                 Path.Combine(subDir, "Group.xml"),
                 errorMask: errorMask,
-                translationMask: GroupExt.XmlFolderTranslationCrystal);
+                translationMask: XmlFolderTranslationCrystal);
             int blockCounter = 0;
             List<Task> tasks = new List<Task>();
             foreach (var item in this.Items)
@@ -71,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
                     ret,
                     elem,
                     errorMask,
-                    translationMask: GroupExt.XmlFolderTranslationCrystal);
+                    translationMask: XmlFolderTranslationCrystal);
             }
             var dir = new DirectoryPath(path);
             List<Task<CellSubBlock>> tasks = new List<Task<CellSubBlock>>();
