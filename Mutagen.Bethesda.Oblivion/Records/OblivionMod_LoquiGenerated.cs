@@ -14442,6 +14442,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Factions);
                 }
+                case 0x52494148: // HAIR
+                {
+                    this._Hairs = GroupBinaryWrapper<IHairInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Hairs);
+                }
+                case 0x53455945: // EYES
+                {
+                    this._Eyes = GroupBinaryWrapper<IEyeInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Eyes);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

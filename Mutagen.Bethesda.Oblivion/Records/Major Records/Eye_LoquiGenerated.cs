@@ -2184,6 +2184,101 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class EyeBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IEyeInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Eye_Registration.Instance;
+        public new static Eye_Registration Registration => Eye_Registration.Instance;
+        protected override object CommonInstance => EyeCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEyeInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => EyeXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => EyeBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Icon
+        private int? _IconLocation;
+        public bool Icon_IsSet => _IconLocation.HasValue;
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public bool Flags_IsSet => _FlagsLocation.HasValue;
+        public Eye.Flag Flags => (Eye.Flag)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _FlagsLocation.Value, _package.Meta)[0];
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected EyeBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static EyeBinaryWrapper EyeFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new EyeBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Eye_FieldIndex.Name);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _IconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Eye_FieldIndex.Icon);
+                }
+                case 0x41544144: // DATA
+                {
+                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Eye_FieldIndex.Flags);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

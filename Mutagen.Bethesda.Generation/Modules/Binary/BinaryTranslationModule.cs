@@ -1456,6 +1456,8 @@ namespace Mutagen.Bethesda.Generation
                 && obj.Name != "Faction"
                 && obj.Name != "Relation"
                 && obj.Name != "Rank"
+                && obj.Name != "Hair"
+                && obj.Name != "Eye"
                 ) return;
 
             var dataAccessor = new Accessor("_data");
@@ -1840,7 +1842,7 @@ namespace Mutagen.Bethesda.Generation
                 if (HasRecordTypeFields(obj))
                 {
                     using (var args = new FunctionWrapper(fg,
-                        $"public{obj.FunctionOverride()}TryGet<int?> FillRecordType"))
+                        $"public{await obj.FunctionOverride(async b => HasRecordTypeFields(b))}TryGet<int?> FillRecordType"))
                     {
                         args.Add($"{nameof(BinaryMemoryReadStream)} stream");
                         args.Add($"int offset");
@@ -1858,7 +1860,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (field.Field.Name == "Hairs")
+                                if (field.Field.Name == "Races")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)
@@ -1929,7 +1931,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine("default:");
                             using (new DepthWrapper(fg))
                             {
-                                if (obj.HasLoquiBaseObject)
+                                if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b)))
                                 {
                                     using (var args = new ArgsWrapper(fg,
                                         "return base.FillRecordType"))
