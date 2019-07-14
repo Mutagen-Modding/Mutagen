@@ -11,7 +11,7 @@
       <UInt16 name="MinimumAttenuationDistance" binary="Custom" objectCentralized="false" />
       <UInt16 name="MaximumAttenuationDistance" binary="Custom" objectCentralized="false" />
       <Int8 name="FrequencyAdjustment" />
-      <Buffer name="Marker" length="1" static="false" />
+      <Buffer name="Marker" byteLength="1" static="false" />
       <Enum name="Flags" enumName="SoundData.Flag" byteLength="4" />
     </Fields>
   </Object>

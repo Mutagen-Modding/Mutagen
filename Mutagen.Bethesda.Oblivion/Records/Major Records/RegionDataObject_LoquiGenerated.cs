@@ -191,21 +191,21 @@ namespace Mutagen.Bethesda.Oblivion
             set => this.RaiseAndSetIfChanged(ref this._AngleVariance, value, nameof(AngleVariance));
         }
         #endregion
-        #region Unknow2n
-        private Byte[] _Unknow2n = new byte[6];
-        public Byte[] Unknow2n
+        #region Unknown2
+        private Byte[] _Unknown2 = new byte[6];
+        public Byte[] Unknown2
         {
-            get => _Unknow2n;
+            get => _Unknown2;
             set
             {
-                this._Unknow2n = value;
+                this._Unknown2 = value;
                 if (value == null)
                 {
-                    this._Unknow2n = new byte[6];
+                    this._Unknown2 = new byte[6];
                 }
             }
         }
-        ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknow2n => this.Unknow2n;
+        ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknown2 => this.Unknown2;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectGetter)rhs, include);
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RegionDataObject_FieldIndex.SinkVariance:
                 case RegionDataObject_FieldIndex.SizeVariance:
                 case RegionDataObject_FieldIndex.AngleVariance:
-                case RegionDataObject_FieldIndex.Unknow2n:
+                case RegionDataObject_FieldIndex.Unknown2:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -603,13 +603,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(6),
-                item: out Byte[] Unknow2nParse))
+                item: out Byte[] Unknown2Parse))
             {
-                item.Unknow2n = Unknow2nParse;
+                item.Unknown2 = Unknown2Parse;
             }
             else
             {
-                item.Unknow2n = default(Byte[]);
+                item.Unknown2 = default(Byte[]);
             }
         }
 
@@ -774,8 +774,8 @@ namespace Mutagen.Bethesda.Oblivion
                 case RegionDataObject_FieldIndex.AngleVariance:
                     this.AngleVariance = (P3UInt16)obj;
                     break;
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    this.Unknow2n = (Byte[])obj;
+                case RegionDataObject_FieldIndex.Unknown2:
+                    this.Unknown2 = (Byte[])obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -853,8 +853,8 @@ namespace Mutagen.Bethesda.Oblivion
                 case RegionDataObject_FieldIndex.AngleVariance:
                     obj.AngleVariance = (P3UInt16)pair.Value;
                     break;
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    obj.Unknow2n = (Byte[])pair.Value;
+                case RegionDataObject_FieldIndex.Unknown2:
+                    obj.Unknown2 = (Byte[])pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -900,7 +900,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new P3UInt16 AngleVariance { get; set; }
 
-        new Byte[] Unknow2n { get; set; }
+        new Byte[] Unknown2 { get; set; }
 
         void CopyFieldsFrom(
             RegionDataObject rhs,
@@ -980,8 +980,8 @@ namespace Mutagen.Bethesda.Oblivion
         P3UInt16 AngleVariance { get; }
 
         #endregion
-        #region Unknow2n
-        ReadOnlySpan<Byte> Unknow2n { get; }
+        #region Unknown2
+        ReadOnlySpan<Byte> Unknown2 { get; }
 
         #endregion
 
@@ -1085,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         SinkVariance = 13,
         SizeVariance = 14,
         AngleVariance = 15,
-        Unknow2n = 16,
+        Unknown2 = 16,
     }
     #endregion
 
@@ -1169,8 +1169,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)RegionDataObject_FieldIndex.SizeVariance;
                 case "ANGLEVARIANCE":
                     return (ushort)RegionDataObject_FieldIndex.AngleVariance;
-                case "UNKNOW2N":
-                    return (ushort)RegionDataObject_FieldIndex.Unknow2n;
+                case "UNKNOWN2":
+                    return (ushort)RegionDataObject_FieldIndex.Unknown2;
                 default:
                     return null;
             }
@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionDataObject_FieldIndex.SinkVariance:
                 case RegionDataObject_FieldIndex.SizeVariance:
                 case RegionDataObject_FieldIndex.AngleVariance:
-                case RegionDataObject_FieldIndex.Unknow2n:
+                case RegionDataObject_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionDataObject_FieldIndex.SinkVariance:
                 case RegionDataObject_FieldIndex.SizeVariance:
                 case RegionDataObject_FieldIndex.AngleVariance:
-                case RegionDataObject_FieldIndex.Unknow2n:
+                case RegionDataObject_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionDataObject_FieldIndex.SinkVariance:
                 case RegionDataObject_FieldIndex.SizeVariance:
                 case RegionDataObject_FieldIndex.AngleVariance:
-                case RegionDataObject_FieldIndex.Unknow2n:
+                case RegionDataObject_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1297,8 +1297,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "SizeVariance";
                 case RegionDataObject_FieldIndex.AngleVariance:
                     return "AngleVariance";
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    return "Unknow2n";
+                case RegionDataObject_FieldIndex.Unknown2:
+                    return "Unknown2";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionDataObject_FieldIndex.SinkVariance:
                 case RegionDataObject_FieldIndex.SizeVariance:
                 case RegionDataObject_FieldIndex.AngleVariance:
-                case RegionDataObject_FieldIndex.Unknow2n:
+                case RegionDataObject_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1353,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionDataObject_FieldIndex.SinkVariance:
                 case RegionDataObject_FieldIndex.SizeVariance:
                 case RegionDataObject_FieldIndex.AngleVariance:
-                case RegionDataObject_FieldIndex.Unknow2n:
+                case RegionDataObject_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1397,7 +1397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Single);
                 case RegionDataObject_FieldIndex.AngleVariance:
                     return typeof(P3UInt16);
-                case RegionDataObject_FieldIndex.Unknow2n:
+                case RegionDataObject_FieldIndex.Unknown2:
                     return typeof(Byte[]);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1725,12 +1725,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Unknow2n ?? true)
+            if (copyMask?.Unknown2 ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknow2n);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown2);
                 try
                 {
-                    item.Unknow2n = rhs.Unknow2n;
+                    item.Unknown2 = rhs.Unknown2;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1767,7 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SinkVariance = default(Single);
             item.SizeVariance = default(Single);
             item.AngleVariance = default(P3UInt16);
-            item.Unknow2n = default(Byte[]);
+            item.Unknown2 = default(Byte[]);
         }
 
         public RegionDataObject_Mask<bool> GetEqualsMask(
@@ -1807,7 +1807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.SinkVariance = item.SinkVariance.EqualsWithin(rhs.SinkVariance);
             ret.SizeVariance = item.SizeVariance.EqualsWithin(rhs.SizeVariance);
             ret.AngleVariance = item.AngleVariance.Equals(rhs.AngleVariance);
-            ret.Unknow2n = MemoryExtensions.SequenceEqual(item.Unknow2n, rhs.Unknow2n);
+            ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2, rhs.Unknown2);
         }
 
         public string ToString(
@@ -1918,9 +1918,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendLine($"AngleVariance => {item.AngleVariance}");
             }
-            if (printMask?.Unknow2n ?? true)
+            if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendLine($"Unknow2n => {SpanExt.ToHexString(item.Unknow2n)}");
+                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
             }
         }
 
@@ -1951,7 +1951,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.SinkVariance = true;
             mask.SizeVariance = true;
             mask.AngleVariance = true;
-            mask.Unknow2n = true;
+            mask.Unknown2 = true;
         }
 
         #region Equals and Hash
@@ -1977,7 +1977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.SinkVariance.EqualsWithin(rhs.SinkVariance)) return false;
             if (!lhs.SizeVariance.EqualsWithin(rhs.SizeVariance)) return false;
             if (!lhs.AngleVariance.Equals(rhs.AngleVariance)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknow2n, rhs.Unknow2n)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown2, rhs.Unknown2)) return false;
             return true;
         }
 
@@ -2000,7 +2000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = HashHelper.GetHashCode(item.SinkVariance).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.SizeVariance).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.AngleVariance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknow2n).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Unknown2).CombineHashCode(ret);
             return ret;
         }
 
@@ -2166,13 +2166,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Unknow2n) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Unknown2) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknow2n),
-                    item: item.Unknow2n,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
+                    name: nameof(item.Unknown2),
+                    item: item.Unknown2,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.Unknown2,
                     errorMask: errorMask);
             }
         }
@@ -2678,20 +2678,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknow2n":
+                case "Unknown2":
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknow2n);
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown2);
                         if (ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] Unknow2nParse,
+                            item: out Byte[] Unknown2Parse,
                             errorMask: errorMask))
                         {
-                            item.Unknow2n = Unknow2nParse;
+                            item.Unknown2 = Unknown2Parse;
                         }
                         else
                         {
-                            item.Unknow2n = default(Byte[]);
+                            item.Unknown2 = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -2896,7 +2896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.SinkVariance = initialValue;
             this.SizeVariance = initialValue;
             this.AngleVariance = initialValue;
-            this.Unknow2n = initialValue;
+            this.Unknown2 = initialValue;
         }
         #endregion
 
@@ -2917,7 +2917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T SinkVariance;
         public T SizeVariance;
         public T AngleVariance;
-        public T Unknow2n;
+        public T Unknown2;
         #endregion
 
         #region Equals
@@ -2946,7 +2946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.SinkVariance, rhs.SinkVariance)) return false;
             if (!object.Equals(this.SizeVariance, rhs.SizeVariance)) return false;
             if (!object.Equals(this.AngleVariance, rhs.AngleVariance)) return false;
-            if (!object.Equals(this.Unknow2n, rhs.Unknow2n)) return false;
+            if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2968,7 +2968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.SinkVariance?.GetHashCode());
             ret = ret.CombineHashCode(this.SizeVariance?.GetHashCode());
             ret = ret.CombineHashCode(this.AngleVariance?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknow2n?.GetHashCode());
+            ret = ret.CombineHashCode(this.Unknown2?.GetHashCode());
             return ret;
         }
 
@@ -2993,7 +2993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.SinkVariance)) return false;
             if (!eval(this.SizeVariance)) return false;
             if (!eval(this.AngleVariance)) return false;
-            if (!eval(this.Unknow2n)) return false;
+            if (!eval(this.Unknown2)) return false;
             return true;
         }
         #endregion
@@ -3024,7 +3024,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.SinkVariance = eval(this.SinkVariance);
             obj.SizeVariance = eval(this.SizeVariance);
             obj.AngleVariance = eval(this.AngleVariance);
-            obj.Unknow2n = eval(this.Unknow2n);
+            obj.Unknown2 = eval(this.Unknown2);
         }
         #endregion
 
@@ -3117,9 +3117,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"AngleVariance => {AngleVariance}");
                 }
-                if (printMask?.Unknow2n ?? true)
+                if (printMask?.Unknown2 ?? true)
                 {
-                    fg.AppendLine($"Unknow2n => {Unknow2n}");
+                    fg.AppendLine($"Unknown2 => {Unknown2}");
                 }
             }
             fg.AppendLine("]");
@@ -3160,7 +3160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception SinkVariance;
         public Exception SizeVariance;
         public Exception AngleVariance;
-        public Exception Unknow2n;
+        public Exception Unknown2;
         #endregion
 
         #region IErrorMask
@@ -3201,8 +3201,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return SizeVariance;
                 case RegionDataObject_FieldIndex.AngleVariance:
                     return AngleVariance;
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    return Unknow2n;
+                case RegionDataObject_FieldIndex.Unknown2:
+                    return Unknown2;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3261,8 +3261,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionDataObject_FieldIndex.AngleVariance:
                     this.AngleVariance = ex;
                     break;
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    this.Unknow2n = ex;
+                case RegionDataObject_FieldIndex.Unknown2:
+                    this.Unknown2 = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3322,8 +3322,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionDataObject_FieldIndex.AngleVariance:
                     this.AngleVariance = (Exception)obj;
                     break;
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    this.Unknow2n = (Exception)obj;
+                case RegionDataObject_FieldIndex.Unknown2:
+                    this.Unknown2 = (Exception)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3349,7 +3349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (SinkVariance != null) return true;
             if (SizeVariance != null) return true;
             if (AngleVariance != null) return true;
-            if (Unknow2n != null) return true;
+            if (Unknown2 != null) return true;
             return false;
         }
         #endregion
@@ -3400,7 +3400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"SinkVariance => {SinkVariance}");
             fg.AppendLine($"SizeVariance => {SizeVariance}");
             fg.AppendLine($"AngleVariance => {AngleVariance}");
-            fg.AppendLine($"Unknow2n => {Unknow2n}");
+            fg.AppendLine($"Unknown2 => {Unknown2}");
         }
         #endregion
 
@@ -3424,7 +3424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.SinkVariance = this.SinkVariance.Combine(rhs.SinkVariance);
             ret.SizeVariance = this.SizeVariance.Combine(rhs.SizeVariance);
             ret.AngleVariance = this.AngleVariance.Combine(rhs.AngleVariance);
-            ret.Unknow2n = this.Unknow2n.Combine(rhs.Unknow2n);
+            ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
             return ret;
         }
         public static RegionDataObject_ErrorMask Combine(RegionDataObject_ErrorMask lhs, RegionDataObject_ErrorMask rhs)
@@ -3467,7 +3467,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.SinkVariance = defaultOn;
             this.SizeVariance = defaultOn;
             this.AngleVariance = defaultOn;
-            this.Unknow2n = defaultOn;
+            this.Unknown2 = defaultOn;
         }
 
         #region Members
@@ -3487,7 +3487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool SinkVariance;
         public bool SizeVariance;
         public bool AngleVariance;
-        public bool Unknow2n;
+        public bool Unknown2;
         #endregion
 
     }
@@ -3512,7 +3512,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool SinkVariance;
         public bool SizeVariance;
         public bool AngleVariance;
-        public bool Unknow2n;
+        public bool Unknown2;
         #endregion
 
         #region Ctors
@@ -3538,7 +3538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.SinkVariance = defaultOn;
             this.SizeVariance = defaultOn;
             this.AngleVariance = defaultOn;
-            this.Unknow2n = defaultOn;
+            this.Unknown2 = defaultOn;
         }
 
         #endregion
@@ -3573,7 +3573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((SinkVariance, null));
             ret.Add((SizeVariance, null));
             ret.Add((AngleVariance, null));
-            ret.Add((Unknow2n, null));
+            ret.Add((Unknown2, null));
         }
     }
     #endregion
@@ -3629,7 +3629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.AngleVariance);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknow2n);
+                item: item.Unknown2);
         }
 
         public void Write(

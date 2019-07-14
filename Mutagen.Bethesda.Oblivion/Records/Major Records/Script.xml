@@ -17,7 +17,7 @@
   </Object>
   <Object name="ScriptMetaSummary" objType="Subrecord" recordType="SCHR" GUID="80c1bfa2-bdf3-4bc9-aeb7-306536cdbc91" ID="47">
     <Fields>
-      <ByteArray name="Fluff" length="4" nullable="NotNull" />
+      <ByteArray name="Fluff" byteLength="4" nullable="NotNull" />
       <UInt32 name="RefCount" />
       <Int32 name="CompiledSize" derivative="true" binary="Custom" />
       <UInt32 name="VariableCount" />
@@ -29,9 +29,9 @@
       <Data recordType="SLSD" >
         <Fields>
           <Int32 name="Index" />
-          <ByteArray name="Fluff" length="12" nullable="NotNull" />
+          <ByteArray name="Fluff" byteLength="12" nullable="NotNull" />
           <Enum name="Flags" enumName="Script.LocalVariableFlag" byteLength="4" />
-          <ByteArray name="Fluff2" length="4" nullable="NotNull" />
+          <ByteArray name="Fluff2" byteLength="4" nullable="NotNull" />
         </Fields>
       </Data>
       <String name="Name" recordType="SCVR" />

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>5ffc34aa5ba0f9d7eef7cffe586fd56c433c2c61</Sha>
+         <Sha>e90c9c48489c672a0c7d90ab880fb56f2dc4739c</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-08-2019 20:40:23</CommitDate>
-         <Description>FunctionWrapper.AddPassArg</Description>
+         <CommitDate>07-13-2019 23:07:32</CommitDate>
+         <Description>ByteArrayType length =&gt; byteLength</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

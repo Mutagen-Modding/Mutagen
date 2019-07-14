@@ -83,6 +83,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="byteLength" type="xs:int" >
+            <xs:annotation>
+              <xs:documentation>
+                Explicit definition of byte length on disk.  Used in various circumstances
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -121,14 +128,6 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="ByteArray">
-      <xs:complexContent>
-        <xs:extension base="ByteArray">
-          <xs:attribute name="length" type="xs:string" />
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -174,14 +173,6 @@
         <xs:extension base="RefListField">
           <xs:attribute name="thread" type="xs:boolean" />
           <xs:attribute name="asyncItems" type="xs:boolean" />
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="Enum">
-      <xs:complexContent>
-        <xs:extension base="Enum">
-          <xs:attribute name="byteLength" type="xs:byte" />
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -247,7 +238,7 @@
   <xs:complexType name="Buffer" >
     <xs:complexContent>
       <xs:extension base="Nothing">
-        <xs:attribute name="length" type="xs:int" use="required" />
+        <xs:attribute name="byteLength" type="xs:int" use="required" />
         <xs:attribute name="static" type="xs:boolean" />
       </xs:extension>
     </xs:complexContent>
