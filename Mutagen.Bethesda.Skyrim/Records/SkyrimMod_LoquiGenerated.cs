@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public GameMode GameMode => GameMode.Skyrim;
-        IReadOnlyCache<T, FormKey> IModGetter.GetGroup<T>() => this.GetGroup<T>();
+        IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ISourceCache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);
         public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;
@@ -1086,10 +1086,16 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Mutagen
-        public static ISourceCache<T, FormKey> GetGroup<T>(this ISkyrimModGetter obj)
+        public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>(this ISkyrimModGetter obj)
             where T : IMajorRecordInternalGetter
         {
-            return ((SkyrimModCommon)obj.CommonInstance).GetGroup<T>(obj: obj);
+            return (IReadOnlyCache<T, FormKey>)((SkyrimModCommon)obj.CommonInstance).GetGroup<T>(obj: obj);
+        }
+
+        public static ISourceCache<T, FormKey> GetGroup<T>(this ISkyrimMod obj)
+            where T : IMajorRecordInternal
+        {
+            return (ISourceCache<T, FormKey>)((SkyrimModCommon)obj.CommonInstance).GetGroup<T>(obj: obj);
         }
         #endregion
 
@@ -1553,15 +1559,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 
         #region Mutagen
-        public ISourceCache<T, FormKey> GetGroup<T>(ISkyrimModGetter obj)
+        public object GetGroup<T>(ISkyrimModGetter obj)
             where T : IMajorRecordInternalGetter
         {
             switch (typeof(T).Name)
             {
                 case "GameSetting":
-                    return (ISourceCache<T, FormKey>)obj.GameSettings.Items;
+                case "IGameSettingInternalGetter":
+                case "IGameSettingInternal":
+                    return obj.GameSettings.Items;
                 case "Global":
-                    return (ISourceCache<T, FormKey>)obj.Globals.Items;
+                case "IGlobalInternalGetter":
+                case "IGlobalInternal":
+                    return obj.Globals.Items;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }

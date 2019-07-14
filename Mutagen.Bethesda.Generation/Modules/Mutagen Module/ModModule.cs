@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Generation
             }
             obj.CustomData[Mutagen.Bethesda.Generation.Constants.GAME_MODE] = gameMode;
             fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{gameMode};");
-            fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroup)}<T>() => this.GetGroup<T>();");
-            fg.AppendLine($"ISourceCache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IModGetter.GetGroup)}<T>() => this.GetGroup<T>();");
+            fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroupGetter)}<T>() => this.GetGroupGetter<T>();");
+            fg.AppendLine($"ISourceCache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
             fg.AppendLine($"private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);");
             fg.AppendLine($"public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;");
             fg.AppendLine($"public IMajorRecord this[FormKey id]");
@@ -272,7 +272,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
-                "public static ISourceCache<T, FormKey> GetGroup<T>",
+                "public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>",
                 wheres: $"where T : {nameof(IMajorRecordInternalGetter)}"))
             {
                 args.Add($"this {obj.Interface(getter: true)} obj");
@@ -280,7 +280,23 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return {obj.CommonClassInstance("obj")}.GetGroup<T>"))
+                    $"return (IReadOnlyCache<T, FormKey>){obj.CommonClassInstance("obj")}.GetGroup<T>"))
+                {
+                    args.AddPassArg("obj");
+                }
+            }
+            fg.AppendLine();
+
+            using (var args = new FunctionWrapper(fg,
+                "public static ISourceCache<T, FormKey> GetGroup<T>",
+                wheres: $"where T : {nameof(IMajorRecordInternal)}"))
+            {
+                args.Add($"this {obj.Interface(getter: false)} obj");
+            }
+            using (new BraceWrapper(fg))
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"return (ISourceCache<T, FormKey>){obj.CommonClassInstance("obj")}.GetGroup<T>"))
                 {
                     args.AddPassArg("obj");
                 }
@@ -293,7 +309,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
-                "public ISourceCache<T, FormKey> GetGroup<T>",
+                "public object GetGroup<T>",
                 wheres: $"where T : {nameof(IMajorRecordInternalGetter)}"))
             {
                 args.Add($"{obj.Interface(getter: true)} obj");
@@ -312,9 +328,11 @@ namespace Mutagen.Bethesda.Generation
                             throw new ArgumentException();
                         }
                         fg.AppendLine($"case \"{subObj.Name}\":");
+                        fg.AppendLine($"case \"{subObj.Interface(getter: true)}\":");
+                        fg.AppendLine($"case \"{subObj.Interface(getter: false)}\":");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"return (ISourceCache<T, FormKey>)obj.{field.Name}.Items;");
+                            fg.AppendLine($"return obj.{field.Name}.Items;");
                         }
                     }
                     fg.AppendLine("default:");

@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda
         GameMode GameMode { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
         IReadOnlyCache<IMajorRecordInternalGetter, FormKey> MajorRecords { get; }
-        IReadOnlyCache<T, FormKey> GetGroup<T>() where T : IMajorRecordInternalGetter;
+        IReadOnlyCache<T, FormKey> GetGroupGetter<T>() where T : IMajorRecordInternalGetter;
         void WriteToBinary(
             string path,
             ModKey modKey);
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda
     {
         new ISourceList<MasterReference> MasterReferences { get; }
         new IObservableCache<IMajorRecord, FormKey> MajorRecords { get; }
-        new ISourceCache<T, FormKey> GetGroup<T>() where T : IMajorRecordInternalGetter;
+        new ISourceCache<T, FormKey> GetGroup<T>() where T : IMajorRecordInternal;
         FormKey GetNextFormKey();
         void SyncRecordCount();
     }

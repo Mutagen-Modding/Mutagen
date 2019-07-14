@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public GameMode GameMode => GameMode.Oblivion;
-        IReadOnlyCache<T, FormKey> IModGetter.GetGroup<T>() => this.GetGroup<T>();
+        IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ISourceCache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);
         public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;
@@ -5535,10 +5535,16 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public static ISourceCache<T, FormKey> GetGroup<T>(this IOblivionModGetter obj)
+        public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>(this IOblivionModGetter obj)
             where T : IMajorRecordInternalGetter
         {
-            return ((OblivionModCommon)obj.CommonInstance).GetGroup<T>(obj: obj);
+            return (IReadOnlyCache<T, FormKey>)((OblivionModCommon)obj.CommonInstance).GetGroup<T>(obj: obj);
+        }
+
+        public static ISourceCache<T, FormKey> GetGroup<T>(this IOblivionMod obj)
+            where T : IMajorRecordInternal
+        {
+            return (ISourceCache<T, FormKey>)((OblivionModCommon)obj.CommonInstance).GetGroup<T>(obj: obj);
         }
         #endregion
 
@@ -8324,123 +8330,235 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
 
         #region Mutagen
-        public ISourceCache<T, FormKey> GetGroup<T>(IOblivionModGetter obj)
+        public object GetGroup<T>(IOblivionModGetter obj)
             where T : IMajorRecordInternalGetter
         {
             switch (typeof(T).Name)
             {
                 case "GameSetting":
-                    return (ISourceCache<T, FormKey>)obj.GameSettings.Items;
+                case "IGameSettingInternalGetter":
+                case "IGameSettingInternal":
+                    return obj.GameSettings.Items;
                 case "Global":
-                    return (ISourceCache<T, FormKey>)obj.Globals.Items;
+                case "IGlobalInternalGetter":
+                case "IGlobalInternal":
+                    return obj.Globals.Items;
                 case "Class":
-                    return (ISourceCache<T, FormKey>)obj.Classes.Items;
+                case "IClassInternalGetter":
+                case "IClassInternal":
+                    return obj.Classes.Items;
                 case "Faction":
-                    return (ISourceCache<T, FormKey>)obj.Factions.Items;
+                case "IFactionInternalGetter":
+                case "IFactionInternal":
+                    return obj.Factions.Items;
                 case "Hair":
-                    return (ISourceCache<T, FormKey>)obj.Hairs.Items;
+                case "IHairInternalGetter":
+                case "IHairInternal":
+                    return obj.Hairs.Items;
                 case "Eye":
-                    return (ISourceCache<T, FormKey>)obj.Eyes.Items;
+                case "IEyeInternalGetter":
+                case "IEyeInternal":
+                    return obj.Eyes.Items;
                 case "Race":
-                    return (ISourceCache<T, FormKey>)obj.Races.Items;
+                case "IRaceInternalGetter":
+                case "IRaceInternal":
+                    return obj.Races.Items;
                 case "Sound":
-                    return (ISourceCache<T, FormKey>)obj.Sounds.Items;
+                case "ISoundInternalGetter":
+                case "ISoundInternal":
+                    return obj.Sounds.Items;
                 case "SkillRecord":
-                    return (ISourceCache<T, FormKey>)obj.Skills.Items;
+                case "ISkillRecordInternalGetter":
+                case "ISkillRecordInternal":
+                    return obj.Skills.Items;
                 case "MagicEffect":
-                    return (ISourceCache<T, FormKey>)obj.MagicEffects.Items;
+                case "IMagicEffectInternalGetter":
+                case "IMagicEffectInternal":
+                    return obj.MagicEffects.Items;
                 case "Script":
-                    return (ISourceCache<T, FormKey>)obj.Scripts.Items;
+                case "IScriptInternalGetter":
+                case "IScriptInternal":
+                    return obj.Scripts.Items;
                 case "LandTexture":
-                    return (ISourceCache<T, FormKey>)obj.LandTextures.Items;
+                case "ILandTextureInternalGetter":
+                case "ILandTextureInternal":
+                    return obj.LandTextures.Items;
                 case "Enchantment":
-                    return (ISourceCache<T, FormKey>)obj.Enchantments.Items;
+                case "IEnchantmentInternalGetter":
+                case "IEnchantmentInternal":
+                    return obj.Enchantments.Items;
                 case "SpellUnleveled":
-                    return (ISourceCache<T, FormKey>)obj.Spells.Items;
+                case "ISpellUnleveledInternalGetter":
+                case "ISpellUnleveledInternal":
+                    return obj.Spells.Items;
                 case "Birthsign":
-                    return (ISourceCache<T, FormKey>)obj.Birthsigns.Items;
+                case "IBirthsignInternalGetter":
+                case "IBirthsignInternal":
+                    return obj.Birthsigns.Items;
                 case "Activator":
-                    return (ISourceCache<T, FormKey>)obj.Activators.Items;
+                case "IActivatorInternalGetter":
+                case "IActivatorInternal":
+                    return obj.Activators.Items;
                 case "AlchemicalApparatus":
-                    return (ISourceCache<T, FormKey>)obj.AlchemicalApparatus.Items;
+                case "IAlchemicalApparatusInternalGetter":
+                case "IAlchemicalApparatusInternal":
+                    return obj.AlchemicalApparatus.Items;
                 case "Armor":
-                    return (ISourceCache<T, FormKey>)obj.Armors.Items;
+                case "IArmorInternalGetter":
+                case "IArmorInternal":
+                    return obj.Armors.Items;
                 case "Book":
-                    return (ISourceCache<T, FormKey>)obj.Books.Items;
+                case "IBookInternalGetter":
+                case "IBookInternal":
+                    return obj.Books.Items;
                 case "Clothing":
-                    return (ISourceCache<T, FormKey>)obj.Clothes.Items;
+                case "IClothingInternalGetter":
+                case "IClothingInternal":
+                    return obj.Clothes.Items;
                 case "Container":
-                    return (ISourceCache<T, FormKey>)obj.Containers.Items;
+                case "IContainerInternalGetter":
+                case "IContainerInternal":
+                    return obj.Containers.Items;
                 case "Door":
-                    return (ISourceCache<T, FormKey>)obj.Doors.Items;
+                case "IDoorInternalGetter":
+                case "IDoorInternal":
+                    return obj.Doors.Items;
                 case "Ingredient":
-                    return (ISourceCache<T, FormKey>)obj.Ingredients.Items;
+                case "IIngredientInternalGetter":
+                case "IIngredientInternal":
+                    return obj.Ingredients.Items;
                 case "Light":
-                    return (ISourceCache<T, FormKey>)obj.Lights.Items;
+                case "ILightInternalGetter":
+                case "ILightInternal":
+                    return obj.Lights.Items;
                 case "Miscellaneous":
-                    return (ISourceCache<T, FormKey>)obj.Miscellaneous.Items;
+                case "IMiscellaneousInternalGetter":
+                case "IMiscellaneousInternal":
+                    return obj.Miscellaneous.Items;
                 case "Static":
-                    return (ISourceCache<T, FormKey>)obj.Statics.Items;
+                case "IStaticInternalGetter":
+                case "IStaticInternal":
+                    return obj.Statics.Items;
                 case "Grass":
-                    return (ISourceCache<T, FormKey>)obj.Grasses.Items;
+                case "IGrassInternalGetter":
+                case "IGrassInternal":
+                    return obj.Grasses.Items;
                 case "Tree":
-                    return (ISourceCache<T, FormKey>)obj.Trees.Items;
+                case "ITreeInternalGetter":
+                case "ITreeInternal":
+                    return obj.Trees.Items;
                 case "Flora":
-                    return (ISourceCache<T, FormKey>)obj.Flora.Items;
+                case "IFloraInternalGetter":
+                case "IFloraInternal":
+                    return obj.Flora.Items;
                 case "Furnature":
-                    return (ISourceCache<T, FormKey>)obj.Furnature.Items;
+                case "IFurnatureInternalGetter":
+                case "IFurnatureInternal":
+                    return obj.Furnature.Items;
                 case "Weapon":
-                    return (ISourceCache<T, FormKey>)obj.Weapons.Items;
+                case "IWeaponInternalGetter":
+                case "IWeaponInternal":
+                    return obj.Weapons.Items;
                 case "Ammo":
-                    return (ISourceCache<T, FormKey>)obj.Ammo.Items;
+                case "IAmmoInternalGetter":
+                case "IAmmoInternal":
+                    return obj.Ammo.Items;
                 case "NPC":
-                    return (ISourceCache<T, FormKey>)obj.NPCs.Items;
+                case "INPCInternalGetter":
+                case "INPCInternal":
+                    return obj.NPCs.Items;
                 case "Creature":
-                    return (ISourceCache<T, FormKey>)obj.Creatures.Items;
+                case "ICreatureInternalGetter":
+                case "ICreatureInternal":
+                    return obj.Creatures.Items;
                 case "LeveledCreature":
-                    return (ISourceCache<T, FormKey>)obj.LeveledCreatures.Items;
+                case "ILeveledCreatureInternalGetter":
+                case "ILeveledCreatureInternal":
+                    return obj.LeveledCreatures.Items;
                 case "SoulGem":
-                    return (ISourceCache<T, FormKey>)obj.SoulGems.Items;
+                case "ISoulGemInternalGetter":
+                case "ISoulGemInternal":
+                    return obj.SoulGems.Items;
                 case "Key":
-                    return (ISourceCache<T, FormKey>)obj.Keys.Items;
+                case "IKeyInternalGetter":
+                case "IKeyInternal":
+                    return obj.Keys.Items;
                 case "Potion":
-                    return (ISourceCache<T, FormKey>)obj.Potions.Items;
+                case "IPotionInternalGetter":
+                case "IPotionInternal":
+                    return obj.Potions.Items;
                 case "Subspace":
-                    return (ISourceCache<T, FormKey>)obj.Subspaces.Items;
+                case "ISubspaceInternalGetter":
+                case "ISubspaceInternal":
+                    return obj.Subspaces.Items;
                 case "SigilStone":
-                    return (ISourceCache<T, FormKey>)obj.SigilStones.Items;
+                case "ISigilStoneInternalGetter":
+                case "ISigilStoneInternal":
+                    return obj.SigilStones.Items;
                 case "LeveledItem":
-                    return (ISourceCache<T, FormKey>)obj.LeveledItems.Items;
+                case "ILeveledItemInternalGetter":
+                case "ILeveledItemInternal":
+                    return obj.LeveledItems.Items;
                 case "Weather":
-                    return (ISourceCache<T, FormKey>)obj.Weathers.Items;
+                case "IWeatherInternalGetter":
+                case "IWeatherInternal":
+                    return obj.Weathers.Items;
                 case "Climate":
-                    return (ISourceCache<T, FormKey>)obj.Climates.Items;
+                case "IClimateInternalGetter":
+                case "IClimateInternal":
+                    return obj.Climates.Items;
                 case "Region":
-                    return (ISourceCache<T, FormKey>)obj.Regions.Items;
+                case "IRegionInternalGetter":
+                case "IRegionInternal":
+                    return obj.Regions.Items;
                 case "CellBlock":
-                    return (ISourceCache<T, FormKey>)obj.Cells.Items;
+                case "ICellBlockGetter":
+                case "ICellBlock":
+                    return obj.Cells.Items;
                 case "Worldspace":
-                    return (ISourceCache<T, FormKey>)obj.Worldspaces.Items;
+                case "IWorldspaceInternalGetter":
+                case "IWorldspaceInternal":
+                    return obj.Worldspaces.Items;
                 case "DialogTopic":
-                    return (ISourceCache<T, FormKey>)obj.DialogTopics.Items;
+                case "IDialogTopicInternalGetter":
+                case "IDialogTopicInternal":
+                    return obj.DialogTopics.Items;
                 case "Quest":
-                    return (ISourceCache<T, FormKey>)obj.Quests.Items;
+                case "IQuestInternalGetter":
+                case "IQuestInternal":
+                    return obj.Quests.Items;
                 case "IdleAnimation":
-                    return (ISourceCache<T, FormKey>)obj.IdleAnimations.Items;
+                case "IIdleAnimationInternalGetter":
+                case "IIdleAnimationInternal":
+                    return obj.IdleAnimations.Items;
                 case "AIPackage":
-                    return (ISourceCache<T, FormKey>)obj.AIPackages.Items;
+                case "IAIPackageInternalGetter":
+                case "IAIPackageInternal":
+                    return obj.AIPackages.Items;
                 case "CombatStyle":
-                    return (ISourceCache<T, FormKey>)obj.CombatStyles.Items;
+                case "ICombatStyleInternalGetter":
+                case "ICombatStyleInternal":
+                    return obj.CombatStyles.Items;
                 case "LoadScreen":
-                    return (ISourceCache<T, FormKey>)obj.LoadScreens.Items;
+                case "ILoadScreenInternalGetter":
+                case "ILoadScreenInternal":
+                    return obj.LoadScreens.Items;
                 case "LeveledSpell":
-                    return (ISourceCache<T, FormKey>)obj.LeveledSpells.Items;
+                case "ILeveledSpellInternalGetter":
+                case "ILeveledSpellInternal":
+                    return obj.LeveledSpells.Items;
                 case "AnimatedObject":
-                    return (ISourceCache<T, FormKey>)obj.AnimatedObjects.Items;
+                case "IAnimatedObjectInternalGetter":
+                case "IAnimatedObjectInternal":
+                    return obj.AnimatedObjects.Items;
                 case "Water":
-                    return (ISourceCache<T, FormKey>)obj.Waters.Items;
+                case "IWaterInternalGetter":
+                case "IWaterInternal":
+                    return obj.Waters.Items;
                 case "EffectShader":
-                    return (ISourceCache<T, FormKey>)obj.EffectShaders.Items;
+                case "IEffectShaderInternalGetter":
+                case "IEffectShaderInternal":
+                    return obj.EffectShaders.Items;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -14113,7 +14231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModGetter)rhs, include);
 
         public GameMode GameMode => GameMode.Oblivion;
-        IReadOnlyCache<T, FormKey> IModGetter.GetGroup<T>() => this.GetGroup<T>();
+        IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         void IModGetter.WriteToBinary(
             string path,
             ModKey modKey)
