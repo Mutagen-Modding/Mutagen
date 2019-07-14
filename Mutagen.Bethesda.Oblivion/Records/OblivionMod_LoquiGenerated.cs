@@ -14463,6 +14463,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Races);
                 }
+                case 0x4E554F53: // SOUN
+                {
+                    this._Sounds = GroupBinaryWrapper<ISoundInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Sounds);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

@@ -1477,6 +1477,9 @@ namespace Mutagen.Bethesda.Generation
                 && obj.Name != "RaceRelation"
                 && obj.Name != "BodyData"
                 && obj.Name != "BodyPart"
+                && obj.Name != "Sound"
+                && obj.Name != "SoundData"
+                && obj.Name != "SoundDataExtended"
                 ) return;
 
             var dataAccessor = new Accessor("_data");
@@ -1541,7 +1544,33 @@ namespace Mutagen.Bethesda.Generation
                 }
 
                 fg.AppendLine();
+
                 int passedLength = 0;
+                // Get passed length of all base classes, not including major record
+                if (obj.HasLoquiBaseObject)
+                {
+                    foreach (var field in obj.BaseClass.IterateFields(
+                        expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
+                        nonIntegrated: true,
+                        includeBaseClass: true))
+                    {
+                        if (await field.ObjectGen.IsMajorRecord()) continue;
+                        if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
+                        var data = field.GetFieldData();
+                        switch (data.Binary)
+                        {
+                            case BinaryGenerationType.Custom:
+                                passedLength += CustomLogic.ExpectedLength(obj, field).Value;
+                                continue;
+                            case BinaryGenerationType.Normal:
+                                break;
+                            default:
+                                continue;
+                        }
+                        passedLength += typeGen.GetPassedAmount(obj, field);
+                    }
+                }
+
                 foreach (var field in obj.IterateFields(
                     expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                     nonIntegrated: true))
@@ -1554,17 +1583,16 @@ namespace Mutagen.Bethesda.Generation
                     })
                     {
                         var data = field.GetFieldData();
-                        if (data.Binary == BinaryGenerationType.Custom)
-                        {
-                            CustomLogic.GenerateFillForWrapper(
-                                fg,
-                                field,
-                                dataAccessor,
-                                doMasters: needsMasters);
-                            continue;
-                        }
                         switch (data.Binary)
                         {
+                            case BinaryGenerationType.Custom:
+                                CustomLogic.GenerateFillForWrapper(
+                                    fg,
+                                    field,
+                                    dataAccessor,
+                                    ref passedLength,
+                                    doMasters: needsMasters);
+                                continue;
                             case BinaryGenerationType.DoNothing:
                             case BinaryGenerationType.NoGeneration:
                                 continue;
@@ -1581,6 +1609,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
 
+                // Get complete passed length of all fields
                 passedLength = 0;
                 foreach (var field in obj.IterateFields(
                     expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
@@ -1879,7 +1908,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (field.Field.Name == "Sounds")
+                                if (field.Field.Name == "Skills")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)
@@ -1914,7 +1943,7 @@ namespace Mutagen.Bethesda.Generation
                                                 await generator.GenerateWrapperRecordTypeParse(
                                                     fg: fg,
                                                     objGen: obj,
-                                                    typeGen: field.Field,
+                                                    typeGen: gen.Value,
                                                     locationAccessor: "(stream.Position - offset)");
                                                 if (obj.GetObjectType() == ObjectType.Mod
                                                     && field.Field.Name == "ModHeader")

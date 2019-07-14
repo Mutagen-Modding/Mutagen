@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Generation
             data.Binary = node.GetAttribute<BinaryGenerationType>("binary", BinaryGenerationType.Normal);
             ModifyGRUPAttributes(field);
             await base.PostFieldLoad(obj, field, node);
-            data.Length = node.GetAttribute<long?>("byteLength", null);
+            data.Length = node.GetAttribute<int?>("byteLength", null);
             if (!data.Length.HasValue
                 && !data.RecordType.HasValue
                 && !(field is NothingType)

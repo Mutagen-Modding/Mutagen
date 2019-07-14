@@ -51,7 +51,7 @@
           <Zero byteLength="3" />
           <Float name="RushingAttackDistanceMult" />
           <Break />
-          <CustomLogic name="SecondaryFlags" expectedLength="4" />
+          <CustomLogic name="SecondaryFlags" byteLength="4" />
         </Fields>
       </Data>
       <RefDirect name="Advanced" refName="CombatStyleAdvanced" />

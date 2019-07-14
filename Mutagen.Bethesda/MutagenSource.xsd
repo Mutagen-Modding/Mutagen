@@ -265,13 +265,6 @@
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="expectedLength" type="xs:integer" >
-      <xs:annotation>
-        <xs:documentation>
-          Length the custom logic is expected to parse.
-        </xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="TransferType">

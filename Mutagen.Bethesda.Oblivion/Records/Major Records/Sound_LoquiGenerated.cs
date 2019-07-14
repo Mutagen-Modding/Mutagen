@@ -2068,6 +2068,99 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class SoundBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        ISoundInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
+        public new static Sound_Registration Registration => Sound_Registration.Instance;
+        protected override object CommonInstance => SoundCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => SoundXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SoundBinaryWriteTranslation.Instance;
+
+        #region File
+        private int? _FileLocation;
+        public bool File_IsSet => _FileLocation.HasValue;
+        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FileLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Data
+        public ISoundDataInternalGetter Data { get; private set; }
+        public bool Data_IsSet => Data != null;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected SoundBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static SoundBinaryWrapper SoundFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new SoundBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4D414E46: // FNAM
+                {
+                    _FileLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.File);
+                }
+                case 0x44444E53: // SNDD
+                {
+                    this.Data = SoundDataBinaryWrapper.SoundDataFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
+                }
+                case 0x58444E53: // SNDX
+                {
+                    this.Data = SoundDataExtendedBinaryWrapper.SoundDataExtendedFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

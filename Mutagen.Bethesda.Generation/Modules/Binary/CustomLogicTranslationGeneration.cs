@@ -224,22 +224,40 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             TypeGeneration field,
             Accessor dataAccessor,
+            ref int passedLength,
             bool doMasters)
         {
             var data = field.GetFieldData();
+            string loc;
+            string span;
             if (data.HasTrigger)
             {
                 fg.AppendLine($"private int? _{field.Name}Location;");
                 fg.AppendLine($"public bool {field.Name}_IsSet => _{field.Name}Location.HasValue;");
+                loc = $"_{field.Name}Location.Value";
+                span = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, {loc}, _package.Meta)";
+            }
+            else if (!data.Length.HasValue)
+            {
+                throw new ArgumentException("Custom logic without trigger needs to define expected length");
+            }
+            else
+            {
+                loc = $"{passedLength}";
+                span = $"{dataAccessor}.Slice({loc})";
             }
             using (var args = new ArgsWrapper(fg,
                 $"public {field.TypeName(getter: true)} {field.Name} => Get{field.Name}Custom"))
             {
-                args.Add($"span: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{field.Name}Location.Value, _package.Meta)");
+                args.Add($"span: {span}");
                 if (doMasters)
                 {
                     args.Add($"masterReferences: _package.MasterReferences");
                 }
+            }
+            if (!data.HasTrigger)
+            {
+                passedLength += data.Length.Value;
             }
         }
 
@@ -263,7 +281,7 @@ namespace Mutagen.Bethesda.Generation
         {
             CustomLogic custom = typeGen as CustomLogic;
             var data = typeGen.GetFieldData();
-            return custom.ExpectedLength;
+            return data.Length;
         }
     }
 }

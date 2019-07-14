@@ -1986,6 +1986,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class SoundDataExtendedBinaryWrapper :
+        SoundDataBinaryWrapper,
+        ISoundDataExtendedInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SoundDataExtended_Registration.Instance;
+        public new static SoundDataExtended_Registration Registration => SoundDataExtended_Registration.Instance;
+        protected override object CommonInstance => SoundDataExtendedCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataExtendedInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => SoundDataExtendedXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SoundDataExtendedBinaryWriteTranslation.Instance;
+
+        public Single StaticAttenuation => GetStaticAttenuationCustom(span: _data.Slice(8));
+        public Single StopTime => GetStopTimeCustom(span: _data.Slice(10));
+        public Single StartTime => GetStartTimeCustom(span: _data.Slice(11));
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected SoundDataExtendedBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static SoundDataExtendedBinaryWrapper SoundDataExtendedFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new SoundDataExtendedBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0xC;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

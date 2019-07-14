@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
         public string TriggeringRecordSetAccessor { get; set; }
         public bool HasTrigger => this.TriggeringRecordAccessors.Count > 0 || SubLoquiTypes.Count > 0;
         public bool Optional;
-        public long? Length;
+        public int? Length;
         public bool IncludeInLength;
         public bool Vestigial;
         public BinaryGenerationType Binary;
