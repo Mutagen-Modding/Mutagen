@@ -2892,15 +2892,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E58: // XNAM
                 {
-                    this.Relations = new BinaryWrapperSetList<RelationBinaryWrapper>(
+                    this.Relations = BinaryWrapperSetList<RelationBinaryWrapper>.FactoryByArray(
                         mem: stream.RemainingMemory,
-                        getter: (subSpan) => RelationBinaryWrapper.RelationFactory(
-                            stream: new BinaryMemoryReadStream(subSpan),
-                            package: _package),
+                        package: _package,
+                        getter: (s, p) => RelationBinaryWrapper.RelationFactory(new BinaryMemoryReadStream(s), p),
                         locs: UtilityTranslation.ParseSubrecordLocations(
                             stream: stream,
                             meta: _package.Meta,
-                            trigger: type));
+                            trigger: type,
+                            skipHeader: false));
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
                 }
                 case 0x41544144: // DATA

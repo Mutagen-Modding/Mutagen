@@ -116,14 +116,18 @@ namespace Mutagen.Bethesda.Generation
             DataType dataType = field as DataType;
             fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = (ushort){locationAccessor} + _package.Meta.SubConstants.TypeAndLengthLength;");
             fg.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
-            fg.AppendLine($"var subLen = _package.Meta.SubRecord(_data.Slice({locationAccessor})).RecordLength;");
+            bool generatedStart = false;
             var passedLen = 0;
             foreach (var item in dataType.IterateFieldsWithMeta())
             {
                 if (!this.Module.TryGetTypeGeneration(item.Field.GetType(), out var typeGen)) continue;
-                passedLen += typeGen.GetPassedAmount(objGen, item.Field);
                 if (item.BreakIndex != -1)
                 {
+                    if (!generatedStart)
+                    {
+                        generatedStart = true;
+                        fg.AppendLine($"var subLen = _package.Meta.SubRecord(_data.Slice({locationAccessor})).RecordLength;");
+                    }
                     fg.AppendLine($"if (subLen <= {passedLen})");
                     using (new BraceWrapper(fg))
                     {
@@ -132,12 +136,18 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (item.RangeIndex != -1)
                 {
+                    if (!generatedStart)
+                    {
+                        generatedStart = true;
+                        fg.AppendLine($"var subLen = _package.Meta.SubRecord(_data.Slice({locationAccessor})).RecordLength;");
+                    }
                     fg.AppendLine($"if (subLen > {passedLen})");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"this.{dataType.StateName} |= {dataType.EnumName}.Range{item.RangeIndex};");
                     }
                 }
+                passedLen += typeGen.GetPassedAmount(objGen, item.Field);
             }
         }
 

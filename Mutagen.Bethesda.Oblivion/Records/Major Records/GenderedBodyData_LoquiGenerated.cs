@@ -2014,6 +2014,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class GenderedBodyDataBinaryWrapper : IGenderedBodyDataGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => GenderedBodyData_Registration.Instance;
+        public static GenderedBodyData_Registration Registration => GenderedBodyData_Registration.Instance;
+        protected object CommonInstance => GenderedBodyDataCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGenderedBodyDataGetter)rhs, include);
+
+        protected object XmlWriteTranslator => GenderedBodyDataXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => GenderedBodyDataBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Male
+        public IBodyDataGetter Male { get; private set; }
+        public bool Male_IsSet => Male != null;
+        #endregion
+        #region Female
+        public IBodyDataGetter Female { get; private set; }
+        public bool Female_IsSet => Female != null;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GenderedBodyDataBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static GenderedBodyDataBinaryWrapper GenderedBodyDataFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new GenderedBodyDataBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4D414E4D: // MNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)GenderedBodyData_FieldIndex.Male) return TryGet<int?>.Failure;
+                    stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker
+                    this.Male = BodyDataBinaryWrapper.BodyDataFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)GenderedBodyData_FieldIndex.Male);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)GenderedBodyData_FieldIndex.Female) return TryGet<int?>.Failure;
+                    stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker
+                    this.Female = BodyDataBinaryWrapper.BodyDataFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)GenderedBodyData_FieldIndex.Female);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

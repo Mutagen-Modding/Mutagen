@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Generation
         public virtual int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             var data = typeGen.GetFieldData();
-            if (!data.RecordType.HasValue)
+            if (!data.HasTrigger)
             {
                 return this.ExpectedLength(objGen, typeGen) ?? 0;
             }
@@ -98,6 +98,15 @@ namespace Mutagen.Bethesda.Generation
             Accessor locationAccessor)
         {
             fg.AppendLine($"_{typeGen.Name}Location = (ushort){locationAccessor};");
+        }
+
+        public virtual string GenerateForTypicalWrapper(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            Accessor packageAccessor)
+        {
+            throw new NotImplementedException();
         }
     }
 }

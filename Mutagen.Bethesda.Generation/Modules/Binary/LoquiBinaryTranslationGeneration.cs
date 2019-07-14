@@ -253,7 +253,14 @@ namespace Mutagen.Bethesda.Generation
                     {
                         throw new NotImplementedException();
                     }
-                    fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} {{ get; private set; }}");
+                    if (loqui.GetFieldData()?.HasTrigger ?? false)
+                    {
+                        fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} {{ get; private set; }}");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} => {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice({currentPosition})), _package);");
+                    }
                     break;
                 case SingletonLevel.NotNull:
                 case SingletonLevel.Singleton:
@@ -277,9 +284,17 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
-
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            LoquiType loqui = typeGen as LoquiType;
+            var sum = 0;
+            foreach (var item in loqui.TargetObjectGeneration.IterateFields(includeBaseClass: true))
+            {
+                if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
+                sum += gen.ExpectedLength(objGen, item) ?? 0;
+            }
+            return sum;
+        }
 
         public override async Task GenerateWrapperRecordTypeParse(
             FileGeneration fg,
@@ -300,6 +315,11 @@ namespace Mutagen.Bethesda.Generation
                     break;
                 default:
                     throw new NotImplementedException();
+            }
+            var data = loqui.GetFieldData();
+            if (data.MarkerType.HasValue)
+            {
+                fg.AppendLine("stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker");
             }
             using (var args = new ArgsWrapper(fg,
                 $"this.{accessor} = {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}{loqui.GenericTypes(getter: true)}.{loqui.TargetObjectGeneration.Name}Factory"))

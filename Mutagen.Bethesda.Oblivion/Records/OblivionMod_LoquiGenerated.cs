@@ -14456,6 +14456,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Eyes);
                 }
+                case 0x45434152: // RACE
+                {
+                    this._Races = GroupBinaryWrapper<IRaceInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Races);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

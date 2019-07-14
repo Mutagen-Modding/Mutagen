@@ -6656,6 +6656,294 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RaceBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IRaceInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
+        public new static Race_Registration Registration => Race_Registration.Instance;
+        protected override object CommonInstance => RaceCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => RaceXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public bool Description_IsSet => _DescriptionLocation.HasValue;
+        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
+        #endregion
+        public IReadOnlySetList<IFormIDLinkGetter<ISpellInternalGetter>> Spells { get; private set; } = EmptySetList<IFormIDLinkGetter<ISpellInternalGetter>>.Instance;
+        public IReadOnlySetList<IRaceRelationGetter> Relations { get; private set; } = EmptySetList<RaceRelationBinaryWrapper>.Instance;
+        private int? _DATALocation;
+        public Race.DATADataType DATADataTypeState { get; private set; }
+        public IReadOnlyList<ISkillBoostGetter> SkillBoosts => BinaryWrapperNumberedList.FactoryForLoqui<ISkillBoostGetter>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 7, length: 2, _package, SkillBoostBinaryWrapper.SkillBoostFactory);
+        #region Fluff
+        private int _FluffLocation => _DATALocation.Value + 14;
+        private bool _Fluff_IsSet => _DATALocation.HasValue;
+        public ReadOnlySpan<Byte> Fluff => _Fluff_IsSet ? _data.Span.Slice(_FluffLocation, 4).ToArray() : default;
+        #endregion
+        #region MaleHeight
+        private int _MaleHeightLocation => _DATALocation.Value + 18;
+        private bool _MaleHeight_IsSet => _DATALocation.HasValue;
+        public Single MaleHeight => _MaleHeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_MaleHeightLocation, 4)) : default;
+        #endregion
+        #region FemaleHeight
+        private int _FemaleHeightLocation => _DATALocation.Value + 22;
+        private bool _FemaleHeight_IsSet => _DATALocation.HasValue;
+        public Single FemaleHeight => _FemaleHeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FemaleHeightLocation, 4)) : default;
+        #endregion
+        #region MaleWeight
+        private int _MaleWeightLocation => _DATALocation.Value + 26;
+        private bool _MaleWeight_IsSet => _DATALocation.HasValue;
+        public Single MaleWeight => _MaleWeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_MaleWeightLocation, 4)) : default;
+        #endregion
+        #region FemaleWeight
+        private int _FemaleWeightLocation => _DATALocation.Value + 30;
+        private bool _FemaleWeight_IsSet => _DATALocation.HasValue;
+        public Single FemaleWeight => _FemaleWeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FemaleWeightLocation, 4)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation.Value + 34;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Race.Flag Flags => _Flags_IsSet ? (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 2)) : default;
+        #endregion
+        #region Voices
+        public IRaceVoicesGetter Voices { get; private set; }
+        public bool Voices_IsSet => Voices != null;
+        #endregion
+        #region DefaultHair
+        public IRaceHairGetter DefaultHair { get; private set; }
+        public bool DefaultHair_IsSet => DefaultHair != null;
+        #endregion
+        #region DefaultHairColor
+        private int? _DefaultHairColorLocation;
+        public bool DefaultHairColor_IsSet => _DefaultHairColorLocation.HasValue;
+        public Byte DefaultHairColor => _DefaultHairColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _DefaultHairColorLocation.Value, _package.Meta)[0] : default;
+        #endregion
+        #region FaceGenMainClamp
+        private int? _FaceGenMainClampLocation;
+        public bool FaceGenMainClamp_IsSet => _FaceGenMainClampLocation.HasValue;
+        public Int32 FaceGenMainClamp => _FaceGenMainClampLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FaceGenMainClampLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region FaceGenFaceClamp
+        private int? _FaceGenFaceClampLocation;
+        public bool FaceGenFaceClamp_IsSet => _FaceGenFaceClampLocation.HasValue;
+        public Int32 FaceGenFaceClamp => _FaceGenFaceClampLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FaceGenFaceClampLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region RaceStats
+        public IRaceStatsGenderedGetter RaceStats { get; private set; }
+        public bool RaceStats_IsSet => RaceStats != null;
+        #endregion
+        public IReadOnlySetList<IFacePartGetter> FaceData { get; private set; } = EmptySetList<FacePartBinaryWrapper>.Instance;
+        #region BodyData
+        public IGenderedBodyDataGetter BodyData { get; private set; }
+        public bool BodyData_IsSet => BodyData != null;
+        #endregion
+        public IReadOnlySetList<IFormIDLinkGetter<IHairInternalGetter>> Hairs { get; private set; } = EmptySetList<IFormIDLinkGetter<IHairInternalGetter>>.Instance;
+        public IReadOnlySetList<IFormIDLinkGetter<IEyeInternalGetter>> Eyes { get; private set; } = EmptySetList<IFormIDLinkGetter<IEyeInternalGetter>>.Instance;
+        #region FaceGenData
+        public IFaceGenDataGetter FaceGenData { get; private set; }
+        public bool FaceGenData_IsSet => FaceGenData != null;
+        #endregion
+        #region Unknown
+        private int? _UnknownLocation;
+        public bool Unknown_IsSet => _UnknownLocation.HasValue;
+        public ReadOnlySpan<Byte> Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RaceBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static RaceBinaryWrapper RaceFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new RaceBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Name);
+                }
+                case 0x43534544: // DESC
+                {
+                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Description);
+                }
+                case 0x4F4C5053: // SPLO
+                {
+                    this.Spells = BinaryWrapperSetList<IFormIDLinkGetter<ISpellInternalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormIDLink<ISpellInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: true));
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
+                }
+                case 0x4D414E58: // XNAM
+                {
+                    this.Relations = BinaryWrapperSetList<RaceRelationBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => RaceRelationBinaryWrapper.RaceRelationFactory(new BinaryMemoryReadStream(s), p),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Relations);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = Race.DATADataType.Has;
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Flags);
+                }
+                case 0x4D414E56: // VNAM
+                {
+                    this.Voices = RaceVoicesBinaryWrapper.RaceVoicesFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
+                }
+                case 0x4D414E44: // DNAM
+                {
+                    this.DefaultHair = RaceHairBinaryWrapper.RaceHairFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHair);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    _DefaultHairColorLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColor);
+                }
+                case 0x4D414E50: // PNAM
+                {
+                    _FaceGenMainClampLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenMainClamp);
+                }
+                case 0x4D414E55: // UNAM
+                {
+                    _FaceGenFaceClampLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenFaceClamp);
+                }
+                case 0x52545441: // ATTR
+                {
+                    this.RaceStats = RaceStatsGenderedBinaryWrapper.RaceStatsGenderedFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.RaceStats);
+                }
+                case 0x304D414E: // NAM0
+                {
+                    stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker
+                    this.FaceData = UtilityTranslation.ParseRepeatedTypelessSubrecord<FacePartBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        offset: offset,
+                        trigger: FacePart_Registration.TriggeringRecordTypes,
+                        factory:  FacePartBinaryWrapper.FacePartFactory);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);
+                }
+                case 0x314D414E: // NAM1
+                {
+                    stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker
+                    this.BodyData = GenderedBodyDataBinaryWrapper.GenderedBodyDataFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
+                }
+                case 0x4D414E48: // HNAM
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.Hairs = BinaryWrapperSetList<IFormIDLinkGetter<IHairInternalGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormIDLink<IHairInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.Eyes = BinaryWrapperSetList<IFormIDLinkGetter<IEyeInternalGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormIDLink<IEyeInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
+                }
+                case 0x53474746: // FGGS
+                case 0x41474746: // FGGA
+                case 0x53544746: // FGTS
+                {
+                    this.FaceGenData = FaceGenDataBinaryWrapper.FaceGenDataFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenData);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Unknown);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

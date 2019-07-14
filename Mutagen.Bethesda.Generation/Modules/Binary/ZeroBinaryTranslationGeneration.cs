@@ -64,8 +64,6 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => this.ExpectedLength(objGen, typeGen) ?? 0;
-
         public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             ZeroType zero = typeGen as ZeroType;

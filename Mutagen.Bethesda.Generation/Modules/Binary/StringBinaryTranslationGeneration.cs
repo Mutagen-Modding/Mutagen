@@ -136,10 +136,11 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        protected override string GenerateForTypicalWrapper(
+        public override string GenerateForTypicalWrapper(
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
-            Accessor dataAccessor)
+            Accessor dataAccessor,
+            Accessor packageAccessor)
         {
             return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor})";
         }

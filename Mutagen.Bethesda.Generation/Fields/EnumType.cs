@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class EnumType : Loqui.Generation.EnumType
     {
-        public int ByteLength;
+        public int ByteLength { get; private set; }
 
         public override async Task Load(XElement node, bool requireName = true)
         {

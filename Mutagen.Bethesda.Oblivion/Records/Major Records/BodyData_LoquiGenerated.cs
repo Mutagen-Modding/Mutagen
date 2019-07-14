@@ -2069,6 +2069,91 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class BodyDataBinaryWrapper : IBodyDataGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
+        public static BodyData_Registration Registration => BodyData_Registration.Instance;
+        protected object CommonInstance => BodyDataCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyDataGetter)rhs, include);
+
+        protected object XmlWriteTranslator => BodyDataXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => BodyDataBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        public IReadOnlySetList<IBodyPartGetter> BodyParts { get; private set; } = EmptySetList<BodyPartBinaryWrapper>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected BodyDataBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static BodyDataBinaryWrapper BodyDataFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new BodyDataBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
+                }
+                case 0x58444E49: // INDX
+                case 0x4E4F4349: // ICON
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
+                    this.BodyParts = UtilityTranslation.ParseRepeatedTypelessSubrecord<BodyPartBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        offset: offset,
+                        trigger: BodyPart_Registration.TriggeringRecordTypes,
+                        factory:  BodyPartBinaryWrapper.BodyPartFactory);
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

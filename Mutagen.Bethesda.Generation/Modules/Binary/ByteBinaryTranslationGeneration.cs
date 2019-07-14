@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Generation
                     throw new ArgumentException();
                 }
                 dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}.Span[_{typeGen.Name}Location] : default;");
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default;");
             }
             else
             {
@@ -51,6 +51,11 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Span[_{dataType.GetFieldData().RecordType}Location.Value + {currentPosition}] : default;");
                 }
             }
+        }
+
+        public override string GenerateForTypicalWrapper(ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor, Accessor packageAccessor)
+        {
+            return $"{dataAccessor}[0]";
         }
     }
 }

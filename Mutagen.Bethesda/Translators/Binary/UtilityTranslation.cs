@@ -484,7 +484,8 @@ namespace Mutagen.Bethesda
         public static int[] ParseSubrecordLocations(
             BinaryMemoryReadStream stream,
             MetaDataConstants meta,
-            RecordType trigger)
+            RecordType trigger,
+            bool skipHeader)
         {
             List<int> ret = new List<int>();
             var startingPos = stream.Position;
@@ -492,14 +493,27 @@ namespace Mutagen.Bethesda
             {
                 var subMeta = meta.GetSubRecord(stream);
                 if (subMeta.RecordType != trigger) break;
-                ret.Add(stream.Position - startingPos);
-                stream.Position += subMeta.TotalLength;
+                if (skipHeader)
+                {
+                    stream.Position += subMeta.HeaderLength;
+                    ret.Add(stream.Position - startingPos);
+                    stream.Position += subMeta.RecordLength;
+                }
+                else
+                {
+                    ret.Add(stream.Position - startingPos);
+                    stream.Position += subMeta.TotalLength;
+                }
             }
             return ret.ToArray();
         }
 
         public delegate T BinaryWrapperFactory<T>(
             BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package);
+
+        public delegate T BinaryWrapperSpanFactory<T>(
+            ReadOnlyMemorySlice<byte> span,
             BinaryWrapperFactoryPackage package);
 
         public static IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(

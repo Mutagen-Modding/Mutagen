@@ -182,10 +182,14 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        protected override string GenerateForTypicalWrapper(ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor)
+        public override string GenerateForTypicalWrapper(
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            Accessor packageAccessor)
         {
             FormIDLinkType linkType = typeGen as FormIDLinkType;
-            return $"new FormIDLink<{linkType.LoquiType.TypeName(getter: true)}>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})))";
+            return $"new FormIDLink<{linkType.LoquiType.TypeName(getter: true)}>(FormKey.Factory({packageAccessor}.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})))";
         }
 
         public override void GenerateWrapperFields(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor, int currentPosition, DataType dataType = null)
@@ -205,7 +209,7 @@ namespace Mutagen.Bethesda.Generation
                     throw new ArgumentException();
                 }
                 dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor)} : default;");
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, "_package")} : default;");
             }
             else
             {
@@ -215,12 +219,12 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (dataType == null)
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(objGen, typeGen).Value})")};");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(objGen, typeGen).Value})", "_package")};");
                 }
                 else
                 {
                     DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(objGen, typeGen).Value})")} : default;");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(objGen, typeGen).Value})", "_package")} : default;");
                 }
             }
             fg.AppendLine($"public {linkType.LoquiType.TypeName(getter: true)} {linkType.Name} => default;");

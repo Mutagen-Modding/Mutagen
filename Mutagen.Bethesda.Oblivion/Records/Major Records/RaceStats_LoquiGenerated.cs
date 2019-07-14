@@ -2476,6 +2476,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RaceStatsBinaryWrapper : IRaceStatsGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RaceStats_Registration.Instance;
+        public static RaceStats_Registration Registration => RaceStats_Registration.Instance;
+        protected object CommonInstance => RaceStatsCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceStatsGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RaceStatsXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RaceStatsBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public Byte Strength => _data.Span[0];
+        public Byte Intelligence => _data.Span[1];
+        public Byte Willpower => _data.Span[2];
+        public Byte Agility => _data.Span[3];
+        public Byte Speed => _data.Span[4];
+        public Byte Endurance => _data.Span[5];
+        public Byte Personality => _data.Span[6];
+        public Byte Luck => _data.Span[7];
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RaceStatsBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static RaceStatsBinaryWrapper RaceStatsFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new RaceStatsBinaryWrapper(
+                bytes: stream.RemainingMemory.Slice(0, 8),
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

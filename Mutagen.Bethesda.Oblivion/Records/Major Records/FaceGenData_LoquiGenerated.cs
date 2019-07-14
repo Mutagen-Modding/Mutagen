@@ -2102,6 +2102,99 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class FaceGenDataBinaryWrapper : IFaceGenDataGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
+        public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
+        protected object CommonInstance => FaceGenDataCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFaceGenDataGetter)rhs, include);
+
+        protected object XmlWriteTranslator => FaceGenDataXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => FaceGenDataBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region SymmetricGeometry
+        private int? _SymmetricGeometryLocation;
+        public bool SymmetricGeometry_IsSet => _SymmetricGeometryLocation.HasValue;
+        public ReadOnlySpan<Byte> SymmetricGeometry => _SymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _SymmetricGeometryLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region AsymmetricGeometry
+        private int? _AsymmetricGeometryLocation;
+        public bool AsymmetricGeometry_IsSet => _AsymmetricGeometryLocation.HasValue;
+        public ReadOnlySpan<Byte> AsymmetricGeometry => _AsymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _AsymmetricGeometryLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region SymmetricTexture
+        private int? _SymmetricTextureLocation;
+        public bool SymmetricTexture_IsSet => _SymmetricTextureLocation.HasValue;
+        public ReadOnlySpan<Byte> SymmetricTexture => _SymmetricTextureLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _SymmetricTextureLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected FaceGenDataBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static FaceGenDataBinaryWrapper FaceGenDataFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new FaceGenDataBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x53474746: // FGGS
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricGeometry) return TryGet<int?>.Failure;
+                    _SymmetricGeometryLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricGeometry);
+                }
+                case 0x41474746: // FGGA
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.AsymmetricGeometry) return TryGet<int?>.Failure;
+                    _AsymmetricGeometryLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.AsymmetricGeometry);
+                }
+                case 0x53544746: // FGTS
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricTexture) return TryGet<int?>.Failure;
+                    _SymmetricTextureLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricTexture);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

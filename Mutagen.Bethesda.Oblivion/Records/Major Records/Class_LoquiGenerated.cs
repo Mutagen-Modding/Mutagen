@@ -3482,13 +3482,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         private int? _DATALocation;
         public Class.DATADataType DATADataTypeState { get; private set; }
-        public IReadOnlyList<ActorValue> PrimaryAttributes => new NumberedEnumList<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 2);
+        public IReadOnlyList<ActorValue> PrimaryAttributes => BinaryWrapperNumberedList.FactoryForEnum<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 2, enumLength: 4);
         #region Specialization
         private int _SpecializationLocation => _DATALocation.Value + 8;
         private bool _Specialization_IsSet => _DATALocation.HasValue;
         public Class.SpecializationFlag Specialization => _Specialization_IsSet ? (Class.SpecializationFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SpecializationLocation, 4)) : default;
         #endregion
-        public IReadOnlyList<ActorValue> SecondaryAttributes => new NumberedEnumList<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 12) : default, amount: 7);
+        public IReadOnlyList<ActorValue> SecondaryAttributes => BinaryWrapperNumberedList.FactoryForEnum<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 12) : default, amount: 7, enumLength: 4);
         #region Flags
         private int _FlagsLocation => _DATALocation.Value + 40;
         private bool _Flags_IsSet => _DATALocation.HasValue;

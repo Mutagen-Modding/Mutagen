@@ -1759,6 +1759,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RaceRelationBinaryWrapper : IRaceRelationGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RaceRelation_Registration.Instance;
+        public static RaceRelation_Registration Registration => RaceRelation_Registration.Instance;
+        protected object CommonInstance => RaceRelationCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceRelationGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RaceRelationXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RaceRelationBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Race
+        public IFormIDLinkGetter<IRaceInternalGetter> Race_Property => new FormIDLink<IRaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IRaceInternalGetter Race => default;
+        #endregion
+        public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RaceRelationBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static RaceRelationBinaryWrapper RaceRelationFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new RaceRelationBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0xE;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

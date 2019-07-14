@@ -16,10 +16,11 @@ namespace Mutagen.Bethesda.Generation
             PreferDirectTranslation = false;
         }
 
-        protected override string GenerateForTypicalWrapper(
+        public override string GenerateForTypicalWrapper(
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
-            Accessor dataAccessor)
+            Accessor dataAccessor,
+            Accessor packageAccessor)
         {
             return $"SpanExt.GetFloat({dataAccessor})";
         }

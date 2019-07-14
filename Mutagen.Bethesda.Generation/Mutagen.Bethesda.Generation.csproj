@@ -90,6 +90,7 @@
     <Compile Include="Modules\Binary\ModKeyBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\PrimitiveBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\SByteArrayBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\SpecialParseTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\StringBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ZeroBinaryTranslationGeneration.cs" />

@@ -1737,6 +1737,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RaceVoicesBinaryWrapper : IRaceVoicesGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
+        public static RaceVoices_Registration Registration => RaceVoices_Registration.Instance;
+        protected object CommonInstance => RaceVoicesCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceVoicesGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RaceVoicesXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RaceVoicesBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Male
+        public IFormIDLinkGetter<IRaceInternalGetter> Male_Property => new FormIDLink<IRaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IRaceInternalGetter Male => default;
+        #endregion
+        #region Female
+        public IFormIDLinkGetter<IRaceInternalGetter> Female_Property => new FormIDLink<IRaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IRaceInternalGetter Female => default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RaceVoicesBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static RaceVoicesBinaryWrapper RaceVoicesFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new RaceVoicesBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0xE;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

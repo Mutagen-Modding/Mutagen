@@ -1874,6 +1874,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RaceStatsGenderedBinaryWrapper : IRaceStatsGenderedGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RaceStatsGendered_Registration.Instance;
+        public static RaceStatsGendered_Registration Registration => RaceStatsGendered_Registration.Instance;
+        protected object CommonInstance => RaceStatsGenderedCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceStatsGenderedGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RaceStatsGenderedXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RaceStatsGenderedBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public IRaceStatsGetter Male => RaceStatsBinaryWrapper.RaceStatsFactory(new BinaryMemoryReadStream(_data.Slice(0)), _package);
+        public IRaceStatsGetter Female => RaceStatsBinaryWrapper.RaceStatsFactory(new BinaryMemoryReadStream(_data.Slice(8)), _package);
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RaceStatsGenderedBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static RaceStatsGenderedBinaryWrapper RaceStatsGenderedFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new RaceStatsGenderedBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x16;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

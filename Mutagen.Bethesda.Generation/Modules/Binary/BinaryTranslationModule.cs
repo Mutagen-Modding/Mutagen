@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(DoubleType)] = new PrimitiveBinaryTranslationGeneration<double>(expectedLen: 8);
             this._typeGenerations[typeof(EnumType)] = new EnumBinaryTranslationGeneration();
             this._typeGenerations[typeof(FloatType)] = new FloatBinaryTranslationGeneration();
-            this._typeGenerations[typeof(Int8Type)] = new PrimitiveBinaryTranslationGeneration<sbyte>(expectedLen: 1, typeName: "Int8");
+            this._typeGenerations[typeof(Int8Type)] = new SByteBinaryTranslationGeneration();
             this._typeGenerations[typeof(Int16Type)] = new PrimitiveBinaryTranslationGeneration<short>(expectedLen: 2);
             this._typeGenerations[typeof(Int32Type)] = new PrimitiveBinaryTranslationGeneration<int>(expectedLen: 4);
             this._typeGenerations[typeof(Int64Type)] = new PrimitiveBinaryTranslationGeneration<long>(expectedLen: 8);
@@ -1458,6 +1458,25 @@ namespace Mutagen.Bethesda.Generation
                 && obj.Name != "Rank"
                 && obj.Name != "Hair"
                 && obj.Name != "Eye"
+                && obj.Name != "Race"
+                && obj.Name != "RaceRelation"
+                && obj.Name != "FacePart"
+                && obj.Name != "SkillBoost"
+                && obj.Name != "GenderedBodyData"
+                && obj.Name != "RaceStatsGendered"
+                && obj.Name != "RaceHair"
+                && obj.Name != "RaceVoices"
+                && obj.Name != "FaceGenData"
+                && obj.Name != "SkillBoost"
+                && obj.Name != "RaceVoices"
+                && obj.Name != "RaceHair"
+                && obj.Name != "RaceStats"
+                && obj.Name != "FacePart"
+                && obj.Name != "GenderedBodyData"
+                && obj.Name != "FaceGenData"
+                && obj.Name != "RaceRelation"
+                && obj.Name != "BodyData"
+                && obj.Name != "BodyPart"
                 ) return;
 
             var dataAccessor = new Accessor("_data");
@@ -1860,7 +1879,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (field.Field.Name == "Races")
+                                if (field.Field.Name == "Sounds")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)

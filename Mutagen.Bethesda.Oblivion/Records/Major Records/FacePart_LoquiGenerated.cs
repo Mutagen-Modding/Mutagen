@@ -2152,6 +2152,100 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class FacePartBinaryWrapper : IFacePartGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => FacePart_Registration.Instance;
+        public static FacePart_Registration Registration => FacePart_Registration.Instance;
+        protected object CommonInstance => FacePartCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFacePartGetter)rhs, include);
+
+        protected object XmlWriteTranslator => FacePartXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => FacePartBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Index
+        private int? _IndexLocation;
+        public bool Index_IsSet => _IndexLocation.HasValue;
+        public Race.FaceIndex Index => (Race.FaceIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _IndexLocation.Value, _package.Meta));
+        #endregion
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region Icon
+        private int? _IconLocation;
+        public bool Icon_IsSet => _IconLocation.HasValue;
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected FacePartBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static FacePartBinaryWrapper FacePartFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new FacePartBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x58444E49: // INDX
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Index) return TryGet<int?>.Failure;
+                    _IndexLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Index);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Model) return TryGet<int?>.Failure;
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Icon) return TryGet<int?>.Failure;
+                    _IconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Icon);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion
