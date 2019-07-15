@@ -45,6 +45,8 @@ namespace Mutagen.Bethesda.Generation
             return await base.AsyncImport(obj);
         }
 
+        public string BinaryWrapperClassName(ObjectGeneration obj) => $"{obj.Name}BinaryWrapper";
+
         public BinaryTranslationModule(LoquiGenerator gen)
             : base(gen)
         {
@@ -52,40 +54,37 @@ namespace Mutagen.Bethesda.Generation
             this.ShouldGenerateCopyIn = false;
             this.TranslationMaskParameter = false;
             this._typeGenerations[typeof(LoquiType)] = new LoquiBinaryTranslationGeneration(ModuleNickname);
-            this._typeGenerations[typeof(BoolType)] = new PrimitiveBinaryTranslationGeneration<bool>();
-            this._typeGenerations[typeof(CharType)] = new PrimitiveBinaryTranslationGeneration<char>();
-            this._typeGenerations[typeof(DateTimeType)] = new PrimitiveBinaryTranslationGeneration<DateTime>();
-            this._typeGenerations[typeof(DoubleType)] = new PrimitiveBinaryTranslationGeneration<double>();
+            this._typeGenerations[typeof(BoolType)] = new PrimitiveBinaryTranslationGeneration<bool>(expectedLen: 1);
+            this._typeGenerations[typeof(CharType)] = new PrimitiveBinaryTranslationGeneration<char>(expectedLen: 1);
+            this._typeGenerations[typeof(DateTimeType)] = new PrimitiveBinaryTranslationGeneration<DateTime>(expectedLen: null);
+            this._typeGenerations[typeof(DoubleType)] = new PrimitiveBinaryTranslationGeneration<double>(expectedLen: 8);
             this._typeGenerations[typeof(EnumType)] = new EnumBinaryTranslationGeneration();
-            this._typeGenerations[typeof(FloatType)] = new PrimitiveBinaryTranslationGeneration<float>("Float")
+            this._typeGenerations[typeof(FloatType)] = new FloatBinaryTranslationGeneration();
+            this._typeGenerations[typeof(Int8Type)] = new SByteBinaryTranslationGeneration();
+            this._typeGenerations[typeof(Int16Type)] = new PrimitiveBinaryTranslationGeneration<short>(expectedLen: 2);
+            this._typeGenerations[typeof(Int32Type)] = new PrimitiveBinaryTranslationGeneration<int>(expectedLen: 4);
+            this._typeGenerations[typeof(Int64Type)] = new PrimitiveBinaryTranslationGeneration<long>(expectedLen: 8);
+            this._typeGenerations[typeof(P3UInt16Type)] = new PrimitiveBinaryTranslationGeneration<P3UInt16>(expectedLen: 6)
             {
                 PreferDirectTranslation = false
             };
-            this._typeGenerations[typeof(Int8Type)] = new PrimitiveBinaryTranslationGeneration<sbyte>("Int8");
-            this._typeGenerations[typeof(Int16Type)] = new PrimitiveBinaryTranslationGeneration<short>();
-            this._typeGenerations[typeof(Int32Type)] = new PrimitiveBinaryTranslationGeneration<int>();
-            this._typeGenerations[typeof(Int64Type)] = new PrimitiveBinaryTranslationGeneration<long>();
-            this._typeGenerations[typeof(P3UInt16Type)] = new PrimitiveBinaryTranslationGeneration<P3UInt16>()
+            this._typeGenerations[typeof(P2FloatType)] = new PrimitiveBinaryTranslationGeneration<P2Float>(expectedLen: 8)
             {
                 PreferDirectTranslation = false
             };
-            this._typeGenerations[typeof(P2FloatType)] = new PrimitiveBinaryTranslationGeneration<P2Float>()
+            this._typeGenerations[typeof(P3FloatType)] = new PrimitiveBinaryTranslationGeneration<P3Float>(expectedLen: 12)
             {
                 PreferDirectTranslation = false
             };
-            this._typeGenerations[typeof(P3FloatType)] = new PrimitiveBinaryTranslationGeneration<P3Float>()
+            this._typeGenerations[typeof(P2Int32Type)] = new PrimitiveBinaryTranslationGeneration<P2Int>(expectedLen: 8)
             {
                 PreferDirectTranslation = false
             };
-            this._typeGenerations[typeof(P2Int32Type)] = new PrimitiveBinaryTranslationGeneration<P2Int>()
+            this._typeGenerations[typeof(P2Int16Type)] = new PrimitiveBinaryTranslationGeneration<P2Int16>(expectedLen: 4)
             {
                 PreferDirectTranslation = false
             };
-            this._typeGenerations[typeof(P2Int16Type)] = new PrimitiveBinaryTranslationGeneration<P2Int16>()
-            {
-                PreferDirectTranslation = false
-            };
-            this._typeGenerations[typeof(P2FloatType)] = new PrimitiveBinaryTranslationGeneration<P2Float>()
+            this._typeGenerations[typeof(P2FloatType)] = new PrimitiveBinaryTranslationGeneration<P2Float>(expectedLen: 8)
             {
                 PreferDirectTranslation = false
             };
@@ -94,22 +93,16 @@ namespace Mutagen.Bethesda.Generation
                 PreferDirectTranslation = false
             };
             this._typeGenerations[typeof(FilePathType)] = new FilePathBinaryTranslationGeneration();
-            this._typeGenerations[typeof(UInt8Type)] = new PrimitiveBinaryTranslationGeneration<byte>()
-            {
-                customRead = (fg, reader, item) => fg.AppendLine($"{item.DirectAccess} = {reader.DirectAccess}.ReadUInt8();")
-            };
-            this._typeGenerations[typeof(UInt16Type)] = new PrimitiveBinaryTranslationGeneration<ushort>();
-            this._typeGenerations[typeof(UInt32Type)] = new PrimitiveBinaryTranslationGeneration<uint>();
-            this._typeGenerations[typeof(UInt64Type)] = new PrimitiveBinaryTranslationGeneration<ulong>();
-            this._typeGenerations[typeof(FormIDType)] = new PrimitiveBinaryTranslationGeneration<FormID>()
+            this._typeGenerations[typeof(UInt8Type)] = new ByteBinaryTranslationGeneration();
+            this._typeGenerations[typeof(UInt16Type)] = new PrimitiveBinaryTranslationGeneration<ushort>(expectedLen: 2);
+            this._typeGenerations[typeof(UInt32Type)] = new PrimitiveBinaryTranslationGeneration<uint>(expectedLen: 4);
+            this._typeGenerations[typeof(UInt64Type)] = new PrimitiveBinaryTranslationGeneration<ulong>(expectedLen: 8);
+            this._typeGenerations[typeof(FormIDType)] = new PrimitiveBinaryTranslationGeneration<FormID>(expectedLen: 4)
             {
                 PreferDirectTranslation = false
             };
             this._typeGenerations[typeof(FormKeyType)] = new FormKeyBinaryTranslationGeneration();
-            this._typeGenerations[typeof(ModKeyType)] = new PrimitiveBinaryTranslationGeneration<ModKey>()
-            {
-                PreferDirectTranslation = false
-            };
+            this._typeGenerations[typeof(ModKeyType)] = new ModKeyBinaryTranslationGeneration();
             this._typeGenerations[typeof(FormIDLinkType)] = new FormIDLinkBinaryTranslationGeneration();
             this._typeGenerations[typeof(ListType)] = new ListBinaryTranslationGeneration();
             this._typeGenerations[typeof(LoquiListType)] = new ListBinaryTranslationGeneration();
@@ -245,6 +238,12 @@ namespace Mutagen.Bethesda.Generation
             await base.GenerateInTranslationWriteClass(obj, fg);
         }
 
+        public override async Task GenerateInVoid(ObjectGeneration obj, FileGeneration fg)
+        {
+            await base.GenerateInVoid(obj, fg);
+            await GenerateImportWrapper(obj, fg);
+        }
+
         public override async Task GenerateInTranslationCreateClass(ObjectGeneration obj, FileGeneration fg)
         {
             GenerateCustomCreatePartials(obj, fg);
@@ -320,7 +319,7 @@ namespace Mutagen.Bethesda.Generation
         {
             return GetEmbeddedFields(obj).Any();
         }
-        
+
         public bool HasAsyncStructs(ObjectGeneration obj, bool self)
         {
             IEnumerable<ObjectGeneration> enumer = obj.BaseClassTrail();
@@ -461,7 +460,6 @@ namespace Mutagen.Bethesda.Generation
                             }
 
                             if (!generator.ShouldGenerateCopyIn(field.Field)) continue;
-                            var dataSet = field.Field as DataType;
                             foreach (var gen in fieldData.GenerationTypes)
                             {
                                 LoquiType loqui = gen.Value as LoquiType;
@@ -472,65 +470,34 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 using (new BraceWrapper(fg))
                                 {
-                                    if (typelessStruct && fieldData.IsTriggerForObject)
-                                    {
-                                        if (dataSet != null)
+                                    await GenerateLastParsedShortCircuit(
+                                        obj: obj,
+                                        fg: fg,
+                                        field: field,
+                                        fieldData: fieldData,
+                                        toDo: async () =>
                                         {
-                                            fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return TryGet<int?>.Failure;");
-                                        }
-                                        else if (field.Field is SpecialParseType)
-                                        {
-                                            var objFields = obj.IterateFieldIndices(nonIntegrated: false).ToList();
-                                            var nextField = objFields.FirstOrDefault((i) => i.InternalIndex > field.InternalIndex);
-                                            var prevField = objFields.LastOrDefault((i) => i.InternalIndex < field.InternalIndex);
-                                            if (nextField.Field != null)
+                                            if (fieldData.Binary != BinaryGenerationType.DoNothing)
                                             {
-                                                fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){nextField.Field.IndexEnumName}) return TryGet<int?>.Failure;");
+                                                var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
+                                                if (groupMask)
+                                                {
+                                                    fg.AppendLine($"if (importMask?.{field.Field.Name} ?? true)");
+                                                }
+                                                using (new BraceWrapper(fg, doIt: groupMask))
+                                                {
+                                                    GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
+                                                }
+                                                if (groupMask)
+                                                {
+                                                    fg.AppendLine("else");
+                                                    using (new BraceWrapper(fg))
+                                                    {
+                                                        fg.AppendLine("frame.Position += contentLength;");
+                                                    }
+                                                }
                                             }
-                                            else if (prevField.Field != null)
-                                            {
-                                                fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){prevField.Field.IndexEnumName}) return TryGet<int?>.Failure;");
-                                            }
-                                        }
-                                        else
-                                        {
-                                            fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){field.Field.IndexEnumName}) return TryGet<int?>.Failure;");
-                                        }
-                                    }
-
-                                    if (fieldData.Binary != BinaryGenerationType.DoNothing)
-                                    {
-                                        var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
-                                        if (groupMask)
-                                        {
-                                            fg.AppendLine($"if (importMask?.{field.Field.Name} ?? true)");
-                                        }
-                                        using (new BraceWrapper(fg, doIt: groupMask))
-                                        {
-                                            GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
-                                        }
-                                        if (groupMask)
-                                        {
-                                            fg.AppendLine("else");
-                                            using (new BraceWrapper(fg))
-                                            {
-                                                fg.AppendLine("frame.Position += contentLength;");
-                                            }
-                                        }
-                                    }
-                                    if (dataSet != null)
-                                    {
-                                        fg.AppendLine($"return TryGet<int?>.Succeed((int){dataSet.SubFields.Last(f => f.IntegrateField).IndexEnumName});");
-                                    }
-                                    else if (field.Field is SpecialParseType
-                                        || field.Field is CustomLogic)
-                                    {
-                                        fg.AppendLine($"return TryGet<int?>.Succeed({(typelessStruct ? "lastParsed" : "null")});");
-                                    }
-                                    else
-                                    {
-                                        fg.AppendLine($"return TryGet<int?>.Succeed((int){field.Field.IndexEnumName});");
-                                    }
+                                        });
                                 }
                             }
                         }
@@ -635,6 +602,56 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
+        private static async Task GenerateLastParsedShortCircuit(
+            ObjectGeneration obj,
+            FileGeneration fg,
+            (int PublicIndex, int InternalIndex, TypeGeneration Field) field,
+            MutagenFieldData fieldData,
+            Func<Task> toDo)
+        {
+            var dataSet = field.Field as DataType;
+            var typelessStruct = obj.IsTypelessStruct();
+            if (typelessStruct && fieldData.IsTriggerForObject)
+            {
+                if (dataSet != null)
+                {
+                    fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return TryGet<int?>.Failure;");
+                }
+                else if (field.Field is SpecialParseType)
+                {
+                    var objFields = obj.IterateFieldIndices(nonIntegrated: false).ToList();
+                    var nextField = objFields.FirstOrDefault((i) => i.InternalIndex > field.InternalIndex);
+                    var prevField = objFields.LastOrDefault((i) => i.InternalIndex < field.InternalIndex);
+                    if (nextField.Field != null)
+                    {
+                        fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){nextField.Field.IndexEnumName}) return TryGet<int?>.Failure;");
+                    }
+                    else if (prevField.Field != null)
+                    {
+                        fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){prevField.Field.IndexEnumName}) return TryGet<int?>.Failure;");
+                    }
+                }
+                else
+                {
+                    fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){field.Field.IndexEnumName}) return TryGet<int?>.Failure;");
+                }
+            }
+            await toDo();
+            if (dataSet != null)
+            {
+                fg.AppendLine($"return TryGet<int?>.Succeed((int){dataSet.SubFields.Last(f => f.IntegrateField).IndexEnumName});");
+            }
+            else if (field.Field is SpecialParseType
+                || field.Field is CustomLogic)
+            {
+                fg.AppendLine($"return TryGet<int?>.Succeed({(typelessStruct ? "lastParsed" : "null")});");
+            }
+            else
+            {
+                fg.AppendLine($"return TryGet<int?>.Succeed((int){field.Field.IndexEnumName});");
+            }
+        }
+
         private void GenerateCustomBinaryEndWritePartial(ObjectGeneration obj, FileGeneration fg)
         {
             var data = obj.GetObjectData();
@@ -703,7 +720,7 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
         }
-        
+
         public static void GenerateModLinking(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
@@ -1417,6 +1434,584 @@ namespace Mutagen.Bethesda.Generation
                 }
                 fg.AppendLine();
             }
+        }
+
+        protected async Task GenerateImportWrapper(ObjectGeneration obj, FileGeneration fg)
+        {
+            if (obj.Name != "Condition"
+                && obj.Name != "MajorRecord"
+                && obj.Name != "ModStats"
+                && obj.Name != "ModHeader"
+                && obj.Name != "OblivionMajorRecord"
+                && obj.Name != "SkyrimMajorRecord"
+                && obj.Name != "MasterReference"
+                && !obj.Name.Contains("GameSetting")
+                && !obj.Name.Contains("Global")
+                && obj.Name != "Grass"
+                && obj.Name != "Model"
+                && obj.Name != "Group"
+                && obj.Name != "OblivionMod"
+                && obj.Name != "Class"
+                && obj.Name != "ClassTraining"
+                && obj.Name != "Faction"
+                && obj.Name != "Relation"
+                && obj.Name != "Rank"
+                && obj.Name != "Hair"
+                && obj.Name != "Eye"
+                && obj.Name != "Race"
+                && obj.Name != "RaceRelation"
+                && obj.Name != "FacePart"
+                && obj.Name != "SkillBoost"
+                && obj.Name != "GenderedBodyData"
+                && obj.Name != "RaceStatsGendered"
+                && obj.Name != "RaceHair"
+                && obj.Name != "RaceVoices"
+                && obj.Name != "FaceGenData"
+                && obj.Name != "SkillBoost"
+                && obj.Name != "RaceVoices"
+                && obj.Name != "RaceHair"
+                && obj.Name != "RaceStats"
+                && obj.Name != "FacePart"
+                && obj.Name != "GenderedBodyData"
+                && obj.Name != "FaceGenData"
+                && obj.Name != "RaceRelation"
+                && obj.Name != "BodyData"
+                && obj.Name != "BodyPart"
+                && obj.Name != "Sound"
+                && obj.Name != "SoundData"
+                && obj.Name != "SoundDataExtended"
+                ) return;
+
+            var dataAccessor = new Accessor("_data");
+            var packageAccessor = new Accessor("_package");
+            var metaAccessor = new Accessor("_package.Meta");
+            var objData = obj.GetObjectData();
+            var needsMasters = await obj.GetNeedsMasters();
+            var anyHasRecordTypes = (await obj.EntireClassTree()).Any(c => HasRecordTypeFields(c));
+
+            using (var args = new ClassWrapper(fg, $"{BinaryWrapperClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}"))
+            {
+                args.Partial = true;
+                args.BaseClass = obj.HasLoquiBaseObject ? BinaryWrapperClassName(obj.BaseClass) : null;
+                args.Interfaces.Add(obj.Interface(getter: true, internalInterface: obj.HasInternalInterface));
+                args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
+            }
+            using (new BraceWrapper(fg))
+            {
+                obj.GenerateRouting(fg);
+                obj.GenerateGetterInterfaceImplementations(fg);
+                if (obj.GetObjectType() == ObjectType.Mod)
+                {
+                    fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{obj.GetObjectData().GameMode};");
+                    fg.AppendLine($"IReadOnlyCache<T, FormKey> {nameof(IModGetter)}.GetGroup<T>() => this.GetGroup<T>();");
+                    using (var args = new FunctionWrapper(fg,
+                        $"void {nameof(IModGetter)}.WriteToBinary"))
+                    {
+                        args.Add("string path");
+                        args.Add($"{nameof(ModKey)} modKey");
+                    }
+                    using (new BraceWrapper(fg))
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"this.WriteToBinary"))
+                        {
+                            args.AddPassArg("path");
+                            args.AddPassArg($"modKey");
+                        }
+                    }
+                    fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
+                    fg.AppendLine($"IReadOnlyCache<{nameof(IMajorRecordInternalGetter)}, {nameof(FormKey)}> {nameof(IModGetter)}.MajorRecords => throw new NotImplementedException();");
+                }
+
+                foreach (var transl in obj.ProtoGen.Gen.GenerationModules
+                    .WhereCastable<IGenerationModule, ITranslationModule>())
+                {
+                    if (transl.DoTranslationInterface(obj))
+                    {
+                        await transl.GenerateTranslationInterfaceImplementation(obj, fg);
+                    }
+                }
+
+                if (obj.IsTopClass)
+                {
+                    fg.AppendLine($"protected ReadOnlyMemorySlice<byte> {dataAccessor};");
+                    fg.AppendLine($"protected {nameof(BinaryWrapperFactoryPackage)} {packageAccessor};");
+                }
+
+                if (obj.GetObjectType() == ObjectType.Mod)
+                {
+                    fg.AppendLine($"public {nameof(ModKey)} ModKey {{ get; }}");
+                }
+
+                fg.AppendLine();
+
+                int passedLength = 0;
+                // Get passed length of all base classes, not including major record
+                if (obj.HasLoquiBaseObject)
+                {
+                    foreach (var field in obj.BaseClass.IterateFields(
+                        expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
+                        nonIntegrated: true,
+                        includeBaseClass: true))
+                    {
+                        if (await field.ObjectGen.IsMajorRecord()) continue;
+                        if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
+                        var data = field.GetFieldData();
+                        switch (data.Binary)
+                        {
+                            case BinaryGenerationType.Custom:
+                                passedLength += CustomLogic.ExpectedLength(obj, field).Value;
+                                continue;
+                            case BinaryGenerationType.Normal:
+                                break;
+                            default:
+                                continue;
+                        }
+                        passedLength += typeGen.GetPassedAmount(obj, field);
+                    }
+                }
+
+                foreach (var field in obj.IterateFields(
+                    expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
+                    nonIntegrated: true))
+                {
+                    if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
+                    using (new RegionWrapper(fg, field.Name)
+                    {
+                        AppendExtraLine = false,
+                        SkipIfOnlyOneLine = true
+                    })
+                    {
+                        var data = field.GetFieldData();
+                        switch (data.Binary)
+                        {
+                            case BinaryGenerationType.Custom:
+                                CustomLogic.GenerateFillForWrapper(
+                                    fg,
+                                    field,
+                                    dataAccessor,
+                                    ref passedLength,
+                                    doMasters: needsMasters);
+                                continue;
+                            case BinaryGenerationType.DoNothing:
+                            case BinaryGenerationType.NoGeneration:
+                                continue;
+                            default:
+                                break;
+                        }
+                        typeGen.GenerateWrapperFields(
+                            fg,
+                            obj,
+                            field,
+                            dataAccessor,
+                            passedLength);
+                        passedLength += typeGen.GetPassedAmount(obj, field);
+                    }
+                }
+
+                // Get complete passed length of all fields
+                passedLength = 0;
+                foreach (var field in obj.IterateFields(
+                    expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
+                    nonIntegrated: true,
+                    includeBaseClass: true))
+                {
+                    if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
+                    var data = field.GetFieldData();
+                    switch (data.Binary)
+                    {
+                        case BinaryGenerationType.Normal:
+                            break;
+                        default:
+                            continue;
+                    }
+                    passedLength += typeGen.GetPassedAmount(obj, field);
+                }
+
+                fg.AppendLine($"partial void CustomCtor({nameof(BinaryMemoryReadStream)} stream, int offset);");
+                fg.AppendLine();
+
+                using (var args = new FunctionWrapper(fg,
+                    $"protected {BinaryWrapperClassName(obj)}"))
+                {
+                    args.Add($"ReadOnlyMemorySlice<byte> bytes");
+                    if (obj.GetObjectType() == ObjectType.Mod)
+                    {
+                        args.Add("ModKey modKey");
+                    }
+                    else
+                    {
+                        args.Add($"{nameof(BinaryWrapperFactoryPackage)} package");
+                    }
+                }
+                if (obj.HasLoquiBaseObject)
+                {
+                    using (new DepthWrapper(fg))
+                    {
+                        using (var args = new FunctionWrapper(fg,
+                            ": base"))
+                        {
+                            args.AddPassArg("bytes");
+                            if (obj.GetObjectType() != ObjectType.Mod)
+                            {
+                                args.AddPassArg("package");
+                            }
+                        }
+                    }
+                }
+                using (new BraceWrapper(fg))
+                {
+                    if (obj.IsTopClass)
+                    {
+                        fg.AppendLine($"this.{dataAccessor} = bytes;");
+                        if (obj.GetObjectType() != ObjectType.Mod)
+                        {
+                            fg.AppendLine($"this.{packageAccessor} = package;");
+                        }
+                        else
+                        {
+                            fg.AppendLine($"this.{packageAccessor} = new {nameof(BinaryWrapperFactoryPackage)}()");
+                            using (new BraceWrapper(fg) { AppendSemicolon = true })
+                            {
+                                fg.AppendLine($"Meta = {nameof(MetaDataConstants)}.Get(this.GameMode)");
+                            }
+                        }
+                    }
+                    if (obj.GetObjectType() == ObjectType.Mod)
+                    {
+                        fg.AppendLine("this.ModKey = modKey;");
+                    }
+                    foreach (var field in obj.IterateFields(
+                        expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
+                        nonIntegrated: true))
+                    {
+                        if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
+                        typeGen.GenerateWrapperCtor(
+                            fg: fg,
+                            objGen: obj,
+                            typeGen: field);
+                    }
+                }
+                fg.AppendLine();
+
+                if (!obj.Abstract)
+                {
+                    using (var args = new FunctionWrapper(fg,
+                        $"public static {this.BinaryWrapperClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)} {obj.Name}Factory"))
+                    {
+                        if (obj.GetObjectType() == ObjectType.Mod)
+                        {
+                            args.Add($"ReadOnlyMemorySlice<byte> bytes");
+                        }
+                        else
+                        {
+                            args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                        }
+                        if (obj.GetObjectType() == ObjectType.Mod)
+                        {
+                            args.Add("ModKey modKey");
+                        }
+                        else
+                        {
+                            args.Add($"{nameof(BinaryWrapperFactoryPackage)} package");
+                        }
+                    }
+                    using (new BraceWrapper(fg))
+                    {
+                        sbyte headerLen = 0;
+                        using (var args = new ArgsWrapper(fg,
+                            $"var ret = new {BinaryWrapperClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}"))
+                        {
+                            switch (obj.GetObjectType())
+                            {
+                                case ObjectType.Record:
+                                    headerLen = Mutagen.Bethesda.Constants.RECORD_LENGTH;
+                                    break;
+                                case ObjectType.Group:
+                                    headerLen = Mutagen.Bethesda.Constants.RECORD_LENGTH;
+                                    break;
+                                case ObjectType.Subrecord:
+                                    headerLen = Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                                    break;
+                                case ObjectType.Mod:
+                                    break;
+                                default:
+                                    throw new NotImplementedException();
+                            }
+                            if (obj.IsTypelessStruct())
+                            {
+                                if (anyHasRecordTypes)
+                                {
+                                    args.Add($"bytes: stream.RemainingMemory");
+                                }
+                                else
+                                {
+                                    args.Add($"bytes: stream.RemainingMemory.Slice(0, {passedLength})");
+                                }
+                            }
+                            else
+                            {
+                                switch (obj.GetObjectType())
+                                {
+                                    case ObjectType.Record:
+                                        args.Add($"bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta)");
+                                        break;
+                                    case ObjectType.Group:
+                                        args.Add($"bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta)");
+                                        break;
+                                    case ObjectType.Subrecord:
+                                        args.Add($"bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta)");
+                                        break;
+                                    case ObjectType.Mod:
+                                        args.Add($"bytes: bytes");
+                                        break;
+                                    default:
+                                        throw new NotImplementedException();
+                                }
+                            }
+                            if (obj.GetObjectType() == ObjectType.Mod)
+                            {
+                                args.AddPassArg("modKey");
+                            }
+                            else
+                            {
+                                args.AddPassArg("package");
+                            }
+                        }
+                        if (obj.GetObjectType() == ObjectType.Mod)
+                        {
+                            fg.AppendLine($"var stream = new {nameof(BinaryMemoryReadStream)}(bytes);");
+                        }
+                        if (obj.IsTypelessStruct())
+                        {
+                            fg.AppendLine($"int offset = stream.Position;");
+                        }
+                        else
+                        {
+                            switch (obj.GetObjectType())
+                            {
+                                case ObjectType.Subrecord:
+                                    fg.AppendLine($"var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;");
+                                    fg.AppendLine($"int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;");
+                                    break;
+                                case ObjectType.Record:
+                                    fg.AppendLine($"var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;");
+                                    fg.AppendLine($"int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;");
+                                    break;
+                                case ObjectType.Group:
+                                    fg.AppendLine($"var finalPos = stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength;");
+                                    fg.AppendLine($"int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;");
+                                    break;
+                                case ObjectType.Mod:
+                                    break;
+                                default:
+                                    throw new NotImplementedException();
+                            }
+                        }
+                        if (anyHasRecordTypes)
+                        {
+                            if (obj.GetObjectType() != ObjectType.Mod
+                                && !obj.IsTypelessStruct())
+                            {
+                                switch (obj.GetObjectType())
+                                {
+                                    case ObjectType.Subrecord:
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + package.Meta.SubConstants.TypeAndLengthLength;");
+                                        break;
+                                    case ObjectType.Record:
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + package.Meta.MajorConstants.TypeAndLengthLength;");
+                                        break;
+                                    case ObjectType.Group:
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + package.Meta.GroupConstants.TypeAndLengthLength;");
+                                        break;
+                                    case ObjectType.Mod:
+                                        break;
+                                    default:
+                                        throw new NotImplementedException();
+                                }
+                                fg.AppendLine($"ret.CustomCtor(stream, offset);");
+                            }
+                            else
+                            {
+                                fg.AppendLine($"ret.CustomCtor(stream, offset: 0);");
+                            }
+                            string call;
+                            switch (obj.GetObjectType())
+                            {
+                                case ObjectType.Subrecord:
+                                case ObjectType.Record:
+                                    if (obj.IsTypelessStruct())
+                                    {
+                                        call = $"{nameof(UtilityTranslation.FillTypelessSubrecordTypesForWrapper)}";
+                                    }
+                                    else
+                                    {
+                                        call = $"{nameof(UtilityTranslation.FillSubrecordTypesForWrapper)}";
+                                    }
+                                    break;
+                                case ObjectType.Group:
+                                    call = $"{nameof(UtilityTranslation.FillRecordTypesForWrapper)}";
+                                    break;
+                                case ObjectType.Mod:
+                                    call = $"{nameof(UtilityTranslation.FillModTypesForWrapper)}";
+                                    break;
+                                default:
+                                    throw new NotImplementedException();
+                            }
+                            using (var args = new ArgsWrapper(fg,
+                                $"UtilityTranslation.{call}"))
+                            {
+                                args.Add($"stream: stream");
+                                if (obj.GetObjectType() != ObjectType.Mod)
+                                {
+                                    if (!obj.IsTypelessStruct())
+                                    {
+                                        args.Add($"finalPos: finalPos");
+                                    }
+                                    args.Add($"offset: offset");
+                                }
+                                args.Add($"meta: ret.{metaAccessor}");
+                                args.Add($"fill: ret.FillRecordType");
+                            }
+                        }
+                        else
+                        {
+                            if (!obj.IsTypelessStruct())
+                            {
+                                fg.AppendLine($"stream.Position += 0x{(passedLength + headerLen).ToString("X")};");
+                            }
+                            fg.AppendLine($"ret.CustomCtor(stream, offset);");
+                        }
+                        fg.AppendLine("return ret;");
+                    }
+                    fg.AppendLine();
+                }
+
+                if (HasRecordTypeFields(obj))
+                {
+                    using (var args = new FunctionWrapper(fg,
+                        $"public{await obj.FunctionOverride(async b => HasRecordTypeFields(b))}TryGet<int?> FillRecordType"))
+                    {
+                        args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                        args.Add($"int offset");
+                        args.Add("RecordType type");
+                        args.Add("int? lastParsed");
+                    }
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine("switch (type.TypeInt)");
+                        using (new BraceWrapper(fg))
+                        {
+                            foreach (var field in obj.IterateFieldIndices(
+                                expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
+                                nonIntegrated: true))
+                            {
+                                // ToDo
+                                // Remove
+                                if (field.Field.Name == "Skills")
+                                    break;
+
+                                if (!field.Field.TryGetFieldData(out var fieldData)
+                                    || !fieldData.HasTrigger
+                                    || fieldData.TriggeringRecordTypes.Count == 0) continue;
+                                if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
+                                if (field.Field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
+                                if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
+                                {
+                                    throw new ArgumentException("Unsupported type generator: " + field.Field);
+                                }
+
+                                if (!generator.ShouldGenerateCopyIn(field.Field)) continue;
+                                var dataSet = field.Field as DataType;
+                                foreach (var gen in fieldData.GenerationTypes)
+                                {
+                                    LoquiType loqui = gen.Value as LoquiType;
+                                    if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
+                                    foreach (var trigger in gen.Key)
+                                    {
+                                        fg.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
+                                    }
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        await GenerateLastParsedShortCircuit(
+                                            obj: obj,
+                                            fg: fg,
+                                            field: field,
+                                            fieldData: fieldData,
+                                            toDo: async () =>
+                                            {
+                                                await generator.GenerateWrapperRecordTypeParse(
+                                                    fg: fg,
+                                                    objGen: obj,
+                                                    typeGen: gen.Value,
+                                                    locationAccessor: "(stream.Position - offset)");
+                                                if (obj.GetObjectType() == ObjectType.Mod
+                                                    && field.Field.Name == "ModHeader")
+                                                {
+                                                    using (var args = new ArgsWrapper(fg,
+                                                        "_package.MasterReferences = new MasterReferences"))
+                                                    {
+                                                        args.Add((subFg) =>
+                                                        {
+                                                            subFg.AppendLine("this.ModHeader.MasterReferences.Select(");
+                                                            using (new DepthWrapper(subFg))
+                                                            {
+                                                                subFg.AppendLine($"master => new {nameof(MasterReference)}()");
+                                                                using (new BraceWrapper(subFg)
+                                                                {
+                                                                    AppendParenthesis = true
+                                                                })
+                                                                {
+                                                                    subFg.AppendLine("Master = master.Master,");
+                                                                    subFg.AppendLine("FileSize = master.FileSize,");
+                                                                    subFg.AppendLine(" FileSize_IsSet = master.FileSize_IsSet");
+                                                                }
+                                                                subFg.AppendLine(".ToList()");
+                                                            }
+                                                        });
+                                                        args.Add("this.ModKey");
+                                                    }
+                                                }
+                                            });
+                                    }
+                                }
+                            }
+                            fg.AppendLine("default:");
+                            using (new DepthWrapper(fg))
+                            {
+                                if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b)))
+                                {
+                                    using (var args = new ArgsWrapper(fg,
+                                        "return base.FillRecordType"))
+                                    {
+                                        args.AddPassArg("stream");
+                                        args.AddPassArg("offset");
+                                        args.AddPassArg("type");
+                                        args.AddPassArg("lastParsed");
+                                    }
+                                }
+                                else
+                                {
+                                    var failOnUnknown = obj.GetObjectData().FailOnUnknown;
+                                    if (obj.GetObjectType() == ObjectType.Subrecord)
+                                    {
+                                        fg.AppendLine($"return TryGet<int?>.Failure;");
+                                    }
+                                    else if (failOnUnknown)
+                                    {
+                                        fg.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {frame.Position}\");");
+                                    }
+                                    else
+                                    {
+                                        fg.AppendLine($"return TryGet<int?>.Succeed(null);");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            fg.AppendLine();
         }
     }
 }

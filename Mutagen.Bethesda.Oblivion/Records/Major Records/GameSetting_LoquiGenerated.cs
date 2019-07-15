@@ -73,26 +73,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is GameSetting rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IGameSettingInternalGetter rhs)) return false;
+            return ((GameSettingCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(GameSetting rhs)
+        public bool Equals(GameSetting obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            return true;
+            return ((GameSettingCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((GameSettingCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => GameSettingXmlWriteTranslation.Instance;
@@ -494,6 +486,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IGameSettingInternalGetter item,
+            IGameSettingInternalGetter rhs)
+        {
+            return ((GameSettingCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -841,6 +842,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IGameSettingInternalGetter lhs,
+            IGameSettingInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGameSettingInternalGetter)lhs,
+                rhs: rhs as IGameSettingInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGameSettingInternalGetter)lhs,
+                rhs: rhs as IGameSettingInternalGetter);
+        }
+
+        public virtual int GetHashCode(IGameSettingInternalGetter item)
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGameSettingInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGameSettingInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1374,6 +1424,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class GameSettingBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IGameSettingInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => GameSetting_Registration.Instance;
+        public new static GameSetting_Registration Registration => GameSetting_Registration.Instance;
+        protected override object CommonInstance => GameSettingCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => GameSettingXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GameSettingBinaryWriteTranslation.Instance;
+
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GameSettingBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+    }
 
     #endregion
 

@@ -126,44 +126,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Sound rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ISoundInternalGetter rhs)) return false;
+            return ((SoundCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Sound rhs)
+        public bool Equals(Sound obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (File_IsSet != rhs.File_IsSet) return false;
-            if (File_IsSet)
-            {
-                if (!string.Equals(this.File, rhs.File)) return false;
-            }
-            if (Data_IsSet != rhs.Data_IsSet) return false;
-            if (Data_IsSet)
-            {
-                if (!object.Equals(this.Data, rhs.Data)) return false;
-            }
-            return true;
+            return ((SoundCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (File_IsSet)
-            {
-                ret = HashHelper.GetHashCode(File).CombineHashCode(ret);
-            }
-            if (Data_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((SoundCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => SoundXmlWriteTranslation.Instance;
@@ -811,6 +785,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this ISoundInternalGetter item,
+            ISoundInternalGetter rhs)
+        {
+            return ((SoundCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1296,6 +1279,73 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISoundInternalGetter lhs,
+            ISoundInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.File_IsSet != rhs.File_IsSet) return false;
+            if (lhs.File_IsSet)
+            {
+                if (!string.Equals(lhs.File, rhs.File)) return false;
+            }
+            if (lhs.Data_IsSet != rhs.Data_IsSet) return false;
+            if (lhs.Data_IsSet)
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISoundInternalGetter)lhs,
+                rhs: rhs as ISoundInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISoundInternalGetter)lhs,
+                rhs: rhs as ISoundInternalGetter);
+        }
+
+        public virtual int GetHashCode(ISoundInternalGetter item)
+        {
+            int ret = 0;
+            if (item.File_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.File).CombineHashCode(ret);
+            }
+            if (item.Data_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Data).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISoundInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISoundInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -2017,6 +2067,99 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class SoundBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        ISoundInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
+        public new static Sound_Registration Registration => Sound_Registration.Instance;
+        protected override object CommonInstance => SoundCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => SoundXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SoundBinaryWriteTranslation.Instance;
+
+        #region File
+        private int? _FileLocation;
+        public bool File_IsSet => _FileLocation.HasValue;
+        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FileLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Data
+        public ISoundDataInternalGetter Data { get; private set; }
+        public bool Data_IsSet => Data != null;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected SoundBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static SoundBinaryWrapper SoundFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new SoundBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4D414E46: // FNAM
+                {
+                    _FileLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.File);
+                }
+                case 0x44444E53: // SNDD
+                {
+                    this.Data = SoundDataBinaryWrapper.SoundDataFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
+                }
+                case 0x58444E53: // SNDX
+                {
+                    this.Data = SoundDataExtendedBinaryWrapper.SoundDataExtendedFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
 
     #endregion
 

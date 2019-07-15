@@ -261,61 +261,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Grass rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IGrassInternalGetter rhs)) return false;
+            return ((GrassCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Grass rhs)
+        public bool Equals(Grass obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (this.Density != rhs.Density) return false;
-            if (this.MinSlope != rhs.MinSlope) return false;
-            if (this.MaxSlope != rhs.MaxSlope) return false;
-            if (this.Fluff1 != rhs.Fluff1) return false;
-            if (this.UnitFromWaterAmount != rhs.UnitFromWaterAmount) return false;
-            if (this.Fluff2 != rhs.Fluff2) return false;
-            if (this.UnitFromWaterMode != rhs.UnitFromWaterMode) return false;
-            if (!this.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
-            if (!this.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
-            if (!this.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
-            if (!this.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((GrassCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Density).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MinSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MaxSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff1).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(UnitFromWaterAmount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff2).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(UnitFromWaterMode).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PositionRange).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HeightRange).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ColorRange).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(WavePeriod).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((GrassCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => GrassXmlWriteTranslation.Instance;
@@ -1160,6 +1117,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IGrassInternalGetter item,
+            IGrassInternalGetter rhs)
+        {
+            return ((GrassCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -2044,6 +2010,90 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IGrassInternalGetter lhs,
+            IGrassInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Density != rhs.Density) return false;
+            if (lhs.MinSlope != rhs.MinSlope) return false;
+            if (lhs.MaxSlope != rhs.MaxSlope) return false;
+            if (lhs.Fluff1 != rhs.Fluff1) return false;
+            if (lhs.UnitFromWaterAmount != rhs.UnitFromWaterAmount) return false;
+            if (lhs.Fluff2 != rhs.Fluff2) return false;
+            if (lhs.UnitFromWaterMode != rhs.UnitFromWaterMode) return false;
+            if (!lhs.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
+            if (!lhs.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
+            if (!lhs.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
+            if (!lhs.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGrassInternalGetter)lhs,
+                rhs: rhs as IGrassInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGrassInternalGetter)lhs,
+                rhs: rhs as IGrassInternalGetter);
+        }
+
+        public virtual int GetHashCode(IGrassInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Density).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MinSlope).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaxSlope).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff1).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.UnitFromWaterAmount).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff2).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.UnitFromWaterMode).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PositionRange).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HeightRange).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ColorRange).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.WavePeriod).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGrassInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGrassInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -3549,6 +3599,134 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class GrassBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IGrassInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
+        public new static Grass_Registration Registration => Grass_Registration.Instance;
+        protected override object CommonInstance => GrassCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGrassInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => GrassXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GrassBinaryWriteTranslation.Instance;
+
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        private int? _DATALocation;
+        public Grass.DATADataType DATADataTypeState { get; private set; }
+        public Byte Density => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 0] : default;
+        public Byte MinSlope => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 1] : default;
+        public Byte MaxSlope => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 2] : default;
+        public Byte Fluff1 => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 3] : default;
+        #region UnitFromWaterAmount
+        private int _UnitFromWaterAmountLocation => _DATALocation.Value + 4;
+        private bool _UnitFromWaterAmount_IsSet => _DATALocation.HasValue;
+        public UInt16 UnitFromWaterAmount => _UnitFromWaterAmount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_UnitFromWaterAmountLocation, 2)) : default;
+        #endregion
+        #region Fluff2
+        private int _Fluff2Location => _DATALocation.Value + 6;
+        private bool _Fluff2_IsSet => _DATALocation.HasValue;
+        public UInt16 Fluff2 => _Fluff2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_Fluff2Location, 2)) : default;
+        #endregion
+        #region UnitFromWaterMode
+        private int _UnitFromWaterModeLocation => _DATALocation.Value + 8;
+        private bool _UnitFromWaterMode_IsSet => _DATALocation.HasValue;
+        public Grass.UnitFromWaterType UnitFromWaterMode => _UnitFromWaterMode_IsSet ? (Grass.UnitFromWaterType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_UnitFromWaterModeLocation, 4)) : default;
+        #endregion
+        #region PositionRange
+        private int _PositionRangeLocation => _DATALocation.Value + 12;
+        private bool _PositionRange_IsSet => _DATALocation.HasValue;
+        public Single PositionRange => _PositionRange_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_PositionRangeLocation, 4)) : default;
+        #endregion
+        #region HeightRange
+        private int _HeightRangeLocation => _DATALocation.Value + 16;
+        private bool _HeightRange_IsSet => _DATALocation.HasValue;
+        public Single HeightRange => _HeightRange_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HeightRangeLocation, 4)) : default;
+        #endregion
+        #region ColorRange
+        private int _ColorRangeLocation => _DATALocation.Value + 20;
+        private bool _ColorRange_IsSet => _DATALocation.HasValue;
+        public Single ColorRange => _ColorRange_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorRangeLocation, 4)) : default;
+        #endregion
+        #region WavePeriod
+        private int _WavePeriodLocation => _DATALocation.Value + 24;
+        private bool _WavePeriod_IsSet => _DATALocation.HasValue;
+        public Single WavePeriod => _WavePeriod_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WavePeriodLocation, 4)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation.Value + 28;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Grass.GrassFlag Flags => _Flags_IsSet ? (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GrassBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static GrassBinaryWrapper GrassFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new GrassBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = Grass.DATADataType.Has;
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Flags);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
 
     #endregion
 

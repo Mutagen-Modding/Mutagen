@@ -13,6 +13,7 @@ namespace Mutagen.Bethesda.Generation
     {
         public ByteArrayBinaryTranslationGeneration()
             : base(nullable: true,
+                  expectedLen: null,
                   typeName: "ByteArray")
         {
         }
@@ -110,6 +111,61 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"length: {data.Length.Value}");
                 }
             }
+        }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor, 
+            int currentPosition,
+            DataType dataType = null)
+        {
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            if (data.HasTrigger)
+            {
+                fg.AppendLine($"private int? _{typeGen.Name}Location;");
+                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+            }
+            if (data.RecordType.HasValue)
+            {
+                if (dataType != null)
+                {
+                    throw new ArgumentException();
+                }
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}(_data, _{typeGen.Name}Location.Value, _package.Meta).ToArray() : default;");
+            }
+            else
+            {
+                if (dataType == null)
+                {
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {dataAccessor}.Span.Slice({currentPosition}, {data.Length.Value}).ToArray();");
+                }
+                else
+                {
+                    DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(objGen, typeGen).Value}).ToArray() : default;");
+                }
+            }
+        }
+
+        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            if (!data.RecordType.HasValue)
+            {
+                return checked((int)data.Length.Value);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            ByteArrayType bType = typeGen as ByteArrayType;
+            return bType.Length;
         }
     }
 }

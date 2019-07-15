@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,12 +42,12 @@ namespace Mutagen.Bethesda.Generation
             return false;
         }
 
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             var loquiGen = typeGen as LoquiType;
             if (loquiGen.CanStronglyType)
             {
-                return $"LoquiBinaryTranslation<{loquiGen.TypeName}>.Instance";
+                return $"LoquiBinaryTranslation<{loquiGen.TypeName(getter: getter)}>.Instance";
             }
             else
             {
@@ -141,7 +142,7 @@ namespace Mutagen.Bethesda.Generation
                         if (loquiGen.SingletonType == SingletonLevel.Singleton)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"var tmp{typeGen.Name} = {Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{loquiGen.TypeName}.{this.Module.CreateFromPrefix}{ModNickname}"))
+                                $"var tmp{typeGen.Name} = {Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{loquiGen.TypeName(getter: false)}.{this.Module.CreateFromPrefix}{ModNickname}"))
                             {
                                 args.Add($"frame: {frameAccessor}");
                                 args.Add($"errorMask: {errorMaskAccessor}");
@@ -233,6 +234,98 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
                 }
+            }
+        }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            int currentPosition,
+            DataType dataType)
+        {
+            LoquiType loqui = typeGen as LoquiType;
+            switch (loqui.SingletonType)
+            {
+                case SingletonLevel.None:
+                    if (dataType != null)
+                    {
+                        throw new NotImplementedException();
+                    }
+                    if (loqui.GetFieldData()?.HasTrigger ?? false)
+                    {
+                        fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} {{ get; private set; }}");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} => {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice({currentPosition})), _package);");
+                    }
+                    break;
+                case SingletonLevel.NotNull:
+                case SingletonLevel.Singleton:
+                    if (dataType == null)
+                    {
+                        fg.AppendLine($"private {loqui.Interface(getter: true)} _{typeGen.Name};");
+                    }
+                    else
+                    {
+                        DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                        fg.AppendLine($"private {loqui.Interface(getter: true)} _{typeGen.Name} => _{typeGen.Name}_IsSet ? {loqui.TargetObjectGeneration.Name}BinaryWrapper.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice(_{typeGen.Name}Location)), _package) : default;");
+                    }
+                    fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} => _{typeGen.Name} ?? new {loqui.DirectTypeName}({(loqui.ThisConstruction ? "this" : null)});");
+                    break;
+                default:
+                    break;
+            }
+            if (typeGen.HasBeenSet)
+            {
+                fg.AppendLine($"public bool {typeGen.Name}_IsSet => {typeGen.Name} != null;");
+            }
+        }
+
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            LoquiType loqui = typeGen as LoquiType;
+            var sum = 0;
+            foreach (var item in loqui.TargetObjectGeneration.IterateFields(includeBaseClass: true))
+            {
+                if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
+                sum += gen.ExpectedLength(objGen, item) ?? 0;
+            }
+            return sum;
+        }
+
+        public override async Task GenerateWrapperRecordTypeParse(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor locationAccessor)
+        {
+            LoquiType loqui = typeGen as LoquiType;
+            string accessor;
+            switch (loqui.SingletonType)
+            {
+                case SingletonLevel.None:
+                    accessor = typeGen.Name;
+                    break;
+                case SingletonLevel.NotNull:
+                case SingletonLevel.Singleton:
+                    accessor = $"_{typeGen.Name}";
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            var data = loqui.GetFieldData();
+            if (data.MarkerType.HasValue)
+            {
+                fg.AppendLine("stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker");
+            }
+            using (var args = new ArgsWrapper(fg,
+                $"this.{accessor} = {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}{loqui.GenericTypes(getter: true)}.{loqui.TargetObjectGeneration.Name}Factory"))
+            {
+                args.Add($"stream: stream");
+                args.Add($"package: _package");
             }
         }
     }

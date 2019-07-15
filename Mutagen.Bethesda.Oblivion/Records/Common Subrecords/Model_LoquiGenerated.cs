@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => Hashes_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IModelGetter.Hashes => this.Hashes;
+        ReadOnlySpan<Byte> IModelGetter.Hashes => this.Hashes;
         public void Hashes_Set(
             Byte[] value,
             bool markSet = true)
@@ -117,37 +117,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Model rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IModelGetter rhs)) return false;
+            return ((ModelCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Model rhs)
+        public bool Equals(Model obj)
         {
-            if (rhs == null) return false;
-            if (!string.Equals(this.File, rhs.File)) return false;
-            if (!this.BoundRadius.EqualsWithin(rhs.BoundRadius)) return false;
-            if (Hashes_IsSet != rhs.Hashes_IsSet) return false;
-            if (Hashes_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.Hashes, rhs.Hashes)) return false;
-            }
-            return true;
+            return ((ModelCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(File).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BoundRadius).CombineHashCode(ret);
-            if (Hashes_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Hashes).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((ModelCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => ModelXmlWriteTranslation.Instance;
@@ -652,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Hashes
-        Byte[] Hashes { get; }
+        ReadOnlySpan<Byte> Hashes { get; }
         bool Hashes_IsSet { get; }
 
         #endregion
@@ -720,6 +701,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IModelGetter item,
+            IModelGetter rhs)
+        {
+            return ((ModelCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1053,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.File = string.Equals(item.File, rhs.File);
             ret.BoundRadius = item.BoundRadius.EqualsWithin(rhs.BoundRadius);
-            ret.Hashes = item.Hashes_IsSet == rhs.Hashes_IsSet && ByteExt.EqualsFast(item.Hashes, rhs.Hashes);
+            ret.Hashes = item.Hashes_IsSet == rhs.Hashes_IsSet && MemoryExtensions.SequenceEqual(item.Hashes, rhs.Hashes);
         }
 
         public string ToString(
@@ -1110,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Hashes ?? true)
             {
-                fg.AppendLine($"Hashes => {item.Hashes}");
+                fg.AppendLine($"Hashes => {SpanExt.ToHexString(item.Hashes)}");
             }
         }
 
@@ -1130,6 +1120,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.BoundRadius = true;
             mask.Hashes = item.Hashes_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IModelGetter lhs,
+            IModelGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!string.Equals(lhs.File, rhs.File)) return false;
+            if (!lhs.BoundRadius.EqualsWithin(rhs.BoundRadius)) return false;
+            if (lhs.Hashes_IsSet != rhs.Hashes_IsSet) return false;
+            if (lhs.Hashes_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Hashes, rhs.Hashes)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IModelGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.File).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BoundRadius).CombineHashCode(ret);
+            if (item.Hashes_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Hashes).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1973,6 +1995,97 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class ModelBinaryWrapper : IModelGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
+        public static Model_Registration Registration => Model_Registration.Instance;
+        protected object CommonInstance => ModelCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModelGetter)rhs, include);
+
+        protected object XmlWriteTranslator => ModelXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region File
+        private int? _FileLocation;
+        public bool File_IsSet => _FileLocation.HasValue;
+        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FileLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region BoundRadius
+        private int? _BoundRadiusLocation;
+        public bool BoundRadius_IsSet => _BoundRadiusLocation.HasValue;
+        public Single BoundRadius => _BoundRadiusLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _BoundRadiusLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Hashes
+        private int? _HashesLocation;
+        public bool Hashes_IsSet => _HashesLocation.HasValue;
+        public ReadOnlySpan<Byte> Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _HashesLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ModelBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static ModelBinaryWrapper ModelFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new ModelBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Model_FieldIndex.File) return TryGet<int?>.Failure;
+                    _FileLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Model_FieldIndex.File);
+                }
+                case 0x42444F4D: // MODB
+                {
+                    _BoundRadiusLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Model_FieldIndex.BoundRadius);
+                }
+                case 0x54444F4D: // MODT
+                {
+                    _HashesLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Model_FieldIndex.Hashes);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
 
     #endregion
 

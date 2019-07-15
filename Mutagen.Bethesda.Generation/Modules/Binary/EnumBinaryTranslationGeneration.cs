@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
     {
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             var eType = typeGen as EnumType;
             return $"EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance";
@@ -116,6 +116,84 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"errorMask: {errorMaskAccessor}");
                 }
             }
+        }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen, 
+            Accessor dataAccessor,
+            int currentPosition,
+            DataType dataType)
+        {
+            var eType = typeGen as EnumType;
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+
+            if (data.HasTrigger)
+            {
+                fg.AppendLine($"private int? _{typeGen.Name}Location;");
+                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+            }
+            var posStr = dataType == null ? $"{currentPosition}" : $"_{typeGen.Name}Location";
+            string slice;
+            if (data.RecordType.HasValue)
+            {
+                slice = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}.Slice({posStr}), _{typeGen.Name}Location.Value, _package.Meta)";
+            }
+            else
+            {
+                slice = $"{dataAccessor}.Span.Slice({posStr}, {eType.ByteLength})";
+            }
+
+            string getType;
+            switch (eType.ByteLength)
+            {
+                case 1:
+                    getType = $"{slice}[{posStr}]";
+                    break;
+                case 2:
+                    getType = $"BinaryPrimitives.ReadUInt16LittleEndian({slice})";
+                    break;
+                case 4:
+                    getType = $"BinaryPrimitives.ReadInt32LittleEndian({slice})";
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+            if (data.RecordType.HasValue)
+            {
+                fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => ({eType.TypeName(getter: true)}){getType};");
+            }
+            else
+            {
+                if (dataType == null)
+                {
+                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => ({eType.TypeName(getter: true)}){getType};");
+                }
+                else
+                {
+                    DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => _{typeGen.Name}_IsSet ? ({eType.TypeName(getter: true)}){getType} : default;");
+                }
+            }
+
+        }
+
+        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            var data = typeGen.GetFieldData();
+            if (!data.RecordType.HasValue)
+            {
+                return this.ExpectedLength(objGen, typeGen) ?? 0;
+            }
+            return 0;
+        }
+
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            var eType = typeGen as EnumType;
+            return eType.ByteLength;
         }
     }
 }

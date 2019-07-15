@@ -6,7 +6,7 @@
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
       <FormIDLink name="Script" refName="Script" recordType="SCRI" />
-      <ByteArray name="MarkerFlags" recordType="MNAM" length="4" nullable="NotNull" />
+      <ByteArray name="MarkerFlags" recordType="MNAM" byteLength="4" nullable="NotNull" />
     </Fields>
   </Object>
 </Loqui>

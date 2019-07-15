@@ -73,26 +73,18 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Global rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IGlobalInternalGetter rhs)) return false;
+            return ((GlobalCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Global rhs)
+        public bool Equals(Global obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            return true;
+            return ((GlobalCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((GlobalCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => GlobalXmlWriteTranslation.Instance;
@@ -527,6 +519,15 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
+        public static bool Equals(
+            this IGlobalInternalGetter item,
+            IGlobalInternalGetter rhs)
+        {
+            return ((GlobalCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -875,6 +876,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IGlobalInternalGetter lhs,
+            IGlobalInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            ISkyrimMajorRecordInternalGetter lhs,
+            ISkyrimMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGlobalInternalGetter)lhs,
+                rhs: rhs as IGlobalInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGlobalInternalGetter)lhs,
+                rhs: rhs as IGlobalInternalGetter);
+        }
+
+        public virtual int GetHashCode(IGlobalInternalGetter item)
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(ISkyrimMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGlobalInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGlobalInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1466,6 +1516,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
     #endregion
+
+    public partial class GlobalBinaryWrapper :
+        SkyrimMajorRecordBinaryWrapper,
+        IGlobalInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
+        public new static Global_Registration Registration => Global_Registration.Instance;
+        protected override object CommonInstance => GlobalCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => GlobalXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GlobalBinaryWriteTranslation.Instance;
+
+        #region TypeChar
+        private int? _TypeCharLocation;
+        public bool TypeChar_IsSet => _TypeCharLocation.HasValue;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GlobalBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4D414E46: // FNAM
+                {
+                    _TypeCharLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed(null);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
 
     #endregion
 

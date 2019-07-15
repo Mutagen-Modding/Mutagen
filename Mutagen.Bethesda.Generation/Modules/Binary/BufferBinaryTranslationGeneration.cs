@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class BufferBinaryTranslationGeneration : BinaryTranslationGeneration
     {
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             return $"ByteArrayBinaryTranslation.Instance";
         }
@@ -46,8 +46,8 @@ namespace Mutagen.Bethesda.Generation
                 throw new NotImplementedException();
             }
             if (asyncMode == AsyncMode.Direct) throw new NotImplementedException();
-            BufferType zero = typeGen as BufferType;
-            fg.AppendLine($"{readerAccessor}.Position += {zero.Length};");
+            BufferType buf = typeGen as BufferType;
+            fg.AppendLine($"{readerAccessor}.Position += {buf.Length};");
         }
 
         public override void GenerateWrite(
@@ -73,6 +73,12 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
                 }
             }
+        }
+        
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            BufferType buf = typeGen as BufferType;
+            return buf.Length;
         }
     }
 }

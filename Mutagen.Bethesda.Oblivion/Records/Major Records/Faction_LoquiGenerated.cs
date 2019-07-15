@@ -180,71 +180,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Faction rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IFactionInternalGetter rhs)) return false;
+            return ((FactionCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Faction rhs)
+        public bool Equals(Faction obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
-            if (Relations.HasBeenSet)
-            {
-                if (!this.Relations.SequenceEqual(rhs.Relations)) return false;
-            }
-            if (Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (Flags_IsSet)
-            {
-                if (this.Flags != rhs.Flags) return false;
-            }
-            if (CrimeGoldMultiplier_IsSet != rhs.CrimeGoldMultiplier_IsSet) return false;
-            if (CrimeGoldMultiplier_IsSet)
-            {
-                if (!this.CrimeGoldMultiplier.EqualsWithin(rhs.CrimeGoldMultiplier)) return false;
-            }
-            if (Ranks.HasBeenSet != rhs.Ranks.HasBeenSet) return false;
-            if (Ranks.HasBeenSet)
-            {
-                if (!this.Ranks.SequenceEqual(rhs.Ranks)) return false;
-            }
-            return true;
+            return ((FactionCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Relations.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Relations).CombineHashCode(ret);
-            }
-            if (Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
-            if (CrimeGoldMultiplier_IsSet)
-            {
-                ret = HashHelper.GetHashCode(CrimeGoldMultiplier).CombineHashCode(ret);
-            }
-            if (Ranks.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Ranks).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((FactionCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
@@ -791,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Name = (String)obj;
                     break;
                 case Faction_FieldIndex.Relations:
-                    this._Relations.SetTo((IEnumerable<Relation>)obj);
+                    this._Relations.SetTo((SourceSetList<Relation>)obj);
                     break;
                 case Faction_FieldIndex.Flags:
                     this.Flags = (Faction.FactionFlag)obj;
@@ -800,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.CrimeGoldMultiplier = (Single)obj;
                     break;
                 case Faction_FieldIndex.Ranks:
-                    this._Ranks.SetTo((IEnumerable<Rank>)obj);
+                    this._Ranks.SetTo((SourceSetList<Rank>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -835,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Name = (String)pair.Value;
                     break;
                 case Faction_FieldIndex.Relations:
-                    obj._Relations.SetTo((IEnumerable<Relation>)pair.Value);
+                    obj._Relations.SetTo((SourceSetList<Relation>)pair.Value);
                     break;
                 case Faction_FieldIndex.Flags:
                     obj.Flags = (Faction.FactionFlag)pair.Value;
@@ -844,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.CrimeGoldMultiplier = (Single)pair.Value;
                     break;
                 case Faction_FieldIndex.Ranks:
-                    obj._Ranks.SetTo((IEnumerable<Rank>)pair.Value);
+                    obj._Ranks.SetTo((SourceSetList<Rank>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -988,6 +935,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IFactionInternalGetter item,
+            IFactionInternalGetter rhs)
+        {
+            return ((FactionCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1644,6 +1600,100 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IFactionInternalGetter lhs,
+            IFactionInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
+            if (lhs.Relations.HasBeenSet)
+            {
+                if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.CrimeGoldMultiplier_IsSet != rhs.CrimeGoldMultiplier_IsSet) return false;
+            if (lhs.CrimeGoldMultiplier_IsSet)
+            {
+                if (!lhs.CrimeGoldMultiplier.EqualsWithin(rhs.CrimeGoldMultiplier)) return false;
+            }
+            if (lhs.Ranks.HasBeenSet != rhs.Ranks.HasBeenSet) return false;
+            if (lhs.Ranks.HasBeenSet)
+            {
+                if (!lhs.Ranks.SequenceEqual(rhs.Ranks)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IFactionInternalGetter)lhs,
+                rhs: rhs as IFactionInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IFactionInternalGetter)lhs,
+                rhs: rhs as IFactionInternalGetter);
+        }
+
+        public virtual int GetHashCode(IFactionInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Relations.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Relations).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.CrimeGoldMultiplier_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.CrimeGoldMultiplier).CombineHashCode(ret);
+            }
+            if (item.Ranks.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Ranks).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IFactionInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IFactionInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -2762,6 +2812,129 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class FactionBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IFactionInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
+        public new static Faction_Registration Registration => Faction_Registration.Instance;
+        protected override object CommonInstance => FactionCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        public IReadOnlySetList<IRelationGetter> Relations { get; private set; } = EmptySetList<RelationBinaryWrapper>.Instance;
+        #region Flags
+        private int? _FlagsLocation;
+        public bool Flags_IsSet => _FlagsLocation.HasValue;
+        public Faction.FactionFlag Flags => (Faction.FactionFlag)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _FlagsLocation.Value, _package.Meta)[0];
+        #endregion
+        #region CrimeGoldMultiplier
+        private int? _CrimeGoldMultiplierLocation;
+        public bool CrimeGoldMultiplier_IsSet => _CrimeGoldMultiplierLocation.HasValue;
+        public Single CrimeGoldMultiplier => _CrimeGoldMultiplierLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _CrimeGoldMultiplierLocation.Value, _package.Meta)) : default;
+        #endregion
+        public IReadOnlySetList<IRankGetter> Ranks { get; private set; } = EmptySetList<RankBinaryWrapper>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected FactionBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static FactionBinaryWrapper FactionFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new FactionBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
+                }
+                case 0x4D414E58: // XNAM
+                {
+                    this.Relations = BinaryWrapperSetList<RelationBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => RelationBinaryWrapper.RelationFactory(new BinaryMemoryReadStream(s), p),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
+                }
+                case 0x41544144: // DATA
+                {
+                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    _CrimeGoldMultiplierLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
+                }
+                case 0x4D414E52: // RNAM
+                case 0x4D414E4D: // MNAM
+                case 0x4D414E46: // FNAM
+                case 0x4D414E49: // INAM
+                {
+                    this.Ranks = UtilityTranslation.ParseRepeatedTypelessSubrecord<RankBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        offset: offset,
+                        trigger: Rank_Registration.TriggeringRecordTypes,
+                        factory:  RankBinaryWrapper.RankFactory);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
 
     #endregion
 

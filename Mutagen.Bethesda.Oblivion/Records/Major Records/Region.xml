@@ -43,7 +43,7 @@
     <Fields>
       <FormIDLink name="Object" refName="OblivionMajorRecord" />
       <UInt16 name="ParentIndex" />
-      <ByteArray name="Unknown1" nullable="NotNull" length="2" />
+      <ByteArray name="Unknown1" nullable="NotNull" byteLength="2" />
       <Float name="Density" />
       <UInt8 name="Clustering" />
       <UInt8 name="MinSlope" />
@@ -57,7 +57,7 @@
       <Float name="SinkVariance" />
       <Float name="SizeVariance" />
       <P3UInt16 name="AngleVariance" />
-      <ByteArray name="Unknow2n" nullable="NotNull" length="6" />
+      <ByteArray name="Unknown2" nullable="NotNull" byteLength="6" />
     </Fields>
   </Object>
   <Object name="RegionDataMapName" objType="Subrecord" baseClass="RegionData" GUID="acca1023-9d99-47c2-82a4-d46ed90b087b" ID="111">

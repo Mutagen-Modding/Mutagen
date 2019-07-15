@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Race> IRaceRelation.Race_Property => this.Race_Property;
         IRaceInternalGetter IRaceRelationGetter.Race => this.Race_Property.Item;
-        IFormIDLinkGetter<Race> IRaceRelationGetter.Race_Property => this.Race_Property;
+        IFormIDLinkGetter<IRaceInternalGetter> IRaceRelationGetter.Race_Property => this.Race_Property;
         #endregion
         #region Modifier
         private Int32 _Modifier;
@@ -90,28 +90,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RaceRelation rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRaceRelationGetter rhs)) return false;
+            return ((RaceRelationCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RaceRelation rhs)
+        public bool Equals(RaceRelation obj)
         {
-            if (rhs == null) return false;
-            if (!this.Race_Property.Equals(rhs.Race_Property)) return false;
-            if (this.Modifier != rhs.Modifier) return false;
-            return true;
+            return ((RaceRelationCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Race).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Modifier).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((RaceRelationCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RaceRelationXmlWriteTranslation.Instance;
@@ -555,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Race
         IRaceInternalGetter Race { get; }
-        IFormIDLinkGetter<Race> Race_Property { get; }
+        IFormIDLinkGetter<IRaceInternalGetter> Race_Property { get; }
 
         #endregion
         #region Modifier
@@ -626,6 +616,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRaceRelationGetter item,
+            IRaceRelationGetter rhs)
+        {
+            return ((RaceRelationCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -984,6 +983,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Race = true;
             mask.Modifier = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRaceRelationGetter lhs,
+            IRaceRelationGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Race_Property.Equals(rhs.Race_Property)) return false;
+            if (lhs.Modifier != rhs.Modifier) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IRaceRelationGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Race).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Modifier).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1736,6 +1758,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class RaceRelationBinaryWrapper : IRaceRelationGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RaceRelation_Registration.Instance;
+        public static RaceRelation_Registration Registration => RaceRelation_Registration.Instance;
+        protected object CommonInstance => RaceRelationCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceRelationGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RaceRelationXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RaceRelationBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Race
+        public IFormIDLinkGetter<IRaceInternalGetter> Race_Property => new FormIDLink<IRaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IRaceInternalGetter Race => default;
+        #endregion
+        public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RaceRelationBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static RaceRelationBinaryWrapper RaceRelationFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new RaceRelationBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0xE;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
 
     #endregion
 

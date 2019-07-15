@@ -36,5 +36,10 @@ namespace Noggog
             return bytes;
         }
 
+        public static string ProcessWholeToZString(ReadOnlySpan<byte> span)
+        {
+            span = ProcessNullTermination(span);
+            return ToZString(span);
+        }
     }
 }

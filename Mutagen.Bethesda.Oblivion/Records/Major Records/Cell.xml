@@ -4,7 +4,7 @@
     <Fields>
       <Int32 name="BlockNumber" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
-      <ByteArray name="LastModified" length="4" nullable="NotNull" />
+      <ByteArray name="LastModified" byteLength="4" nullable="NotNull" />
       <RefList name="Items" refName="CellSubBlock" asyncItems="true" thread="true" />
     </Fields>
   </Object>
@@ -12,7 +12,7 @@
     <Fields>
       <Int32 name="BlockNumber" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
-      <ByteArray name="LastModified" length="4" nullable="NotNull" />
+      <ByteArray name="LastModified" byteLength="4" nullable="NotNull" />
       <RefList name="Items" refName="Cell" />
     </Fields>
   </Object>
@@ -35,12 +35,12 @@
       <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="PathGrid" binary="NoGeneration" refName="PathGrid" />
       <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
-      <ByteArray name="Timestamp" binary="NoGeneration" length="4" nullable="NotNull" />
-      <ByteArray name="PersistentTimestamp" binary="NoGeneration" length="4" nullable="NotNull" />
+      <ByteArray name="Timestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
+      <ByteArray name="PersistentTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
       <RefList name="Persistent" binary="NoGeneration" interfaceName="IPlaced" objType="Record" />
-      <ByteArray name="TemporaryTimestamp" binary="NoGeneration" length="4" nullable="NotNull" />
+      <ByteArray name="TemporaryTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
       <RefList name="Temporary" binary="NoGeneration" interfaceName="IPlaced" objType="Record" />
-      <ByteArray name="VisibleWhenDistantTimestamp" binary="NoGeneration" length="4" nullable="NotNull" />
+      <ByteArray name="VisibleWhenDistantTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
       <RefList name="VisibleWhenDistant" binary="NoGeneration" interfaceName="IPlaced" objType="Record" />
     </Fields>
   </Object>

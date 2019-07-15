@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEDIDLink<MagicEffect> IEffect.MagicEffect_Property => this.MagicEffect_Property;
         IMagicEffectInternalGetter IEffectGetter.MagicEffect => this.MagicEffect_Property.Item;
-        IEDIDLinkGetter<MagicEffect> IEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
+        IEDIDLinkGetter<IMagicEffectInternalGetter> IEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
         #endregion
         #region Magnitude
         private UInt32 _Magnitude;
@@ -187,47 +187,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Effect rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IEffectInternalGetter rhs)) return false;
+            return ((EffectCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Effect rhs)
+        public bool Equals(Effect obj)
         {
-            if (rhs == null) return false;
-            if (!this.MagicEffect_Property.Equals(rhs.MagicEffect_Property)) return false;
-            if (this.Magnitude != rhs.Magnitude) return false;
-            if (this.Area != rhs.Area) return false;
-            if (this.Duration != rhs.Duration) return false;
-            if (this.Type != rhs.Type) return false;
-            if (this.ActorValue != rhs.ActorValue) return false;
-            if (ScriptEffect_IsSet != rhs.ScriptEffect_IsSet) return false;
-            if (ScriptEffect_IsSet)
-            {
-                if (!object.Equals(this.ScriptEffect, rhs.ScriptEffect)) return false;
-            }
-            if (this.EFITDataTypeState != rhs.EFITDataTypeState) return false;
-            return true;
+            return ((EffectCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(MagicEffect).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Magnitude).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Area).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Duration).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ActorValue).CombineHashCode(ret);
-            if (ScriptEffect_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ScriptEffect).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(EFITDataTypeState).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((EffectCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => EffectXmlWriteTranslation.Instance;
@@ -851,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region MagicEffect
         IMagicEffectInternalGetter MagicEffect { get; }
-        IEDIDLinkGetter<MagicEffect> MagicEffect_Property { get; }
+        IEDIDLinkGetter<IMagicEffectInternalGetter> MagicEffect_Property { get; }
 
         #endregion
         #region Magnitude
@@ -952,6 +923,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IEffectInternalGetter item,
+            IEffectInternalGetter rhs)
+        {
+            return ((EffectCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1552,6 +1532,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.ScriptEffect = new MaskItem<bool, ScriptEffect_Mask<bool>>(item.ScriptEffect_IsSet, item.ScriptEffect.GetHasBeenSetMask());
             mask.EFITDataTypeState = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IEffectInternalGetter lhs,
+            IEffectInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.MagicEffect_Property.Equals(rhs.MagicEffect_Property)) return false;
+            if (lhs.Magnitude != rhs.Magnitude) return false;
+            if (lhs.Area != rhs.Area) return false;
+            if (lhs.Duration != rhs.Duration) return false;
+            if (lhs.Type != rhs.Type) return false;
+            if (lhs.ActorValue != rhs.ActorValue) return false;
+            if (lhs.ScriptEffect_IsSet != rhs.ScriptEffect_IsSet) return false;
+            if (lhs.ScriptEffect_IsSet)
+            {
+                if (!object.Equals(lhs.ScriptEffect, rhs.ScriptEffect)) return false;
+            }
+            if (lhs.EFITDataTypeState != rhs.EFITDataTypeState) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IEffectInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.MagicEffect).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Magnitude).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Area).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Duration).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ActorValue).CombineHashCode(ret);
+            if (item.ScriptEffect_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ScriptEffect).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.EFITDataTypeState).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

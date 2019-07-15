@@ -73,28 +73,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is OblivionMajorRecord rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IOblivionMajorRecordInternalGetter rhs)) return false;
+            return ((OblivionMajorRecordCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(OblivionMajorRecord rhs)
+        public bool Equals(OblivionMajorRecord obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (this.OblivionMajorRecordFlags != rhs.OblivionMajorRecordFlags) return false;
-            return true;
+            return ((OblivionMajorRecordCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(OblivionMajorRecordFlags).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((OblivionMajorRecordCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => OblivionMajorRecordXmlWriteTranslation.Instance;
@@ -549,6 +539,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IOblivionMajorRecordInternalGetter item,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return ((OblivionMajorRecordCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1058,6 +1057,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.OblivionMajorRecordFlags != rhs.OblivionMajorRecordFlags) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IOblivionMajorRecordInternalGetter)lhs,
+                rhs: rhs as IOblivionMajorRecordInternalGetter);
+        }
+
+        public virtual int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.OblivionMajorRecordFlags).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IOblivionMajorRecordInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1646,6 +1682,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class OblivionMajorRecordBinaryWrapper :
+        MajorRecordBinaryWrapper,
+        IOblivionMajorRecordInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => OblivionMajorRecord_Registration.Instance;
+        public new static OblivionMajorRecord_Registration Registration => OblivionMajorRecord_Registration.Instance;
+        protected override object CommonInstance => OblivionMajorRecordCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionMajorRecordInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => OblivionMajorRecordXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => OblivionMajorRecordBinaryWriteTranslation.Instance;
+
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected OblivionMajorRecordBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+    }
 
     #endregion
 

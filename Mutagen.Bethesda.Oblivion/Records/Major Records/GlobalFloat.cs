@@ -36,4 +36,13 @@ namespace Mutagen.Bethesda.Oblivion
             return new GlobalFloat();
         }
     }
+
+    namespace Internals
+    {
+        public partial class GlobalFloatBinaryWrapper
+        {
+            public override char TypeChar => GlobalFloat.TRIGGER_CHAR;
+            public override float RawFloat => this.Data;
+        }
+    }
 }

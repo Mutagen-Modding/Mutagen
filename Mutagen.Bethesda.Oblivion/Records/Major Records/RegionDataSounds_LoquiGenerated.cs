@@ -113,44 +113,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RegionDataSounds rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRegionDataSoundsInternalGetter rhs)) return false;
+            return ((RegionDataSoundsCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RegionDataSounds rhs)
+        public bool Equals(RegionDataSounds obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (MusicType_IsSet != rhs.MusicType_IsSet) return false;
-            if (MusicType_IsSet)
-            {
-                if (this.MusicType != rhs.MusicType) return false;
-            }
-            if (Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
-            if (Sounds.HasBeenSet)
-            {
-                if (!this.Sounds.SequenceEqual(rhs.Sounds)) return false;
-            }
-            return true;
+            return ((RegionDataSoundsCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (MusicType_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MusicType).CombineHashCode(ret);
-            }
-            if (Sounds.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Sounds).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((RegionDataSoundsCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => RegionDataSoundsXmlWriteTranslation.Instance;
@@ -621,7 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MusicType = (MusicType)obj;
                     break;
                 case RegionDataSounds_FieldIndex.Sounds:
-                    this._Sounds.SetTo((IEnumerable<RegionSound>)obj);
+                    this._Sounds.SetTo((SourceSetList<RegionSound>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -656,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.MusicType = (MusicType)pair.Value;
                     break;
                 case RegionDataSounds_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((IEnumerable<RegionSound>)pair.Value);
+                    obj._Sounds.SetTo((SourceSetList<RegionSound>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -776,6 +750,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRegionDataSoundsInternalGetter item,
+            IRegionDataSoundsInternalGetter rhs)
+        {
+            return ((RegionDataSoundsCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1230,6 +1213,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRegionDataSoundsInternalGetter lhs,
+            IRegionDataSoundsInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.MusicType_IsSet != rhs.MusicType_IsSet) return false;
+            if (lhs.MusicType_IsSet)
+            {
+                if (lhs.MusicType != rhs.MusicType) return false;
+            }
+            if (lhs.Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
+            if (lhs.Sounds.HasBeenSet)
+            {
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IRegionDataInternalGetter lhs,
+            IRegionDataInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRegionDataSoundsInternalGetter)lhs,
+                rhs: rhs as IRegionDataSoundsInternalGetter);
+        }
+
+        public virtual int GetHashCode(IRegionDataSoundsInternalGetter item)
+        {
+            int ret = 0;
+            if (item.MusicType_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MusicType).CombineHashCode(ret);
+            }
+            if (item.Sounds.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Sounds).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IRegionDataInternalGetter item)
+        {
+            return GetHashCode(item: (IRegionDataSoundsInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

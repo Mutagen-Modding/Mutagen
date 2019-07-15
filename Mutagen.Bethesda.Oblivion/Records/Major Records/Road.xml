@@ -8,7 +8,7 @@
   <Object name="RoadPoint" objType="Subrecord" GUID="40edd2d1-a707-454b-93c4-d833df08a2dd" ID="142">
     <Fields>
       <P3Float name="Point" />
-      <ByteArray name="NumConnectionsFluffBytes" length="3" nullable="NotNull" />
+      <ByteArray name="NumConnectionsFluffBytes" byteLength="3" nullable="NotNull" />
       <List name="Connections">
         <P3Float />
       </List>

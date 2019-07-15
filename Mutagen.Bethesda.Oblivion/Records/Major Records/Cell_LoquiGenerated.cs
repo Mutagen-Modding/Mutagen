@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Region>> ICell.Regions => _Regions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDLink<Region>> ICellGetter.Regions => _Regions;
+        IReadOnlySetList<IFormIDLinkGetter<IRegionInternalGetter>> ICellGetter.Regions => _Regions;
         #endregion
 
         #endregion
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Climate> ICell.Climate_Property => this.Climate_Property;
         IClimateInternalGetter ICellGetter.Climate => this.Climate_Property.Item;
-        IFormIDSetLinkGetter<Climate> ICellGetter.Climate_Property => this.Climate_Property;
+        IFormIDSetLinkGetter<IClimateInternalGetter> ICellGetter.Climate_Property => this.Climate_Property;
         #endregion
         #region Water
         public IFormIDSetLink<Water> Water_Property { get; } = new FormIDSetLink<Water>();
@@ -242,7 +242,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Water> ICell.Water_Property => this.Water_Property;
         IWaterInternalGetter ICellGetter.Water => this.Water_Property.Item;
-        IFormIDSetLinkGetter<Water> ICellGetter.Water_Property => this.Water_Property;
+        IFormIDSetLinkGetter<IWaterInternalGetter> ICellGetter.Water_Property => this.Water_Property;
         #endregion
         #region Owner
         public IFormIDSetLink<Faction> Owner_Property { get; } = new FormIDSetLink<Faction>();
@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Faction> ICell.Owner_Property => this.Owner_Property;
         IFactionInternalGetter ICellGetter.Owner => this.Owner_Property.Item;
-        IFormIDSetLinkGetter<Faction> ICellGetter.Owner_Property => this.Owner_Property;
+        IFormIDSetLinkGetter<IFactionInternalGetter> ICellGetter.Owner_Property => this.Owner_Property;
         #endregion
         #region FactionRank
         public bool FactionRank_IsSet
@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Global> ICell.GlobalVariable_Property => this.GlobalVariable_Property;
         IGlobalInternalGetter ICellGetter.GlobalVariable => this.GlobalVariable_Property.Item;
-        IFormIDSetLinkGetter<Global> ICellGetter.GlobalVariable_Property => this.GlobalVariable_Property;
+        IFormIDSetLinkGetter<IGlobalInternalGetter> ICellGetter.GlobalVariable_Property => this.GlobalVariable_Property;
         #endregion
         #region PathGrid
         public bool PathGrid_IsSet
@@ -354,6 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> ICellGetter.Timestamp => this.Timestamp;
         #endregion
         #region PersistentTimestamp
         private Byte[] _PersistentTimestamp = new byte[4];
@@ -369,6 +370,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> ICellGetter.PersistentTimestamp => this.PersistentTimestamp;
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -396,6 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> ICellGetter.TemporaryTimestamp => this.TemporaryTimestamp;
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -423,6 +426,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> ICellGetter.VisibleWhenDistantTimestamp => this.VisibleWhenDistantTimestamp;
         #endregion
         #region VisibleWhenDistant
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -455,187 +459,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Cell rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ICellInternalGetter rhs)) return false;
+            return ((CellCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Cell rhs)
+        public bool Equals(Cell obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (Flags_IsSet)
-            {
-                if (this.Flags != rhs.Flags) return false;
-            }
-            if (Grid_IsSet != rhs.Grid_IsSet) return false;
-            if (Grid_IsSet)
-            {
-                if (!this.Grid.Equals(rhs.Grid)) return false;
-            }
-            if (Lighting_IsSet != rhs.Lighting_IsSet) return false;
-            if (Lighting_IsSet)
-            {
-                if (!object.Equals(this.Lighting, rhs.Lighting)) return false;
-            }
-            if (Regions.HasBeenSet != rhs.Regions.HasBeenSet) return false;
-            if (Regions.HasBeenSet)
-            {
-                if (!this.Regions.SequenceEqual(rhs.Regions)) return false;
-            }
-            if (MusicType_IsSet != rhs.MusicType_IsSet) return false;
-            if (MusicType_IsSet)
-            {
-                if (this.MusicType != rhs.MusicType) return false;
-            }
-            if (WaterHeight_IsSet != rhs.WaterHeight_IsSet) return false;
-            if (WaterHeight_IsSet)
-            {
-                if (!this.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
-            }
-            if (Climate_Property.HasBeenSet != rhs.Climate_Property.HasBeenSet) return false;
-            if (Climate_Property.HasBeenSet)
-            {
-                if (!this.Climate_Property.Equals(rhs.Climate_Property)) return false;
-            }
-            if (Water_Property.HasBeenSet != rhs.Water_Property.HasBeenSet) return false;
-            if (Water_Property.HasBeenSet)
-            {
-                if (!this.Water_Property.Equals(rhs.Water_Property)) return false;
-            }
-            if (Owner_Property.HasBeenSet != rhs.Owner_Property.HasBeenSet) return false;
-            if (Owner_Property.HasBeenSet)
-            {
-                if (!this.Owner_Property.Equals(rhs.Owner_Property)) return false;
-            }
-            if (FactionRank_IsSet != rhs.FactionRank_IsSet) return false;
-            if (FactionRank_IsSet)
-            {
-                if (this.FactionRank != rhs.FactionRank) return false;
-            }
-            if (GlobalVariable_Property.HasBeenSet != rhs.GlobalVariable_Property.HasBeenSet) return false;
-            if (GlobalVariable_Property.HasBeenSet)
-            {
-                if (!this.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property)) return false;
-            }
-            if (PathGrid_IsSet != rhs.PathGrid_IsSet) return false;
-            if (PathGrid_IsSet)
-            {
-                if (!object.Equals(this.PathGrid, rhs.PathGrid)) return false;
-            }
-            if (Landscape_IsSet != rhs.Landscape_IsSet) return false;
-            if (Landscape_IsSet)
-            {
-                if (!object.Equals(this.Landscape, rhs.Landscape)) return false;
-            }
-            if (!ByteExt.EqualsFast(this.Timestamp, rhs.Timestamp)) return false;
-            if (!ByteExt.EqualsFast(this.PersistentTimestamp, rhs.PersistentTimestamp)) return false;
-            if (Persistent.HasBeenSet != rhs.Persistent.HasBeenSet) return false;
-            if (Persistent.HasBeenSet)
-            {
-                if (!this.Persistent.SequenceEqual(rhs.Persistent)) return false;
-            }
-            if (!ByteExt.EqualsFast(this.TemporaryTimestamp, rhs.TemporaryTimestamp)) return false;
-            if (Temporary.HasBeenSet != rhs.Temporary.HasBeenSet) return false;
-            if (Temporary.HasBeenSet)
-            {
-                if (!this.Temporary.SequenceEqual(rhs.Temporary)) return false;
-            }
-            if (!ByteExt.EqualsFast(this.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp)) return false;
-            if (VisibleWhenDistant.HasBeenSet != rhs.VisibleWhenDistant.HasBeenSet) return false;
-            if (VisibleWhenDistant.HasBeenSet)
-            {
-                if (!this.VisibleWhenDistant.SequenceEqual(rhs.VisibleWhenDistant)) return false;
-            }
-            return true;
+            return ((CellCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
-            if (Grid_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Grid).CombineHashCode(ret);
-            }
-            if (Lighting_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Lighting).CombineHashCode(ret);
-            }
-            if (Regions.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Regions).CombineHashCode(ret);
-            }
-            if (MusicType_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MusicType).CombineHashCode(ret);
-            }
-            if (WaterHeight_IsSet)
-            {
-                ret = HashHelper.GetHashCode(WaterHeight).CombineHashCode(ret);
-            }
-            if (Climate_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Climate).CombineHashCode(ret);
-            }
-            if (Water_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Water).CombineHashCode(ret);
-            }
-            if (Owner_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Owner).CombineHashCode(ret);
-            }
-            if (FactionRank_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FactionRank).CombineHashCode(ret);
-            }
-            if (GlobalVariable_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(GlobalVariable).CombineHashCode(ret);
-            }
-            if (PathGrid_IsSet)
-            {
-                ret = HashHelper.GetHashCode(PathGrid).CombineHashCode(ret);
-            }
-            if (Landscape_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Landscape).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Timestamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PersistentTimestamp).CombineHashCode(ret);
-            if (Persistent.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Persistent).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(TemporaryTimestamp).CombineHashCode(ret);
-            if (Temporary.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Temporary).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(VisibleWhenDistantTimestamp).CombineHashCode(ret);
-            if (VisibleWhenDistant.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(VisibleWhenDistant).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((CellCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => CellXmlWriteTranslation.Instance;
@@ -1365,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Lighting = (CellLighting)obj;
                     break;
                 case Cell_FieldIndex.Regions:
-                    this._Regions.SetTo((IEnumerable<IFormIDLink<Region>>)obj);
+                    this._Regions.SetTo((SourceSetList<IFormIDLink<Region>>)obj);
                     break;
                 case Cell_FieldIndex.MusicType:
                     this.MusicType = (MusicType)obj;
@@ -1401,19 +1236,19 @@ namespace Mutagen.Bethesda.Oblivion
                     this.PersistentTimestamp = (Byte[])obj;
                     break;
                 case Cell_FieldIndex.Persistent:
-                    this._Persistent.SetTo((IEnumerable<IPlaced>)obj);
+                    this._Persistent.SetTo((SourceSetList<IPlaced>)obj);
                     break;
                 case Cell_FieldIndex.TemporaryTimestamp:
                     this.TemporaryTimestamp = (Byte[])obj;
                     break;
                 case Cell_FieldIndex.Temporary:
-                    this._Temporary.SetTo((IEnumerable<IPlaced>)obj);
+                    this._Temporary.SetTo((SourceSetList<IPlaced>)obj);
                     break;
                 case Cell_FieldIndex.VisibleWhenDistantTimestamp:
                     this.VisibleWhenDistantTimestamp = (Byte[])obj;
                     break;
                 case Cell_FieldIndex.VisibleWhenDistant:
-                    this._VisibleWhenDistant.SetTo((IEnumerable<IPlaced>)obj);
+                    this._VisibleWhenDistant.SetTo((SourceSetList<IPlaced>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -1457,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Lighting = (CellLighting)pair.Value;
                     break;
                 case Cell_FieldIndex.Regions:
-                    obj._Regions.SetTo((IEnumerable<IFormIDLink<Region>>)pair.Value);
+                    obj._Regions.SetTo((SourceSetList<IFormIDLink<Region>>)pair.Value);
                     break;
                 case Cell_FieldIndex.MusicType:
                     obj.MusicType = (MusicType)pair.Value;
@@ -1493,19 +1328,19 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.PersistentTimestamp = (Byte[])pair.Value;
                     break;
                 case Cell_FieldIndex.Persistent:
-                    obj._Persistent.SetTo((IEnumerable<IPlaced>)pair.Value);
+                    obj._Persistent.SetTo((SourceSetList<IPlaced>)pair.Value);
                     break;
                 case Cell_FieldIndex.TemporaryTimestamp:
                     obj.TemporaryTimestamp = (Byte[])pair.Value;
                     break;
                 case Cell_FieldIndex.Temporary:
-                    obj._Temporary.SetTo((IEnumerable<IPlaced>)pair.Value);
+                    obj._Temporary.SetTo((SourceSetList<IPlaced>)pair.Value);
                     break;
                 case Cell_FieldIndex.VisibleWhenDistantTimestamp:
                     obj.VisibleWhenDistantTimestamp = (Byte[])pair.Value;
                     break;
                 case Cell_FieldIndex.VisibleWhenDistant:
-                    obj._VisibleWhenDistant.SetTo((IEnumerable<IPlaced>)pair.Value);
+                    obj._VisibleWhenDistant.SetTo((SourceSetList<IPlaced>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1634,7 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Regions
-        IReadOnlySetList<IFormIDLink<Region>> Regions { get; }
+        IReadOnlySetList<IFormIDLinkGetter<IRegionInternalGetter>> Regions { get; }
         #endregion
         #region MusicType
         MusicType MusicType { get; }
@@ -1648,17 +1483,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Climate
         IClimateInternalGetter Climate { get; }
-        IFormIDSetLinkGetter<Climate> Climate_Property { get; }
+        IFormIDSetLinkGetter<IClimateInternalGetter> Climate_Property { get; }
 
         #endregion
         #region Water
         IWaterInternalGetter Water { get; }
-        IFormIDSetLinkGetter<Water> Water_Property { get; }
+        IFormIDSetLinkGetter<IWaterInternalGetter> Water_Property { get; }
 
         #endregion
         #region Owner
         IFactionInternalGetter Owner { get; }
-        IFormIDSetLinkGetter<Faction> Owner_Property { get; }
+        IFormIDSetLinkGetter<IFactionInternalGetter> Owner_Property { get; }
 
         #endregion
         #region FactionRank
@@ -1668,7 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region GlobalVariable
         IGlobalInternalGetter GlobalVariable { get; }
-        IFormIDSetLinkGetter<Global> GlobalVariable_Property { get; }
+        IFormIDSetLinkGetter<IGlobalInternalGetter> GlobalVariable_Property { get; }
 
         #endregion
         #region PathGrid
@@ -1682,25 +1517,25 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Timestamp
-        Byte[] Timestamp { get; }
+        ReadOnlySpan<Byte> Timestamp { get; }
 
         #endregion
         #region PersistentTimestamp
-        Byte[] PersistentTimestamp { get; }
+        ReadOnlySpan<Byte> PersistentTimestamp { get; }
 
         #endregion
         #region Persistent
         IReadOnlySetList<IPlaced> Persistent { get; }
         #endregion
         #region TemporaryTimestamp
-        Byte[] TemporaryTimestamp { get; }
+        ReadOnlySpan<Byte> TemporaryTimestamp { get; }
 
         #endregion
         #region Temporary
         IReadOnlySetList<IPlaced> Temporary { get; }
         #endregion
         #region VisibleWhenDistantTimestamp
-        Byte[] VisibleWhenDistantTimestamp { get; }
+        ReadOnlySpan<Byte> VisibleWhenDistantTimestamp { get; }
 
         #endregion
         #region VisibleWhenDistant
@@ -1777,6 +1612,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ICellInternalGetter item,
+            ICellInternalGetter rhs)
+        {
+            return ((CellCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -2949,18 +2793,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Landscape,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.Timestamp = ByteExt.EqualsFast(item.Timestamp, rhs.Timestamp);
-            ret.PersistentTimestamp = ByteExt.EqualsFast(item.PersistentTimestamp, rhs.PersistentTimestamp);
+            ret.Timestamp = MemoryExtensions.SequenceEqual(item.Timestamp, rhs.Timestamp);
+            ret.PersistentTimestamp = MemoryExtensions.SequenceEqual(item.PersistentTimestamp, rhs.PersistentTimestamp);
             ret.Persistent = item.Persistent.CollectionEqualsHelper(
                 rhs.Persistent,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
                 include);
-            ret.TemporaryTimestamp = ByteExt.EqualsFast(item.TemporaryTimestamp, rhs.TemporaryTimestamp);
+            ret.TemporaryTimestamp = MemoryExtensions.SequenceEqual(item.TemporaryTimestamp, rhs.TemporaryTimestamp);
             ret.Temporary = item.Temporary.CollectionEqualsHelper(
                 rhs.Temporary,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
                 include);
-            ret.VisibleWhenDistantTimestamp = ByteExt.EqualsFast(item.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp);
+            ret.VisibleWhenDistantTimestamp = MemoryExtensions.SequenceEqual(item.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp);
             ret.VisibleWhenDistant = item.VisibleWhenDistant.CollectionEqualsHelper(
                 rhs.VisibleWhenDistant,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
@@ -3088,11 +2932,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Timestamp ?? true)
             {
-                fg.AppendLine($"Timestamp => {item.Timestamp}");
+                fg.AppendLine($"Timestamp => {SpanExt.ToHexString(item.Timestamp)}");
             }
             if (printMask?.PersistentTimestamp ?? true)
             {
-                fg.AppendLine($"PersistentTimestamp => {item.PersistentTimestamp}");
+                fg.AppendLine($"PersistentTimestamp => {SpanExt.ToHexString(item.PersistentTimestamp)}");
             }
             if (printMask?.Persistent?.Overall ?? true)
             {
@@ -3114,7 +2958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.TemporaryTimestamp ?? true)
             {
-                fg.AppendLine($"TemporaryTimestamp => {item.TemporaryTimestamp}");
+                fg.AppendLine($"TemporaryTimestamp => {SpanExt.ToHexString(item.TemporaryTimestamp)}");
             }
             if (printMask?.Temporary?.Overall ?? true)
             {
@@ -3136,7 +2980,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.VisibleWhenDistantTimestamp ?? true)
             {
-                fg.AppendLine($"VisibleWhenDistantTimestamp => {item.VisibleWhenDistantTimestamp}");
+                fg.AppendLine($"VisibleWhenDistantTimestamp => {SpanExt.ToHexString(item.VisibleWhenDistantTimestamp)}");
             }
             if (printMask?.VisibleWhenDistant?.Overall ?? true)
             {
@@ -3272,6 +3116,230 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        #region Equals and Hash
+        public virtual bool Equals(
+            ICellInternalGetter lhs,
+            ICellInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.Grid_IsSet != rhs.Grid_IsSet) return false;
+            if (lhs.Grid_IsSet)
+            {
+                if (!lhs.Grid.Equals(rhs.Grid)) return false;
+            }
+            if (lhs.Lighting_IsSet != rhs.Lighting_IsSet) return false;
+            if (lhs.Lighting_IsSet)
+            {
+                if (!object.Equals(lhs.Lighting, rhs.Lighting)) return false;
+            }
+            if (lhs.Regions.HasBeenSet != rhs.Regions.HasBeenSet) return false;
+            if (lhs.Regions.HasBeenSet)
+            {
+                if (!lhs.Regions.SequenceEqual(rhs.Regions)) return false;
+            }
+            if (lhs.MusicType_IsSet != rhs.MusicType_IsSet) return false;
+            if (lhs.MusicType_IsSet)
+            {
+                if (lhs.MusicType != rhs.MusicType) return false;
+            }
+            if (lhs.WaterHeight_IsSet != rhs.WaterHeight_IsSet) return false;
+            if (lhs.WaterHeight_IsSet)
+            {
+                if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
+            }
+            if (lhs.Climate_Property.HasBeenSet != rhs.Climate_Property.HasBeenSet) return false;
+            if (lhs.Climate_Property.HasBeenSet)
+            {
+                if (!lhs.Climate_Property.Equals(rhs.Climate_Property)) return false;
+            }
+            if (lhs.Water_Property.HasBeenSet != rhs.Water_Property.HasBeenSet) return false;
+            if (lhs.Water_Property.HasBeenSet)
+            {
+                if (!lhs.Water_Property.Equals(rhs.Water_Property)) return false;
+            }
+            if (lhs.Owner_Property.HasBeenSet != rhs.Owner_Property.HasBeenSet) return false;
+            if (lhs.Owner_Property.HasBeenSet)
+            {
+                if (!lhs.Owner_Property.Equals(rhs.Owner_Property)) return false;
+            }
+            if (lhs.FactionRank_IsSet != rhs.FactionRank_IsSet) return false;
+            if (lhs.FactionRank_IsSet)
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
+            }
+            if (lhs.GlobalVariable_Property.HasBeenSet != rhs.GlobalVariable_Property.HasBeenSet) return false;
+            if (lhs.GlobalVariable_Property.HasBeenSet)
+            {
+                if (!lhs.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property)) return false;
+            }
+            if (lhs.PathGrid_IsSet != rhs.PathGrid_IsSet) return false;
+            if (lhs.PathGrid_IsSet)
+            {
+                if (!object.Equals(lhs.PathGrid, rhs.PathGrid)) return false;
+            }
+            if (lhs.Landscape_IsSet != rhs.Landscape_IsSet) return false;
+            if (lhs.Landscape_IsSet)
+            {
+                if (!object.Equals(lhs.Landscape, rhs.Landscape)) return false;
+            }
+            if (!MemoryExtensions.SequenceEqual(lhs.Timestamp, rhs.Timestamp)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.PersistentTimestamp, rhs.PersistentTimestamp)) return false;
+            if (lhs.Persistent.HasBeenSet != rhs.Persistent.HasBeenSet) return false;
+            if (lhs.Persistent.HasBeenSet)
+            {
+                if (!lhs.Persistent.SequenceEqual(rhs.Persistent)) return false;
+            }
+            if (!MemoryExtensions.SequenceEqual(lhs.TemporaryTimestamp, rhs.TemporaryTimestamp)) return false;
+            if (lhs.Temporary.HasBeenSet != rhs.Temporary.HasBeenSet) return false;
+            if (lhs.Temporary.HasBeenSet)
+            {
+                if (!lhs.Temporary.SequenceEqual(rhs.Temporary)) return false;
+            }
+            if (!MemoryExtensions.SequenceEqual(lhs.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp)) return false;
+            if (lhs.VisibleWhenDistant.HasBeenSet != rhs.VisibleWhenDistant.HasBeenSet) return false;
+            if (lhs.VisibleWhenDistant.HasBeenSet)
+            {
+                if (!lhs.VisibleWhenDistant.SequenceEqual(rhs.VisibleWhenDistant)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IPlaceInternalGetter lhs,
+            IPlaceInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ICellInternalGetter)lhs,
+                rhs: rhs as ICellInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ICellInternalGetter)lhs,
+                rhs: rhs as ICellInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ICellInternalGetter)lhs,
+                rhs: rhs as ICellInternalGetter);
+        }
+
+        public virtual int GetHashCode(ICellInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.Grid_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Grid).CombineHashCode(ret);
+            }
+            if (item.Lighting_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Lighting).CombineHashCode(ret);
+            }
+            if (item.Regions.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Regions).CombineHashCode(ret);
+            }
+            if (item.MusicType_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MusicType).CombineHashCode(ret);
+            }
+            if (item.WaterHeight_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.WaterHeight).CombineHashCode(ret);
+            }
+            if (item.Climate_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Climate).CombineHashCode(ret);
+            }
+            if (item.Water_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Water).CombineHashCode(ret);
+            }
+            if (item.Owner_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Owner).CombineHashCode(ret);
+            }
+            if (item.FactionRank_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FactionRank).CombineHashCode(ret);
+            }
+            if (item.GlobalVariable_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.GlobalVariable).CombineHashCode(ret);
+            }
+            if (item.PathGrid_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.PathGrid).CombineHashCode(ret);
+            }
+            if (item.Landscape_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Landscape).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Timestamp).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PersistentTimestamp).CombineHashCode(ret);
+            if (item.Persistent.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Persistent).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.TemporaryTimestamp).CombineHashCode(ret);
+            if (item.Temporary.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Temporary).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.VisibleWhenDistantTimestamp).CombineHashCode(ret);
+            if (item.VisibleWhenDistant.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.VisibleWhenDistant).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IPlaceInternalGetter item)
+        {
+            return GetHashCode(item: (ICellInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ICellInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ICellInternalGetter)item);
+        }
+
+        #endregion
+
+
     }
     #endregion
 
@@ -3338,14 +3406,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Regions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
             {
-                ListXmlTranslation<IFormIDLink<Region>>.Instance.Write(
+                ListXmlTranslation<IFormIDLinkGetter<IRegionInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Regions),
                     item: item.Regions,
                     fieldIndex: (int)Cell_FieldIndex.Regions,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Regions),
-                    transl: (XElement subNode, IFormIDLink<Region> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDLinkGetter<IRegionInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -5439,11 +5507,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Regions.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Region>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IRegionInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.Regions,
                     recordType: Cell_Registration.XCLR_HEADER,
-                    transl: (MutagenWriter subWriter, IFormIDLink<Region> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDLinkGetter<IRegionInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,

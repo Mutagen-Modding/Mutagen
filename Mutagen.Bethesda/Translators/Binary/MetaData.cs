@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Binary;
+using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -101,17 +102,17 @@ namespace Mutagen.Bethesda.Binary
         };
 
         public ModHeaderMeta Header(ReadOnlySpan<byte> span) => new ModHeaderMeta(this, span);
-        public ModHeaderMeta GetHeader(IMutagenReadStream stream) => new ModHeaderMeta(this, stream.GetSpan(this.ModHeaderLength));
-        public ModHeaderMeta ReadHeader(IMutagenReadStream stream) => new ModHeaderMeta(this, stream.ReadSpan(this.ModHeaderLength));
+        public ModHeaderMeta GetHeader(IBinaryReadStream stream) => new ModHeaderMeta(this, stream.GetSpan(this.ModHeaderLength));
+        public ModHeaderMeta ReadHeader(IBinaryReadStream stream) => new ModHeaderMeta(this, stream.ReadSpan(this.ModHeaderLength));
         public GroupRecordMeta Group(ReadOnlySpan<byte> span) => new GroupRecordMeta(this, span);
-        public GroupRecordMeta GetGroup(IMutagenReadStream stream) => new GroupRecordMeta(this, stream.GetSpan(this.GroupConstants.HeaderLength));
-        public GroupRecordMeta ReadGroup(IMutagenReadStream stream) => new GroupRecordMeta(this, stream.ReadSpan(this.GroupConstants.HeaderLength));
+        public GroupRecordMeta GetGroup(IBinaryReadStream stream) => new GroupRecordMeta(this, stream.GetSpan(this.GroupConstants.HeaderLength));
+        public GroupRecordMeta ReadGroup(IBinaryReadStream stream) => new GroupRecordMeta(this, stream.ReadSpan(this.GroupConstants.HeaderLength));
         public MajorRecordMeta MajorRecord(ReadOnlySpan<byte> span) => new MajorRecordMeta(this, span);
-        public MajorRecordMeta GetMajorRecord(IMutagenReadStream stream) => new MajorRecordMeta(this, stream.GetSpan(this.MajorConstants.HeaderLength));
-        public MajorRecordMeta ReadMajorRecord(IMutagenReadStream stream) => new MajorRecordMeta(this, stream.ReadSpan(this.MajorConstants.HeaderLength));
+        public MajorRecordMeta GetMajorRecord(IBinaryReadStream stream) => new MajorRecordMeta(this, stream.GetSpan(this.MajorConstants.HeaderLength));
+        public MajorRecordMeta ReadMajorRecord(IBinaryReadStream stream) => new MajorRecordMeta(this, stream.ReadSpan(this.MajorConstants.HeaderLength));
         public SubRecordMeta SubRecord(ReadOnlySpan<byte> span) => new SubRecordMeta(this, span);
-        public SubRecordMeta GetSubRecord(IMutagenReadStream stream) => new SubRecordMeta(this, stream.GetSpan(this.SubConstants.HeaderLength));
-        public SubRecordMeta ReadSubRecord(IMutagenReadStream stream) => new SubRecordMeta(this, stream.ReadSpan(this.SubConstants.HeaderLength));
+        public SubRecordMeta GetSubRecord(IBinaryReadStream stream) => new SubRecordMeta(this, stream.GetSpan(this.SubConstants.HeaderLength));
+        public SubRecordMeta ReadSubRecord(IBinaryReadStream stream) => new SubRecordMeta(this, stream.ReadSpan(this.SubConstants.HeaderLength));
 
         public IRecordConstants Constants(ObjectType type)
         {
@@ -227,6 +228,6 @@ namespace Mutagen.Bethesda.Binary
         public sbyte HeaderLength => meta.SubConstants.HeaderLength;
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
         public ushort RecordLength => BinaryPrimitives.ReadUInt16LittleEndian(this.Span.Slice(4, 2));
-        public long TotalLength => this.HeaderLength + this.RecordLength;
+        public int TotalLength => this.HeaderLength + this.RecordLength;
     }
 }

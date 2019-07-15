@@ -48,11 +48,21 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public const byte Mask = 0xF0;
 
+            public static Condition.Flag GetFlag(byte b)
+            {
+                return (Condition.Flag)(0xF & b);
+            }
+
+            public static CompareOperator GetCompareOperator(byte b)
+            {
+                return (CompareOperator)((Mask & b) / 16);
+            }
+
             static partial void FillBinaryInitialParserCustom(MutagenFrame frame, Condition item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 byte b = frame.ReadUInt8();
-                item.Flags = (Condition.Flag)(0xF & b);
-                item.CompareOperator = (CompareOperator)((Mask & b) / 16);
+                item.Flags = GetFlag(b);
+                item.CompareOperator = GetCompareOperator(b);
             }
         }
 
@@ -64,6 +74,12 @@ namespace Mutagen.Bethesda.Oblivion
                 b |= (byte)(((int)(item.CompareOperator) * 16) & ConditionBinaryCreateTranslation.Mask);
                 writer.Write(b);
             }
+        }
+
+        public partial class ConditionBinaryWrapper
+        {
+            public Condition.Flag Flags => ConditionBinaryCreateTranslation.GetFlag(_data.Span[0]);
+            public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
         }
     }
 }

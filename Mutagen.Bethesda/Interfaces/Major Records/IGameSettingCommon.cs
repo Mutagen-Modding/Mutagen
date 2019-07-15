@@ -78,26 +78,19 @@ namespace Mutagen.Bethesda
             return input;
         }
 
-        public static GetResponse<GameSettingType> GetGameSettingType(MutagenFrame frame)
+        public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlySpan<byte> span, MetaDataConstants meta)
         {
-            var initialPos = frame.Position;
-            frame.Position += 20;
-            if (!Constants.EditorID.Equals(HeaderTranslation.GetNextSubRecordType(frame.Reader, out var edidLength)))
+            span = span.Slice(meta.MajorConstants.HeaderLength);
+            var subRecordMeta = meta.SubRecord(span);
+            if (Constants.EditorID != subRecordMeta.RecordType)
             {
-                return GetResponse<GameSettingType>.Fail($"EDID was not located in expected position: {frame.Position}");
+                return GetResponse<GameSettingType>.Fail($"EDID was not located");
             }
-            frame.Position += 6;
-            if (!StringBinaryTranslation.Instance.Parse(
-                frame.SpawnWithLength(edidLength),
-                out var edid))
-            {
-                return GetResponse<GameSettingType>.Fail($"EDID was parsed in expected position: {frame.Position}");
-            }
+            var edid = BinaryStringUtility.ProcessWholeToZString(span.Slice(subRecordMeta.HeaderLength, subRecordMeta.RecordLength));
             if (edid.Length == 0)
             {
                 return GetResponse<GameSettingType>.Fail("No EDID parsed.");
             }
-            frame.Position = initialPos;
             if (!TryGetGameSettingType(edid[0], out var settingType))
             {
                 return GetResponse<GameSettingType>.Fail($"Unknown game setting type: {edid[0]}");

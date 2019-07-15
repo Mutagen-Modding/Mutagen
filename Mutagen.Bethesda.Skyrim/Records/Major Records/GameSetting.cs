@@ -31,11 +31,11 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            var settingType = GameSettingUtility.GetGameSettingType(frame);
+            var majorMeta = frame.MetaData.GetMajorRecord(frame);
+            var settingType = GameSettingUtility.GetGameSettingType(frame.GetSpan(checked((int)majorMeta.TotalLength)), frame.MetaData);
             if (settingType.Failed)
             {
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"EDID was not located in expected position: {frame.Position}"));
+                errorMask.ReportExceptionOrThrow(new ArgumentException($"Error splitting to desired GameSetting type at position {frame.Position}: {settingType.Reason}"));
                 return null;
             }
             switch (settingType.Value)

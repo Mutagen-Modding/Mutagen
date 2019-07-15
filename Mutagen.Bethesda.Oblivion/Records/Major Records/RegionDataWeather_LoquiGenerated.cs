@@ -87,35 +87,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RegionDataWeather rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRegionDataWeatherInternalGetter rhs)) return false;
+            return ((RegionDataWeatherCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RegionDataWeather rhs)
+        public bool Equals(RegionDataWeather obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Weathers.HasBeenSet != rhs.Weathers.HasBeenSet) return false;
-            if (Weathers.HasBeenSet)
-            {
-                if (!this.Weathers.SequenceEqual(rhs.Weathers)) return false;
-            }
-            return true;
+            return ((RegionDataWeatherCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Weathers.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Weathers).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((RegionDataWeatherCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => RegionDataWeatherXmlWriteTranslation.Instance;
@@ -555,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataWeather_FieldIndex.Weathers:
-                    this._Weathers.SetTo((IEnumerable<WeatherChance>)obj);
+                    this._Weathers.SetTo((SourceSetList<WeatherChance>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -587,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataWeather_FieldIndex.Weathers:
-                    obj._Weathers.SetTo((IEnumerable<WeatherChance>)pair.Value);
+                    obj._Weathers.SetTo((SourceSetList<WeatherChance>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -697,6 +680,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRegionDataWeatherInternalGetter item,
+            IRegionDataWeatherInternalGetter rhs)
+        {
+            return ((RegionDataWeatherCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1098,6 +1090,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRegionDataWeatherInternalGetter lhs,
+            IRegionDataWeatherInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Weathers.HasBeenSet != rhs.Weathers.HasBeenSet) return false;
+            if (lhs.Weathers.HasBeenSet)
+            {
+                if (!lhs.Weathers.SequenceEqual(rhs.Weathers)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IRegionDataInternalGetter lhs,
+            IRegionDataInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRegionDataWeatherInternalGetter)lhs,
+                rhs: rhs as IRegionDataWeatherInternalGetter);
+        }
+
+        public virtual int GetHashCode(IRegionDataWeatherInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Weathers.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Weathers).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IRegionDataInternalGetter item)
+        {
+            return GetHashCode(item: (IRegionDataWeatherInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

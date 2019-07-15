@@ -128,39 +128,18 @@ namespace Mutagen.Bethesda
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is MajorRecord rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IMajorRecordInternalGetter rhs)) return false;
+            return ((MajorRecordCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(MajorRecord rhs)
+        public bool Equals(MajorRecord obj)
         {
-            if (rhs == null) return false;
-            if (this.MajorRecordFlagsRaw != rhs.MajorRecordFlagsRaw) return false;
-            if (this.FormKey != rhs.FormKey) return false;
-            if (this.Version != rhs.Version) return false;
-            if (EditorID_IsSet != rhs.EditorID_IsSet) return false;
-            if (EditorID_IsSet)
-            {
-                if (!string.Equals(this.EditorID, rhs.EditorID)) return false;
-            }
-            return true;
+            return ((MajorRecordCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(MajorRecordFlagsRaw).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FormKey).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
-            if (EditorID_IsSet)
-            {
-                ret = HashHelper.GetHashCode(EditorID).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((MajorRecordCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected virtual object XmlWriteTranslator => MajorRecordXmlWriteTranslation.Instance;
@@ -726,6 +705,15 @@ namespace Mutagen.Bethesda
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IMajorRecordInternalGetter item,
+            IMajorRecordInternalGetter rhs)
+        {
+            return ((MajorRecordCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1296,6 +1284,40 @@ namespace Mutagen.Bethesda.Internals
             mask.Version = true;
             mask.EditorID = item.EditorID_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.MajorRecordFlagsRaw != rhs.MajorRecordFlagsRaw) return false;
+            if (lhs.FormKey != rhs.FormKey) return false;
+            if (lhs.Version != rhs.Version) return false;
+            if (lhs.EditorID_IsSet != rhs.EditorID_IsSet) return false;
+            if (lhs.EditorID_IsSet)
+            {
+                if (!string.Equals(lhs.EditorID, rhs.EditorID)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.MajorRecordFlagsRaw).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FormKey).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
+            if (item.EditorID_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.EditorID).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -2184,6 +2206,62 @@ namespace Mutagen.Bethesda.Internals
 
     }
     #endregion
+
+    public partial class MajorRecordBinaryWrapper : IMajorRecordInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
+        public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
+        protected virtual object CommonInstance => MajorRecordCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMajorRecordInternalGetter)rhs, include);
+
+        protected virtual object XmlWriteTranslator => MajorRecordXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected virtual object BinaryWriteTranslator => MajorRecordBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
+        public FormKey FormKey => FormKeyBinaryTranslation.Parse(_data.Span.Slice(4, 4), this._package.MasterReferences);
+        public UInt32 Version => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4));
+        #region EditorID
+        private int? _EditorIDLocation;
+        public bool EditorID_IsSet => _EditorIDLocation.HasValue;
+        public String EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _EditorIDLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected MajorRecordBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public virtual TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x44494445: // EDID
+                {
+                    _EditorIDLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
+                }
+                default:
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+    }
 
     #endregion
 

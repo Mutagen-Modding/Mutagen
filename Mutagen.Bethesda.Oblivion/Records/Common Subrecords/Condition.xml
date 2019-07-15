@@ -4,8 +4,8 @@
     <Fields>
       <Enum name="CompareOperator" enumName="CompareOperator" binary="DoNothing" />
       <Enum name="Flags" enumName="Condition.Flag" binary="DoNothing" />
-      <CustomLogic name="InitialParser" />
-      <ByteArray name="Fluff" length="3" nullable="NotNull" />
+      <CustomLogic name="InitialParser" byteLength="1" />
+      <ByteArray name="Fluff" byteLength="3" nullable="NotNull" />
       <Float name="ComparisonValue" />
       <Enum name="Function" enumName="Function" byteLength="4" />
       <Int32 name="FirstParameter" />

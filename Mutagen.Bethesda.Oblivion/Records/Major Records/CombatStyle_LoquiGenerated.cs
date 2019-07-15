@@ -567,109 +567,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is CombatStyle rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ICombatStyleInternalGetter rhs)) return false;
+            return ((CombatStyleCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(CombatStyle rhs)
+        public bool Equals(CombatStyle obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (this.DodgePercentChance != rhs.DodgePercentChance) return false;
-            if (this.LeftRightPercentChance != rhs.LeftRightPercentChance) return false;
-            if (!this.DodgeLeftRightTimerMin.EqualsWithin(rhs.DodgeLeftRightTimerMin)) return false;
-            if (!this.DodgeLeftRightTimerMax.EqualsWithin(rhs.DodgeLeftRightTimerMax)) return false;
-            if (!this.DodgeForwardTimerMin.EqualsWithin(rhs.DodgeForwardTimerMin)) return false;
-            if (!this.DodgeForwardTimerMax.EqualsWithin(rhs.DodgeForwardTimerMax)) return false;
-            if (!this.DodgeBackTimerMin.EqualsWithin(rhs.DodgeBackTimerMin)) return false;
-            if (!this.DodgeBackTimerMax.EqualsWithin(rhs.DodgeBackTimerMax)) return false;
-            if (!this.IdleTimerMin.EqualsWithin(rhs.IdleTimerMin)) return false;
-            if (!this.IdleTimerMax.EqualsWithin(rhs.IdleTimerMax)) return false;
-            if (this.BlockPercentChance != rhs.BlockPercentChance) return false;
-            if (this.AttackPercentChance != rhs.AttackPercentChance) return false;
-            if (!this.RecoilStaggerBonusToAttack.EqualsWithin(rhs.RecoilStaggerBonusToAttack)) return false;
-            if (!this.UnconsciousBonusToAttack.EqualsWithin(rhs.UnconsciousBonusToAttack)) return false;
-            if (!this.HandToHandBonusToAttack.EqualsWithin(rhs.HandToHandBonusToAttack)) return false;
-            if (this.PowerAttackPercentChance != rhs.PowerAttackPercentChance) return false;
-            if (!this.RecoilStaggerBonusToPowerAttack.EqualsWithin(rhs.RecoilStaggerBonusToPowerAttack)) return false;
-            if (!this.UnconsciousBonusToPowerAttack.EqualsWithin(rhs.UnconsciousBonusToPowerAttack)) return false;
-            if (this.PowerAttackNormal != rhs.PowerAttackNormal) return false;
-            if (this.PowerAttackForward != rhs.PowerAttackForward) return false;
-            if (this.PowerAttackBack != rhs.PowerAttackBack) return false;
-            if (this.PowerAttackLeft != rhs.PowerAttackLeft) return false;
-            if (this.PowerAttackRight != rhs.PowerAttackRight) return false;
-            if (!this.HoldTimerMin.EqualsWithin(rhs.HoldTimerMin)) return false;
-            if (!this.HoldTimerMax.EqualsWithin(rhs.HoldTimerMax)) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (this.AcrobaticDodgePercentChance != rhs.AcrobaticDodgePercentChance) return false;
-            if (!this.RangeMultOptimal.EqualsWithin(rhs.RangeMultOptimal)) return false;
-            if (!this.RangeMultMax.EqualsWithin(rhs.RangeMultMax)) return false;
-            if (!this.SwitchDistanceMelee.EqualsWithin(rhs.SwitchDistanceMelee)) return false;
-            if (!this.SwitchDistanceRanged.EqualsWithin(rhs.SwitchDistanceRanged)) return false;
-            if (!this.BuffStandoffDistance.EqualsWithin(rhs.BuffStandoffDistance)) return false;
-            if (!this.RangedStandoffDistance.EqualsWithin(rhs.RangedStandoffDistance)) return false;
-            if (!this.GroupStandoffDistance.EqualsWithin(rhs.GroupStandoffDistance)) return false;
-            if (this.RushingAttackPercentChance != rhs.RushingAttackPercentChance) return false;
-            if (!this.RushingAttackDistanceMult.EqualsWithin(rhs.RushingAttackDistanceMult)) return false;
-            if (Advanced_IsSet != rhs.Advanced_IsSet) return false;
-            if (Advanced_IsSet)
-            {
-                if (!object.Equals(this.Advanced, rhs.Advanced)) return false;
-            }
-            if (this.CSTDDataTypeState != rhs.CSTDDataTypeState) return false;
-            return true;
+            return ((CombatStyleCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(DodgePercentChance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LeftRightPercentChance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DodgeLeftRightTimerMin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DodgeLeftRightTimerMax).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DodgeForwardTimerMin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DodgeForwardTimerMax).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DodgeBackTimerMin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DodgeBackTimerMax).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(IdleTimerMin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(IdleTimerMax).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BlockPercentChance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AttackPercentChance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RecoilStaggerBonusToAttack).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(UnconsciousBonusToAttack).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HandToHandBonusToAttack).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PowerAttackPercentChance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RecoilStaggerBonusToPowerAttack).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(UnconsciousBonusToPowerAttack).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PowerAttackNormal).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PowerAttackForward).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PowerAttackBack).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PowerAttackLeft).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PowerAttackRight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HoldTimerMin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HoldTimerMax).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AcrobaticDodgePercentChance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RangeMultOptimal).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RangeMultMax).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SwitchDistanceMelee).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SwitchDistanceRanged).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BuffStandoffDistance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RangedStandoffDistance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(GroupStandoffDistance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RushingAttackPercentChance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RushingAttackDistanceMult).CombineHashCode(ret);
-            if (Advanced_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Advanced).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(CSTDDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((CombatStyleCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => CombatStyleXmlWriteTranslation.Instance;
@@ -2058,6 +1967,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ICombatStyleInternalGetter item,
+            ICombatStyleInternalGetter rhs)
+        {
+            return ((CombatStyleCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -3806,6 +3724,138 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ICombatStyleInternalGetter lhs,
+            ICombatStyleInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.DodgePercentChance != rhs.DodgePercentChance) return false;
+            if (lhs.LeftRightPercentChance != rhs.LeftRightPercentChance) return false;
+            if (!lhs.DodgeLeftRightTimerMin.EqualsWithin(rhs.DodgeLeftRightTimerMin)) return false;
+            if (!lhs.DodgeLeftRightTimerMax.EqualsWithin(rhs.DodgeLeftRightTimerMax)) return false;
+            if (!lhs.DodgeForwardTimerMin.EqualsWithin(rhs.DodgeForwardTimerMin)) return false;
+            if (!lhs.DodgeForwardTimerMax.EqualsWithin(rhs.DodgeForwardTimerMax)) return false;
+            if (!lhs.DodgeBackTimerMin.EqualsWithin(rhs.DodgeBackTimerMin)) return false;
+            if (!lhs.DodgeBackTimerMax.EqualsWithin(rhs.DodgeBackTimerMax)) return false;
+            if (!lhs.IdleTimerMin.EqualsWithin(rhs.IdleTimerMin)) return false;
+            if (!lhs.IdleTimerMax.EqualsWithin(rhs.IdleTimerMax)) return false;
+            if (lhs.BlockPercentChance != rhs.BlockPercentChance) return false;
+            if (lhs.AttackPercentChance != rhs.AttackPercentChance) return false;
+            if (!lhs.RecoilStaggerBonusToAttack.EqualsWithin(rhs.RecoilStaggerBonusToAttack)) return false;
+            if (!lhs.UnconsciousBonusToAttack.EqualsWithin(rhs.UnconsciousBonusToAttack)) return false;
+            if (!lhs.HandToHandBonusToAttack.EqualsWithin(rhs.HandToHandBonusToAttack)) return false;
+            if (lhs.PowerAttackPercentChance != rhs.PowerAttackPercentChance) return false;
+            if (!lhs.RecoilStaggerBonusToPowerAttack.EqualsWithin(rhs.RecoilStaggerBonusToPowerAttack)) return false;
+            if (!lhs.UnconsciousBonusToPowerAttack.EqualsWithin(rhs.UnconsciousBonusToPowerAttack)) return false;
+            if (lhs.PowerAttackNormal != rhs.PowerAttackNormal) return false;
+            if (lhs.PowerAttackForward != rhs.PowerAttackForward) return false;
+            if (lhs.PowerAttackBack != rhs.PowerAttackBack) return false;
+            if (lhs.PowerAttackLeft != rhs.PowerAttackLeft) return false;
+            if (lhs.PowerAttackRight != rhs.PowerAttackRight) return false;
+            if (!lhs.HoldTimerMin.EqualsWithin(rhs.HoldTimerMin)) return false;
+            if (!lhs.HoldTimerMax.EqualsWithin(rhs.HoldTimerMax)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.AcrobaticDodgePercentChance != rhs.AcrobaticDodgePercentChance) return false;
+            if (!lhs.RangeMultOptimal.EqualsWithin(rhs.RangeMultOptimal)) return false;
+            if (!lhs.RangeMultMax.EqualsWithin(rhs.RangeMultMax)) return false;
+            if (!lhs.SwitchDistanceMelee.EqualsWithin(rhs.SwitchDistanceMelee)) return false;
+            if (!lhs.SwitchDistanceRanged.EqualsWithin(rhs.SwitchDistanceRanged)) return false;
+            if (!lhs.BuffStandoffDistance.EqualsWithin(rhs.BuffStandoffDistance)) return false;
+            if (!lhs.RangedStandoffDistance.EqualsWithin(rhs.RangedStandoffDistance)) return false;
+            if (!lhs.GroupStandoffDistance.EqualsWithin(rhs.GroupStandoffDistance)) return false;
+            if (lhs.RushingAttackPercentChance != rhs.RushingAttackPercentChance) return false;
+            if (!lhs.RushingAttackDistanceMult.EqualsWithin(rhs.RushingAttackDistanceMult)) return false;
+            if (lhs.Advanced_IsSet != rhs.Advanced_IsSet) return false;
+            if (lhs.Advanced_IsSet)
+            {
+                if (!object.Equals(lhs.Advanced, rhs.Advanced)) return false;
+            }
+            if (lhs.CSTDDataTypeState != rhs.CSTDDataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ICombatStyleInternalGetter)lhs,
+                rhs: rhs as ICombatStyleInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ICombatStyleInternalGetter)lhs,
+                rhs: rhs as ICombatStyleInternalGetter);
+        }
+
+        public virtual int GetHashCode(ICombatStyleInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.DodgePercentChance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LeftRightPercentChance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DodgeLeftRightTimerMin).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DodgeLeftRightTimerMax).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DodgeForwardTimerMin).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DodgeForwardTimerMax).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DodgeBackTimerMin).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DodgeBackTimerMax).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.IdleTimerMin).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.IdleTimerMax).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BlockPercentChance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AttackPercentChance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RecoilStaggerBonusToAttack).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.UnconsciousBonusToAttack).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HandToHandBonusToAttack).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PowerAttackPercentChance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RecoilStaggerBonusToPowerAttack).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.UnconsciousBonusToPowerAttack).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PowerAttackNormal).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PowerAttackForward).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PowerAttackBack).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PowerAttackLeft).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PowerAttackRight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HoldTimerMin).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HoldTimerMax).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AcrobaticDodgePercentChance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RangeMultOptimal).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RangeMultMax).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SwitchDistanceMelee).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SwitchDistanceRanged).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BuffStandoffDistance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RangedStandoffDistance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.GroupStandoffDistance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RushingAttackPercentChance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RushingAttackDistanceMult).CombineHashCode(ret);
+            if (item.Advanced_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Advanced).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.CSTDDataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ICombatStyleInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ICombatStyleInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

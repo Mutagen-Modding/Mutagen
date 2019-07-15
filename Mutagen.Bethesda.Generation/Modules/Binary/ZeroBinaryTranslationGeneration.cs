@@ -59,9 +59,15 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"{writerAccessor}.WriteZeros({zero.Length});");
         }
 
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             throw new NotImplementedException();
+        }
+
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            ZeroType zero = typeGen as ZeroType;
+            return zero.Length;
         }
     }
 }

@@ -89,28 +89,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is SkillBoost rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ISkillBoostGetter rhs)) return false;
+            return ((SkillBoostCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(SkillBoost rhs)
+        public bool Equals(SkillBoost obj)
         {
-            if (rhs == null) return false;
-            if (this.Skill != rhs.Skill) return false;
-            if (this.Boost != rhs.Boost) return false;
-            return true;
+            return ((SkillBoostCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Skill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Boost).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((SkillBoostCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => SkillBoostXmlWriteTranslation.Instance;
@@ -608,6 +598,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this ISkillBoostGetter item,
+            ISkillBoostGetter rhs)
+        {
+            return ((SkillBoostCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -962,6 +961,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Skill = true;
             mask.Boost = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISkillBoostGetter lhs,
+            ISkillBoostGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Skill != rhs.Skill) return false;
+            if (lhs.Boost != rhs.Boost) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(ISkillBoostGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Skill).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Boost).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1727,6 +1749,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class SkillBoostBinaryWrapper : ISkillBoostGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
+        public static SkillBoost_Registration Registration => SkillBoost_Registration.Instance;
+        protected object CommonInstance => SkillBoostCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillBoostGetter)rhs, include);
+
+        protected object XmlWriteTranslator => SkillBoostXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => SkillBoostBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public ActorValue Skill => (ActorValue)_data.Span.Slice(0, 1)[0];
+        public SByte Boost => (sbyte)_data.Span.Slice(1, 1)[0];
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected SkillBoostBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static SkillBoostBinaryWrapper SkillBoostFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new SkillBoostBinaryWrapper(
+                bytes: stream.RemainingMemory.Slice(0, 2),
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
 
     #endregion
 

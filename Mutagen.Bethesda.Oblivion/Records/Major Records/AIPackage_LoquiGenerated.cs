@@ -210,68 +210,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is AIPackage rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IAIPackageInternalGetter rhs)) return false;
+            return ((AIPackageCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(AIPackage rhs)
+        public bool Equals(AIPackage obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (this.GeneralType != rhs.GeneralType) return false;
-            if (Location_IsSet != rhs.Location_IsSet) return false;
-            if (Location_IsSet)
-            {
-                if (!object.Equals(this.Location, rhs.Location)) return false;
-            }
-            if (Schedule_IsSet != rhs.Schedule_IsSet) return false;
-            if (Schedule_IsSet)
-            {
-                if (!object.Equals(this.Schedule, rhs.Schedule)) return false;
-            }
-            if (Target_IsSet != rhs.Target_IsSet) return false;
-            if (Target_IsSet)
-            {
-                if (!object.Equals(this.Target, rhs.Target)) return false;
-            }
-            if (Conditions.HasBeenSet != rhs.Conditions.HasBeenSet) return false;
-            if (Conditions.HasBeenSet)
-            {
-                if (!this.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            }
-            if (this.PKDTDataTypeState != rhs.PKDTDataTypeState) return false;
-            return true;
+            return ((AIPackageCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(GeneralType).CombineHashCode(ret);
-            if (Location_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Location).CombineHashCode(ret);
-            }
-            if (Schedule_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Schedule).CombineHashCode(ret);
-            }
-            if (Target_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Target).CombineHashCode(ret);
-            }
-            if (Conditions.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Conditions).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(PKDTDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((AIPackageCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => AIPackageXmlWriteTranslation.Instance;
@@ -862,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Target = (AIPackageTarget)obj;
                     break;
                 case AIPackage_FieldIndex.Conditions:
-                    this._Conditions.SetTo((IEnumerable<Condition>)obj);
+                    this._Conditions.SetTo((SourceSetList<Condition>)obj);
                     break;
                 case AIPackage_FieldIndex.PKDTDataTypeState:
                     this.PKDTDataTypeState = (AIPackage.PKDTDataType)obj;
@@ -912,7 +862,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Target = (AIPackageTarget)pair.Value;
                     break;
                 case AIPackage_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value);
+                    obj._Conditions.SetTo((SourceSetList<Condition>)pair.Value);
                     break;
                 case AIPackage_FieldIndex.PKDTDataTypeState:
                     obj.PKDTDataTypeState = (AIPackage.PKDTDataType)pair.Value;
@@ -1073,6 +1023,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IAIPackageInternalGetter item,
+            IAIPackageInternalGetter rhs)
+        {
+            return ((AIPackageCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1831,6 +1790,97 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IAIPackageInternalGetter lhs,
+            IAIPackageInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.GeneralType != rhs.GeneralType) return false;
+            if (lhs.Location_IsSet != rhs.Location_IsSet) return false;
+            if (lhs.Location_IsSet)
+            {
+                if (!object.Equals(lhs.Location, rhs.Location)) return false;
+            }
+            if (lhs.Schedule_IsSet != rhs.Schedule_IsSet) return false;
+            if (lhs.Schedule_IsSet)
+            {
+                if (!object.Equals(lhs.Schedule, rhs.Schedule)) return false;
+            }
+            if (lhs.Target_IsSet != rhs.Target_IsSet) return false;
+            if (lhs.Target_IsSet)
+            {
+                if (!object.Equals(lhs.Target, rhs.Target)) return false;
+            }
+            if (lhs.Conditions.HasBeenSet != rhs.Conditions.HasBeenSet) return false;
+            if (lhs.Conditions.HasBeenSet)
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            }
+            if (lhs.PKDTDataTypeState != rhs.PKDTDataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IAIPackageInternalGetter)lhs,
+                rhs: rhs as IAIPackageInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IAIPackageInternalGetter)lhs,
+                rhs: rhs as IAIPackageInternalGetter);
+        }
+
+        public virtual int GetHashCode(IAIPackageInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.GeneralType).CombineHashCode(ret);
+            if (item.Location_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Location).CombineHashCode(ret);
+            }
+            if (item.Schedule_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Schedule).CombineHashCode(ret);
+            }
+            if (item.Target_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Target).CombineHashCode(ret);
+            }
+            if (item.Conditions.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.PKDTDataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IAIPackageInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IAIPackageInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

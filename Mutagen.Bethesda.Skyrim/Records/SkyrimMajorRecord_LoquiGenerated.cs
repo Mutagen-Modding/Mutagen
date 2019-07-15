@@ -72,28 +72,18 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is SkyrimMajorRecord rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ISkyrimMajorRecordInternalGetter rhs)) return false;
+            return ((SkyrimMajorRecordCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(SkyrimMajorRecord rhs)
+        public bool Equals(SkyrimMajorRecord obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (this.SkyrimMajorRecordFlags != rhs.SkyrimMajorRecordFlags) return false;
-            return true;
+            return ((SkyrimMajorRecordCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(SkyrimMajorRecordFlags).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((SkyrimMajorRecordCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => SkyrimMajorRecordXmlWriteTranslation.Instance;
@@ -530,6 +520,15 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
+        public static bool Equals(
+            this ISkyrimMajorRecordInternalGetter item,
+            ISkyrimMajorRecordInternalGetter rhs)
+        {
+            return ((SkyrimMajorRecordCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -905,6 +904,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISkyrimMajorRecordInternalGetter lhs,
+            ISkyrimMajorRecordInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.SkyrimMajorRecordFlags != rhs.SkyrimMajorRecordFlags) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISkyrimMajorRecordInternalGetter)lhs,
+                rhs: rhs as ISkyrimMajorRecordInternalGetter);
+        }
+
+        public virtual int GetHashCode(ISkyrimMajorRecordInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.SkyrimMajorRecordFlags).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISkyrimMajorRecordInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1493,6 +1529,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
     #endregion
+
+    public partial class SkyrimMajorRecordBinaryWrapper :
+        MajorRecordBinaryWrapper,
+        ISkyrimMajorRecordInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
+        public new static SkyrimMajorRecord_Registration Registration => SkyrimMajorRecord_Registration.Instance;
+        protected override object CommonInstance => SkyrimMajorRecordCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimMajorRecordInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => SkyrimMajorRecordXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SkyrimMajorRecordBinaryWriteTranslation.Instance;
+
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected SkyrimMajorRecordBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+    }
 
     #endregion
 

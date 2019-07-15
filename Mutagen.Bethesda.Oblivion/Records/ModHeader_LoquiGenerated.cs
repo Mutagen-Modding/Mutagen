@@ -71,6 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IModHeaderGetter.Fluff => this.Fluff;
         #endregion
         #region Stats
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -98,7 +99,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => TypeOffsets_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IModHeaderGetter.TypeOffsets => this.TypeOffsets;
+        ReadOnlySpan<Byte> IModHeaderGetter.TypeOffsets => this.TypeOffsets;
         public void TypeOffsets_Set(
             Byte[] value,
             bool markSet = true)
@@ -126,7 +127,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => Deleted_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IModHeaderGetter.Deleted => this.Deleted;
+        ReadOnlySpan<Byte> IModHeaderGetter.Deleted => this.Deleted;
         public void Deleted_Set(
             Byte[] value,
             bool markSet = true)
@@ -247,82 +248,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ModHeader rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IModHeaderGetter rhs)) return false;
+            return ((ModHeaderCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ModHeader rhs)
+        public bool Equals(ModHeader obj)
         {
-            if (rhs == null) return false;
-            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
-            if (!object.Equals(this.Stats, rhs.Stats)) return false;
-            if (TypeOffsets_IsSet != rhs.TypeOffsets_IsSet) return false;
-            if (TypeOffsets_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.TypeOffsets, rhs.TypeOffsets)) return false;
-            }
-            if (Deleted_IsSet != rhs.Deleted_IsSet) return false;
-            if (Deleted_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.Deleted, rhs.Deleted)) return false;
-            }
-            if (Author_IsSet != rhs.Author_IsSet) return false;
-            if (Author_IsSet)
-            {
-                if (!string.Equals(this.Author, rhs.Author)) return false;
-            }
-            if (Description_IsSet != rhs.Description_IsSet) return false;
-            if (Description_IsSet)
-            {
-                if (!string.Equals(this.Description, rhs.Description)) return false;
-            }
-            if (MasterReferences.HasBeenSet != rhs.MasterReferences.HasBeenSet) return false;
-            if (MasterReferences.HasBeenSet)
-            {
-                if (!this.MasterReferences.SequenceEqual(rhs.MasterReferences)) return false;
-            }
-            if (VestigialData_IsSet != rhs.VestigialData_IsSet) return false;
-            if (VestigialData_IsSet)
-            {
-                if (this.VestigialData != rhs.VestigialData) return false;
-            }
-            return true;
+            return ((ModHeaderCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Stats).CombineHashCode(ret);
-            if (TypeOffsets_IsSet)
-            {
-                ret = HashHelper.GetHashCode(TypeOffsets).CombineHashCode(ret);
-            }
-            if (Deleted_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Deleted).CombineHashCode(ret);
-            }
-            if (Author_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Author).CombineHashCode(ret);
-            }
-            if (Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
-            }
-            if (MasterReferences.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(MasterReferences).CombineHashCode(ret);
-            }
-            if (VestigialData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(VestigialData).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((ModHeaderCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
@@ -851,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case ModHeader_FieldIndex.MasterReferences:
-                    this._MasterReferences.SetTo((IEnumerable<MasterReference>)obj);
+                    this._MasterReferences.SetTo((SourceSetList<MasterReference>)obj);
                     break;
                 case ModHeader_FieldIndex.VestigialData:
                     this.VestigialData = (UInt64)obj;
@@ -903,7 +840,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case ModHeader_FieldIndex.MasterReferences:
-                    obj._MasterReferences.SetTo((IEnumerable<MasterReference>)pair.Value);
+                    obj._MasterReferences.SetTo((SourceSetList<MasterReference>)pair.Value);
                     break;
                 case ModHeader_FieldIndex.VestigialData:
                     obj.VestigialData = (UInt64)pair.Value;
@@ -964,7 +901,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Fluff
-        Byte[] Fluff { get; }
+        ReadOnlySpan<Byte> Fluff { get; }
 
         #endregion
         #region Stats
@@ -972,12 +909,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region TypeOffsets
-        Byte[] TypeOffsets { get; }
+        ReadOnlySpan<Byte> TypeOffsets { get; }
         bool TypeOffsets_IsSet { get; }
 
         #endregion
         #region Deleted
-        Byte[] Deleted { get; }
+        ReadOnlySpan<Byte> Deleted { get; }
         bool Deleted_IsSet { get; }
 
         #endregion
@@ -1063,6 +1000,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IModHeaderGetter item,
+            IModHeaderGetter rhs)
+        {
+            return ((ModHeaderCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1648,10 +1594,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
             ret.Stats = MaskItemExt.Factory(item.Stats.GetEqualsMask(rhs.Stats, include), include);
-            ret.TypeOffsets = item.TypeOffsets_IsSet == rhs.TypeOffsets_IsSet && ByteExt.EqualsFast(item.TypeOffsets, rhs.TypeOffsets);
-            ret.Deleted = item.Deleted_IsSet == rhs.Deleted_IsSet && ByteExt.EqualsFast(item.Deleted, rhs.Deleted);
+            ret.TypeOffsets = item.TypeOffsets_IsSet == rhs.TypeOffsets_IsSet && MemoryExtensions.SequenceEqual(item.TypeOffsets, rhs.TypeOffsets);
+            ret.Deleted = item.Deleted_IsSet == rhs.Deleted_IsSet && MemoryExtensions.SequenceEqual(item.Deleted, rhs.Deleted);
             ret.Author = item.Author_IsSet == rhs.Author_IsSet && string.Equals(item.Author, rhs.Author);
             ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
             ret.MasterReferences = item.MasterReferences.CollectionEqualsHelper(
@@ -1707,7 +1653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Fluff ?? true)
             {
-                fg.AppendLine($"Fluff => {item.Fluff}");
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
             if (printMask?.Stats?.Overall ?? true)
             {
@@ -1715,11 +1661,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.TypeOffsets ?? true)
             {
-                fg.AppendLine($"TypeOffsets => {item.TypeOffsets}");
+                fg.AppendLine($"TypeOffsets => {SpanExt.ToHexString(item.TypeOffsets)}");
             }
             if (printMask?.Deleted ?? true)
             {
-                fg.AppendLine($"Deleted => {item.Deleted}");
+                fg.AppendLine($"Deleted => {SpanExt.ToHexString(item.Deleted)}");
             }
             if (printMask?.Author ?? true)
             {
@@ -1779,6 +1725,83 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.MasterReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MasterReference_Mask<bool>>>>(item.MasterReferences.HasBeenSet, item.MasterReferences.WithIndex().Select((i) => new MaskItemIndexed<bool, MasterReference_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.VestigialData = item.VestigialData_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IModHeaderGetter lhs,
+            IModHeaderGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!object.Equals(lhs.Stats, rhs.Stats)) return false;
+            if (lhs.TypeOffsets_IsSet != rhs.TypeOffsets_IsSet) return false;
+            if (lhs.TypeOffsets_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
+            }
+            if (lhs.Deleted_IsSet != rhs.Deleted_IsSet) return false;
+            if (lhs.Deleted_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Deleted, rhs.Deleted)) return false;
+            }
+            if (lhs.Author_IsSet != rhs.Author_IsSet) return false;
+            if (lhs.Author_IsSet)
+            {
+                if (!string.Equals(lhs.Author, rhs.Author)) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.MasterReferences.HasBeenSet != rhs.MasterReferences.HasBeenSet) return false;
+            if (lhs.MasterReferences.HasBeenSet)
+            {
+                if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences)) return false;
+            }
+            if (lhs.VestigialData_IsSet != rhs.VestigialData_IsSet) return false;
+            if (lhs.VestigialData_IsSet)
+            {
+                if (lhs.VestigialData != rhs.VestigialData) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IModHeaderGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Stats).CombineHashCode(ret);
+            if (item.TypeOffsets_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.TypeOffsets).CombineHashCode(ret);
+            }
+            if (item.Deleted_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Deleted).CombineHashCode(ret);
+            }
+            if (item.Author_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Author).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            if (item.MasterReferences.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.MasterReferences).CombineHashCode(ret);
+            }
+            if (item.VestigialData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.VestigialData).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -3108,6 +3131,142 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class ModHeaderBinaryWrapper : IModHeaderGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
+        public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
+        protected object CommonInstance => ModHeaderCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderGetter)rhs, include);
+
+        protected object XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(0, 12).ToArray();
+        #region Stats
+        private IModStatsGetter _Stats;
+        public IModStatsGetter Stats => _Stats ?? new ModStats();
+        #endregion
+        #region TypeOffsets
+        private int? _TypeOffsetsLocation;
+        public bool TypeOffsets_IsSet => _TypeOffsetsLocation.HasValue;
+        public ReadOnlySpan<Byte> TypeOffsets => _TypeOffsetsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _TypeOffsetsLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region Deleted
+        private int? _DeletedLocation;
+        public bool Deleted_IsSet => _DeletedLocation.HasValue;
+        public ReadOnlySpan<Byte> Deleted => _DeletedLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _DeletedLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region Author
+        private int? _AuthorLocation;
+        public bool Author_IsSet => _AuthorLocation.HasValue;
+        public String Author => _AuthorLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _AuthorLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public bool Description_IsSet => _DescriptionLocation.HasValue;
+        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
+        #endregion
+        public IReadOnlySetList<IMasterReferenceGetter> MasterReferences { get; private set; } = EmptySetList<MasterReferenceBinaryWrapper>.Instance;
+        #region VestigialData
+        private int? _VestigialDataLocation;
+        public bool VestigialData_IsSet => _VestigialDataLocation.HasValue;
+        public UInt64 VestigialData => _VestigialDataLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VestigialDataLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ModHeaderBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static ModHeaderBinaryWrapper ModHeaderFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new ModHeaderBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x52444548: // HEDR
+                {
+                    this._Stats = ModStatsBinaryWrapper.ModStatsFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
+                }
+                case 0x5453464F: // OFST
+                {
+                    _TypeOffsetsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
+                }
+                case 0x454C4544: // DELE
+                {
+                    _DeletedLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    _AuthorLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
+                }
+                case 0x5453414D: // MAST
+                {
+                    this.MasterReferences = UtilityTranslation.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        offset: offset,
+                        trigger: ModHeader_Registration.MAST_HEADER,
+                        factory:  MasterReferenceBinaryWrapper.MasterReferenceFactory);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
+                }
+                case 0x41544144: // DATA
+                {
+                    _VestigialDataLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.VestigialData);
+                }
+                default:
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+    }
 
     #endregion
 

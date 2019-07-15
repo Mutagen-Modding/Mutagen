@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial interface ISoundDataInternalGetter
     {
-        byte[] Marker { get; }
+        ReadOnlySpan<byte> Marker { get; }
     }
 
     public partial class SoundData
@@ -37,7 +37,8 @@ namespace Mutagen.Bethesda.Oblivion
         public const int MaxAttenuationDistanceMultiplier = 100;
 
         private static byte[] _marker = new byte[] { 1 };
-        public virtual byte[] Marker => _marker;
+        public static ReadOnlySpan<byte> SoundDataMarker => _marker;
+        public virtual ReadOnlySpan<byte> Marker => SoundDataMarker;
 
         partial void CustomCtor()
         {
@@ -103,6 +104,21 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.MaximumAttenuationDistance = (ushort)(b * SoundData.MaxAttenuationDistanceMultiplier);
                 }
+            }
+        }
+
+        public partial class SoundDataBinaryWrapper
+        {
+            public virtual ReadOnlySpan<byte> Marker => SoundData.SoundDataMarker;
+
+            public ushort GetMinimumAttenuationDistanceCustom(ReadOnlySpan<byte> span)
+            {
+                return (ushort)(span[0] * SoundData.MinAttenuationDistanceMultiplier);
+            }
+
+            public ushort GetMaximumAttenuationDistanceCustom(ReadOnlySpan<byte> span)
+            {
+                return (ushort)(span[0] * SoundData.MaxAttenuationDistanceMultiplier);
             }
         }
     }

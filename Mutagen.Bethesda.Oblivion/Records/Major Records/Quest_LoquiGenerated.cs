@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Script> IQuest.Script_Property => this.Script_Property;
         IScriptInternalGetter IQuestGetter.Script => this.Script_Property.Item;
-        IFormIDSetLinkGetter<Script> IQuestGetter.Script_Property => this.Script_Property;
+        IFormIDSetLinkGetter<IScriptInternalGetter> IQuestGetter.Script_Property => this.Script_Property;
         #endregion
         #region Name
         public bool Name_IsSet
@@ -214,86 +214,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Quest rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IQuestInternalGetter rhs)) return false;
+            return ((QuestCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Quest rhs)
+        public bool Equals(Quest obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (Script_Property.HasBeenSet)
-            {
-                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            if (this.Flags != rhs.Flags) return false;
-            if (this.Priority != rhs.Priority) return false;
-            if (Conditions.HasBeenSet != rhs.Conditions.HasBeenSet) return false;
-            if (Conditions.HasBeenSet)
-            {
-                if (!this.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            }
-            if (Stages.HasBeenSet != rhs.Stages.HasBeenSet) return false;
-            if (Stages.HasBeenSet)
-            {
-                if (!this.Stages.SequenceEqual(rhs.Stages)) return false;
-            }
-            if (Targets.HasBeenSet != rhs.Targets.HasBeenSet) return false;
-            if (Targets.HasBeenSet)
-            {
-                if (!this.Targets.SequenceEqual(rhs.Targets)) return false;
-            }
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((QuestCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
-            }
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Priority).CombineHashCode(ret);
-            if (Conditions.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Conditions).CombineHashCode(ret);
-            }
-            if (Stages.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Stages).CombineHashCode(ret);
-            }
-            if (Targets.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Targets).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((QuestCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => QuestXmlWriteTranslation.Instance;
@@ -915,13 +847,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Priority = (Byte)obj;
                     break;
                 case Quest_FieldIndex.Conditions:
-                    this._Conditions.SetTo((IEnumerable<Condition>)obj);
+                    this._Conditions.SetTo((SourceSetList<Condition>)obj);
                     break;
                 case Quest_FieldIndex.Stages:
-                    this._Stages.SetTo((IEnumerable<QuestStage>)obj);
+                    this._Stages.SetTo((SourceSetList<QuestStage>)obj);
                     break;
                 case Quest_FieldIndex.Targets:
-                    this._Targets.SetTo((IEnumerable<QuestTarget>)obj);
+                    this._Targets.SetTo((SourceSetList<QuestTarget>)obj);
                     break;
                 case Quest_FieldIndex.DATADataTypeState:
                     this.DATADataTypeState = (Quest.DATADataType)obj;
@@ -971,13 +903,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Priority = (Byte)pair.Value;
                     break;
                 case Quest_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value);
+                    obj._Conditions.SetTo((SourceSetList<Condition>)pair.Value);
                     break;
                 case Quest_FieldIndex.Stages:
-                    obj._Stages.SetTo((IEnumerable<QuestStage>)pair.Value);
+                    obj._Stages.SetTo((SourceSetList<QuestStage>)pair.Value);
                     break;
                 case Quest_FieldIndex.Targets:
-                    obj._Targets.SetTo((IEnumerable<QuestTarget>)pair.Value);
+                    obj._Targets.SetTo((SourceSetList<QuestTarget>)pair.Value);
                     break;
                 case Quest_FieldIndex.DATADataTypeState:
                     obj.DATADataTypeState = (Quest.DATADataType)pair.Value;
@@ -1040,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Script
         IScriptInternalGetter Script { get; }
-        IFormIDSetLinkGetter<Script> Script_Property { get; }
+        IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property { get; }
 
         #endregion
         #region Name
@@ -1145,6 +1077,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IQuestInternalGetter item,
+            IQuestInternalGetter rhs)
+        {
+            return ((QuestCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1949,6 +1890,115 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IQuestInternalGetter lhs,
+            IQuestInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Priority != rhs.Priority) return false;
+            if (lhs.Conditions.HasBeenSet != rhs.Conditions.HasBeenSet) return false;
+            if (lhs.Conditions.HasBeenSet)
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            }
+            if (lhs.Stages.HasBeenSet != rhs.Stages.HasBeenSet) return false;
+            if (lhs.Stages.HasBeenSet)
+            {
+                if (!lhs.Stages.SequenceEqual(rhs.Stages)) return false;
+            }
+            if (lhs.Targets.HasBeenSet != rhs.Targets.HasBeenSet) return false;
+            if (lhs.Targets.HasBeenSet)
+            {
+                if (!lhs.Targets.SequenceEqual(rhs.Targets)) return false;
+            }
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IQuestInternalGetter)lhs,
+                rhs: rhs as IQuestInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IQuestInternalGetter)lhs,
+                rhs: rhs as IQuestInternalGetter);
+        }
+
+        public virtual int GetHashCode(IQuestInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Priority).CombineHashCode(ret);
+            if (item.Conditions.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
+            }
+            if (item.Stages.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Stages).CombineHashCode(ret);
+            }
+            if (item.Targets.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Targets).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IQuestInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IQuestInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

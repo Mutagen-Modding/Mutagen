@@ -98,30 +98,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is TeleportDestination rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ITeleportDestinationGetter rhs)) return false;
+            return ((TeleportDestinationCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(TeleportDestination rhs)
+        public bool Equals(TeleportDestination obj)
         {
-            if (rhs == null) return false;
-            if (!this.Destination_Property.Equals(rhs.Destination_Property)) return false;
-            if (!this.Position.Equals(rhs.Position)) return false;
-            if (!this.Rotation.Equals(rhs.Rotation)) return false;
-            return true;
+            return ((TeleportDestinationCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Destination).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Position).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Rotation).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((TeleportDestinationCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => TeleportDestinationXmlWriteTranslation.Instance;
@@ -670,6 +658,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this ITeleportDestinationGetter item,
+            ITeleportDestinationGetter rhs)
+        {
+            return ((TeleportDestinationCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1062,6 +1059,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Position = true;
             mask.Rotation = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ITeleportDestinationGetter lhs,
+            ITeleportDestinationGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Destination_Property.Equals(rhs.Destination_Property)) return false;
+            if (!lhs.Position.Equals(rhs.Position)) return false;
+            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(ITeleportDestinationGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Destination).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Position).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Rotation).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

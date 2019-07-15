@@ -74,26 +74,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is NPCSpawn rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is INPCSpawnInternalGetter rhs)) return false;
+            return ((NPCSpawnCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(NPCSpawn rhs)
+        public bool Equals(NPCSpawn obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            return true;
+            return ((NPCSpawnCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((NPCSpawnCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => NPCSpawnXmlWriteTranslation.Instance;
@@ -514,6 +506,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this INPCSpawnInternalGetter item,
+            INPCSpawnInternalGetter rhs)
+        {
+            return ((NPCSpawnCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -875,6 +876,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            INPCSpawnInternalGetter lhs,
+            INPCSpawnInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (INPCSpawnInternalGetter)lhs,
+                rhs: rhs as INPCSpawnInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (INPCSpawnInternalGetter)lhs,
+                rhs: rhs as INPCSpawnInternalGetter);
+        }
+
+        public virtual int GetHashCode(INPCSpawnInternalGetter item)
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (INPCSpawnInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (INPCSpawnInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

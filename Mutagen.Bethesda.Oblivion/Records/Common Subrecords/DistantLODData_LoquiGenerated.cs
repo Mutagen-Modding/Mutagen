@@ -97,30 +97,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is DistantLODData rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IDistantLODDataGetter rhs)) return false;
+            return ((DistantLODDataCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(DistantLODData rhs)
+        public bool Equals(DistantLODData obj)
         {
-            if (rhs == null) return false;
-            if (!this.Unknown0.EqualsWithin(rhs.Unknown0)) return false;
-            if (!this.Unknown1.EqualsWithin(rhs.Unknown1)) return false;
-            if (!this.Unknown2.EqualsWithin(rhs.Unknown2)) return false;
-            return true;
+            return ((DistantLODDataCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Unknown0).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Unknown1).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Unknown2).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((DistantLODDataCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => DistantLODDataXmlWriteTranslation.Instance;
@@ -657,6 +645,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IDistantLODDataGetter item,
+            IDistantLODDataGetter rhs)
+        {
+            return ((DistantLODDataCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1049,6 +1046,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Unknown1 = true;
             mask.Unknown2 = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IDistantLODDataGetter lhs,
+            IDistantLODDataGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Unknown0.EqualsWithin(rhs.Unknown0)) return false;
+            if (!lhs.Unknown1.EqualsWithin(rhs.Unknown1)) return false;
+            if (!lhs.Unknown2.EqualsWithin(rhs.Unknown2)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IDistantLODDataGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Unknown0).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Unknown1).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Unknown2).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

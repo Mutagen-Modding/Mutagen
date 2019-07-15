@@ -3,6 +3,7 @@ using Loqui.Internal;
 using Noggog;
 using Noggog.Notifying;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -65,9 +66,7 @@ namespace Mutagen.Bethesda.Binary
         {
             if (parseWhole)
             {
-                var span = frame.ReadSpan(checked((int)frame.Remaining));
-                span = BinaryStringUtility.ProcessNullTermination(span);
-                item = BinaryStringUtility.ToZString(span);
+                item = BinaryStringUtility.ProcessWholeToZString(frame.ReadSpan(checked((int)frame.Remaining)));
             }
             else
             {

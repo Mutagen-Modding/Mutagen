@@ -5,9 +5,9 @@
       <Where>MajorRecord</Where>
     </Generic>
     <Fields>
-      <String name="ContainedRecordType" derivative="true" binary="Custom" />
+      <CustomLogic byteLength="4" name="ContainedRecordTypeParse" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
-      <ByteArray name="LastModified" length="4" nullable="NotNull" />
+      <ByteArray name="LastModified" byteLength="4" nullable="NotNull" />
       <Dict name="Items" lengthLength="4" asyncItems="true" hasBeenSet="False" >
         <KeyedValue keyAccessor="FormKey" keyType="FormKey">
           <Ref>
@@ -22,7 +22,7 @@
     <Fields>
       <String name="ContainedRecordType" derivative="true" binary="Custom" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
-      <ByteArray name="LastModified" length="4" nullable="NotNull" />
+      <ByteArray name="LastModified" byteLength="4" nullable="NotNull" />
       <List name="Items" lengthLength="4" hasBeenSet="False" asyncItems="true" thread="true" >
         <Ref>
           <Generic>T</Generic>

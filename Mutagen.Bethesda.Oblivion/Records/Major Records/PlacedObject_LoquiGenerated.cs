@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<OblivionMajorRecord> IPlacedObject.Base_Property => this.Base_Property;
         IOblivionMajorRecordInternalGetter IPlacedObjectGetter.Base => this.Base_Property.Item;
-        IFormIDSetLinkGetter<OblivionMajorRecord> IPlacedObjectGetter.Base_Property => this.Base_Property;
+        IFormIDSetLinkGetter<IOblivionMajorRecordInternalGetter> IPlacedObjectGetter.Base_Property => this.Base_Property;
         #endregion
         #region XPCIFluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => XPCIFluff_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IPlacedObjectGetter.XPCIFluff => this.XPCIFluff;
+        ReadOnlySpan<Byte> IPlacedObjectGetter.XPCIFluff => this.XPCIFluff;
         public void XPCIFluff_Set(
             Byte[] value,
             bool markSet = true)
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => FULLFluff_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IPlacedObjectGetter.FULLFluff => this.FULLFluff;
+        ReadOnlySpan<Byte> IPlacedObjectGetter.FULLFluff => this.FULLFluff;
         public void FULLFluff_Set(
             Byte[] value,
             bool markSet = true)
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Global> IPlacedObject.GlobalVariable_Property => this.GlobalVariable_Property;
         IGlobalInternalGetter IPlacedObjectGetter.GlobalVariable => this.GlobalVariable_Property.Item;
-        IFormIDSetLinkGetter<Global> IPlacedObjectGetter.GlobalVariable_Property => this.GlobalVariable_Property;
+        IFormIDSetLinkGetter<IGlobalInternalGetter> IPlacedObjectGetter.GlobalVariable_Property => this.GlobalVariable_Property;
         #endregion
         #region EnableParent
         public bool EnableParent_IsSet
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<OblivionMajorRecord> IPlacedObject.Unknown_Property => this.Unknown_Property;
         IOblivionMajorRecordInternalGetter IPlacedObjectGetter.Unknown => this.Unknown_Property.Item;
-        IFormIDSetLinkGetter<OblivionMajorRecord> IPlacedObjectGetter.Unknown_Property => this.Unknown_Property;
+        IFormIDSetLinkGetter<IOblivionMajorRecordInternalGetter> IPlacedObjectGetter.Unknown_Property => this.Unknown_Property;
         #endregion
         #region ActionFlags
         public bool ActionFlags_IsSet
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => RagdollData_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IPlacedObjectGetter.RagdollData => this.RagdollData;
+        ReadOnlySpan<Byte> IPlacedObjectGetter.RagdollData => this.RagdollData;
         public void RagdollData_Set(
             Byte[] value,
             bool markSet = true)
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<SoulGem> IPlacedObject.ContainedSoul_Property => this.ContainedSoul_Property;
         ISoulGemInternalGetter IPlacedObjectGetter.ContainedSoul => this.ContainedSoul_Property.Item;
-        IFormIDSetLinkGetter<SoulGem> IPlacedObjectGetter.ContainedSoul_Property => this.ContainedSoul_Property;
+        IFormIDSetLinkGetter<ISoulGemInternalGetter> IPlacedObjectGetter.ContainedSoul_Property => this.ContainedSoul_Property;
         #endregion
         #region Position
         private P3Float _Position;
@@ -599,232 +599,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is PlacedObject rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IPlacedObjectInternalGetter rhs)) return false;
+            return ((PlacedObjectCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(PlacedObject rhs)
+        public bool Equals(PlacedObject obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Base_Property.HasBeenSet != rhs.Base_Property.HasBeenSet) return false;
-            if (Base_Property.HasBeenSet)
-            {
-                if (!this.Base_Property.Equals(rhs.Base_Property)) return false;
-            }
-            if (XPCIFluff_IsSet != rhs.XPCIFluff_IsSet) return false;
-            if (XPCIFluff_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.XPCIFluff, rhs.XPCIFluff)) return false;
-            }
-            if (FULLFluff_IsSet != rhs.FULLFluff_IsSet) return false;
-            if (FULLFluff_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.FULLFluff, rhs.FULLFluff)) return false;
-            }
-            if (TeleportDestination_IsSet != rhs.TeleportDestination_IsSet) return false;
-            if (TeleportDestination_IsSet)
-            {
-                if (!object.Equals(this.TeleportDestination, rhs.TeleportDestination)) return false;
-            }
-            if (Lock_IsSet != rhs.Lock_IsSet) return false;
-            if (Lock_IsSet)
-            {
-                if (!object.Equals(this.Lock, rhs.Lock)) return false;
-            }
-            if (Owner_Property.HasBeenSet != rhs.Owner_Property.HasBeenSet) return false;
-            if (Owner_Property.HasBeenSet)
-            {
-                if (!this.Owner_Property.Equals(rhs.Owner_Property)) return false;
-            }
-            if (FactionRank_IsSet != rhs.FactionRank_IsSet) return false;
-            if (FactionRank_IsSet)
-            {
-                if (this.FactionRank != rhs.FactionRank) return false;
-            }
-            if (GlobalVariable_Property.HasBeenSet != rhs.GlobalVariable_Property.HasBeenSet) return false;
-            if (GlobalVariable_Property.HasBeenSet)
-            {
-                if (!this.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property)) return false;
-            }
-            if (EnableParent_IsSet != rhs.EnableParent_IsSet) return false;
-            if (EnableParent_IsSet)
-            {
-                if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
-            }
-            if (Target_Property.HasBeenSet != rhs.Target_Property.HasBeenSet) return false;
-            if (Target_Property.HasBeenSet)
-            {
-                if (!this.Target_Property.Equals(rhs.Target_Property)) return false;
-            }
-            if (SpeedTreeSeed_IsSet != rhs.SpeedTreeSeed_IsSet) return false;
-            if (SpeedTreeSeed_IsSet)
-            {
-                if (this.SpeedTreeSeed != rhs.SpeedTreeSeed) return false;
-            }
-            if (DistantLODData_IsSet != rhs.DistantLODData_IsSet) return false;
-            if (DistantLODData_IsSet)
-            {
-                if (!object.Equals(this.DistantLODData, rhs.DistantLODData)) return false;
-            }
-            if (Charge_IsSet != rhs.Charge_IsSet) return false;
-            if (Charge_IsSet)
-            {
-                if (!this.Charge.EqualsWithin(rhs.Charge)) return false;
-            }
-            if (Health_IsSet != rhs.Health_IsSet) return false;
-            if (Health_IsSet)
-            {
-                if (this.Health != rhs.Health) return false;
-            }
-            if (LevelModifier_IsSet != rhs.LevelModifier_IsSet) return false;
-            if (LevelModifier_IsSet)
-            {
-                if (this.LevelModifier != rhs.LevelModifier) return false;
-            }
-            if (Unknown_Property.HasBeenSet != rhs.Unknown_Property.HasBeenSet) return false;
-            if (Unknown_Property.HasBeenSet)
-            {
-                if (!this.Unknown_Property.Equals(rhs.Unknown_Property)) return false;
-            }
-            if (ActionFlags_IsSet != rhs.ActionFlags_IsSet) return false;
-            if (ActionFlags_IsSet)
-            {
-                if (this.ActionFlags != rhs.ActionFlags) return false;
-            }
-            if (Count_IsSet != rhs.Count_IsSet) return false;
-            if (Count_IsSet)
-            {
-                if (this.Count != rhs.Count) return false;
-            }
-            if (MapMarker_IsSet != rhs.MapMarker_IsSet) return false;
-            if (MapMarker_IsSet)
-            {
-                if (!object.Equals(this.MapMarker, rhs.MapMarker)) return false;
-            }
-            if (this.OpenByDefault != rhs.OpenByDefault) return false;
-            if (RagdollData_IsSet != rhs.RagdollData_IsSet) return false;
-            if (RagdollData_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.RagdollData, rhs.RagdollData)) return false;
-            }
-            if (Scale_IsSet != rhs.Scale_IsSet) return false;
-            if (Scale_IsSet)
-            {
-                if (!this.Scale.EqualsWithin(rhs.Scale)) return false;
-            }
-            if (ContainedSoul_Property.HasBeenSet != rhs.ContainedSoul_Property.HasBeenSet) return false;
-            if (ContainedSoul_Property.HasBeenSet)
-            {
-                if (!this.ContainedSoul_Property.Equals(rhs.ContainedSoul_Property)) return false;
-            }
-            if (!this.Position.Equals(rhs.Position)) return false;
-            if (!this.Rotation.Equals(rhs.Rotation)) return false;
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((PlacedObjectCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Base_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Base).CombineHashCode(ret);
-            }
-            if (XPCIFluff_IsSet)
-            {
-                ret = HashHelper.GetHashCode(XPCIFluff).CombineHashCode(ret);
-            }
-            if (FULLFluff_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FULLFluff).CombineHashCode(ret);
-            }
-            if (TeleportDestination_IsSet)
-            {
-                ret = HashHelper.GetHashCode(TeleportDestination).CombineHashCode(ret);
-            }
-            if (Lock_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Lock).CombineHashCode(ret);
-            }
-            if (Owner_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Owner).CombineHashCode(ret);
-            }
-            if (FactionRank_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FactionRank).CombineHashCode(ret);
-            }
-            if (GlobalVariable_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(GlobalVariable).CombineHashCode(ret);
-            }
-            if (EnableParent_IsSet)
-            {
-                ret = HashHelper.GetHashCode(EnableParent).CombineHashCode(ret);
-            }
-            if (Target_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Target).CombineHashCode(ret);
-            }
-            if (SpeedTreeSeed_IsSet)
-            {
-                ret = HashHelper.GetHashCode(SpeedTreeSeed).CombineHashCode(ret);
-            }
-            if (DistantLODData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(DistantLODData).CombineHashCode(ret);
-            }
-            if (Charge_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Charge).CombineHashCode(ret);
-            }
-            if (Health_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Health).CombineHashCode(ret);
-            }
-            if (LevelModifier_IsSet)
-            {
-                ret = HashHelper.GetHashCode(LevelModifier).CombineHashCode(ret);
-            }
-            if (Unknown_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Unknown).CombineHashCode(ret);
-            }
-            if (ActionFlags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ActionFlags).CombineHashCode(ret);
-            }
-            if (Count_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Count).CombineHashCode(ret);
-            }
-            if (MapMarker_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MapMarker).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(OpenByDefault).CombineHashCode(ret);
-            if (RagdollData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(RagdollData).CombineHashCode(ret);
-            }
-            if (Scale_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Scale).CombineHashCode(ret);
-            }
-            if (ContainedSoul_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(ContainedSoul).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Position).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Rotation).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((PlacedObjectCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => PlacedObjectXmlWriteTranslation.Instance;
@@ -2023,16 +1809,16 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Base
         IOblivionMajorRecordInternalGetter Base { get; }
-        IFormIDSetLinkGetter<OblivionMajorRecord> Base_Property { get; }
+        IFormIDSetLinkGetter<IOblivionMajorRecordInternalGetter> Base_Property { get; }
 
         #endregion
         #region XPCIFluff
-        Byte[] XPCIFluff { get; }
+        ReadOnlySpan<Byte> XPCIFluff { get; }
         bool XPCIFluff_IsSet { get; }
 
         #endregion
         #region FULLFluff
-        Byte[] FULLFluff { get; }
+        ReadOnlySpan<Byte> FULLFluff { get; }
         bool FULLFluff_IsSet { get; }
 
         #endregion
@@ -2058,7 +1844,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region GlobalVariable
         IGlobalInternalGetter GlobalVariable { get; }
-        IFormIDSetLinkGetter<Global> GlobalVariable_Property { get; }
+        IFormIDSetLinkGetter<IGlobalInternalGetter> GlobalVariable_Property { get; }
 
         #endregion
         #region EnableParent
@@ -2098,7 +1884,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Unknown
         IOblivionMajorRecordInternalGetter Unknown { get; }
-        IFormIDSetLinkGetter<OblivionMajorRecord> Unknown_Property { get; }
+        IFormIDSetLinkGetter<IOblivionMajorRecordInternalGetter> Unknown_Property { get; }
 
         #endregion
         #region ActionFlags
@@ -2121,7 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RagdollData
-        Byte[] RagdollData { get; }
+        ReadOnlySpan<Byte> RagdollData { get; }
         bool RagdollData_IsSet { get; }
 
         #endregion
@@ -2132,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ContainedSoul
         ISoulGemInternalGetter ContainedSoul { get; }
-        IFormIDSetLinkGetter<SoulGem> ContainedSoul_Property { get; }
+        IFormIDSetLinkGetter<ISoulGemInternalGetter> ContainedSoul_Property { get; }
 
         #endregion
         #region Position
@@ -2218,6 +2004,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IPlacedObjectInternalGetter item,
+            IPlacedObjectInternalGetter rhs)
+        {
+            return ((PlacedObjectCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -3584,8 +3379,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Base = item.Base_Property.FormKey == rhs.Base_Property.FormKey;
-            ret.XPCIFluff = item.XPCIFluff_IsSet == rhs.XPCIFluff_IsSet && ByteExt.EqualsFast(item.XPCIFluff, rhs.XPCIFluff);
-            ret.FULLFluff = item.FULLFluff_IsSet == rhs.FULLFluff_IsSet && ByteExt.EqualsFast(item.FULLFluff, rhs.FULLFluff);
+            ret.XPCIFluff = item.XPCIFluff_IsSet == rhs.XPCIFluff_IsSet && MemoryExtensions.SequenceEqual(item.XPCIFluff, rhs.XPCIFluff);
+            ret.FULLFluff = item.FULLFluff_IsSet == rhs.FULLFluff_IsSet && MemoryExtensions.SequenceEqual(item.FULLFluff, rhs.FULLFluff);
             ret.TeleportDestination = EqualsMaskHelper.EqualsHelper(
                 item.TeleportDestination_IsSet,
                 rhs.TeleportDestination_IsSet,
@@ -3633,7 +3428,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.OpenByDefault = item.OpenByDefault == rhs.OpenByDefault;
-            ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && ByteExt.EqualsFast(item.RagdollData, rhs.RagdollData);
+            ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && MemoryExtensions.SequenceEqual(item.RagdollData, rhs.RagdollData);
             ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale.EqualsWithin(rhs.Scale);
             ret.ContainedSoul = item.ContainedSoul_Property.FormKey == rhs.ContainedSoul_Property.FormKey;
             ret.Position = item.Position.Equals(rhs.Position);
@@ -3695,11 +3490,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.XPCIFluff ?? true)
             {
-                fg.AppendLine($"XPCIFluff => {item.XPCIFluff}");
+                fg.AppendLine($"XPCIFluff => {SpanExt.ToHexString(item.XPCIFluff)}");
             }
             if (printMask?.FULLFluff ?? true)
             {
-                fg.AppendLine($"FULLFluff => {item.FULLFluff}");
+                fg.AppendLine($"FULLFluff => {SpanExt.ToHexString(item.FULLFluff)}");
             }
             if (printMask?.TeleportDestination?.Overall ?? true)
             {
@@ -3771,7 +3566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.RagdollData ?? true)
             {
-                fg.AppendLine($"RagdollData => {item.RagdollData}");
+                fg.AppendLine($"RagdollData => {SpanExt.ToHexString(item.RagdollData)}");
             }
             if (printMask?.Scale ?? true)
             {
@@ -3900,6 +3695,261 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IPlacedObjectInternalGetter lhs,
+            IPlacedObjectInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Base_Property.HasBeenSet != rhs.Base_Property.HasBeenSet) return false;
+            if (lhs.Base_Property.HasBeenSet)
+            {
+                if (!lhs.Base_Property.Equals(rhs.Base_Property)) return false;
+            }
+            if (lhs.XPCIFluff_IsSet != rhs.XPCIFluff_IsSet) return false;
+            if (lhs.XPCIFluff_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.XPCIFluff, rhs.XPCIFluff)) return false;
+            }
+            if (lhs.FULLFluff_IsSet != rhs.FULLFluff_IsSet) return false;
+            if (lhs.FULLFluff_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.FULLFluff, rhs.FULLFluff)) return false;
+            }
+            if (lhs.TeleportDestination_IsSet != rhs.TeleportDestination_IsSet) return false;
+            if (lhs.TeleportDestination_IsSet)
+            {
+                if (!object.Equals(lhs.TeleportDestination, rhs.TeleportDestination)) return false;
+            }
+            if (lhs.Lock_IsSet != rhs.Lock_IsSet) return false;
+            if (lhs.Lock_IsSet)
+            {
+                if (!object.Equals(lhs.Lock, rhs.Lock)) return false;
+            }
+            if (lhs.Owner_Property.HasBeenSet != rhs.Owner_Property.HasBeenSet) return false;
+            if (lhs.Owner_Property.HasBeenSet)
+            {
+                if (!lhs.Owner_Property.Equals(rhs.Owner_Property)) return false;
+            }
+            if (lhs.FactionRank_IsSet != rhs.FactionRank_IsSet) return false;
+            if (lhs.FactionRank_IsSet)
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
+            }
+            if (lhs.GlobalVariable_Property.HasBeenSet != rhs.GlobalVariable_Property.HasBeenSet) return false;
+            if (lhs.GlobalVariable_Property.HasBeenSet)
+            {
+                if (!lhs.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property)) return false;
+            }
+            if (lhs.EnableParent_IsSet != rhs.EnableParent_IsSet) return false;
+            if (lhs.EnableParent_IsSet)
+            {
+                if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
+            }
+            if (lhs.Target_Property.HasBeenSet != rhs.Target_Property.HasBeenSet) return false;
+            if (lhs.Target_Property.HasBeenSet)
+            {
+                if (!lhs.Target_Property.Equals(rhs.Target_Property)) return false;
+            }
+            if (lhs.SpeedTreeSeed_IsSet != rhs.SpeedTreeSeed_IsSet) return false;
+            if (lhs.SpeedTreeSeed_IsSet)
+            {
+                if (lhs.SpeedTreeSeed != rhs.SpeedTreeSeed) return false;
+            }
+            if (lhs.DistantLODData_IsSet != rhs.DistantLODData_IsSet) return false;
+            if (lhs.DistantLODData_IsSet)
+            {
+                if (!object.Equals(lhs.DistantLODData, rhs.DistantLODData)) return false;
+            }
+            if (lhs.Charge_IsSet != rhs.Charge_IsSet) return false;
+            if (lhs.Charge_IsSet)
+            {
+                if (!lhs.Charge.EqualsWithin(rhs.Charge)) return false;
+            }
+            if (lhs.Health_IsSet != rhs.Health_IsSet) return false;
+            if (lhs.Health_IsSet)
+            {
+                if (lhs.Health != rhs.Health) return false;
+            }
+            if (lhs.LevelModifier_IsSet != rhs.LevelModifier_IsSet) return false;
+            if (lhs.LevelModifier_IsSet)
+            {
+                if (lhs.LevelModifier != rhs.LevelModifier) return false;
+            }
+            if (lhs.Unknown_Property.HasBeenSet != rhs.Unknown_Property.HasBeenSet) return false;
+            if (lhs.Unknown_Property.HasBeenSet)
+            {
+                if (!lhs.Unknown_Property.Equals(rhs.Unknown_Property)) return false;
+            }
+            if (lhs.ActionFlags_IsSet != rhs.ActionFlags_IsSet) return false;
+            if (lhs.ActionFlags_IsSet)
+            {
+                if (lhs.ActionFlags != rhs.ActionFlags) return false;
+            }
+            if (lhs.Count_IsSet != rhs.Count_IsSet) return false;
+            if (lhs.Count_IsSet)
+            {
+                if (lhs.Count != rhs.Count) return false;
+            }
+            if (lhs.MapMarker_IsSet != rhs.MapMarker_IsSet) return false;
+            if (lhs.MapMarker_IsSet)
+            {
+                if (!object.Equals(lhs.MapMarker, rhs.MapMarker)) return false;
+            }
+            if (lhs.OpenByDefault != rhs.OpenByDefault) return false;
+            if (lhs.RagdollData_IsSet != rhs.RagdollData_IsSet) return false;
+            if (lhs.RagdollData_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.RagdollData, rhs.RagdollData)) return false;
+            }
+            if (lhs.Scale_IsSet != rhs.Scale_IsSet) return false;
+            if (lhs.Scale_IsSet)
+            {
+                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            }
+            if (lhs.ContainedSoul_Property.HasBeenSet != rhs.ContainedSoul_Property.HasBeenSet) return false;
+            if (lhs.ContainedSoul_Property.HasBeenSet)
+            {
+                if (!lhs.ContainedSoul_Property.Equals(rhs.ContainedSoul_Property)) return false;
+            }
+            if (!lhs.Position.Equals(rhs.Position)) return false;
+            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IPlacedObjectInternalGetter)lhs,
+                rhs: rhs as IPlacedObjectInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IPlacedObjectInternalGetter)lhs,
+                rhs: rhs as IPlacedObjectInternalGetter);
+        }
+
+        public virtual int GetHashCode(IPlacedObjectInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Base_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Base).CombineHashCode(ret);
+            }
+            if (item.XPCIFluff_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.XPCIFluff).CombineHashCode(ret);
+            }
+            if (item.FULLFluff_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FULLFluff).CombineHashCode(ret);
+            }
+            if (item.TeleportDestination_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.TeleportDestination).CombineHashCode(ret);
+            }
+            if (item.Lock_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Lock).CombineHashCode(ret);
+            }
+            if (item.Owner_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Owner).CombineHashCode(ret);
+            }
+            if (item.FactionRank_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FactionRank).CombineHashCode(ret);
+            }
+            if (item.GlobalVariable_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.GlobalVariable).CombineHashCode(ret);
+            }
+            if (item.EnableParent_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.EnableParent).CombineHashCode(ret);
+            }
+            if (item.Target_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Target).CombineHashCode(ret);
+            }
+            if (item.SpeedTreeSeed_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.SpeedTreeSeed).CombineHashCode(ret);
+            }
+            if (item.DistantLODData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.DistantLODData).CombineHashCode(ret);
+            }
+            if (item.Charge_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Charge).CombineHashCode(ret);
+            }
+            if (item.Health_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Health).CombineHashCode(ret);
+            }
+            if (item.LevelModifier_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.LevelModifier).CombineHashCode(ret);
+            }
+            if (item.Unknown_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
+            }
+            if (item.ActionFlags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ActionFlags).CombineHashCode(ret);
+            }
+            if (item.Count_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Count).CombineHashCode(ret);
+            }
+            if (item.MapMarker_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MapMarker).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.OpenByDefault).CombineHashCode(ret);
+            if (item.RagdollData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.RagdollData).CombineHashCode(ret);
+            }
+            if (item.Scale_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Scale).CombineHashCode(ret);
+            }
+            if (item.ContainedSoul_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.ContainedSoul).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Position).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Rotation).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IPlacedObjectInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IPlacedObjectInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

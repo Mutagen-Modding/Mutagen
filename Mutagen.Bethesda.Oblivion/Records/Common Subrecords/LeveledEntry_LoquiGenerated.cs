@@ -78,6 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> ILeveledEntryGetter<T>.Fluff => this.Fluff;
         #endregion
         #region Reference
         public IFormIDLink<T> Reference_Property { get; } = new FormIDLink<T>();
@@ -129,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => Fluff2_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] ILeveledEntryGetter<T>.Fluff2 => this.Fluff2;
+        ReadOnlySpan<Byte> ILeveledEntryGetter<T>.Fluff2 => this.Fluff2;
         public void Fluff2_Set(
             Byte[] value,
             bool markSet = true)
@@ -160,48 +161,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is LeveledEntry<T> rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ILeveledEntryGetter<T> rhs)) return false;
+            return ((LeveledEntryCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledEntry<T> rhs)
+        public bool Equals(LeveledEntry<T> obj)
         {
-            if (rhs == null) return false;
-            if (this.Level != rhs.Level) return false;
-            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
-            if (!this.Reference_Property.Equals(rhs.Reference_Property)) return false;
-            if (Count_IsSet != rhs.Count_IsSet) return false;
-            if (Count_IsSet)
-            {
-                if (this.Count != rhs.Count) return false;
-            }
-            if (Fluff2_IsSet != rhs.Fluff2_IsSet) return false;
-            if (Fluff2_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.Fluff2, rhs.Fluff2)) return false;
-            }
-            return true;
+            return ((LeveledEntryCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Level).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Reference).CombineHashCode(ret);
-            if (Count_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Count).CombineHashCode(ret);
-            }
-            if (Fluff2_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Fluff2).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((LeveledEntryCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => LeveledEntryXmlWriteTranslation.Instance;
@@ -730,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff
-        Byte[] Fluff { get; }
+        ReadOnlySpan<Byte> Fluff { get; }
 
         #endregion
         #region Reference
@@ -744,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff2
-        Byte[] Fluff2 { get; }
+        ReadOnlySpan<Byte> Fluff2 { get; }
         bool Fluff2_IsSet { get; }
 
         #endregion
@@ -818,6 +789,16 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals<T>(
+            this ILeveledEntryGetter<T> item,
+            ILeveledEntryGetter<T> rhs)
+            where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
+        {
+            return ((LeveledEntryCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1235,10 +1216,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Level = item.Level == rhs.Level;
-            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
             ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
             ret.Count = item.Count_IsSet == rhs.Count_IsSet && item.Count == rhs.Count;
-            ret.Fluff2 = item.Fluff2_IsSet == rhs.Fluff2_IsSet && ByteExt.EqualsFast(item.Fluff2, rhs.Fluff2);
+            ret.Fluff2 = item.Fluff2_IsSet == rhs.Fluff2_IsSet && MemoryExtensions.SequenceEqual(item.Fluff2, rhs.Fluff2);
         }
 
         public string ToString<T>(
@@ -1294,7 +1275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Fluff ?? true)
             {
-                fg.AppendLine($"Fluff => {item.Fluff}");
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
             if (printMask?.Reference ?? true)
             {
@@ -1306,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Fluff2 ?? true)
             {
-                fg.AppendLine($"Fluff2 => {item.Fluff2}");
+                fg.AppendLine($"Fluff2 => {SpanExt.ToHexString(item.Fluff2)}");
             }
         }
 
@@ -1331,6 +1312,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Count = item.Count_IsSet;
             mask.Fluff2 = item.Fluff2_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals<T>(
+            ILeveledEntryGetter<T> lhs,
+            ILeveledEntryGetter<T> rhs)
+            where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Level != rhs.Level) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!lhs.Reference_Property.Equals(rhs.Reference_Property)) return false;
+            if (lhs.Count_IsSet != rhs.Count_IsSet) return false;
+            if (lhs.Count_IsSet)
+            {
+                if (lhs.Count != rhs.Count) return false;
+            }
+            if (lhs.Fluff2_IsSet != rhs.Fluff2_IsSet) return false;
+            if (lhs.Fluff2_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Fluff2, rhs.Fluff2)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode<T>(ILeveledEntryGetter<T> item)
+            where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Level).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Reference).CombineHashCode(ret);
+            if (item.Count_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Count).CombineHashCode(ret);
+            }
+            if (item.Fluff2_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Fluff2).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

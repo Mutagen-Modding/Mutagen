@@ -63,14 +63,6 @@ namespace Mutagen.Bethesda
             
         }
 
-        #region ContainedRecordType
-        private String _ContainedRecordType;
-        public String ContainedRecordType
-        {
-            get => this._ContainedRecordType;
-            protected set => this.RaiseAndSetIfReferenceChanged(ref this._ContainedRecordType, value, nameof(ContainedRecordType));
-        }
-        #endregion
         #region GroupType
         private GroupTypeEnum _GroupType;
         public GroupTypeEnum GroupType
@@ -93,6 +85,7 @@ namespace Mutagen.Bethesda
                 }
             }
         }
+        ReadOnlySpan<Byte> IGroupGetter<T>.LastModified => this.LastModified;
         #endregion
         #region Items
         private readonly SourceSetCache<T, FormKey> _Items = new SourceSetCache<T, FormKey>((item) => item.FormKey);
@@ -122,32 +115,18 @@ namespace Mutagen.Bethesda
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Group<T> rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IGroupGetter<T> rhs)) return false;
+            return ((GroupCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Group<T> rhs)
+        public bool Equals(Group<T> obj)
         {
-            if (rhs == null) return false;
-            if (!string.Equals(this.ContainedRecordType, rhs.ContainedRecordType)) return false;
-            if (this.GroupType != rhs.GroupType) return false;
-            if (!ByteExt.EqualsFast(this.LastModified, rhs.LastModified)) return false;
-            if (!this.Items.SequenceEqual(rhs.Items)) return false;
-            return true;
+            return ((GroupCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(ContainedRecordType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(GroupType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LastModified).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((GroupCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
@@ -207,12 +186,6 @@ namespace Mutagen.Bethesda
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
                     GroupXmlCreateTranslation<T>.FillPublicElementXml(
                         item: ret,
                         node: elem,
@@ -321,20 +294,6 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        protected static void FillPrivateElementXml(
-            Group<T> item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    break;
-            }
-        }
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -342,7 +301,6 @@ namespace Mutagen.Bethesda
         {
             switch ((Group_FieldIndex)index)
             {
-                case Group_FieldIndex.ContainedRecordType:
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Items:
@@ -437,7 +395,7 @@ namespace Mutagen.Bethesda
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeCustomPublic(
+            GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustomPublic(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
@@ -622,8 +580,6 @@ namespace Mutagen.Bethesda
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.ContainedRecordType:
-                    throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case Group_FieldIndex.GroupType:
                     this.GroupType = (GroupTypeEnum)obj;
                     break;
@@ -703,16 +659,12 @@ namespace Mutagen.Bethesda
         IBinaryItem
         where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
     {
-        #region ContainedRecordType
-        String ContainedRecordType { get; }
-
-        #endregion
         #region GroupType
         GroupTypeEnum GroupType { get; }
 
         #endregion
         #region LastModified
-        Byte[] LastModified { get; }
+        ReadOnlySpan<Byte> LastModified { get; }
 
         #endregion
         #region Items
@@ -790,6 +742,16 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
+        public static bool Equals<T>(
+            this IGroupGetter<T> item,
+            IGroupGetter<T> rhs)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
+        {
+            return ((GroupCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -800,10 +762,9 @@ namespace Mutagen.Bethesda.Internals
     #region Field Index
     public enum Group_FieldIndex
     {
-        ContainedRecordType = 0,
-        GroupType = 1,
-        LastModified = 2,
-        Items = 3,
+        GroupType = 0,
+        LastModified = 1,
+        Items = 2,
     }
     #endregion
 
@@ -821,9 +782,9 @@ namespace Mutagen.Bethesda.Internals
 
         public const string GUID = "35a37d0b-4676-4dba-9410-a5972e262f5d";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(Group_Mask<>);
 
@@ -855,8 +816,6 @@ namespace Mutagen.Bethesda.Internals
         {
             switch (str.Upper)
             {
-                case "CONTAINEDRECORDTYPE":
-                    return (ushort)Group_FieldIndex.ContainedRecordType;
                 case "GROUPTYPE":
                     return (ushort)Group_FieldIndex.GroupType;
                 case "LASTMODIFIED":
@@ -873,7 +832,6 @@ namespace Mutagen.Bethesda.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.ContainedRecordType:
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Items:
@@ -888,7 +846,6 @@ namespace Mutagen.Bethesda.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.ContainedRecordType:
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Items:
@@ -903,7 +860,6 @@ namespace Mutagen.Bethesda.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.ContainedRecordType:
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Items:
@@ -918,8 +874,6 @@ namespace Mutagen.Bethesda.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.ContainedRecordType:
-                    return "ContainedRecordType";
                 case Group_FieldIndex.GroupType:
                     return "GroupType";
                 case Group_FieldIndex.LastModified:
@@ -936,8 +890,6 @@ namespace Mutagen.Bethesda.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.ContainedRecordType:
-                    return true;
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Items:
@@ -952,8 +904,6 @@ namespace Mutagen.Bethesda.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.ContainedRecordType:
-                    return true;
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Items:
@@ -968,7 +918,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly Type XmlWriteTranslation = typeof(GroupXmlWriteTranslation);
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
-        public const int NumStructFields = 3;
+        public const int NumStructFields = 2;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(GroupBinaryWriteTranslation);
         #region Interface
@@ -1012,8 +962,6 @@ namespace Mutagen.Bethesda.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.ContainedRecordType:
-                    return typeof(String);
                 case Group_FieldIndex.GroupType:
                     return typeof(GroupTypeEnum);
                 case Group_FieldIndex.LastModified:
@@ -1146,9 +1094,8 @@ namespace Mutagen.Bethesda.Internals
             where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             if (rhs == null) return;
-            ret.ContainedRecordType = string.Equals(item.ContainedRecordType, rhs.ContainedRecordType);
             ret.GroupType = item.GroupType == rhs.GroupType;
-            ret.LastModified = ByteExt.EqualsFast(item.LastModified, rhs.LastModified);
+            ret.LastModified = MemoryExtensions.SequenceEqual(item.LastModified, rhs.LastModified);
             ret.Items = EqualsMaskHelper.CacheEqualsHelper(
                 lhs: item.Items,
                 rhs: rhs.Items,
@@ -1203,17 +1150,13 @@ namespace Mutagen.Bethesda.Internals
             Group_Mask<bool> printMask = null)
             where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            if (printMask?.ContainedRecordType ?? true)
-            {
-                fg.AppendLine($"ContainedRecordType => {item.ContainedRecordType}");
-            }
             if (printMask?.GroupType ?? true)
             {
                 fg.AppendLine($"GroupType => {item.GroupType}");
             }
             if (printMask?.LastModified ?? true)
             {
-                fg.AppendLine($"LastModified => {item.LastModified}");
+                fg.AppendLine($"LastModified => {SpanExt.ToHexString(item.LastModified)}");
             }
             if (printMask?.Items?.Overall ?? true)
             {
@@ -1248,11 +1191,37 @@ namespace Mutagen.Bethesda.Internals
             Group_Mask<bool> mask)
             where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            mask.ContainedRecordType = true;
             mask.GroupType = true;
             mask.LastModified = true;
             mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, MajorRecord_Mask<bool>>>>(true, item.Items.Values.Select((i) => new MaskItemIndexed<FormKey, bool, MajorRecord_Mask<bool>>(i.FormKey, true, i.GetHasBeenSetMask())));
         }
+
+        #region Equals and Hash
+        public virtual bool Equals<T>(
+            IGroupGetter<T> lhs,
+            IGroupGetter<T> rhs)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.GroupType != rhs.GroupType) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.LastModified, rhs.LastModified)) return false;
+            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode<T>(IGroupGetter<T> item)
+            where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1679,7 +1648,6 @@ namespace Mutagen.Bethesda.Internals
 
         public Group_Mask(T initialValue)
         {
-            this.ContainedRecordType = initialValue;
             this.GroupType = initialValue;
             this.LastModified = initialValue;
             this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, MajorRecord_Mask<T>>>>(initialValue, null);
@@ -1687,7 +1655,6 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         #region Members
-        public T ContainedRecordType;
         public T GroupType;
         public T LastModified;
         public MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, MajorRecord_Mask<T>>>> Items;
@@ -1703,7 +1670,6 @@ namespace Mutagen.Bethesda.Internals
         public bool Equals(Group_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.ContainedRecordType, rhs.ContainedRecordType)) return false;
             if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
             if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
             if (!object.Equals(this.Items, rhs.Items)) return false;
@@ -1712,7 +1678,6 @@ namespace Mutagen.Bethesda.Internals
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.ContainedRecordType?.GetHashCode());
             ret = ret.CombineHashCode(this.GroupType?.GetHashCode());
             ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
             ret = ret.CombineHashCode(this.Items?.GetHashCode());
@@ -1724,7 +1689,6 @@ namespace Mutagen.Bethesda.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.ContainedRecordType)) return false;
             if (!eval(this.GroupType)) return false;
             if (!eval(this.LastModified)) return false;
             if (this.Items != null)
@@ -1753,7 +1717,6 @@ namespace Mutagen.Bethesda.Internals
 
         protected void Translate_InternalFill<R>(Group_Mask<R> obj, Func<T, R> eval)
         {
-            obj.ContainedRecordType = eval(this.ContainedRecordType);
             obj.GroupType = eval(this.GroupType);
             obj.LastModified = eval(this.LastModified);
             if (Items != null)
@@ -1800,10 +1763,6 @@ namespace Mutagen.Bethesda.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.ContainedRecordType ?? true)
-                {
-                    fg.AppendLine($"ContainedRecordType => {ContainedRecordType}");
-                }
                 if (printMask?.GroupType ?? true)
                 {
                     fg.AppendLine($"GroupType => {GroupType}");
@@ -1861,7 +1820,6 @@ namespace Mutagen.Bethesda.Internals
                 return _warnings;
             }
         }
-        public Exception ContainedRecordType;
         public Exception GroupType;
         public Exception LastModified;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>> Items;
@@ -1873,8 +1831,6 @@ namespace Mutagen.Bethesda.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.ContainedRecordType:
-                    return ContainedRecordType;
                 case Group_FieldIndex.GroupType:
                     return GroupType;
                 case Group_FieldIndex.LastModified:
@@ -1891,9 +1847,6 @@ namespace Mutagen.Bethesda.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.ContainedRecordType:
-                    this.ContainedRecordType = ex;
-                    break;
                 case Group_FieldIndex.GroupType:
                     this.GroupType = ex;
                     break;
@@ -1913,9 +1866,6 @@ namespace Mutagen.Bethesda.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.ContainedRecordType:
-                    this.ContainedRecordType = (Exception)obj;
-                    break;
                 case Group_FieldIndex.GroupType:
                     this.GroupType = (Exception)obj;
                     break;
@@ -1933,7 +1883,6 @@ namespace Mutagen.Bethesda.Internals
         public bool IsInError()
         {
             if (Overall != null) return true;
-            if (ContainedRecordType != null) return true;
             if (GroupType != null) return true;
             if (LastModified != null) return true;
             if (Items != null) return true;
@@ -1971,7 +1920,6 @@ namespace Mutagen.Bethesda.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            fg.AppendLine($"ContainedRecordType => {ContainedRecordType}");
             fg.AppendLine($"GroupType => {GroupType}");
             fg.AppendLine($"LastModified => {LastModified}");
             fg.AppendLine("Items =>");
@@ -2003,7 +1951,6 @@ namespace Mutagen.Bethesda.Internals
         public Group_ErrorMask<T_ErrMask> Combine(Group_ErrorMask<T_ErrMask> rhs)
         {
             var ret = new Group_ErrorMask<T_ErrMask>();
-            ret.ContainedRecordType = this.ContainedRecordType.Combine(rhs.ContainedRecordType);
             ret.GroupType = this.GroupType.Combine(rhs.GroupType);
             ret.LastModified = this.LastModified.Combine(rhs.LastModified);
             ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, T_ErrMask>>(this.Items.Specific.And(rhs.Items.Specific)));
@@ -2034,14 +1981,12 @@ namespace Mutagen.Bethesda.Internals
 
         public Group_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
-            this.ContainedRecordType = defaultOn;
             this.GroupType = defaultOn;
             this.LastModified = defaultOn;
             this.Items = new MaskItem<CopyOption, T_CopyMask>(deepCopyOption, default);
         }
 
         #region Members
-        public bool ContainedRecordType;
         public bool GroupType;
         public bool LastModified;
         public MaskItem<CopyOption, T_CopyMask> Items;
@@ -2054,7 +1999,6 @@ namespace Mutagen.Bethesda.Internals
     {
         #region Members
         private TranslationCrystal _crystal;
-        public bool ContainedRecordType;
         public bool GroupType;
         public bool LastModified;
         public MaskItem<bool, T_TranslMask> Items;
@@ -2067,7 +2011,6 @@ namespace Mutagen.Bethesda.Internals
 
         public Group_TranslationMask(bool defaultOn)
         {
-            this.ContainedRecordType = defaultOn;
             this.GroupType = defaultOn;
             this.LastModified = defaultOn;
             this.Items = new MaskItem<bool, T_TranslMask>(defaultOn, null);
@@ -2089,7 +2032,6 @@ namespace Mutagen.Bethesda.Internals
 
         protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
-            ret.Add((ContainedRecordType, null));
             ret.Add((GroupType, null));
             ret.Add((LastModified, null));
             ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
@@ -2102,21 +2044,21 @@ namespace Mutagen.Bethesda.Internals
     {
         public readonly static GroupBinaryWriteTranslation Instance = new GroupBinaryWriteTranslation();
 
-        static partial void WriteBinaryContainedRecordTypeCustom<T>(
+        static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
             MutagenWriter writer,
             IGroupGetter<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
             where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem;
 
-        public static void WriteBinaryContainedRecordType<T>(
+        public static void WriteBinaryContainedRecordTypeParse<T>(
             MutagenWriter writer,
             IGroupGetter<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
             where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            WriteBinaryContainedRecordTypeCustom(
+            WriteBinaryContainedRecordTypeParseCustom(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -2130,7 +2072,7 @@ namespace Mutagen.Bethesda.Internals
             MasterReferences masterReferences)
             where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            GroupBinaryWriteTranslation.WriteBinaryContainedRecordType(
+            GroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -2212,19 +2154,19 @@ namespace Mutagen.Bethesda.Internals
     {
         public readonly static GroupBinaryCreateTranslation<T> Instance = new GroupBinaryCreateTranslation<T>();
 
-        static partial void FillBinaryContainedRecordTypeCustom(
+        static partial void FillBinaryContainedRecordTypeParseCustom(
             MutagenFrame frame,
             Group<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void FillBinaryContainedRecordTypeCustomPublic(
+        public static void FillBinaryContainedRecordTypeParseCustomPublic(
             MutagenFrame frame,
             Group<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            FillBinaryContainedRecordTypeCustom(
+            FillBinaryContainedRecordTypeParseCustom(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
@@ -2287,6 +2229,72 @@ namespace Mutagen.Bethesda.Internals
 
     }
     #endregion
+
+    public partial class GroupBinaryWrapper<T> : IGroupGetter<T>
+        where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
+        public static Group_Registration Registration => Group_Registration.Instance;
+        protected object CommonInstance => GroupCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
+
+        protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        public ReadOnlySpan<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GroupBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static GroupBinaryWrapper<T> GroupFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new GroupBinaryWrapper<T>(
+                bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.GroupConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillRecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                default:
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+    }
 
     #endregion
 

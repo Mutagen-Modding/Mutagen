@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Global" recordType="GLOB" baseClass="SkyrimMajorRecord" objType="Record" abstract="true" GUID="072ceda7-3182-4314-a4e3-927e68f39c3f" ID="12">
     <Fields>
-      <CustomLogic name="TypeChar" recordType="FNAM" />
+      <CustomLogic name="TypeChar" recordType="FNAM" byteLength="1" />
     </Fields>
   </Object>
   <Object name="GlobalInt" recordType="GLOB" baseClass="Global" objType="Record" GUID="fcf8c0ba-4933-42bc-8499-168c84bb2f4e" ID="13">

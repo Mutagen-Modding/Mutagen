@@ -60,13 +60,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDSetLink<Quest>> _Quests = new SourceSetList<IFormIDSetLink<Quest>>();
-        public ISourceSetList<IFormIDSetLink<Quest>> Quests => _Quests;
+        private readonly SourceSetList<IFormIDLink<Quest>> _Quests = new SourceSetList<IFormIDLink<Quest>>();
+        public ISourceSetList<IFormIDLink<Quest>> Quests => _Quests;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDSetLink<Quest>> IDialogTopic.Quests => _Quests;
+        ISetList<IFormIDLink<Quest>> IDialogTopic.Quests => _Quests;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDSetLink<Quest>> IDialogTopicGetter.Quests => _Quests;
+        IReadOnlySetList<IFormIDLinkGetter<IQuestInternalGetter>> IDialogTopicGetter.Quests => _Quests;
         #endregion
 
         #endregion
@@ -136,6 +136,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IDialogTopicGetter.Timestamp => this.Timestamp;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -168,64 +169,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is DialogTopic rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IDialogTopicInternalGetter rhs)) return false;
+            return ((DialogTopicCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(DialogTopic rhs)
+        public bool Equals(DialogTopic obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Quests.HasBeenSet != rhs.Quests.HasBeenSet) return false;
-            if (Quests.HasBeenSet)
-            {
-                if (!this.Quests.SequenceEqual(rhs.Quests)) return false;
-            }
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (DialogType_IsSet != rhs.DialogType_IsSet) return false;
-            if (DialogType_IsSet)
-            {
-                if (this.DialogType != rhs.DialogType) return false;
-            }
-            if (!ByteExt.EqualsFast(this.Timestamp, rhs.Timestamp)) return false;
-            if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
-            if (Items.HasBeenSet)
-            {
-                if (!this.Items.SequenceEqual(rhs.Items)) return false;
-            }
-            return true;
+            return ((DialogTopicCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Quests.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Quests).CombineHashCode(ret);
-            }
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (DialogType_IsSet)
-            {
-                ret = HashHelper.GetHashCode(DialogType).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Timestamp).CombineHashCode(ret);
-            if (Items.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((DialogTopicCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => DialogTopicXmlWriteTranslation.Instance;
@@ -583,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x49545351: // QSTI
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLink<Quest>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Quest>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogTopic_Registration.QSTI_HEADER,
                         masterReferences: masterReferences,
@@ -749,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    this._Quests.SetTo((IEnumerable<IFormIDSetLink<Quest>>)obj);
+                    this._Quests.SetTo((SourceSetList<IFormIDLink<Quest>>)obj);
                     break;
                 case DialogTopic_FieldIndex.Name:
                     this.Name = (String)obj;
@@ -761,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Timestamp = (Byte[])obj;
                     break;
                 case DialogTopic_FieldIndex.Items:
-                    this._Items.SetTo((IEnumerable<DialogItem>)obj);
+                    this._Items.SetTo((SourceSetList<DialogItem>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -793,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    obj._Quests.SetTo((IEnumerable<IFormIDSetLink<Quest>>)pair.Value);
+                    obj._Quests.SetTo((SourceSetList<IFormIDLink<Quest>>)pair.Value);
                     break;
                 case DialogTopic_FieldIndex.Name:
                     obj.Name = (String)pair.Value;
@@ -805,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Timestamp = (Byte[])pair.Value;
                     break;
                 case DialogTopic_FieldIndex.Items:
-                    obj._Items.SetTo((IEnumerable<DialogItem>)pair.Value);
+                    obj._Items.SetTo((SourceSetList<DialogItem>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -820,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IDialogTopicInternal>
     {
-        new ISetList<IFormIDSetLink<Quest>> Quests { get; }
+        new ISetList<IFormIDLink<Quest>> Quests { get; }
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
         void Name_Set(String value, bool hasBeenSet = true);
@@ -855,7 +810,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Quests
-        IReadOnlySetList<IFormIDSetLink<Quest>> Quests { get; }
+        IReadOnlySetList<IFormIDLinkGetter<IQuestInternalGetter>> Quests { get; }
         #endregion
         #region Name
         String Name { get; }
@@ -868,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Timestamp
-        Byte[] Timestamp { get; }
+        ReadOnlySpan<Byte> Timestamp { get; }
 
         #endregion
         #region Items
@@ -945,6 +900,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IDialogTopicInternalGetter item,
+            IDialogTopicInternalGetter rhs)
+        {
+            return ((DialogTopicCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1141,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    return typeof(SourceSetList<IFormIDSetLink<Quest>>);
+                    return typeof(SourceSetList<IFormIDLink<Quest>>);
                 case DialogTopic_FieldIndex.Name:
                     return typeof(String);
                 case DialogTopic_FieldIndex.DialogType:
@@ -1400,7 +1364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
             ret.DialogType = item.DialogType_IsSet == rhs.DialogType_IsSet && item.DialogType == rhs.DialogType;
-            ret.Timestamp = ByteExt.EqualsFast(item.Timestamp, rhs.Timestamp);
+            ret.Timestamp = MemoryExtensions.SequenceEqual(item.Timestamp, rhs.Timestamp);
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1484,7 +1448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Timestamp ?? true)
             {
-                fg.AppendLine($"Timestamp => {item.Timestamp}");
+                fg.AppendLine($"Timestamp => {SpanExt.ToHexString(item.Timestamp)}");
             }
             if (printMask?.Items?.Overall ?? true)
             {
@@ -1569,6 +1533,93 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        #region Equals and Hash
+        public virtual bool Equals(
+            IDialogTopicInternalGetter lhs,
+            IDialogTopicInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Quests.HasBeenSet != rhs.Quests.HasBeenSet) return false;
+            if (lhs.Quests.HasBeenSet)
+            {
+                if (!lhs.Quests.SequenceEqual(rhs.Quests)) return false;
+            }
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.DialogType_IsSet != rhs.DialogType_IsSet) return false;
+            if (lhs.DialogType_IsSet)
+            {
+                if (lhs.DialogType != rhs.DialogType) return false;
+            }
+            if (!MemoryExtensions.SequenceEqual(lhs.Timestamp, rhs.Timestamp)) return false;
+            if (lhs.Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
+            if (lhs.Items.HasBeenSet)
+            {
+                if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IDialogTopicInternalGetter)lhs,
+                rhs: rhs as IDialogTopicInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IDialogTopicInternalGetter)lhs,
+                rhs: rhs as IDialogTopicInternalGetter);
+        }
+
+        public virtual int GetHashCode(IDialogTopicInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Quests.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Quests).CombineHashCode(ret);
+            }
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.DialogType_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.DialogType).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Timestamp).CombineHashCode(ret);
+            if (item.Items.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IDialogTopicInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IDialogTopicInternalGetter)item);
+        }
+
+        #endregion
+
+
     }
     #endregion
 
@@ -1594,14 +1645,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Quests.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quests) ?? true))
             {
-                ListXmlTranslation<IFormIDSetLink<Quest>>.Instance.Write(
+                ListXmlTranslation<IFormIDLinkGetter<IQuestInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Quests),
                     item: item.Quests,
                     fieldIndex: (int)DialogTopic_FieldIndex.Quests,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)DialogTopic_FieldIndex.Quests),
-                    transl: (XElement subNode, IFormIDSetLink<Quest> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDLinkGetter<IQuestInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -1770,7 +1821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogTopic_FieldIndex.Quests);
-                        if (ListXmlTranslation<IFormIDSetLink<Quest>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormIDLink<Quest>>.Instance.Parse(
                             node: node,
                             enumer: out var QuestsItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -2545,10 +2596,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
             if (item.Quests.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDSetLink<Quest>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IQuestInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.Quests,
-                    transl: (MutagenWriter subWriter, IFormIDSetLink<Quest> subItem) =>
+                    transl: (MutagenWriter subWriter, IFormIDLinkGetter<IQuestInternalGetter> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,

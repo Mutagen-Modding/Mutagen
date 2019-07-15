@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Faction> IRankPlacement.Faction_Property => this.Faction_Property;
         IFactionInternalGetter IRankPlacementGetter.Faction => this.Faction_Property.Item;
-        IFormIDLinkGetter<Faction> IRankPlacementGetter.Faction_Property => this.Faction_Property;
+        IFormIDLinkGetter<IFactionInternalGetter> IRankPlacementGetter.Faction_Property => this.Faction_Property;
         #endregion
         #region Rank
         private Byte _Rank;
@@ -85,6 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IRankPlacementGetter.Fluff => this.Fluff;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRankPlacementGetter)rhs, include);
@@ -105,30 +106,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RankPlacement rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRankPlacementGetter rhs)) return false;
+            return ((RankPlacementCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RankPlacement rhs)
+        public bool Equals(RankPlacement obj)
         {
-            if (rhs == null) return false;
-            if (!this.Faction_Property.Equals(rhs.Faction_Property)) return false;
-            if (this.Rank != rhs.Rank) return false;
-            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
-            return true;
+            return ((RankPlacementCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Faction).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Rank).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((RankPlacementCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RankPlacementXmlWriteTranslation.Instance;
@@ -591,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Faction
         IFactionInternalGetter Faction { get; }
-        IFormIDLinkGetter<Faction> Faction_Property { get; }
+        IFormIDLinkGetter<IFactionInternalGetter> Faction_Property { get; }
 
         #endregion
         #region Rank
@@ -599,7 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff
-        Byte[] Fluff { get; }
+        ReadOnlySpan<Byte> Fluff { get; }
 
         #endregion
 
@@ -666,6 +655,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRankPlacementGetter item,
+            IRankPlacementGetter rhs)
+        {
+            return ((RankPlacementCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -984,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Faction = item.Faction_Property.FormKey == rhs.Faction_Property.FormKey;
             ret.Rank = item.Rank == rhs.Rank;
-            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
         }
 
         public string ToString(
@@ -1041,7 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Fluff ?? true)
             {
-                fg.AppendLine($"Fluff => {item.Fluff}");
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
         }
 
@@ -1060,6 +1058,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Rank = true;
             mask.Fluff = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRankPlacementGetter lhs,
+            IRankPlacementGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Faction_Property.Equals(rhs.Faction_Property)) return false;
+            if (lhs.Rank != rhs.Rank) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IRankPlacementGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Faction).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Rank).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

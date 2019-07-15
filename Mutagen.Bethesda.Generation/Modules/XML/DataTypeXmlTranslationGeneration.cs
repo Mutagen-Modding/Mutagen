@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             throw new NotImplementedException();
         }

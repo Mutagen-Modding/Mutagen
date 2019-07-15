@@ -332,101 +332,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is SkillRecord rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ISkillRecordInternalGetter rhs)) return false;
+            return ((SkillRecordCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(SkillRecord rhs)
+        public bool Equals(SkillRecord obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Skill_IsSet != rhs.Skill_IsSet) return false;
-            if (Skill_IsSet)
-            {
-                if (this.Skill != rhs.Skill) return false;
-            }
-            if (Description_IsSet != rhs.Description_IsSet) return false;
-            if (Description_IsSet)
-            {
-                if (!string.Equals(this.Description, rhs.Description)) return false;
-            }
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            if (this.Action != rhs.Action) return false;
-            if (this.Attribute != rhs.Attribute) return false;
-            if (this.Specialization != rhs.Specialization) return false;
-            if (!this.UseValueFirst.EqualsWithin(rhs.UseValueFirst)) return false;
-            if (!this.UseValueSecond.EqualsWithin(rhs.UseValueSecond)) return false;
-            if (ApprenticeText_IsSet != rhs.ApprenticeText_IsSet) return false;
-            if (ApprenticeText_IsSet)
-            {
-                if (!string.Equals(this.ApprenticeText, rhs.ApprenticeText)) return false;
-            }
-            if (JourneymanText_IsSet != rhs.JourneymanText_IsSet) return false;
-            if (JourneymanText_IsSet)
-            {
-                if (!string.Equals(this.JourneymanText, rhs.JourneymanText)) return false;
-            }
-            if (ExpertText_IsSet != rhs.ExpertText_IsSet) return false;
-            if (ExpertText_IsSet)
-            {
-                if (!string.Equals(this.ExpertText, rhs.ExpertText)) return false;
-            }
-            if (MasterText_IsSet != rhs.MasterText_IsSet) return false;
-            if (MasterText_IsSet)
-            {
-                if (!string.Equals(this.MasterText, rhs.MasterText)) return false;
-            }
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((SkillRecordCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Skill_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Skill).CombineHashCode(ret);
-            }
-            if (Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
-            }
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Action).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Attribute).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Specialization).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(UseValueFirst).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(UseValueSecond).CombineHashCode(ret);
-            if (ApprenticeText_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ApprenticeText).CombineHashCode(ret);
-            }
-            if (JourneymanText_IsSet)
-            {
-                ret = HashHelper.GetHashCode(JourneymanText).CombineHashCode(ret);
-            }
-            if (ExpertText_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ExpertText).CombineHashCode(ret);
-            }
-            if (MasterText_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MasterText).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((SkillRecordCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => SkillRecordXmlWriteTranslation.Instance;
@@ -1357,6 +1274,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this ISkillRecordInternalGetter item,
+            ISkillRecordInternalGetter rhs)
+        {
+            return ((SkillRecordCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -2263,6 +2189,130 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISkillRecordInternalGetter lhs,
+            ISkillRecordInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Skill_IsSet != rhs.Skill_IsSet) return false;
+            if (lhs.Skill_IsSet)
+            {
+                if (lhs.Skill != rhs.Skill) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.Action != rhs.Action) return false;
+            if (lhs.Attribute != rhs.Attribute) return false;
+            if (lhs.Specialization != rhs.Specialization) return false;
+            if (!lhs.UseValueFirst.EqualsWithin(rhs.UseValueFirst)) return false;
+            if (!lhs.UseValueSecond.EqualsWithin(rhs.UseValueSecond)) return false;
+            if (lhs.ApprenticeText_IsSet != rhs.ApprenticeText_IsSet) return false;
+            if (lhs.ApprenticeText_IsSet)
+            {
+                if (!string.Equals(lhs.ApprenticeText, rhs.ApprenticeText)) return false;
+            }
+            if (lhs.JourneymanText_IsSet != rhs.JourneymanText_IsSet) return false;
+            if (lhs.JourneymanText_IsSet)
+            {
+                if (!string.Equals(lhs.JourneymanText, rhs.JourneymanText)) return false;
+            }
+            if (lhs.ExpertText_IsSet != rhs.ExpertText_IsSet) return false;
+            if (lhs.ExpertText_IsSet)
+            {
+                if (!string.Equals(lhs.ExpertText, rhs.ExpertText)) return false;
+            }
+            if (lhs.MasterText_IsSet != rhs.MasterText_IsSet) return false;
+            if (lhs.MasterText_IsSet)
+            {
+                if (!string.Equals(lhs.MasterText, rhs.MasterText)) return false;
+            }
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISkillRecordInternalGetter)lhs,
+                rhs: rhs as ISkillRecordInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISkillRecordInternalGetter)lhs,
+                rhs: rhs as ISkillRecordInternalGetter);
+        }
+
+        public virtual int GetHashCode(ISkillRecordInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Skill_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Skill).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Action).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Attribute).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Specialization).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.UseValueFirst).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.UseValueSecond).CombineHashCode(ret);
+            if (item.ApprenticeText_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ApprenticeText).CombineHashCode(ret);
+            }
+            if (item.JourneymanText_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.JourneymanText).CombineHashCode(ret);
+            }
+            if (item.ExpertText_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ExpertText).CombineHashCode(ret);
+            }
+            if (item.MasterText_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MasterText).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISkillRecordInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISkillRecordInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

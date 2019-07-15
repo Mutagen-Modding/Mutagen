@@ -108,32 +108,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is SoundDataExtended rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ISoundDataExtendedInternalGetter rhs)) return false;
+            return ((SoundDataExtendedCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(SoundDataExtended rhs)
+        public bool Equals(SoundDataExtended obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!this.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation)) return false;
-            if (!this.StopTime.EqualsWithin(rhs.StopTime)) return false;
-            if (!this.StartTime.EqualsWithin(rhs.StartTime)) return false;
-            return true;
+            return ((SoundDataExtendedCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(StaticAttenuation).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(StopTime).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(StartTime).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((SoundDataExtendedCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => SoundDataExtendedXmlWriteTranslation.Instance;
@@ -673,6 +659,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this ISoundDataExtendedInternalGetter item,
+            ISoundDataExtendedInternalGetter rhs)
+        {
+            return ((SoundDataExtendedCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1108,6 +1103,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISoundDataExtendedInternalGetter lhs,
+            ISoundDataExtendedInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (!lhs.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation)) return false;
+            if (!lhs.StopTime.EqualsWithin(rhs.StopTime)) return false;
+            if (!lhs.StartTime.EqualsWithin(rhs.StartTime)) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            ISoundDataInternalGetter lhs,
+            ISoundDataInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISoundDataExtendedInternalGetter)lhs,
+                rhs: rhs as ISoundDataExtendedInternalGetter);
+        }
+
+        public virtual int GetHashCode(ISoundDataExtendedInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.StaticAttenuation).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.StopTime).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.StartTime).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(ISoundDataInternalGetter item)
+        {
+            return GetHashCode(item: (ISoundDataExtendedInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1949,6 +1985,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class SoundDataExtendedBinaryWrapper :
+        SoundDataBinaryWrapper,
+        ISoundDataExtendedInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SoundDataExtended_Registration.Instance;
+        public new static SoundDataExtended_Registration Registration => SoundDataExtended_Registration.Instance;
+        protected override object CommonInstance => SoundDataExtendedCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataExtendedInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => SoundDataExtendedXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SoundDataExtendedBinaryWriteTranslation.Instance;
+
+        public Single StaticAttenuation => GetStaticAttenuationCustom(span: _data.Slice(8));
+        public Single StopTime => GetStopTimeCustom(span: _data.Slice(10));
+        public Single StartTime => GetStartTimeCustom(span: _data.Slice(11));
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected SoundDataExtendedBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static SoundDataExtendedBinaryWrapper SoundDataExtendedFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new SoundDataExtendedBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0xC;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
 
     #endregion
 

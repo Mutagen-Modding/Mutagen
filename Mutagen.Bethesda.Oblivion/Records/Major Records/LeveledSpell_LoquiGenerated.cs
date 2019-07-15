@@ -140,53 +140,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is LeveledSpell rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ILeveledSpellInternalGetter rhs)) return false;
+            return ((LeveledSpellCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledSpell rhs)
+        public bool Equals(LeveledSpell obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (ChanceNone_IsSet != rhs.ChanceNone_IsSet) return false;
-            if (ChanceNone_IsSet)
-            {
-                if (this.ChanceNone != rhs.ChanceNone) return false;
-            }
-            if (Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (Flags_IsSet)
-            {
-                if (this.Flags != rhs.Flags) return false;
-            }
-            if (Entries.HasBeenSet != rhs.Entries.HasBeenSet) return false;
-            if (Entries.HasBeenSet)
-            {
-                if (!this.Entries.SequenceEqual(rhs.Entries)) return false;
-            }
-            return true;
+            return ((LeveledSpellCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (ChanceNone_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ChanceNone).CombineHashCode(ret);
-            }
-            if (Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
-            if (Entries.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Entries).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((LeveledSpellCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => LeveledSpellXmlWriteTranslation.Instance;
@@ -686,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (LeveledFlag)obj;
                     break;
                 case LeveledSpell_FieldIndex.Entries:
-                    this._Entries.SetTo((IEnumerable<LeveledEntry<SpellAbstract>>)obj);
+                    this._Entries.SetTo((SourceSetList<LeveledEntry<SpellAbstract>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -724,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (LeveledFlag)pair.Value;
                     break;
                 case LeveledSpell_FieldIndex.Entries:
-                    obj._Entries.SetTo((IEnumerable<LeveledEntry<SpellAbstract>>)pair.Value);
+                    obj._Entries.SetTo((SourceSetList<LeveledEntry<SpellAbstract>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -854,6 +819,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ILeveledSpellInternalGetter item,
+            ILeveledSpellInternalGetter rhs)
+        {
+            return ((LeveledSpellCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1408,6 +1382,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILeveledSpellInternalGetter lhs,
+            ILeveledSpellInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.ChanceNone_IsSet != rhs.ChanceNone_IsSet) return false;
+            if (lhs.ChanceNone_IsSet)
+            {
+                if (lhs.ChanceNone != rhs.ChanceNone) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.Entries.HasBeenSet != rhs.Entries.HasBeenSet) return false;
+            if (lhs.Entries.HasBeenSet)
+            {
+                if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            ISpellAbstractInternalGetter lhs,
+            ISpellAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILeveledSpellInternalGetter)lhs,
+                rhs: rhs as ILeveledSpellInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILeveledSpellInternalGetter)lhs,
+                rhs: rhs as ILeveledSpellInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILeveledSpellInternalGetter)lhs,
+                rhs: rhs as ILeveledSpellInternalGetter);
+        }
+
+        public virtual int GetHashCode(ILeveledSpellInternalGetter item)
+        {
+            int ret = 0;
+            if (item.ChanceNone_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ChanceNone).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.Entries.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Entries).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(ISpellAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (ILeveledSpellInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILeveledSpellInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILeveledSpellInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

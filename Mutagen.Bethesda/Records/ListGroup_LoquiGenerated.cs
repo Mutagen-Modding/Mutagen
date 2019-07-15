@@ -93,6 +93,7 @@ namespace Mutagen.Bethesda
                 }
             }
         }
+        ReadOnlySpan<Byte> IListGroupGetter<T>.LastModified => this.LastModified;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -125,32 +126,18 @@ namespace Mutagen.Bethesda
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ListGroup<T> rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IListGroupGetter<T> rhs)) return false;
+            return ((ListGroupCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ListGroup<T> rhs)
+        public bool Equals(ListGroup<T> obj)
         {
-            if (rhs == null) return false;
-            if (!string.Equals(this.ContainedRecordType, rhs.ContainedRecordType)) return false;
-            if (this.GroupType != rhs.GroupType) return false;
-            if (!ByteExt.EqualsFast(this.LastModified, rhs.LastModified)) return false;
-            if (!this.Items.SequenceEqual(rhs.Items)) return false;
-            return true;
+            return ((ListGroupCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(ContainedRecordType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(GroupType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LastModified).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((ListGroupCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => ListGroupXmlWriteTranslation.Instance;
@@ -584,7 +571,7 @@ namespace Mutagen.Bethesda
                     this.LastModified = (Byte[])obj;
                     break;
                 case ListGroup_FieldIndex.Items:
-                    this._Items.SetTo((IEnumerable<T>)obj);
+                    this._Items.SetTo((SourceSetList<T>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -621,7 +608,7 @@ namespace Mutagen.Bethesda
                     obj.LastModified = (Byte[])pair.Value;
                     break;
                 case ListGroup_FieldIndex.Items:
-                    obj._Items.SetTo((IEnumerable<T>)pair.Value);
+                    obj._Items.SetTo((SourceSetList<T>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -665,7 +652,7 @@ namespace Mutagen.Bethesda
 
         #endregion
         #region LastModified
-        Byte[] LastModified { get; }
+        ReadOnlySpan<Byte> LastModified { get; }
 
         #endregion
         #region Items
@@ -741,6 +728,16 @@ namespace Mutagen.Bethesda
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals<T>(
+            this IListGroupGetter<T> item,
+            IListGroupGetter<T> rhs)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        {
+            return ((ListGroupCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1103,7 +1100,7 @@ namespace Mutagen.Bethesda.Internals
             if (rhs == null) return;
             ret.ContainedRecordType = string.Equals(item.ContainedRecordType, rhs.ContainedRecordType);
             ret.GroupType = item.GroupType == rhs.GroupType;
-            ret.LastModified = ByteExt.EqualsFast(item.LastModified, rhs.LastModified);
+            ret.LastModified = MemoryExtensions.SequenceEqual(item.LastModified, rhs.LastModified);
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
@@ -1167,7 +1164,7 @@ namespace Mutagen.Bethesda.Internals
             }
             if (printMask?.LastModified ?? true)
             {
-                fg.AppendLine($"LastModified => {item.LastModified}");
+                fg.AppendLine($"LastModified => {SpanExt.ToHexString(item.LastModified)}");
             }
             if (printMask?.Items?.Overall ?? true)
             {
@@ -1207,6 +1204,35 @@ namespace Mutagen.Bethesda.Internals
             mask.LastModified = true;
             mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(true, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetIMask())));
         }
+
+        #region Equals and Hash
+        public virtual bool Equals<T>(
+            IListGroupGetter<T> lhs,
+            IListGroupGetter<T> rhs)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!string.Equals(lhs.ContainedRecordType, rhs.ContainedRecordType)) return false;
+            if (lhs.GroupType != rhs.GroupType) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.LastModified, rhs.LastModified)) return false;
+            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode<T>(IListGroupGetter<T> item)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.ContainedRecordType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

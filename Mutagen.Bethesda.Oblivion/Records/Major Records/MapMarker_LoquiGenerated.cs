@@ -140,51 +140,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is MapMarker rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IMapMarkerGetter rhs)) return false;
+            return ((MapMarkerCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(MapMarker rhs)
+        public bool Equals(MapMarker obj)
         {
-            if (rhs == null) return false;
-            if (Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (Flags_IsSet)
-            {
-                if (this.Flags != rhs.Flags) return false;
-            }
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Types.HasBeenSet != rhs.Types.HasBeenSet) return false;
-            if (Types.HasBeenSet)
-            {
-                if (!this.Types.SequenceEqual(rhs.Types)) return false;
-            }
-            return true;
+            return ((MapMarkerCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Types.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Types).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((MapMarkerCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => MapMarkerXmlWriteTranslation.Instance;
@@ -605,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Name = (String)obj;
                     break;
                 case MapMarker_FieldIndex.Types:
-                    this._Types.SetTo((IEnumerable<MapMarker.Type>)obj);
+                    this._Types.SetTo((SourceSetList<MapMarker.Type>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -642,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Name = (String)pair.Value;
                     break;
                 case MapMarker_FieldIndex.Types:
-                    obj._Types.SetTo((IEnumerable<MapMarker.Type>)pair.Value);
+                    obj._Types.SetTo((SourceSetList<MapMarker.Type>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -757,6 +724,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IMapMarkerGetter item,
+            IMapMarkerGetter rhs)
+        {
+            return ((MapMarkerCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1214,6 +1190,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Name = item.Name_IsSet;
             mask.Types = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Types.HasBeenSet, null);
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IMapMarkerGetter lhs,
+            IMapMarkerGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Types.HasBeenSet != rhs.Types.HasBeenSet) return false;
+            if (lhs.Types.HasBeenSet)
+            {
+                if (!lhs.Types.SequenceEqual(rhs.Types)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IMapMarkerGetter item)
+        {
+            int ret = 0;
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Types.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Types).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SoundDataExtended
     {
         private static byte[] _marker = new byte[] { 0 };
-        public override byte[] Marker => _marker;
+        public static ReadOnlySpan<byte> SoundDataExtendedMarker => _marker;
+        public override ReadOnlySpan<byte> Marker => SoundDataExtendedMarker;
     }
 
     namespace Internals
@@ -43,6 +45,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class SoundDataExtendedBinaryCreateTranslation
         {
+            public static float ConvertAttenuation(ushort i) => i / 100f;
+            public static float ConvertTime(byte b) => b * 1440f / 256f;
+
             static partial void FillBinaryStaticAttenuationCustom(MutagenFrame frame, SoundDataExtended item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (!UInt16BinaryTranslation.Instance.Parse(
@@ -51,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     return;
                 }
-                item.StaticAttenuation = i / 100f;
+                item.StaticAttenuation = ConvertAttenuation(i);
             }
 
             static partial void FillBinaryStartTimeCustom(MutagenFrame frame, SoundDataExtended item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
@@ -62,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     return;
                 }
-                item.StartTime = b * 1440f / 256f;
+                item.StartTime = ConvertTime(b);
             }
 
             static partial void FillBinaryStopTimeCustom(MutagenFrame frame, SoundDataExtended item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
@@ -73,7 +78,27 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     return;
                 }
-                item.StopTime = b * 1440f / 256f;
+                item.StopTime = ConvertTime(b);
+            }
+        }
+    
+        public partial class SoundDataExtendedBinaryWrapper
+        {
+            public override ReadOnlySpan<byte> Marker => SoundDataExtended.SoundDataExtendedMarker;
+
+            public float GetStaticAttenuationCustom(ReadOnlySpan<byte> span)
+            {
+                return SoundDataExtendedBinaryCreateTranslation.ConvertAttenuation(BinaryPrimitives.ReadUInt16LittleEndian(span));
+            }
+
+            public float GetStopTimeCustom(ReadOnlySpan<byte> span)
+            {
+                return SoundDataExtendedBinaryCreateTranslation.ConvertTime(span[0]);
+            }
+
+            public float GetStartTimeCustom(ReadOnlySpan<byte> span)
+            {
+                return SoundDataExtendedBinaryCreateTranslation.ConvertTime(span[0]);
             }
         }
     }

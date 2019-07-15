@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Race> IRaceVoices.Male_Property => this.Male_Property;
         IRaceInternalGetter IRaceVoicesGetter.Male => this.Male_Property.Item;
-        IFormIDLinkGetter<Race> IRaceVoicesGetter.Male_Property => this.Male_Property;
+        IFormIDLinkGetter<IRaceInternalGetter> IRaceVoicesGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
         public IFormIDLink<Race> Female_Property { get; } = new FormIDLink<Race>();
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Race> IRaceVoices.Female_Property => this.Female_Property;
         IRaceInternalGetter IRaceVoicesGetter.Female => this.Female_Property.Item;
-        IFormIDLinkGetter<Race> IRaceVoicesGetter.Female_Property => this.Female_Property;
+        IFormIDLinkGetter<IRaceInternalGetter> IRaceVoicesGetter.Female_Property => this.Female_Property;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceVoicesGetter)rhs, include);
@@ -89,28 +89,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RaceVoices rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRaceVoicesGetter rhs)) return false;
+            return ((RaceVoicesCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RaceVoices rhs)
+        public bool Equals(RaceVoices obj)
         {
-            if (rhs == null) return false;
-            if (!this.Male_Property.Equals(rhs.Male_Property)) return false;
-            if (!this.Female_Property.Equals(rhs.Female_Property)) return false;
-            return true;
+            return ((RaceVoicesCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Male).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Female).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((RaceVoicesCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RaceVoicesXmlWriteTranslation.Instance;
@@ -548,12 +538,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Male
         IRaceInternalGetter Male { get; }
-        IFormIDLinkGetter<Race> Male_Property { get; }
+        IFormIDLinkGetter<IRaceInternalGetter> Male_Property { get; }
 
         #endregion
         #region Female
         IRaceInternalGetter Female { get; }
-        IFormIDLinkGetter<Race> Female_Property { get; }
+        IFormIDLinkGetter<IRaceInternalGetter> Female_Property { get; }
 
         #endregion
 
@@ -620,6 +610,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRaceVoicesGetter item,
+            IRaceVoicesGetter rhs)
+        {
+            return ((RaceVoicesCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -978,6 +977,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Male = true;
             mask.Female = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRaceVoicesGetter lhs,
+            IRaceVoicesGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Male_Property.Equals(rhs.Male_Property)) return false;
+            if (!lhs.Female_Property.Equals(rhs.Female_Property)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IRaceVoicesGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Male).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Female).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1714,6 +1736,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class RaceVoicesBinaryWrapper : IRaceVoicesGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
+        public static RaceVoices_Registration Registration => RaceVoices_Registration.Instance;
+        protected object CommonInstance => RaceVoicesCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceVoicesGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RaceVoicesXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RaceVoicesBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Male
+        public IFormIDLinkGetter<IRaceInternalGetter> Male_Property => new FormIDLink<IRaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IRaceInternalGetter Male => default;
+        #endregion
+        #region Female
+        public IFormIDLinkGetter<IRaceInternalGetter> Female_Property => new FormIDLink<IRaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IRaceInternalGetter Female => default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RaceVoicesBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static RaceVoicesBinaryWrapper RaceVoicesFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new RaceVoicesBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0xE;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
 
     #endregion
 

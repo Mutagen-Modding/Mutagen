@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Sound> ISoundItem.Sound_Property => this.Sound_Property;
         ISoundInternalGetter ISoundItemGetter.Sound => this.Sound_Property.Item;
-        IFormIDSetLinkGetter<Sound> ISoundItemGetter.Sound_Property => this.Sound_Property;
+        IFormIDSetLinkGetter<ISoundInternalGetter> ISoundItemGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region Chance
         public bool Chance_IsSet
@@ -108,42 +108,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is SoundItem rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ISoundItemGetter rhs)) return false;
+            return ((SoundItemCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(SoundItem rhs)
+        public bool Equals(SoundItem obj)
         {
-            if (rhs == null) return false;
-            if (Sound_Property.HasBeenSet != rhs.Sound_Property.HasBeenSet) return false;
-            if (Sound_Property.HasBeenSet)
-            {
-                if (!this.Sound_Property.Equals(rhs.Sound_Property)) return false;
-            }
-            if (Chance_IsSet != rhs.Chance_IsSet) return false;
-            if (Chance_IsSet)
-            {
-                if (this.Chance != rhs.Chance) return false;
-            }
-            return true;
+            return ((SoundItemCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Sound_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Sound).CombineHashCode(ret);
-            }
-            if (Chance_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Chance).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((SoundItemCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => SoundItemXmlWriteTranslation.Instance;
@@ -618,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Sound
         ISoundInternalGetter Sound { get; }
-        IFormIDSetLinkGetter<Sound> Sound_Property { get; }
+        IFormIDSetLinkGetter<ISoundInternalGetter> Sound_Property { get; }
 
         #endregion
         #region Chance
@@ -690,6 +666,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ISoundItemGetter item,
+            ISoundItemGetter rhs)
+        {
+            return ((SoundItemCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1077,6 +1062,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Sound = item.Sound_Property.HasBeenSet;
             mask.Chance = item.Chance_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISoundItemGetter lhs,
+            ISoundItemGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Sound_Property.HasBeenSet != rhs.Sound_Property.HasBeenSet) return false;
+            if (lhs.Sound_Property.HasBeenSet)
+            {
+                if (!lhs.Sound_Property.Equals(rhs.Sound_Property)) return false;
+            }
+            if (lhs.Chance_IsSet != rhs.Chance_IsSet) return false;
+            if (lhs.Chance_IsSet)
+            {
+                if (lhs.Chance != rhs.Chance) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(ISoundItemGetter item)
+        {
+            int ret = 0;
+            if (item.Sound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Sound).CombineHashCode(ret);
+            }
+            if (item.Chance_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Chance).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

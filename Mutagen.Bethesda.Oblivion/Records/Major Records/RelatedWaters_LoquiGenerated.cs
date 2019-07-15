@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Water> IRelatedWaters.RelatedWaterDaytime_Property => this.RelatedWaterDaytime_Property;
         IWaterInternalGetter IRelatedWatersGetter.RelatedWaterDaytime => this.RelatedWaterDaytime_Property.Item;
-        IFormIDLinkGetter<Water> IRelatedWatersGetter.RelatedWaterDaytime_Property => this.RelatedWaterDaytime_Property;
+        IFormIDLinkGetter<IWaterInternalGetter> IRelatedWatersGetter.RelatedWaterDaytime_Property => this.RelatedWaterDaytime_Property;
         #endregion
         #region RelatedWaterNighttime
         public IFormIDLink<Water> RelatedWaterNighttime_Property { get; } = new FormIDLink<Water>();
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Water> IRelatedWaters.RelatedWaterNighttime_Property => this.RelatedWaterNighttime_Property;
         IWaterInternalGetter IRelatedWatersGetter.RelatedWaterNighttime => this.RelatedWaterNighttime_Property.Item;
-        IFormIDLinkGetter<Water> IRelatedWatersGetter.RelatedWaterNighttime_Property => this.RelatedWaterNighttime_Property;
+        IFormIDLinkGetter<IWaterInternalGetter> IRelatedWatersGetter.RelatedWaterNighttime_Property => this.RelatedWaterNighttime_Property;
         #endregion
         #region RelatedWaterUnderwater
         public IFormIDLink<Water> RelatedWaterUnderwater_Property { get; } = new FormIDLink<Water>();
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Water> IRelatedWaters.RelatedWaterUnderwater_Property => this.RelatedWaterUnderwater_Property;
         IWaterInternalGetter IRelatedWatersGetter.RelatedWaterUnderwater => this.RelatedWaterUnderwater_Property.Item;
-        IFormIDLinkGetter<Water> IRelatedWatersGetter.RelatedWaterUnderwater_Property => this.RelatedWaterUnderwater_Property;
+        IFormIDLinkGetter<IWaterInternalGetter> IRelatedWatersGetter.RelatedWaterUnderwater_Property => this.RelatedWaterUnderwater_Property;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelatedWatersGetter)rhs, include);
@@ -97,30 +97,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RelatedWaters rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRelatedWatersGetter rhs)) return false;
+            return ((RelatedWatersCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RelatedWaters rhs)
+        public bool Equals(RelatedWaters obj)
         {
-            if (rhs == null) return false;
-            if (!this.RelatedWaterDaytime_Property.Equals(rhs.RelatedWaterDaytime_Property)) return false;
-            if (!this.RelatedWaterNighttime_Property.Equals(rhs.RelatedWaterNighttime_Property)) return false;
-            if (!this.RelatedWaterUnderwater_Property.Equals(rhs.RelatedWaterUnderwater_Property)) return false;
-            return true;
+            return ((RelatedWatersCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(RelatedWaterDaytime).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RelatedWaterNighttime).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RelatedWaterUnderwater).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((RelatedWatersCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RelatedWatersXmlWriteTranslation.Instance;
@@ -574,17 +562,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region RelatedWaterDaytime
         IWaterInternalGetter RelatedWaterDaytime { get; }
-        IFormIDLinkGetter<Water> RelatedWaterDaytime_Property { get; }
+        IFormIDLinkGetter<IWaterInternalGetter> RelatedWaterDaytime_Property { get; }
 
         #endregion
         #region RelatedWaterNighttime
         IWaterInternalGetter RelatedWaterNighttime { get; }
-        IFormIDLinkGetter<Water> RelatedWaterNighttime_Property { get; }
+        IFormIDLinkGetter<IWaterInternalGetter> RelatedWaterNighttime_Property { get; }
 
         #endregion
         #region RelatedWaterUnderwater
         IWaterInternalGetter RelatedWaterUnderwater { get; }
-        IFormIDLinkGetter<Water> RelatedWaterUnderwater_Property { get; }
+        IFormIDLinkGetter<IWaterInternalGetter> RelatedWaterUnderwater_Property { get; }
 
         #endregion
 
@@ -651,6 +639,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRelatedWatersGetter item,
+            IRelatedWatersGetter rhs)
+        {
+            return ((RelatedWatersCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1045,6 +1042,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.RelatedWaterNighttime = true;
             mask.RelatedWaterUnderwater = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRelatedWatersGetter lhs,
+            IRelatedWatersGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.RelatedWaterDaytime_Property.Equals(rhs.RelatedWaterDaytime_Property)) return false;
+            if (!lhs.RelatedWaterNighttime_Property.Equals(rhs.RelatedWaterNighttime_Property)) return false;
+            if (!lhs.RelatedWaterUnderwater_Property.Equals(rhs.RelatedWaterUnderwater_Property)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IRelatedWatersGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.RelatedWaterDaytime).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RelatedWaterNighttime).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RelatedWaterUnderwater).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

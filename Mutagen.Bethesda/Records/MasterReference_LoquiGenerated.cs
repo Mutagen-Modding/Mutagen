@@ -106,35 +106,18 @@ namespace Mutagen.Bethesda
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is MasterReference rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IMasterReferenceGetter rhs)) return false;
+            return ((MasterReferenceCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(MasterReference rhs)
+        public bool Equals(MasterReference obj)
         {
-            if (rhs == null) return false;
-            if (this.Master != rhs.Master) return false;
-            if (FileSize_IsSet != rhs.FileSize_IsSet) return false;
-            if (FileSize_IsSet)
-            {
-                if (this.FileSize != rhs.FileSize) return false;
-            }
-            return true;
+            return ((MasterReferenceCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Master).CombineHashCode(ret);
-            if (FileSize_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FileSize).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((MasterReferenceCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => MasterReferenceXmlWriteTranslation.Instance;
@@ -671,6 +654,15 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
+        public static bool Equals(
+            this IMasterReferenceGetter item,
+            IMasterReferenceGetter rhs)
+        {
+            return ((MasterReferenceCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1042,6 +1034,36 @@ namespace Mutagen.Bethesda.Internals
             mask.Master = true;
             mask.FileSize = item.FileSize_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IMasterReferenceGetter lhs,
+            IMasterReferenceGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Master != rhs.Master) return false;
+            if (lhs.FileSize_IsSet != rhs.FileSize_IsSet) return false;
+            if (lhs.FileSize_IsSet)
+            {
+                if (lhs.FileSize != rhs.FileSize) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IMasterReferenceGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Master).CombineHashCode(ret);
+            if (item.FileSize_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FileSize).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1818,6 +1840,87 @@ namespace Mutagen.Bethesda.Internals
 
     }
     #endregion
+
+    public partial class MasterReferenceBinaryWrapper : IMasterReferenceGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
+        public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
+        protected object CommonInstance => MasterReferenceCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceGetter)rhs, include);
+
+        protected object XmlWriteTranslator => MasterReferenceXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => MasterReferenceBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Master
+        private int? _MasterLocation;
+        public bool Master_IsSet => _MasterLocation.HasValue;
+        public ModKey Master => _MasterLocation.HasValue ? ModKey.Factory(BinaryStringUtility.ToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MasterLocation.Value, _package.Meta))) : default;
+        #endregion
+        #region FileSize
+        private int? _FileSizeLocation;
+        public bool FileSize_IsSet => _FileSizeLocation.HasValue;
+        public UInt64 FileSize => _FileSizeLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FileSizeLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected MasterReferenceBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static MasterReferenceBinaryWrapper MasterReferenceFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new MasterReferenceBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x5453414D: // MAST
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
+                    _MasterLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
+                }
+                case 0x41544144: // DATA
+                {
+                    _FileSizeLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
 
     #endregion
 

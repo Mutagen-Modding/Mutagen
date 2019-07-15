@@ -134,40 +134,18 @@ namespace Mutagen.Bethesda.Tests
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is TestingSettings rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ITestingSettingsGetter rhs)) return false;
+            return ((TestingSettingsCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(TestingSettings rhs)
+        public bool Equals(TestingSettings obj)
         {
-            if (rhs == null) return false;
-            if (this.TestGroupMasks != rhs.TestGroupMasks) return false;
-            if (this.TestModList != rhs.TestModList) return false;
-            if (this.TestFlattenedMod != rhs.TestFlattenedMod) return false;
-            if (this.TestBenchmarks != rhs.TestBenchmarks) return false;
-            if (this.TestLocators != rhs.TestLocators) return false;
-            if (!object.Equals(this.DataFolderLocations, rhs.DataFolderLocations)) return false;
-            if (!object.Equals(this.PassthroughSettings, rhs.PassthroughSettings)) return false;
-            if (!this.TargetGroups.SequenceEqual(rhs.TargetGroups)) return false;
-            return true;
+            return ((TestingSettingsCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(TestGroupMasks).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(TestModList).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(TestFlattenedMod).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(TestBenchmarks).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(TestLocators).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DataFolderLocations).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(PassthroughSettings).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(TargetGroups).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((TestingSettingsCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => TestingSettingsXmlWriteTranslation.Instance;
@@ -573,7 +551,7 @@ namespace Mutagen.Bethesda.Tests
                     this.PassthroughSettings = (PassthroughSettings)obj;
                     break;
                 case TestingSettings_FieldIndex.TargetGroups:
-                    this._TargetGroups.SetTo((IEnumerable<TargetGroup>)obj);
+                    this._TargetGroups.SetTo((SourceSetList<TargetGroup>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -625,7 +603,7 @@ namespace Mutagen.Bethesda.Tests
                     obj.PassthroughSettings = (PassthroughSettings)pair.Value;
                     break;
                 case TestingSettings_FieldIndex.TargetGroups:
-                    obj._TargetGroups.SetTo((IEnumerable<TargetGroup>)pair.Value);
+                    obj._TargetGroups.SetTo((SourceSetList<TargetGroup>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -761,6 +739,15 @@ namespace Mutagen.Bethesda.Tests
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ITestingSettingsGetter item,
+            ITestingSettingsGetter rhs)
+        {
+            return ((TestingSettingsCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1422,6 +1409,41 @@ namespace Mutagen.Bethesda.Tests.Internals
             mask.PassthroughSettings = new MaskItem<bool, PassthroughSettings_Mask<bool>>(true, item.PassthroughSettings.GetHasBeenSetMask());
             mask.TargetGroups = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, TargetGroup_Mask<bool>>>>(true, item.TargetGroups.WithIndex().Select((i) => new MaskItemIndexed<bool, TargetGroup_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ITestingSettingsGetter lhs,
+            ITestingSettingsGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.TestGroupMasks != rhs.TestGroupMasks) return false;
+            if (lhs.TestModList != rhs.TestModList) return false;
+            if (lhs.TestFlattenedMod != rhs.TestFlattenedMod) return false;
+            if (lhs.TestBenchmarks != rhs.TestBenchmarks) return false;
+            if (lhs.TestLocators != rhs.TestLocators) return false;
+            if (!object.Equals(lhs.DataFolderLocations, rhs.DataFolderLocations)) return false;
+            if (!object.Equals(lhs.PassthroughSettings, rhs.PassthroughSettings)) return false;
+            if (!lhs.TargetGroups.SequenceEqual(rhs.TargetGroups)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(ITestingSettingsGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.TestGroupMasks).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TestModList).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TestFlattenedMod).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TestBenchmarks).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TestLocators).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DataFolderLocations).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PassthroughSettings).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TargetGroups).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

@@ -68,6 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        ReadOnlySpan<Byte> IScriptMetaSummaryGetter.Fluff => this.Fluff;
         #endregion
         #region RefCount
         private UInt32 _RefCount;
@@ -120,34 +121,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ScriptMetaSummary rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IScriptMetaSummaryGetter rhs)) return false;
+            return ((ScriptMetaSummaryCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptMetaSummary rhs)
+        public bool Equals(ScriptMetaSummary obj)
         {
-            if (rhs == null) return false;
-            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
-            if (this.RefCount != rhs.RefCount) return false;
-            if (this.CompiledSize != rhs.CompiledSize) return false;
-            if (this.VariableCount != rhs.VariableCount) return false;
-            if (this.Type != rhs.Type) return false;
-            return true;
+            return ((ScriptMetaSummaryCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RefCount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CompiledSize).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(VariableCount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((ScriptMetaSummaryCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => ScriptMetaSummaryXmlWriteTranslation.Instance;
@@ -636,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Fluff
-        Byte[] Fluff { get; }
+        ReadOnlySpan<Byte> Fluff { get; }
 
         #endregion
         #region RefCount
@@ -719,6 +704,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IScriptMetaSummaryGetter item,
+            IScriptMetaSummaryGetter rhs)
+        {
+            return ((ScriptMetaSummaryCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1079,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
             ret.RefCount = item.RefCount == rhs.RefCount;
             ret.CompiledSize = item.CompiledSize == rhs.CompiledSize;
             ret.VariableCount = item.VariableCount == rhs.VariableCount;
@@ -1132,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Fluff ?? true)
             {
-                fg.AppendLine($"Fluff => {item.Fluff}");
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
             if (printMask?.RefCount ?? true)
             {
@@ -1169,6 +1163,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.VariableCount = true;
             mask.Type = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IScriptMetaSummaryGetter lhs,
+            IScriptMetaSummaryGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (lhs.RefCount != rhs.RefCount) return false;
+            if (lhs.CompiledSize != rhs.CompiledSize) return false;
+            if (lhs.VariableCount != rhs.VariableCount) return false;
+            if (lhs.Type != rhs.Type) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IScriptMetaSummaryGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RefCount).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CompiledSize).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.VariableCount).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

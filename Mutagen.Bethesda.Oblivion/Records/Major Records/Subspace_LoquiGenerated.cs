@@ -126,34 +126,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Subspace rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ISubspaceInternalGetter rhs)) return false;
+            return ((SubspaceCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Subspace rhs)
+        public bool Equals(Subspace obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!this.X.EqualsWithin(rhs.X)) return false;
-            if (!this.Y.EqualsWithin(rhs.Y)) return false;
-            if (!this.Z.EqualsWithin(rhs.Z)) return false;
-            if (this.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
-            return true;
+            return ((SubspaceCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(X).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Y).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Z).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DNAMDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((SubspaceCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => SubspaceXmlWriteTranslation.Instance;
@@ -807,6 +791,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this ISubspaceInternalGetter item,
+            ISubspaceInternalGetter rhs)
+        {
+            return ((SubspaceCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1284,6 +1277,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISubspaceInternalGetter lhs,
+            ISubspaceInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (!lhs.X.EqualsWithin(rhs.X)) return false;
+            if (!lhs.Y.EqualsWithin(rhs.Y)) return false;
+            if (!lhs.Z.EqualsWithin(rhs.Z)) return false;
+            if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISubspaceInternalGetter)lhs,
+                rhs: rhs as ISubspaceInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISubspaceInternalGetter)lhs,
+                rhs: rhs as ISubspaceInternalGetter);
+        }
+
+        public virtual int GetHashCode(ISubspaceInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.X).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Y).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Z).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DNAMDataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISubspaceInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISubspaceInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

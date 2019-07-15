@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Place> ILoadScreenLocation.Direct_Property => this.Direct_Property;
         IPlaceInternalGetter ILoadScreenLocationGetter.Direct => this.Direct_Property.Item;
-        IFormIDLinkGetter<Place> ILoadScreenLocationGetter.Direct_Property => this.Direct_Property;
+        IFormIDLinkGetter<IPlaceInternalGetter> ILoadScreenLocationGetter.Direct_Property => this.Direct_Property;
         #endregion
         #region Indirect
         public IFormIDLink<Worldspace> Indirect_Property { get; } = new FormIDLink<Worldspace>();
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Worldspace> ILoadScreenLocation.Indirect_Property => this.Indirect_Property;
         IWorldspaceInternalGetter ILoadScreenLocationGetter.Indirect => this.Indirect_Property.Item;
-        IFormIDLinkGetter<Worldspace> ILoadScreenLocationGetter.Indirect_Property => this.Indirect_Property;
+        IFormIDLinkGetter<IWorldspaceInternalGetter> ILoadScreenLocationGetter.Indirect_Property => this.Indirect_Property;
         #endregion
         #region GridPoint
         private P2Int16 _GridPoint;
@@ -98,30 +98,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is LoadScreenLocation rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ILoadScreenLocationGetter rhs)) return false;
+            return ((LoadScreenLocationCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(LoadScreenLocation rhs)
+        public bool Equals(LoadScreenLocation obj)
         {
-            if (rhs == null) return false;
-            if (!this.Direct_Property.Equals(rhs.Direct_Property)) return false;
-            if (!this.Indirect_Property.Equals(rhs.Indirect_Property)) return false;
-            if (!this.GridPoint.Equals(rhs.GridPoint)) return false;
-            return true;
+            return ((LoadScreenLocationCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Direct).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Indirect).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(GridPoint).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((LoadScreenLocationCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => LoadScreenLocationXmlWriteTranslation.Instance;
@@ -591,12 +579,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Direct
         IPlaceInternalGetter Direct { get; }
-        IFormIDLinkGetter<Place> Direct_Property { get; }
+        IFormIDLinkGetter<IPlaceInternalGetter> Direct_Property { get; }
 
         #endregion
         #region Indirect
         IWorldspaceInternalGetter Indirect { get; }
-        IFormIDLinkGetter<Worldspace> Indirect_Property { get; }
+        IFormIDLinkGetter<IWorldspaceInternalGetter> Indirect_Property { get; }
 
         #endregion
         #region GridPoint
@@ -667,6 +655,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ILoadScreenLocationGetter item,
+            ILoadScreenLocationGetter rhs)
+        {
+            return ((LoadScreenLocationCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1061,6 +1058,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Indirect = true;
             mask.GridPoint = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILoadScreenLocationGetter lhs,
+            ILoadScreenLocationGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Direct_Property.Equals(rhs.Direct_Property)) return false;
+            if (!lhs.Indirect_Property.Equals(rhs.Indirect_Property)) return false;
+            if (!lhs.GridPoint.Equals(rhs.GridPoint)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(ILoadScreenLocationGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Direct).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Indirect).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.GridPoint).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

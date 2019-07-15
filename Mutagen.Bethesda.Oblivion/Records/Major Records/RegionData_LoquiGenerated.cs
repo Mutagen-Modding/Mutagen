@@ -127,32 +127,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RegionData rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRegionDataInternalGetter rhs)) return false;
+            return ((RegionDataCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RegionData rhs)
+        public bool Equals(RegionData obj)
         {
-            if (rhs == null) return false;
-            if (this.DataType != rhs.DataType) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (this.Priority != rhs.Priority) return false;
-            if (this.RDATDataTypeState != rhs.RDATDataTypeState) return false;
-            return true;
+            return ((RegionDataCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(DataType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Priority).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RDATDataTypeState).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((RegionDataCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected virtual object XmlWriteTranslator => RegionDataXmlWriteTranslation.Instance;
@@ -700,6 +686,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IRegionDataInternalGetter item,
+            IRegionDataInternalGetter rhs)
+        {
+            return ((RegionDataCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1091,6 +1086,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Priority = true;
             mask.RDATDataTypeState = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRegionDataInternalGetter lhs,
+            IRegionDataInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.DataType != rhs.DataType) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Priority != rhs.Priority) return false;
+            if (lhs.RDATDataTypeState != rhs.RDATDataTypeState) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IRegionDataInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.DataType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Priority).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RDATDataTypeState).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

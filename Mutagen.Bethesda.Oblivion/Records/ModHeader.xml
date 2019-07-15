@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ModHeader" recordType="TES4" objType="Record" GUID="d26d9f2a-53af-4c45-9490-dfdb377b6655" ID="2">
     <Fields>
-      <ByteArray name="Fluff" length="12" nullable="NotNull" hasBeenSet="False" />
+      <ByteArray name="Fluff" byteLength="12" nullable="NotNull" hasBeenSet="False" />
       <RefDirect name="Stats" refName="ModStats" nullable="NotNull" hasBeenSet="False" />
       <ByteArray name="TypeOffsets" recordType="OFST" hasBeenSet="True" />
       <ByteArray name="Deleted" recordType="DELE" hasBeenSet="True" />

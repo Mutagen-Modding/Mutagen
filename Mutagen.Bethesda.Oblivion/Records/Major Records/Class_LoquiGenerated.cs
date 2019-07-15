@@ -241,67 +241,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Class rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IClassInternalGetter rhs)) return false;
+            return ((ClassCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Class rhs)
+        public bool Equals(Class obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Description_IsSet != rhs.Description_IsSet) return false;
-            if (Description_IsSet)
-            {
-                if (!string.Equals(this.Description, rhs.Description)) return false;
-            }
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            if (!this.PrimaryAttributes.SequenceEqual(rhs.PrimaryAttributes)) return false;
-            if (this.Specialization != rhs.Specialization) return false;
-            if (!this.SecondaryAttributes.SequenceEqual(rhs.SecondaryAttributes)) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (this.ClassServices != rhs.ClassServices) return false;
-            if (!object.Equals(this.Training, rhs.Training)) return false;
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((ClassCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
-            }
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(PrimaryAttributes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Specialization).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SecondaryAttributes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ClassServices).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Training).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((ClassCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ClassXmlWriteTranslation.Instance;
@@ -882,13 +833,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Icon = (String)obj;
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
-                    this._PrimaryAttributes.SetTo((IEnumerable<ActorValue>)obj);
+                    this._PrimaryAttributes.SetTo((SourceSetList<ActorValue>)obj);
                     break;
                 case Class_FieldIndex.Specialization:
                     this.Specialization = (Class.SpecializationFlag)obj;
                     break;
                 case Class_FieldIndex.SecondaryAttributes:
-                    this._SecondaryAttributes.SetTo((IEnumerable<ActorValue>)obj);
+                    this._SecondaryAttributes.SetTo((SourceSetList<ActorValue>)obj);
                     break;
                 case Class_FieldIndex.Flags:
                     this.Flags = (ClassFlag)obj;
@@ -941,13 +892,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Icon = (String)pair.Value;
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
-                    obj._PrimaryAttributes.SetTo((IEnumerable<ActorValue>)pair.Value);
+                    obj._PrimaryAttributes.SetTo((SourceSetList<ActorValue>)pair.Value);
                     break;
                 case Class_FieldIndex.Specialization:
                     obj.Specialization = (Class.SpecializationFlag)pair.Value;
                     break;
                 case Class_FieldIndex.SecondaryAttributes:
-                    obj._SecondaryAttributes.SetTo((IEnumerable<ActorValue>)pair.Value);
+                    obj._SecondaryAttributes.SetTo((SourceSetList<ActorValue>)pair.Value);
                     break;
                 case Class_FieldIndex.Flags:
                     obj.Flags = (ClassFlag)pair.Value;
@@ -1133,6 +1084,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IClassInternalGetter item,
+            IClassInternalGetter rhs)
+        {
+            return ((ClassCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1941,6 +1901,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IClassInternalGetter lhs,
+            IClassInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (!lhs.PrimaryAttributes.SequenceEqual(rhs.PrimaryAttributes)) return false;
+            if (lhs.Specialization != rhs.Specialization) return false;
+            if (!lhs.SecondaryAttributes.SequenceEqual(rhs.SecondaryAttributes)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.ClassServices != rhs.ClassServices) return false;
+            if (!object.Equals(lhs.Training, rhs.Training)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IClassInternalGetter)lhs,
+                rhs: rhs as IClassInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IClassInternalGetter)lhs,
+                rhs: rhs as IClassInternalGetter);
+        }
+
+        public virtual int GetHashCode(IClassInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.PrimaryAttributes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Specialization).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SecondaryAttributes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ClassServices).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Training).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IClassInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IClassInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -3398,6 +3448,137 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class ClassBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IClassInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Class_Registration.Instance;
+        public new static Class_Registration Registration => Class_Registration.Instance;
+        protected override object CommonInstance => ClassCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => ClassXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ClassBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public bool Description_IsSet => _DescriptionLocation.HasValue;
+        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Icon
+        private int? _IconLocation;
+        public bool Icon_IsSet => _IconLocation.HasValue;
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        #endregion
+        private int? _DATALocation;
+        public Class.DATADataType DATADataTypeState { get; private set; }
+        public IReadOnlyList<ActorValue> PrimaryAttributes => BinaryWrapperNumberedList.FactoryForEnum<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 2, enumLength: 4);
+        #region Specialization
+        private int _SpecializationLocation => _DATALocation.Value + 8;
+        private bool _Specialization_IsSet => _DATALocation.HasValue;
+        public Class.SpecializationFlag Specialization => _Specialization_IsSet ? (Class.SpecializationFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SpecializationLocation, 4)) : default;
+        #endregion
+        public IReadOnlyList<ActorValue> SecondaryAttributes => BinaryWrapperNumberedList.FactoryForEnum<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 12) : default, amount: 7, enumLength: 4);
+        #region Flags
+        private int _FlagsLocation => _DATALocation.Value + 40;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public ClassFlag Flags => _Flags_IsSet ? (ClassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
+        #endregion
+        #region ClassServices
+        private int _ClassServicesLocation => _DATALocation.Value + 44;
+        private bool _ClassServices_IsSet => _DATALocation.HasValue;
+        public ClassService ClassServices => _ClassServices_IsSet ? (ClassService)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ClassServicesLocation, 4)) : default;
+        #endregion
+        #region Training
+        private int _TrainingLocation => _DATALocation.Value + 48;
+        private bool _Training_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Class.DATADataType.Break0);
+        private IClassTrainingGetter _Training => _Training_IsSet ? ClassTrainingBinaryWrapper.ClassTrainingFactory(new BinaryMemoryReadStream(_data.Slice(_TrainingLocation)), _package) : default;
+        public IClassTrainingGetter Training => _Training ?? new ClassTraining();
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ClassBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static ClassBinaryWrapper ClassFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new ClassBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
+                }
+                case 0x43534544: // DESC
+                {
+                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _IconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = Class.DATADataType.Has;
+                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                    if (subLen <= 48)
+                    {
+                        this.DATADataTypeState |= Class.DATADataType.Break0;
+                    }
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Training);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
 
     #endregion
 

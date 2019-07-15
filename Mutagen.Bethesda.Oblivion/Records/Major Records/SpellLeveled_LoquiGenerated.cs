@@ -73,26 +73,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is SpellLeveled rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ISpellLeveledInternalGetter rhs)) return false;
+            return ((SpellLeveledCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(SpellLeveled rhs)
+        public bool Equals(SpellLeveled obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            return true;
+            return ((SpellLeveledCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((SpellLeveledCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => SpellLeveledXmlWriteTranslation.Instance;
@@ -612,6 +604,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this ISpellLeveledInternalGetter item,
+            ISpellLeveledInternalGetter rhs)
+        {
+            return ((SpellLeveledCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1010,6 +1011,83 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISpellLeveledInternalGetter lhs,
+            ISpellLeveledInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            ISpellInternalGetter lhs,
+            ISpellInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISpellLeveledInternalGetter)lhs,
+                rhs: rhs as ISpellLeveledInternalGetter);
+        }
+
+        public override bool Equals(
+            ISpellAbstractInternalGetter lhs,
+            ISpellAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISpellLeveledInternalGetter)lhs,
+                rhs: rhs as ISpellLeveledInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISpellLeveledInternalGetter)lhs,
+                rhs: rhs as ISpellLeveledInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISpellLeveledInternalGetter)lhs,
+                rhs: rhs as ISpellLeveledInternalGetter);
+        }
+
+        public virtual int GetHashCode(ISpellLeveledInternalGetter item)
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(ISpellInternalGetter item)
+        {
+            return GetHashCode(item: (ISpellLeveledInternalGetter)item);
+        }
+
+        public override int GetHashCode(ISpellAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (ISpellLeveledInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISpellLeveledInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISpellLeveledInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

@@ -97,30 +97,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ModStats rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IModStatsGetter rhs)) return false;
+            return ((ModStatsCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ModStats rhs)
+        public bool Equals(ModStats obj)
         {
-            if (rhs == null) return false;
-            if (!this.Version.EqualsWithin(rhs.Version)) return false;
-            if (this.NumRecords != rhs.NumRecords) return false;
-            if (this.NextObjectID != rhs.NextObjectID) return false;
-            return true;
+            return ((ModStatsCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(NumRecords).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(NextObjectID).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((ModStatsCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => ModStatsXmlWriteTranslation.Instance;
@@ -639,6 +627,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IModStatsGetter item,
+            IModStatsGetter rhs)
+        {
+            return ((ModStatsCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1031,6 +1028,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.NumRecords = true;
             mask.NextObjectID = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IModStatsGetter lhs,
+            IModStatsGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Version.EqualsWithin(rhs.Version)) return false;
+            if (lhs.NumRecords != rhs.NumRecords) return false;
+            if (lhs.NextObjectID != rhs.NextObjectID) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IModStatsGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.NumRecords).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.NextObjectID).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1864,6 +1886,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class ModStatsBinaryWrapper : IModStatsGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
+        public static ModStats_Registration Registration => ModStats_Registration.Instance;
+        protected object CommonInstance => ModStatsCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModStatsGetter)rhs, include);
+
+        protected object XmlWriteTranslator => ModStatsXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => ModStatsBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public Single Version => SpanExt.GetFloat(_data.Span.Slice(0, 4));
+        public Int32 NumRecords => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        public UInt32 NextObjectID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4));
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ModStatsBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static ModStatsBinaryWrapper ModStatsFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new ModStatsBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x12;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
 
     #endregion
 

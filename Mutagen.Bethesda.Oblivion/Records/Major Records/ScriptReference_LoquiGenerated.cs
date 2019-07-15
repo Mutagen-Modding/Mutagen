@@ -73,24 +73,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ScriptReference rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IScriptReferenceGetter rhs)) return false;
+            return ((ScriptReferenceCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptReference rhs)
+        public bool Equals(ScriptReference obj)
         {
-            if (rhs == null) return false;
-            return true;
+            return ((ScriptReferenceCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            return ret;
-        }
+        public override int GetHashCode() => ((ScriptReferenceCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected virtual object XmlWriteTranslator => ScriptReferenceXmlWriteTranslation.Instance;
@@ -459,6 +453,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IScriptReferenceGetter item,
+            IScriptReferenceGetter rhs)
+        {
+            return ((ScriptReferenceCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -750,6 +753,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_Mask<bool> mask)
         {
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IScriptReferenceGetter lhs,
+            IScriptReferenceGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IScriptReferenceGetter item)
+        {
+            int ret = 0;
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

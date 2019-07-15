@@ -153,45 +153,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is SpellUnleveled rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ISpellUnleveledInternalGetter rhs)) return false;
+            return ((SpellUnleveledCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(SpellUnleveled rhs)
+        public bool Equals(SpellUnleveled obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (this.Type != rhs.Type) return false;
-            if (this.Cost != rhs.Cost) return false;
-            if (this.Level != rhs.Level) return false;
-            if (this.Flag != rhs.Flag) return false;
-            if (Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
-            if (Effects.HasBeenSet)
-            {
-                if (!this.Effects.SequenceEqual(rhs.Effects)) return false;
-            }
-            if (this.SPITDataTypeState != rhs.SPITDataTypeState) return false;
-            return true;
+            return ((SpellUnleveledCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Cost).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Level).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flag).CombineHashCode(ret);
-            if (Effects.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Effects).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(SPITDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((SpellUnleveledCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => SpellUnleveledXmlWriteTranslation.Instance;
@@ -728,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flag = (Spell.SpellFlag)obj;
                     break;
                 case SpellUnleveled_FieldIndex.Effects:
-                    this._Effects.SetTo((IEnumerable<Effect>)obj);
+                    this._Effects.SetTo((SourceSetList<Effect>)obj);
                     break;
                 case SpellUnleveled_FieldIndex.SPITDataTypeState:
                     this.SPITDataTypeState = (SpellUnleveled.SPITDataType)obj;
@@ -775,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flag = (Spell.SpellFlag)pair.Value;
                     break;
                 case SpellUnleveled_FieldIndex.Effects:
-                    obj._Effects.SetTo((IEnumerable<Effect>)pair.Value);
+                    obj._Effects.SetTo((SourceSetList<Effect>)pair.Value);
                     break;
                 case SpellUnleveled_FieldIndex.SPITDataTypeState:
                     obj.SPITDataTypeState = (SpellUnleveled.SPITDataType)pair.Value;
@@ -918,6 +891,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ISpellUnleveledInternalGetter item,
+            ISpellUnleveledInternalGetter rhs)
+        {
+            return ((SpellUnleveledCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1558,6 +1540,102 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISpellUnleveledInternalGetter lhs,
+            ISpellUnleveledInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Type != rhs.Type) return false;
+            if (lhs.Cost != rhs.Cost) return false;
+            if (lhs.Level != rhs.Level) return false;
+            if (lhs.Flag != rhs.Flag) return false;
+            if (lhs.Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
+            if (lhs.Effects.HasBeenSet)
+            {
+                if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            }
+            if (lhs.SPITDataTypeState != rhs.SPITDataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            ISpellInternalGetter lhs,
+            ISpellInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISpellUnleveledInternalGetter)lhs,
+                rhs: rhs as ISpellUnleveledInternalGetter);
+        }
+
+        public override bool Equals(
+            ISpellAbstractInternalGetter lhs,
+            ISpellAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISpellUnleveledInternalGetter)lhs,
+                rhs: rhs as ISpellUnleveledInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISpellUnleveledInternalGetter)lhs,
+                rhs: rhs as ISpellUnleveledInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISpellUnleveledInternalGetter)lhs,
+                rhs: rhs as ISpellUnleveledInternalGetter);
+        }
+
+        public virtual int GetHashCode(ISpellUnleveledInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Cost).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Level).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flag).CombineHashCode(ret);
+            if (item.Effects.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Effects).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.SPITDataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(ISpellInternalGetter item)
+        {
+            return GetHashCode(item: (ISpellUnleveledInternalGetter)item);
+        }
+
+        public override int GetHashCode(ISpellAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (ISpellUnleveledInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISpellUnleveledInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISpellUnleveledInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

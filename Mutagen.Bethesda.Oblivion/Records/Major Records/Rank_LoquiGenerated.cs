@@ -177,60 +177,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Rank rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRankGetter rhs)) return false;
+            return ((RankCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Rank rhs)
+        public bool Equals(Rank obj)
         {
-            if (rhs == null) return false;
-            if (RankNumber_IsSet != rhs.RankNumber_IsSet) return false;
-            if (RankNumber_IsSet)
-            {
-                if (this.RankNumber != rhs.RankNumber) return false;
-            }
-            if (MaleName_IsSet != rhs.MaleName_IsSet) return false;
-            if (MaleName_IsSet)
-            {
-                if (!string.Equals(this.MaleName, rhs.MaleName)) return false;
-            }
-            if (FemaleName_IsSet != rhs.FemaleName_IsSet) return false;
-            if (FemaleName_IsSet)
-            {
-                if (!string.Equals(this.FemaleName, rhs.FemaleName)) return false;
-            }
-            if (Insignia_IsSet != rhs.Insignia_IsSet) return false;
-            if (Insignia_IsSet)
-            {
-                if (!string.Equals(this.Insignia, rhs.Insignia)) return false;
-            }
-            return true;
+            return ((RankCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (RankNumber_IsSet)
-            {
-                ret = HashHelper.GetHashCode(RankNumber).CombineHashCode(ret);
-            }
-            if (MaleName_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MaleName).CombineHashCode(ret);
-            }
-            if (FemaleName_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FemaleName).CombineHashCode(ret);
-            }
-            if (Insignia_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Insignia).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((RankCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RankXmlWriteTranslation.Instance;
@@ -836,6 +794,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IRankGetter item,
+            IRankGetter rhs)
+        {
+            return ((RankCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1336,6 +1303,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.FemaleName = item.FemaleName_IsSet;
             mask.Insignia = item.Insignia_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRankGetter lhs,
+            IRankGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.RankNumber_IsSet != rhs.RankNumber_IsSet) return false;
+            if (lhs.RankNumber_IsSet)
+            {
+                if (lhs.RankNumber != rhs.RankNumber) return false;
+            }
+            if (lhs.MaleName_IsSet != rhs.MaleName_IsSet) return false;
+            if (lhs.MaleName_IsSet)
+            {
+                if (!string.Equals(lhs.MaleName, rhs.MaleName)) return false;
+            }
+            if (lhs.FemaleName_IsSet != rhs.FemaleName_IsSet) return false;
+            if (lhs.FemaleName_IsSet)
+            {
+                if (!string.Equals(lhs.FemaleName, rhs.FemaleName)) return false;
+            }
+            if (lhs.Insignia_IsSet != rhs.Insignia_IsSet) return false;
+            if (lhs.Insignia_IsSet)
+            {
+                if (!string.Equals(lhs.Insignia, rhs.Insignia)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IRankGetter item)
+        {
+            int ret = 0;
+            if (item.RankNumber_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.RankNumber).CombineHashCode(ret);
+            }
+            if (item.MaleName_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MaleName).CombineHashCode(ret);
+            }
+            if (item.FemaleName_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FemaleName).CombineHashCode(ret);
+            }
+            if (item.Insignia_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Insignia).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -2258,6 +2280,110 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class RankBinaryWrapper : IRankGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
+        public static Rank_Registration Registration => Rank_Registration.Instance;
+        protected object CommonInstance => RankCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRankGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RankXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RankBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region RankNumber
+        private int? _RankNumberLocation;
+        public bool RankNumber_IsSet => _RankNumberLocation.HasValue;
+        public Int32 RankNumber => _RankNumberLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RankNumberLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region MaleName
+        private int? _MaleNameLocation;
+        public bool MaleName_IsSet => _MaleNameLocation.HasValue;
+        public String MaleName => _MaleNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MaleNameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region FemaleName
+        private int? _FemaleNameLocation;
+        public bool FemaleName_IsSet => _FemaleNameLocation.HasValue;
+        public String FemaleName => _FemaleNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FemaleNameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Insignia
+        private int? _InsigniaLocation;
+        public bool Insignia_IsSet => _InsigniaLocation.HasValue;
+        public String Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _InsigniaLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RankBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static RankBinaryWrapper RankFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new RankBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4D414E52: // RNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
+                    _RankNumberLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleName) return TryGet<int?>.Failure;
+                    _MaleNameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleName);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleName) return TryGet<int?>.Failure;
+                    _FemaleNameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleName);
+                }
+                case 0x4D414E49: // INAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
+                    _InsigniaLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
 
     #endregion
 

@@ -90,28 +90,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is EnableParent rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IEnableParentGetter rhs)) return false;
+            return ((EnableParentCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(EnableParent rhs)
+        public bool Equals(EnableParent obj)
         {
-            if (rhs == null) return false;
-            if (!this.Reference_Property.Equals(rhs.Reference_Property)) return false;
-            if (this.Flags != rhs.Flags) return false;
-            return true;
+            return ((EnableParentCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Reference).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((EnableParentCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => EnableParentXmlWriteTranslation.Instance;
@@ -637,6 +627,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IEnableParentGetter item,
+            IEnableParentGetter rhs)
+        {
+            return ((EnableParentCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -993,6 +992,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Reference = true;
             mask.Flags = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IEnableParentGetter lhs,
+            IEnableParentGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Reference_Property.Equals(rhs.Reference_Property)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IEnableParentGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Reference).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

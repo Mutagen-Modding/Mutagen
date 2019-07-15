@@ -2,6 +2,7 @@
 using Loqui.Internal;
 using Noggog;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 
@@ -11,23 +12,31 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly static FormKeyBinaryTranslation Instance = new FormKeyBinaryTranslation();
 
+        public static FormKey Parse(
+            ReadOnlySpan<byte> span,
+            MasterReferences masterReferences)
+        {
+            var id = BinaryPrimitives.ReadUInt32LittleEndian(span);
+            var modID = ModID.GetModIDByteFromUInt(id);
+            if (modID < masterReferences.Masters.Count)
+            {
+                return new FormKey(
+                    masterReferences.Masters[modID].Master,
+                    id);
+            }
+            return new FormKey(
+                masterReferences.CurrentMod,
+                id);
+        }
+
         public bool Parse(
             MutagenFrame frame,
             out FormKey item,
             MasterReferences masterReferences)
         {
-            var id = frame.ReadUInt32();
-            var formID = new FormID(id);
-            if (formID.ModID.ID < masterReferences.Masters.Count)
-            {
-                item = new FormKey(
-                    masterReferences.Masters[formID.ModID.ID].Master,
-                    id);
-                return true;
-            }
-            item = new FormKey(
-                masterReferences.CurrentMod,
-                id);
+            item = Parse(
+                frame.ReadSpan(4),
+                masterReferences);
             return true;
         }
 

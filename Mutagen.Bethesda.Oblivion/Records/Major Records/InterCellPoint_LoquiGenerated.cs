@@ -89,28 +89,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is InterCellPoint rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IInterCellPointGetter rhs)) return false;
+            return ((InterCellPointCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(InterCellPoint rhs)
+        public bool Equals(InterCellPoint obj)
         {
-            if (rhs == null) return false;
-            if (this.PointID != rhs.PointID) return false;
-            if (!this.Point.Equals(rhs.Point)) return false;
-            return true;
+            return ((InterCellPointCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(PointID).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Point).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((InterCellPointCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => InterCellPointXmlWriteTranslation.Instance;
@@ -608,6 +598,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IInterCellPointGetter item,
+            IInterCellPointGetter rhs)
+        {
+            return ((InterCellPointCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -962,6 +961,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.PointID = true;
             mask.Point = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IInterCellPointGetter lhs,
+            IInterCellPointGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.PointID != rhs.PointID) return false;
+            if (!lhs.Point.Equals(rhs.Point)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IInterCellPointGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.PointID).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Point).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

@@ -113,42 +113,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RegionArea rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRegionAreaGetter rhs)) return false;
+            return ((RegionAreaCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RegionArea rhs)
+        public bool Equals(RegionArea obj)
         {
-            if (rhs == null) return false;
-            if (EdgeFallOff_IsSet != rhs.EdgeFallOff_IsSet) return false;
-            if (EdgeFallOff_IsSet)
-            {
-                if (this.EdgeFallOff != rhs.EdgeFallOff) return false;
-            }
-            if (RegionPoints.HasBeenSet != rhs.RegionPoints.HasBeenSet) return false;
-            if (RegionPoints.HasBeenSet)
-            {
-                if (!this.RegionPoints.SequenceEqual(rhs.RegionPoints)) return false;
-            }
-            return true;
+            return ((RegionAreaCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (EdgeFallOff_IsSet)
-            {
-                ret = HashHelper.GetHashCode(EdgeFallOff).CombineHashCode(ret);
-            }
-            if (RegionPoints.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(RegionPoints).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((RegionAreaCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RegionAreaXmlWriteTranslation.Instance;
@@ -534,7 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.EdgeFallOff = (UInt32)obj;
                     break;
                 case RegionArea_FieldIndex.RegionPoints:
-                    this._RegionPoints.SetTo((IEnumerable<P2Float>)obj);
+                    this._RegionPoints.SetTo((SourceSetList<P2Float>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -568,7 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.EdgeFallOff = (UInt32)pair.Value;
                     break;
                 case RegionArea_FieldIndex.RegionPoints:
-                    obj._RegionPoints.SetTo((IEnumerable<P2Float>)pair.Value);
+                    obj._RegionPoints.SetTo((SourceSetList<P2Float>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -673,6 +649,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRegionAreaGetter item,
+            IRegionAreaGetter rhs)
+        {
+            return ((RegionAreaCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1078,6 +1063,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.EdgeFallOff = item.EdgeFallOff_IsSet;
             mask.RegionPoints = new MaskItem<bool, IEnumerable<(int, bool)>>(item.RegionPoints.HasBeenSet, null);
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRegionAreaGetter lhs,
+            IRegionAreaGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.EdgeFallOff_IsSet != rhs.EdgeFallOff_IsSet) return false;
+            if (lhs.EdgeFallOff_IsSet)
+            {
+                if (lhs.EdgeFallOff != rhs.EdgeFallOff) return false;
+            }
+            if (lhs.RegionPoints.HasBeenSet != rhs.RegionPoints.HasBeenSet) return false;
+            if (lhs.RegionPoints.HasBeenSet)
+            {
+                if (!lhs.RegionPoints.SequenceEqual(rhs.RegionPoints)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IRegionAreaGetter item)
+        {
+            int ret = 0;
+            if (item.EdgeFallOff_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.EdgeFallOff).CombineHashCode(ret);
+            }
+            if (item.RegionPoints.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.RegionPoints).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

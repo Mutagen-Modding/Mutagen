@@ -93,28 +93,18 @@ namespace Mutagen.Bethesda.Tests
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is TargetGroup rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is ITargetGroupGetter rhs)) return false;
+            return ((TargetGroupCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(TargetGroup rhs)
+        public bool Equals(TargetGroup obj)
         {
-            if (rhs == null) return false;
-            if (this.Do != rhs.Do) return false;
-            if (!this.Targets.SequenceEqual(rhs.Targets)) return false;
-            return true;
+            return ((TargetGroupCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Do).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Targets).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((TargetGroupCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => TargetGroupXmlWriteTranslation.Instance;
@@ -496,7 +486,7 @@ namespace Mutagen.Bethesda.Tests
                     this.Do = (Boolean)obj;
                     break;
                 case TargetGroup_FieldIndex.Targets:
-                    this._Targets.SetTo((IEnumerable<Target>)obj);
+                    this._Targets.SetTo((SourceSetList<Target>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -530,7 +520,7 @@ namespace Mutagen.Bethesda.Tests
                     obj.Do = (Boolean)pair.Value;
                     break;
                 case TargetGroup_FieldIndex.Targets:
-                    obj._Targets.SetTo((IEnumerable<Target>)pair.Value);
+                    obj._Targets.SetTo((SourceSetList<Target>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -630,6 +620,15 @@ namespace Mutagen.Bethesda.Tests
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this ITargetGroupGetter item,
+            ITargetGroupGetter rhs)
+        {
+            return ((TargetGroupCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1019,6 +1018,29 @@ namespace Mutagen.Bethesda.Tests.Internals
             mask.Do = true;
             mask.Targets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Target_Mask<bool>>>>(true, item.Targets.WithIndex().Select((i) => new MaskItemIndexed<bool, Target_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            ITargetGroupGetter lhs,
+            ITargetGroupGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Do != rhs.Do) return false;
+            if (!lhs.Targets.SequenceEqual(rhs.Targets)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(ITargetGroupGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Do).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Targets).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

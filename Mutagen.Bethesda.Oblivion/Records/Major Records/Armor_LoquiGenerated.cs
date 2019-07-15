@@ -138,36 +138,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Armor rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IArmorInternalGetter rhs)) return false;
+            return ((ArmorCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Armor rhs)
+        public bool Equals(Armor obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!this.ArmorValue.EqualsWithin(rhs.ArmorValue)) return false;
-            if (this.Value != rhs.Value) return false;
-            if (this.Health != rhs.Health) return false;
-            if (!this.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((ArmorCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(ArmorValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Health).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((ArmorCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ArmorXmlWriteTranslation.Instance;
@@ -821,6 +803,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IArmorInternalGetter item,
+            IArmorInternalGetter rhs)
+        {
+            return ((ArmorCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1421,6 +1412,93 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IArmorInternalGetter lhs,
+            IArmorInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (!lhs.ArmorValue.EqualsWithin(rhs.ArmorValue)) return false;
+            if (lhs.Value != rhs.Value) return false;
+            if (lhs.Health != rhs.Health) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IClothingAbstractInternalGetter lhs,
+            IClothingAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IArmorInternalGetter)lhs,
+                rhs: rhs as IArmorInternalGetter);
+        }
+
+        public override bool Equals(
+            IItemAbstractInternalGetter lhs,
+            IItemAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IArmorInternalGetter)lhs,
+                rhs: rhs as IArmorInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IArmorInternalGetter)lhs,
+                rhs: rhs as IArmorInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IArmorInternalGetter)lhs,
+                rhs: rhs as IArmorInternalGetter);
+        }
+
+        public virtual int GetHashCode(IArmorInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.ArmorValue).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Health).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IClothingAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (IArmorInternalGetter)item);
+        }
+
+        public override int GetHashCode(IItemAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (IArmorInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IArmorInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IArmorInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

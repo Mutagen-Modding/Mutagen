@@ -99,35 +99,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is GlobalShort rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IGlobalShortInternalGetter rhs)) return false;
+            return ((GlobalShortCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(GlobalShort rhs)
+        public bool Equals(GlobalShort obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Data_IsSet != rhs.Data_IsSet) return false;
-            if (Data_IsSet)
-            {
-                if (this.Data != rhs.Data) return false;
-            }
-            return true;
+            return ((GlobalShortCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Data_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((GlobalShortCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => GlobalShortXmlWriteTranslation.Instance;
@@ -707,6 +690,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IGlobalShortInternalGetter item,
+            IGlobalShortInternalGetter rhs)
+        {
+            return ((GlobalShortCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1134,6 +1126,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IGlobalShortInternalGetter lhs,
+            IGlobalShortInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Data_IsSet != rhs.Data_IsSet) return false;
+            if (lhs.Data_IsSet)
+            {
+                if (lhs.Data != rhs.Data) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IGlobalInternalGetter lhs,
+            IGlobalInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGlobalShortInternalGetter)lhs,
+                rhs: rhs as IGlobalShortInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGlobalShortInternalGetter)lhs,
+                rhs: rhs as IGlobalShortInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGlobalShortInternalGetter)lhs,
+                rhs: rhs as IGlobalShortInternalGetter);
+        }
+
+        public virtual int GetHashCode(IGlobalShortInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Data_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Data).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IGlobalInternalGetter item)
+        {
+            return GetHashCode(item: (IGlobalShortInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGlobalShortInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGlobalShortInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1834,6 +1898,83 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class GlobalShortBinaryWrapper :
+        GlobalBinaryWrapper,
+        IGlobalShortInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => GlobalShort_Registration.Instance;
+        public new static GlobalShort_Registration Registration => GlobalShort_Registration.Instance;
+        protected override object CommonInstance => GlobalShortCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalShortInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => GlobalShortXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GlobalShortBinaryWriteTranslation.Instance;
+
+        #region Data
+        private int? _DataLocation;
+        public bool Data_IsSet => _DataLocation.HasValue;
+        public Int16 Data => GetDataCustom(
+            span: HeaderTranslation.ExtractSubrecordSpan(_data, _DataLocation.Value, _package.Meta),
+            masterReferences: _package.MasterReferences);
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GlobalShortBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static GlobalShortBinaryWrapper GlobalShortFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new GlobalShortBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x56544C46: // FLTV
+                {
+                    _DataLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)GlobalShort_FieldIndex.Data);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
 
     #endregion
 

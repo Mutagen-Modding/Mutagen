@@ -115,42 +115,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is BodyData rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IBodyDataGetter rhs)) return false;
+            return ((BodyDataCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(BodyData rhs)
+        public bool Equals(BodyData obj)
         {
-            if (rhs == null) return false;
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (BodyParts.HasBeenSet != rhs.BodyParts.HasBeenSet) return false;
-            if (BodyParts.HasBeenSet)
-            {
-                if (!this.BodyParts.SequenceEqual(rhs.BodyParts)) return false;
-            }
-            return true;
+            return ((BodyDataCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (BodyParts.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(BodyParts).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((BodyDataCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => BodyDataXmlWriteTranslation.Instance;
@@ -562,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case BodyData_FieldIndex.BodyParts:
-                    this._BodyParts.SetTo((IEnumerable<BodyPart>)obj);
+                    this._BodyParts.SetTo((SourceSetList<BodyPart>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -596,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case BodyData_FieldIndex.BodyParts:
-                    obj._BodyParts.SetTo((IEnumerable<BodyPart>)pair.Value);
+                    obj._BodyParts.SetTo((SourceSetList<BodyPart>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -701,6 +677,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IBodyDataGetter item,
+            IBodyDataGetter rhs)
+        {
+            return ((BodyDataCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1152,6 +1137,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
             mask.BodyParts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BodyPart_Mask<bool>>>>(item.BodyParts.HasBeenSet, item.BodyParts.WithIndex().Select((i) => new MaskItemIndexed<bool, BodyPart_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IBodyDataGetter lhs,
+            IBodyDataGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.BodyParts.HasBeenSet != rhs.BodyParts.HasBeenSet) return false;
+            if (lhs.BodyParts.HasBeenSet)
+            {
+                if (!lhs.BodyParts.SequenceEqual(rhs.BodyParts)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IBodyDataGetter item)
+        {
+            int ret = 0;
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.BodyParts.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.BodyParts).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -2046,6 +2068,91 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class BodyDataBinaryWrapper : IBodyDataGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
+        public static BodyData_Registration Registration => BodyData_Registration.Instance;
+        protected object CommonInstance => BodyDataCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyDataGetter)rhs, include);
+
+        protected object XmlWriteTranslator => BodyDataXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => BodyDataBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        public IReadOnlySetList<IBodyPartGetter> BodyParts { get; private set; } = EmptySetList<BodyPartBinaryWrapper>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected BodyDataBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static BodyDataBinaryWrapper BodyDataFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new BodyDataBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
+                }
+                case 0x58444E49: // INDX
+                case 0x4E4F4349: // ICON
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
+                    this.BodyParts = UtilityTranslation.ParseRepeatedTypelessSubrecord<BodyPartBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        offset: offset,
+                        trigger: BodyPart_Registration.TriggeringRecordTypes,
+                        factory:  BodyPartBinaryWrapper.BodyPartFactory);
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
 
     #endregion
 

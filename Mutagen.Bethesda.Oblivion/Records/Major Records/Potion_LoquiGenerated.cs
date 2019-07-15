@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Script> IPotion.Script_Property => this.Script_Property;
         IScriptInternalGetter IPotionGetter.Script => this.Script_Property.Item;
-        IFormIDSetLinkGetter<Script> IPotionGetter.Script_Property => this.Script_Property;
+        IFormIDSetLinkGetter<IScriptInternalGetter> IPotionGetter.Script_Property => this.Script_Property;
         #endregion
         #region Weight
         public bool Weight_IsSet
@@ -243,86 +243,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Potion rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IPotionInternalGetter rhs)) return false;
+            return ((PotionCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Potion rhs)
+        public bool Equals(Potion obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (Script_Property.HasBeenSet)
-            {
-                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (Weight_IsSet != rhs.Weight_IsSet) return false;
-            if (Weight_IsSet)
-            {
-                if (!this.Weight.EqualsWithin(rhs.Weight)) return false;
-            }
-            if (this.Value != rhs.Value) return false;
-            if (this.Flags != rhs.Flags) return false;
-            if (Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
-            if (Effects.HasBeenSet)
-            {
-                if (!this.Effects.SequenceEqual(rhs.Effects)) return false;
-            }
-            if (this.ENITDataTypeState != rhs.ENITDataTypeState) return false;
-            return true;
+            return ((PotionCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            if (Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
-            }
-            if (Weight_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            if (Effects.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Effects).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(ENITDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((PotionCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => PotionXmlWriteTranslation.Instance;
@@ -935,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (IngredientFlag)obj;
                     break;
                 case Potion_FieldIndex.Effects:
-                    this._Effects.SetTo((IEnumerable<Effect>)obj);
+                    this._Effects.SetTo((SourceSetList<Effect>)obj);
                     break;
                 case Potion_FieldIndex.ENITDataTypeState:
                     this.ENITDataTypeState = (Potion.ENITDataType)obj;
@@ -991,7 +923,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (IngredientFlag)pair.Value;
                     break;
                 case Potion_FieldIndex.Effects:
-                    obj._Effects.SetTo((IEnumerable<Effect>)pair.Value);
+                    obj._Effects.SetTo((SourceSetList<Effect>)pair.Value);
                     break;
                 case Potion_FieldIndex.ENITDataTypeState:
                     obj.ENITDataTypeState = (Potion.ENITDataType)pair.Value;
@@ -1077,7 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         IScriptInternalGetter Script { get; }
-        IFormIDSetLinkGetter<Script> Script_Property { get; }
+        IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property { get; }
 
         #endregion
         #region Weight
@@ -1171,6 +1103,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IPotionInternalGetter item,
+            IPotionInternalGetter rhs)
+        {
+            return ((PotionCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1985,6 +1926,129 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IPotionInternalGetter lhs,
+            IPotionInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Weight_IsSet != rhs.Weight_IsSet) return false;
+            if (lhs.Weight_IsSet)
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if (lhs.Value != rhs.Value) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
+            if (lhs.Effects.HasBeenSet)
+            {
+                if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            }
+            if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IItemAbstractInternalGetter lhs,
+            IItemAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IPotionInternalGetter)lhs,
+                rhs: rhs as IPotionInternalGetter);
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IPotionInternalGetter)lhs,
+                rhs: rhs as IPotionInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IPotionInternalGetter)lhs,
+                rhs: rhs as IPotionInternalGetter);
+        }
+
+        public virtual int GetHashCode(IPotionInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.Weight_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            if (item.Effects.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Effects).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.ENITDataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IItemAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (IPotionInternalGetter)item);
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IPotionInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IPotionInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

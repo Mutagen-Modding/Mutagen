@@ -137,40 +137,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RaceStats rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRaceStatsGetter rhs)) return false;
+            return ((RaceStatsCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RaceStats rhs)
+        public bool Equals(RaceStats obj)
         {
-            if (rhs == null) return false;
-            if (this.Strength != rhs.Strength) return false;
-            if (this.Intelligence != rhs.Intelligence) return false;
-            if (this.Willpower != rhs.Willpower) return false;
-            if (this.Agility != rhs.Agility) return false;
-            if (this.Speed != rhs.Speed) return false;
-            if (this.Endurance != rhs.Endurance) return false;
-            if (this.Personality != rhs.Personality) return false;
-            if (this.Luck != rhs.Luck) return false;
-            return true;
+            return ((RaceStatsCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Strength).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Intelligence).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Willpower).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Agility).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Speed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Endurance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Personality).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Luck).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((RaceStatsCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RaceStatsXmlWriteTranslation.Instance;
@@ -743,6 +721,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IRaceStatsGetter item,
+            IRaceStatsGetter rhs)
+        {
+            return ((RaceStatsCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1313,6 +1300,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Personality = true;
             mask.Luck = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRaceStatsGetter lhs,
+            IRaceStatsGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Strength != rhs.Strength) return false;
+            if (lhs.Intelligence != rhs.Intelligence) return false;
+            if (lhs.Willpower != rhs.Willpower) return false;
+            if (lhs.Agility != rhs.Agility) return false;
+            if (lhs.Speed != rhs.Speed) return false;
+            if (lhs.Endurance != rhs.Endurance) return false;
+            if (lhs.Personality != rhs.Personality) return false;
+            if (lhs.Luck != rhs.Luck) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IRaceStatsGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Strength).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Intelligence).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Willpower).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Agility).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Speed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Endurance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Personality).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Luck).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -2453,6 +2475,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class RaceStatsBinaryWrapper : IRaceStatsGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RaceStats_Registration.Instance;
+        public static RaceStats_Registration Registration => RaceStats_Registration.Instance;
+        protected object CommonInstance => RaceStatsCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceStatsGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RaceStatsXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RaceStatsBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public Byte Strength => _data.Span[0];
+        public Byte Intelligence => _data.Span[1];
+        public Byte Willpower => _data.Span[2];
+        public Byte Agility => _data.Span[3];
+        public Byte Speed => _data.Span[4];
+        public Byte Endurance => _data.Span[5];
+        public Byte Personality => _data.Span[6];
+        public Byte Luck => _data.Span[7];
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RaceStatsBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static RaceStatsBinaryWrapper RaceStatsFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new RaceStatsBinaryWrapper(
+                bytes: stream.RemainingMemory.Slice(0, 8),
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
 
     #endregion
 

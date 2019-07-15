@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Creature> IPlacedCreature.Base_Property => this.Base_Property;
         ICreatureInternalGetter IPlacedCreatureGetter.Base => this.Base_Property.Item;
-        IFormIDSetLinkGetter<Creature> IPlacedCreatureGetter.Base_Property => this.Base_Property;
+        IFormIDSetLinkGetter<ICreatureInternalGetter> IPlacedCreatureGetter.Base_Property => this.Base_Property;
         #endregion
         #region Owner
         public IFormIDSetLink<Faction> Owner_Property { get; } = new FormIDSetLink<Faction>();
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Faction> IPlacedCreature.Owner_Property => this.Owner_Property;
         IFactionInternalGetter IPlacedCreatureGetter.Owner => this.Owner_Property.Item;
-        IFormIDSetLinkGetter<Faction> IPlacedCreatureGetter.Owner_Property => this.Owner_Property;
+        IFormIDSetLinkGetter<IFactionInternalGetter> IPlacedCreatureGetter.Owner_Property => this.Owner_Property;
         #endregion
         #region FactionRank
         public bool FactionRank_IsSet
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Global> IPlacedCreature.GlobalVariable_Property => this.GlobalVariable_Property;
         IGlobalInternalGetter IPlacedCreatureGetter.GlobalVariable => this.GlobalVariable_Property.Item;
-        IFormIDSetLinkGetter<Global> IPlacedCreatureGetter.GlobalVariable_Property => this.GlobalVariable_Property;
+        IFormIDSetLinkGetter<IGlobalInternalGetter> IPlacedCreatureGetter.GlobalVariable_Property => this.GlobalVariable_Property;
         #endregion
         #region EnableParent
         public bool EnableParent_IsSet
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => RagdollData_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IPlacedCreatureGetter.RagdollData => this.RagdollData;
+        ReadOnlySpan<Byte> IPlacedCreatureGetter.RagdollData => this.RagdollData;
         public void RagdollData_Set(
             Byte[] value,
             bool markSet = true)
@@ -247,95 +247,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is PlacedCreature rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IPlacedCreatureInternalGetter rhs)) return false;
+            return ((PlacedCreatureCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(PlacedCreature rhs)
+        public bool Equals(PlacedCreature obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Base_Property.HasBeenSet != rhs.Base_Property.HasBeenSet) return false;
-            if (Base_Property.HasBeenSet)
-            {
-                if (!this.Base_Property.Equals(rhs.Base_Property)) return false;
-            }
-            if (Owner_Property.HasBeenSet != rhs.Owner_Property.HasBeenSet) return false;
-            if (Owner_Property.HasBeenSet)
-            {
-                if (!this.Owner_Property.Equals(rhs.Owner_Property)) return false;
-            }
-            if (FactionRank_IsSet != rhs.FactionRank_IsSet) return false;
-            if (FactionRank_IsSet)
-            {
-                if (this.FactionRank != rhs.FactionRank) return false;
-            }
-            if (GlobalVariable_Property.HasBeenSet != rhs.GlobalVariable_Property.HasBeenSet) return false;
-            if (GlobalVariable_Property.HasBeenSet)
-            {
-                if (!this.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property)) return false;
-            }
-            if (EnableParent_IsSet != rhs.EnableParent_IsSet) return false;
-            if (EnableParent_IsSet)
-            {
-                if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
-            }
-            if (RagdollData_IsSet != rhs.RagdollData_IsSet) return false;
-            if (RagdollData_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.RagdollData, rhs.RagdollData)) return false;
-            }
-            if (Scale_IsSet != rhs.Scale_IsSet) return false;
-            if (Scale_IsSet)
-            {
-                if (!this.Scale.EqualsWithin(rhs.Scale)) return false;
-            }
-            if (!this.Position.Equals(rhs.Position)) return false;
-            if (!this.Rotation.Equals(rhs.Rotation)) return false;
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((PlacedCreatureCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Base_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Base).CombineHashCode(ret);
-            }
-            if (Owner_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Owner).CombineHashCode(ret);
-            }
-            if (FactionRank_IsSet)
-            {
-                ret = HashHelper.GetHashCode(FactionRank).CombineHashCode(ret);
-            }
-            if (GlobalVariable_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(GlobalVariable).CombineHashCode(ret);
-            }
-            if (EnableParent_IsSet)
-            {
-                ret = HashHelper.GetHashCode(EnableParent).CombineHashCode(ret);
-            }
-            if (RagdollData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(RagdollData).CombineHashCode(ret);
-            }
-            if (Scale_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Scale).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(Position).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Rotation).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((PlacedCreatureCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => PlacedCreatureXmlWriteTranslation.Instance;
@@ -1098,12 +1021,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Base
         ICreatureInternalGetter Base { get; }
-        IFormIDSetLinkGetter<Creature> Base_Property { get; }
+        IFormIDSetLinkGetter<ICreatureInternalGetter> Base_Property { get; }
 
         #endregion
         #region Owner
         IFactionInternalGetter Owner { get; }
-        IFormIDSetLinkGetter<Faction> Owner_Property { get; }
+        IFormIDSetLinkGetter<IFactionInternalGetter> Owner_Property { get; }
 
         #endregion
         #region FactionRank
@@ -1113,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region GlobalVariable
         IGlobalInternalGetter GlobalVariable { get; }
-        IFormIDSetLinkGetter<Global> GlobalVariable_Property { get; }
+        IFormIDSetLinkGetter<IGlobalInternalGetter> GlobalVariable_Property { get; }
 
         #endregion
         #region EnableParent
@@ -1122,7 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RagdollData
-        Byte[] RagdollData { get; }
+        ReadOnlySpan<Byte> RagdollData { get; }
         bool RagdollData_IsSet { get; }
 
         #endregion
@@ -1214,6 +1137,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IPlacedCreatureInternalGetter item,
+            IPlacedCreatureInternalGetter rhs)
+        {
+            return ((PlacedCreatureCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1844,7 +1776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.EnableParent,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && ByteExt.EqualsFast(item.RagdollData, rhs.RagdollData);
+            ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && MemoryExtensions.SequenceEqual(item.RagdollData, rhs.RagdollData);
             ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale.EqualsWithin(rhs.Scale);
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
@@ -1921,7 +1853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.RagdollData ?? true)
             {
-                fg.AppendLine($"RagdollData => {item.RagdollData}");
+                fg.AppendLine($"RagdollData => {SpanExt.ToHexString(item.RagdollData)}");
             }
             if (printMask?.Scale ?? true)
             {
@@ -2011,6 +1943,124 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IPlacedCreatureInternalGetter lhs,
+            IPlacedCreatureInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Base_Property.HasBeenSet != rhs.Base_Property.HasBeenSet) return false;
+            if (lhs.Base_Property.HasBeenSet)
+            {
+                if (!lhs.Base_Property.Equals(rhs.Base_Property)) return false;
+            }
+            if (lhs.Owner_Property.HasBeenSet != rhs.Owner_Property.HasBeenSet) return false;
+            if (lhs.Owner_Property.HasBeenSet)
+            {
+                if (!lhs.Owner_Property.Equals(rhs.Owner_Property)) return false;
+            }
+            if (lhs.FactionRank_IsSet != rhs.FactionRank_IsSet) return false;
+            if (lhs.FactionRank_IsSet)
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
+            }
+            if (lhs.GlobalVariable_Property.HasBeenSet != rhs.GlobalVariable_Property.HasBeenSet) return false;
+            if (lhs.GlobalVariable_Property.HasBeenSet)
+            {
+                if (!lhs.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property)) return false;
+            }
+            if (lhs.EnableParent_IsSet != rhs.EnableParent_IsSet) return false;
+            if (lhs.EnableParent_IsSet)
+            {
+                if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
+            }
+            if (lhs.RagdollData_IsSet != rhs.RagdollData_IsSet) return false;
+            if (lhs.RagdollData_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.RagdollData, rhs.RagdollData)) return false;
+            }
+            if (lhs.Scale_IsSet != rhs.Scale_IsSet) return false;
+            if (lhs.Scale_IsSet)
+            {
+                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            }
+            if (!lhs.Position.Equals(rhs.Position)) return false;
+            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IPlacedCreatureInternalGetter)lhs,
+                rhs: rhs as IPlacedCreatureInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IPlacedCreatureInternalGetter)lhs,
+                rhs: rhs as IPlacedCreatureInternalGetter);
+        }
+
+        public virtual int GetHashCode(IPlacedCreatureInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Base_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Base).CombineHashCode(ret);
+            }
+            if (item.Owner_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Owner).CombineHashCode(ret);
+            }
+            if (item.FactionRank_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FactionRank).CombineHashCode(ret);
+            }
+            if (item.GlobalVariable_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.GlobalVariable).CombineHashCode(ret);
+            }
+            if (item.EnableParent_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.EnableParent).CombineHashCode(ret);
+            }
+            if (item.RagdollData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.RagdollData).CombineHashCode(ret);
+            }
+            if (item.Scale_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Scale).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Position).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Rotation).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IPlacedCreatureInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IPlacedCreatureInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

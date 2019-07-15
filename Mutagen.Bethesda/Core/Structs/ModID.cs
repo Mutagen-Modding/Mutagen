@@ -42,5 +42,10 @@ namespace Mutagen.Bethesda
         {
             return !(a == b);
         }
+
+        public static byte GetModIDByteFromUInt(uint i)
+        {
+            return (byte)(i >> 24);
+        }
     }
 }

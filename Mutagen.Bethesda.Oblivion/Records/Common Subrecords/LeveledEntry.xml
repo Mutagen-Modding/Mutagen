@@ -6,12 +6,12 @@
     </Generic>
     <Fields>
       <Int16 name="Level" />
-      <ByteArray name="Fluff" length="2" nullable="NotNull" />
+      <ByteArray name="Fluff" byteLength="2" nullable="NotNull" />
       <FormIDLink name="Reference" >
         <Generic>T</Generic>
       </FormIDLink>
       <Int16 name="Count" hasBeenSet="True" />
-      <ByteArray name="Fluff2" length="2" nullable="NotNull" hasBeenSet="True" />
+      <ByteArray name="Fluff2" byteLength="2" nullable="NotNull" hasBeenSet="True" />
     </Fields>
   </Object>
 </Loqui>

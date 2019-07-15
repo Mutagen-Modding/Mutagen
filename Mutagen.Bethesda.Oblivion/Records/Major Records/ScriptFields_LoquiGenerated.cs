@@ -137,69 +137,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ScriptFields rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IScriptFieldsGetter rhs)) return false;
+            return ((ScriptFieldsCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptFields rhs)
+        public bool Equals(ScriptFields obj)
         {
-            if (rhs == null) return false;
-            if (MetadataSummary_IsSet != rhs.MetadataSummary_IsSet) return false;
-            if (MetadataSummary_IsSet)
-            {
-                if (!object.Equals(this.MetadataSummary, rhs.MetadataSummary)) return false;
-            }
-            if (CompiledScript_IsSet != rhs.CompiledScript_IsSet) return false;
-            if (CompiledScript_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.CompiledScript, rhs.CompiledScript)) return false;
-            }
-            if (SourceCode_IsSet != rhs.SourceCode_IsSet) return false;
-            if (SourceCode_IsSet)
-            {
-                if (!string.Equals(this.SourceCode, rhs.SourceCode)) return false;
-            }
-            if (LocalVariables.HasBeenSet != rhs.LocalVariables.HasBeenSet) return false;
-            if (LocalVariables.HasBeenSet)
-            {
-                if (!this.LocalVariables.SequenceEqual(rhs.LocalVariables)) return false;
-            }
-            if (References.HasBeenSet != rhs.References.HasBeenSet) return false;
-            if (References.HasBeenSet)
-            {
-                if (!this.References.SequenceEqual(rhs.References)) return false;
-            }
-            return true;
+            return ((ScriptFieldsCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (MetadataSummary_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MetadataSummary).CombineHashCode(ret);
-            }
-            if (CompiledScript_IsSet)
-            {
-                ret = HashHelper.GetHashCode(CompiledScript).CombineHashCode(ret);
-            }
-            if (SourceCode_IsSet)
-            {
-                ret = HashHelper.GetHashCode(SourceCode).CombineHashCode(ret);
-            }
-            if (LocalVariables.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(LocalVariables).CombineHashCode(ret);
-            }
-            if (References.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(References).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((ScriptFieldsCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => ScriptFieldsXmlWriteTranslation.Instance;
@@ -770,10 +719,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.SourceCode = (String)obj;
                     break;
                 case ScriptFields_FieldIndex.LocalVariables:
-                    this._LocalVariables.SetTo((IEnumerable<LocalVariable>)obj);
+                    this._LocalVariables.SetTo((SourceSetList<LocalVariable>)obj);
                     break;
                 case ScriptFields_FieldIndex.References:
-                    this._References.SetTo((IEnumerable<ScriptReference>)obj);
+                    this._References.SetTo((SourceSetList<ScriptReference>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -813,10 +762,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.SourceCode = (String)pair.Value;
                     break;
                 case ScriptFields_FieldIndex.LocalVariables:
-                    obj._LocalVariables.SetTo((IEnumerable<LocalVariable>)pair.Value);
+                    obj._LocalVariables.SetTo((SourceSetList<LocalVariable>)pair.Value);
                     break;
                 case ScriptFields_FieldIndex.References:
-                    obj._References.SetTo((IEnumerable<ScriptReference>)pair.Value);
+                    obj._References.SetTo((SourceSetList<ScriptReference>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -862,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region CompiledScript
-        Byte[] CompiledScript { get; }
+        ReadOnlySpan<Byte> CompiledScript { get; }
         bool CompiledScript_IsSet { get; }
 
         #endregion
@@ -941,6 +890,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IScriptFieldsGetter item,
+            IScriptFieldsGetter rhs)
+        {
+            return ((ScriptFieldsCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1413,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.MetadataSummary,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.CompiledScript = item.CompiledScript_IsSet == rhs.CompiledScript_IsSet && ByteExt.EqualsFast(item.CompiledScript, rhs.CompiledScript);
+            ret.CompiledScript = item.CompiledScript_IsSet == rhs.CompiledScript_IsSet && MemoryExtensions.SequenceEqual(item.CompiledScript, rhs.CompiledScript);
             ret.SourceCode = item.SourceCode_IsSet == rhs.SourceCode_IsSet && string.Equals(item.SourceCode, rhs.SourceCode);
             ret.LocalVariables = item.LocalVariables.CollectionEqualsHelper(
                 rhs.LocalVariables,
@@ -1475,7 +1433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.CompiledScript ?? true)
             {
-                fg.AppendLine($"CompiledScript => {item.CompiledScript}");
+                fg.AppendLine($"CompiledScript => {SpanExt.ToHexString(item.CompiledScript)}");
             }
             if (printMask?.SourceCode ?? true)
             {
@@ -1542,6 +1500,70 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.LocalVariables = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocalVariable_Mask<bool>>>>(item.LocalVariables.HasBeenSet, item.LocalVariables.WithIndex().Select((i) => new MaskItemIndexed<bool, LocalVariable_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.References = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ScriptReference_Mask<bool>>>>(item.References.HasBeenSet, item.References.WithIndex().Select((i) => new MaskItemIndexed<bool, ScriptReference_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IScriptFieldsGetter lhs,
+            IScriptFieldsGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.MetadataSummary_IsSet != rhs.MetadataSummary_IsSet) return false;
+            if (lhs.MetadataSummary_IsSet)
+            {
+                if (!object.Equals(lhs.MetadataSummary, rhs.MetadataSummary)) return false;
+            }
+            if (lhs.CompiledScript_IsSet != rhs.CompiledScript_IsSet) return false;
+            if (lhs.CompiledScript_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.CompiledScript, rhs.CompiledScript)) return false;
+            }
+            if (lhs.SourceCode_IsSet != rhs.SourceCode_IsSet) return false;
+            if (lhs.SourceCode_IsSet)
+            {
+                if (!string.Equals(lhs.SourceCode, rhs.SourceCode)) return false;
+            }
+            if (lhs.LocalVariables.HasBeenSet != rhs.LocalVariables.HasBeenSet) return false;
+            if (lhs.LocalVariables.HasBeenSet)
+            {
+                if (!lhs.LocalVariables.SequenceEqual(rhs.LocalVariables)) return false;
+            }
+            if (lhs.References.HasBeenSet != rhs.References.HasBeenSet) return false;
+            if (lhs.References.HasBeenSet)
+            {
+                if (!lhs.References.SequenceEqual(rhs.References)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IScriptFieldsGetter item)
+        {
+            int ret = 0;
+            if (item.MetadataSummary_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MetadataSummary).CombineHashCode(ret);
+            }
+            if (item.CompiledScript_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.CompiledScript).CombineHashCode(ret);
+            }
+            if (item.SourceCode_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.SourceCode).CombineHashCode(ret);
+            }
+            if (item.LocalVariables.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.LocalVariables).CombineHashCode(ret);
+            }
+            if (item.References.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.References).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

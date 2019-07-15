@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => CompiledScript_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IScriptFieldsGetter.CompiledScript => this.CompiledScript;
+        ReadOnlySpan<byte> IScriptFieldsGetter.CompiledScript => this.CompiledScript;
         public void CompiledScript_Set(
             Byte[] value,
             bool markSet = true)

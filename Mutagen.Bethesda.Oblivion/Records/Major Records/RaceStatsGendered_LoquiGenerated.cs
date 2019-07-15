@@ -82,28 +82,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RaceStatsGendered rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRaceStatsGenderedGetter rhs)) return false;
+            return ((RaceStatsGenderedCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(RaceStatsGendered rhs)
+        public bool Equals(RaceStatsGendered obj)
         {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Male, rhs.Male)) return false;
-            if (!object.Equals(this.Female, rhs.Female)) return false;
-            return true;
+            return ((RaceStatsGenderedCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Male).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Female).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((RaceStatsGenderedCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RaceStatsGenderedXmlWriteTranslation.Instance;
@@ -633,6 +623,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IRaceStatsGenderedGetter item,
+            IRaceStatsGenderedGetter rhs)
+        {
+            return ((RaceStatsGenderedCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1045,6 +1044,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Male = new MaskItem<bool, RaceStats_Mask<bool>>(true, item.Male.GetHasBeenSetMask());
             mask.Female = new MaskItem<bool, RaceStats_Mask<bool>>(true, item.Female.GetHasBeenSetMask());
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRaceStatsGenderedGetter lhs,
+            IRaceStatsGenderedGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!object.Equals(lhs.Male, rhs.Male)) return false;
+            if (!object.Equals(lhs.Female, rhs.Female)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IRaceStatsGenderedGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Male).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Female).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1851,6 +1873,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class RaceStatsGenderedBinaryWrapper : IRaceStatsGenderedGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RaceStatsGendered_Registration.Instance;
+        public static RaceStatsGendered_Registration Registration => RaceStatsGendered_Registration.Instance;
+        protected object CommonInstance => RaceStatsGenderedCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceStatsGenderedGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RaceStatsGenderedXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RaceStatsGenderedBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public IRaceStatsGetter Male => RaceStatsBinaryWrapper.RaceStatsFactory(new BinaryMemoryReadStream(_data.Slice(0)), _package);
+        public IRaceStatsGetter Female => RaceStatsBinaryWrapper.RaceStatsFactory(new BinaryMemoryReadStream(_data.Slice(8)), _package);
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RaceStatsGenderedBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static RaceStatsGenderedBinaryWrapper RaceStatsGenderedFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new RaceStatsGenderedBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x16;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
 
     #endregion
 

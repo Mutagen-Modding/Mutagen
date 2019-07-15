@@ -125,42 +125,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is BodyPart rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IBodyPartGetter rhs)) return false;
+            return ((BodyPartCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(BodyPart rhs)
+        public bool Equals(BodyPart obj)
         {
-            if (rhs == null) return false;
-            if (Index_IsSet != rhs.Index_IsSet) return false;
-            if (Index_IsSet)
-            {
-                if (this.Index != rhs.Index) return false;
-            }
-            if (Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (Icon_IsSet)
-            {
-                if (!string.Equals(this.Icon, rhs.Icon)) return false;
-            }
-            return true;
+            return ((BodyPartCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Index_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Index).CombineHashCode(ret);
-            }
-            if (Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((BodyPartCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => BodyPartXmlWriteTranslation.Instance;
@@ -707,6 +683,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IBodyPartGetter item,
+            IBodyPartGetter rhs)
+        {
+            return ((BodyPartCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1103,6 +1088,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Index = item.Index_IsSet;
             mask.Icon = item.Icon_IsSet;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IBodyPartGetter lhs,
+            IBodyPartGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Index_IsSet != rhs.Index_IsSet) return false;
+            if (lhs.Index_IsSet)
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IBodyPartGetter item)
+        {
+            int ret = 0;
+            if (item.Index_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Index).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1884,6 +1906,88 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class BodyPartBinaryWrapper : IBodyPartGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => BodyPart_Registration.Instance;
+        public static BodyPart_Registration Registration => BodyPart_Registration.Instance;
+        protected object CommonInstance => BodyPartCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyPartGetter)rhs, include);
+
+        protected object XmlWriteTranslator => BodyPartXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => BodyPartBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Index
+        private int? _IndexLocation;
+        public bool Index_IsSet => _IndexLocation.HasValue;
+        public Race.BodyIndex Index => (Race.BodyIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _IndexLocation.Value, _package.Meta));
+        #endregion
+        #region Icon
+        private int? _IconLocation;
+        public bool Icon_IsSet => _IconLocation.HasValue;
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected BodyPartBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static BodyPartBinaryWrapper BodyPartFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new BodyPartBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x58444E49: // INDX
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Index) return TryGet<int?>.Failure;
+                    _IndexLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.Index);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Icon) return TryGet<int?>.Failure;
+                    _IconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.Icon);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
 
     #endregion
 

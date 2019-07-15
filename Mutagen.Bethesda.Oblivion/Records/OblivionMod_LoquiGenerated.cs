@@ -536,145 +536,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is OblivionMod rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IOblivionModGetter rhs)) return false;
+            return ((OblivionModCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(OblivionMod rhs)
+        public bool Equals(OblivionMod obj)
         {
-            if (rhs == null) return false;
-            if (ModHeader_IsSet != rhs.ModHeader_IsSet) return false;
-            if (ModHeader_IsSet)
-            {
-                if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
-            }
-            if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
-            if (!object.Equals(this.Globals, rhs.Globals)) return false;
-            if (!object.Equals(this.Classes, rhs.Classes)) return false;
-            if (!object.Equals(this.Factions, rhs.Factions)) return false;
-            if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
-            if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
-            if (!object.Equals(this.Races, rhs.Races)) return false;
-            if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
-            if (!object.Equals(this.Skills, rhs.Skills)) return false;
-            if (!object.Equals(this.MagicEffects, rhs.MagicEffects)) return false;
-            if (!object.Equals(this.Scripts, rhs.Scripts)) return false;
-            if (!object.Equals(this.LandTextures, rhs.LandTextures)) return false;
-            if (!object.Equals(this.Enchantments, rhs.Enchantments)) return false;
-            if (!object.Equals(this.Spells, rhs.Spells)) return false;
-            if (!object.Equals(this.Birthsigns, rhs.Birthsigns)) return false;
-            if (!object.Equals(this.Activators, rhs.Activators)) return false;
-            if (!object.Equals(this.AlchemicalApparatus, rhs.AlchemicalApparatus)) return false;
-            if (!object.Equals(this.Armors, rhs.Armors)) return false;
-            if (!object.Equals(this.Books, rhs.Books)) return false;
-            if (!object.Equals(this.Clothes, rhs.Clothes)) return false;
-            if (!object.Equals(this.Containers, rhs.Containers)) return false;
-            if (!object.Equals(this.Doors, rhs.Doors)) return false;
-            if (!object.Equals(this.Ingredients, rhs.Ingredients)) return false;
-            if (!object.Equals(this.Lights, rhs.Lights)) return false;
-            if (!object.Equals(this.Miscellaneous, rhs.Miscellaneous)) return false;
-            if (!object.Equals(this.Statics, rhs.Statics)) return false;
-            if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
-            if (!object.Equals(this.Trees, rhs.Trees)) return false;
-            if (!object.Equals(this.Flora, rhs.Flora)) return false;
-            if (!object.Equals(this.Furnature, rhs.Furnature)) return false;
-            if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
-            if (!object.Equals(this.Ammo, rhs.Ammo)) return false;
-            if (!object.Equals(this.NPCs, rhs.NPCs)) return false;
-            if (!object.Equals(this.Creatures, rhs.Creatures)) return false;
-            if (!object.Equals(this.LeveledCreatures, rhs.LeveledCreatures)) return false;
-            if (!object.Equals(this.SoulGems, rhs.SoulGems)) return false;
-            if (!object.Equals(this.Keys, rhs.Keys)) return false;
-            if (!object.Equals(this.Potions, rhs.Potions)) return false;
-            if (!object.Equals(this.Subspaces, rhs.Subspaces)) return false;
-            if (!object.Equals(this.SigilStones, rhs.SigilStones)) return false;
-            if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
-            if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
-            if (!object.Equals(this.Climates, rhs.Climates)) return false;
-            if (!object.Equals(this.Regions, rhs.Regions)) return false;
-            if (!object.Equals(this.Cells, rhs.Cells)) return false;
-            if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
-            if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
-            if (!object.Equals(this.Quests, rhs.Quests)) return false;
-            if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
-            if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
-            if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
-            if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
-            if (!object.Equals(this.LeveledSpells, rhs.LeveledSpells)) return false;
-            if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
-            if (!object.Equals(this.Waters, rhs.Waters)) return false;
-            if (!object.Equals(this.EffectShaders, rhs.EffectShaders)) return false;
-            return true;
+            return ((OblivionModCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (ModHeader_IsSet)
-            {
-                ret = HashHelper.GetHashCode(ModHeader).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(GameSettings).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Globals).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Classes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Factions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Hairs).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Eyes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Races).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Sounds).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Skills).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MagicEffects).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Scripts).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LandTextures).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Enchantments).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Spells).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Birthsigns).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Activators).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AlchemicalApparatus).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Armors).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Books).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Clothes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Containers).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Doors).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Ingredients).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Lights).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Miscellaneous).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Statics).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Grasses).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Trees).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flora).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Furnature).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Weapons).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Ammo).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(NPCs).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Creatures).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LeveledCreatures).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SoulGems).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Keys).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Potions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Subspaces).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SigilStones).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LeveledItems).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Weathers).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Climates).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Regions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Cells).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Worldspaces).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DialogTopics).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Quests).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(IdleAnimations).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AIPackages).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CombatStyles).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LoadScreens).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LeveledSpells).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AnimatedObjects).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Waters).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(EffectShaders).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((OblivionModCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;
@@ -5652,6 +5525,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IOblivionModGetter item,
+            IOblivionModGetter rhs)
+        {
+            return ((OblivionModCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
         #region Mutagen
         public static ISourceCache<T, FormKey> GetGroup<T>(this IOblivionModGetter obj)
             where T : IMajorRecordInternalGetter
@@ -8300,6 +8182,146 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Waters = new MaskItem<bool, Group_Mask<bool>>(true, item.Waters.GetHasBeenSetMask());
             mask.EffectShaders = new MaskItem<bool, Group_Mask<bool>>(true, item.EffectShaders.GetHasBeenSetMask());
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IOblivionModGetter lhs,
+            IOblivionModGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.ModHeader_IsSet != rhs.ModHeader_IsSet) return false;
+            if (lhs.ModHeader_IsSet)
+            {
+                if (!object.Equals(lhs.ModHeader, rhs.ModHeader)) return false;
+            }
+            if (!object.Equals(lhs.GameSettings, rhs.GameSettings)) return false;
+            if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
+            if (!object.Equals(lhs.Classes, rhs.Classes)) return false;
+            if (!object.Equals(lhs.Factions, rhs.Factions)) return false;
+            if (!object.Equals(lhs.Hairs, rhs.Hairs)) return false;
+            if (!object.Equals(lhs.Eyes, rhs.Eyes)) return false;
+            if (!object.Equals(lhs.Races, rhs.Races)) return false;
+            if (!object.Equals(lhs.Sounds, rhs.Sounds)) return false;
+            if (!object.Equals(lhs.Skills, rhs.Skills)) return false;
+            if (!object.Equals(lhs.MagicEffects, rhs.MagicEffects)) return false;
+            if (!object.Equals(lhs.Scripts, rhs.Scripts)) return false;
+            if (!object.Equals(lhs.LandTextures, rhs.LandTextures)) return false;
+            if (!object.Equals(lhs.Enchantments, rhs.Enchantments)) return false;
+            if (!object.Equals(lhs.Spells, rhs.Spells)) return false;
+            if (!object.Equals(lhs.Birthsigns, rhs.Birthsigns)) return false;
+            if (!object.Equals(lhs.Activators, rhs.Activators)) return false;
+            if (!object.Equals(lhs.AlchemicalApparatus, rhs.AlchemicalApparatus)) return false;
+            if (!object.Equals(lhs.Armors, rhs.Armors)) return false;
+            if (!object.Equals(lhs.Books, rhs.Books)) return false;
+            if (!object.Equals(lhs.Clothes, rhs.Clothes)) return false;
+            if (!object.Equals(lhs.Containers, rhs.Containers)) return false;
+            if (!object.Equals(lhs.Doors, rhs.Doors)) return false;
+            if (!object.Equals(lhs.Ingredients, rhs.Ingredients)) return false;
+            if (!object.Equals(lhs.Lights, rhs.Lights)) return false;
+            if (!object.Equals(lhs.Miscellaneous, rhs.Miscellaneous)) return false;
+            if (!object.Equals(lhs.Statics, rhs.Statics)) return false;
+            if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
+            if (!object.Equals(lhs.Trees, rhs.Trees)) return false;
+            if (!object.Equals(lhs.Flora, rhs.Flora)) return false;
+            if (!object.Equals(lhs.Furnature, rhs.Furnature)) return false;
+            if (!object.Equals(lhs.Weapons, rhs.Weapons)) return false;
+            if (!object.Equals(lhs.Ammo, rhs.Ammo)) return false;
+            if (!object.Equals(lhs.NPCs, rhs.NPCs)) return false;
+            if (!object.Equals(lhs.Creatures, rhs.Creatures)) return false;
+            if (!object.Equals(lhs.LeveledCreatures, rhs.LeveledCreatures)) return false;
+            if (!object.Equals(lhs.SoulGems, rhs.SoulGems)) return false;
+            if (!object.Equals(lhs.Keys, rhs.Keys)) return false;
+            if (!object.Equals(lhs.Potions, rhs.Potions)) return false;
+            if (!object.Equals(lhs.Subspaces, rhs.Subspaces)) return false;
+            if (!object.Equals(lhs.SigilStones, rhs.SigilStones)) return false;
+            if (!object.Equals(lhs.LeveledItems, rhs.LeveledItems)) return false;
+            if (!object.Equals(lhs.Weathers, rhs.Weathers)) return false;
+            if (!object.Equals(lhs.Climates, rhs.Climates)) return false;
+            if (!object.Equals(lhs.Regions, rhs.Regions)) return false;
+            if (!object.Equals(lhs.Cells, rhs.Cells)) return false;
+            if (!object.Equals(lhs.Worldspaces, rhs.Worldspaces)) return false;
+            if (!object.Equals(lhs.DialogTopics, rhs.DialogTopics)) return false;
+            if (!object.Equals(lhs.Quests, rhs.Quests)) return false;
+            if (!object.Equals(lhs.IdleAnimations, rhs.IdleAnimations)) return false;
+            if (!object.Equals(lhs.AIPackages, rhs.AIPackages)) return false;
+            if (!object.Equals(lhs.CombatStyles, rhs.CombatStyles)) return false;
+            if (!object.Equals(lhs.LoadScreens, rhs.LoadScreens)) return false;
+            if (!object.Equals(lhs.LeveledSpells, rhs.LeveledSpells)) return false;
+            if (!object.Equals(lhs.AnimatedObjects, rhs.AnimatedObjects)) return false;
+            if (!object.Equals(lhs.Waters, rhs.Waters)) return false;
+            if (!object.Equals(lhs.EffectShaders, rhs.EffectShaders)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IOblivionModGetter item)
+        {
+            int ret = 0;
+            if (item.ModHeader_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ModHeader).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.GameSettings).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Globals).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Classes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Factions).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Hairs).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Eyes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Races).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Sounds).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Skills).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MagicEffects).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Scripts).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LandTextures).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Enchantments).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Spells).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Birthsigns).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Activators).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AlchemicalApparatus).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Armors).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Books).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Clothes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Containers).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Doors).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Ingredients).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Lights).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Miscellaneous).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Statics).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Grasses).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Trees).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flora).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Furnature).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Weapons).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Ammo).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.NPCs).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Creatures).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LeveledCreatures).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SoulGems).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Keys).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Potions).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Subspaces).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SigilStones).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LeveledItems).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Weathers).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Climates).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Regions).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Cells).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Worldspaces).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DialogTopics).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Quests).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.IdleAnimations).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AIPackages).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CombatStyles).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LoadScreens).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LeveledSpells).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AnimatedObjects).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Waters).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.EffectShaders).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
         #region Mutagen
         public ISourceCache<T, FormKey> GetGroup<T>(IOblivionModGetter obj)
@@ -14077,6 +14099,382 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class OblivionModBinaryWrapper : IOblivionModGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
+        public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
+        protected object CommonInstance => OblivionModCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModGetter)rhs, include);
+
+        public GameMode GameMode => GameMode.Oblivion;
+        IReadOnlyCache<T, FormKey> IModGetter.GetGroup<T>() => this.GetGroup<T>();
+        void IModGetter.WriteToBinary(
+            string path,
+            ModKey modKey)
+        {
+            this.WriteToBinary(
+                path: path,
+                modKey: modKey);
+        }
+        IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
+        IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
+        protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+        public ModKey ModKey { get; }
+
+        #region ModHeader
+        private IModHeaderGetter _ModHeader;
+        public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
+        public bool ModHeader_IsSet => ModHeader != null;
+        #endregion
+        #region GameSettings
+        private IGroupGetter<IGameSettingInternalGetter> _GameSettings;
+        public IGroupGetter<IGameSettingInternalGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
+        #endregion
+        #region Globals
+        private IGroupGetter<IGlobalInternalGetter> _Globals;
+        public IGroupGetter<IGlobalInternalGetter> Globals => _Globals ?? new Group<Global>(this);
+        #endregion
+        #region Classes
+        private IGroupGetter<IClassInternalGetter> _Classes;
+        public IGroupGetter<IClassInternalGetter> Classes => _Classes ?? new Group<Class>(this);
+        #endregion
+        #region Factions
+        private IGroupGetter<IFactionInternalGetter> _Factions;
+        public IGroupGetter<IFactionInternalGetter> Factions => _Factions ?? new Group<Faction>(this);
+        #endregion
+        #region Hairs
+        private IGroupGetter<IHairInternalGetter> _Hairs;
+        public IGroupGetter<IHairInternalGetter> Hairs => _Hairs ?? new Group<Hair>(this);
+        #endregion
+        #region Eyes
+        private IGroupGetter<IEyeInternalGetter> _Eyes;
+        public IGroupGetter<IEyeInternalGetter> Eyes => _Eyes ?? new Group<Eye>(this);
+        #endregion
+        #region Races
+        private IGroupGetter<IRaceInternalGetter> _Races;
+        public IGroupGetter<IRaceInternalGetter> Races => _Races ?? new Group<Race>(this);
+        #endregion
+        #region Sounds
+        private IGroupGetter<ISoundInternalGetter> _Sounds;
+        public IGroupGetter<ISoundInternalGetter> Sounds => _Sounds ?? new Group<Sound>(this);
+        #endregion
+        #region Skills
+        private IGroupGetter<ISkillRecordInternalGetter> _Skills;
+        public IGroupGetter<ISkillRecordInternalGetter> Skills => _Skills ?? new Group<SkillRecord>(this);
+        #endregion
+        #region MagicEffects
+        private IGroupGetter<IMagicEffectInternalGetter> _MagicEffects;
+        public IGroupGetter<IMagicEffectInternalGetter> MagicEffects => _MagicEffects ?? new Group<MagicEffect>(this);
+        #endregion
+        #region Scripts
+        private IGroupGetter<IScriptInternalGetter> _Scripts;
+        public IGroupGetter<IScriptInternalGetter> Scripts => _Scripts ?? new Group<Script>(this);
+        #endregion
+        #region LandTextures
+        private IGroupGetter<ILandTextureInternalGetter> _LandTextures;
+        public IGroupGetter<ILandTextureInternalGetter> LandTextures => _LandTextures ?? new Group<LandTexture>(this);
+        #endregion
+        #region Enchantments
+        private IGroupGetter<IEnchantmentInternalGetter> _Enchantments;
+        public IGroupGetter<IEnchantmentInternalGetter> Enchantments => _Enchantments ?? new Group<Enchantment>(this);
+        #endregion
+        #region Spells
+        private IGroupGetter<ISpellUnleveledInternalGetter> _Spells;
+        public IGroupGetter<ISpellUnleveledInternalGetter> Spells => _Spells ?? new Group<SpellUnleveled>(this);
+        #endregion
+        #region Birthsigns
+        private IGroupGetter<IBirthsignInternalGetter> _Birthsigns;
+        public IGroupGetter<IBirthsignInternalGetter> Birthsigns => _Birthsigns ?? new Group<Birthsign>(this);
+        #endregion
+        #region Activators
+        private IGroupGetter<IActivatorInternalGetter> _Activators;
+        public IGroupGetter<IActivatorInternalGetter> Activators => _Activators ?? new Group<Activator>(this);
+        #endregion
+        #region AlchemicalApparatus
+        private IGroupGetter<IAlchemicalApparatusInternalGetter> _AlchemicalApparatus;
+        public IGroupGetter<IAlchemicalApparatusInternalGetter> AlchemicalApparatus => _AlchemicalApparatus ?? new Group<AlchemicalApparatus>(this);
+        #endregion
+        #region Armors
+        private IGroupGetter<IArmorInternalGetter> _Armors;
+        public IGroupGetter<IArmorInternalGetter> Armors => _Armors ?? new Group<Armor>(this);
+        #endregion
+        #region Books
+        private IGroupGetter<IBookInternalGetter> _Books;
+        public IGroupGetter<IBookInternalGetter> Books => _Books ?? new Group<Book>(this);
+        #endregion
+        #region Clothes
+        private IGroupGetter<IClothingInternalGetter> _Clothes;
+        public IGroupGetter<IClothingInternalGetter> Clothes => _Clothes ?? new Group<Clothing>(this);
+        #endregion
+        #region Containers
+        private IGroupGetter<IContainerInternalGetter> _Containers;
+        public IGroupGetter<IContainerInternalGetter> Containers => _Containers ?? new Group<Container>(this);
+        #endregion
+        #region Doors
+        private IGroupGetter<IDoorInternalGetter> _Doors;
+        public IGroupGetter<IDoorInternalGetter> Doors => _Doors ?? new Group<Door>(this);
+        #endregion
+        #region Ingredients
+        private IGroupGetter<IIngredientInternalGetter> _Ingredients;
+        public IGroupGetter<IIngredientInternalGetter> Ingredients => _Ingredients ?? new Group<Ingredient>(this);
+        #endregion
+        #region Lights
+        private IGroupGetter<ILightInternalGetter> _Lights;
+        public IGroupGetter<ILightInternalGetter> Lights => _Lights ?? new Group<Light>(this);
+        #endregion
+        #region Miscellaneous
+        private IGroupGetter<IMiscellaneousInternalGetter> _Miscellaneous;
+        public IGroupGetter<IMiscellaneousInternalGetter> Miscellaneous => _Miscellaneous ?? new Group<Miscellaneous>(this);
+        #endregion
+        #region Statics
+        private IGroupGetter<IStaticInternalGetter> _Statics;
+        public IGroupGetter<IStaticInternalGetter> Statics => _Statics ?? new Group<Static>(this);
+        #endregion
+        #region Grasses
+        private IGroupGetter<IGrassInternalGetter> _Grasses;
+        public IGroupGetter<IGrassInternalGetter> Grasses => _Grasses ?? new Group<Grass>(this);
+        #endregion
+        #region Trees
+        private IGroupGetter<ITreeInternalGetter> _Trees;
+        public IGroupGetter<ITreeInternalGetter> Trees => _Trees ?? new Group<Tree>(this);
+        #endregion
+        #region Flora
+        private IGroupGetter<IFloraInternalGetter> _Flora;
+        public IGroupGetter<IFloraInternalGetter> Flora => _Flora ?? new Group<Flora>(this);
+        #endregion
+        #region Furnature
+        private IGroupGetter<IFurnatureInternalGetter> _Furnature;
+        public IGroupGetter<IFurnatureInternalGetter> Furnature => _Furnature ?? new Group<Furnature>(this);
+        #endregion
+        #region Weapons
+        private IGroupGetter<IWeaponInternalGetter> _Weapons;
+        public IGroupGetter<IWeaponInternalGetter> Weapons => _Weapons ?? new Group<Weapon>(this);
+        #endregion
+        #region Ammo
+        private IGroupGetter<IAmmoInternalGetter> _Ammo;
+        public IGroupGetter<IAmmoInternalGetter> Ammo => _Ammo ?? new Group<Ammo>(this);
+        #endregion
+        #region NPCs
+        private IGroupGetter<INPCInternalGetter> _NPCs;
+        public IGroupGetter<INPCInternalGetter> NPCs => _NPCs ?? new Group<NPC>(this);
+        #endregion
+        #region Creatures
+        private IGroupGetter<ICreatureInternalGetter> _Creatures;
+        public IGroupGetter<ICreatureInternalGetter> Creatures => _Creatures ?? new Group<Creature>(this);
+        #endregion
+        #region LeveledCreatures
+        private IGroupGetter<ILeveledCreatureInternalGetter> _LeveledCreatures;
+        public IGroupGetter<ILeveledCreatureInternalGetter> LeveledCreatures => _LeveledCreatures ?? new Group<LeveledCreature>(this);
+        #endregion
+        #region SoulGems
+        private IGroupGetter<ISoulGemInternalGetter> _SoulGems;
+        public IGroupGetter<ISoulGemInternalGetter> SoulGems => _SoulGems ?? new Group<SoulGem>(this);
+        #endregion
+        #region Keys
+        private IGroupGetter<IKeyInternalGetter> _Keys;
+        public IGroupGetter<IKeyInternalGetter> Keys => _Keys ?? new Group<Key>(this);
+        #endregion
+        #region Potions
+        private IGroupGetter<IPotionInternalGetter> _Potions;
+        public IGroupGetter<IPotionInternalGetter> Potions => _Potions ?? new Group<Potion>(this);
+        #endregion
+        #region Subspaces
+        private IGroupGetter<ISubspaceInternalGetter> _Subspaces;
+        public IGroupGetter<ISubspaceInternalGetter> Subspaces => _Subspaces ?? new Group<Subspace>(this);
+        #endregion
+        #region SigilStones
+        private IGroupGetter<ISigilStoneInternalGetter> _SigilStones;
+        public IGroupGetter<ISigilStoneInternalGetter> SigilStones => _SigilStones ?? new Group<SigilStone>(this);
+        #endregion
+        #region LeveledItems
+        private IGroupGetter<ILeveledItemInternalGetter> _LeveledItems;
+        public IGroupGetter<ILeveledItemInternalGetter> LeveledItems => _LeveledItems ?? new Group<LeveledItem>(this);
+        #endregion
+        #region Weathers
+        private IGroupGetter<IWeatherInternalGetter> _Weathers;
+        public IGroupGetter<IWeatherInternalGetter> Weathers => _Weathers ?? new Group<Weather>(this);
+        #endregion
+        #region Climates
+        private IGroupGetter<IClimateInternalGetter> _Climates;
+        public IGroupGetter<IClimateInternalGetter> Climates => _Climates ?? new Group<Climate>(this);
+        #endregion
+        #region Regions
+        private IGroupGetter<IRegionInternalGetter> _Regions;
+        public IGroupGetter<IRegionInternalGetter> Regions => _Regions ?? new Group<Region>(this);
+        #endregion
+        #region Cells
+        private IListGroupGetter<ICellBlockGetter> _Cells;
+        public IListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new ListGroup<CellBlock>();
+        #endregion
+        #region Worldspaces
+        private IGroupGetter<IWorldspaceInternalGetter> _Worldspaces;
+        public IGroupGetter<IWorldspaceInternalGetter> Worldspaces => _Worldspaces ?? new Group<Worldspace>(this);
+        #endregion
+        #region DialogTopics
+        private IGroupGetter<IDialogTopicInternalGetter> _DialogTopics;
+        public IGroupGetter<IDialogTopicInternalGetter> DialogTopics => _DialogTopics ?? new Group<DialogTopic>(this);
+        #endregion
+        #region Quests
+        private IGroupGetter<IQuestInternalGetter> _Quests;
+        public IGroupGetter<IQuestInternalGetter> Quests => _Quests ?? new Group<Quest>(this);
+        #endregion
+        #region IdleAnimations
+        private IGroupGetter<IIdleAnimationInternalGetter> _IdleAnimations;
+        public IGroupGetter<IIdleAnimationInternalGetter> IdleAnimations => _IdleAnimations ?? new Group<IdleAnimation>(this);
+        #endregion
+        #region AIPackages
+        private IGroupGetter<IAIPackageInternalGetter> _AIPackages;
+        public IGroupGetter<IAIPackageInternalGetter> AIPackages => _AIPackages ?? new Group<AIPackage>(this);
+        #endregion
+        #region CombatStyles
+        private IGroupGetter<ICombatStyleInternalGetter> _CombatStyles;
+        public IGroupGetter<ICombatStyleInternalGetter> CombatStyles => _CombatStyles ?? new Group<CombatStyle>(this);
+        #endregion
+        #region LoadScreens
+        private IGroupGetter<ILoadScreenInternalGetter> _LoadScreens;
+        public IGroupGetter<ILoadScreenInternalGetter> LoadScreens => _LoadScreens ?? new Group<LoadScreen>(this);
+        #endregion
+        #region LeveledSpells
+        private IGroupGetter<ILeveledSpellInternalGetter> _LeveledSpells;
+        public IGroupGetter<ILeveledSpellInternalGetter> LeveledSpells => _LeveledSpells ?? new Group<LeveledSpell>(this);
+        #endregion
+        #region AnimatedObjects
+        private IGroupGetter<IAnimatedObjectInternalGetter> _AnimatedObjects;
+        public IGroupGetter<IAnimatedObjectInternalGetter> AnimatedObjects => _AnimatedObjects ?? new Group<AnimatedObject>(this);
+        #endregion
+        #region Waters
+        private IGroupGetter<IWaterInternalGetter> _Waters;
+        public IGroupGetter<IWaterInternalGetter> Waters => _Waters ?? new Group<Water>(this);
+        #endregion
+        #region EffectShaders
+        private IGroupGetter<IEffectShaderInternalGetter> _EffectShaders;
+        public IGroupGetter<IEffectShaderInternalGetter> EffectShaders => _EffectShaders ?? new Group<EffectShader>(this);
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected OblivionModBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            ModKey modKey)
+        {
+            this._data = bytes;
+            this._package = new BinaryWrapperFactoryPackage()
+            {
+                Meta = MetaDataConstants.Get(this.GameMode)
+            };
+            this.ModKey = modKey;
+        }
+
+        public static OblivionModBinaryWrapper OblivionModFactory(
+            ReadOnlyMemorySlice<byte> bytes,
+            ModKey modKey)
+        {
+            var ret = new OblivionModBinaryWrapper(
+                bytes: bytes,
+                modKey: modKey);
+            var stream = new BinaryMemoryReadStream(bytes);
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillModTypesForWrapper(
+                stream: stream,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x34534554: // TES4
+                {
+                    this._ModHeader = ModHeaderBinaryWrapper.ModHeaderFactory(
+                        stream: stream,
+                        package: _package);
+                    _package.MasterReferences = new MasterReferences(
+                        this.ModHeader.MasterReferences.Select(
+                            master => new MasterReference()
+                            {
+                                Master = master.Master,
+                                FileSize = master.FileSize,
+                                 FileSize_IsSet = master.FileSize_IsSet
+                            })
+                            .ToList(),
+                        this.ModKey);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.ModHeader);
+                }
+                case 0x54534D47: // GMST
+                {
+                    this._GameSettings = GroupBinaryWrapper<IGameSettingInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.GameSettings);
+                }
+                case 0x424F4C47: // GLOB
+                {
+                    this._Globals = GroupBinaryWrapper<IGlobalInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Globals);
+                }
+                case 0x53414C43: // CLAS
+                {
+                    this._Classes = GroupBinaryWrapper<IClassInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Classes);
+                }
+                case 0x54434146: // FACT
+                {
+                    this._Factions = GroupBinaryWrapper<IFactionInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Factions);
+                }
+                case 0x52494148: // HAIR
+                {
+                    this._Hairs = GroupBinaryWrapper<IHairInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Hairs);
+                }
+                case 0x53455945: // EYES
+                {
+                    this._Eyes = GroupBinaryWrapper<IEyeInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Eyes);
+                }
+                case 0x45434152: // RACE
+                {
+                    this._Races = GroupBinaryWrapper<IRaceInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Races);
+                }
+                case 0x4E554F53: // SOUN
+                {
+                    this._Sounds = GroupBinaryWrapper<ISoundInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Sounds);
+                }
+                default:
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+    }
 
     #endregion
 

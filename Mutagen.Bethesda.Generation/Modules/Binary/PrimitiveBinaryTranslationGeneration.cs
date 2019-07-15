@@ -12,20 +12,22 @@ namespace Mutagen.Bethesda.Generation
 {
     public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGeneration
     {
+        private int? _ExpectedLength;
         private string typeName;
         protected bool? nullable;
         public bool Nullable => nullable ?? false || typeof(T).GetName().EndsWith("?");
         public bool PreferDirectTranslation = true;
-        public Action<FileGeneration, Accessor, Accessor> customRead;
-        public Action<FileGeneration, Accessor, Accessor> customWrite;
+        public Action<FileGeneration, Accessor, Accessor> CustomRead;
+        public Action<FileGeneration, Accessor, Accessor> CustomWrite;
 
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             return $"{Typename(typeGen)}BinaryTranslation.Instance";
         }
 
-        public PrimitiveBinaryTranslationGeneration(string typeName = null, bool? nullable = null)
+        public PrimitiveBinaryTranslationGeneration(int? expectedLen, string typeName = null, bool? nullable = null)
         {
+            this._ExpectedLength = expectedLen;
             this.nullable = nullable;
             this.typeName = typeName ?? typeof(T).GetName().Replace("?", string.Empty);
         }
@@ -47,9 +49,9 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
-            if (customWrite != null)
+            if (CustomWrite != null)
             {
-                customWrite(fg, writerAccessor, itemAccessor);
+                CustomWrite(fg, writerAccessor, itemAccessor);
             }
             else if (data.HasTrigger || !PreferDirectTranslation)
             {
@@ -114,9 +116,9 @@ namespace Mutagen.Bethesda.Generation
                 extraArgs.Add(get.Value);
             }
 
-            if (customRead != null)
+            if (CustomRead != null)
             {
-                customRead(fg, frameAccessor, itemAccessor);
+                CustomRead(fg, frameAccessor, itemAccessor);
             }
             else if (PreferDirectTranslation)
             {
@@ -179,5 +181,57 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
         }
+
+        public override string GenerateForTypicalWrapper(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            Accessor packageAccessor)
+        {
+            return $"BinaryPrimitives.Read{typeGen.TypeName(getter: true)}LittleEndian({dataAccessor})";
+        }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            int currentPosition,
+            DataType dataType = null)
+        {
+            var data = typeGen.GetFieldData();
+            if (data.HasTrigger)
+            {
+                fg.AppendLine($"private int? _{typeGen.Name}Location;");
+                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+            }
+            if (data.RecordType.HasValue)
+            {
+                if (dataType != null)
+                {
+                    throw new ArgumentException();
+                }
+                dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, "_package")} : default;");
+            }
+            else
+            {
+                if (this.ExpectedLength(objGen, typeGen) == null)
+                {
+                    throw new NotImplementedException();
+                }
+                if (dataType == null)
+                {
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(objGen, typeGen).Value})", "_package")};");
+                }
+                else
+                {
+                    DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(objGen, typeGen).Value})", "_package")} : default;");
+                }
+            }
+        }
+
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => _ExpectedLength;
     }
 }

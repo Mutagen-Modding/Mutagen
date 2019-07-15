@@ -99,35 +99,18 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is GameSettingInt rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IGameSettingIntInternalGetter rhs)) return false;
+            return ((GameSettingIntCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(GameSettingInt rhs)
+        public bool Equals(GameSettingInt obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Data_IsSet != rhs.Data_IsSet) return false;
-            if (Data_IsSet)
-            {
-                if (this.Data != rhs.Data) return false;
-            }
-            return true;
+            return ((GameSettingIntCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Data_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((GameSettingIntCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => GameSettingIntXmlWriteTranslation.Instance;
@@ -704,6 +687,15 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
+        public static bool Equals(
+            this IGameSettingIntInternalGetter item,
+            IGameSettingIntInternalGetter rhs)
+        {
+            return ((GameSettingIntCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1131,6 +1123,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IGameSettingIntInternalGetter lhs,
+            IGameSettingIntInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Data_IsSet != rhs.Data_IsSet) return false;
+            if (lhs.Data_IsSet)
+            {
+                if (lhs.Data != rhs.Data) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IGameSettingInternalGetter lhs,
+            IGameSettingInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGameSettingIntInternalGetter)lhs,
+                rhs: rhs as IGameSettingIntInternalGetter);
+        }
+
+        public override bool Equals(
+            ISkyrimMajorRecordInternalGetter lhs,
+            ISkyrimMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGameSettingIntInternalGetter)lhs,
+                rhs: rhs as IGameSettingIntInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGameSettingIntInternalGetter)lhs,
+                rhs: rhs as IGameSettingIntInternalGetter);
+        }
+
+        public virtual int GetHashCode(IGameSettingIntInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Data_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Data).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IGameSettingInternalGetter item)
+        {
+            return GetHashCode(item: (IGameSettingIntInternalGetter)item);
+        }
+
+        public override int GetHashCode(ISkyrimMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGameSettingIntInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGameSettingIntInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1796,6 +1860,81 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
     #endregion
+
+    public partial class GameSettingIntBinaryWrapper :
+        GameSettingBinaryWrapper,
+        IGameSettingIntInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => GameSettingInt_Registration.Instance;
+        public new static GameSettingInt_Registration Registration => GameSettingInt_Registration.Instance;
+        protected override object CommonInstance => GameSettingIntCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingIntInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => GameSettingIntXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GameSettingIntBinaryWriteTranslation.Instance;
+
+        #region Data
+        private int? _DataLocation;
+        public bool Data_IsSet => _DataLocation.HasValue;
+        public Int32 Data => _DataLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DataLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GameSettingIntBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static GameSettingIntBinaryWrapper GameSettingIntFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new GameSettingIntBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    _DataLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)GameSettingInt_FieldIndex.Data);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
 
     #endregion
 

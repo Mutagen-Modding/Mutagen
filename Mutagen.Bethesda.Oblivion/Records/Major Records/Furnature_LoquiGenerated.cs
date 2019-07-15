@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Script> IFurnature.Script_Property => this.Script_Property;
         IScriptInternalGetter IFurnatureGetter.Script => this.Script_Property.Item;
-        IFormIDSetLinkGetter<Script> IFurnatureGetter.Script_Property => this.Script_Property;
+        IFormIDSetLinkGetter<IScriptInternalGetter> IFurnatureGetter.Script_Property => this.Script_Property;
         #endregion
         #region MarkerFlags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => MarkerFlags_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IFurnatureGetter.MarkerFlags => this.MarkerFlags;
+        ReadOnlySpan<Byte> IFurnatureGetter.MarkerFlags => this.MarkerFlags;
         public void MarkerFlags_Set(
             Byte[] value,
             bool markSet = true)
@@ -164,62 +164,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Furnature rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IFurnatureInternalGetter rhs)) return false;
+            return ((FurnatureCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Furnature rhs)
+        public bool Equals(Furnature obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Name_IsSet != rhs.Name_IsSet) return false;
-            if (Name_IsSet)
-            {
-                if (!string.Equals(this.Name, rhs.Name)) return false;
-            }
-            if (Model_IsSet != rhs.Model_IsSet) return false;
-            if (Model_IsSet)
-            {
-                if (!object.Equals(this.Model, rhs.Model)) return false;
-            }
-            if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (Script_Property.HasBeenSet)
-            {
-                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (MarkerFlags_IsSet != rhs.MarkerFlags_IsSet) return false;
-            if (MarkerFlags_IsSet)
-            {
-                if (!ByteExt.EqualsFast(this.MarkerFlags, rhs.MarkerFlags)) return false;
-            }
-            return true;
+            return ((FurnatureCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
-            if (Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
-            }
-            if (MarkerFlags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MarkerFlags).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((FurnatureCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => FurnatureXmlWriteTranslation.Instance;
@@ -846,11 +802,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         IScriptInternalGetter Script { get; }
-        IFormIDSetLinkGetter<Script> Script_Property { get; }
+        IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property { get; }
 
         #endregion
         #region MarkerFlags
-        Byte[] MarkerFlags { get; }
+        ReadOnlySpan<Byte> MarkerFlags { get; }
         bool MarkerFlags_IsSet { get; }
 
         #endregion
@@ -925,6 +881,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IFurnatureInternalGetter item,
+            IFurnatureInternalGetter rhs)
+        {
+            return ((FurnatureCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -1370,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
-            ret.MarkerFlags = item.MarkerFlags_IsSet == rhs.MarkerFlags_IsSet && ByteExt.EqualsFast(item.MarkerFlags, rhs.MarkerFlags);
+            ret.MarkerFlags = item.MarkerFlags_IsSet == rhs.MarkerFlags_IsSet && MemoryExtensions.SequenceEqual(item.MarkerFlags, rhs.MarkerFlags);
             base.FillEqualsMask(item, rhs, ret, include);
         }
 
@@ -1436,7 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.MarkerFlags ?? true)
             {
-                fg.AppendLine($"MarkerFlags => {item.MarkerFlags}");
+                fg.AppendLine($"MarkerFlags => {SpanExt.ToHexString(item.MarkerFlags)}");
             }
         }
 
@@ -1502,6 +1467,91 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IFurnatureInternalGetter lhs,
+            IFurnatureInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.MarkerFlags_IsSet != rhs.MarkerFlags_IsSet) return false;
+            if (lhs.MarkerFlags_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.MarkerFlags, rhs.MarkerFlags)) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IFurnatureInternalGetter)lhs,
+                rhs: rhs as IFurnatureInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IFurnatureInternalGetter)lhs,
+                rhs: rhs as IFurnatureInternalGetter);
+        }
+
+        public virtual int GetHashCode(IFurnatureInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.MarkerFlags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MarkerFlags).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IFurnatureInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IFurnatureInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

@@ -1,5 +1,6 @@
 ﻿using Loqui;
 using Loqui.Generation;
+using Noggog;
 using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Mutagen.Bethesda.Generation
         const string AsyncItemKey = "ListAsyncItem";
         const string ThreadKey = "ListThread";
 
-        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             var list = typeGen as ListType;
             if (!Module.TryGetTypeGeneration(list.SubTypeGeneration.GetType(), out var subTransl))
@@ -34,7 +35,7 @@ namespace Mutagen.Bethesda.Generation
             }
 
             var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
-            return $"{TranslatorName}<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance";
+            return $"{TranslatorName}<{list.SubTypeGeneration.TypeName(getter)}, {subMaskStr}>.Instance";
         }
 
         public override bool IsAsync(TypeGeneration gen, bool read)
@@ -108,12 +109,12 @@ namespace Mutagen.Bethesda.Generation
 
             var allowDirectWrite = subTransl.AllowDirectWrite(objGen, typeGen);
             var isLoqui = list.SubTypeGeneration is LoquiType;
-            var listOfRecords = !isLoqui 
+            var listOfRecords = !isLoqui
                 && listBinaryType == ListBinaryType.SubTrigger
                 && allowDirectWrite;
 
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{list.SubGetterTypeName}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
+                $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName(getter: true)}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {itemAccessor.PropertyOrDirectAccess}");
@@ -139,14 +140,14 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (allowDirectWrite)
                 {
-                    args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Write");
+                    args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: true)}.Write");
                 }
                 else
                 {
                     args.Add((gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(list.SubTypeGeneration);
-                        gen.AppendLine($"transl: (MutagenWriter subWriter, {list.SubGetterTypeName} subItem{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrorMask" : null)}) =>");
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {list.SubTypeGeneration.TypeName(getter: true)} subItem{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrorMask" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             subTransl.GenerateWrite(
@@ -196,7 +197,7 @@ namespace Mutagen.Bethesda.Generation
                 && (bool)t;
 
             using (var args = new ArgsWrapper(fg,
-                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName}>.Instance.ParseRepeatedItem",
+                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false)}>.Instance.ParseRepeatedItem",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
             {
                 if (listBinaryType == ListBinaryType.Amount)
@@ -277,18 +278,18 @@ namespace Mutagen.Bethesda.Generation
                     if (list.SubTypeGeneration is LoquiType loqui
                         && !loqui.CanStronglyType)
                     {
-                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Parse<{loqui.TypeName}>");
+                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: false)}.Parse<{loqui.TypeName(getter: false)}>");
                     }
                     else
                     {
-                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Parse");
+                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: false)}.Parse");
                     }
                 }
                 else
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName} listSubItem")}{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrMask" : null)}) =>");
+                        gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false)} listSubItem")}{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrMask" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             if (subGenTypes.Count <= 1)
@@ -362,6 +363,172 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationAccessor)
         {
             throw new NotImplementedException();
+        }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            int currentPosition,
+            DataType dataType = null)
+        {
+            ListType list = typeGen as ListType;
+            var data = list.GetFieldData();
+            if (list.MaxValue.HasValue)
+            {
+                var posStr = $"_{dataType.GetFieldData().RecordType}Location.Value + {currentPosition}";
+                if (list.SubTypeGeneration is EnumType e)
+                {
+                    fg.AppendLine($"public IReadOnlyList<{list.SubTypeGeneration.TypeName(getter: true)}> {typeGen.Name} => BinaryWrapperNumberedList.FactoryForEnum<{list.SubTypeGeneration.TypeName(getter: true)}>(_{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Slice({posStr}) : default, amount: {list.MaxValue.Value}, enumLength: {e.ByteLength});");
+                }
+                else if (list.SubTypeGeneration is LoquiType loqui)
+                {
+                    var gen = this.Module.GetTypeGeneration(loqui.GetType());
+                    fg.AppendLine($"public IReadOnlyList<{list.SubTypeGeneration.TypeName(getter: true)}> {typeGen.Name} => BinaryWrapperNumberedList.FactoryForLoqui<{list.SubTypeGeneration.TypeName(getter: true)}>(_{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Slice({posStr}) : default, amount: {list.MaxValue.Value}, length: {gen.ExpectedLength(objGen, loqui)}, _package, {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory);");
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+            }
+            else if (list.SubTypeGeneration is LoquiType loqui)
+            {
+                var typeName = this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration);
+                fg.AppendLine($"public IReadOnly{(list.HasBeenSet ? "Set" : null)}List<{loqui.TypeName(getter: true)}> {typeGen.Name} {{ get; private set; }} = EmptySetList<{typeName}>.Instance;");
+            }
+            else
+            {
+                fg.AppendLine($"public IReadOnly{(list.HasBeenSet ? "Set" : null)}List<{list.SubTypeGeneration.TypeName(getter: true)}> {typeGen.Name} {{ get; private set; }} = EmptySetList<{list.SubTypeGeneration.TypeName(getter: true)}>.Instance;");
+            }
+        }
+
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            ListType list = typeGen as ListType;
+            if (list.MaxValue.HasValue)
+            {
+                if (list.HasBeenSet)
+                {
+                    throw new NotImplementedException();
+                }
+                else if (list.SubTypeGeneration is EnumType e)
+                {
+                    return list.MaxValue.Value * e.ByteLength;
+                }
+                else if (list.SubTypeGeneration is LoquiType loqui
+                    && this.Module.TryGetTypeGeneration(loqui.GetType(), out var loquiGen))
+                {
+                    return list.MaxValue.Value * loquiGen.GetPassedAmount(objGen, loqui);
+                }
+                throw new NotImplementedException();
+            }
+            return null;
+        }
+
+        public override async Task GenerateWrapperRecordTypeParse(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor locationAccessor)
+        {
+            ListType list = typeGen as ListType;
+            var data = list.GetFieldData();
+            if (data.MarkerType.HasValue)
+            {
+                fg.AppendLine("stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker");
+            }
+            var subData = list.SubTypeGeneration.GetFieldData();
+            ListBinaryType listBinaryType = GetListType(list, data, subData);
+            var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
+            string typeName;
+            LoquiType loqui = list.SubTypeGeneration as LoquiType;
+            if (loqui != null)
+            {
+                typeName = this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration);
+            }
+            else
+            {
+                typeName = list.SubTypeGeneration.TypeName(getter: true);
+            }
+            switch (listBinaryType)
+            {
+                case ListBinaryType.SubTrigger:
+                    if (loqui != null)
+                    {
+                        if (loqui.TargetObjectGeneration.IsTypelessStruct())
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                $"this.{typeGen.Name} = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.ParseRepeatedTypelessSubrecord)}<{typeName}>"))
+                            {
+                                args.AddPassArg("stream");
+                                args.Add("package: _package");
+                                args.AddPassArg("offset");
+                                args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
+                                args.Add($"factory:  {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory");
+                            }
+                        }
+                        else
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                $"this.{typeGen.Name} = BinaryWrapperSetList<{typeName}>.FactoryByArray"))
+                            {
+                                args.Add($"mem: stream.RemainingMemory");
+                                args.Add($"package: _package");
+                                args.Add($"getter: (s, p) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}(s), p)");
+                                args.Add(subFg =>
+                                {
+                                    using (var subArgs = new FunctionWrapper(subFg,
+                                        $"locs: UtilityTranslation.ParseSubrecordLocations"))
+                                    {
+                                        subArgs.AddPassArg("stream");
+                                        subArgs.Add("meta: _package.Meta");
+                                        subArgs.Add("trigger: type");
+                                        subArgs.Add("skipHeader: false");
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"this.{typeGen.Name} = BinaryWrapperSetList<{typeName}>.FactoryByArray"))
+                        {
+                            args.Add($"mem: stream.RemainingMemory");
+                            args.Add($"package: _package");
+                            args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
+                            args.Add(subFg =>
+                            {
+                                using (var subArgs = new FunctionWrapper(subFg,
+                                    $"locs: UtilityTranslation.ParseSubrecordLocations"))
+                                {
+                                    subArgs.AddPassArg("stream");
+                                    subArgs.Add("meta: _package.Meta");
+                                    subArgs.Add("trigger: type");
+                                    subArgs.Add("skipHeader: true");
+                                }
+                            });
+                        }
+                    }
+                    break;
+                case ListBinaryType.Trigger:
+                    fg.AppendLine("var subMeta = _package.Meta.ReadSubRecord(stream);");
+                    fg.AppendLine("var subLen = subMeta.RecordLength;");
+                    using (var args = new ArgsWrapper(fg,
+                        $"this.{typeGen.Name} = BinaryWrapperSetList<{typeName}>.FactoryByStartIndex"))
+                    {
+                        args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
+                        args.Add($"package: _package");
+                        args.Add($"itemLength: {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}");
+                        args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
+                    }
+                    fg.AppendLine("stream.Position += subLen;");
+                    break;
+                case ListBinaryType.Amount:
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

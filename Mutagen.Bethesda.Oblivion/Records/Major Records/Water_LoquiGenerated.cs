@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<Sound> IWater.Sound_Property => this.Sound_Property;
         ISoundInternalGetter IWaterGetter.Sound => this.Sound_Property.Item;
-        IFormIDSetLinkGetter<Sound> IWaterGetter.Sound_Property => this.Sound_Property;
+        IFormIDSetLinkGetter<ISoundInternalGetter> IWaterGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region WindVelocity
         private Single _WindVelocity;
@@ -602,134 +602,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Water rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IWaterInternalGetter rhs)) return false;
+            return ((WaterCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Water rhs)
+        public bool Equals(Water obj)
         {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (Texture_IsSet != rhs.Texture_IsSet) return false;
-            if (Texture_IsSet)
-            {
-                if (!string.Equals(this.Texture, rhs.Texture)) return false;
-            }
-            if (Opacity_IsSet != rhs.Opacity_IsSet) return false;
-            if (Opacity_IsSet)
-            {
-                if (this.Opacity != rhs.Opacity) return false;
-            }
-            if (Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (Flags_IsSet)
-            {
-                if (this.Flags != rhs.Flags) return false;
-            }
-            if (MaterialID_IsSet != rhs.MaterialID_IsSet) return false;
-            if (MaterialID_IsSet)
-            {
-                if (!string.Equals(this.MaterialID, rhs.MaterialID)) return false;
-            }
-            if (Sound_Property.HasBeenSet != rhs.Sound_Property.HasBeenSet) return false;
-            if (Sound_Property.HasBeenSet)
-            {
-                if (!this.Sound_Property.Equals(rhs.Sound_Property)) return false;
-            }
-            if (!this.WindVelocity.EqualsWithin(rhs.WindVelocity)) return false;
-            if (!this.WindDirection.EqualsWithin(rhs.WindDirection)) return false;
-            if (!this.WaveAmplitude.EqualsWithin(rhs.WaveAmplitude)) return false;
-            if (!this.WaveFrequency.EqualsWithin(rhs.WaveFrequency)) return false;
-            if (!this.SunPower.EqualsWithin(rhs.SunPower)) return false;
-            if (!this.ReflectivityAmount.EqualsWithin(rhs.ReflectivityAmount)) return false;
-            if (!this.FresnelAmount.EqualsWithin(rhs.FresnelAmount)) return false;
-            if (!this.ScrollXSpeed.EqualsWithin(rhs.ScrollXSpeed)) return false;
-            if (!this.ScrollYSpeed.EqualsWithin(rhs.ScrollYSpeed)) return false;
-            if (!this.FogDistanceNearPlane.EqualsWithin(rhs.FogDistanceNearPlane)) return false;
-            if (!this.FogDistanceFarPlane.EqualsWithin(rhs.FogDistanceFarPlane)) return false;
-            if (!this.ShallowColor.ColorOnlyEquals(rhs.ShallowColor)) return false;
-            if (!this.DeepColor.ColorOnlyEquals(rhs.DeepColor)) return false;
-            if (!this.ReflectionColor.ColorOnlyEquals(rhs.ReflectionColor)) return false;
-            if (this.TextureBlend != rhs.TextureBlend) return false;
-            if (!this.RainSimulatorForce.EqualsWithin(rhs.RainSimulatorForce)) return false;
-            if (!this.RainSimulatorVelocity.EqualsWithin(rhs.RainSimulatorVelocity)) return false;
-            if (!this.RainSimulatorFalloff.EqualsWithin(rhs.RainSimulatorFalloff)) return false;
-            if (!this.RainSimulatorDampner.EqualsWithin(rhs.RainSimulatorDampner)) return false;
-            if (!this.RainSimulatorStartingSize.EqualsWithin(rhs.RainSimulatorStartingSize)) return false;
-            if (!this.DisplacementSimulatorForce.EqualsWithin(rhs.DisplacementSimulatorForce)) return false;
-            if (!this.DisplacementSimulatorVelocity.EqualsWithin(rhs.DisplacementSimulatorVelocity)) return false;
-            if (!this.DisplacementSimulatorFalloff.EqualsWithin(rhs.DisplacementSimulatorFalloff)) return false;
-            if (!this.DisplacementSimulatorDampner.EqualsWithin(rhs.DisplacementSimulatorDampner)) return false;
-            if (!this.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize)) return false;
-            if (this.Damage != rhs.Damage) return false;
-            if (RelatedWaters_IsSet != rhs.RelatedWaters_IsSet) return false;
-            if (RelatedWaters_IsSet)
-            {
-                if (!object.Equals(this.RelatedWaters, rhs.RelatedWaters)) return false;
-            }
-            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
+            return ((WaterCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Texture_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Texture).CombineHashCode(ret);
-            }
-            if (Opacity_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Opacity).CombineHashCode(ret);
-            }
-            if (Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
-            if (MaterialID_IsSet)
-            {
-                ret = HashHelper.GetHashCode(MaterialID).CombineHashCode(ret);
-            }
-            if (Sound_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Sound).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(WindVelocity).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(WindDirection).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(WaveAmplitude).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(WaveFrequency).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SunPower).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ReflectivityAmount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FresnelAmount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ScrollXSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ScrollYSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FogDistanceNearPlane).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FogDistanceFarPlane).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ShallowColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DeepColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ReflectionColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(TextureBlend).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RainSimulatorForce).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RainSimulatorVelocity).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RainSimulatorFalloff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RainSimulatorDampner).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RainSimulatorStartingSize).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DisplacementSimulatorForce).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DisplacementSimulatorVelocity).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DisplacementSimulatorFalloff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DisplacementSimulatorDampner).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DisplacementSimulatorStartingSize).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Damage).CombineHashCode(ret);
-            if (RelatedWaters_IsSet)
-            {
-                ret = HashHelper.GetHashCode(RelatedWaters).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
+        public override int GetHashCode() => ((WaterCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected override object XmlWriteTranslator => WaterXmlWriteTranslation.Instance;
@@ -1981,7 +1865,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sound
         ISoundInternalGetter Sound { get; }
-        IFormIDSetLinkGetter<Sound> Sound_Property { get; }
+        IFormIDSetLinkGetter<ISoundInternalGetter> Sound_Property { get; }
 
         #endregion
         #region WindVelocity
@@ -2168,6 +2052,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IWaterInternalGetter item,
+            IWaterInternalGetter rhs)
+        {
+            return ((WaterCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -3800,6 +3693,163 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IWaterInternalGetter lhs,
+            IWaterInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Texture_IsSet != rhs.Texture_IsSet) return false;
+            if (lhs.Texture_IsSet)
+            {
+                if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
+            }
+            if (lhs.Opacity_IsSet != rhs.Opacity_IsSet) return false;
+            if (lhs.Opacity_IsSet)
+            {
+                if (lhs.Opacity != rhs.Opacity) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.MaterialID_IsSet != rhs.MaterialID_IsSet) return false;
+            if (lhs.MaterialID_IsSet)
+            {
+                if (!string.Equals(lhs.MaterialID, rhs.MaterialID)) return false;
+            }
+            if (lhs.Sound_Property.HasBeenSet != rhs.Sound_Property.HasBeenSet) return false;
+            if (lhs.Sound_Property.HasBeenSet)
+            {
+                if (!lhs.Sound_Property.Equals(rhs.Sound_Property)) return false;
+            }
+            if (!lhs.WindVelocity.EqualsWithin(rhs.WindVelocity)) return false;
+            if (!lhs.WindDirection.EqualsWithin(rhs.WindDirection)) return false;
+            if (!lhs.WaveAmplitude.EqualsWithin(rhs.WaveAmplitude)) return false;
+            if (!lhs.WaveFrequency.EqualsWithin(rhs.WaveFrequency)) return false;
+            if (!lhs.SunPower.EqualsWithin(rhs.SunPower)) return false;
+            if (!lhs.ReflectivityAmount.EqualsWithin(rhs.ReflectivityAmount)) return false;
+            if (!lhs.FresnelAmount.EqualsWithin(rhs.FresnelAmount)) return false;
+            if (!lhs.ScrollXSpeed.EqualsWithin(rhs.ScrollXSpeed)) return false;
+            if (!lhs.ScrollYSpeed.EqualsWithin(rhs.ScrollYSpeed)) return false;
+            if (!lhs.FogDistanceNearPlane.EqualsWithin(rhs.FogDistanceNearPlane)) return false;
+            if (!lhs.FogDistanceFarPlane.EqualsWithin(rhs.FogDistanceFarPlane)) return false;
+            if (!lhs.ShallowColor.ColorOnlyEquals(rhs.ShallowColor)) return false;
+            if (!lhs.DeepColor.ColorOnlyEquals(rhs.DeepColor)) return false;
+            if (!lhs.ReflectionColor.ColorOnlyEquals(rhs.ReflectionColor)) return false;
+            if (lhs.TextureBlend != rhs.TextureBlend) return false;
+            if (!lhs.RainSimulatorForce.EqualsWithin(rhs.RainSimulatorForce)) return false;
+            if (!lhs.RainSimulatorVelocity.EqualsWithin(rhs.RainSimulatorVelocity)) return false;
+            if (!lhs.RainSimulatorFalloff.EqualsWithin(rhs.RainSimulatorFalloff)) return false;
+            if (!lhs.RainSimulatorDampner.EqualsWithin(rhs.RainSimulatorDampner)) return false;
+            if (!lhs.RainSimulatorStartingSize.EqualsWithin(rhs.RainSimulatorStartingSize)) return false;
+            if (!lhs.DisplacementSimulatorForce.EqualsWithin(rhs.DisplacementSimulatorForce)) return false;
+            if (!lhs.DisplacementSimulatorVelocity.EqualsWithin(rhs.DisplacementSimulatorVelocity)) return false;
+            if (!lhs.DisplacementSimulatorFalloff.EqualsWithin(rhs.DisplacementSimulatorFalloff)) return false;
+            if (!lhs.DisplacementSimulatorDampner.EqualsWithin(rhs.DisplacementSimulatorDampner)) return false;
+            if (!lhs.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize)) return false;
+            if (lhs.Damage != rhs.Damage) return false;
+            if (lhs.RelatedWaters_IsSet != rhs.RelatedWaters_IsSet) return false;
+            if (lhs.RelatedWaters_IsSet)
+            {
+                if (!object.Equals(lhs.RelatedWaters, rhs.RelatedWaters)) return false;
+            }
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IWaterInternalGetter)lhs,
+                rhs: rhs as IWaterInternalGetter);
+        }
+
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IWaterInternalGetter)lhs,
+                rhs: rhs as IWaterInternalGetter);
+        }
+
+        public virtual int GetHashCode(IWaterInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Texture_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Texture).CombineHashCode(ret);
+            }
+            if (item.Opacity_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Opacity).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.MaterialID_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MaterialID).CombineHashCode(ret);
+            }
+            if (item.Sound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Sound).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.WindVelocity).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.WindDirection).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.WaveAmplitude).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.WaveFrequency).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SunPower).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ReflectivityAmount).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FresnelAmount).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ScrollXSpeed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ScrollYSpeed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FogDistanceNearPlane).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FogDistanceFarPlane).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ShallowColor).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DeepColor).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ReflectionColor).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TextureBlend).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RainSimulatorForce).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RainSimulatorVelocity).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RainSimulatorFalloff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RainSimulatorDampner).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RainSimulatorStartingSize).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DisplacementSimulatorForce).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DisplacementSimulatorVelocity).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DisplacementSimulatorFalloff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DisplacementSimulatorDampner).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DisplacementSimulatorStartingSize).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Damage).CombineHashCode(ret);
+            if (item.RelatedWaters_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.RelatedWaters).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IWaterInternalGetter)item);
+        }
+
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IWaterInternalGetter)item);
+        }
+
+        #endregion
+
 
     }
     #endregion

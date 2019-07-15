@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Generation;
 using Noggog;
 using System;
@@ -21,6 +21,7 @@ namespace Mutagen.Bethesda.Generation
         public List<ParamTest> AdditionalWriteParams = new List<ParamTest>();
         public List<ParamTest> AdditionalCopyInParams = new List<ParamTest>();
         public List<ParamTest> AdditionalCopyInRetParams = new List<ParamTest>();
+        public abstract int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen);
 
         public virtual bool AllowDirectWrite(
             ObjectGeneration objGen,
@@ -39,7 +40,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationAccessor);
 
-        public abstract string GetTranslatorInstance(TypeGeneration typeGen);
+        public abstract string GetTranslatorInstance(TypeGeneration typeGen, bool getter);
 
         public abstract void GenerateCopyIn(
             FileGeneration fg,
@@ -62,5 +63,50 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor);
+
+        public virtual void GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            int passedLength,
+            DataType data = null)
+        {
+        }
+
+        public virtual void GenerateWrapperCtor(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen)
+        {
+        }
+        
+        public virtual int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            var data = typeGen.GetFieldData();
+            if (!data.HasTrigger)
+            {
+                return this.ExpectedLength(objGen, typeGen) ?? 0;
+            }
+            return 0;
+        }
+
+        public virtual async Task GenerateWrapperRecordTypeParse(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor locationAccessor)
+        {
+            fg.AppendLine($"_{typeGen.Name}Location = (ushort){locationAccessor};");
+        }
+
+        public virtual string GenerateForTypicalWrapper(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            Accessor packageAccessor)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

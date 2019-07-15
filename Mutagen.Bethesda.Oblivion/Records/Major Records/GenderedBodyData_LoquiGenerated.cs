@@ -128,42 +128,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is GenderedBodyData rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IGenderedBodyDataGetter rhs)) return false;
+            return ((GenderedBodyDataCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(GenderedBodyData rhs)
+        public bool Equals(GenderedBodyData obj)
         {
-            if (rhs == null) return false;
-            if (Male_IsSet != rhs.Male_IsSet) return false;
-            if (Male_IsSet)
-            {
-                if (!object.Equals(this.Male, rhs.Male)) return false;
-            }
-            if (Female_IsSet != rhs.Female_IsSet) return false;
-            if (Female_IsSet)
-            {
-                if (!object.Equals(this.Female, rhs.Female)) return false;
-            }
-            return true;
+            return ((GenderedBodyDataCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            if (Male_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Male).CombineHashCode(ret);
-            }
-            if (Female_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Female).CombineHashCode(ret);
-            }
-            return ret;
-        }
+        public override int GetHashCode() => ((GenderedBodyDataCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => GenderedBodyDataXmlWriteTranslation.Instance;
@@ -725,6 +701,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IGenderedBodyDataGetter item,
+            IGenderedBodyDataGetter rhs)
+        {
+            return ((GenderedBodyDataCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1179,6 +1164,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Male = new MaskItem<bool, BodyData_Mask<bool>>(item.Male_IsSet, item.Male.GetHasBeenSetMask());
             mask.Female = new MaskItem<bool, BodyData_Mask<bool>>(item.Female_IsSet, item.Female.GetHasBeenSetMask());
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IGenderedBodyDataGetter lhs,
+            IGenderedBodyDataGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Male_IsSet != rhs.Male_IsSet) return false;
+            if (lhs.Male_IsSet)
+            {
+                if (!object.Equals(lhs.Male, rhs.Male)) return false;
+            }
+            if (lhs.Female_IsSet != rhs.Female_IsSet) return false;
+            if (lhs.Female_IsSet)
+            {
+                if (!object.Equals(lhs.Female, rhs.Female)) return false;
+            }
+            return true;
+        }
+
+        public virtual int GetHashCode(IGenderedBodyDataGetter item)
+        {
+            int ret = 0;
+            if (item.Male_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Male).CombineHashCode(ret);
+            }
+            if (item.Female_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Female).CombineHashCode(ret);
+            }
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1991,6 +2013,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class GenderedBodyDataBinaryWrapper : IGenderedBodyDataGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => GenderedBodyData_Registration.Instance;
+        public static GenderedBodyData_Registration Registration => GenderedBodyData_Registration.Instance;
+        protected object CommonInstance => GenderedBodyDataCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGenderedBodyDataGetter)rhs, include);
+
+        protected object XmlWriteTranslator => GenderedBodyDataXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => GenderedBodyDataBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Male
+        public IBodyDataGetter Male { get; private set; }
+        public bool Male_IsSet => Male != null;
+        #endregion
+        #region Female
+        public IBodyDataGetter Female { get; private set; }
+        public bool Female_IsSet => Female != null;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GenderedBodyDataBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static GenderedBodyDataBinaryWrapper GenderedBodyDataFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new GenderedBodyDataBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4D414E4D: // MNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)GenderedBodyData_FieldIndex.Male) return TryGet<int?>.Failure;
+                    stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker
+                    this.Male = BodyDataBinaryWrapper.BodyDataFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)GenderedBodyData_FieldIndex.Male);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)GenderedBodyData_FieldIndex.Female) return TryGet<int?>.Failure;
+                    stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker
+                    this.Female = BodyDataBinaryWrapper.BodyDataFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)GenderedBodyData_FieldIndex.Female);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
 
     #endregion
 

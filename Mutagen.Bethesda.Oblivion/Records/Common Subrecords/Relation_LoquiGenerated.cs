@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<Faction> IRelation.Faction_Property => this.Faction_Property;
         IFactionInternalGetter IRelationGetter.Faction => this.Faction_Property.Item;
-        IFormIDLinkGetter<Faction> IRelationGetter.Faction_Property => this.Faction_Property;
+        IFormIDLinkGetter<IFactionInternalGetter> IRelationGetter.Faction_Property => this.Faction_Property;
         #endregion
         #region Modifier
         private Int32 _Modifier;
@@ -90,28 +90,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Relation rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IRelationGetter rhs)) return false;
+            return ((RelationCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(Relation rhs)
+        public bool Equals(Relation obj)
         {
-            if (rhs == null) return false;
-            if (!this.Faction_Property.Equals(rhs.Faction_Property)) return false;
-            if (this.Modifier != rhs.Modifier) return false;
-            return true;
+            return ((RelationCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Faction).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Modifier).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((RelationCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => RelationXmlWriteTranslation.Instance;
@@ -555,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Faction
         IFactionInternalGetter Faction { get; }
-        IFormIDLinkGetter<Faction> Faction_Property { get; }
+        IFormIDLinkGetter<IFactionInternalGetter> Faction_Property { get; }
 
         #endregion
         #region Modifier
@@ -626,6 +616,15 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 mask: ret);
             return ret;
+        }
+
+        public static bool Equals(
+            this IRelationGetter item,
+            IRelationGetter rhs)
+        {
+            return ((RelationCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
         }
 
     }
@@ -984,6 +983,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Faction = true;
             mask.Modifier = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRelationGetter lhs,
+            IRelationGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Faction_Property.Equals(rhs.Faction_Property)) return false;
+            if (lhs.Modifier != rhs.Modifier) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IRelationGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Faction).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Modifier).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
@@ -1736,6 +1758,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class RelationBinaryWrapper : IRelationGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
+        public static Relation_Registration Registration => Relation_Registration.Instance;
+        protected object CommonInstance => RelationCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelationGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RelationXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RelationBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Faction
+        public IFormIDLinkGetter<IFactionInternalGetter> Faction_Property => new FormIDLink<IFactionInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFactionInternalGetter Faction => default;
+        #endregion
+        public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RelationBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static RelationBinaryWrapper RelationFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new RelationBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0xE;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
 
     #endregion
 

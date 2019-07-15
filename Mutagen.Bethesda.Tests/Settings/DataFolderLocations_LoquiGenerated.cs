@@ -87,28 +87,18 @@ namespace Mutagen.Bethesda.Tests
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is DataFolderLocations rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IDataFolderLocationsGetter rhs)) return false;
+            return ((DataFolderLocationsCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(DataFolderLocations rhs)
+        public bool Equals(DataFolderLocations obj)
         {
-            if (rhs == null) return false;
-            if (!string.Equals(this.Oblivion, rhs.Oblivion)) return false;
-            if (!string.Equals(this.Skyrim, rhs.Skyrim)) return false;
-            return true;
+            return ((DataFolderLocationsCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(Oblivion).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Skyrim).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((DataFolderLocationsCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => DataFolderLocationsXmlWriteTranslation.Instance;
@@ -628,6 +618,15 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
+        public static bool Equals(
+            this IDataFolderLocationsGetter item,
+            IDataFolderLocationsGetter rhs)
+        {
+            return ((DataFolderLocationsCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -979,6 +978,29 @@ namespace Mutagen.Bethesda.Tests.Internals
             mask.Oblivion = true;
             mask.Skyrim = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IDataFolderLocationsGetter lhs,
+            IDataFolderLocationsGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!string.Equals(lhs.Oblivion, rhs.Oblivion)) return false;
+            if (!string.Equals(lhs.Skyrim, rhs.Skyrim)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IDataFolderLocationsGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Oblivion).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Skyrim).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion

@@ -8,6 +8,7 @@ using ReactiveUI;
 using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Linq;
+using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -32,11 +33,11 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            var settingType = GameSettingUtility.GetGameSettingType(frame);
+            var majorMeta = frame.MetaData.GetMajorRecord(frame);
+            var settingType = GameSettingUtility.GetGameSettingType(frame.GetSpan(checked((int)majorMeta.TotalLength)), frame.MetaData);
             if (settingType.Failed)
             {
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"EDID was not located in expected position: {frame.Position}"));
+                errorMask.ReportExceptionOrThrow(new ArgumentException($"Error splitting to desired GameSetting type at position {frame.Position}: {settingType.Reason}"));
                 return null;
             }
             switch (settingType.Value)
@@ -51,6 +52,34 @@ namespace Mutagen.Bethesda.Oblivion
                     errorMask.ReportExceptionOrThrow(
                         new ArgumentException($"Unknown game type: {settingType.Value}"));
                     return null;
+            }
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class GameSettingBinaryWrapper
+        {
+            public static GameSettingBinaryWrapper GameSettingFactory(
+                BinaryMemoryReadStream stream,
+                BinaryWrapperFactoryPackage package)
+            {
+                var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingSpan, package.Meta);
+                if (settingType.Failed)
+                {
+                    throw new ArgumentException($"Error splitting to desired GameSetting type: {settingType.Reason}");
+                }
+                switch (settingType.Value)
+                {
+                    case GameSettingType.Float:
+                        return GameSettingFloatBinaryWrapper.GameSettingFloatFactory(stream, package);
+                    case GameSettingType.Int:
+                        return GameSettingIntBinaryWrapper.GameSettingIntFactory(stream, package);
+                    case GameSettingType.String:
+                        return GameSettingStringBinaryWrapper.GameSettingStringFactory(stream, package);
+                    default:
+                        throw new ArgumentException($"Unknown game type: {settingType.Value}");
+                }
             }
         }
     }

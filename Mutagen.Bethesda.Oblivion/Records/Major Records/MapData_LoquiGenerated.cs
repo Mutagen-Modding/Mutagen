@@ -97,30 +97,18 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is MapData rhs)) return false;
-            return Equals(rhs);
+            if (!(obj is IMapDataGetter rhs)) return false;
+            return ((MapDataCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(MapData rhs)
+        public bool Equals(MapData obj)
         {
-            if (rhs == null) return false;
-            if (!this.UsableDimensions.Equals(rhs.UsableDimensions)) return false;
-            if (!this.CellCoordinatesNWCell.Equals(rhs.CellCoordinatesNWCell)) return false;
-            if (!this.CellCoordinatesSECell.Equals(rhs.CellCoordinatesSECell)) return false;
-            return true;
+            return ((MapDataCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(UsableDimensions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CellCoordinatesNWCell).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CellCoordinatesSECell).CombineHashCode(ret);
-            return ret;
-        }
+        public override int GetHashCode() => ((MapDataCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
-
 
         #region Xml Translation
         protected object XmlWriteTranslator => MapDataXmlWriteTranslation.Instance;
@@ -657,6 +645,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public static bool Equals(
+            this IMapDataGetter item,
+            IMapDataGetter rhs)
+        {
+            return ((MapDataCommon)item.CommonInstance).Equals(
+                lhs: item,
+                rhs: rhs);
+        }
+
     }
     #endregion
 
@@ -1049,6 +1046,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.CellCoordinatesNWCell = true;
             mask.CellCoordinatesSECell = true;
         }
+
+        #region Equals and Hash
+        public virtual bool Equals(
+            IMapDataGetter lhs,
+            IMapDataGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.UsableDimensions.Equals(rhs.UsableDimensions)) return false;
+            if (!lhs.CellCoordinatesNWCell.Equals(rhs.CellCoordinatesNWCell)) return false;
+            if (!lhs.CellCoordinatesSECell.Equals(rhs.CellCoordinatesSECell)) return false;
+            return true;
+        }
+
+        public virtual int GetHashCode(IMapDataGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.UsableDimensions).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CellCoordinatesNWCell).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CellCoordinatesSECell).CombineHashCode(ret);
+            return ret;
+        }
+
+        #endregion
+
 
     }
     #endregion
