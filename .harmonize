@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>e90c9c48489c672a0c7d90ab880fb56f2dc4739c</Sha>
+         <Sha>41295d43976fc534d85975f79158032c44d25244</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-13-2019 23:07:32</CommitDate>
-         <Description>ByteArrayType length =&gt; byteLength</Description>
+         <CommitDate>07-15-2019 17:07:05</CommitDate>
+         <Description>ByteArray byteLength swapped to expect int</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

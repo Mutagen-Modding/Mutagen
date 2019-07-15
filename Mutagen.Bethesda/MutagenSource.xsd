@@ -83,7 +83,7 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
-          <xs:attribute name="byteLength" type="xs:int" >
+          <xs:attribute name="byteLength" type="xs:integer" >
             <xs:annotation>
               <xs:documentation>
                 Explicit definition of byte length on disk.  Used in various circumstances
@@ -238,7 +238,7 @@
   <xs:complexType name="Buffer" >
     <xs:complexContent>
       <xs:extension base="Nothing">
-        <xs:attribute name="byteLength" type="xs:int" use="required" />
+        <xs:attribute name="byteLength" type="xs:integer" use="required" />
         <xs:attribute name="static" type="xs:boolean" />
       </xs:extension>
     </xs:complexContent>
