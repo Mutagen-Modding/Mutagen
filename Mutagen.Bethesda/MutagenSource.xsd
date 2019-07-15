@@ -390,6 +390,7 @@
   <xs:complexType name="GroupType" >
     <xs:attribute name="name" use="required" />
     <xs:attribute name="refName" use="required" />
+    <xs:attribute name="edidLinked" />
   </xs:complexType>
   
 </xs:schema>

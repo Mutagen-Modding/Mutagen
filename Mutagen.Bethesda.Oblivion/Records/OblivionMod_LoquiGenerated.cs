@@ -14486,7 +14486,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this._data = bytes;
             this._package = new BinaryWrapperFactoryPackage()
             {
-                Meta = MetaDataConstants.Get(this.GameMode)
+                Meta = MetaDataConstants.Get(this.GameMode),
+                Mod = this
             };
             this.ModKey = modKey;
         }
@@ -14504,6 +14505,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
+            UtilityTranslation.FillEdidLinkCache<IMagicEffectInternalGetter>(
+                mod: ret,
+                recordType: MagicEffect_Registration.MGEF_HEADER,
+                package: ret._package);
             return ret;
         }
 
@@ -14587,6 +14592,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Sounds);
+                }
+                case 0x4C494B53: // SKIL
+                {
+                    this._Skills = GroupBinaryWrapper<ISkillRecordInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Skills);
+                }
+                case 0x4645474D: // MGEF
+                {
+                    this._MagicEffects = GroupBinaryWrapper<IMagicEffectInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.MagicEffects);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

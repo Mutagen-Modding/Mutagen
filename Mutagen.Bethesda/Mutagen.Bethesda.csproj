@@ -27,11 +27,11 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Translators\Binary\Helper Containers\BinaryWrapperFactoryPackage.cs" />
-    <Compile Include="Translators\Binary\Helper Containers\EmptySetList.cs" />
-    <Compile Include="Translators\Binary\Helper Containers\BinaryWrapperSetList.cs" />
-    <Compile Include="Translators\Binary\Helper Containers\BinaryWrapperNumberedList.cs" />
-    <Compile Include="Translators\Binary\Helper Containers\ReadOnlySetList.cs" />
+    <Compile Include="Translators\Binary\Binary Wrapper\BinaryWrapperFactoryPackage.cs" />
+    <Compile Include="Translators\Binary\Binary Wrapper\EmptySetList.cs" />
+    <Compile Include="Translators\Binary\Binary Wrapper\BinaryWrapperSetList.cs" />
+    <Compile Include="Translators\Binary\Binary Wrapper\BinaryWrapperNumberedList.cs" />
+    <Compile Include="Translators\Binary\Binary Wrapper\ReadOnlySetList.cs" />
     <Compile Include="Translators\Binary\LoquiBinaryWrapperTranslation.cs" />
     <Compile Include="Translators\Binary\MetaData.cs" />
     <Compile Include="Core\Utility.cs" />

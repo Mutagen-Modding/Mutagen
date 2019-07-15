@@ -8,6 +8,7 @@ using System.Reactive.Linq;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda
 {
@@ -107,12 +108,34 @@ namespace Mutagen.Bethesda
             this.EDID = new RecordType(item.Value);
         }
 
-        private static bool TryLinkToMod<M>(
-            IEDIDLink<T> link,
-            M mod)
-            where M : IMod
+        public static IEDIDLink<T> FactoryFromCache(RecordType edidRecordType, RecordType targetRecordType, BinaryWrapperFactoryPackage package)
         {
-            if (string.IsNullOrWhiteSpace(link.EDID.Type)) return false;
+            var ret = new EDIDLink<T>(edidRecordType);
+            TryLinkToCache(ret, package.EdidLinkCache[targetRecordType]);
+            return ret;
+        }
+
+        public static bool TryLinkToCache(
+            IEDIDLink<T> link,
+            IReadOnlyDictionary<RecordType, object> cache)
+        {
+            if (link.EDID == UNLINKED) return false;
+            if (cache.TryGetValue(link.EDID, out var rec))
+            {
+                link.Item = (T)rec;
+                return true;
+            }
+            link.Item = default;
+            return false;
+        }
+
+        private static bool TryLinkToMod(
+            IEDIDLink<T> link,
+            IModGetter mod)
+        {
+            if (link.EDID == UNLINKED) return false;
+            // ToDo
+            // Improve to not be a forloop
             var group = mod.GetGroupGetter<T>();
             foreach (var rec in group.Values)
             {
@@ -122,6 +145,7 @@ namespace Mutagen.Bethesda
                     return true;
                 }
             }
+            link.Item = default;
             return false;
         }
 

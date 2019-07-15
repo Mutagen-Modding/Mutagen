@@ -3789,6 +3789,174 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class SkillRecordBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        ISkillRecordInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
+        public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
+        protected override object CommonInstance => SkillRecordCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillRecordInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => SkillRecordXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SkillRecordBinaryWriteTranslation.Instance;
+
+        #region Skill
+        private int? _SkillLocation;
+        public bool Skill_IsSet => _SkillLocation.HasValue;
+        public ActorValue Skill => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _SkillLocation.Value, _package.Meta));
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public bool Description_IsSet => _DescriptionLocation.HasValue;
+        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Icon
+        private int? _IconLocation;
+        public bool Icon_IsSet => _IconLocation.HasValue;
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        #endregion
+        private int? _DATALocation;
+        public SkillRecord.DATADataType DATADataTypeState { get; private set; }
+        #region Action
+        private int _ActionLocation => _DATALocation.Value + 0;
+        private bool _Action_IsSet => _DATALocation.HasValue;
+        public ActorValue Action => _Action_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ActionLocation, 4)) : default;
+        #endregion
+        #region Attribute
+        private int _AttributeLocation => _DATALocation.Value + 4;
+        private bool _Attribute_IsSet => _DATALocation.HasValue;
+        public ActorValue Attribute => _Attribute_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_AttributeLocation, 4)) : default;
+        #endregion
+        #region Specialization
+        private int _SpecializationLocation => _DATALocation.Value + 8;
+        private bool _Specialization_IsSet => _DATALocation.HasValue;
+        public Specialization Specialization => _Specialization_IsSet ? (Specialization)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SpecializationLocation, 4)) : default;
+        #endregion
+        #region UseValueFirst
+        private int _UseValueFirstLocation => _DATALocation.Value + 12;
+        private bool _UseValueFirst_IsSet => _DATALocation.HasValue;
+        public Single UseValueFirst => _UseValueFirst_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_UseValueFirstLocation, 4)) : default;
+        #endregion
+        #region UseValueSecond
+        private int _UseValueSecondLocation => _DATALocation.Value + 16;
+        private bool _UseValueSecond_IsSet => _DATALocation.HasValue;
+        public Single UseValueSecond => _UseValueSecond_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_UseValueSecondLocation, 4)) : default;
+        #endregion
+        #region ApprenticeText
+        private int? _ApprenticeTextLocation;
+        public bool ApprenticeText_IsSet => _ApprenticeTextLocation.HasValue;
+        public String ApprenticeText => _ApprenticeTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _ApprenticeTextLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region JourneymanText
+        private int? _JourneymanTextLocation;
+        public bool JourneymanText_IsSet => _JourneymanTextLocation.HasValue;
+        public String JourneymanText => _JourneymanTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _JourneymanTextLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region ExpertText
+        private int? _ExpertTextLocation;
+        public bool ExpertText_IsSet => _ExpertTextLocation.HasValue;
+        public String ExpertText => _ExpertTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _ExpertTextLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region MasterText
+        private int? _MasterTextLocation;
+        public bool MasterText_IsSet => _MasterTextLocation.HasValue;
+        public String MasterText => _MasterTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MasterTextLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected SkillRecordBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static SkillRecordBinaryWrapper SkillRecordFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new SkillRecordBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x58444E49: // INDX
+                {
+                    _SkillLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Skill);
+                }
+                case 0x43534544: // DESC
+                {
+                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Description);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _IconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Icon);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = SkillRecord.DATADataType.Has;
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.UseValueSecond);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    _ApprenticeTextLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ApprenticeText);
+                }
+                case 0x4D414E4A: // JNAM
+                {
+                    _JourneymanTextLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.JourneymanText);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    _ExpertTextLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ExpertText);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    _MasterTextLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.MasterText);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

@@ -1480,6 +1480,9 @@ namespace Mutagen.Bethesda.Generation
                 && obj.Name != "Sound"
                 && obj.Name != "SoundData"
                 && obj.Name != "SoundDataExtended"
+                && obj.Name != "SkillRecord"
+                && obj.Name != "MagicEffect"
+                && obj.Name != "MagicEffectSubData"
                 ) return;
 
             var dataAccessor = new Accessor("_data");
@@ -1673,7 +1676,8 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine($"this.{packageAccessor} = new {nameof(BinaryWrapperFactoryPackage)}()");
                             using (new BraceWrapper(fg) { AppendSemicolon = true })
                             {
-                                fg.AppendLine($"Meta = {nameof(MetaDataConstants)}.Get(this.GameMode)");
+                                fg.AppendLine($"Meta = {nameof(MetaDataConstants)}.Get(this.GameMode),");
+                                fg.AppendLine($"Mod = this");
                             }
                         }
                     }
@@ -1882,6 +1886,21 @@ namespace Mutagen.Bethesda.Generation
                             }
                             fg.AppendLine($"ret.CustomCtor(stream, offset);");
                         }
+                        if (obj.GetObjectType() == ObjectType.Mod)
+                        {
+                            foreach (var field in obj.IterateFields())
+                            {
+                                if (!(field is GroupType group)) continue;
+                                if (!((bool)group.CustomData[Mutagen.Bethesda.Constants.EdidLinked])) continue;
+                                using (var args = new ArgsWrapper(fg,
+                                    $"{nameof(UtilityTranslation)}.{nameof(UtilityTranslation.FillEdidLinkCache)}<{group.GetGroupTarget().GetTypeName(LoquiInterfaceType.IGetter)}>"))
+                                {
+                                    args.Add("mod: ret");
+                                    args.Add($"recordType: {group.GetGroupTarget().GetTriggeringSource()}");
+                                    args.Add("package: ret._package");
+                                }
+                            }
+                        }
                         fg.AppendLine("return ret;");
                     }
                     fg.AppendLine();
@@ -1908,7 +1927,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (field.Field.Name == "Skills")
+                                if (field.Field.Name == "Scripts")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)

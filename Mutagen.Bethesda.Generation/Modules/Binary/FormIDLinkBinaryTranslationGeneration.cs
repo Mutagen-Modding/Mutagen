@@ -189,7 +189,15 @@ namespace Mutagen.Bethesda.Generation
             Accessor packageAccessor)
         {
             FormIDLinkType linkType = typeGen as FormIDLinkType;
-            return $"new FormIDLink<{linkType.LoquiType.TypeName(getter: true)}>(FormKey.Factory({packageAccessor}.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})))";
+            switch (linkType.FormIDType)
+            {
+                case FormIDLinkType.FormIDTypeEnum.Normal:
+                    return $"new {linkType.DirectTypeName}(FormKey.Factory({packageAccessor}.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})))";
+                case FormIDLinkType.FormIDTypeEnum.EDIDChars:
+                    return $"EDIDLink<{linkType.LoquiType.TypeName(getter: true)}>.FactoryFromCache(edidRecordType: new RecordType(BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})), targetRecordType: {linkType.LoquiType.TargetObjectGeneration.GetTriggeringSource()}, package: {packageAccessor})";
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         public override void GenerateWrapperFields(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor, int currentPosition, DataType dataType = null)

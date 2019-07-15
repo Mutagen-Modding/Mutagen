@@ -540,6 +540,23 @@ namespace Mutagen.Bethesda
             }
             return ret;
         }
+
+        public static void FillEdidLinkCache<T>(IModGetter mod, RecordType recordType, BinaryWrapperFactoryPackage package)
+            where T : IMajorRecordInternalGetter
+        {
+            var group = mod.GetGroupGetter<T>();
+            var cache = new Dictionary<RecordType, object>();
+            package.EdidLinkCache[recordType] = cache;
+            foreach (var item in group)
+            {
+                var edid = item.Value.EditorID;
+                if (edid.Length != Constants.HEADER_LENGTH)
+                {
+                    throw new ArgumentException($"EDID link record type {recordType} had an EDID of improper length: {edid}");
+                }
+                cache[new RecordType(edid)] = item.Value;
+            }
+        }
     }
 
     public static class UtilityAsyncTranslation

@@ -2352,6 +2352,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class MagicEffectSubDataBinaryWrapper : IMagicEffectSubDataGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => MagicEffectSubData_Registration.Instance;
+        public static MagicEffectSubData_Registration Registration => MagicEffectSubData_Registration.Instance;
+        protected object CommonInstance => MagicEffectSubDataCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectSubDataGetter)rhs, include);
+
+        protected object XmlWriteTranslator => MagicEffectSubDataXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => MagicEffectSubDataBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region EnchantEffect
+        public IFormIDLinkGetter<IEffectShaderInternalGetter> EnchantEffect_Property => new FormIDLink<EffectShader>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IEffectShaderInternalGetter EnchantEffect => default;
+        #endregion
+        #region CastingSound
+        public IFormIDLinkGetter<ISoundInternalGetter> CastingSound_Property => new FormIDLink<Sound>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public ISoundInternalGetter CastingSound => default;
+        #endregion
+        #region BoltSound
+        public IFormIDLinkGetter<ISoundInternalGetter> BoltSound_Property => new FormIDLink<Sound>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4))));
+        public ISoundInternalGetter BoltSound => default;
+        #endregion
+        #region HitSound
+        public IFormIDLinkGetter<ISoundInternalGetter> HitSound_Property => new FormIDLink<Sound>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(12, 4))));
+        public ISoundInternalGetter HitSound => default;
+        #endregion
+        #region AreaSound
+        public IFormIDLinkGetter<ISoundInternalGetter> AreaSound_Property => new FormIDLink<Sound>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(16, 4))));
+        public ISoundInternalGetter AreaSound => default;
+        #endregion
+        public Single ConstantEffectEnchantmentFactor => SpanExt.GetFloat(_data.Span.Slice(20, 4));
+        public Single ConstantEffectBarterFactor => SpanExt.GetFloat(_data.Span.Slice(24, 4));
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected MagicEffectSubDataBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static MagicEffectSubDataBinaryWrapper MagicEffectSubDataFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new MagicEffectSubDataBinaryWrapper(
+                bytes: stream.RemainingMemory.Slice(0, 28),
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

@@ -1779,7 +1779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected BinaryWrapperFactoryPackage _package;
 
         #region Faction
-        public IFormIDLinkGetter<IFactionInternalGetter> Faction_Property => new FormIDLink<IFactionInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormIDLinkGetter<IFactionInternalGetter> Faction_Property => new FormIDLink<Faction>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public IFactionInternalGetter Faction => default;
         #endregion
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));

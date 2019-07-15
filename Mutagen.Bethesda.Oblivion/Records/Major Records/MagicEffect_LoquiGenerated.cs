@@ -4280,6 +4280,191 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class MagicEffectBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IMagicEffectInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
+        public new static MagicEffect_Registration Registration => MagicEffect_Registration.Instance;
+        protected override object CommonInstance => MagicEffectCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => MagicEffectXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public bool Description_IsSet => _DescriptionLocation.HasValue;
+        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Icon
+        private int? _IconLocation;
+        public bool Icon_IsSet => _IconLocation.HasValue;
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        private int? _DATALocation;
+        public MagicEffect.DATADataType DATADataTypeState { get; private set; }
+        #region Flags
+        private int _FlagsLocation => _DATALocation.Value + 0;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public MagicEffect.MagicFlag Flags => _Flags_IsSet ? (MagicEffect.MagicFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
+        #endregion
+        #region BaseCost
+        private int _BaseCostLocation => _DATALocation.Value + 4;
+        private bool _BaseCost_IsSet => _DATALocation.HasValue;
+        public Single BaseCost => _BaseCost_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BaseCostLocation, 4)) : default;
+        #endregion
+        #region Unused
+        private int _UnusedLocation => _DATALocation.Value + 8;
+        private bool _Unused_IsSet => _DATALocation.HasValue;
+        public ReadOnlySpan<Byte> Unused => _Unused_IsSet ? _data.Span.Slice(_UnusedLocation, 4).ToArray() : default;
+        #endregion
+        #region MagicSchool
+        private int _MagicSchoolLocation => _DATALocation.Value + 12;
+        private bool _MagicSchool_IsSet => _DATALocation.HasValue;
+        public MagicSchool MagicSchool => _MagicSchool_IsSet ? (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MagicSchoolLocation, 4)) : default;
+        #endregion
+        #region Resistance
+        private int _ResistanceLocation => _DATALocation.Value + 16;
+        private bool _Resistance_IsSet => _DATALocation.HasValue;
+        public Resistance Resistance => _Resistance_IsSet ? (Resistance)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ResistanceLocation, 4)) : default;
+        #endregion
+        #region CounterEffectCount
+        private int _CounterEffectCountLocation => _DATALocation.Value + 20;
+        private bool _CounterEffectCount_IsSet => _DATALocation.HasValue;
+        public UInt32 CounterEffectCount => _CounterEffectCount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CounterEffectCountLocation, 4)) : default;
+        #endregion
+        #region Light
+        private int _LightLocation => _DATALocation.Value + 24;
+        private bool _Light_IsSet => _DATALocation.HasValue;
+        public IFormIDLinkGetter<ILightInternalGetter> Light_Property => _Light_IsSet ? new FormIDLink<Light>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 4)))) : default;
+        public ILightInternalGetter Light => default;
+        #endregion
+        #region ProjectileSpeed
+        private int _ProjectileSpeedLocation => _DATALocation.Value + 28;
+        private bool _ProjectileSpeed_IsSet => _DATALocation.HasValue;
+        public Single ProjectileSpeed => _ProjectileSpeed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ProjectileSpeedLocation, 4)) : default;
+        #endregion
+        #region EffectShader
+        private int _EffectShaderLocation => _DATALocation.Value + 32;
+        private bool _EffectShader_IsSet => _DATALocation.HasValue;
+        public IFormIDLinkGetter<IEffectShaderInternalGetter> EffectShader_Property => _EffectShader_IsSet ? new FormIDLink<EffectShader>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectShaderLocation, 4)))) : default;
+        public IEffectShaderInternalGetter EffectShader => default;
+        #endregion
+        #region SubData
+        private int _SubDataLocation => _DATALocation.Value + 36;
+        private bool _SubData_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0);
+        private IMagicEffectSubDataGetter _SubData => _SubData_IsSet ? MagicEffectSubDataBinaryWrapper.MagicEffectSubDataFactory(new BinaryMemoryReadStream(_data.Slice(_SubDataLocation)), _package) : default;
+        public IMagicEffectSubDataGetter SubData => _SubData ?? new MagicEffectSubData();
+        #endregion
+        public IReadOnlySetList<IEDIDLinkGetter<IMagicEffectInternalGetter>> CounterEffects { get; private set; } = EmptySetList<IEDIDLinkGetter<IMagicEffectInternalGetter>>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected MagicEffectBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static MagicEffectBinaryWrapper MagicEffectFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new MagicEffectBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Name);
+                }
+                case 0x43534544: // DESC
+                {
+                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Description);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _IconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Icon);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Model);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = MagicEffect.DATADataType.Has;
+                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                    if (subLen <= 36)
+                    {
+                        this.DATADataTypeState |= MagicEffect.DATADataType.Break0;
+                    }
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.SubData);
+                }
+                case 0x45435345: // ESCE
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.CounterEffects = BinaryWrapperSetList<IEDIDLinkGetter<IMagicEffectInternalGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => EDIDLink<IMagicEffectInternalGetter>.FactoryFromCache(edidRecordType: new RecordType(BinaryPrimitives.ReadInt32LittleEndian(s)), targetRecordType: MagicEffect_Registration.MGEF_HEADER, package: p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion
