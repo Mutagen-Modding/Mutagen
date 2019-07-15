@@ -111,7 +111,8 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration field, 
-            Accessor locationAccessor)
+            Accessor locationAccessor,
+            Accessor packageAccessor)
         {
             DataType dataType = field as DataType;
             fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = (ushort){locationAccessor} + _package.Meta.SubConstants.TypeAndLengthLength;");

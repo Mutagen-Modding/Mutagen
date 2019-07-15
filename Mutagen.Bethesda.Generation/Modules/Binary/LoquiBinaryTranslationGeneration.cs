@@ -300,7 +300,8 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            Accessor locationAccessor)
+            Accessor locationAccessor,
+            Accessor packageAccessor)
         {
             LoquiType loqui = typeGen as LoquiType;
             string accessor;
@@ -319,7 +320,7 @@ namespace Mutagen.Bethesda.Generation
             var data = loqui.GetFieldData();
             if (data.MarkerType.HasValue)
             {
-                fg.AppendLine("stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker");
+                fg.AppendLine($"stream.Position += {packageAccessor}.Meta.SubConstants.HeaderLength; // Skip marker");
             }
             using (var args = new ArgsWrapper(fg,
                 $"this.{accessor} = {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}{loqui.GenericTypes(getter: true)}.{loqui.TargetObjectGeneration.Name}Factory"))

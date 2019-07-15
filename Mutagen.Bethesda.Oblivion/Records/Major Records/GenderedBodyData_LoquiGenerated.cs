@@ -2079,7 +2079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E4D: // MNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)GenderedBodyData_FieldIndex.Male) return TryGet<int?>.Failure;
-                    stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker
+                    stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
                     this.Male = BodyDataBinaryWrapper.BodyDataFactory(
                         stream: stream,
                         package: _package);
@@ -2088,7 +2088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E46: // FNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)GenderedBodyData_FieldIndex.Female) return TryGet<int?>.Failure;
-                    stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker
+                    stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
                     this.Female = BodyDataBinaryWrapper.BodyDataFactory(
                         stream: stream,
                         package: _package);

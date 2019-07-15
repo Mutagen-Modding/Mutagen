@@ -6879,7 +6879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x304D414E: // NAM0
                 {
-                    stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker
+                    stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
                     this.FaceData = UtilityTranslation.ParseRepeatedTypelessSubrecord<FacePartBinaryWrapper>(
                         stream: stream,
                         package: _package,
@@ -6890,7 +6890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x314D414E: // NAM1
                 {
-                    stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker
+                    stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
                     this.BodyData = GenderedBodyDataBinaryWrapper.GenderedBodyDataFactory(
                         stream: stream,
                         package: _package);

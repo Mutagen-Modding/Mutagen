@@ -1928,7 +1928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x12;
+            stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(stream, offset);
             return ret;
         }

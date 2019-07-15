@@ -430,13 +430,14 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            Accessor locationAccessor)
+            Accessor locationAccessor,
+            Accessor packageAccessor)
         {
             ListType list = typeGen as ListType;
             var data = list.GetFieldData();
             if (data.MarkerType.HasValue)
             {
-                fg.AppendLine("stream.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH; // Skip marker");
+                fg.AppendLine($"stream.Position += {packageAccessor}.Meta.SubConstants.HeaderLength; // Skip marker");
             }
             var subData = list.SubTypeGeneration.GetFieldData();
             ListBinaryType listBinaryType = GetListType(list, data, subData);

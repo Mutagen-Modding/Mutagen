@@ -1914,7 +1914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 package: package);
             var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x16;
+            stream.Position += 0x10 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(stream, offset);
             return ret;
         }

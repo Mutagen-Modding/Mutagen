@@ -1718,26 +1718,9 @@ namespace Mutagen.Bethesda.Generation
                     }
                     using (new BraceWrapper(fg))
                     {
-                        sbyte headerLen = 0;
                         using (var args = new ArgsWrapper(fg,
                             $"var ret = new {BinaryWrapperClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}"))
                         {
-                            switch (obj.GetObjectType())
-                            {
-                                case ObjectType.Record:
-                                    headerLen = Mutagen.Bethesda.Constants.RECORD_LENGTH;
-                                    break;
-                                case ObjectType.Group:
-                                    headerLen = Mutagen.Bethesda.Constants.RECORD_LENGTH;
-                                    break;
-                                case ObjectType.Subrecord:
-                                    headerLen = Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                                    break;
-                                case ObjectType.Mod:
-                                    break;
-                                default:
-                                    throw new NotImplementedException();
-                            }
                             if (obj.IsTypelessStruct())
                             {
                                 if (anyHasRecordTypes)
@@ -1878,7 +1861,24 @@ namespace Mutagen.Bethesda.Generation
                         {
                             if (!obj.IsTypelessStruct())
                             {
-                                fg.AppendLine($"stream.Position += 0x{(passedLength + headerLen).ToString("X")};");
+                                string headerAddition = null;
+                                switch (obj.GetObjectType())
+                                {
+                                    case ObjectType.Record:
+                                        headerAddition = $" + package.Meta.MajorConstants.HeaderLength";
+                                        break;
+                                    case ObjectType.Group:
+                                        headerAddition = $" + package.Meta.GroupConstants.HeaderLength";
+                                        break;
+                                    case ObjectType.Subrecord:
+                                        headerAddition = $" + package.Meta.SubConstants.HeaderLength";
+                                        break;
+                                    case ObjectType.Mod:
+                                        break;
+                                    default:
+                                        throw new NotImplementedException();
+                                }
+                                fg.AppendLine($"stream.Position += 0x{(passedLength).ToString("X")}{headerAddition};");
                             }
                             fg.AppendLine($"ret.CustomCtor(stream, offset);");
                         }
@@ -1944,7 +1944,8 @@ namespace Mutagen.Bethesda.Generation
                                                     fg: fg,
                                                     objGen: obj,
                                                     typeGen: gen.Value,
-                                                    locationAccessor: "(stream.Position - offset)");
+                                                    locationAccessor: "(stream.Position - offset)",
+                                                    packageAccessor: "_package");
                                                 if (obj.GetObjectType() == ObjectType.Mod
                                                     && field.Field.Name == "ModHeader")
                                                 {
