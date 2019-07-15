@@ -499,8 +499,13 @@ namespace Mutagen.Bethesda
             return ret.ToArray();
         }
 
-        public delegate T BinaryWrapperFactory<T>(
+        public delegate T BinaryWrapperStreamFactory<T>(
             BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package);
+
+        public delegate T BinaryWrapperStreamTypedFactory<T>(
+            BinaryMemoryReadStream stream,
+            RecordType recordType,
             BinaryWrapperFactoryPackage package);
 
         public delegate T BinaryWrapperSpanFactory<T>(
@@ -512,14 +517,48 @@ namespace Mutagen.Bethesda
             BinaryWrapperFactoryPackage package,
             int offset,
             ICollectionGetter<RecordType> trigger,
-            BinaryWrapperFactory<T> factory)
+            BinaryWrapperStreamTypedFactory<T> factory)
         {
             var ret = new ReadOnlySetList<T>();
             while (!stream.Complete)
             {
                 var subMeta = package.Meta.GetSubRecord(stream);
-                if (!trigger.Contains(subMeta.RecordType)) break;
-                ret.Add(factory(stream, package));
+                var recType = subMeta.RecordType;
+                if (!trigger.Contains(recType)) break;
+                ret.Add(factory(stream, recType, package));
+            }
+            return ret;
+        }
+
+        public static IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            int offset,
+            ICollectionGetter<RecordType> trigger,
+            BinaryWrapperStreamFactory<T> factory)
+        {
+            return ParseRepeatedTypelessSubrecord(
+                stream,
+                package,
+                offset,
+                trigger,
+                (s, r, p) => factory(s, p));
+        }
+
+        public static IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            int offset,
+            RecordType trigger,
+            BinaryWrapperStreamTypedFactory<T> factory)
+        {
+            var ret = new ReadOnlySetList<T>();
+            while (!stream.Complete)
+            {
+                var subMeta = package.Meta.GetSubRecord(stream);
+                var recType = subMeta.RecordType;
+                if (trigger != recType) break;
+                ret.Add(factory(stream, recType, package));
             }
             return ret;
         }
@@ -529,16 +568,14 @@ namespace Mutagen.Bethesda
             BinaryWrapperFactoryPackage package,
             int offset,
             RecordType trigger,
-            BinaryWrapperFactory<T> factory)
+            BinaryWrapperStreamFactory<T> factory)
         {
-            var ret = new ReadOnlySetList<T>();
-            while (!stream.Complete)
-            {
-                var subMeta = package.Meta.GetSubRecord(stream);
-                if (trigger != subMeta.RecordType) break;
-                ret.Add(factory(stream, package));
-            }
-            return ret;
+            return ParseRepeatedTypelessSubrecord(
+                stream,
+                package,
+                offset,
+                trigger,
+                (s, r, p) => factory(s, p));
         }
 
         public static void FillEdidLinkCache<T>(IModGetter mod, RecordType recordType, BinaryWrapperFactoryPackage package)

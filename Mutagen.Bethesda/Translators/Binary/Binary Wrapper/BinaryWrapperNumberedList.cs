@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Binary
             int amount, 
             int length,
             BinaryWrapperFactoryPackage package,
-            UtilityTranslation.BinaryWrapperFactory<T> getter)
+            UtilityTranslation.BinaryWrapperStreamFactory<T> getter)
         {
             return new NumberedLoquiList<T>(mem, amount, length, package, getter);
         }
@@ -35,9 +35,9 @@ namespace Mutagen.Bethesda.Binary
         public ReadOnlyMemorySlice<byte> Memory { get; }
         public int Length { get; }
         public BinaryWrapperFactoryPackage Package { get; }
-        public UtilityTranslation.BinaryWrapperFactory<T> Getter { get; }
+        public UtilityTranslation.BinaryWrapperStreamFactory<T> Getter { get; }
 
-        public NumberedLoquiList(ReadOnlyMemorySlice<byte> mem, int amount, int length, BinaryWrapperFactoryPackage package, UtilityTranslation.BinaryWrapperFactory<T> getter)
+        public NumberedLoquiList(ReadOnlyMemorySlice<byte> mem, int amount, int length, BinaryWrapperFactoryPackage package, UtilityTranslation.BinaryWrapperStreamFactory<T> getter)
         {
             this.Amount = amount;
             this.Memory = mem;
