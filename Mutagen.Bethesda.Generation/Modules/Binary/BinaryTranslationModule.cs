@@ -616,10 +616,10 @@ namespace Mutagen.Bethesda.Generation
                                             break;
                                         case ObjectType.Subrecord:
                                         case ObjectType.Record:
-                                            addString = " + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH";
+                                            addString = $" + frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(MetaDataConstants.SubConstants.HeaderLength)}";
                                             break;
                                         case ObjectType.Group:
-                                            addString = " + Mutagen.Bethesda.Constants.RECORD_LENGTH";
+                                            addString = $" + frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.MajorConstants)}.{nameof(MetaDataConstants.SubConstants.HeaderLength)}";
                                             break;
                                         default:
                                             throw new NotImplementedException();
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (field is DataType set)
             {
-                fg.AppendLine($"{frameAccessor}.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(IRecordConstants.HeaderLength)};");
                 fg.AppendLine($"var dataFrame = {frameAccessor}.SpawnWithLength(contentLength);");
                 fg.AppendLine($"if (!dataFrame.Complete)");
                 using (new BraceWrapper(fg))
@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Generation
                             using (var args = new ArgsWrapper(fg,
                                 "return CustomRecordTypeTrigger"))
                             {
-                                args.Add("frame: frame.SpawnWithLength(customLen + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH)");
+                                args.Add($"frame: frame.SpawnWithLength(customLen + frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(MetaDataConstants.SubConstants.HeaderLength)})");
                                 args.Add("recordType: nextRecord");
                                 args.Add("recordTypeConverter: recordTypeConverter");
                                 args.Add("masterReferences: masterReferences");

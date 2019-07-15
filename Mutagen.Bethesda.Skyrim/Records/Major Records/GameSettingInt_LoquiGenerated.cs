@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case 0x41544144: // DATA
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Data = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)GameSettingInt_FieldIndex.Data);
                 }

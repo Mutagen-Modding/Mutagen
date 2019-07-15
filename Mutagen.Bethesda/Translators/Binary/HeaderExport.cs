@@ -12,21 +12,17 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly MutagenWriter Writer;
         public readonly long SizePosition;
-        public readonly sbyte MetaLengthToSkip;
-        public readonly ObjectType Type;
-        private static readonly byte[] SubRecordZeros = new byte[Constants.SUBRECORD_LENGTHLENGTH];
-        private static readonly byte[] RecordZeros = new byte[Constants.RECORD_LENGTHLENGTH];
+        public readonly IRecordConstants RecordConstants;
+        private static readonly byte[] Zeros = new byte[8];
 
         private HeaderExport(
             MutagenWriter writer,
             long sizePosition,
-            ObjectType type,
-            sbyte metaLenToSkip)
+            IRecordConstants recordConstants)
         {
             this.Writer = writer;
-            this.Type = type;
+            this.RecordConstants = recordConstants;
             this.SizePosition = sizePosition;
-            this.MetaLengthToSkip = metaLenToSkip;
         }
 
         public static HeaderExport ExportHeader(
@@ -36,23 +32,8 @@ namespace Mutagen.Bethesda.Binary
         {
             writer.Write(record.TypeInt);
             var sizePosition = writer.Position;
-            var offset = type.GetOffset(writer.Meta.GameMode);
-            sbyte metaLen;
-            switch (type)
-            {
-                case ObjectType.Subrecord:
-                    writer.Write(SubRecordZeros);
-                    metaLen = (sbyte)(Constants.SUBRECORD_LENGTHLENGTH + offset);
-                    break;
-                case ObjectType.Record:
-                case ObjectType.Group:
-                    writer.Write(RecordZeros);
-                    metaLen = (SByte)(Constants.RECORD_LENGTHLENGTH + offset);
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-            return new HeaderExport(writer, sizePosition, type, metaLen);
+            writer.Write(Zeros.AsSpan(0, writer.Meta.Constants(type).LengthLength));
+            return new HeaderExport(writer, sizePosition, writer.Meta.Constants(type));
         }
 
         public static HeaderExport ExportSubRecordHeader(
@@ -67,15 +48,27 @@ namespace Mutagen.Bethesda.Binary
             var endPos = this.Writer.Position;
             this.Writer.Position = this.SizePosition;
             var diff = endPos - this.Writer.Position;
-            var totalLength = diff - this.MetaLengthToSkip;
-            switch (this.Type)
+            if (this.RecordConstants.HeaderIncludedInLength)
+            {
+                diff += Constants.HEADER_LENGTH;
+            }
+            else
+            {
+                diff -= this.RecordConstants.LengthAfterType;
+            }
+
+            switch (this.RecordConstants.ObjectType)
             {
                 case ObjectType.Subrecord:
-                    this.Writer.Write((Int16)totalLength);
+                    {
+                        this.Writer.Write((ushort)diff);
+                    }
                     break;
                 case ObjectType.Record:
                 case ObjectType.Group:
-                    this.Writer.Write((Int32)totalLength);
+                    {
+                        this.Writer.Write((uint)diff);
+                    }
                     break;
                 default:
                     throw new NotImplementedException();

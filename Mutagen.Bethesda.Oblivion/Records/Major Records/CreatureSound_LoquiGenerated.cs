@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x54445343: // CSDT
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return TryGet<int?>.Failure;
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out CreatureSound.CreatureSoundType SoundTypeParse))
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
                         item: item.Sounds,
                         fieldIndex: (int)CreatureSound_FieldIndex.Sounds,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out SoundItem listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda
             {
                 case 0x44494445: // EDID
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda
                 }
                 default:
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += contentLength + frame.MetaData.SubConstants.HeaderLength;
                     return TryGet<int?>.Succeed(null);
             }
         }

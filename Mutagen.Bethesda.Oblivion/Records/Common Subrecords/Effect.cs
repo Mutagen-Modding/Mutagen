@@ -21,18 +21,23 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void SpecialParse_EffectInitial(Effect item, MutagenFrame frame, ErrorMaskBuilder errorMask)
         {
-            var recType = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var contentLen);
-            if (contentLen != 4)
+            var subMeta = frame.MetaData.ReadSubRecord(frame);
+            if (subMeta.RecordLength != Mutagen.Bethesda.Constants.HEADER_LENGTH)
             {
-                throw new ArgumentException($"Magic effect name must be length 4.  Was: {contentLen}");
+                throw new ArgumentException($"Magic effect name must be length 4.  Was: {subMeta.RecordLength}");
             }
             var magicEffName = frame.ReadSpan(4);
-            var efit = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var efitLength);
-            if (efitLength < 4)
+
+            var efitMeta = frame.MetaData.GetSubRecord(frame);
+            if (efitMeta.RecordType != Effect_Registration.EFIT_HEADER)
             {
-                throw new ArgumentException($"Magic effect ref length was less than 4.  Was: {efitLength}");
+                throw new ArgumentException("Expected EFIT header.");
             }
-            var magicEffName2 = frame.GetSpan(amount: 4, offset: Mutagen.Bethesda.Constants.SUBRECORD_LENGTH);
+            if (efitMeta.RecordLength < Mutagen.Bethesda.Constants.HEADER_LENGTH)
+            {
+                throw new ArgumentException($"Magic effect ref length was less than 4.  Was: {efitMeta.RecordLength}");
+            }
+            var magicEffName2 = frame.GetSpan(amount: Mutagen.Bethesda.Constants.HEADER_LENGTH, offset: efitMeta.HeaderLength);
             if (!magicEffName.SequenceEqual(magicEffName2))
             {
                 throw new ArgumentException($"Magic effect names did not match. {BinaryStringUtility.ToZString(magicEffName)} != {BinaryStringUtility.ToZString(magicEffName2)}");

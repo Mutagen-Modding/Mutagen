@@ -1,5 +1,6 @@
 ﻿using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -184,11 +185,11 @@ namespace Mutagen.Bethesda.Generation
 
             if (data.MarkerType.HasValue)
             {
-                fg.AppendLine("frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
+                fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(MetaDataConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
             }
             else if (listBinaryType == ListBinaryType.Trigger)
             {
-                fg.AppendLine("frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(IRecordConstants.HeaderLength)};");
             }
 
             bool threading = list.CustomData.TryGetValue(ThreadKey, out var t)
@@ -244,11 +245,13 @@ namespace Mutagen.Bethesda.Generation
                         switch (loqui.GetObjectType())
                         {
                             case ObjectType.Subrecord:
-                                args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
+                                args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(MetaDataConstants.SubConstants.LengthLength)}");
                                 break;
                             case ObjectType.Group:
+                                args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.GroupConstants)}.{nameof(MetaDataConstants.SubConstants.LengthLength)}");
+                                break;
                             case ObjectType.Record:
-                                args.Add($"lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH");
+                                args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.MajorConstants)}.{nameof(MetaDataConstants.SubConstants.LengthLength)}");
                                 break;
                             case ObjectType.Mod:
                             default:
@@ -257,7 +260,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else
                     {
-                        args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
+                        args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(MetaDataConstants.SubConstants.LengthLength)}");
                     }
                 }
                 if (subTransl.DoErrorMasks)

@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4C4C5546: // FULL
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x43534544: // DESC
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: Race_Registration.SPLO_HEADER,
                         masterReferences: masterReferences,
                         item: item.Spells,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
                 }
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: Race_Registration.XNAM_HEADER,
                         item: item.Relations,
                         fieldIndex: (int)Race_FieldIndex.Relations,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out RaceRelation listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (!dataFrame.Complete)
                     {
@@ -1323,19 +1323,19 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.DefaultHairColor = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColor);
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.FaceGenMainClamp = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenMainClamp);
                 }
                 case 0x4D414E55: // UNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.FaceGenFaceClamp = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenFaceClamp);
                 }
@@ -1363,13 +1363,13 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x304D414E: // NAM0
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
                         item: item.FaceData,
                         fieldIndex: (int)Race_FieldIndex.FaceData,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out FacePart listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -1383,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x314D414E: // NAM1
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
@@ -1406,23 +1406,23 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E48: // HNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Hair>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Hairs,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
                 }
                 case 0x4D414E45: // ENAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Eye>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Eyes,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
                 }
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Byte[] UnknownParse))

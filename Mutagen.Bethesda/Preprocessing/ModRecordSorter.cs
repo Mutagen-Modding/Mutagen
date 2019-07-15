@@ -36,10 +36,14 @@ namespace Mutagen.Bethesda.Preprocessing
                                 // If complete overall, return
                                 if (inputStream.Complete) return;
 
-                                HeaderTranslation.GetNextRecordType(inputStream, out var grupLen);
+                                var groupMeta = inputStream.MetaData.GetGroup(inputStream);
+                                if (!groupMeta.IsGroup)
+                                {
+                                    throw new ArgumentException();
+                                }
 
                                 Dictionary<FormID, List<byte[]>> storage = new Dictionary<FormID, List<byte[]>>();
-                                using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(grupLen))
+                                using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(groupMeta.TotalLength))
                                 {
                                     inputStream.WriteTo(writer.BaseStream, meta.GroupConstants.HeaderLength);
                                     locatorStream.Position = grupLoc.Value;

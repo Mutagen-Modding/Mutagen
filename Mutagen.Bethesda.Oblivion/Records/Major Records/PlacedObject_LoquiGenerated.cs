@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x454D414E: // NAME
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x49435058: // XPCI
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Byte[] XPCIFluffParse))
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Byte[] FULLFluffParse))
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4E574F58: // XOWN
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
@@ -1336,13 +1336,13 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4B4E5258: // XRNK
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.FactionRank = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FactionRank);
                 }
                 case 0x424C4758: // XGLB
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
@@ -1373,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x47525458: // XTRG
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
@@ -1382,7 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x44455358: // XSED
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.SpeedTreeSeed = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.SpeedTreeSeed);
                 }
@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x47484358: // XCHG
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Single ChargeParse))
@@ -1425,19 +1425,19 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x544C4858: // XHLT
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Health = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Health);
                 }
                 case 0x4D434C58: // XLCM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.LevelModifier = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
                 }
                 case 0x4D545258: // XRTM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
@@ -1446,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x54434158: // XACT
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out PlacedObject.ActionFlag ActionFlagsParse))
@@ -1461,13 +1461,13 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x544E4358: // XCNT
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Count = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Count);
                 }
                 case 0x4B524D58: // XMRK
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.MapMarker);
@@ -1491,7 +1491,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E4F: // ONAM
                 {
                     PlacedObjectBinaryCreateTranslation.FillBinaryOpenByDefaultCustomPublic(
-                        frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);
@@ -1499,7 +1499,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x44475258: // XRGD
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Byte[] RagdollDataParse))
@@ -1514,7 +1514,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4C435358: // XSCL
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Single ScaleParse))
@@ -1529,7 +1529,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4C4F5358: // XSOL
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
@@ -1538,7 +1538,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (!dataFrame.Complete)
                     {

@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4C4C5546: // FULL
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,

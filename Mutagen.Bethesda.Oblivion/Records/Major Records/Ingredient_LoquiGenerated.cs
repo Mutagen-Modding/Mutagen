@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4C4C5546: // FULL
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x49524353: // SCRI
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Single WeightParse))
@@ -750,7 +750,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x54494E45: // ENIT
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (!dataFrame.Complete)
                     {
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: Ingredient_Registration.EFID_HEADER,
                         item: item.Effects,
                         fieldIndex: (int)Ingredient_FieldIndex.Effects,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out Effect listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

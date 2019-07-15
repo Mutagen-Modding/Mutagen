@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4C4C5546: // FULL
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -582,7 +582,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x49524353: // SCRI
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E4D: // MNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Byte[] MarkerFlagsParse))

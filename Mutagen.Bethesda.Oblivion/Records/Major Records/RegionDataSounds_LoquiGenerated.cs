@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x444D4452: // RDMD
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (EnumBinaryTranslation<MusicType>.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out MusicType MusicTypeParse))
@@ -475,12 +475,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x44534452: // RDSD
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Sounds,
                         fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out RegionSound listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

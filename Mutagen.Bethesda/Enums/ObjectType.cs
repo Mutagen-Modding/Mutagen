@@ -16,25 +16,3 @@ namespace Mutagen.Bethesda
         Mod
     }
 }
-
-namespace System
-{
-    public static class ObjectTypeExt
-    {
-        public static sbyte GetOffset(this ObjectType objType, GameMode mode)
-        {
-            switch (objType)
-            {
-                case ObjectType.Subrecord:
-                    return Constants.SUBRECORD_HEADER_OFFSET;
-                case ObjectType.Record:
-                    return MetaDataConstants.Get(mode).MajorConstants.LengthAfterLength;
-                case ObjectType.Group:
-                    return Constants.GRUP_HEADER_OFFSET;
-                case ObjectType.Mod:
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-    }
-}

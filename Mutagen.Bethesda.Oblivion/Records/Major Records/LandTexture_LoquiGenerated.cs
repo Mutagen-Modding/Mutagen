@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4E4F4349: // ICON
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.TextureSpecularExponent = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.TextureSpecularExponent);
                 }
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: LandTexture_Registration.GNAM_HEADER,
                         masterReferences: masterReferences,
                         item: item.PotentialGrass,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.PotentialGrass);
                 }

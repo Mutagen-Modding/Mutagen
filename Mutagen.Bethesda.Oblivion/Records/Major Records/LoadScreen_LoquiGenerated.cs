@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4E4F4349: // ICON
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x43534544: // DESC
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: LoadScreen_Registration.LNAM_HEADER,
                         item: item.Locations,
                         fieldIndex: (int)LoadScreen_FieldIndex.Locations,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out LoadScreenLocation listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

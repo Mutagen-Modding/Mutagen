@@ -562,13 +562,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x444C564C: // LVLD
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.ChanceNone = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.ChanceNone);
                 }
                 case 0x464C564C: // LVLF
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out LeveledFlag FlagsParse))
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: LeveledCreature_Registration.LVLO_HEADER,
                         item: item.Entries,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Entries,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out LeveledEntry<NPCSpawn> listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x49524353: // SCRI
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,

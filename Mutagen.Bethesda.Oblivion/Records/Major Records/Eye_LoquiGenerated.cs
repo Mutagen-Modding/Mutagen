@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4C4C5546: // FULL
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -529,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (EnumBinaryTranslation<Eye.Flag>.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Eye.Flag FlagsParse))

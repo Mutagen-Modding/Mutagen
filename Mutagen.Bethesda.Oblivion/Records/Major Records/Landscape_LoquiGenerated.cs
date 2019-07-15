@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x41544144: // DATA
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Byte[] UnknownParse))
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4C4D4E56: // VNML
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Byte[] VertexNormalsParse))
@@ -660,7 +660,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x54474856: // VHGT
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Byte[] VertexHeightMapParse))
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x524C4356: // VCLR
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Byte[] VertexColorsParse))
@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
                         item: item.Layers,
                         fieldIndex: (int)Landscape_FieldIndex.Layers,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, RecordType header, out BaseLayer listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -722,12 +722,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x58455456: // VTEX
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<LandTexture>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Textures,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
                 }

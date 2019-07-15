@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4D414E43: // CNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -1182,12 +1182,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x304D414E: // NAM0
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.WeatherTypes,
                         fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out WeatherType listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (!dataFrame.Complete)
                     {
@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E48: // HNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (!dataFrame.Complete)
                     {
@@ -1401,7 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (!dataFrame.Complete)
                     {
@@ -1447,7 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: Weather_Registration.SNAM_HEADER,
                         item: item.Sounds,
                         fieldIndex: (int)Weather_FieldIndex.Sounds,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out WeatherSound listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

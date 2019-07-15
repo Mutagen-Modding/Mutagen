@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                         item: item.Conditions,
                         fieldIndex: (int)IdleAnimation_FieldIndex.Conditions,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out Condition listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -582,7 +582,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E41: // ANAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (EnumBinaryTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out IdleAnimation.AnimationGroupSectionEnum AnimationGroupSectionParse))
@@ -597,12 +597,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<IdleAnimation>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.RelatedIdleAnimations,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
                 }

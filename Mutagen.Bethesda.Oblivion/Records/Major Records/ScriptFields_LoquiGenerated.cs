@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x44484353: // SCHD
                 {
                     ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustomPublic(
-                        frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);
@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x41444353: // SCDA
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.CompiledScript) return TryGet<int?>.Failure;
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Byte[] CompiledScriptParse))
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x58544353: // SCTX
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.SourceCode) return TryGet<int?>.Failure;
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: ScriptFields_Registration.SLSD_HEADER,
                         item: item.LocalVariables,
                         fieldIndex: (int)ScriptFields_FieldIndex.LocalVariables,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out LocalVariable listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
                         item: item.References,
                         fieldIndex: (int)ScriptFields_FieldIndex.References,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, RecordType header, out ScriptReference listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

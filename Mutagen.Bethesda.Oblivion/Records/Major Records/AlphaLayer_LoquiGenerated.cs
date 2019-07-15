@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x54585456: // VTXT
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Byte[] AlphaLayerDataParse))

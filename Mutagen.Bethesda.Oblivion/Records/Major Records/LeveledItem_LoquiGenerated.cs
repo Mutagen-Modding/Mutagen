@@ -534,13 +534,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x444C564C: // LVLD
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.ChanceNone = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
                 }
                 case 0x464C564C: // LVLF
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out LeveledFlag FlagsParse))
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: LeveledItem_Registration.LVLO_HEADER,
                         item: item.Entries,
                         fieldIndex: (int)LeveledItem_FieldIndex.Entries,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out LeveledEntry<ItemAbstract> listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

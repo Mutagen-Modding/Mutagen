@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda
                 case 0x5453414D: // MAST
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out ModKey MasterParse))
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.FileSize = frame.ReadUInt64();
                     return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
                 }

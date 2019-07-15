@@ -8,27 +8,41 @@ namespace Mutagen.Bethesda.Binary
 {
     public interface IRecordConstants
     {
+        GameMode GameMode { get; }
+        ObjectType ObjectType { get; }
         sbyte HeaderLength { get; }
         sbyte LengthLength { get; }
         sbyte LengthAfterLength { get; }
+        sbyte LengthAfterType { get; }
         sbyte TypeAndLengthLength { get; }
+        bool HeaderIncludedInLength { get; }
     }
 
     public class RecordConstants : IRecordConstants
     {
+        public ObjectType ObjectType { get; }
+        public GameMode GameMode { get; }
         public sbyte HeaderLength { get; }
         public sbyte LengthLength { get; }
         public sbyte LengthAfterLength { get; }
+        public sbyte LengthAfterType { get; }
         public sbyte TypeAndLengthLength { get; }
+        public bool HeaderIncludedInLength { get; }
 
         public RecordConstants(
+            GameMode gameMode,
+            ObjectType type,
             sbyte headerLength,
             sbyte lengthLength)
         {
+            this.GameMode = gameMode;
+            this.ObjectType = type;
             this.HeaderLength = headerLength;
             this.LengthLength = lengthLength;
             this.LengthAfterLength = (sbyte)(this.HeaderLength - Constants.HEADER_LENGTH - this.LengthLength);
+            this.LengthAfterType = (sbyte)(this.HeaderLength - Constants.HEADER_LENGTH);
             this.TypeAndLengthLength = (sbyte)(Constants.HEADER_LENGTH + this.LengthLength);
+            this.HeaderIncludedInLength = type == ObjectType.Group;
         }
     }
 
@@ -48,12 +62,18 @@ namespace Mutagen.Bethesda.Binary
             ModHeaderLength = 20,
             ModHeaderFluffLength = 12,
             GroupConstants = new RecordConstants(
+                GameMode.Oblivion,
+                ObjectType.Group,
                 headerLength: 20,
                 lengthLength: 4),
             MajorConstants = new RecordConstants(
+                GameMode.Oblivion,
+                ObjectType.Record,
                 headerLength: 20,
                 lengthLength: 4),
             SubConstants = new RecordConstants(
+                GameMode.Oblivion,
+                ObjectType.Subrecord,
                 headerLength: 6,
                 lengthLength: 2)
         };
@@ -64,12 +84,18 @@ namespace Mutagen.Bethesda.Binary
             ModHeaderLength = 24,
             ModHeaderFluffLength = 16,
             GroupConstants = new RecordConstants(
+                GameMode.Skyrim,
+                ObjectType.Group,
                 headerLength: 24,
                 lengthLength: 4),
             MajorConstants = new RecordConstants(
+                GameMode.Skyrim,
+                ObjectType.Record,
                 headerLength: 24,
                 lengthLength: 4),
             SubConstants = new RecordConstants(
+                GameMode.Skyrim,
+                ObjectType.Subrecord,
                 headerLength: 6,
                 lengthLength: 2)
         };
@@ -86,6 +112,22 @@ namespace Mutagen.Bethesda.Binary
         public SubRecordMeta SubRecord(ReadOnlySpan<byte> span) => new SubRecordMeta(this, span);
         public SubRecordMeta GetSubRecord(IMutagenReadStream stream) => new SubRecordMeta(this, stream.GetSpan(this.SubConstants.HeaderLength));
         public SubRecordMeta ReadSubRecord(IMutagenReadStream stream) => new SubRecordMeta(this, stream.ReadSpan(this.SubConstants.HeaderLength));
+
+        public IRecordConstants Constants(ObjectType type)
+        {
+            switch (type)
+            {
+                case ObjectType.Subrecord:
+                    return SubConstants;
+                case ObjectType.Record:
+                    return MajorConstants;
+                case ObjectType.Group:
+                    return GroupConstants;
+                case ObjectType.Mod:
+                default:
+                    throw new NotImplementedException();
+            }
+        }
 
         public static MetaDataConstants Get(GameMode mode)
         {
@@ -147,6 +189,7 @@ namespace Mutagen.Bethesda.Binary
         public long TotalLength => this.RecordLength;
         public bool IsGroup => this.RecordType == Constants.GRUP;
         public uint ContentLength => checked((uint)(this.TotalLength - this.HeaderLength));
+        public int TypeAndLengthLength => meta.GroupConstants.TypeAndLengthLength;
     }
 
     public ref struct MajorRecordMeta

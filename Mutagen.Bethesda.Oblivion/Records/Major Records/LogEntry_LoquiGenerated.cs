@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x54445351: // QSDT
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (EnumBinaryTranslation<LogEntry.Flag>.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out LogEntry.Flag FlagsParse))
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                         item: item.Conditions,
                         fieldIndex: (int)LogEntry_FieldIndex.Conditions,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out Condition listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E43: // CNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,

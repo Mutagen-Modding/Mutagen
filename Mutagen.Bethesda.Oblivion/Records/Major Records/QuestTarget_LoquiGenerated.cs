@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x41545351: // QSTA
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (!dataFrame.Complete)
                     {
@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                         item: item.Conditions,
                         fieldIndex: (int)QuestTarget_FieldIndex.Conditions,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out Condition listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

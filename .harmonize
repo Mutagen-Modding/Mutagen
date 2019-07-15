@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>0164ede0ed8629ed18372c237ec34342ae18d9d1</Sha>
+         <Sha>aee873340d2e4f94850f4fe4edb5d1866ec567d8</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>06-29-2019 21:58:00</CommitDate>
-         <Description>Some has been set covariance</Description>
+         <CommitDate>07-05-2019 18:46:07</CommitDate>
+         <Description>HashHelper for spans</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>d039083ab50d91fd4f1efb40df68858d54797b49</Sha>
+         <Sha>f1a4e9966d79a866072fb5499b788854b842eafd</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>06-29-2019 23:55:44</CommitDate>
-         <Description>Generate in mixin for modules</Description>
+         <CommitDate>07-02-2019 18:23:04</CommitDate>
+         <Description>Convenience functions for generating loqui getter calls to common</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

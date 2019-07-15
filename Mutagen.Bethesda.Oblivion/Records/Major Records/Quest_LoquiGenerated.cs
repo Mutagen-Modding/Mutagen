@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x49524353: // SCRI
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (!dataFrame.Complete)
                     {
@@ -724,7 +724,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                         item: item.Conditions,
                         fieldIndex: (int)Quest_FieldIndex.Conditions,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out Condition listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -743,7 +743,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: Quest_Registration.INDX_HEADER,
                         item: item.Stages,
                         fieldIndex: (int)Quest_FieldIndex.Stages,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out QuestStage listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: Quest_Registration.QSTA_HEADER,
                         item: item.Targets,
                         fieldIndex: (int)Quest_FieldIndex.Targets,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out QuestTarget listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

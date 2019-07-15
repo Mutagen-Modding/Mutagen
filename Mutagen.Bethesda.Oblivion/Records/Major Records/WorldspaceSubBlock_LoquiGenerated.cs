@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: WorldspaceSubBlock_Registration.CELL_HEADER,
                         item: item.Items,
                         fieldIndex: (int)WorldspaceSubBlock_FieldIndex.Items,
-                        lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.MajorConstants.LengthLength,
                         errorMask: errorMask,
                         transl: async (MutagenFrame r, ErrorMaskBuilder listErrMask) =>
                         {
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 default:
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + Mutagen.Bethesda.Constants.RECORD_LENGTH;
+                    frame.Position += contentLength + frame.MetaData.MajorConstants.HeaderLength;
                     return TryGet<int?>.Succeed(null);
             }
         }

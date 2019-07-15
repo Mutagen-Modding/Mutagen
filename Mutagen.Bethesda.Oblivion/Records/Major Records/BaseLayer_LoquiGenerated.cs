@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x54585442: // BTXT
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.LayerNumber) return TryGet<int?>.Failure;
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (!dataFrame.Complete)
                     {

@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x58444E49: // INDX
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Stage = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
                 }
@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: LogEntry_Registration.TriggeringRecordTypes,
                         item: item.LogEntries,
                         fieldIndex: (int)QuestStage_FieldIndex.LogEntries,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out LogEntry listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

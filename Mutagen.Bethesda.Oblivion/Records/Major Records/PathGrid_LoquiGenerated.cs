@@ -529,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x41544144: // DATA
                 {
                     PathGridBinaryCreateTranslation.FillBinaryPointToPointConnectionsCustomPublic(
-                        frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);
@@ -541,12 +541,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x49524750: // PGRI
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.InterCellConnections,
                         fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out InterCellPoint listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: PathGrid_Registration.PGRL_HEADER,
                         item: item.PointToReferenceMappings,
                         fieldIndex: (int)PathGrid_FieldIndex.PointToReferenceMappings,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out PointToReferenceMapping listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

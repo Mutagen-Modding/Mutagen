@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 item: obj.SubCells,
                                 triggeringRecord: Worldspace_Registration.GRUP_HEADER,
                                 fieldIndex: (int)Worldspace_FieldIndex.SubCells,
-                                lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,
+                                lengthLength: frame.MetaData.MajorConstants.LengthLength,
                                 errorMask: errorMask,
                                 transl: (MutagenFrame r, ErrorMaskBuilder subErrorMask) =>
                                 {

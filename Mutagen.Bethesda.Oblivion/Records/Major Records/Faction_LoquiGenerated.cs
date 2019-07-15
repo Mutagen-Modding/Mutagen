@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4C4C5546: // FULL
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: Faction_Registration.XNAM_HEADER,
                         item: item.Relations,
                         fieldIndex: (int)Faction_FieldIndex.Relations,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out Relation listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Faction.FactionFlag FlagsParse))
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Single CrimeGoldMultiplierParse))
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: Rank_Registration.TriggeringRecordTypes,
                         item: item.Ranks,
                         fieldIndex: (int)Faction_FieldIndex.Ranks,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out Rank listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

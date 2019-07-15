@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case 0x56544C46: // FLTV
                 {
                     GlobalIntBinaryCreateTranslation.FillBinaryDataCustomPublic(
-                        frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

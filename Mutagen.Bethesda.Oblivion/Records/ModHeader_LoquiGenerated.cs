@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x5453464F: // OFST
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Byte[] TypeOffsetsParse))
@@ -642,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x454C4544: // DELE
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Byte[] DeletedParse))
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: ModHeader_Registration.MAST_HEADER,
                         item: item.MasterReferences,
                         fieldIndex: (int)ModHeader_FieldIndex.MasterReferences,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out MasterReference listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -708,13 +708,13 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.VestigialData = frame.ReadUInt64();
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.VestigialData);
                 }
                 default:
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += contentLength + frame.MetaData.SubConstants.HeaderLength;
                     return TryGet<int?>.Succeed(null);
             }
         }

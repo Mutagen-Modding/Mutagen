@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x44534C53: // SLSD
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Fluff2) return TryGet<int?>.Failure;
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (!dataFrame.Complete)
                     {
@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x52564353: // SCVR
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,

@@ -412,12 +412,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x544F4452: // RDOT
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionDataObject>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Objects,
                         fieldIndex: (int)RegionDataObjects_FieldIndex.Objects,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out RegionDataObject listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

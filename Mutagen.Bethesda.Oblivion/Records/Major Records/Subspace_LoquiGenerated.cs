@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4D414E44: // DNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (!dataFrame.Complete)
                     {

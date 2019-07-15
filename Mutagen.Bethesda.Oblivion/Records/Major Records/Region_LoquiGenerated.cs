@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4E4F4349: // ICON
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         parseWhole: true,
@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x524C4352: // RCLR
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         extraByte: true,
@@ -800,7 +800,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E57: // WNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
@@ -815,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
                         item: item.Areas,
                         fieldIndex: (int)Region_FieldIndex.Areas,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out RegionArea listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x54414452: // RDAT
                 {
                     RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustomPublic(
-                        frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

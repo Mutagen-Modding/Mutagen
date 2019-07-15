@@ -412,12 +412,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x54574452: // RDWT
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Weathers,
                         fieldIndex: (int)RegionDataWeather_FieldIndex.Weathers,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out WeatherChance listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

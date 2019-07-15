@@ -20,19 +20,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         //Upgrade to spans
         static partial void FillBinaryPointsCustom(MutagenFrame frame, Road item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
-            var nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len);
-            if (!nextRec.Equals(PGRP))
+            var subMeta = frame.MetaData.ReadSubRecord(frame);
+            if (subMeta.RecordType != PGRP)
             {
-                frame.Reader.Position -= Mutagen.Bethesda.Constants.RECORD_LENGTH;
+                frame.Reader.Position -= subMeta.HeaderLength;
                 return;
             }
-            var pointBytes = frame.Reader.ReadSpan(len);
+            var pointBytes = frame.Reader.ReadSpan(subMeta.RecordLength);
 
-            nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out len);
-            switch (nextRec.TypeInt)
+            subMeta = frame.MetaData.ReadSubRecord(frame);
+            switch (subMeta.RecordType.TypeInt)
             {
                 case 0x52524750: // "PGRR":
-                    var connBytes = frame.Reader.ReadSpan(len);
+                    var connBytes = frame.Reader.ReadSpan(subMeta.RecordLength);
                     var connFloats = connBytes.AsFloatSpan();
                     int numPts = pointBytes.Length / POINT_LEN;
                     RoadPoint[] points = new RoadPoint[numPts];
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    frame.Reader.Position -= Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Reader.Position -= subMeta.HeaderLength;
                     while (pointBytes.Length > 0)
                     {
                         item.Points.Add(

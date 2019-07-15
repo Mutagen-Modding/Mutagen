@@ -75,15 +75,13 @@ namespace Mutagen.Bethesda
             }
             while (!targetFrame.Complete)
             {
-                var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                    targetFrame.Reader,
-                    contentLength: out var contentLength);
-                var finalPos = targetFrame.Position + contentLength + Constants.SUBRECORD_LENGTH;
+                var subMeta = frame.MetaData.GetSubRecord(targetFrame);
+                var finalPos = targetFrame.Position + subMeta.TotalLength;
                 var parsed = fillTyped(
                     record: record,
                     frame: targetFrame,
-                    nextRecordType: nextRecordType,
-                    contentLength: contentLength,
+                    nextRecordType: subMeta.RecordType,
+                    contentLength: subMeta.RecordLength,
                     masterReferences: masterReferences,
                     errorMask: errorMask,
                     recordTypeConverter: recordTypeConverter);
@@ -145,15 +143,13 @@ namespace Mutagen.Bethesda
                     errorMask: errorMask);
                 while (!frame.Complete)
                 {
-                    var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                        reader: frame.Reader,
-                        contentLength: out var contentLength);
-                    var finalPos = frame.Position + contentLength + Constants.SUBRECORD_LENGTH;
+                    var subMeta = frame.MetaData.GetSubRecord(frame);
+                    var finalPos = frame.Position + subMeta.TotalLength;
                     var parsed = fillTyped(
                         record: record,
                         frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
+                        nextRecordType: subMeta.RecordType,
+                        contentLength: subMeta.RecordLength,
                         masterReferences: masterReferences,
                         errorMask: errorMask,
                         recordTypeConverter: recordTypeConverter);
@@ -225,16 +221,14 @@ namespace Mutagen.Bethesda
                 int? lastParsed = null;
                 while (!frame.Complete)
                 {
-                    var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                        reader: frame.Reader,
-                        contentLength: out var contentLength);
-                    var finalPos = frame.Position + contentLength + Constants.SUBRECORD_LENGTH;
+                    var subMeta = frame.MetaData.GetSubRecord(frame);
+                    var finalPos = frame.Position + subMeta.TotalLength;
                     var parsed = fillTyped(
                         record: record,
                         frame: frame,
                         lastParsed: lastParsed,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
+                        nextRecordType: subMeta.RecordType,
+                        contentLength: subMeta.RecordLength,
                         masterReferences: masterReferences,
                         errorMask: errorMask,
                         recordTypeConverter: recordTypeConverter);
@@ -269,16 +263,13 @@ namespace Mutagen.Bethesda
         {
             try
             {
-                if (!HeaderTranslation.TryParse(
-                    frame,
-                    Group_Registration.GRUP_HEADER,
-                    out var grupLen,
-                    Constants.RECORD_LENGTHLENGTH))
+                var groupMeta = frame.MetaData.GetGroup(frame);
+                if (!groupMeta.IsGroup)
                 {
-                    throw new ArgumentException($"Expected header was not read in: {Group_Registration.GRUP_HEADER}");
+                    throw new ArgumentException($"Expected GRUP header was not read in: {frame.Position}");
                 }
-                var groupLen = checked((int)(grupLen - Constants.HEADER_LENGTH - Constants.RECORD_LENGTHLENGTH));
-                frame = frame.ReadAndReframe(groupLen);
+                frame.Position += groupMeta.TypeAndLengthLength;
+                frame = frame.ReadAndReframe(checked((int)(groupMeta.TotalLength - groupMeta.TypeAndLengthLength)));
 
                 fillStructs?.Invoke(
                     record: record,
@@ -431,7 +422,7 @@ namespace Mutagen.Bethesda
                 var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                     targetFrame.Reader,
                     contentLength: out var contentLength);
-                var finalPos = targetFrame.Position + contentLength + Constants.SUBRECORD_LENGTH;
+                var finalPos = targetFrame.Position + contentLength + frame.MetaData.SubConstants.HeaderLength;
                 var parsed = await fillTyped(
                     record: record,
                     frame: targetFrame,
@@ -501,7 +492,7 @@ namespace Mutagen.Bethesda
                     var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                         reader: frame.Reader,
                         contentLength: out var contentLength);
-                    var finalPos = frame.Position + contentLength + Constants.SUBRECORD_LENGTH;
+                    var finalPos = frame.Position + contentLength + frame.MetaData.SubConstants.HeaderLength;
                     var parsed = await fillTyped(
                         record: record,
                         frame: frame,
@@ -581,7 +572,7 @@ namespace Mutagen.Bethesda
                     var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                         reader: frame.Reader,
                         contentLength: out var contentLength);
-                    var finalPos = frame.Position + contentLength + Constants.SUBRECORD_LENGTH;
+                    var finalPos = frame.Position + contentLength + frame.MetaData.SubConstants.HeaderLength;
                     var parsed = await fillTyped(
                         record: record,
                         frame: frame,
@@ -630,11 +621,11 @@ namespace Mutagen.Bethesda
                     frame,
                     Group_Registration.GRUP_HEADER,
                     out var grupLen,
-                    Constants.RECORD_LENGTHLENGTH))
+                    frame.MetaData.GroupConstants.LengthLength))
                 {
                     throw new ArgumentException($"Expected header was not read in: {Group_Registration.GRUP_HEADER}");
                 }
-                var groupLen = checked((int)(grupLen - Constants.HEADER_LENGTH - Constants.RECORD_LENGTHLENGTH));
+                var groupLen = checked((int)(grupLen - frame.MetaData.GroupConstants.TypeAndLengthLength));
                 frame = frame.ReadAndReframe(groupLen);
 
                 return await Task.Run(async () =>

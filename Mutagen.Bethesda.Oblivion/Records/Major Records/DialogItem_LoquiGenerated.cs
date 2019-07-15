@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x41544144: // DATA
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (!dataFrame.Complete)
                     {
@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x49545351: // QSTI
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: DialogItem_Registration.NAME_HEADER,
                         masterReferences: masterReferences,
                         item: item.Topics,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
                 }
@@ -789,7 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: DialogItem_Registration.TRDT_HEADER,
                         item: item.Responses,
                         fieldIndex: (int)DialogItem_FieldIndex.Responses,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out DialogResponse listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -809,7 +809,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                         item: item.Conditions,
                         fieldIndex: (int)DialogItem_FieldIndex.Conditions,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out Condition listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
@@ -828,7 +828,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: DialogItem_Registration.TCLT_HEADER,
                         masterReferences: masterReferences,
                         item: item.Choices,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
                 }
@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: DialogItem_Registration.TCLF_HEADER,
                         masterReferences: masterReferences,
                         item: item.LinkFrom,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
                 }

@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x56544C46: // FLTV
                 {
-                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         item: out Single DataParse))

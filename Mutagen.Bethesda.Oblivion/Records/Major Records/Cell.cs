@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     return;
                 }
-                var subFrame = frame.SpawnWithLength(len - Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH);
+                var subFrame = frame.SpawnWithLength(len - frame.MetaData.MajorConstants.HeaderLength);
                 while (!subFrame.Complete)
                 {
                     var persistGroup = HeaderTranslation.GetNextType(

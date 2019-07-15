@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 1413764163: // CTDT
                     return CustomRecordTypeTrigger(
-                        frame: frame.SpawnWithLength(customLen + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH),
+                        frame: frame.SpawnWithLength(customLen + frame.MetaData.SubConstants.HeaderLength),
                         recordType: nextRecord,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,

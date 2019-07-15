@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!HeaderTranslation.TryGetRecordType(frame.Reader, lengthLength, triggeringRecord)) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 if (transl(frame, out var subItem))
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Binary
 
                 if (frame.Position == startingPos)
                 {
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
                 }
             }
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Binary
                         if (!HeaderTranslation.TryGetRecordType(frame.Reader, lengthLength, triggeringRecord)) break;
                         if (!IsLoqui)
                         {
-                            frame.Position += Constants.SUBRECORD_LENGTH;
+                            frame.Position += frame.MetaData.SubConstants.HeaderLength;
                         }
                         var startingPos = frame.Position;
                         if (transl(frame, out var subItem, errorMask))
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Binary
 
                         if (frame.Position == startingPos)
                         {
-                            frame.Position += Constants.SUBRECORD_LENGTH;
+                            frame.Position += frame.MetaData.SubConstants.HeaderLength;
                             throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
                         }
                     }
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Binary
                         if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                         if (!IsLoqui)
                         {
-                            frame.Position += Constants.SUBRECORD_LENGTH;
+                            frame.Position += frame.MetaData.SubConstants.HeaderLength;
                         }
                         var startingPos = frame.Position;
                         if (transl(frame, nextRecord, out var subIitem, errorMask))
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 if (transl(frame, nextRecord, out var subIitem))
@@ -815,7 +815,7 @@ namespace Mutagen.Bethesda.Binary
                         if (!HeaderTranslation.TryGetRecordType(frame.Reader, lengthLength, triggeringRecord)) break;
                         if (!IsLoqui)
                         {
-                            frame.Position += Constants.SUBRECORD_LENGTH;
+                            frame.Position += frame.MetaData.SubConstants.HeaderLength;
                         }
                         var startingPos = frame.Position;
                         var item = await transl(frame, errorMask).ConfigureAwait(false);
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.Binary
 
                         if (frame.Position == startingPos)
                         {
-                            frame.Position += Constants.SUBRECORD_LENGTH;
+                            frame.Position += frame.MetaData.SubConstants.HeaderLength;
                             throw new ArgumentException($"Parsed item on the list consumed no data: {item.Value}");
                         }
                     }

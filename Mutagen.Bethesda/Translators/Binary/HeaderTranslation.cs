@@ -97,32 +97,18 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static long ParseSubrecord(
-            IBinaryReadStream reader,
+            IMutagenReadStream reader,
             RecordType expectedHeader)
         {
             if (!TryParse(
                 reader,
                 expectedHeader,
                 out var contentLength,
-                Constants.SUBRECORD_LENGTHLENGTH))
+                reader.MetaData.SubConstants.LengthLength))
             {
                 throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
             }
             return reader.Position + contentLength;
-        }
-
-        public static long ParseGroup(
-            IBinaryReadStream reader)
-        {
-            if (!TryParse(
-                reader,
-                GRUP_HEADER,
-                out var contentLength,
-                Constants.RECORD_LENGTHLENGTH))
-            {
-                throw new ArgumentException($"Expected header was not read in: {GRUP_HEADER}");
-            }
-            return reader.Position + contentLength - Constants.HEADER_LENGTH - Constants.RECORD_LENGTHLENGTH;
         }
 
         public static bool TryParseRecordType(
@@ -175,13 +161,13 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static long GetSubrecord(
-            IBinaryReadStream reader,
+            IMutagenReadStream reader,
             RecordType expectedHeader)
         {
             var ret = ParseSubrecord(
                 reader,
                 expectedHeader);
-            reader.Position -= Constants.SUBRECORD_LENGTH;
+            reader.Position -= reader.MetaData.SubConstants.HeaderLength;
             return ret;
         }
 
@@ -198,17 +184,6 @@ namespace Mutagen.Bethesda.Binary
         {
             var header = reader.GetInt32();
             var ret = new RecordType(header);
-            ret = recordTypeConverter.ConvertToStandard(ret);
-            return ret;
-        }
-
-        public static RecordType GetNextRecordType(
-            IBinaryReadStream reader,
-            out int contentLength,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            var ret = new RecordType(reader.GetInt32());
-            contentLength = GetContentLength(reader, Constants.RECORD_LENGTHLENGTH, Constants.HEADER_LENGTH);
             ret = recordTypeConverter.ConvertToStandard(ret);
             return ret;
         }
@@ -259,36 +234,23 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static RecordType ReadNextRecordType(
-            IBinaryReadStream reader,
+            IMutagenReadStream reader,
             out int contentLength)
         {
             return ReadNextRecordType(
                 reader,
-                Constants.RECORD_LENGTHLENGTH,
+                reader.MetaData.MajorConstants.LengthLength,
                 out contentLength);
         }
 
         public static RecordType ReadNextSubRecordType(
-            IBinaryReadStream reader,
+            IMutagenReadStream reader,
             out int contentLength)
         {
             return ReadNextRecordType(
                 reader,
-                Constants.SUBRECORD_LENGTHLENGTH,
+                reader.MetaData.SubConstants.LengthLength,
                 out contentLength);
-        }
-
-        public static RecordType ReadNextType(
-            IBinaryReadStream reader,
-            out int contentLength)
-        {
-            var ret = ReadNextRecordType(reader);
-            contentLength = ReadContentLength(reader, Constants.RECORD_LENGTHLENGTH);
-            if (ret.Equals(GRUP_HEADER))
-            {
-                return ReadNextRecordType(reader);
-            }
-            return ret;
         }
 
         public static RecordType GetNextType(
@@ -310,20 +272,20 @@ namespace Mutagen.Bethesda.Binary
             }
             else
             {
-                finalPos = reader.Position + Constants.RECORD_META_LENGTH + Constants.HEADER_LENGTH + contentLength;
+                finalPos = reader.Position + reader.MetaData.MajorConstants.HeaderLength + contentLength;
             }
             return ret;
         }
 
         public static RecordType GetNextSubRecordType(
-            IBinaryReadStream reader,
+            IMutagenReadStream reader,
             out int contentLength,
             int offset = 0)
         {
             var ret = new RecordType(reader.GetInt32(offset));
             contentLength = GetContentLength(
                 reader: reader,
-                lengthLength: Constants.SUBRECORD_LENGTHLENGTH,
+                lengthLength: reader.MetaData.SubConstants.LengthLength,
                 offset: Constants.HEADER_LENGTH + offset);
             return ret;
         }
