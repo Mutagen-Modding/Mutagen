@@ -2162,6 +2162,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ScriptMetaSummaryBinaryWrapper : IScriptMetaSummaryGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ScriptMetaSummary_Registration.Instance;
+        public static ScriptMetaSummary_Registration Registration => ScriptMetaSummary_Registration.Instance;
+        protected object CommonInstance => ScriptMetaSummaryCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptMetaSummaryGetter)rhs, include);
+
+        protected object XmlWriteTranslator => ScriptMetaSummaryXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => ScriptMetaSummaryBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(0, 4).ToArray();
+        public UInt32 RefCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4));
+        public Int32 CompiledSize => GetCompiledSizeCustom(span: _data.Slice(8));
+        public UInt32 VariableCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(12, 4));
+        public ScriptFields.ScriptType Type => (ScriptFields.ScriptType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(16, 4));
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ScriptMetaSummaryBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static ScriptMetaSummaryBinaryWrapper ScriptMetaSummaryFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new ScriptMetaSummaryBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x14 + package.Meta.SubConstants.HeaderLength;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

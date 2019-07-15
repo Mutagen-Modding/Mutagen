@@ -1576,6 +1576,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ScriptObjectReferenceBinaryWrapper :
+        ScriptReferenceBinaryWrapper,
+        IScriptObjectReferenceGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ScriptObjectReference_Registration.Instance;
+        public new static ScriptObjectReference_Registration Registration => ScriptObjectReference_Registration.Instance;
+        protected override object CommonInstance => ScriptObjectReferenceCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptObjectReferenceGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => ScriptObjectReferenceXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ScriptObjectReferenceBinaryWriteTranslation.Instance;
+
+        #region Reference
+        private int? _ReferenceLocation;
+        public bool Reference_IsSet => _ReferenceLocation.HasValue;
+        public IFormIDLinkGetter<IOblivionMajorRecordInternalGetter> Reference_Property => _ReferenceLocation.HasValue ? new FormIDLink<OblivionMajorRecord>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ReferenceLocation.Value, _package.Meta)))) : default;
+        public IOblivionMajorRecordInternalGetter Reference => default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ScriptObjectReferenceBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static ScriptObjectReferenceBinaryWrapper ScriptObjectReferenceFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new ScriptObjectReferenceBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4F524353: // SCRO
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptObjectReference_FieldIndex.Reference) return TryGet<int?>.Failure;
+                    _ReferenceLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ScriptObjectReference_FieldIndex.Reference);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

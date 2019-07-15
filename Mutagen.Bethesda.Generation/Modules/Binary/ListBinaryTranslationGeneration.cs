@@ -440,6 +440,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"stream.Position += {packageAccessor}.Meta.SubConstants.HeaderLength; // Skip marker");
             }
             var subData = list.SubTypeGeneration.GetFieldData();
+            var subGenTypes = subData.GenerationTypes.ToList();
             ListBinaryType listBinaryType = GetListType(list, data, subData);
             var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
             string typeName;
@@ -466,7 +467,41 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add("package: _package");
                                 args.AddPassArg("offset");
                                 args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
-                                args.Add($"factory:  {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory");
+                                if (subGenTypes.Count <= 1)
+                                {
+                                    args.Add($"factory:  {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory");
+                                }
+                                else
+                                {
+                                    args.Add((subFg) =>
+                                    {
+                                        subFg.AppendLine("factory: (s, r, p) =>");
+                                        using (new BraceWrapper(subFg))
+                                        {
+                                            subFg.AppendLine("switch (r.TypeInt)");
+                                            using (new BraceWrapper(subFg))
+                                            {
+                                                foreach (var item in subGenTypes)
+                                                {
+                                                    foreach (var trigger in item.Key)
+                                                    {
+                                                        subFg.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
+                                                    }
+                                                    using (new DepthWrapper(subFg))
+                                                    {
+                                                        LoquiType specificLoqui = item.Value as LoquiType;
+                                                        subFg.AppendLine($"return {this.Module.BinaryWrapperClassName(specificLoqui.TargetObjectGeneration)}.{specificLoqui.TargetObjectGeneration.Name}Factory(s, p);");
+                                                    }
+                                                }
+                                                subFg.AppendLine("default:");
+                                                using (new DepthWrapper(subFg))
+                                                {
+                                                    subFg.AppendLine("throw new NotImplementedException();");
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
                             }
                         }
                         else
@@ -522,7 +557,41 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
                         args.Add($"package: _package");
                         args.Add($"itemLength: {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}");
-                        args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
+                        if (subGenTypes.Count <= 1)
+                        {
+                            args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
+                        }
+                        else
+                        {
+                            args.Add((subFg) =>
+                            {
+                                subFg.AppendLine("getter: (s, r, p) =>");
+                                using (new BraceWrapper(subFg))
+                                {
+                                    subFg.AppendLine("switch (r.TypeInt)");
+                                    using (new BraceWrapper(subFg))
+                                    {
+                                        foreach (var item in subGenTypes)
+                                        {
+                                            foreach (var trigger in item.Key)
+                                            {
+                                                subFg.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
+                                            }
+                                            using (new DepthWrapper(subFg))
+                                            {
+                                                LoquiType specificLoqui = item.Value as LoquiType;
+                                                subFg.AppendLine($"return {subGen.GenerateForTypicalWrapper(objGen, specificLoqui, "s", "p")}");
+                                            }
+                                        }
+                                        subFg.AppendLine("default:");
+                                        using (new DepthWrapper(subFg))
+                                        {
+                                            subFg.AppendLine("throw new NotImplementedException();");
+                                        }
+                                    }
+                                }
+                            });
+                        }
                     }
                     fg.AppendLine("stream.Position += subLen;");
                     break;

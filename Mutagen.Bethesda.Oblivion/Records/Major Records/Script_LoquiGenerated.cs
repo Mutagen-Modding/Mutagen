@@ -1848,6 +1848,88 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ScriptBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IScriptInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Script_Registration.Instance;
+        public new static Script_Registration Registration => Script_Registration.Instance;
+        protected override object CommonInstance => ScriptCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => ScriptXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ScriptBinaryWriteTranslation.Instance;
+
+        #region Fields
+        private IScriptFieldsGetter _Fields;
+        public IScriptFieldsGetter Fields => _Fields ?? new ScriptFields();
+        public bool Fields_IsSet => Fields != null;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ScriptBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static ScriptBinaryWrapper ScriptFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new ScriptBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x52484353: // SCHR
+                case 0x41444353: // SCDA
+                case 0x58544353: // SCTX
+                case 0x44534C53: // SLSD
+                case 0x56524353: // SCRV
+                case 0x4F524353: // SCRO
+                {
+                    this._Fields = ScriptFieldsBinaryWrapper.ScriptFieldsFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)Script_FieldIndex.Fields);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

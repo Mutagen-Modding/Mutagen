@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,11 @@ namespace Mutagen.Bethesda.Oblivion
                     writer,
                     item.CompiledSize);
             }
+        }
+
+        public partial class ScriptMetaSummaryBinaryWrapper
+        {
+            public int GetCompiledSizeCustom(ReadOnlySpan<byte> span) => BinaryPrimitives.ReadInt32LittleEndian(span);
         }
     }
 }

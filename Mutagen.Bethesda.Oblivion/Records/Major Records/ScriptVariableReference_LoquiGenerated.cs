@@ -1578,6 +1578,75 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ScriptVariableReferenceBinaryWrapper :
+        ScriptReferenceBinaryWrapper,
+        IScriptVariableReferenceGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ScriptVariableReference_Registration.Instance;
+        public new static ScriptVariableReference_Registration Registration => ScriptVariableReference_Registration.Instance;
+        protected override object CommonInstance => ScriptVariableReferenceCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptVariableReferenceGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => ScriptVariableReferenceXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ScriptVariableReferenceBinaryWriteTranslation.Instance;
+
+        #region VariableIndex
+        private int? _VariableIndexLocation;
+        public bool VariableIndex_IsSet => _VariableIndexLocation.HasValue;
+        public Int32 VariableIndex => _VariableIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VariableIndexLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ScriptVariableReferenceBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static ScriptVariableReferenceBinaryWrapper ScriptVariableReferenceFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new ScriptVariableReferenceBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x56524353: // SCRV
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<int?>.Failure;
+                    _VariableIndexLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ScriptVariableReference_FieldIndex.VariableIndex);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

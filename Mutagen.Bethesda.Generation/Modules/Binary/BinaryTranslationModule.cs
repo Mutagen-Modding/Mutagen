@@ -1483,6 +1483,14 @@ namespace Mutagen.Bethesda.Generation
                 && obj.Name != "SkillRecord"
                 && obj.Name != "MagicEffect"
                 && obj.Name != "MagicEffectSubData"
+                && obj.Name != "Scripts"
+                && obj.Name != "ScriptFields"
+                && obj.Name != "ScriptMetaSummary"
+                && obj.Name != "LocalVariable"
+                && obj.Name != "Script"
+                && obj.Name != "ScriptReference"
+                && obj.Name != "ScriptVariableReference"
+                && obj.Name != "ScriptObjectReference"
                 ) return;
 
             var dataAccessor = new Accessor("_data");
@@ -1590,10 +1598,11 @@ namespace Mutagen.Bethesda.Generation
                         {
                             case BinaryGenerationType.Custom:
                                 CustomLogic.GenerateFillForWrapper(
-                                    fg,
-                                    field,
-                                    dataAccessor,
-                                    ref passedLength,
+                                    fg: fg,
+                                    objGen: obj,
+                                    field: field,
+                                    dataAccessor: dataAccessor,
+                                    passedLength: ref passedLength,
                                     doMasters: needsMasters);
                                 continue;
                             case BinaryGenerationType.DoNothing:
@@ -1624,6 +1633,7 @@ namespace Mutagen.Bethesda.Generation
                     switch (data.Binary)
                     {
                         case BinaryGenerationType.Normal:
+                        case BinaryGenerationType.Custom:
                             break;
                         default:
                             continue;
@@ -1927,7 +1937,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (field.Field.Name == "Scripts")
+                                if (field.Field.Name == "LandTextures")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)

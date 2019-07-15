@@ -2788,6 +2788,146 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ScriptFieldsBinaryWrapper : IScriptFieldsGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ScriptFields_Registration.Instance;
+        public static ScriptFields_Registration Registration => ScriptFields_Registration.Instance;
+        protected object CommonInstance => ScriptFieldsCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptFieldsGetter)rhs, include);
+
+        protected object XmlWriteTranslator => ScriptFieldsXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => ScriptFieldsBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region MetadataSummary
+        private IScriptMetaSummaryGetter _MetadataSummary;
+        public IScriptMetaSummaryGetter MetadataSummary => _MetadataSummary ?? new ScriptMetaSummary();
+        public bool MetadataSummary_IsSet => MetadataSummary != null;
+        #endregion
+        #region MetadataSummaryOld
+        private int? _MetadataSummaryOldLocation;
+        public bool MetadataSummaryOld_IsSet => _MetadataSummaryOldLocation.HasValue;
+        #endregion
+        #region CompiledScript
+        private int? _CompiledScriptLocation;
+        public bool CompiledScript_IsSet => _CompiledScriptLocation.HasValue;
+        public ReadOnlySpan<Byte> CompiledScript => _CompiledScriptLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _CompiledScriptLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region SourceCode
+        private int? _SourceCodeLocation;
+        public bool SourceCode_IsSet => _SourceCodeLocation.HasValue;
+        public String SourceCode => _SourceCodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _SourceCodeLocation.Value, _package.Meta)) : default;
+        #endregion
+        public IReadOnlySetList<ILocalVariableInternalGetter> LocalVariables { get; private set; } = EmptySetList<LocalVariableBinaryWrapper>.Instance;
+        public IReadOnlySetList<IScriptReferenceGetter> References { get; private set; } = EmptySetList<ScriptReferenceBinaryWrapper>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ScriptFieldsBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static ScriptFieldsBinaryWrapper ScriptFieldsFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new ScriptFieldsBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x52484353: // SCHR
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
+                    this._MetadataSummary = ScriptMetaSummaryBinaryWrapper.ScriptMetaSummaryFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
+                }
+                case 0x44484353: // SCHD
+                {
+                    _MetadataSummaryOldLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed(lastParsed);
+                }
+                case 0x41444353: // SCDA
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.CompiledScript) return TryGet<int?>.Failure;
+                    _CompiledScriptLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
+                }
+                case 0x58544353: // SCTX
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.SourceCode) return TryGet<int?>.Failure;
+                    _SourceCodeLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
+                }
+                case 0x44534C53: // SLSD
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.LocalVariables) return TryGet<int?>.Failure;
+                    this.LocalVariables = UtilityTranslation.ParseRepeatedTypelessSubrecord<LocalVariableBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        offset: offset,
+                        trigger: ScriptFields_Registration.SLSD_HEADER,
+                        factory:  LocalVariableBinaryWrapper.LocalVariableFactory);
+                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
+                }
+                case 0x56524353: // SCRV
+                case 0x4F524353: // SCRO
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.References) return TryGet<int?>.Failure;
+                    this.References = UtilityTranslation.ParseRepeatedTypelessSubrecord<ScriptReferenceBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        offset: offset,
+                        trigger: ScriptReference_Registration.TriggeringRecordTypes,
+                        factory: (s, r, p) =>
+                        {
+                            switch (r.TypeInt)
+                            {
+                                case 0x56524353: // SCRV
+                                    return ScriptVariableReferenceBinaryWrapper.ScriptVariableReferenceFactory(s, p);
+                                case 0x4F524353: // SCRO
+                                    return ScriptObjectReferenceBinaryWrapper.ScriptObjectReferenceFactory(s, p);
+                                default:
+                                    throw new NotImplementedException();
+                            }
+                        });
+                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.References);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

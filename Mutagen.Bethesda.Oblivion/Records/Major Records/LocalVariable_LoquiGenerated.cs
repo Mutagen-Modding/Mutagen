@@ -2420,6 +2420,105 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class LocalVariableBinaryWrapper : ILocalVariableInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
+        public static LocalVariable_Registration Registration => LocalVariable_Registration.Instance;
+        protected object CommonInstance => LocalVariableCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocalVariableInternalGetter)rhs, include);
+
+        protected object XmlWriteTranslator => LocalVariableXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => LocalVariableBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        private int? _SLSDLocation;
+        public LocalVariable.SLSDDataType SLSDDataTypeState { get; private set; }
+        #region Index
+        private int _IndexLocation => _SLSDLocation.Value + 0;
+        private bool _Index_IsSet => _SLSDLocation.HasValue;
+        public Int32 Index => _Index_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_IndexLocation, 4)) : default;
+        #endregion
+        #region Fluff
+        private int _FluffLocation => _SLSDLocation.Value + 4;
+        private bool _Fluff_IsSet => _SLSDLocation.HasValue;
+        public ReadOnlySpan<Byte> Fluff => _Fluff_IsSet ? _data.Span.Slice(_FluffLocation, 12).ToArray() : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _SLSDLocation.Value + 16;
+        private bool _Flags_IsSet => _SLSDLocation.HasValue;
+        public Script.LocalVariableFlag Flags => _Flags_IsSet ? (Script.LocalVariableFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
+        #endregion
+        #region Fluff2
+        private int _Fluff2Location => _SLSDLocation.Value + 20;
+        private bool _Fluff2_IsSet => _SLSDLocation.HasValue;
+        public ReadOnlySpan<Byte> Fluff2 => _Fluff2_IsSet ? _data.Span.Slice(_Fluff2Location, 4).ToArray() : default;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected LocalVariableBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static LocalVariableBinaryWrapper LocalVariableFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new LocalVariableBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x44534C53: // SLSD
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Fluff2) return TryGet<int?>.Failure;
+                    _SLSDLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.SLSDDataTypeState = LocalVariable.SLSDDataType.Has;
+                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Fluff2);
+                }
+                case 0x52564353: // SCVR
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Name);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

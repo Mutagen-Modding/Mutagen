@@ -222,6 +222,7 @@ namespace Mutagen.Bethesda.Generation
 
         public void GenerateFillForWrapper(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration field,
             Accessor dataAccessor,
             ref int passedLength,
@@ -230,6 +231,7 @@ namespace Mutagen.Bethesda.Generation
             var data = field.GetFieldData();
             string loc;
             string span;
+            var gen = this.Module.GetTypeGeneration(field.GetType());
             if (data.HasTrigger)
             {
                 fg.AppendLine($"private int? _{field.Name}Location;");
@@ -237,7 +239,8 @@ namespace Mutagen.Bethesda.Generation
                 loc = $"_{field.Name}Location.Value";
                 span = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, {loc}, _package.Meta)";
             }
-            else if (!data.Length.HasValue)
+            else if (!data.Length.HasValue
+                && !gen.ExpectedLength(objGen, field).HasValue)
             {
                 throw new ArgumentException("Custom logic without trigger needs to define expected length");
             }
@@ -257,7 +260,7 @@ namespace Mutagen.Bethesda.Generation
             }
             if (!data.HasTrigger)
             {
-                passedLength += data.Length.Value;
+                passedLength += data.Length ?? gen.ExpectedLength(objGen, field).Value;
             }
         }
 

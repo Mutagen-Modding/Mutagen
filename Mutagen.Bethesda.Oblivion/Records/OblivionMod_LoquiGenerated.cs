@@ -14607,6 +14607,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.MagicEffects);
                 }
+                case 0x54504353: // SCPT
+                {
+                    this._Scripts = GroupBinaryWrapper<IScriptInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Scripts);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }
