@@ -25,24 +25,21 @@ namespace Mutagen.Bethesda.Generation
         public override bool HasProperty => true;
         public override string TypeName(bool getter) =>  $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{LoquiType.TypeName(getter)}>";
         public override Type Type(bool getter) => typeof(FormID);
-        public string DirectTypeName
+        public string DirectTypeName(bool getter)
         {
-            get
+            string linkString;
+            switch (this.FormIDType)
             {
-                string linkString;
-                switch (this.FormIDType)
-                {
-                    case FormIDTypeEnum.Normal:
-                        linkString = "FormID";
-                        break;
-                    case FormIDTypeEnum.EDIDChars:
-                        linkString = "EDID";
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-                return $"{linkString}{(this.HasBeenSet ? "Set" : string.Empty)}Link<{LoquiType.TypeName(getter: false)}>";
+                case FormIDTypeEnum.Normal:
+                    linkString = "FormID";
+                    break;
+                case FormIDTypeEnum.EDIDChars:
+                    linkString = "EDID";
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
+            return $"{linkString}{(this.HasBeenSet ? "Set" : string.Empty)}Link<{LoquiType.TypeName(getter: getter)}>";
         }
 
         public override async Task Load(XElement node, bool requireName = true)
@@ -85,7 +82,7 @@ namespace Mutagen.Bethesda.Generation
                 default:
                     throw new NotImplementedException();
             }
-            fg.AppendLine($"public {TypeName(getter: false)} {this.Property} {{ get; }} = new {DirectTypeName}();");
+            fg.AppendLine($"public {TypeName(getter: false)} {this.Property} {{ get; }} = new {DirectTypeName(getter: false)}();");
             fg.AppendLine($"public {LoquiType.TypeName(getter: false)} {this.Name} {{ get => {this.Property}.Item; {(this.ReadOnly ? string.Empty : $"set => {this.Property}.Item = value; ")}}}");
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
             fg.AppendLine($"{this.TypeName(getter: false)} {this.ObjectGen.Interface(getter: false, internalInterface: this.InternalGetInterface)}.{this.Property} => this.{this.Property};");

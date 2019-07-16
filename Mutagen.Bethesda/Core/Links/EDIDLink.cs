@@ -15,6 +15,8 @@ namespace Mutagen.Bethesda
     public class EDIDLink<T> : FormIDLink<T>, IEDIDLink<T>
        where T : class, IMajorRecordInternalGetter
     {
+        public new static readonly IEDIDLinkGetter<T> Empty = new EDIDLink<T>();
+
         public static readonly RecordType UNLINKED = new RecordType("\0\0\0\0");
         private IDisposable edidSub;
         public RecordType EDID { get; private set; } = UNLINKED;

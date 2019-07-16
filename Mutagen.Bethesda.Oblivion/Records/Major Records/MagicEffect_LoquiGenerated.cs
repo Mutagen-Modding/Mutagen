@@ -4350,7 +4350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Light
         private int _LightLocation => _DATALocation.Value + 24;
         private bool _Light_IsSet => _DATALocation.HasValue;
-        public IFormIDLinkGetter<ILightInternalGetter> Light_Property => _Light_IsSet ? new FormIDLink<Light>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 4)))) : default;
+        public IFormIDLinkGetter<ILightInternalGetter> Light_Property => _Light_IsSet ? new FormIDLink<ILightInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 4)))) : FormIDLink<ILightInternalGetter>.Empty;
         public ILightInternalGetter Light => default;
         #endregion
         #region ProjectileSpeed
@@ -4361,7 +4361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region EffectShader
         private int _EffectShaderLocation => _DATALocation.Value + 32;
         private bool _EffectShader_IsSet => _DATALocation.HasValue;
-        public IFormIDLinkGetter<IEffectShaderInternalGetter> EffectShader_Property => _EffectShader_IsSet ? new FormIDLink<EffectShader>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectShaderLocation, 4)))) : default;
+        public IFormIDLinkGetter<IEffectShaderInternalGetter> EffectShader_Property => _EffectShader_IsSet ? new FormIDLink<IEffectShaderInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectShaderLocation, 4)))) : FormIDLink<IEffectShaderInternalGetter>.Empty;
         public IEffectShaderInternalGetter EffectShader => default;
         #endregion
         #region SubData

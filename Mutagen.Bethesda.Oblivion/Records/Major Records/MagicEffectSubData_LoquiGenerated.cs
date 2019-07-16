@@ -2372,23 +2372,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected BinaryWrapperFactoryPackage _package;
 
         #region EnchantEffect
-        public IFormIDLinkGetter<IEffectShaderInternalGetter> EnchantEffect_Property => new FormIDLink<EffectShader>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormIDLinkGetter<IEffectShaderInternalGetter> EnchantEffect_Property => new FormIDLink<IEffectShaderInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public IEffectShaderInternalGetter EnchantEffect => default;
         #endregion
         #region CastingSound
-        public IFormIDLinkGetter<ISoundInternalGetter> CastingSound_Property => new FormIDLink<Sound>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IFormIDLinkGetter<ISoundInternalGetter> CastingSound_Property => new FormIDLink<ISoundInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public ISoundInternalGetter CastingSound => default;
         #endregion
         #region BoltSound
-        public IFormIDLinkGetter<ISoundInternalGetter> BoltSound_Property => new FormIDLink<Sound>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4))));
+        public IFormIDLinkGetter<ISoundInternalGetter> BoltSound_Property => new FormIDLink<ISoundInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4))));
         public ISoundInternalGetter BoltSound => default;
         #endregion
         #region HitSound
-        public IFormIDLinkGetter<ISoundInternalGetter> HitSound_Property => new FormIDLink<Sound>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(12, 4))));
+        public IFormIDLinkGetter<ISoundInternalGetter> HitSound_Property => new FormIDLink<ISoundInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(12, 4))));
         public ISoundInternalGetter HitSound => default;
         #endregion
         #region AreaSound
-        public IFormIDLinkGetter<ISoundInternalGetter> AreaSound_Property => new FormIDLink<Sound>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(16, 4))));
+        public IFormIDLinkGetter<ISoundInternalGetter> AreaSound_Property => new FormIDLink<ISoundInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(16, 4))));
         public ISoundInternalGetter AreaSound => default;
         #endregion
         public Single ConstantEffectEnchantmentFactor => SpanExt.GetFloat(_data.Span.Slice(20, 4));

@@ -1595,7 +1595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Reference
         private int? _ReferenceLocation;
         public bool Reference_IsSet => _ReferenceLocation.HasValue;
-        public IFormIDLinkGetter<IOblivionMajorRecordInternalGetter> Reference_Property => _ReferenceLocation.HasValue ? new FormIDLink<OblivionMajorRecord>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ReferenceLocation.Value, _package.Meta)))) : default;
+        public IFormIDLinkGetter<IOblivionMajorRecordInternalGetter> Reference_Property => _ReferenceLocation.HasValue ? new FormIDLink<IOblivionMajorRecordInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ReferenceLocation.Value, _package.Meta)))) : FormIDLink<IOblivionMajorRecordInternalGetter>.Empty;
         public IOblivionMajorRecordInternalGetter Reference => default;
         #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);

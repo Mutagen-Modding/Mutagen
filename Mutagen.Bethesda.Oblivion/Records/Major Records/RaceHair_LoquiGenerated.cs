@@ -1757,11 +1757,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected BinaryWrapperFactoryPackage _package;
 
         #region Male
-        public IFormIDLinkGetter<IHairInternalGetter> Male_Property => new FormIDLink<Hair>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormIDLinkGetter<IHairInternalGetter> Male_Property => new FormIDLink<IHairInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public IHairInternalGetter Male => default;
         #endregion
         #region Female
-        public IFormIDLinkGetter<IHairInternalGetter> Female_Property => new FormIDLink<Hair>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IFormIDLinkGetter<IHairInternalGetter> Female_Property => new FormIDLink<IHairInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public IHairInternalGetter Female => default;
         #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);

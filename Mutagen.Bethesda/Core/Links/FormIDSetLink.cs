@@ -14,6 +14,8 @@ namespace Mutagen.Bethesda
     public class FormIDSetLink<T> : LoquiNotifyingObject, IFormIDSetLink<T>, IEquatable<ILink<T>>
        where T : class, IMajorRecordInternalGetter
     {
+        public static readonly IFormIDSetLinkGetter<T> Empty = new FormIDSetLink<T>();
+
         private bool _HasBeenSet;
         public bool HasBeenSet
         {

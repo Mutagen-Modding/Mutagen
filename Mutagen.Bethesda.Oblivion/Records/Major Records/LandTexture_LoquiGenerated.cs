@@ -2610,7 +2610,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.PotentialGrass = BinaryWrapperSetList<IFormIDLinkGetter<IGrassInternalGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormIDLink<Grass>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => new FormIDLink<IGrassInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: UtilityTranslation.ParseSubrecordLocations(
                             stream: stream,
                             meta: _package.Meta,
