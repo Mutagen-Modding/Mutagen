@@ -238,6 +238,8 @@ namespace Mutagen.Bethesda.Tests
                 var binaryWrapper = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_BinaryWrapper");
                 ModKey modKey = ModKey.Factory(this.FilePath.Name);
 
+                List<Exception> delayedExceptions = new List<Exception>();
+
                 // Do normal
                 if (Settings.TestNormal)
                 {
@@ -260,7 +262,14 @@ namespace Mutagen.Bethesda.Tests
                             amountToReport: 15);
                         if (ret.Exception != null)
                         {
-                            throw ret.Exception;
+                            if (ret.HadMore)
+                            {
+                                delayedExceptions.Add(ret.Exception);
+                            }
+                            else
+                            {
+                                throw ret.Exception;
+                            }
                         }
                     }
                 }
@@ -284,9 +293,21 @@ namespace Mutagen.Bethesda.Tests
                             amountToReport: 15);
                         if (ret.Exception != null)
                         {
-                            throw ret.Exception;
+                            if (ret.HadMore)
+                            {
+                                delayedExceptions.Add(ret.Exception);
+                            }
+                            else
+                            {
+                                throw ret.Exception;
+                            }
                         }
                     }
+                }
+
+                if (delayedExceptions.Count > 0)
+                {
+                    throw new AggregateException(delayedExceptions);
                 }
             }
         }

@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Tests
 {
     public class Passthrough_Tests
     {
-        public static (Exception Exception, IEnumerable<RangeInt64> Sections) AssertFilesEqual(
+        public static (Exception Exception, IEnumerable<RangeInt64> Sections, bool HadMore) AssertFilesEqual(
             Stream stream,
             string path2,
             RangeCollection ignoreList = null,
@@ -48,17 +48,17 @@ namespace Mutagen.Bethesda.Tests
                     {
                         return r.ToString("X");
                     }));
-                    return (new ArgumentException($"{path2} Bytes did not match at positions: {posStr}"), errs);
+                    return (new ArgumentException($"{path2} Bytes did not match at positions: {posStr}"), errs, false);
                 }
                 if (stream.Position != stream.Length)
                 {
-                    return (new ArgumentException($"{path2} Stream had more data past position 0x{stream.Position.ToString("X")} than {path2}"), errs);
+                    return (new ArgumentException($"{path2} Stream had more data past position 0x{stream.Position.ToString("X")} than {path2}"), errs, true);
                 }
                 if (reader2.Position != reader2.Length)
                 {
-                    return (new ArgumentException($"{path2} Stream {path2} had more data past position 0x{reader2.Position.ToString("X")} than source stream."), errs);
+                    return (new ArgumentException($"{path2} Stream {path2} had more data past position 0x{reader2.Position.ToString("X")} than source stream."), errs, true);
                 }
-                return (null, errs);
+                return (null, errs, false);
             }
         }
 
