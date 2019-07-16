@@ -144,22 +144,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 slice = $"{dataAccessor}.Span.Slice({posStr}, {eType.ByteLength})";
             }
-
-            string getType;
-            switch (eType.ByteLength)
-            {
-                case 1:
-                    getType = $"{slice}[{posStr}]";
-                    break;
-                case 2:
-                    getType = $"BinaryPrimitives.ReadUInt16LittleEndian({slice})";
-                    break;
-                case 4:
-                    getType = $"BinaryPrimitives.ReadInt32LittleEndian({slice})";
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
+            var getType = GenerateForTypicalWrapper(objGen, typeGen, slice, "_package");
 
             if (data.RecordType.HasValue)
             {
@@ -194,6 +179,22 @@ namespace Mutagen.Bethesda.Generation
         {
             var eType = typeGen as EnumType;
             return eType.ByteLength;
+        }
+
+        public override string GenerateForTypicalWrapper(ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor, Accessor packageAccessor)
+        {
+            var eType = typeGen as EnumType;
+            switch (eType.ByteLength)
+            {
+                case 1:
+                    return $"{dataAccessor}[0]";
+                case 2:
+                    return $"BinaryPrimitives.ReadUInt16LittleEndian({dataAccessor})";
+                case 4:
+                    return $"BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})";
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

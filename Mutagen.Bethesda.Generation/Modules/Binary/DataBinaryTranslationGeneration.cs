@@ -83,12 +83,16 @@ namespace Mutagen.Bethesda.Generation
                 })
                 {
                     var data = field.Field.GetFieldData();
-                    if (data.Binary == BinaryGenerationType.Custom)
-                    {
-                        throw new NotImplementedException();
-                    }
                     switch (data.Binary)
                     {
+                        case BinaryGenerationType.Custom:
+                            this.Module.CustomLogic.GenerateFillForWrapper(
+                                fg: fg,
+                                objGen: objGen,
+                                field: field.Field,
+                                dataAccessor: dataAccessor,
+                                passedLength: ref passedLength);
+                            continue;
                         case BinaryGenerationType.DoNothing:
                         case BinaryGenerationType.NoGeneration:
                             continue;

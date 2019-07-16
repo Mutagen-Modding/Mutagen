@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override char TypeChar => GlobalInt.TRIGGER_CHAR;
             public override float RawFloat => (float)this.Data;
 
-            public int GetDataCustom(ReadOnlySpan<byte> span, MasterReferences masterReferences)
+            public int GetDataCustom(ReadOnlySpan<byte> span)
             {
                 return (int)span.GetFloat();
             }

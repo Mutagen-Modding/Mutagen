@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Generation
         public override string Namespace => "Mutagen.Bethesda.Binary.";
         public override string ModuleNickname => "Binary";
         public override bool GenerateAbstractCreates => false;
-        private CustomLogicTranslationGeneration CustomLogic;
+        public readonly CustomLogicTranslationGeneration CustomLogic;
         public override bool DoTranslationInterface(ObjectGeneration obj) => obj.GetObjectType() != ObjectType.Mod;
         public override bool DirectTranslationReference(ObjectGeneration obj) => obj.GetObjectType() == ObjectType.Mod;
         public override string TranslatorReference(ObjectGeneration obj, Accessor item)
@@ -1491,6 +1491,8 @@ namespace Mutagen.Bethesda.Generation
                 && obj.Name != "ScriptReference"
                 && obj.Name != "ScriptVariableReference"
                 && obj.Name != "ScriptObjectReference"
+                && obj.Name != "LandTexture"
+                && obj.Name != "HavokData"
                 ) return;
 
             var dataAccessor = new Accessor("_data");
@@ -1602,8 +1604,7 @@ namespace Mutagen.Bethesda.Generation
                                     objGen: obj,
                                     field: field,
                                     dataAccessor: dataAccessor,
-                                    passedLength: ref passedLength,
-                                    doMasters: needsMasters);
+                                    passedLength: ref passedLength);
                                 continue;
                             case BinaryGenerationType.DoNothing:
                             case BinaryGenerationType.NoGeneration:
@@ -1937,7 +1938,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (field.Field.Name == "LandTextures")
+                                if (field.Field.Name == "Enchantments")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)

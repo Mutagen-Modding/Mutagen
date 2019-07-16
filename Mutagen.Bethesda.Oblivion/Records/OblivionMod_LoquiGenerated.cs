@@ -14614,6 +14614,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Scripts);
                 }
+                case 0x5845544C: // LTEX
+                {
+                    this._LandTextures = GroupBinaryWrapper<ILandTextureInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LandTextures);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

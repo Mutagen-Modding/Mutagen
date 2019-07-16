@@ -2518,6 +2518,116 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class LandTextureBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        ILandTextureInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LandTexture_Registration.Instance;
+        public new static LandTexture_Registration Registration => LandTexture_Registration.Instance;
+        protected override object CommonInstance => LandTextureCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILandTextureInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => LandTextureXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => LandTextureBinaryWriteTranslation.Instance;
+
+        #region Icon
+        private int? _IconLocation;
+        public bool Icon_IsSet => _IconLocation.HasValue;
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Havok
+        public IHavokDataGetter Havok { get; private set; }
+        public bool Havok_IsSet => Havok != null;
+        #endregion
+        #region TextureSpecularExponent
+        private int? _TextureSpecularExponentLocation;
+        public bool TextureSpecularExponent_IsSet => _TextureSpecularExponentLocation.HasValue;
+        public Byte TextureSpecularExponent => _TextureSpecularExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _TextureSpecularExponentLocation.Value, _package.Meta)[0] : default;
+        #endregion
+        public IReadOnlySetList<IFormIDLinkGetter<IGrassInternalGetter>> PotentialGrass { get; private set; } = EmptySetList<IFormIDLinkGetter<IGrassInternalGetter>>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected LandTextureBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static LandTextureBinaryWrapper LandTextureFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package)
+        {
+            var ret = new LandTextureBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4E4F4349: // ICON
+                {
+                    _IconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Icon);
+                }
+                case 0x4D414E48: // HNAM
+                {
+                    this.Havok = HavokDataBinaryWrapper.HavokDataFactory(
+                        stream: stream,
+                        package: _package);
+                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Havok);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    _TextureSpecularExponentLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.TextureSpecularExponent);
+                }
+                case 0x4D414E47: // GNAM
+                {
+                    this.PotentialGrass = BinaryWrapperSetList<IFormIDLinkGetter<IGrassInternalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormIDLink<Grass>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: true));
+                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.PotentialGrass);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

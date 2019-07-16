@@ -225,8 +225,7 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration field,
             Accessor dataAccessor,
-            ref int passedLength,
-            bool doMasters)
+            ref int passedLength)
         {
             var data = field.GetFieldData();
             string loc;
@@ -253,10 +252,6 @@ namespace Mutagen.Bethesda.Generation
                 $"public {field.TypeName(getter: true)} {field.Name} => Get{field.Name}Custom"))
             {
                 args.Add($"span: {span}");
-                if (doMasters)
-                {
-                    args.Add($"masterReferences: _package.MasterReferences");
-                }
             }
             if (!data.HasTrigger)
             {

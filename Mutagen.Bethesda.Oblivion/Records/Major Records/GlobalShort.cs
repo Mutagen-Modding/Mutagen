@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
             public override char TypeChar => GlobalShort.TRIGGER_CHAR;
             public override float RawFloat => (float)this.Data;
 
-            public short GetDataCustom(ReadOnlySpan<byte> span, MasterReferences masterReferences)
+            public short GetDataCustom(ReadOnlySpan<byte> span)
             {
                 return (short)span.GetFloat();
             }
