@@ -393,11 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x54445443: // CTDT
                 case 0x4D414E43: // CNAM
                 case 0x52484353: // SCHR
-                case 0x41444353: // SCDA
-                case 0x58544353: // SCTX
-                case 0x44534C53: // SLSD
-                case 0x56524353: // SCRV
-                case 0x4F524353: // SCRO
+                case 0x44484353: // SCHD
                 {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<LogEntry>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -858,11 +854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
-        public static readonly RecordType SCDA_HEADER = new RecordType("SCDA");
-        public static readonly RecordType SCTX_HEADER = new RecordType("SCTX");
-        public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
-        public static readonly RecordType SCRV_HEADER = new RecordType("SCRV");
-        public static readonly RecordType SCRO_HEADER = new RecordType("SCRO");
+        public static readonly RecordType SCHD_HEADER = new RecordType("SCHD");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = INDX_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;

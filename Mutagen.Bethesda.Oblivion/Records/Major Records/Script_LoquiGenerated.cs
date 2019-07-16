@@ -447,11 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x52484353: // SCHR
-                case 0x41444353: // SCDA
-                case 0x58544353: // SCTX
-                case 0x44534C53: // SLSD
-                case 0x56524353: // SCRV
-                case 0x4F524353: // SCRO
+                case 0x44484353: // SCHD
                 {
                     try
                     {
@@ -921,11 +917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(ScriptXmlWriteTranslation);
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
         public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
-        public static readonly RecordType SCDA_HEADER = new RecordType("SCDA");
-        public static readonly RecordType SCTX_HEADER = new RecordType("SCTX");
-        public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
-        public static readonly RecordType SCRV_HEADER = new RecordType("SCRV");
-        public static readonly RecordType SCRO_HEADER = new RecordType("SCRO");
+        public static readonly RecordType SCHD_HEADER = new RecordType("SCHD");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SCPT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
@@ -1909,11 +1901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (type.TypeInt)
             {
                 case 0x52484353: // SCHR
-                case 0x41444353: // SCDA
-                case 0x58544353: // SCTX
-                case 0x44534C53: // SLSD
-                case 0x56524353: // SCRV
-                case 0x4F524353: // SCRO
+                case 0x44484353: // SCHD
                 {
                     this._Fields = ScriptFieldsBinaryWrapper.ScriptFieldsFactory(
                         stream: stream,

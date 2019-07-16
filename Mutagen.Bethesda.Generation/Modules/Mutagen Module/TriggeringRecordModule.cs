@@ -392,7 +392,8 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (!field.IntegrateField
                     && !(field is DataType)
-                    && !(field is SpecialParseType)) continue;
+                    && !(field is SpecialParseType)
+                    && !(field is CustomLogic)) continue;
                 if (!field.TryGetFieldData(out var fieldData)) break;
                 if (!fieldData.HasTrigger) break;
                 recTypes.Add(fieldData.TriggeringRecordTypes);

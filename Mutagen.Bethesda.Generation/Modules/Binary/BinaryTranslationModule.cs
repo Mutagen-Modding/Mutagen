@@ -617,7 +617,8 @@ namespace Mutagen.Bethesda.Generation
                 {
                     fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return TryGet<int?>.Failure;");
                 }
-                else if (field.Field is SpecialParseType)
+                else if (field.Field is SpecialParseType
+                    || field.Field is CustomLogic)
                 {
                     var objFields = obj.IterateFieldIndices(nonIntegrated: false).ToList();
                     var nextField = objFields.FirstOrDefault((i) => i.InternalIndex > field.InternalIndex);
