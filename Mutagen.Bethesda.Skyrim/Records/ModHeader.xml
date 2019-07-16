@@ -2,12 +2,16 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ModHeader" recordType="TES4" objType="Record" GUID="1745b948-7eb0-45ff-8799-461afdadeb89" ID="2">
     <Fields>
-      <ByteArray name="Fluff" byteLength="12" nullable="NotNull" hasBeenSet="False" />
+      <Enum name="Flags" enumName="ModHeader.HeaderFlag" byteLength="4" />
+      <UInt32 name="FormID" />
+      <Int32 name="Version" />
+      <UInt16 name="FormVersion" />
+      <UInt16 name="Version2" />
       <RefDirect name="Stats" refName="ModStats" nullable="NotNull" hasBeenSet="False" />
-      <ByteArray name="TypeOffsets" recordType="OFST" hasBeenSet="True" />
-      <ByteArray name="Deleted" recordType="DELE" hasBeenSet="True" />
-      <String name="Author" recordType="CNAM" maxLength="512" hasBeenSet="True" />
-      <String name="Description" recordType="SNAM" maxLength="512" hasBeenSet="True" />
+      <ByteArray name="TypeOffsets" recordType="OFST" />
+      <ByteArray name="Deleted" recordType="DELE" />
+      <String name="Author" recordType="CNAM" maxLength="512" />
+      <String name="Description" recordType="SNAM" maxLength="512" />
       <RefList name="MasterReferences" refName="Bethesda.MasterReference" />
       <UInt64 name="VestigialData" recordType="DATA" />
     </Fields>

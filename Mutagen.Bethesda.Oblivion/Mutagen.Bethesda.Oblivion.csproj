@@ -463,6 +463,9 @@
     <Compile Include="Records\Major Records\Worldspace.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\ModHeader.cs">
+      <DependentUpon>ModHeader.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\OblivionMajorRecord.cs">
       <DependentUpon>OblivionMajorRecord.xml</DependentUpon>
     </Compile>

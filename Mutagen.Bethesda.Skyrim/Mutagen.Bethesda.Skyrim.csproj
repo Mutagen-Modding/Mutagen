@@ -49,6 +49,9 @@
     <Compile Include="Records\Major Records\Global_LoquiGenerated.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\ModHeader.cs">
+      <DependentUpon>ModHeader.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\ModHeader_LoquiGenerated.cs">
       <DependentUpon>ModHeader.xml</DependentUpon>
     </Compile>

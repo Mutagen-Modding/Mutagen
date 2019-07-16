@@ -57,21 +57,29 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region Fluff
-        private Byte[] _Fluff = new byte[12];
-        public Byte[] Fluff
+        #region Flags
+        private ModHeader.HeaderFlag _Flags;
+        public ModHeader.HeaderFlag Flags
         {
-            get => _Fluff;
-            set
-            {
-                this._Fluff = value;
-                if (value == null)
-                {
-                    this._Fluff = new byte[12];
-                }
-            }
+            get => this._Flags;
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
-        ReadOnlySpan<Byte> IModHeaderGetter.Fluff => this.Fluff;
+        #endregion
+        #region FormID
+        private UInt32 _FormID;
+        public UInt32 FormID
+        {
+            get => this._FormID;
+            set => this.RaiseAndSetIfChanged(ref this._FormID, value, nameof(FormID));
+        }
+        #endregion
+        #region Version
+        private Int32 _Version;
+        public Int32 Version
+        {
+            get => this._Version;
+            set => this.RaiseAndSetIfChanged(ref this._Version, value, nameof(Version));
+        }
         #endregion
         #region Stats
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -429,7 +437,9 @@ namespace Mutagen.Bethesda.Oblivion
                     return _hasBeenSetTracker[index];
                 case ModHeader_FieldIndex.MasterReferences:
                     return MasterReferences.HasBeenSet;
-                case ModHeader_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Flags:
+                case ModHeader_FieldIndex.FormID:
+                case ModHeader_FieldIndex.Version:
                 case ModHeader_FieldIndex.Stats:
                     return true;
                 default:
@@ -516,16 +526,18 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(12),
-                item: out Byte[] FluffParse))
+            if (EnumBinaryTranslation<ModHeader.HeaderFlag>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out ModHeader.HeaderFlag FlagsParse))
             {
-                item.Fluff = FluffParse;
+                item.Flags = FlagsParse;
             }
             else
             {
-                item.Fluff = default(Byte[]);
+                item.Flags = default(ModHeader.HeaderFlag);
             }
+            item.FormID = frame.ReadUInt32();
+            item.Version = frame.ReadInt32();
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -769,8 +781,14 @@ namespace Mutagen.Bethesda.Oblivion
             ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Fluff:
-                    this.Fluff = (Byte[])obj;
+                case ModHeader_FieldIndex.Flags:
+                    this.Flags = (ModHeader.HeaderFlag)obj;
+                    break;
+                case ModHeader_FieldIndex.FormID:
+                    this.FormID = (UInt32)obj;
+                    break;
+                case ModHeader_FieldIndex.Version:
+                    this.Version = (Int32)obj;
                     break;
                 case ModHeader_FieldIndex.Stats:
                     this.Stats = (ModStats)obj;
@@ -821,8 +839,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
             switch (enu)
             {
-                case ModHeader_FieldIndex.Fluff:
-                    obj.Fluff = (Byte[])pair.Value;
+                case ModHeader_FieldIndex.Flags:
+                    obj.Flags = (ModHeader.HeaderFlag)pair.Value;
+                    break;
+                case ModHeader_FieldIndex.FormID:
+                    obj.FormID = (UInt32)pair.Value;
+                    break;
+                case ModHeader_FieldIndex.Version:
+                    obj.Version = (Int32)pair.Value;
                     break;
                 case ModHeader_FieldIndex.Stats:
                     obj.Stats = (ModStats)pair.Value;
@@ -857,7 +881,11 @@ namespace Mutagen.Bethesda.Oblivion
         IModHeaderGetter,
         ILoquiObjectSetter<IModHeader>
     {
-        new Byte[] Fluff { get; set; }
+        new ModHeader.HeaderFlag Flags { get; set; }
+
+        new UInt32 FormID { get; set; }
+
+        new Int32 Version { get; set; }
 
         new ModStats Stats { get; set; }
 
@@ -900,8 +928,16 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        #region Fluff
-        ReadOnlySpan<Byte> Fluff { get; }
+        #region Flags
+        ModHeader.HeaderFlag Flags { get; }
+
+        #endregion
+        #region FormID
+        UInt32 FormID { get; }
+
+        #endregion
+        #region Version
+        Int32 Version { get; }
 
         #endregion
         #region Stats
@@ -1021,14 +1057,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum ModHeader_FieldIndex
     {
-        Fluff = 0,
-        Stats = 1,
-        TypeOffsets = 2,
-        Deleted = 3,
-        Author = 4,
-        Description = 5,
-        MasterReferences = 6,
-        VestigialData = 7,
+        Flags = 0,
+        FormID = 1,
+        Version = 2,
+        Stats = 3,
+        TypeOffsets = 4,
+        Deleted = 5,
+        Author = 6,
+        Description = 7,
+        MasterReferences = 8,
+        VestigialData = 9,
     }
     #endregion
 
@@ -1046,9 +1084,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d26d9f2a-53af-4c45-9490-dfdb377b6655";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(ModHeader_Mask<>);
 
@@ -1080,8 +1118,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "FLUFF":
-                    return (ushort)ModHeader_FieldIndex.Fluff;
+                case "FLAGS":
+                    return (ushort)ModHeader_FieldIndex.Flags;
+                case "FORMID":
+                    return (ushort)ModHeader_FieldIndex.FormID;
+                case "VERSION":
+                    return (ushort)ModHeader_FieldIndex.Version;
                 case "STATS":
                     return (ushort)ModHeader_FieldIndex.Stats;
                 case "TYPEOFFSETS":
@@ -1108,7 +1150,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ModHeader_FieldIndex.MasterReferences:
                     return true;
-                case ModHeader_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Flags:
+                case ModHeader_FieldIndex.FormID:
+                case ModHeader_FieldIndex.Version:
                 case ModHeader_FieldIndex.Stats:
                 case ModHeader_FieldIndex.TypeOffsets:
                 case ModHeader_FieldIndex.Deleted:
@@ -1129,7 +1173,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ModHeader_FieldIndex.Stats:
                 case ModHeader_FieldIndex.MasterReferences:
                     return true;
-                case ModHeader_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Flags:
+                case ModHeader_FieldIndex.FormID:
+                case ModHeader_FieldIndex.Version:
                 case ModHeader_FieldIndex.TypeOffsets:
                 case ModHeader_FieldIndex.Deleted:
                 case ModHeader_FieldIndex.Author:
@@ -1146,7 +1192,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Flags:
+                case ModHeader_FieldIndex.FormID:
+                case ModHeader_FieldIndex.Version:
                 case ModHeader_FieldIndex.Stats:
                 case ModHeader_FieldIndex.TypeOffsets:
                 case ModHeader_FieldIndex.Deleted:
@@ -1165,8 +1213,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Fluff:
-                    return "Fluff";
+                case ModHeader_FieldIndex.Flags:
+                    return "Flags";
+                case ModHeader_FieldIndex.FormID:
+                    return "FormID";
+                case ModHeader_FieldIndex.Version:
+                    return "Version";
                 case ModHeader_FieldIndex.Stats:
                     return "Stats";
                 case ModHeader_FieldIndex.TypeOffsets:
@@ -1191,7 +1243,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Flags:
+                case ModHeader_FieldIndex.FormID:
+                case ModHeader_FieldIndex.Version:
                 case ModHeader_FieldIndex.Stats:
                 case ModHeader_FieldIndex.TypeOffsets:
                 case ModHeader_FieldIndex.Deleted:
@@ -1210,7 +1264,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Fluff:
+                case ModHeader_FieldIndex.Flags:
+                case ModHeader_FieldIndex.FormID:
+                case ModHeader_FieldIndex.Version:
                 case ModHeader_FieldIndex.Stats:
                 case ModHeader_FieldIndex.TypeOffsets:
                 case ModHeader_FieldIndex.Deleted:
@@ -1229,8 +1285,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Fluff:
-                    return typeof(Byte[]);
+                case ModHeader_FieldIndex.Flags:
+                    return typeof(ModHeader.HeaderFlag);
+                case ModHeader_FieldIndex.FormID:
+                    return typeof(UInt32);
+                case ModHeader_FieldIndex.Version:
+                    return typeof(Int32);
                 case ModHeader_FieldIndex.Stats:
                     return typeof(ModStats);
                 case ModHeader_FieldIndex.TypeOffsets:
@@ -1260,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType MAST_HEADER = new RecordType("MAST");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = TES4_HEADER;
-        public const int NumStructFields = 1;
+        public const int NumStructFields = 3;
         public const int NumTypedFields = 7;
         public static readonly Type BinaryWriteTranslation = typeof(ModHeaderBinaryWriteTranslation);
         #region Interface
@@ -1308,12 +1368,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             ModHeader_CopyMask copyMask)
         {
-            if (copyMask?.Fluff ?? true)
+            if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)ModHeader_FieldIndex.Fluff);
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.Flags);
                 try
                 {
-                    item.Fluff = rhs.Fluff;
+                    item.Flags = rhs.Flags;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.FormID ?? true)
+            {
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.FormID);
+                try
+                {
+                    item.FormID = rhs.FormID;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Version ?? true)
+            {
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.Version);
+                try
+                {
+                    item.Version = rhs.Version;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1563,7 +1657,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void Clear(IModHeader item)
         {
             ClearPartial();
-            item.Fluff = default(Byte[]);
+            item.Flags = default(ModHeader.HeaderFlag);
+            item.FormID = default(UInt32);
+            item.Version = default(Int32);
             item.Stats = default(ModStats);
             item.TypeOffsets_Unset();
             item.Deleted_Unset();
@@ -1594,7 +1690,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.FormID = item.FormID == rhs.FormID;
+            ret.Version = item.Version == rhs.Version;
             ret.Stats = MaskItemExt.Factory(item.Stats.GetEqualsMask(rhs.Stats, include), include);
             ret.TypeOffsets = item.TypeOffsets_IsSet == rhs.TypeOffsets_IsSet && MemoryExtensions.SequenceEqual(item.TypeOffsets, rhs.TypeOffsets);
             ret.Deleted = item.Deleted_IsSet == rhs.Deleted_IsSet && MemoryExtensions.SequenceEqual(item.Deleted, rhs.Deleted);
@@ -1651,9 +1749,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             ModHeader_Mask<bool> printMask = null)
         {
-            if (printMask?.Fluff ?? true)
+            if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.FormID ?? true)
+            {
+                fg.AppendLine($"FormID => {item.FormID}");
+            }
+            if (printMask?.Version ?? true)
+            {
+                fg.AppendLine($"Version => {item.Version}");
             }
             if (printMask?.Stats?.Overall ?? true)
             {
@@ -1716,7 +1822,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IModHeaderGetter item,
             ModHeader_Mask<bool> mask)
         {
-            mask.Fluff = true;
+            mask.Flags = true;
+            mask.FormID = true;
+            mask.Version = true;
             mask.Stats = new MaskItem<bool, ModStats_Mask<bool>>(true, item.Stats.GetHasBeenSetMask());
             mask.TypeOffsets = item.TypeOffsets_IsSet;
             mask.Deleted = item.Deleted_IsSet;
@@ -1733,7 +1841,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.FormID != rhs.FormID) return false;
+            if (lhs.Version != rhs.Version) return false;
             if (!object.Equals(lhs.Stats, rhs.Stats)) return false;
             if (lhs.TypeOffsets_IsSet != rhs.TypeOffsets_IsSet) return false;
             if (lhs.TypeOffsets_IsSet)
@@ -1771,7 +1881,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IModHeaderGetter item)
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FormID).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Stats).CombineHashCode(ret);
             if (item.TypeOffsets_IsSet)
             {
@@ -1818,13 +1930,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Fluff) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Flags) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                EnumXmlTranslation<ModHeader.HeaderFlag>.Instance.Write(
                     node: node,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff,
-                    fieldIndex: (int)ModHeader_FieldIndex.Fluff,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)ModHeader_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.FormID) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FormID),
+                    item: item.FormID,
+                    fieldIndex: (int)ModHeader_FieldIndex.FormID,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Version) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Version),
+                    item: item.Version,
+                    fieldIndex: (int)ModHeader_FieldIndex.Version,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Stats) ?? true))
@@ -2013,20 +2143,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "Fluff":
+                case "Flags":
                     try
                     {
-                        errorMask?.PushIndex((int)ModHeader_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.Flags);
+                        if (EnumXmlTranslation<ModHeader.HeaderFlag>.Instance.Parse(
                             node: node,
-                            item: out Byte[] FluffParse,
+                            item: out ModHeader.HeaderFlag FlagsParse,
                             errorMask: errorMask))
                         {
-                            item.Fluff = FluffParse;
+                            item.Flags = FlagsParse;
                         }
                         else
                         {
-                            item.Fluff = default(Byte[]);
+                            item.Flags = default(ModHeader.HeaderFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FormID":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.FormID);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 FormIDParse,
+                            errorMask: errorMask))
+                        {
+                            item.FormID = FormIDParse;
+                        }
+                        else
+                        {
+                            item.FormID = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Version":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.Version);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 VersionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Version = VersionParse;
+                        }
+                        else
+                        {
+                            item.Version = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -2400,7 +2582,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public ModHeader_Mask(T initialValue)
         {
-            this.Fluff = initialValue;
+            this.Flags = initialValue;
+            this.FormID = initialValue;
+            this.Version = initialValue;
             this.Stats = new MaskItem<T, ModStats_Mask<T>>(initialValue, new ModStats_Mask<T>(initialValue));
             this.TypeOffsets = initialValue;
             this.Deleted = initialValue;
@@ -2412,7 +2596,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Members
-        public T Fluff;
+        public T Flags;
+        public T FormID;
+        public T Version;
         public MaskItem<T, ModStats_Mask<T>> Stats { get; set; }
         public T TypeOffsets;
         public T Deleted;
@@ -2432,7 +2618,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Equals(ModHeader_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+            if (!object.Equals(this.Flags, rhs.Flags)) return false;
+            if (!object.Equals(this.FormID, rhs.FormID)) return false;
+            if (!object.Equals(this.Version, rhs.Version)) return false;
             if (!object.Equals(this.Stats, rhs.Stats)) return false;
             if (!object.Equals(this.TypeOffsets, rhs.TypeOffsets)) return false;
             if (!object.Equals(this.Deleted, rhs.Deleted)) return false;
@@ -2445,7 +2633,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
+            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+            ret = ret.CombineHashCode(this.FormID?.GetHashCode());
+            ret = ret.CombineHashCode(this.Version?.GetHashCode());
             ret = ret.CombineHashCode(this.Stats?.GetHashCode());
             ret = ret.CombineHashCode(this.TypeOffsets?.GetHashCode());
             ret = ret.CombineHashCode(this.Deleted?.GetHashCode());
@@ -2461,7 +2651,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.Fluff)) return false;
+            if (!eval(this.Flags)) return false;
+            if (!eval(this.FormID)) return false;
+            if (!eval(this.Version)) return false;
             if (Stats != null)
             {
                 if (!eval(this.Stats.Overall)) return false;
@@ -2498,7 +2690,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected void Translate_InternalFill<R>(ModHeader_Mask<R> obj, Func<T, R> eval)
         {
-            obj.Fluff = eval(this.Fluff);
+            obj.Flags = eval(this.Flags);
+            obj.FormID = eval(this.FormID);
+            obj.Version = eval(this.Version);
             if (this.Stats != null)
             {
                 obj.Stats = new MaskItem<R, ModStats_Mask<R>>();
@@ -2567,9 +2761,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Fluff ?? true)
+                if (printMask?.Flags ?? true)
                 {
-                    fg.AppendLine($"Fluff => {Fluff}");
+                    fg.AppendLine($"Flags => {Flags}");
+                }
+                if (printMask?.FormID ?? true)
+                {
+                    fg.AppendLine($"FormID => {FormID}");
+                }
+                if (printMask?.Version ?? true)
+                {
+                    fg.AppendLine($"Version => {Version}");
                 }
                 if (printMask?.Stats?.Overall ?? true)
                 {
@@ -2643,7 +2845,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception Fluff;
+        public Exception Flags;
+        public Exception FormID;
+        public Exception Version;
         public MaskItem<Exception, ModStats_ErrorMask> Stats;
         public Exception TypeOffsets;
         public Exception Deleted;
@@ -2659,8 +2863,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Fluff:
-                    return Fluff;
+                case ModHeader_FieldIndex.Flags:
+                    return Flags;
+                case ModHeader_FieldIndex.FormID:
+                    return FormID;
+                case ModHeader_FieldIndex.Version:
+                    return Version;
                 case ModHeader_FieldIndex.Stats:
                     return Stats;
                 case ModHeader_FieldIndex.TypeOffsets:
@@ -2685,8 +2893,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Fluff:
-                    this.Fluff = ex;
+                case ModHeader_FieldIndex.Flags:
+                    this.Flags = ex;
+                    break;
+                case ModHeader_FieldIndex.FormID:
+                    this.FormID = ex;
+                    break;
+                case ModHeader_FieldIndex.Version:
+                    this.Version = ex;
                     break;
                 case ModHeader_FieldIndex.Stats:
                     this.Stats = new MaskItem<Exception, ModStats_ErrorMask>(ex, null);
@@ -2719,8 +2933,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Fluff:
-                    this.Fluff = (Exception)obj;
+                case ModHeader_FieldIndex.Flags:
+                    this.Flags = (Exception)obj;
+                    break;
+                case ModHeader_FieldIndex.FormID:
+                    this.FormID = (Exception)obj;
+                    break;
+                case ModHeader_FieldIndex.Version:
+                    this.Version = (Exception)obj;
                     break;
                 case ModHeader_FieldIndex.Stats:
                     this.Stats = (MaskItem<Exception, ModStats_ErrorMask>)obj;
@@ -2751,7 +2971,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool IsInError()
         {
             if (Overall != null) return true;
-            if (Fluff != null) return true;
+            if (Flags != null) return true;
+            if (FormID != null) return true;
+            if (Version != null) return true;
             if (Stats != null) return true;
             if (TypeOffsets != null) return true;
             if (Deleted != null) return true;
@@ -2793,7 +3015,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            fg.AppendLine($"Fluff => {Fluff}");
+            fg.AppendLine($"Flags => {Flags}");
+            fg.AppendLine($"FormID => {FormID}");
+            fg.AppendLine($"Version => {Version}");
             Stats?.ToString(fg);
             fg.AppendLine($"TypeOffsets => {TypeOffsets}");
             fg.AppendLine($"Deleted => {Deleted}");
@@ -2829,7 +3053,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ModHeader_ErrorMask Combine(ModHeader_ErrorMask rhs)
         {
             var ret = new ModHeader_ErrorMask();
-            ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+            ret.Flags = this.Flags.Combine(rhs.Flags);
+            ret.FormID = this.FormID.Combine(rhs.FormID);
+            ret.Version = this.Version.Combine(rhs.Version);
             ret.Stats = new MaskItem<Exception, ModStats_ErrorMask>(this.Stats.Overall.Combine(rhs.Stats.Overall), ((IErrorMask<ModStats_ErrorMask>)this.Stats.Specific).Combine(rhs.Stats.Specific));
             ret.TypeOffsets = this.TypeOffsets.Combine(rhs.TypeOffsets);
             ret.Deleted = this.Deleted.Combine(rhs.Deleted);
@@ -2863,7 +3089,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public ModHeader_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
-            this.Fluff = defaultOn;
+            this.Flags = defaultOn;
+            this.FormID = defaultOn;
+            this.Version = defaultOn;
             this.Stats = new MaskItem<CopyOption, ModStats_CopyMask>(deepCopyOption, default);
             this.TypeOffsets = defaultOn;
             this.Deleted = defaultOn;
@@ -2874,7 +3102,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Members
-        public bool Fluff;
+        public bool Flags;
+        public bool FormID;
+        public bool Version;
         public MaskItem<CopyOption, ModStats_CopyMask> Stats;
         public bool TypeOffsets;
         public bool Deleted;
@@ -2890,7 +3120,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         private TranslationCrystal _crystal;
-        public bool Fluff;
+        public bool Flags;
+        public bool FormID;
+        public bool Version;
         public MaskItem<bool, ModStats_TranslationMask> Stats;
         public bool TypeOffsets;
         public bool Deleted;
@@ -2907,7 +3139,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public ModHeader_TranslationMask(bool defaultOn)
         {
-            this.Fluff = defaultOn;
+            this.Flags = defaultOn;
+            this.FormID = defaultOn;
+            this.Version = defaultOn;
             this.Stats = new MaskItem<bool, ModStats_TranslationMask>(defaultOn, null);
             this.TypeOffsets = defaultOn;
             this.Deleted = defaultOn;
@@ -2933,7 +3167,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
-            ret.Add((Fluff, null));
+            ret.Add((Flags, null));
+            ret.Add((FormID, null));
+            ret.Add((Version, null));
             ret.Add((Stats?.Overall ?? true, Stats?.Specific?.GetCrystal()));
             ret.Add((TypeOffsets, null));
             ret.Add((Deleted, null));
@@ -2956,9 +3192,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Fluff);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ModHeader.HeaderFlag>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 4);
+            writer.Write(item.FormID);
+            writer.Write(item.Version);
         }
 
         public static void Write_RecordTypes(
@@ -3151,7 +3390,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected ReadOnlyMemorySlice<byte> _data;
         protected BinaryWrapperFactoryPackage _package;
 
-        public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(0, 12).ToArray();
+        public ModHeader.HeaderFlag Flags => (ModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
+        public UInt32 FormID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4));
+        public Int32 Version => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
         #region Stats
         private IModStatsGetter _Stats;
         public IModStatsGetter Stats => _Stats ?? new ModStats();
