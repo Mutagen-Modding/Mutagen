@@ -13,7 +13,11 @@
       <String name="Author" recordType="CNAM" maxLength="512" />
       <String name="Description" recordType="SNAM" maxLength="512" />
       <RefList name="MasterReferences" refName="Bethesda.MasterReference" />
-      <UInt64 name="VestigialData" recordType="DATA" />
+      <List name="OverriddenForms" recordType="ONAM">
+        <FormIDLink refName="SkyrimMajorRecord" />
+      </List>
+      <Int32 name="INTV" recordType="INTV" />
+      <Int32 name="INCC" recordType="INCC" />
     </Fields>
   </Object>
   <Object name="ModStats" recordType="HEDR" objType="Subrecord" GUID="df74bd92-cdb3-4e89-a90f-1aabd4f27c05" ID="3">

@@ -39,6 +39,7 @@ namespace Mutagen.Bethesda.Skyrim
         LoquiNotifyingObject,
         IModHeader,
         ILoquiObjectSetter<ModHeader>,
+        ILinkSubContainer,
         IEquatable<ModHeader>,
         IEqualsMask
     {
@@ -227,30 +228,68 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region VestigialData
-        public bool VestigialData_IsSet
-        {
-            get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.VestigialData];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.VestigialData, nameof(VestigialData_IsSet));
-        }
-        bool IModHeaderGetter.VestigialData_IsSet => VestigialData_IsSet;
-        private UInt64 _VestigialData;
+        #region OverriddenForms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public UInt64 VestigialData
+        private readonly SourceSetList<IFormIDLink<SkyrimMajorRecord>> _OverriddenForms = new SourceSetList<IFormIDLink<SkyrimMajorRecord>>();
+        public ISourceSetList<IFormIDLink<SkyrimMajorRecord>> OverriddenForms => _OverriddenForms;
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISetList<IFormIDLink<SkyrimMajorRecord>> IModHeader.OverriddenForms => _OverriddenForms;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlySetList<IFormIDLinkGetter<ISkyrimMajorRecordInternalGetter>> IModHeaderGetter.OverriddenForms => _OverriddenForms;
+        #endregion
+
+        #endregion
+        #region INTV
+        public bool INTV_IsSet
         {
-            get => this._VestigialData;
-            set => VestigialData_Set(value);
+            get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.INTV];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.INTV, nameof(INTV_IsSet));
         }
-        UInt64 IModHeaderGetter.VestigialData => this.VestigialData;
-        public void VestigialData_Set(
-            UInt64 value,
+        bool IModHeaderGetter.INTV_IsSet => INTV_IsSet;
+        private Int32 _INTV;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Int32 INTV
+        {
+            get => this._INTV;
+            set => INTV_Set(value);
+        }
+        Int32 IModHeaderGetter.INTV => this.INTV;
+        public void INTV_Set(
+            Int32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _VestigialData, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.VestigialData, nameof(VestigialData), nameof(VestigialData_IsSet));
+            this.RaiseAndSetIfChanged(ref _INTV, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.INTV, nameof(INTV), nameof(INTV_IsSet));
         }
-        public void VestigialData_Unset()
+        public void INTV_Unset()
         {
-            this.VestigialData_Set(default(UInt64), false);
+            this.INTV_Set(default(Int32), false);
+        }
+        #endregion
+        #region INCC
+        public bool INCC_IsSet
+        {
+            get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.INCC];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.INCC, nameof(INCC_IsSet));
+        }
+        bool IModHeaderGetter.INCC_IsSet => INCC_IsSet;
+        private Int32 _INCC;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Int32 INCC
+        {
+            get => this._INCC;
+            set => INCC_Set(value);
+        }
+        Int32 IModHeaderGetter.INCC => this.INCC;
+        public void INCC_Set(
+            Int32 value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _INCC, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.INCC, nameof(INCC), nameof(INCC_IsSet));
+        }
+        public void INCC_Unset()
+        {
+            this.INCC_Set(default(Int32), false);
         }
         #endregion
 
@@ -449,10 +488,13 @@ namespace Mutagen.Bethesda.Skyrim
                 case ModHeader_FieldIndex.Deleted:
                 case ModHeader_FieldIndex.Author:
                 case ModHeader_FieldIndex.Description:
-                case ModHeader_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.INTV:
+                case ModHeader_FieldIndex.INCC:
                     return _hasBeenSetTracker[index];
                 case ModHeader_FieldIndex.MasterReferences:
                     return MasterReferences.HasBeenSet;
+                case ModHeader_FieldIndex.OverriddenForms:
+                    return OverriddenForms.HasBeenSet;
                 case ModHeader_FieldIndex.Flags:
                 case ModHeader_FieldIndex.FormID:
                 case ModHeader_FieldIndex.Version:
@@ -467,6 +509,29 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = ModHeader_Registration.TRIGGERING_RECORD_TYPE;
+        public IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in OverriddenForms)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod)
+            where M : IMod
+        {
+            foreach (var item in OverriddenForms)
+            {
+                item.Link(
+                    modList,
+                    sourceMod);
+            }
+        }
+
         public async Task WriteToXmlFolder(
             DirectoryPath? dir,
             string name,
@@ -675,11 +740,28 @@ namespace Mutagen.Bethesda.Skyrim
                         });
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }
-                case 0x41544144: // DATA
+                case 0x4D414E4F: // ONAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.VestigialData = frame.ReadUInt64();
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.VestigialData);
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<SkyrimMajorRecord>>.Instance.ParseRepeatedItem(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.OverriddenForms,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.OverriddenForms);
+                }
+                case 0x56544E49: // INTV
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.INTV = frame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INTV);
+                }
+                case 0x43434E49: // INCC
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.INCC = frame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INCC);
                 }
                 default:
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
@@ -834,8 +916,14 @@ namespace Mutagen.Bethesda.Skyrim
                 case ModHeader_FieldIndex.MasterReferences:
                     this._MasterReferences.SetTo((SourceSetList<MasterReference>)obj);
                     break;
-                case ModHeader_FieldIndex.VestigialData:
-                    this.VestigialData = (UInt64)obj;
+                case ModHeader_FieldIndex.OverriddenForms:
+                    this._OverriddenForms.SetTo((SourceSetList<IFormIDLink<SkyrimMajorRecord>>)obj);
+                    break;
+                case ModHeader_FieldIndex.INTV:
+                    this.INTV = (Int32)obj;
+                    break;
+                case ModHeader_FieldIndex.INCC:
+                    this.INCC = (Int32)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -898,8 +986,14 @@ namespace Mutagen.Bethesda.Skyrim
                 case ModHeader_FieldIndex.MasterReferences:
                     obj._MasterReferences.SetTo((SourceSetList<MasterReference>)pair.Value);
                     break;
-                case ModHeader_FieldIndex.VestigialData:
-                    obj.VestigialData = (UInt64)pair.Value;
+                case ModHeader_FieldIndex.OverriddenForms:
+                    obj._OverriddenForms.SetTo((SourceSetList<IFormIDLink<SkyrimMajorRecord>>)pair.Value);
+                    break;
+                case ModHeader_FieldIndex.INTV:
+                    obj.INTV = (Int32)pair.Value;
+                    break;
+                case ModHeader_FieldIndex.INCC:
+                    obj.INCC = (Int32)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -946,10 +1040,16 @@ namespace Mutagen.Bethesda.Skyrim
         void Description_Unset();
 
         new ISetList<MasterReference> MasterReferences { get; }
-        new UInt64 VestigialData { get; set; }
-        new bool VestigialData_IsSet { get; set; }
-        void VestigialData_Set(UInt64 value, bool hasBeenSet = true);
-        void VestigialData_Unset();
+        new ISetList<IFormIDLink<SkyrimMajorRecord>> OverriddenForms { get; }
+        new Int32 INTV { get; set; }
+        new bool INTV_IsSet { get; set; }
+        void INTV_Set(Int32 value, bool hasBeenSet = true);
+        void INTV_Unset();
+
+        new Int32 INCC { get; set; }
+        new bool INCC_IsSet { get; set; }
+        void INCC_Set(Int32 value, bool hasBeenSet = true);
+        void INCC_Unset();
 
         void CopyFieldsFrom(
             ModHeader rhs,
@@ -1011,9 +1111,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region MasterReferences
         IReadOnlySetList<IMasterReferenceGetter> MasterReferences { get; }
         #endregion
-        #region VestigialData
-        UInt64 VestigialData { get; }
-        bool VestigialData_IsSet { get; }
+        #region OverriddenForms
+        IReadOnlySetList<IFormIDLinkGetter<ISkyrimMajorRecordInternalGetter>> OverriddenForms { get; }
+        #endregion
+        #region INTV
+        Int32 INTV { get; }
+        bool INTV_IsSet { get; }
+
+        #endregion
+        #region INCC
+        Int32 INCC { get; }
+        bool INCC_IsSet { get; }
 
         #endregion
 
@@ -1112,7 +1220,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Author = 8,
         Description = 9,
         MasterReferences = 10,
-        VestigialData = 11,
+        OverriddenForms = 11,
+        INTV = 12,
+        INCC = 13,
     }
     #endregion
 
@@ -1130,9 +1240,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "1745b948-7eb0-45ff-8799-461afdadeb89";
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(ModHeader_Mask<>);
 
@@ -1186,8 +1296,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)ModHeader_FieldIndex.Description;
                 case "MASTERREFERENCES":
                     return (ushort)ModHeader_FieldIndex.MasterReferences;
-                case "VESTIGIALDATA":
-                    return (ushort)ModHeader_FieldIndex.VestigialData;
+                case "OVERRIDDENFORMS":
+                    return (ushort)ModHeader_FieldIndex.OverriddenForms;
+                case "INTV":
+                    return (ushort)ModHeader_FieldIndex.INTV;
+                case "INCC":
+                    return (ushort)ModHeader_FieldIndex.INCC;
                 default:
                     return null;
             }
@@ -1199,6 +1313,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ModHeader_FieldIndex.MasterReferences:
+                case ModHeader_FieldIndex.OverriddenForms:
                     return true;
                 case ModHeader_FieldIndex.Flags:
                 case ModHeader_FieldIndex.FormID:
@@ -1210,7 +1325,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.Deleted:
                 case ModHeader_FieldIndex.Author:
                 case ModHeader_FieldIndex.Description:
-                case ModHeader_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.INTV:
+                case ModHeader_FieldIndex.INCC:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1234,7 +1350,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.Deleted:
                 case ModHeader_FieldIndex.Author:
                 case ModHeader_FieldIndex.Description:
-                case ModHeader_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.OverriddenForms:
+                case ModHeader_FieldIndex.INTV:
+                case ModHeader_FieldIndex.INCC:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1257,7 +1375,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.Author:
                 case ModHeader_FieldIndex.Description:
                 case ModHeader_FieldIndex.MasterReferences:
-                case ModHeader_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.OverriddenForms:
+                case ModHeader_FieldIndex.INTV:
+                case ModHeader_FieldIndex.INCC:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1291,8 +1411,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Description";
                 case ModHeader_FieldIndex.MasterReferences:
                     return "MasterReferences";
-                case ModHeader_FieldIndex.VestigialData:
-                    return "VestigialData";
+                case ModHeader_FieldIndex.OverriddenForms:
+                    return "OverriddenForms";
+                case ModHeader_FieldIndex.INTV:
+                    return "INTV";
+                case ModHeader_FieldIndex.INCC:
+                    return "INCC";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1314,7 +1438,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.Author:
                 case ModHeader_FieldIndex.Description:
                 case ModHeader_FieldIndex.MasterReferences:
-                case ModHeader_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.OverriddenForms:
+                case ModHeader_FieldIndex.INTV:
+                case ModHeader_FieldIndex.INCC:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1337,7 +1463,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.Author:
                 case ModHeader_FieldIndex.Description:
                 case ModHeader_FieldIndex.MasterReferences:
-                case ModHeader_FieldIndex.VestigialData:
+                case ModHeader_FieldIndex.OverriddenForms:
+                case ModHeader_FieldIndex.INTV:
+                case ModHeader_FieldIndex.INCC:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1371,8 +1499,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(String);
                 case ModHeader_FieldIndex.MasterReferences:
                     return typeof(SourceSetList<MasterReference>);
-                case ModHeader_FieldIndex.VestigialData:
-                    return typeof(UInt64);
+                case ModHeader_FieldIndex.OverriddenForms:
+                    return typeof(SourceSetList<IFormIDLink<SkyrimMajorRecord>>);
+                case ModHeader_FieldIndex.INTV:
+                    return typeof(Int32);
+                case ModHeader_FieldIndex.INCC:
+                    return typeof(Int32);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1386,10 +1518,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType MAST_HEADER = new RecordType("MAST");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
+        public static readonly RecordType INTV_HEADER = new RecordType("INTV");
+        public static readonly RecordType INCC_HEADER = new RecordType("INCC");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = TES4_HEADER;
         public const int NumStructFields = 5;
-        public const int NumTypedFields = 7;
+        public const int NumTypedFields = 9;
         public static readonly Type BinaryWriteTranslation = typeof(ModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1720,24 +1854,73 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.VestigialData ?? true)
+            if (copyMask?.OverriddenForms != CopyOption.Skip)
             {
-                errorMask?.PushIndex((int)ModHeader_FieldIndex.VestigialData);
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.OverriddenForms);
+                try
+                {
+                    item.OverriddenForms.SetToWithDefault(
+                        rhs.OverriddenForms,
+                        def?.OverriddenForms);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.INTV ?? true)
+            {
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.INTV);
                 try
                 {
                     if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.VestigialData,
-                        rhsHasBeenSet: rhs.VestigialData_IsSet,
-                        defItem: def?.VestigialData ?? default(UInt64),
-                        defHasBeenSet: def?.VestigialData_IsSet ?? false,
-                        outRhsItem: out var rhsVestigialDataItem,
-                        outDefItem: out var defVestigialDataItem))
+                        rhsItem: rhs.INTV,
+                        rhsHasBeenSet: rhs.INTV_IsSet,
+                        defItem: def?.INTV ?? default(Int32),
+                        defHasBeenSet: def?.INTV_IsSet ?? false,
+                        outRhsItem: out var rhsINTVItem,
+                        outDefItem: out var defINTVItem))
                     {
-                        item.VestigialData = rhsVestigialDataItem;
+                        item.INTV = rhsINTVItem;
                     }
                     else
                     {
-                        item.VestigialData_Unset();
+                        item.INTV_Unset();
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.INCC ?? true)
+            {
+                errorMask?.PushIndex((int)ModHeader_FieldIndex.INCC);
+                try
+                {
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.INCC,
+                        rhsHasBeenSet: rhs.INCC_IsSet,
+                        defItem: def?.INCC ?? default(Int32),
+                        defHasBeenSet: def?.INCC_IsSet ?? false,
+                        outRhsItem: out var rhsINCCItem,
+                        outDefItem: out var defINCCItem))
+                    {
+                        item.INCC = rhsINCCItem;
+                    }
+                    else
+                    {
+                        item.INCC_Unset();
                     }
                 }
                 catch (Exception ex)
@@ -1770,7 +1953,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Author_Unset();
             item.Description_Unset();
             item.MasterReferences.Unset();
-            item.VestigialData_Unset();
+            item.OverriddenForms.Unset();
+            item.INTV_Unset();
+            item.INCC_Unset();
         }
 
         public ModHeader_Mask<bool> GetEqualsMask(
@@ -1808,7 +1993,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.MasterReferences,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.VestigialData = item.VestigialData_IsSet == rhs.VestigialData_IsSet && item.VestigialData == rhs.VestigialData;
+            ret.OverriddenForms = item.OverriddenForms.CollectionEqualsHelper(
+                rhs.OverriddenForms,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.INTV = item.INTV_IsSet == rhs.INTV_IsSet && item.INTV == rhs.INTV;
+            ret.INCC = item.INCC_IsSet == rhs.INCC_IsSet && item.INCC == rhs.INCC;
         }
 
         public string ToString(
@@ -1913,9 +2103,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.VestigialData ?? true)
+            if (printMask?.OverriddenForms?.Overall ?? true)
             {
-                fg.AppendLine($"VestigialData => {item.VestigialData}");
+                fg.AppendLine("OverriddenForms =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.OverriddenForms)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.INTV ?? true)
+            {
+                fg.AppendLine($"INTV => {item.INTV}");
+            }
+            if (printMask?.INCC ?? true)
+            {
+                fg.AppendLine($"INCC => {item.INCC}");
             }
         }
 
@@ -1928,7 +2140,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Author.HasValue && checkMask.Author.Value != item.Author_IsSet) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
             if (checkMask.MasterReferences.Overall.HasValue && checkMask.MasterReferences.Overall.Value != item.MasterReferences.HasBeenSet) return false;
-            if (checkMask.VestigialData.HasValue && checkMask.VestigialData.Value != item.VestigialData_IsSet) return false;
+            if (checkMask.OverriddenForms.Overall.HasValue && checkMask.OverriddenForms.Overall.Value != item.OverriddenForms.HasBeenSet) return false;
+            if (checkMask.INTV.HasValue && checkMask.INTV.Value != item.INTV_IsSet) return false;
+            if (checkMask.INCC.HasValue && checkMask.INCC.Value != item.INCC_IsSet) return false;
             return true;
         }
 
@@ -1947,7 +2161,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Author = item.Author_IsSet;
             mask.Description = item.Description_IsSet;
             mask.MasterReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MasterReference_Mask<bool>>>>(item.MasterReferences.HasBeenSet, item.MasterReferences.WithIndex().Select((i) => new MaskItemIndexed<bool, MasterReference_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.VestigialData = item.VestigialData_IsSet;
+            mask.OverriddenForms = new MaskItem<bool, IEnumerable<(int, bool)>>(item.OverriddenForms.HasBeenSet, null);
+            mask.INTV = item.INTV_IsSet;
+            mask.INCC = item.INCC_IsSet;
         }
 
         #region Equals and Hash
@@ -1988,10 +2204,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences)) return false;
             }
-            if (lhs.VestigialData_IsSet != rhs.VestigialData_IsSet) return false;
-            if (lhs.VestigialData_IsSet)
+            if (lhs.OverriddenForms.HasBeenSet != rhs.OverriddenForms.HasBeenSet) return false;
+            if (lhs.OverriddenForms.HasBeenSet)
             {
-                if (lhs.VestigialData != rhs.VestigialData) return false;
+                if (!lhs.OverriddenForms.SequenceEqual(rhs.OverriddenForms)) return false;
+            }
+            if (lhs.INTV_IsSet != rhs.INTV_IsSet) return false;
+            if (lhs.INTV_IsSet)
+            {
+                if (lhs.INTV != rhs.INTV) return false;
+            }
+            if (lhs.INCC_IsSet != rhs.INCC_IsSet) return false;
+            if (lhs.INCC_IsSet)
+            {
+                if (lhs.INCC != rhs.INCC) return false;
             }
             return true;
         }
@@ -2025,9 +2251,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ret = HashHelper.GetHashCode(item.MasterReferences).CombineHashCode(ret);
             }
-            if (item.VestigialData_IsSet)
+            if (item.OverriddenForms.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(item.VestigialData).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(item.OverriddenForms).CombineHashCode(ret);
+            }
+            if (item.INTV_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.INTV).CombineHashCode(ret);
+            }
+            if (item.INCC_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.INCC).CombineHashCode(ret);
             }
             return ret;
         }
@@ -2165,14 +2399,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             translationMask: listTranslMask);
                     });
             }
-            if (item.VestigialData_IsSet
-                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.VestigialData) ?? true))
+            if (item.OverriddenForms.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.OverriddenForms) ?? true))
             {
-                UInt64XmlTranslation.Instance.Write(
+                ListXmlTranslation<IFormIDLinkGetter<ISkyrimMajorRecordInternalGetter>>.Instance.Write(
                     node: node,
-                    name: nameof(item.VestigialData),
-                    item: item.VestigialData,
-                    fieldIndex: (int)ModHeader_FieldIndex.VestigialData,
+                    name: nameof(item.OverriddenForms),
+                    item: item.OverriddenForms,
+                    fieldIndex: (int)ModHeader_FieldIndex.OverriddenForms,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ModHeader_FieldIndex.OverriddenForms),
+                    transl: (XElement subNode, IFormIDLinkGetter<ISkyrimMajorRecordInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem?.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if (item.INTV_IsSet
+                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.INTV) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.INTV),
+                    item: item.INTV,
+                    fieldIndex: (int)ModHeader_FieldIndex.INTV,
+                    errorMask: errorMask);
+            }
+            if (item.INCC_IsSet
+                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.INCC) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.INCC),
+                    item: item.INCC,
+                    fieldIndex: (int)ModHeader_FieldIndex.INCC,
                     errorMask: errorMask);
             }
         }
@@ -2570,20 +2833,74 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "VestigialData":
+                case "OverriddenForms":
                     try
                     {
-                        errorMask?.PushIndex((int)ModHeader_FieldIndex.VestigialData);
-                        if (UInt64XmlTranslation.Instance.Parse(
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.OverriddenForms);
+                        if (ListXmlTranslation<IFormIDLink<SkyrimMajorRecord>>.Instance.Parse(
                             node: node,
-                            item: out UInt64 VestigialDataParse,
-                            errorMask: errorMask))
+                            enumer: out var OverriddenFormsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
                         {
-                            item.VestigialData = VestigialDataParse;
+                            item.OverriddenForms.SetTo(OverriddenFormsItem);
                         }
                         else
                         {
-                            item.VestigialData = default(UInt64);
+                            item.OverriddenForms.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "INTV":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.INTV);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 INTVParse,
+                            errorMask: errorMask))
+                        {
+                            item.INTV = INTVParse;
+                        }
+                        else
+                        {
+                            item.INTV = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "INCC":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.INCC);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 INCCParse,
+                            errorMask: errorMask))
+                        {
+                            item.INCC = INCCParse;
+                        }
+                        else
+                        {
+                            item.INCC = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -2783,7 +3100,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Author = initialValue;
             this.Description = initialValue;
             this.MasterReferences = new MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference_Mask<T>>>>(initialValue, null);
-            this.VestigialData = initialValue;
+            this.OverriddenForms = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+            this.INTV = initialValue;
+            this.INCC = initialValue;
         }
         #endregion
 
@@ -2799,7 +3118,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public T Author;
         public T Description;
         public MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference_Mask<T>>>> MasterReferences;
-        public T VestigialData;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> OverriddenForms;
+        public T INTV;
+        public T INCC;
         #endregion
 
         #region Equals
@@ -2823,7 +3144,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(this.Author, rhs.Author)) return false;
             if (!object.Equals(this.Description, rhs.Description)) return false;
             if (!object.Equals(this.MasterReferences, rhs.MasterReferences)) return false;
-            if (!object.Equals(this.VestigialData, rhs.VestigialData)) return false;
+            if (!object.Equals(this.OverriddenForms, rhs.OverriddenForms)) return false;
+            if (!object.Equals(this.INTV, rhs.INTV)) return false;
+            if (!object.Equals(this.INCC, rhs.INCC)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2840,7 +3163,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = ret.CombineHashCode(this.Author?.GetHashCode());
             ret = ret.CombineHashCode(this.Description?.GetHashCode());
             ret = ret.CombineHashCode(this.MasterReferences?.GetHashCode());
-            ret = ret.CombineHashCode(this.VestigialData?.GetHashCode());
+            ret = ret.CombineHashCode(this.OverriddenForms?.GetHashCode());
+            ret = ret.CombineHashCode(this.INTV?.GetHashCode());
+            ret = ret.CombineHashCode(this.INCC?.GetHashCode());
             return ret;
         }
 
@@ -2875,7 +3200,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                 }
             }
-            if (!eval(this.VestigialData)) return false;
+            if (this.OverriddenForms != null)
+            {
+                if (!eval(this.OverriddenForms.Overall)) return false;
+                if (this.OverriddenForms.Specific != null)
+                {
+                    foreach (var item in this.OverriddenForms.Specific)
+                    {
+                        if (!eval(item.Value)) return false;
+                    }
+                }
+            }
+            if (!eval(this.INTV)) return false;
+            if (!eval(this.INCC)) return false;
             return true;
         }
         #endregion
@@ -2933,7 +3270,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                 }
             }
-            obj.VestigialData = eval(this.VestigialData);
+            if (OverriddenForms != null)
+            {
+                obj.OverriddenForms = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
+                obj.OverriddenForms.Overall = eval(this.OverriddenForms.Overall);
+                if (OverriddenForms.Specific != null)
+                {
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
+                    obj.OverriddenForms.Specific = l;
+                    foreach (var item in OverriddenForms.Specific.WithIndex())
+                    {
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
+                        l.Add(mask);
+                    }
+                }
+            }
+            obj.INTV = eval(this.INTV);
+            obj.INCC = eval(this.INCC);
         }
         #endregion
 
@@ -2941,6 +3296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void ClearEnumerables()
         {
             this.MasterReferences.Specific = null;
+            this.OverriddenForms.Specific = null;
         }
         #endregion
 
@@ -3028,9 +3384,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     fg.AppendLine("]");
                 }
-                if (printMask?.VestigialData ?? true)
+                if (printMask?.OverriddenForms?.Overall ?? true)
                 {
-                    fg.AppendLine($"VestigialData => {VestigialData}");
+                    fg.AppendLine("OverriddenForms =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (OverriddenForms.Overall != null)
+                        {
+                            fg.AppendLine(OverriddenForms.Overall.ToString());
+                        }
+                        if (OverriddenForms.Specific != null)
+                        {
+                            foreach (var subItem in OverriddenForms.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.INTV ?? true)
+                {
+                    fg.AppendLine($"INTV => {INTV}");
+                }
+                if (printMask?.INCC ?? true)
+                {
+                    fg.AppendLine($"INCC => {INCC}");
                 }
             }
             fg.AppendLine("]");
@@ -3066,7 +3451,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Exception Author;
         public Exception Description;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>> MasterReferences;
-        public Exception VestigialData;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> OverriddenForms;
+        public Exception INTV;
+        public Exception INCC;
         #endregion
 
         #region IErrorMask
@@ -3097,8 +3484,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return Description;
                 case ModHeader_FieldIndex.MasterReferences:
                     return MasterReferences;
-                case ModHeader_FieldIndex.VestigialData:
-                    return VestigialData;
+                case ModHeader_FieldIndex.OverriddenForms:
+                    return OverriddenForms;
+                case ModHeader_FieldIndex.INTV:
+                    return INTV;
+                case ModHeader_FieldIndex.INCC:
+                    return INCC;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3142,8 +3533,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.MasterReferences:
                     this.MasterReferences = new MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>>(ex, null);
                     break;
-                case ModHeader_FieldIndex.VestigialData:
-                    this.VestigialData = ex;
+                case ModHeader_FieldIndex.OverriddenForms:
+                    this.OverriddenForms = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
+                    break;
+                case ModHeader_FieldIndex.INTV:
+                    this.INTV = ex;
+                    break;
+                case ModHeader_FieldIndex.INCC:
+                    this.INCC = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3188,8 +3585,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.MasterReferences:
                     this.MasterReferences = (MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>>)obj;
                     break;
-                case ModHeader_FieldIndex.VestigialData:
-                    this.VestigialData = (Exception)obj;
+                case ModHeader_FieldIndex.OverriddenForms:
+                    this.OverriddenForms = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
+                    break;
+                case ModHeader_FieldIndex.INTV:
+                    this.INTV = (Exception)obj;
+                    break;
+                case ModHeader_FieldIndex.INCC:
+                    this.INCC = (Exception)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3210,7 +3613,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (Author != null) return true;
             if (Description != null) return true;
             if (MasterReferences != null) return true;
-            if (VestigialData != null) return true;
+            if (OverriddenForms != null) return true;
+            if (INTV != null) return true;
+            if (INCC != null) return true;
             return false;
         }
         #endregion
@@ -3277,7 +3682,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
             }
             fg.AppendLine("]");
-            fg.AppendLine($"VestigialData => {VestigialData}");
+            fg.AppendLine("OverriddenForms =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (OverriddenForms.Overall != null)
+                {
+                    fg.AppendLine(OverriddenForms.Overall.ToString());
+                }
+                if (OverriddenForms.Specific != null)
+                {
+                    foreach (var subItem in OverriddenForms.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($" => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+            }
+            fg.AppendLine("]");
+            fg.AppendLine($"INTV => {INTV}");
+            fg.AppendLine($"INCC => {INCC}");
         }
         #endregion
 
@@ -3296,7 +3724,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Author = this.Author.Combine(rhs.Author);
             ret.Description = this.Description.Combine(rhs.Description);
             ret.MasterReferences = new MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>>(this.MasterReferences.Overall.Combine(rhs.MasterReferences.Overall), new List<MaskItem<Exception, MasterReference_ErrorMask>>(this.MasterReferences.Specific.And(rhs.MasterReferences.Specific)));
-            ret.VestigialData = this.VestigialData.Combine(rhs.VestigialData);
+            ret.OverriddenForms = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.OverriddenForms.Overall.Combine(rhs.OverriddenForms.Overall), new List<(int Index, Exception Value)>(this.OverriddenForms.Specific.And(rhs.OverriddenForms.Specific)));
+            ret.INTV = this.INTV.Combine(rhs.INTV);
+            ret.INCC = this.INCC.Combine(rhs.INCC);
             return ret;
         }
         public static ModHeader_ErrorMask Combine(ModHeader_ErrorMask lhs, ModHeader_ErrorMask rhs)
@@ -3334,7 +3764,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Author = defaultOn;
             this.Description = defaultOn;
             this.MasterReferences = new MaskItem<CopyOption, MasterReference_CopyMask>(deepCopyOption, default);
-            this.VestigialData = defaultOn;
+            this.OverriddenForms = deepCopyOption;
+            this.INTV = defaultOn;
+            this.INCC = defaultOn;
         }
 
         #region Members
@@ -3349,7 +3781,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool Author;
         public bool Description;
         public MaskItem<CopyOption, MasterReference_CopyMask> MasterReferences;
-        public bool VestigialData;
+        public CopyOption OverriddenForms;
+        public bool INTV;
+        public bool INCC;
         #endregion
 
     }
@@ -3369,7 +3803,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool Author;
         public bool Description;
         public MaskItem<bool, MasterReference_TranslationMask> MasterReferences;
-        public bool VestigialData;
+        public bool OverriddenForms;
+        public bool INTV;
+        public bool INCC;
         #endregion
 
         #region Ctors
@@ -3390,7 +3826,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Author = defaultOn;
             this.Description = defaultOn;
             this.MasterReferences = new MaskItem<bool, MasterReference_TranslationMask>(defaultOn, null);
-            this.VestigialData = defaultOn;
+            this.OverriddenForms = defaultOn;
+            this.INTV = defaultOn;
+            this.INCC = defaultOn;
         }
 
         #endregion
@@ -3420,7 +3858,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((Author, null));
             ret.Add((Description, null));
             ret.Add((MasterReferences?.Overall ?? true, MasterReferences?.Specific?.GetCrystal()));
-            ret.Add((VestigialData, null));
+            ret.Add((OverriddenForms, null));
+            ret.Add((INTV, null));
+            ret.Add((INCC, null));
         }
     }
     #endregion
@@ -3508,12 +3948,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: null);
                     });
             }
-            if (item.VestigialData_IsSet)
+            if (item.OverriddenForms.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<ISkyrimMajorRecordInternalGetter>>.Instance.Write(
                     writer: writer,
-                    item: item.VestigialData,
-                    header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.DATA_HEADER),
+                    items: item.OverriddenForms,
+                    recordType: ModHeader_Registration.ONAM_HEADER,
+                    transl: (MutagenWriter subWriter, IFormIDLinkGetter<ISkyrimMajorRecordInternalGetter> subItem) =>
+                    {
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            masterReferences: masterReferences);
+                    });
+            }
+            if (item.INTV_IsSet)
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.INTV,
+                    header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.INTV_HEADER),
+                    nullable: false);
+            }
+            if (item.INCC_IsSet)
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.INCC,
+                    header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.INCC_HEADER),
                     nullable: false);
             }
         }
@@ -3666,10 +4128,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
         #endregion
         public IReadOnlySetList<IMasterReferenceGetter> MasterReferences { get; private set; } = EmptySetList<MasterReferenceBinaryWrapper>.Instance;
-        #region VestigialData
-        private int? _VestigialDataLocation;
-        public bool VestigialData_IsSet => _VestigialDataLocation.HasValue;
-        public UInt64 VestigialData => _VestigialDataLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VestigialDataLocation.Value, _package.Meta)) : default;
+        public IReadOnlySetList<IFormIDLinkGetter<ISkyrimMajorRecordInternalGetter>> OverriddenForms { get; private set; } = EmptySetList<IFormIDLinkGetter<ISkyrimMajorRecordInternalGetter>>.Instance;
+        #region INTV
+        private int? _INTVLocation;
+        public bool INTV_IsSet => _INTVLocation.HasValue;
+        public Int32 INTV => _INTVLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _INTVLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region INCC
+        private int? _INCCLocation;
+        public bool INCC_IsSet => _INCCLocation.HasValue;
+        public Int32 INCC => _INCCLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _INCCLocation.Value, _package.Meta)) : default;
         #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
@@ -3746,10 +4214,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         factory:  MasterReferenceBinaryWrapper.MasterReferenceFactory);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }
-                case 0x41544144: // DATA
+                case 0x4D414E4F: // ONAM
                 {
-                    _VestigialDataLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.VestigialData);
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.OverriddenForms = BinaryWrapperSetList<IFormIDLinkGetter<ISkyrimMajorRecordInternalGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormIDLink<ISkyrimMajorRecordInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.OverriddenForms);
+                }
+                case 0x56544E49: // INTV
+                {
+                    _INTVLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INTV);
+                }
+                case 0x43434E49: // INCC
+                {
+                    _INCCLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INCC);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

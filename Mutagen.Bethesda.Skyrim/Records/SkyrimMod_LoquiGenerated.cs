@@ -440,6 +440,10 @@ namespace Mutagen.Bethesda.Skyrim
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
+            foreach (var item in ModHeader.Links)
+            {
+                yield return item;
+            }
             foreach (var item in GameSettings.Links)
             {
                 yield return item;
