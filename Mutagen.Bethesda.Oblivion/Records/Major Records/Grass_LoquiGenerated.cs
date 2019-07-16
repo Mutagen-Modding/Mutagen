@@ -2120,8 +2120,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
             {
-                ((ModelXmlWriteTranslation)((IXmlItem)item.Model).XmlWriteTranslator).Write(
-                    item: item.Model,
+                var loquiItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)Grass_FieldIndex.Model,
@@ -3457,8 +3458,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
             if (item.Model_IsSet)
             {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)item.Model).BinaryWriteTranslator).Write(
-                    item: item.Model,
+                var loquiItem = item.Model;
+                ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

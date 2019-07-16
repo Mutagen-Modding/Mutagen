@@ -4006,8 +4006,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.TeleportDestination_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportDestination) ?? true))
             {
-                ((TeleportDestinationXmlWriteTranslation)((IXmlItem)item.TeleportDestination).XmlWriteTranslator).Write(
-                    item: item.TeleportDestination,
+                var loquiItem = item.TeleportDestination;
+                ((TeleportDestinationXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.TeleportDestination),
                     fieldIndex: (int)PlacedObject_FieldIndex.TeleportDestination,
@@ -4017,8 +4018,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Lock_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
             {
-                ((LockInformationXmlWriteTranslation)((IXmlItem)item.Lock).XmlWriteTranslator).Write(
-                    item: item.Lock,
+                var loquiItem = item.Lock;
+                ((LockInformationXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Lock),
                     fieldIndex: (int)PlacedObject_FieldIndex.Lock,
@@ -4058,8 +4060,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.EnableParent_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
             {
-                ((EnableParentXmlWriteTranslation)((IXmlItem)item.EnableParent).XmlWriteTranslator).Write(
-                    item: item.EnableParent,
+                var loquiItem = item.EnableParent;
+                ((EnableParentXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.EnableParent),
                     fieldIndex: (int)PlacedObject_FieldIndex.EnableParent,
@@ -4089,8 +4092,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.DistantLODData_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLODData) ?? true))
             {
-                ((DistantLODDataXmlWriteTranslation)((IXmlItem)item.DistantLODData).XmlWriteTranslator).Write(
-                    item: item.DistantLODData,
+                var loquiItem = item.DistantLODData;
+                ((DistantLODDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.DistantLODData),
                     fieldIndex: (int)PlacedObject_FieldIndex.DistantLODData,
@@ -4160,8 +4164,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.MapMarker_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
             {
-                ((MapMarkerXmlWriteTranslation)((IXmlItem)item.MapMarker).XmlWriteTranslator).Write(
-                    item: item.MapMarker,
+                var loquiItem = item.MapMarker;
+                ((MapMarkerXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.MapMarker),
                     fieldIndex: (int)PlacedObject_FieldIndex.MapMarker,
@@ -6064,8 +6069,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.TeleportDestination_IsSet)
             {
-                ((TeleportDestinationBinaryWriteTranslation)((IBinaryItem)item.TeleportDestination).BinaryWriteTranslator).Write(
-                    item: item.TeleportDestination,
+                var loquiItem = item.TeleportDestination;
+                ((TeleportDestinationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -6073,8 +6079,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Lock_IsSet)
             {
-                ((LockInformationBinaryWriteTranslation)((IBinaryItem)item.Lock).BinaryWriteTranslator).Write(
-                    item: item.Lock,
+                var loquiItem = item.Lock;
+                ((LockInformationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -6108,8 +6115,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.EnableParent_IsSet)
             {
-                ((EnableParentBinaryWriteTranslation)((IBinaryItem)item.EnableParent).BinaryWriteTranslator).Write(
-                    item: item.EnableParent,
+                var loquiItem = item.EnableParent;
+                ((EnableParentBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -6134,8 +6142,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.DistantLODData_IsSet)
             {
-                ((DistantLODDataBinaryWriteTranslation)((IBinaryItem)item.DistantLODData).BinaryWriteTranslator).Write(
-                    item: item.DistantLODData,
+                var loquiItem = item.DistantLODData;
+                ((DistantLODDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -6194,8 +6203,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.MapMarker_IsSet)
             {
                 using (HeaderExport.ExportHeader(writer, PlacedObject_Registration.XMRK_HEADER, ObjectType.Subrecord)) { }
-                ((MapMarkerBinaryWriteTranslation)((IBinaryItem)item.MapMarker).BinaryWriteTranslator).Write(
-                    item: item.MapMarker,
+                var loquiItem = item.MapMarker;
+                ((MapMarkerBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

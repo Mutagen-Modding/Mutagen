@@ -1220,8 +1220,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Male_IsSet
                 && (translationMask?.GetShouldTranslate((int)GenderedBodyData_FieldIndex.Male) ?? true))
             {
-                ((BodyDataXmlWriteTranslation)((IXmlItem)item.Male).XmlWriteTranslator).Write(
-                    item: item.Male,
+                var loquiItem = item.Male;
+                ((BodyDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Male),
                     fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
@@ -1231,8 +1232,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Female_IsSet
                 && (translationMask?.GetShouldTranslate((int)GenderedBodyData_FieldIndex.Female) ?? true))
             {
-                ((BodyDataXmlWriteTranslation)((IXmlItem)item.Female).XmlWriteTranslator).Write(
-                    item: item.Female,
+                var loquiItem = item.Female;
+                ((BodyDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Female),
                     fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
@@ -1907,8 +1909,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Male_IsSet)
             {
                 using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.MNAM_HEADER, ObjectType.Subrecord)) { }
-                ((BodyDataBinaryWriteTranslation)((IBinaryItem)item.Male).BinaryWriteTranslator).Write(
-                    item: item.Male,
+                var loquiItem = item.Male;
+                ((BodyDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -1917,8 +1920,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Female_IsSet)
             {
                 using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.FNAM_HEADER, ObjectType.Subrecord)) { }
-                ((BodyDataBinaryWriteTranslation)((IBinaryItem)item.Female).BinaryWriteTranslator).Write(
-                    item: item.Female,
+                var loquiItem = item.Female;
+                ((BodyDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

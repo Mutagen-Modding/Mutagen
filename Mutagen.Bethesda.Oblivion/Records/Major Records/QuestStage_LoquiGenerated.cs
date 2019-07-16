@@ -1146,8 +1146,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)QuestStage_FieldIndex.LogEntries),
                     transl: (XElement subNode, ILogEntryGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((LogEntryXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((LogEntryXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -1887,8 +1888,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, ILogEntryGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((LogEntryBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((LogEntryBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                            item: loquiItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,

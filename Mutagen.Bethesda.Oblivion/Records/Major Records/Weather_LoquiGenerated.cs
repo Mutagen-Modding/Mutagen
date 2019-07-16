@@ -4138,8 +4138,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Model) ?? true))
             {
-                ((ModelXmlWriteTranslation)((IXmlItem)item.Model).XmlWriteTranslator).Write(
-                    item: item.Model,
+                var loquiItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)Weather_FieldIndex.Model,
@@ -4158,8 +4159,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.WeatherTypes),
                     transl: (XElement subNode, IWeatherTypeGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((WeatherTypeXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((WeatherTypeXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -4466,8 +4468,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Sounds),
                     transl: (XElement subNode, IWeatherSoundGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((WeatherSoundXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((WeatherSoundXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -7213,8 +7216,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Model_IsSet)
             {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)item.Model).BinaryWriteTranslator).Write(
-                    item: item.Model,
+                var loquiItem = item.Model;
+                ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -7230,12 +7234,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((WeatherTypeBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
-                            item: subItem,
-                            writer: subWriter,
-                            errorMask: listErrorMask,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                        {
+                            var loquiItem = subItem;
+                            ((WeatherTypeBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                                item: loquiItem,
+                                writer: subWriter,
+                                errorMask: listErrorMask,
+                                masterReferences: masterReferences,
+                                recordTypeConverter: null);
+                        }
                     });
             }
             if (item.FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Has))
@@ -7337,8 +7344,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IWeatherSoundGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((WeatherSoundBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((WeatherSoundBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                            item: loquiItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,

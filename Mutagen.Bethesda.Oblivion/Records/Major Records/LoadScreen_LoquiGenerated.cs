@@ -1500,8 +1500,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)LoadScreen_FieldIndex.Locations),
                     transl: (XElement subNode, ILoadScreenLocationGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((LoadScreenLocationXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((LoadScreenLocationXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2210,8 +2211,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, ILoadScreenLocationGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((LoadScreenLocationBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((LoadScreenLocationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                            item: loquiItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,

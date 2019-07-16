@@ -1597,8 +1597,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (item.ModHeader_IsSet
                 && (translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ModHeader) ?? true))
             {
-                ((ModHeaderXmlWriteTranslation)((IXmlItem)item.ModHeader).XmlWriteTranslator).Write(
-                    item: item.ModHeader,
+                var loquiItem = item.ModHeader;
+                ((ModHeaderXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.ModHeader),
                     fieldIndex: (int)SkyrimMod_FieldIndex.ModHeader,
@@ -1607,8 +1608,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.GameSettings) ?? true))
             {
-                ((GroupXmlWriteTranslation)((IXmlItem)item.GameSettings).XmlWriteTranslator).Write<IGameSettingInternalGetter>(
-                    item: item.GameSettings,
+                var loquiItem = item.GameSettings;
+                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IGameSettingInternalGetter>(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.GameSettings),
                     fieldIndex: (int)SkyrimMod_FieldIndex.GameSettings,
@@ -1617,8 +1619,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Globals) ?? true))
             {
-                ((GroupXmlWriteTranslation)((IXmlItem)item.Globals).XmlWriteTranslator).Write<IGlobalInternalGetter>(
-                    item: item.Globals,
+                var loquiItem = item.Globals;
+                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IGlobalInternalGetter>(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Globals),
                     fieldIndex: (int)SkyrimMod_FieldIndex.Globals,
@@ -2341,8 +2344,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences = new MasterReferences(item.ModHeader.MasterReferences, modKey);
             if (item.ModHeader_IsSet)
             {
-                ((ModHeaderBinaryWriteTranslation)((IBinaryItem)item.ModHeader).BinaryWriteTranslator).Write(
-                    item: item.ModHeader,
+                var loquiItem = item.ModHeader;
+                ((ModHeaderBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -2352,8 +2356,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.GameSettings.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.GameSettings).BinaryWriteTranslator).Write<IGameSettingInternalGetter>(
-                        item: item.GameSettings,
+                    var loquiItem = item.GameSettings;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGameSettingInternalGetter>(
+                        item: loquiItem,
                         writer: writer,
                         errorMask: errorMask,
                         masterReferences: masterReferences,
@@ -2364,8 +2369,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.Globals.Items.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)item.Globals).BinaryWriteTranslator).Write<IGlobalInternalGetter>(
-                        item: item.Globals,
+                    var loquiItem = item.Globals;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGlobalInternalGetter>(
+                        item: loquiItem,
                         writer: writer,
                         errorMask: errorMask,
                         masterReferences: masterReferences,

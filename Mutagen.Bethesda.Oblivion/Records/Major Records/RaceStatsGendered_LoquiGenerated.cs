@@ -1085,8 +1085,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((translationMask?.GetShouldTranslate((int)RaceStatsGendered_FieldIndex.Male) ?? true))
             {
-                ((RaceStatsXmlWriteTranslation)((IXmlItem)item.Male).XmlWriteTranslator).Write(
-                    item: item.Male,
+                var loquiItem = item.Male;
+                ((RaceStatsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Male),
                     fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
@@ -1095,8 +1096,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)RaceStatsGendered_FieldIndex.Female) ?? true))
             {
-                ((RaceStatsXmlWriteTranslation)((IXmlItem)item.Female).XmlWriteTranslator).Write(
-                    item: item.Female,
+                var loquiItem = item.Female;
+                ((RaceStatsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Female),
                     fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
@@ -1767,18 +1769,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            ((RaceStatsBinaryWriteTranslation)((IBinaryItem)item.Male).BinaryWriteTranslator).Write(
-                item: item.Male,
-                writer: writer,
-                errorMask: errorMask,
-                masterReferences: masterReferences,
-                recordTypeConverter: null);
-            ((RaceStatsBinaryWriteTranslation)((IBinaryItem)item.Female).BinaryWriteTranslator).Write(
-                item: item.Female,
-                writer: writer,
-                errorMask: errorMask,
-                masterReferences: masterReferences,
-                recordTypeConverter: null);
+            {
+                var loquiItem = item.Male;
+                ((RaceStatsBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
+            }
+            {
+                var loquiItem = item.Female;
+                ((RaceStatsBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
+            }
         }
 
         public void Write(

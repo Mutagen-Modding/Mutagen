@@ -1077,8 +1077,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                     translationMask: translationMask?.GetSubCrystal((int)TargetGroup_FieldIndex.Targets),
                     transl: (XElement subNode, ITargetGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((TargetXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((TargetXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,

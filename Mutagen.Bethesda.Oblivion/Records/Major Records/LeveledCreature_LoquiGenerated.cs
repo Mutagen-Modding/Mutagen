@@ -1701,8 +1701,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)LeveledCreature_FieldIndex.Entries),
                     transl: (XElement subNode, ILeveledEntryGetter<INPCSpawnInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((LeveledEntryXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write<INPCSpawnInternalGetter>(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((LeveledEntryXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<INPCSpawnInternalGetter>(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2515,8 +2516,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, ILeveledEntryGetter<INPCSpawnInternalGetter> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write<INPCSpawnInternalGetter>(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<INPCSpawnInternalGetter>(
+                            item: loquiItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,

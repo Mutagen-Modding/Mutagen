@@ -2972,8 +2972,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.MapData_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
             {
-                ((MapDataXmlWriteTranslation)((IXmlItem)item.MapData).XmlWriteTranslator).Write(
-                    item: item.MapData,
+                var loquiItem = item.MapData;
+                ((MapDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.MapData),
                     fieldIndex: (int)Worldspace_FieldIndex.MapData,
@@ -3033,8 +3034,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Road_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Road) ?? true))
             {
-                ((RoadXmlWriteTranslation)((IXmlItem)item.Road).XmlWriteTranslator).Write(
-                    item: item.Road,
+                var loquiItem = item.Road;
+                ((RoadXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Road),
                     fieldIndex: (int)Worldspace_FieldIndex.Road,
@@ -3044,8 +3046,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.TopCell_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
             {
-                ((CellXmlWriteTranslation)((IXmlItem)item.TopCell).XmlWriteTranslator).Write(
-                    item: item.TopCell,
+                var loquiItem = item.TopCell;
+                ((CellXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.TopCell),
                     fieldIndex: (int)Worldspace_FieldIndex.TopCell,
@@ -3073,8 +3076,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells),
                     transl: (XElement subNode, IWorldspaceBlockGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((WorldspaceBlockXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((WorldspaceBlockXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -4566,8 +4570,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.MapData_IsSet)
             {
-                ((MapDataBinaryWriteTranslation)((IBinaryItem)item.MapData).BinaryWriteTranslator).Write(
-                    item: item.MapData,
+                var loquiItem = item.MapData;
+                ((MapDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

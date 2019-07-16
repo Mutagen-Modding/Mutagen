@@ -4179,8 +4179,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.RelatedWaters_IsSet
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
             {
-                ((RelatedWatersXmlWriteTranslation)((IXmlItem)item.RelatedWaters).XmlWriteTranslator).Write(
-                    item: item.RelatedWaters,
+                var loquiItem = item.RelatedWaters;
+                ((RelatedWatersXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.RelatedWaters),
                     fieldIndex: (int)Water_FieldIndex.RelatedWaters,
@@ -6630,8 +6631,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.RelatedWaters_IsSet)
             {
-                ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)item.RelatedWaters).BinaryWriteTranslator).Write(
-                    item: item.RelatedWaters,
+                var loquiItem = item.RelatedWaters;
+                ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

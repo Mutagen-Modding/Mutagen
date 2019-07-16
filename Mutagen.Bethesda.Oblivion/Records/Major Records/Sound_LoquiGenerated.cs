@@ -1382,8 +1382,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Data_IsSet
                 && (translationMask?.GetShouldTranslate((int)Sound_FieldIndex.Data) ?? true))
             {
-                ((SoundDataXmlWriteTranslation)((IXmlItem)item.Data).XmlWriteTranslator).Write(
-                    item: item.Data,
+                var loquiItem = item.Data;
+                ((SoundDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Data),
                     fieldIndex: (int)Sound_FieldIndex.Data,
@@ -1957,8 +1958,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Data_IsSet)
             {
-                ((SoundDataBinaryWriteTranslation)((IBinaryItem)item.Data).BinaryWriteTranslator).Write(
-                    item: item.Data,
+                var loquiItem = item.Data;
+                ((SoundDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

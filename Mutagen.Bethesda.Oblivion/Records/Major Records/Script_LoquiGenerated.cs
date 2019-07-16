@@ -1242,8 +1242,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Fields_IsSet
                 && (translationMask?.GetShouldTranslate((int)Script_FieldIndex.Fields) ?? true))
             {
-                ((ScriptFieldsXmlWriteTranslation)((IXmlItem)item.Fields).XmlWriteTranslator).Write(
-                    item: item.Fields,
+                var loquiItem = item.Fields;
+                ((ScriptFieldsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Fields),
                     fieldIndex: (int)Script_FieldIndex.Fields,
@@ -1729,8 +1730,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
             if (item.Fields_IsSet)
             {
-                ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)item.Fields).BinaryWriteTranslator).Write(
-                    item: item.Fields,
+                var loquiItem = item.Fields;
+                ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

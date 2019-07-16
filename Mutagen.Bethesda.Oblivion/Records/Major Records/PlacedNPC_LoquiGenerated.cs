@@ -2403,8 +2403,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.DistantLODData_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.DistantLODData) ?? true))
             {
-                ((DistantLODDataXmlWriteTranslation)((IXmlItem)item.DistantLODData).XmlWriteTranslator).Write(
-                    item: item.DistantLODData,
+                var loquiItem = item.DistantLODData;
+                ((DistantLODDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.DistantLODData),
                     fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
@@ -2414,8 +2415,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.EnableParent_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.EnableParent) ?? true))
             {
-                ((EnableParentXmlWriteTranslation)((IXmlItem)item.EnableParent).XmlWriteTranslator).Write(
-                    item: item.EnableParent,
+                var loquiItem = item.EnableParent;
+                ((EnableParentXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.EnableParent),
                     fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
@@ -3576,8 +3578,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.DistantLODData_IsSet)
             {
-                ((DistantLODDataBinaryWriteTranslation)((IBinaryItem)item.DistantLODData).BinaryWriteTranslator).Write(
-                    item: item.DistantLODData,
+                var loquiItem = item.DistantLODData;
+                ((DistantLODDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -3585,8 +3588,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.EnableParent_IsSet)
             {
-                ((EnableParentBinaryWriteTranslation)((IBinaryItem)item.EnableParent).BinaryWriteTranslator).Write(
-                    item: item.EnableParent,
+                var loquiItem = item.EnableParent;
+                ((EnableParentBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

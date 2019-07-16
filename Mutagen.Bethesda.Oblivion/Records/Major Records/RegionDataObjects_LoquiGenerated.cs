@@ -1169,8 +1169,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)RegionDataObjects_FieldIndex.Objects),
                     transl: (XElement subNode, IRegionDataObjectGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((RegionDataObjectXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((RegionDataObjectXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -1743,12 +1744,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IRegionDataObjectGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((RegionDataObjectBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
-                            item: subItem,
-                            writer: subWriter,
-                            errorMask: listErrorMask,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                        {
+                            var loquiItem = subItem;
+                            ((RegionDataObjectBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                                item: loquiItem,
+                                writer: subWriter,
+                                errorMask: listErrorMask,
+                                masterReferences: masterReferences,
+                                recordTypeConverter: null);
+                        }
                     });
             }
         }

@@ -2113,8 +2113,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Training) ?? true))
                     {
-                        ((ClassTrainingXmlWriteTranslation)((IXmlItem)item.Training).XmlWriteTranslator).Write(
-                            item: item.Training,
+                        var loquiItem = item.Training;
+                        ((ClassTrainingXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: node,
                             name: nameof(item.Training),
                             fieldIndex: (int)Class_FieldIndex.Training,
@@ -3336,12 +3337,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         length: 4);
                     if (!item.DATADataTypeState.HasFlag(Class.DATADataType.Break0))
                     {
-                        ((ClassTrainingBinaryWriteTranslation)((IBinaryItem)item.Training).BinaryWriteTranslator).Write(
-                            item: item.Training,
-                            writer: writer,
-                            errorMask: errorMask,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                        {
+                            var loquiItem = item.Training;
+                            ((ClassTrainingBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                                item: loquiItem,
+                                writer: writer,
+                                errorMask: errorMask,
+                                masterReferences: masterReferences,
+                                recordTypeConverter: null);
+                        }
                     }
                 }
             }

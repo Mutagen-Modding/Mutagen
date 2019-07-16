@@ -1279,8 +1279,9 @@ namespace Mutagen.Bethesda.Internals
                     translationMask: translationMask?.GetSubCrystal((int)ListGroup_FieldIndex.Items),
                     transl: (XElement subNode, T subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((IXmlWriteTranslator)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((IXmlWriteTranslator)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2153,8 +2154,9 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask,
                 transl: (MutagenWriter subWriter, T subItem, ErrorMaskBuilder listErrorMask) =>
                 {
-                    ((IBinaryWriteTranslator)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
-                        item: subItem,
+                    var loquiItem = subItem;
+                    ((IBinaryWriteTranslator)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                        item: loquiItem,
                         writer: subWriter,
                         errorMask: listErrorMask,
                         masterReferences: masterReferences,

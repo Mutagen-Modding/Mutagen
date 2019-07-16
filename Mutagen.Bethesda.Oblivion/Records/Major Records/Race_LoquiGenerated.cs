@@ -3853,8 +3853,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Relations),
                     transl: (XElement subNode, IRaceRelationGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((RaceRelationXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((RaceRelationXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -3874,8 +3875,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoosts),
                         transl: (XElement subNode, ISkillBoostGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                         {
-                            ((SkillBoostXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                                item: subItem,
+                            var loquiItem = subItem;
+                            ((SkillBoostXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                                item: loquiItem,
                                 node: subNode,
                                 name: null,
                                 errorMask: listSubMask,
@@ -3940,8 +3942,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Voices_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
-                ((RaceVoicesXmlWriteTranslation)((IXmlItem)item.Voices).XmlWriteTranslator).Write(
-                    item: item.Voices,
+                var loquiItem = item.Voices;
+                ((RaceVoicesXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Voices),
                     fieldIndex: (int)Race_FieldIndex.Voices,
@@ -3951,8 +3954,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.DefaultHair_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHair) ?? true))
             {
-                ((RaceHairXmlWriteTranslation)((IXmlItem)item.DefaultHair).XmlWriteTranslator).Write(
-                    item: item.DefaultHair,
+                var loquiItem = item.DefaultHair;
+                ((RaceHairXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.DefaultHair),
                     fieldIndex: (int)Race_FieldIndex.DefaultHair,
@@ -3992,8 +3996,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.RaceStats_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.RaceStats) ?? true))
             {
-                ((RaceStatsGenderedXmlWriteTranslation)((IXmlItem)item.RaceStats).XmlWriteTranslator).Write(
-                    item: item.RaceStats,
+                var loquiItem = item.RaceStats;
+                ((RaceStatsGenderedXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.RaceStats),
                     fieldIndex: (int)Race_FieldIndex.RaceStats,
@@ -4012,8 +4017,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceData),
                     transl: (XElement subNode, IFacePartGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((FacePartXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((FacePartXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -4023,8 +4029,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.BodyData_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
-                ((GenderedBodyDataXmlWriteTranslation)((IXmlItem)item.BodyData).XmlWriteTranslator).Write(
-                    item: item.BodyData,
+                var loquiItem = item.BodyData;
+                ((GenderedBodyDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.BodyData),
                     fieldIndex: (int)Race_FieldIndex.BodyData,
@@ -4072,8 +4079,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.FaceGenData_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceGenData) ?? true))
             {
-                ((FaceGenDataXmlWriteTranslation)((IXmlItem)item.FaceGenData).XmlWriteTranslator).Write(
-                    item: item.FaceGenData,
+                var loquiItem = item.FaceGenData;
+                ((FaceGenDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.FaceGenData),
                     fieldIndex: (int)Race_FieldIndex.FaceGenData,
@@ -6381,8 +6389,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IRaceRelationGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((RaceRelationBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((RaceRelationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                            item: loquiItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
@@ -6400,12 +6409,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask,
                         transl: (MutagenWriter subWriter, ISkillBoostGetter subItem, ErrorMaskBuilder listErrorMask) =>
                         {
-                            ((SkillBoostBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
-                                item: subItem,
-                                writer: subWriter,
-                                errorMask: listErrorMask,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
+                            {
+                                var loquiItem = subItem;
+                                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                                    item: loquiItem,
+                                    writer: subWriter,
+                                    errorMask: listErrorMask,
+                                    masterReferences: masterReferences,
+                                    recordTypeConverter: null);
+                            }
                         });
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
@@ -6430,8 +6442,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Voices_IsSet)
             {
-                ((RaceVoicesBinaryWriteTranslation)((IBinaryItem)item.Voices).BinaryWriteTranslator).Write(
-                    item: item.Voices,
+                var loquiItem = item.Voices;
+                ((RaceVoicesBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -6439,8 +6452,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.DefaultHair_IsSet)
             {
-                ((RaceHairBinaryWriteTranslation)((IBinaryItem)item.DefaultHair).BinaryWriteTranslator).Write(
-                    item: item.DefaultHair,
+                var loquiItem = item.DefaultHair;
+                ((RaceHairBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -6472,8 +6486,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.RaceStats_IsSet)
             {
-                ((RaceStatsGenderedBinaryWriteTranslation)((IBinaryItem)item.RaceStats).BinaryWriteTranslator).Write(
-                    item: item.RaceStats,
+                var loquiItem = item.RaceStats;
+                ((RaceStatsGenderedBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -6489,8 +6504,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IFacePartGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((FacePartBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((FacePartBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                            item: loquiItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
@@ -6500,8 +6516,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.BodyData_IsSet)
             {
                 using (HeaderExport.ExportHeader(writer, Race_Registration.NAM1_HEADER, ObjectType.Subrecord)) { }
-                ((GenderedBodyDataBinaryWriteTranslation)((IBinaryItem)item.BodyData).BinaryWriteTranslator).Write(
-                    item: item.BodyData,
+                var loquiItem = item.BodyData;
+                ((GenderedBodyDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -6537,8 +6554,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.FaceGenData_IsSet)
             {
-                ((FaceGenDataBinaryWriteTranslation)((IBinaryItem)item.FaceGenData).BinaryWriteTranslator).Write(
-                    item: item.FaceGenData,
+                var loquiItem = item.FaceGenData;
+                ((FaceGenDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

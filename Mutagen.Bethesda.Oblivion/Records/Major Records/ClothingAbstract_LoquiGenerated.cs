@@ -2611,8 +2611,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.MaleBipedModel_IsSet
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleBipedModel) ?? true))
             {
-                ((ModelXmlWriteTranslation)((IXmlItem)item.MaleBipedModel).XmlWriteTranslator).Write(
-                    item: item.MaleBipedModel,
+                var loquiItem = item.MaleBipedModel;
+                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.MaleBipedModel),
                     fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
@@ -2622,8 +2623,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.MaleWorldModel_IsSet
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleWorldModel) ?? true))
             {
-                ((ModelXmlWriteTranslation)((IXmlItem)item.MaleWorldModel).XmlWriteTranslator).Write(
-                    item: item.MaleWorldModel,
+                var loquiItem = item.MaleWorldModel;
+                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.MaleWorldModel),
                     fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
@@ -2643,8 +2645,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.FemaleBipedModel_IsSet
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleBipedModel) ?? true))
             {
-                ((ModelXmlWriteTranslation)((IXmlItem)item.FemaleBipedModel).XmlWriteTranslator).Write(
-                    item: item.FemaleBipedModel,
+                var loquiItem = item.FemaleBipedModel;
+                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.FemaleBipedModel),
                     fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
@@ -2654,8 +2657,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.FemaleWorldModel_IsSet
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleWorldModel) ?? true))
             {
-                ((ModelXmlWriteTranslation)((IXmlItem)item.FemaleWorldModel).XmlWriteTranslator).Write(
-                    item: item.FemaleWorldModel,
+                var loquiItem = item.FemaleWorldModel;
+                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.FemaleWorldModel),
                     fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
@@ -3901,8 +3905,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.MaleBipedModel_IsSet)
             {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)item.MaleBipedModel).BinaryWriteTranslator).Write(
-                    item: item.MaleBipedModel,
+                var loquiItem = item.MaleBipedModel;
+                ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -3910,8 +3915,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.MaleWorldModel_IsSet)
             {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)item.MaleWorldModel).BinaryWriteTranslator).Write(
-                    item: item.MaleWorldModel,
+                var loquiItem = item.MaleWorldModel;
+                ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -3927,8 +3933,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.FemaleBipedModel_IsSet)
             {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)item.FemaleBipedModel).BinaryWriteTranslator).Write(
-                    item: item.FemaleBipedModel,
+                var loquiItem = item.FemaleBipedModel;
+                ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -3936,8 +3943,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.FemaleWorldModel_IsSet)
             {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)item.FemaleWorldModel).BinaryWriteTranslator).Write(
-                    item: item.FemaleWorldModel,
+                var loquiItem = item.FemaleWorldModel;
+                ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

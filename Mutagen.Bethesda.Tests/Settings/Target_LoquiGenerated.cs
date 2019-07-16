@@ -1371,8 +1371,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.Interest) ?? true))
             {
-                ((RecordInterestXmlWriteTranslation)((IXmlItem)item.Interest).XmlWriteTranslator).Write(
-                    item: item.Interest,
+                var loquiItem = item.Interest;
+                ((RecordInterestXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Interest),
                     fieldIndex: (int)Target_FieldIndex.Interest,

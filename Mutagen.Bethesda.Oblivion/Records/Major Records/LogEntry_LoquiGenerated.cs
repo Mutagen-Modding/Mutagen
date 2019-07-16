@@ -1487,8 +1487,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.Conditions),
                     transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((ConditionXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((ConditionXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -1508,8 +1509,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.ResultScript_IsSet
                 && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.ResultScript) ?? true))
             {
-                ((ScriptFieldsXmlWriteTranslation)((IXmlItem)item.ResultScript).XmlWriteTranslator).Write(
-                    item: item.ResultScript,
+                var loquiItem = item.ResultScript;
+                ((ScriptFieldsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.ResultScript),
                     fieldIndex: (int)LogEntry_FieldIndex.ResultScript,
@@ -2372,8 +2374,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IConditionGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((ConditionBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((ConditionBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                            item: loquiItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
@@ -2390,8 +2393,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.ResultScript_IsSet)
             {
-                ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)item.ResultScript).BinaryWriteTranslator).Write(
-                    item: item.ResultScript,
+                var loquiItem = item.ResultScript;
+                ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

@@ -81,20 +81,22 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"if ({itemAccessor.PropertyOrDirectAccess}.Items.Count > 0)");
             }
-            string line;
-            if (loquiGen.TargetObjectGeneration != null)
+            using (new BraceWrapper(fg, doIt: isGroup || (!this.Module.TranslationMaskParameter && !typeGen.HasBeenSet)))
             {
-                line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)})(({nameof(IBinaryItem)}){itemAccessor.DirectAccess}).{this.Module.TranslationWriteItemMember})";
-            }
-            else
-            {
-                line = $"(({this.Module.TranslationWriteInterface})(({nameof(IBinaryItem)}){itemAccessor.DirectAccess}).{this.Module.TranslationWriteItemMember})";
-            }
-            using (new BraceWrapper(fg, doIt: isGroup))
-            {
+                // We want to cache retrievals, in case it's a wrapper being written
+                fg.AppendLine($"var loquiItem = {itemAccessor.DirectAccess};");
+                string line;
+                if (loquiGen.TargetObjectGeneration != null)
+                {
+                    line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)})(({nameof(IBinaryItem)})loquiItem).{this.Module.TranslationWriteItemMember})";
+                }
+                else
+                {
+                    line = $"(({this.Module.TranslationWriteInterface})(({nameof(IBinaryItem)})loquiItem).{this.Module.TranslationWriteItemMember})";
+                }
                 using (var args = new ArgsWrapper(fg, $"{line}.Write{loquiGen.GetGenericTypes(true, MaskType.Normal)}"))
                 {
-                    args.Add($"item: {itemAccessor.DirectAccess}");
+                    args.Add($"item: loquiItem");
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"errorMask: {errorMaskAccessor}");
                     args.Add($"masterReferences: masterReferences");

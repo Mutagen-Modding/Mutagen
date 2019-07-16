@@ -3395,8 +3395,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Lighting_IsSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
             {
-                ((CellLightingXmlWriteTranslation)((IXmlItem)item.Lighting).XmlWriteTranslator).Write(
-                    item: item.Lighting,
+                var loquiItem = item.Lighting;
+                ((CellLightingXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Lighting),
                     fieldIndex: (int)Cell_FieldIndex.Lighting,
@@ -3495,8 +3496,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.PathGrid_IsSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
             {
-                ((PathGridXmlWriteTranslation)((IXmlItem)item.PathGrid).XmlWriteTranslator).Write(
-                    item: item.PathGrid,
+                var loquiItem = item.PathGrid;
+                ((PathGridXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.PathGrid),
                     fieldIndex: (int)Cell_FieldIndex.PathGrid,
@@ -3506,8 +3508,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Landscape_IsSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
             {
-                ((LandscapeXmlWriteTranslation)((IXmlItem)item.Landscape).XmlWriteTranslator).Write(
-                    item: item.Landscape,
+                var loquiItem = item.Landscape;
+                ((LandscapeXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Landscape),
                     fieldIndex: (int)Cell_FieldIndex.Landscape,
@@ -3544,8 +3547,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Persistent),
                     transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((IXmlWriteTranslator)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((IXmlWriteTranslator)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -3573,8 +3577,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Temporary),
                     transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((IXmlWriteTranslator)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((IXmlWriteTranslator)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -3602,8 +3607,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.VisibleWhenDistant),
                     transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((IXmlWriteTranslator)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((IXmlWriteTranslator)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -5498,8 +5504,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Lighting_IsSet)
             {
-                ((CellLightingBinaryWriteTranslation)((IBinaryItem)item.Lighting).BinaryWriteTranslator).Write(
-                    item: item.Lighting,
+                var loquiItem = item.Lighting;
+                ((CellLightingBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

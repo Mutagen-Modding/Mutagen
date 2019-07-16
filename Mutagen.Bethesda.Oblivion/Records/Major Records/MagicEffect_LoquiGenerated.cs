@@ -2588,8 +2588,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Model) ?? true))
             {
-                ((ModelXmlWriteTranslation)((IXmlItem)item.Model).XmlWriteTranslator).Write(
-                    item: item.Model,
+                var loquiItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)MagicEffect_FieldIndex.Model,
@@ -2683,8 +2684,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SubData) ?? true))
                     {
-                        ((MagicEffectSubDataXmlWriteTranslation)((IXmlItem)item.SubData).XmlWriteTranslator).Write(
-                            item: item.SubData,
+                        var loquiItem = item.SubData;
+                        ((MagicEffectSubDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: node,
                             name: nameof(item.SubData),
                             fieldIndex: (int)MagicEffect_FieldIndex.SubData,
@@ -4111,8 +4113,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Model_IsSet)
             {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)item.Model).BinaryWriteTranslator).Write(
-                    item: item.Model,
+                var loquiItem = item.Model;
+                ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -4154,12 +4157,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         masterReferences: masterReferences);
                     if (!item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0))
                     {
-                        ((MagicEffectSubDataBinaryWriteTranslation)((IBinaryItem)item.SubData).BinaryWriteTranslator).Write(
-                            item: item.SubData,
-                            writer: writer,
-                            errorMask: errorMask,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                        {
+                            var loquiItem = item.SubData;
+                            ((MagicEffectSubDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                                item: loquiItem,
+                                writer: writer,
+                                errorMask: errorMask,
+                                masterReferences: masterReferences,
+                                recordTypeConverter: null);
+                        }
                     }
                 }
             }

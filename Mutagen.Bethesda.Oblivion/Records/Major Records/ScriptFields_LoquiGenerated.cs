@@ -1576,8 +1576,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.MetadataSummary_IsSet
                 && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.MetadataSummary) ?? true))
             {
-                ((ScriptMetaSummaryXmlWriteTranslation)((IXmlItem)item.MetadataSummary).XmlWriteTranslator).Write(
-                    item: item.MetadataSummary,
+                var loquiItem = item.MetadataSummary;
+                ((ScriptMetaSummaryXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.MetadataSummary),
                     fieldIndex: (int)ScriptFields_FieldIndex.MetadataSummary,
@@ -1616,8 +1617,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)ScriptFields_FieldIndex.LocalVariables),
                     transl: (XElement subNode, ILocalVariableInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((LocalVariableXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((LocalVariableXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -1636,8 +1638,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)ScriptFields_FieldIndex.References),
                     transl: (XElement subNode, IScriptReferenceGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((ScriptReferenceXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((ScriptReferenceXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2609,8 +2612,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (item.MetadataSummary_IsSet)
             {
-                ((ScriptMetaSummaryBinaryWriteTranslation)((IBinaryItem)item.MetadataSummary).BinaryWriteTranslator).Write(
-                    item: item.MetadataSummary,
+                var loquiItem = item.MetadataSummary;
+                ((ScriptMetaSummaryBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,
@@ -2647,8 +2651,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, ILocalVariableInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((LocalVariableBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((LocalVariableBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                            item: loquiItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,
@@ -2664,8 +2669,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IScriptReferenceGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((ScriptReferenceBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((ScriptReferenceBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                            item: loquiItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,

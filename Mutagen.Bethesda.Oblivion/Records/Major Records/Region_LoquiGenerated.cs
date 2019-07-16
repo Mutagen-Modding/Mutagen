@@ -2313,8 +2313,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Areas),
                     transl: (XElement subNode, IRegionAreaGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((RegionAreaXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((RegionAreaXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2324,8 +2325,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Objects_IsSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
             {
-                ((RegionDataObjectsXmlWriteTranslation)((IXmlItem)item.Objects).XmlWriteTranslator).Write(
-                    item: item.Objects,
+                var loquiItem = item.Objects;
+                ((RegionDataObjectsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Objects),
                     fieldIndex: (int)Region_FieldIndex.Objects,
@@ -2335,8 +2337,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Weather_IsSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
             {
-                ((RegionDataWeatherXmlWriteTranslation)((IXmlItem)item.Weather).XmlWriteTranslator).Write(
-                    item: item.Weather,
+                var loquiItem = item.Weather;
+                ((RegionDataWeatherXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Weather),
                     fieldIndex: (int)Region_FieldIndex.Weather,
@@ -2346,8 +2349,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.MapName_IsSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.MapName) ?? true))
             {
-                ((RegionDataMapNameXmlWriteTranslation)((IXmlItem)item.MapName).XmlWriteTranslator).Write(
-                    item: item.MapName,
+                var loquiItem = item.MapName;
+                ((RegionDataMapNameXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.MapName),
                     fieldIndex: (int)Region_FieldIndex.MapName,
@@ -2357,8 +2361,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Grasses_IsSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
             {
-                ((RegionDataGrassesXmlWriteTranslation)((IXmlItem)item.Grasses).XmlWriteTranslator).Write(
-                    item: item.Grasses,
+                var loquiItem = item.Grasses;
+                ((RegionDataGrassesXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Grasses),
                     fieldIndex: (int)Region_FieldIndex.Grasses,
@@ -2368,8 +2373,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Sounds_IsSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
             {
-                ((RegionDataSoundsXmlWriteTranslation)((IXmlItem)item.Sounds).XmlWriteTranslator).Write(
-                    item: item.Sounds,
+                var loquiItem = item.Sounds;
+                ((RegionDataSoundsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Sounds),
                     fieldIndex: (int)Region_FieldIndex.Sounds,
@@ -3471,8 +3477,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, IRegionAreaGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        ((RegionAreaBinaryWriteTranslation)((IBinaryItem)subItem).BinaryWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((RegionAreaBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                            item: loquiItem,
                             writer: subWriter,
                             errorMask: listErrorMask,
                             masterReferences: masterReferences,

@@ -1603,8 +1603,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Havok_IsSet
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Havok) ?? true))
             {
-                ((HavokDataXmlWriteTranslation)((IXmlItem)item.Havok).XmlWriteTranslator).Write(
-                    item: item.Havok,
+                var loquiItem = item.Havok;
+                ((HavokDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Havok),
                     fieldIndex: (int)LandTexture_FieldIndex.Havok,
@@ -2384,8 +2385,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Havok_IsSet)
             {
-                ((HavokDataBinaryWriteTranslation)((IBinaryItem)item.Havok).BinaryWriteTranslator).Write(
-                    item: item.Havok,
+                var loquiItem = item.Havok;
+                ((HavokDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

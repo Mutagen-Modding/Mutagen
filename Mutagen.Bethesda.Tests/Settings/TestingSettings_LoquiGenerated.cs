@@ -1507,8 +1507,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.DataFolderLocations) ?? true))
             {
-                ((DataFolderLocationsXmlWriteTranslation)((IXmlItem)item.DataFolderLocations).XmlWriteTranslator).Write(
-                    item: item.DataFolderLocations,
+                var loquiItem = item.DataFolderLocations;
+                ((DataFolderLocationsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.DataFolderLocations),
                     fieldIndex: (int)TestingSettings_FieldIndex.DataFolderLocations,
@@ -1517,8 +1518,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.PassthroughSettings) ?? true))
             {
-                ((PassthroughSettingsXmlWriteTranslation)((IXmlItem)item.PassthroughSettings).XmlWriteTranslator).Write(
-                    item: item.PassthroughSettings,
+                var loquiItem = item.PassthroughSettings;
+                ((PassthroughSettingsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.PassthroughSettings),
                     fieldIndex: (int)TestingSettings_FieldIndex.PassthroughSettings,
@@ -1536,8 +1538,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                     translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.TargetGroups),
                     transl: (XElement subNode, ITargetGroupGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        ((TargetGroupXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                            item: subItem,
+                        var loquiItem = subItem;
+                        ((TargetGroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                            item: loquiItem,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,

@@ -4225,8 +4225,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Advanced_IsSet
                 && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Advanced) ?? true))
             {
-                ((CombatStyleAdvancedXmlWriteTranslation)((IXmlItem)item.Advanced).XmlWriteTranslator).Write(
-                    item: item.Advanced,
+                var loquiItem = item.Advanced;
+                ((CombatStyleAdvancedXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                    item: loquiItem,
                     node: node,
                     name: nameof(item.Advanced),
                     fieldIndex: (int)CombatStyle_FieldIndex.Advanced,
@@ -6863,8 +6864,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Advanced_IsSet)
             {
-                ((CombatStyleAdvancedBinaryWriteTranslation)((IBinaryItem)item.Advanced).BinaryWriteTranslator).Write(
-                    item: item.Advanced,
+                var loquiItem = item.Advanced;
+                ((CombatStyleAdvancedBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    item: loquiItem,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences,

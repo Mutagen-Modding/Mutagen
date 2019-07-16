@@ -1270,8 +1270,9 @@ namespace Mutagen.Bethesda.Internals
                         errorMask: errorMask,
                         valTransl: (XElement subNode, T subItem, ErrorMaskBuilder dictSubMask, TranslationCrystal dictTranslMask) =>
                         {
-                            ((MajorRecordXmlWriteTranslation)((IXmlItem)subItem).XmlWriteTranslator).Write(
-                                item: subItem,
+                            var loquiItem = subItem;
+                            ((MajorRecordXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                                item: loquiItem,
                                 node: subNode,
                                 name: null,
                                 errorMask: dictSubMask,
@@ -2101,8 +2102,9 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask,
                 transl: (MutagenWriter r, T dictSubItem, ErrorMaskBuilder dictSubMask) =>
                 {
-                    ((MajorRecordBinaryWriteTranslation)((IBinaryItem)dictSubItem).BinaryWriteTranslator).Write(
-                        item: dictSubItem,
+                    var loquiItem = dictSubItem;
+                    ((MajorRecordBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                        item: loquiItem,
                         writer: r,
                         errorMask: dictSubMask,
                         masterReferences: masterReferences,
