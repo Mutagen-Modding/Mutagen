@@ -1776,7 +1776,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RaceHairBinaryWrapper RaceHairFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new RaceHairBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

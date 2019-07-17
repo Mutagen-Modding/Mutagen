@@ -2405,7 +2405,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static MagicEffectSubDataBinaryWrapper MagicEffectSubDataFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new MagicEffectSubDataBinaryWrapper(
                 bytes: stream.RemainingMemory.Slice(0, 28),

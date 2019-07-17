@@ -303,7 +303,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor locationAccessor,
-            Accessor packageAccessor)
+            Accessor packageAccessor,
+            Accessor converterAccessor)
         {
             LoquiType loqui = typeGen as LoquiType;
             string accessor;
@@ -328,7 +329,8 @@ namespace Mutagen.Bethesda.Generation
                 $"this.{accessor} = {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}{loqui.GenericTypes(getter: true)}.{loqui.TargetObjectGeneration.Name}Factory"))
             {
                 args.Add($"stream: stream");
-                args.Add($"package: _package");
+                args.Add($"package: {packageAccessor}");
+                args.Add($"recordTypeConverter: {converterAccessor}");
             }
         }
     }

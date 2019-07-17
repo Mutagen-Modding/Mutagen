@@ -1930,7 +1930,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ClassTrainingBinaryWrapper ClassTrainingFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new ClassTrainingBinaryWrapper(
                 bytes: stream.RemainingMemory.Slice(0, 4),

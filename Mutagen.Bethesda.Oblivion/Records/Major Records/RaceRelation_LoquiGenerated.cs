@@ -1795,7 +1795,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RaceRelationBinaryWrapper RaceRelationFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new RaceRelationBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

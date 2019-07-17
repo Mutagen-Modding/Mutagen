@@ -23,9 +23,10 @@ namespace Mutagen.Bethesda.Binary
             int amount, 
             int length,
             BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter,
             UtilityTranslation.BinaryWrapperStreamFactory<T> getter)
         {
-            return new NumberedLoquiList<T>(mem, amount, length, package, getter);
+            return new NumberedLoquiList<T>(mem, amount, length, package, recordTypeConverter, getter);
         }
     }
 
@@ -36,14 +37,22 @@ namespace Mutagen.Bethesda.Binary
         public int Length { get; }
         public BinaryWrapperFactoryPackage Package { get; }
         public UtilityTranslation.BinaryWrapperStreamFactory<T> Getter { get; }
+        public RecordTypeConverter RecordTypeConverter { get; }
 
-        public NumberedLoquiList(ReadOnlyMemorySlice<byte> mem, int amount, int length, BinaryWrapperFactoryPackage package, UtilityTranslation.BinaryWrapperStreamFactory<T> getter)
+        public NumberedLoquiList(
+            ReadOnlyMemorySlice<byte> mem,
+            int amount,
+            int length,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter,
+            UtilityTranslation.BinaryWrapperStreamFactory<T> getter)
         {
             this.Amount = amount;
             this.Memory = mem;
             this.Length = length;
             this.Package = package;
             this.Getter = getter;
+            this.RecordTypeConverter = recordTypeConverter;
         }
 
         public T this[int index]
@@ -56,7 +65,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 if (((index + 1) * Length) < this.Memory.Length)
                 {
-                    return this.Getter(new BinaryMemoryReadStream(this.Memory.Slice(index * Length)), this.Package);
+                    return this.Getter(new BinaryMemoryReadStream(this.Memory.Slice(index * Length)), this.Package, this.RecordTypeConverter);
                 }
                 return default;
             }

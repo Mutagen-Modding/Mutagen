@@ -2564,7 +2564,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static LandTextureBinaryWrapper LandTextureFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new LandTextureBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
@@ -2577,6 +2578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
+                recordTypeConverter: recordTypeConverter,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
@@ -2599,7 +2601,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.Havok = HavokDataBinaryWrapper.HavokDataFactory(
                         stream: stream,
-                        package: _package);
+                        package: _package,
+                        recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Havok);
                 }
                 case 0x4D414E53: // SNAM

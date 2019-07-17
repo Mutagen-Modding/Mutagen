@@ -3200,7 +3200,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static ModHeaderBinaryWrapper ModHeaderFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new ModHeaderBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
@@ -3213,6 +3214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
+                recordTypeConverter: recordTypeConverter,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
@@ -3230,7 +3232,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     this._Stats = ModStatsBinaryWrapper.ModStatsFactory(
                         stream: stream,
-                        package: _package);
+                        package: _package,
+                        recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
                 }
                 case 0x5453464F: // OFST
@@ -3258,6 +3261,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.MasterReferences = UtilityTranslation.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryWrapper>(
                         stream: stream,
                         package: _package,
+                        recordTypeConverter: null,
                         offset: offset,
                         trigger: ModHeader_Registration.MAST_HEADER,
                         factory:  MasterReferenceBinaryWrapper.MasterReferenceFactory);

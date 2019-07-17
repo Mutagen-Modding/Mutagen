@@ -2839,7 +2839,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ScriptFieldsBinaryWrapper ScriptFieldsFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new ScriptFieldsBinaryWrapper(
                 bytes: stream.RemainingMemory,
@@ -2849,6 +2850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
                 stream: stream,
                 offset: offset,
+                recordTypeConverter: recordTypeConverter,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
@@ -2867,7 +2869,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
                     this._MetadataSummary = ScriptMetaSummaryBinaryWrapper.ScriptMetaSummaryFactory(
                         stream: stream,
-                        package: _package);
+                        package: _package,
+                        recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
                 }
                 case 0x44484353: // SCHD
@@ -2891,6 +2894,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.LocalVariables = UtilityTranslation.ParseRepeatedTypelessSubrecord<LocalVariableBinaryWrapper>(
                         stream: stream,
                         package: _package,
+                        recordTypeConverter: null,
                         offset: offset,
                         trigger: ScriptFields_Registration.SLSD_HEADER,
                         factory:  LocalVariableBinaryWrapper.LocalVariableFactory);
@@ -2902,9 +2906,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.References = UtilityTranslation.ParseRepeatedTypelessSubrecord<ScriptReferenceBinaryWrapper>(
                         stream: stream,
                         package: _package,
+                        recordTypeConverter: null,
                         offset: offset,
                         trigger: ScriptReference_Registration.TriggeringRecordTypes,
-                        factory: (s, r, p) =>
+                        factory: (s, r, p, recConv) =>
                         {
                             switch (r.TypeInt)
                             {

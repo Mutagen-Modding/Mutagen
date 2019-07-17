@@ -400,6 +400,7 @@ namespace Mutagen.Bethesda
             long finalPos,
             int offset,
             MetaDataConstants meta,
+            RecordTypeConverter recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
@@ -410,7 +411,7 @@ namespace Mutagen.Bethesda
                 var parsed = fill(
                     stream: stream,
                     offset: offset,
-                    type: majorMeta.RecordType,
+                    type: recordTypeConverter.ConvertToStandard(majorMeta.RecordType),
                     lastParsed: lastParsed);
                 if (parsed.Failed) break;
                 if (startPos == stream.Position)
@@ -426,6 +427,7 @@ namespace Mutagen.Bethesda
             long finalPos,
             int offset,
             MetaDataConstants meta,
+            RecordTypeConverter recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
@@ -436,7 +438,7 @@ namespace Mutagen.Bethesda
                 var parsed = fill(
                     stream: stream,
                     offset: offset,
-                    type: subMeta.RecordType,
+                    type: recordTypeConverter.ConvertToStandard(subMeta.RecordType),
                     lastParsed: lastParsed);
                 if (parsed.Failed) break;
                 if (startPos == stream.Position)
@@ -451,6 +453,7 @@ namespace Mutagen.Bethesda
             BinaryMemoryReadStream stream,
             int offset,
             MetaDataConstants meta,
+            RecordTypeConverter recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
@@ -461,7 +464,7 @@ namespace Mutagen.Bethesda
                 var parsed = fill(
                     stream: stream,
                     offset: offset,
-                    type: subMeta.RecordType,
+                    type: recordTypeConverter.ConvertToStandard(subMeta.RecordType),
                     lastParsed: lastParsed);
                 if (parsed.Failed) break;
                 if (startPos == stream.Position)
@@ -501,23 +504,31 @@ namespace Mutagen.Bethesda
 
         public delegate T BinaryWrapperStreamFactory<T>(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package);
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter);
 
         public delegate T BinaryWrapperStreamTypedFactory<T>(
             BinaryMemoryReadStream stream,
             RecordType recordType,
-            BinaryWrapperFactoryPackage package);
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter);
 
         public delegate T BinaryWrapperSpanFactory<T>(
             ReadOnlyMemorySlice<byte> span,
             BinaryWrapperFactoryPackage package);
+
+        public delegate T BinaryWrapperSpanRecordFactory<T>(
+            ReadOnlyMemorySlice<byte> span,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter);
 
         public static IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
             BinaryMemoryReadStream stream,
             BinaryWrapperFactoryPackage package,
             int offset,
             ICollectionGetter<RecordType> trigger,
-            BinaryWrapperStreamTypedFactory<T> factory)
+            BinaryWrapperStreamTypedFactory<T> factory,
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new ReadOnlySetList<T>();
             while (!stream.Complete)
@@ -525,7 +536,7 @@ namespace Mutagen.Bethesda
                 var subMeta = package.Meta.GetSubRecord(stream);
                 var recType = subMeta.RecordType;
                 if (!trigger.Contains(recType)) break;
-                ret.Add(factory(stream, recType, package));
+                ret.Add(factory(stream, recType, package, recordTypeConverter));
             }
             return ret;
         }
@@ -535,14 +546,16 @@ namespace Mutagen.Bethesda
             BinaryWrapperFactoryPackage package,
             int offset,
             ICollectionGetter<RecordType> trigger,
-            BinaryWrapperStreamFactory<T> factory)
+            BinaryWrapperStreamFactory<T> factory,
+            RecordTypeConverter recordTypeConverter)
         {
             return ParseRepeatedTypelessSubrecord(
                 stream,
                 package,
                 offset,
                 trigger,
-                (s, r, p) => factory(s, p));
+                (s, r, p, recConv) => factory(s, p, recConv),
+                recordTypeConverter);
         }
 
         public static IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
@@ -550,7 +563,8 @@ namespace Mutagen.Bethesda
             BinaryWrapperFactoryPackage package,
             int offset,
             RecordType trigger,
-            BinaryWrapperStreamTypedFactory<T> factory)
+            BinaryWrapperStreamTypedFactory<T> factory,
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new ReadOnlySetList<T>();
             while (!stream.Complete)
@@ -558,7 +572,7 @@ namespace Mutagen.Bethesda
                 var subMeta = package.Meta.GetSubRecord(stream);
                 var recType = subMeta.RecordType;
                 if (trigger != recType) break;
-                ret.Add(factory(stream, recType, package));
+                ret.Add(factory(stream, recType, package, recordTypeConverter));
             }
             return ret;
         }
@@ -568,14 +582,16 @@ namespace Mutagen.Bethesda
             BinaryWrapperFactoryPackage package,
             int offset,
             RecordType trigger,
-            BinaryWrapperStreamFactory<T> factory)
+            BinaryWrapperStreamFactory<T> factory,
+            RecordTypeConverter recordTypeConverter)
         {
             return ParseRepeatedTypelessSubrecord(
                 stream,
                 package,
                 offset,
                 trigger,
-                (s, r, p) => factory(s, p));
+                (s, r, p, recConv) => factory(s, p, recConv),
+                recordTypeConverter);
         }
 
         public static void FillEdidLinkCache<T>(IModGetter mod, RecordType recordType, BinaryWrapperFactoryPackage package)

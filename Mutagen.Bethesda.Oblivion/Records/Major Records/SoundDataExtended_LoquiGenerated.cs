@@ -2018,14 +2018,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static SoundDataExtendedBinaryWrapper SoundDataExtendedFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new SoundDataExtendedBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x16 + package.Meta.SubConstants.HeaderLength;
+            stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(stream, offset);
             return ret;
         }

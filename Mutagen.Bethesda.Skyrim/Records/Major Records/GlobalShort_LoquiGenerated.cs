@@ -1933,7 +1933,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static GlobalShortBinaryWrapper GlobalShortFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new GlobalShortBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
@@ -1946,6 +1947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
+                recordTypeConverter: recordTypeConverter,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;

@@ -2863,7 +2863,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static FactionBinaryWrapper FactionFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new FactionBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
@@ -2876,6 +2877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
+                recordTypeConverter: recordTypeConverter,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
@@ -2899,7 +2901,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Relations = BinaryWrapperSetList<RelationBinaryWrapper>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => RelationBinaryWrapper.RelationFactory(new BinaryMemoryReadStream(s), p),
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => RelationBinaryWrapper.RelationFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: UtilityTranslation.ParseSubrecordLocations(
                             stream: stream,
                             meta: _package.Meta,
@@ -2925,6 +2928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Ranks = UtilityTranslation.ParseRepeatedTypelessSubrecord<RankBinaryWrapper>(
                         stream: stream,
                         package: _package,
+                        recordTypeConverter: null,
                         offset: offset,
                         trigger: Rank_Registration.TriggeringRecordTypes,
                         factory:  RankBinaryWrapper.RankFactory);

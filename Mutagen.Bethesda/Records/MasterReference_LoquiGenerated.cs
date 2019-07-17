@@ -1862,7 +1862,6 @@ namespace Mutagen.Bethesda.Internals
 
         #region Master
         private int? _MasterLocation;
-        public bool Master_IsSet => _MasterLocation.HasValue;
         public ModKey Master => _MasterLocation.HasValue ? ModKey.Factory(BinaryStringUtility.ToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MasterLocation.Value, _package.Meta))) : default;
         #endregion
         #region FileSize
@@ -1882,7 +1881,8 @@ namespace Mutagen.Bethesda.Internals
 
         public static MasterReferenceBinaryWrapper MasterReferenceFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new MasterReferenceBinaryWrapper(
                 bytes: stream.RemainingMemory,
@@ -1892,6 +1892,7 @@ namespace Mutagen.Bethesda.Internals
             UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
                 stream: stream,
                 offset: offset,
+                recordTypeConverter: recordTypeConverter,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;

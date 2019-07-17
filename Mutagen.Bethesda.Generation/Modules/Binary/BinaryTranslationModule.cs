@@ -1730,6 +1730,7 @@ namespace Mutagen.Bethesda.Generation
                         else
                         {
                             args.Add($"{nameof(BinaryWrapperFactoryPackage)} package");
+                            args.Add($"{nameof(RecordTypeConverter)} recordTypeConverter = null");
                         }
                     }
                     using (new BraceWrapper(fg))
@@ -1868,6 +1869,7 @@ namespace Mutagen.Bethesda.Generation
                                         args.Add($"finalPos: finalPos");
                                     }
                                     args.Add($"offset: offset");
+                                    args.AddPassArg($"recordTypeConverter");
                                 }
                                 args.Add($"meta: ret.{metaAccessor}");
                                 args.Add($"fill: ret.FillRecordType");
@@ -1971,12 +1973,19 @@ namespace Mutagen.Bethesda.Generation
                                             fieldData: fieldData,
                                             toDo: async () =>
                                             {
+                                                string recConverter = "null";
+                                                if (fieldData?.RecordTypeConverter != null
+                                                    && fieldData.RecordTypeConverter.FromConversions.Count > 0)
+                                                {
+                                                    recConverter = $"{obj.RegistrationName}.{field.Field.Name}Converter";
+                                                }
                                                 await generator.GenerateWrapperRecordTypeParse(
                                                     fg: fg,
                                                     objGen: obj,
                                                     typeGen: gen.Value,
                                                     locationAccessor: "(stream.Position - offset)",
-                                                    packageAccessor: "_package");
+                                                    packageAccessor: "_package",
+                                                    converterAccessor: recConverter);
                                                 if (obj.GetObjectType() == ObjectType.Mod
                                                     && field.Field.Name == "ModHeader")
                                                 {

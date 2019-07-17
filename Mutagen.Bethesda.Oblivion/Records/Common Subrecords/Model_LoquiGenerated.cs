@@ -2017,12 +2017,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region File
         private int? _FileLocation;
-        public bool File_IsSet => _FileLocation.HasValue;
         public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FileLocation.Value, _package.Meta)) : default;
         #endregion
         #region BoundRadius
         private int? _BoundRadiusLocation;
-        public bool BoundRadius_IsSet => _BoundRadiusLocation.HasValue;
         public Single BoundRadius => _BoundRadiusLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _BoundRadiusLocation.Value, _package.Meta)) : default;
         #endregion
         #region Hashes
@@ -2042,7 +2040,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ModelBinaryWrapper ModelFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new ModelBinaryWrapper(
                 bytes: stream.RemainingMemory,
@@ -2052,6 +2051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
                 stream: stream,
                 offset: offset,
+                recordTypeConverter: recordTypeConverter,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;

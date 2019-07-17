@@ -384,8 +384,14 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else if (list.SubTypeGeneration is LoquiType loqui)
                 {
+                    string recConverter = "null";
+                    if (data?.RecordTypeConverter != null
+                        && data.RecordTypeConverter.FromConversions.Count > 0)
+                    {
+                        recConverter = $"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter";
+                    }
                     var gen = this.Module.GetTypeGeneration(loqui.GetType());
-                    fg.AppendLine($"public IReadOnlyList<{list.SubTypeGeneration.TypeName(getter: true)}> {typeGen.Name} => BinaryWrapperNumberedList.FactoryForLoqui<{list.SubTypeGeneration.TypeName(getter: true)}>(_{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Slice({posStr}) : default, amount: {list.MaxValue.Value}, length: {gen.ExpectedLength(objGen, loqui)}, _package, {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory);");
+                    fg.AppendLine($"public IReadOnlyList<{list.SubTypeGeneration.TypeName(getter: true)}> {typeGen.Name} => BinaryWrapperNumberedList.FactoryForLoqui<{list.SubTypeGeneration.TypeName(getter: true)}>(_{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Slice({posStr}) : default, amount: {list.MaxValue.Value}, length: {gen.ExpectedLength(objGen, loqui)}, _package, {recConverter}, {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory);");
                 }
                 else
                 {
@@ -431,7 +437,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor locationAccessor,
-            Accessor packageAccessor)
+            Accessor packageAccessor,
+            Accessor converterAccessor)
         {
             ListType list = typeGen as ListType;
             var data = list.GetFieldData();
@@ -465,6 +472,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.AddPassArg("stream");
                                 args.Add("package: _package");
+                                args.Add($"recordTypeConverter: {converterAccessor}");
                                 args.AddPassArg("offset");
                                 args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
                                 if (subGenTypes.Count <= 1)
@@ -475,7 +483,7 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     args.Add((subFg) =>
                                     {
-                                        subFg.AppendLine("factory: (s, r, p) =>");
+                                        subFg.AppendLine("factory: (s, r, p, recConv) =>");
                                         using (new BraceWrapper(subFg))
                                         {
                                             subFg.AppendLine("switch (r.TypeInt)");
@@ -511,7 +519,8 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.Add($"mem: stream.RemainingMemory");
                                 args.Add($"package: _package");
-                                args.Add($"getter: (s, p) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}(s), p)");
+                                args.Add($"recordTypeConverter: {converterAccessor}");
+                                args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}(s), p, recConv)");
                                 args.Add(subFg =>
                                 {
                                     using (var subArgs = new FunctionWrapper(subFg,

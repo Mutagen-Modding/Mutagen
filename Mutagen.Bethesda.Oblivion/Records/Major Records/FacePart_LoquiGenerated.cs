@@ -2199,7 +2199,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static FacePartBinaryWrapper FacePartFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new FacePartBinaryWrapper(
                 bytes: stream.RemainingMemory,
@@ -2209,6 +2210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
                 stream: stream,
                 offset: offset,
+                recordTypeConverter: recordTypeConverter,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
@@ -2233,7 +2235,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Model) return TryGet<int?>.Failure;
                     this.Model = ModelBinaryWrapper.ModelFactory(
                         stream: stream,
-                        package: _package);
+                        package: _package,
+                        recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Model);
                 }
                 case 0x4E4F4349: // ICON

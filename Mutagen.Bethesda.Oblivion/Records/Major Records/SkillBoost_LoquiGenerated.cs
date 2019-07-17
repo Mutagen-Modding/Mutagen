@@ -1783,7 +1783,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static SkillBoostBinaryWrapper SkillBoostFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new SkillBoostBinaryWrapper(
                 bytes: stream.RemainingMemory.Slice(0, 2),

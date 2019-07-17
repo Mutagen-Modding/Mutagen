@@ -249,9 +249,10 @@ namespace Mutagen.Bethesda
 
                 private T ConstructWrapper(int pos)
                 {
-                     return LoquiBinaryWrapperTranslation<T>.Create(
-                        stream: new BinaryMemoryReadStream(this._data.Slice(pos)),
-                        package: _package);
+                    return LoquiBinaryWrapperTranslation<T>.Create(
+                       stream: new BinaryMemoryReadStream(this._data.Slice(pos)),
+                       package: _package,
+                       recordTypeConverter: null);
                 }
             }
 

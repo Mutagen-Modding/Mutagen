@@ -2198,7 +2198,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ScriptMetaSummaryBinaryWrapper ScriptMetaSummaryFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new ScriptMetaSummaryBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

@@ -1921,7 +1921,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ModStatsBinaryWrapper ModStatsFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new ModStatsBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

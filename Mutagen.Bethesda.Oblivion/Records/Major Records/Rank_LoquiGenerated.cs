@@ -2332,7 +2332,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RankBinaryWrapper RankFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new RankBinaryWrapper(
                 bytes: stream.RemainingMemory,
@@ -2342,6 +2343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
                 stream: stream,
                 offset: offset,
+                recordTypeConverter: recordTypeConverter,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;

@@ -203,7 +203,10 @@ namespace Mutagen.Bethesda.Generation
             if (data.HasTrigger)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
-                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+                if (typeGen.HasBeenSet)
+                {
+                    fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+                }
             }
             if (data.RecordType.HasValue)
             {
@@ -232,6 +235,9 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => _ExpectedLength;
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            return typeGen.GetFieldData().Length ?? this._ExpectedLength;
+        }
     }
 }

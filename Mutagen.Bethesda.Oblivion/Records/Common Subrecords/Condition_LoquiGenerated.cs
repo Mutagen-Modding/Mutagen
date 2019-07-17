@@ -2638,7 +2638,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ConditionBinaryWrapper ConditionFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new ConditionBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

@@ -2108,7 +2108,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static SoundBinaryWrapper SoundFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new SoundBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
@@ -2121,6 +2122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
+                recordTypeConverter: recordTypeConverter,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
@@ -2143,14 +2145,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.Data = SoundDataBinaryWrapper.SoundDataFactory(
                         stream: stream,
-                        package: _package);
+                        package: _package,
+                        recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
                 }
                 case 0x58444E53: // SNDX
                 {
                     this.Data = SoundDataExtendedBinaryWrapper.SoundDataExtendedFactory(
                         stream: stream,
-                        package: _package);
+                        package: _package,
+                        recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
                 }
                 default:

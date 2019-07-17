@@ -1596,7 +1596,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region VariableIndex
         private int? _VariableIndexLocation;
-        public bool VariableIndex_IsSet => _VariableIndexLocation.HasValue;
         public Int32 VariableIndex => _VariableIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VariableIndexLocation.Value, _package.Meta)) : default;
         #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
@@ -1612,7 +1611,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ScriptVariableReferenceBinaryWrapper ScriptVariableReferenceFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new ScriptVariableReferenceBinaryWrapper(
                 bytes: stream.RemainingMemory,
@@ -1622,6 +1622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
                 stream: stream,
                 offset: offset,
+                recordTypeConverter: recordTypeConverter,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;

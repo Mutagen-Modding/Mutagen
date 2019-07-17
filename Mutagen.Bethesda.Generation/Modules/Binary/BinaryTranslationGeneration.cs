@@ -96,7 +96,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor locationAccessor,
-            Accessor packageAccessor)
+            Accessor packageAccessor,
+            Accessor converterAccessor)
         {
             fg.AppendLine($"_{typeGen.Name}Location = (ushort){locationAccessor};");
         }

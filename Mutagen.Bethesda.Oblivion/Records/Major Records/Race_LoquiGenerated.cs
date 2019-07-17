@@ -6704,7 +6704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IRaceRelationGetter> Relations { get; private set; } = EmptySetList<RaceRelationBinaryWrapper>.Instance;
         private int? _DATALocation;
         public Race.DATADataType DATADataTypeState { get; private set; }
-        public IReadOnlyList<ISkillBoostGetter> SkillBoosts => BinaryWrapperNumberedList.FactoryForLoqui<ISkillBoostGetter>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 7, length: 2, _package, SkillBoostBinaryWrapper.SkillBoostFactory);
+        public IReadOnlyList<ISkillBoostGetter> SkillBoosts => BinaryWrapperNumberedList.FactoryForLoqui<ISkillBoostGetter>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 7, length: 2, _package, null, SkillBoostBinaryWrapper.SkillBoostFactory);
         #region Fluff
         private int _FluffLocation => _DATALocation.Value + 14;
         private bool _Fluff_IsSet => _DATALocation.HasValue;
@@ -6791,7 +6791,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RaceBinaryWrapper RaceFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new RaceBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
@@ -6804,6 +6805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
+                recordTypeConverter: recordTypeConverter,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
@@ -6845,7 +6847,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Relations = BinaryWrapperSetList<RaceRelationBinaryWrapper>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => RaceRelationBinaryWrapper.RaceRelationFactory(new BinaryMemoryReadStream(s), p),
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => RaceRelationBinaryWrapper.RaceRelationFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: UtilityTranslation.ParseSubrecordLocations(
                             stream: stream,
                             meta: _package.Meta,
@@ -6863,14 +6866,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.Voices = RaceVoicesBinaryWrapper.RaceVoicesFactory(
                         stream: stream,
-                        package: _package);
+                        package: _package,
+                        recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
                 }
                 case 0x4D414E44: // DNAM
                 {
                     this.DefaultHair = RaceHairBinaryWrapper.RaceHairFactory(
                         stream: stream,
-                        package: _package);
+                        package: _package,
+                        recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHair);
                 }
                 case 0x4D414E43: // CNAM
@@ -6892,7 +6897,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.RaceStats = RaceStatsGenderedBinaryWrapper.RaceStatsGenderedFactory(
                         stream: stream,
-                        package: _package);
+                        package: _package,
+                        recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.RaceStats);
                 }
                 case 0x304D414E: // NAM0
@@ -6901,6 +6907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.FaceData = UtilityTranslation.ParseRepeatedTypelessSubrecord<FacePartBinaryWrapper>(
                         stream: stream,
                         package: _package,
+                        recordTypeConverter: null,
                         offset: offset,
                         trigger: FacePart_Registration.TriggeringRecordTypes,
                         factory:  FacePartBinaryWrapper.FacePartFactory);
@@ -6911,7 +6918,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
                     this.BodyData = GenderedBodyDataBinaryWrapper.GenderedBodyDataFactory(
                         stream: stream,
-                        package: _package);
+                        package: _package,
+                        recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
                 }
                 case 0x4D414E48: // HNAM
@@ -6944,7 +6952,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.FaceGenData = FaceGenDataBinaryWrapper.FaceGenDataFactory(
                         stream: stream,
-                        package: _package);
+                        package: _package,
+                        recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenData);
                 }
                 case 0x4D414E53: // SNAM

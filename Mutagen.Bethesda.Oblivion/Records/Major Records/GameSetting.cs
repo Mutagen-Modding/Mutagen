@@ -62,7 +62,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public static GameSettingBinaryWrapper GameSettingFactory(
                 BinaryMemoryReadStream stream,
-                BinaryWrapperFactoryPackage package)
+                BinaryWrapperFactoryPackage package,
+                RecordTypeConverter recordTypeConverter)
             {
                 var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingSpan, package.Meta);
                 if (settingType.Failed)

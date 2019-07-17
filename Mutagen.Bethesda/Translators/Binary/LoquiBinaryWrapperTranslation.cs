@@ -13,7 +13,8 @@ namespace Mutagen.Bethesda.Binary
     {
         public delegate T CreateFunc(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package);
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter);
         public static readonly CreateFunc Create = GetCreateFunc();
 
         private static CreateFunc GetCreateFunc()
@@ -29,9 +30,10 @@ namespace Mutagen.Bethesda.Binary
                 .Where((methodInfo) =>
                 {
                     var param = methodInfo.GetParameters();
-                    if (param.Length != 2) return false;
+                    if (param.Length != 3) return false;
                     if (!param[0].ParameterType.Equals(typeof(BinaryMemoryReadStream))) return false;
                     if (!param[1].ParameterType.Equals(typeof(BinaryWrapperFactoryPackage))) return false;
+                    if (!param[2].ParameterType.Equals(typeof(RecordTypeConverter))) return false;
                     return true;
                 })
                 .FirstOrDefault();

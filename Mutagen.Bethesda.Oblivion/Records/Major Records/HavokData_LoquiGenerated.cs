@@ -1922,7 +1922,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static HavokDataBinaryWrapper HavokDataFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new HavokDataBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

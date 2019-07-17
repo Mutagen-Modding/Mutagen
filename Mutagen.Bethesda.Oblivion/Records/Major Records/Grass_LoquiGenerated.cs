@@ -3681,7 +3681,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static GrassBinaryWrapper GrassFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new GrassBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
@@ -3694,6 +3695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
+                recordTypeConverter: recordTypeConverter,
                 meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
@@ -3711,7 +3713,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.Model = ModelBinaryWrapper.ModelFactory(
                         stream: stream,
-                        package: _package);
+                        package: _package,
+                        recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
                 }
                 case 0x41544144: // DATA

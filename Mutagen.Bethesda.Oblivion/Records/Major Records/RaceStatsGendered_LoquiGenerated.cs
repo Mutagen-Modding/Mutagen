@@ -1915,7 +1915,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RaceStatsGenderedBinaryWrapper RaceStatsGenderedFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = new RaceStatsGenderedBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

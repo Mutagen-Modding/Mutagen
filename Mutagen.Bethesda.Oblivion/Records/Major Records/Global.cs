@@ -121,7 +121,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static GlobalBinaryWrapper GlobalFactory(
                 BinaryMemoryReadStream stream,
-                BinaryWrapperFactoryPackage package)
+                BinaryWrapperFactoryPackage package,
+                RecordTypeConverter recordTypeConverter)
             {
                 // Skip to FNAM
                 var majorMeta = package.Meta.MajorRecord(stream.RemainingSpan);
