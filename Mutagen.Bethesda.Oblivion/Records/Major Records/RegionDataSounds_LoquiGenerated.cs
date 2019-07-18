@@ -454,7 +454,6 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Sounds,
                         fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out RegionSound listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

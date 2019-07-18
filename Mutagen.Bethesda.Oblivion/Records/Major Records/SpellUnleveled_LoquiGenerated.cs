@@ -2871,7 +2871,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null,
-                        offset: offset,
                         trigger: SpellUnleveled_Registration.EFID_HEADER,
                         factory:  EffectBinaryWrapper.EffectFactory);
                     return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Effects);

@@ -384,7 +384,6 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.RegionPoints,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: P2FloatBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.RegionPoints);
                 }

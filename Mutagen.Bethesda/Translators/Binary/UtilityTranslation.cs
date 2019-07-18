@@ -525,7 +525,6 @@ namespace Mutagen.Bethesda
         public static IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
             BinaryMemoryReadStream stream,
             BinaryWrapperFactoryPackage package,
-            int offset,
             ICollectionGetter<RecordType> trigger,
             BinaryWrapperStreamTypedFactory<T> factory,
             RecordTypeConverter recordTypeConverter)
@@ -544,7 +543,6 @@ namespace Mutagen.Bethesda
         public static IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
             BinaryMemoryReadStream stream,
             BinaryWrapperFactoryPackage package,
-            int offset,
             ICollectionGetter<RecordType> trigger,
             BinaryWrapperStreamFactory<T> factory,
             RecordTypeConverter recordTypeConverter)
@@ -552,7 +550,6 @@ namespace Mutagen.Bethesda
             return ParseRepeatedTypelessSubrecord(
                 stream,
                 package,
-                offset,
                 trigger,
                 (s, r, p, recConv) => factory(s, p, recConv),
                 recordTypeConverter);
@@ -561,7 +558,6 @@ namespace Mutagen.Bethesda
         public static IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
             BinaryMemoryReadStream stream,
             BinaryWrapperFactoryPackage package,
-            int offset,
             RecordType trigger,
             BinaryWrapperStreamTypedFactory<T> factory,
             RecordTypeConverter recordTypeConverter)
@@ -580,7 +576,6 @@ namespace Mutagen.Bethesda
         public static IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
             BinaryMemoryReadStream stream,
             BinaryWrapperFactoryPackage package,
-            int offset,
             RecordType trigger,
             BinaryWrapperStreamFactory<T> factory,
             RecordTypeConverter recordTypeConverter)
@@ -588,7 +583,6 @@ namespace Mutagen.Bethesda
             return ParseRepeatedTypelessSubrecord(
                 stream,
                 package,
-                offset,
                 trigger,
                 (s, r, p, recConv) => factory(s, p, recConv),
                 recordTypeConverter);

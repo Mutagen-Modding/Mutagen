@@ -239,7 +239,8 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"lengthLength: {len}");
                 }
-                else if (!list.MaxValue.HasValue)
+                else if (!list.MaxValue.HasValue
+                    && list.SubTypeGeneration.GetFieldData().HasTrigger)
                 {
                     if (list.SubTypeGeneration is MutagenLoquiType loqui)
                     {
@@ -301,7 +302,6 @@ namespace Mutagen.Bethesda.Generation
                                     typeGen: list.SubTypeGeneration,
                                     readerAccessor: "r",
                                     translationAccessor: "listTranslMask",
-                                    squashedRepeatedList: listBinaryType == ListBinaryType.Trigger,
                                     retAccessor: "return ",
                                     outItemAccessor: new Accessor("listSubItem"),
                                     asyncMode: isAsync ? AsyncMode.Async : AsyncMode.Off,
@@ -329,7 +329,6 @@ namespace Mutagen.Bethesda.Generation
                                                 typeGen: item.Value,
                                                 readerAccessor: "r",
                                                 translationAccessor: "listTranslMask",
-                                                squashedRepeatedList: listBinaryType == ListBinaryType.Trigger,
                                                 retAccessor: "return ",
                                                 outItemAccessor: new Accessor("listSubItem"),
                                                 asyncMode: AsyncMode.Async,
@@ -355,7 +354,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration targetGen,
             TypeGeneration typeGen,
             Accessor nodeAccessor,
-            bool squashedRepeatedList,
             AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
@@ -473,7 +471,6 @@ namespace Mutagen.Bethesda.Generation
                                 args.AddPassArg("stream");
                                 args.Add("package: _package");
                                 args.Add($"recordTypeConverter: {converterAccessor}");
-                                args.AddPassArg("offset");
                                 args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
                                 if (subGenTypes.Count <= 1)
                                 {

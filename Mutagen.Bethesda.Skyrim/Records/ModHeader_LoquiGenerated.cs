@@ -3262,7 +3262,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null,
-                        offset: offset,
                         trigger: ModHeader_Registration.MAST_HEADER,
                         factory:  MasterReferenceBinaryWrapper.MasterReferenceFactory);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);

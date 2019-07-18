@@ -400,7 +400,6 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Objects,
                         fieldIndex: (int)RegionDataObjects_FieldIndex.Objects,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out RegionDataObject listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

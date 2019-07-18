@@ -2151,7 +2151,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null,
-                        offset: offset,
                         trigger: BodyPart_Registration.TriggeringRecordTypes,
                         factory:  BodyPartBinaryWrapper.BodyPartFactory);
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);

@@ -1382,7 +1382,6 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Models,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: (MutagenFrame r, out String listSubItem) =>
                         {
                             return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -1523,7 +1522,6 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Animations,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: (MutagenFrame r, out String listSubItem) =>
                         {
                             return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(

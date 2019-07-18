@@ -558,7 +558,6 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.RelatedIdleAnimations,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
                 }

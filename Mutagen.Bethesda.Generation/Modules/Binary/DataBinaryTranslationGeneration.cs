@@ -30,17 +30,12 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration targetGen,
             TypeGeneration typeGen,
             Accessor readerAccessor,
-            bool squashedRepeatedList,
             AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor)
         {
-            if (squashedRepeatedList)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         public override void GenerateWrite(

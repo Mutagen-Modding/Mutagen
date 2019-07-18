@@ -665,7 +665,6 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Textures,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
                 }

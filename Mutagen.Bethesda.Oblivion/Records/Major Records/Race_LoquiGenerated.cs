@@ -1244,7 +1244,6 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Hairs,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
                 }
@@ -1255,7 +1254,6 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Eyes,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
                 }
@@ -6908,7 +6906,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null,
-                        offset: offset,
                         trigger: FacePart_Registration.TriggeringRecordTypes,
                         factory:  FacePartBinaryWrapper.FacePartFactory);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);

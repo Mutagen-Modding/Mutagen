@@ -2922,7 +2922,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null,
-                        offset: offset,
                         trigger: Enchantment_Registration.EFID_HEADER,
                         factory:  EffectBinaryWrapper.EffectFactory);
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Effects);

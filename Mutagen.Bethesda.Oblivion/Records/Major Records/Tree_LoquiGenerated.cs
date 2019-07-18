@@ -676,7 +676,6 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.SpeedTreeSeeds,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: UInt32BinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
                 }

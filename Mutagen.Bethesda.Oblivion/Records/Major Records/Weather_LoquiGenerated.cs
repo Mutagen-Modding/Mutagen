@@ -1066,7 +1066,6 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.WeatherTypes,
                         fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out WeatherType listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

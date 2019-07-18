@@ -438,7 +438,6 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Types,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: (MutagenFrame r, out MapMarker.Type listSubItem) =>
                         {
                             return Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Parse(

@@ -502,7 +502,6 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.InterCellConnections,
                         fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, out InterCellPoint listSubItem, ErrorMaskBuilder listErrMask) =>
                         {

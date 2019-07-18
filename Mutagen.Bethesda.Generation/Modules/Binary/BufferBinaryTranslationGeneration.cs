@@ -34,17 +34,12 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration targetGen,
             TypeGeneration typeGen,
             Accessor readerAccessor,
-            bool squashedRepeatedList,
             AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor)
         {
-            if (squashedRepeatedList)
-            {
-                throw new NotImplementedException();
-            }
             if (asyncMode == AsyncMode.Direct) throw new NotImplementedException();
             BufferType buf = typeGen as BufferType;
             fg.AppendLine($"{readerAccessor}.Position += {buf.Length};");

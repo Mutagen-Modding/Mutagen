@@ -986,7 +986,6 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Regions,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Regions);
                 }

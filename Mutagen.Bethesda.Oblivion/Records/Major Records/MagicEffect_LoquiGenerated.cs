@@ -882,7 +882,6 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.CounterEffects,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
                         transl: RecordTypeBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
                 }

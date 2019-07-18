@@ -375,7 +375,6 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.ParseRepeatedItem(
                 frame: frame,
                 item: item.Connections,
-                lengthLength: frame.MetaData.SubConstants.LengthLength,
                 transl: P3FloatBinaryTranslation.Instance.Parse);
         }
 

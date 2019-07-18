@@ -376,7 +376,6 @@ namespace Mutagen.Bethesda.Binary
         public bool ParseRepeatedItem(
             MutagenFrame frame,
             out IEnumerable<T> enumer,
-            long lengthLength,
             ErrorMaskBuilder errorMask,
             BinarySubParseErrDelegate transl)
         {
@@ -407,7 +406,6 @@ namespace Mutagen.Bethesda.Binary
         public bool ParseRepeatedItem(
             MutagenFrame frame,
             out IEnumerable<T> enumer,
-            long lengthLength,
             BinarySubParseDelegate transl)
         {
             var ret = new List<T>();
@@ -426,7 +424,6 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int fieldIndex,
             IList<T> item,
-            long lengthLength,
             ErrorMaskBuilder errorMask,
             BinarySubParseErrDelegate transl)
         {
@@ -437,7 +434,6 @@ namespace Mutagen.Bethesda.Binary
                     if (ParseRepeatedItem(
                         frame,
                         out var enumer,
-                        lengthLength,
                         errorMask: errorMask,
                         transl: transl))
                     {
@@ -466,13 +462,11 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             IList<T> item,
-            long lengthLength,
             BinarySubParseDelegate transl)
         {
             if (ParseRepeatedItem(
                 frame,
                 out var enumer,
-                lengthLength,
                 transl: transl))
             {
                 if (item is ISetList<T> setList)
@@ -493,14 +487,12 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             IList<T> item,
-            long lengthLength,
             MasterReferences masterReferences,
             BinaryMasterParseDelegate transl)
         {
             ParseRepeatedItem(
                 frame: frame,
                 item: item,
-                lengthLength: lengthLength,
                 transl: (MutagenFrame r, out T i) =>
                 {
                     return transl(r, out i, masterReferences);

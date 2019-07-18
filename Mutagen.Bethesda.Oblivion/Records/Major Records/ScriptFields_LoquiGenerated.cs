@@ -2895,7 +2895,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null,
-                        offset: offset,
                         trigger: ScriptFields_Registration.SLSD_HEADER,
                         factory:  LocalVariableBinaryWrapper.LocalVariableFactory);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
@@ -2907,7 +2906,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null,
-                        offset: offset,
                         trigger: ScriptReference_Registration.TriggeringRecordTypes,
                         factory: (s, r, p, recConv) =>
                         {

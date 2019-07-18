@@ -2929,7 +2929,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null,
-                        offset: offset,
                         trigger: Rank_Registration.TriggeringRecordTypes,
                         factory:  RankBinaryWrapper.RankFactory);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);

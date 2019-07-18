@@ -95,7 +95,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration targetGen,
             TypeGeneration typeGen,
             Accessor nodeAccessor,
-            bool squashedRepeatedList,
             AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,

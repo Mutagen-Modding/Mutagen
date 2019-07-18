@@ -105,7 +105,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration targetGen,
             TypeGeneration typeGen,
             Accessor nodeAccessor,
-            bool squashedRepeatedList,
             AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
@@ -113,7 +112,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationMaskAccessor)
         {
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.GetFieldData();
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{this.Namespace}StringBinaryTranslation.Instance.Parse"))
             {
@@ -123,7 +122,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"errorMask: {errorMaskAccessor}");
                 }
                 args.Add($"item: out {outItemAccessor.DirectAccess}");
-                args.Add($"parseWhole: {(squashedRepeatedList ? "false" : "true")}");
+                args.Add($"parseWhole: {(data.HasTrigger ? "true" : "false")}");
 
                 if (data.RecordType.HasValue)
                 {
