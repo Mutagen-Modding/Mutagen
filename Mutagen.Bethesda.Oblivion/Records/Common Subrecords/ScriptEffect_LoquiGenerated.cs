@@ -2430,6 +2430,118 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ScriptEffectBinaryWrapper : IScriptEffectInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ScriptEffect_Registration.Instance;
+        public static ScriptEffect_Registration Registration => ScriptEffect_Registration.Instance;
+        protected object CommonInstance => ScriptEffectCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptEffectInternalGetter)rhs, include);
+
+        protected object XmlWriteTranslator => ScriptEffectXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => ScriptEffectBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        private int? _SCITLocation;
+        public ScriptEffect.SCITDataType SCITDataTypeState { get; private set; }
+        #region Script
+        private int _ScriptLocation => _SCITLocation.Value + 0;
+        private bool _Script_IsSet => _SCITLocation.HasValue;
+        public IFormIDLinkGetter<IScriptInternalGetter> Script_Property => _Script_IsSet ? new FormIDLink<IScriptInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ScriptLocation, 4)))) : FormIDLink<IScriptInternalGetter>.Empty;
+        public IScriptInternalGetter Script => default;
+        #endregion
+        #region MagicSchool
+        private int _MagicSchoolLocation => _SCITLocation.Value + 4;
+        private bool _MagicSchool_IsSet => _SCITLocation.HasValue && !SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0);
+        public MagicSchool MagicSchool => _MagicSchool_IsSet ? (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MagicSchoolLocation, 4)) : default;
+        #endregion
+        #region VisualEffect
+        private int _VisualEffectLocation => _SCITLocation.Value + 8;
+        private bool _VisualEffect_IsSet => _SCITLocation.HasValue && !SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0);
+        public IEDIDLinkGetter<IMagicEffectInternalGetter> VisualEffect_Property => _VisualEffect_IsSet ? EDIDLink<IMagicEffectInternalGetter>.FactoryFromCache(edidRecordType: new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_VisualEffectLocation, 4))), targetRecordType: MagicEffect_Registration.MGEF_HEADER, package: _package) : EDIDLink<IMagicEffectInternalGetter>.Empty;
+        public IMagicEffectInternalGetter VisualEffect => default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _SCITLocation.Value + 12;
+        private bool _Flags_IsSet => _SCITLocation.HasValue && !SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1);
+        public ScriptEffect.Flag Flags => _Flags_IsSet ? (ScriptEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ScriptEffectBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static ScriptEffectBinaryWrapper ScriptEffectFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new ScriptEffectBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x54494353: // SCIT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    _SCITLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.SCITDataTypeState = ScriptEffect.SCITDataType.Has;
+                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                    if (subLen <= 4)
+                    {
+                        this.SCITDataTypeState |= ScriptEffect.SCITDataType.Break0;
+                    }
+                    if (subLen <= 12)
+                    {
+                        this.SCITDataTypeState |= ScriptEffect.SCITDataType.Break1;
+                    }
+                    return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Flags);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Name);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

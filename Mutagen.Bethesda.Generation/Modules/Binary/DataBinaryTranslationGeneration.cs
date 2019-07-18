@@ -86,12 +86,13 @@ namespace Mutagen.Bethesda.Generation
                     switch (data.Binary)
                     {
                         case BinaryGenerationType.Custom:
-                            this.Module.CustomLogic.GenerateFillForWrapper(
+                            this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
                                 fg: fg,
                                 objGen: objGen,
-                                field: field.Field,
+                                typeGen: field.Field,
                                 dataAccessor: dataAccessor,
-                                passedLength: ref passedLength);
+                                currentPosition: ref dataPassedLength,
+                                dataType: dataType);
                             continue;
                         case BinaryGenerationType.DoNothing:
                         case BinaryGenerationType.NoGeneration:

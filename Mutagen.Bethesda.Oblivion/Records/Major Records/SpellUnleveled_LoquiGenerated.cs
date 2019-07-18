@@ -2779,6 +2779,113 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class SpellUnleveledBinaryWrapper :
+        SpellBinaryWrapper,
+        ISpellUnleveledInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SpellUnleveled_Registration.Instance;
+        public new static SpellUnleveled_Registration Registration => SpellUnleveled_Registration.Instance;
+        protected override object CommonInstance => SpellUnleveledCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellUnleveledInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => SpellUnleveledXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SpellUnleveledBinaryWriteTranslation.Instance;
+
+        private int? _SPITLocation;
+        public SpellUnleveled.SPITDataType SPITDataTypeState { get; private set; }
+        #region Type
+        private int _TypeLocation => _SPITLocation.Value + 0;
+        private bool _Type_IsSet => _SPITLocation.HasValue;
+        public Spell.SpellType Type => _Type_IsSet ? (Spell.SpellType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 4)) : default;
+        #endregion
+        #region Cost
+        private int _CostLocation => _SPITLocation.Value + 4;
+        private bool _Cost_IsSet => _SPITLocation.HasValue;
+        public UInt32 Cost => _Cost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CostLocation, 4)) : default;
+        #endregion
+        #region Level
+        private int _LevelLocation => _SPITLocation.Value + 8;
+        private bool _Level_IsSet => _SPITLocation.HasValue;
+        public Spell.SpellLevel Level => _Level_IsSet ? (Spell.SpellLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_LevelLocation, 4)) : default;
+        #endregion
+        #region Flag
+        private int _FlagLocation => _SPITLocation.Value + 12;
+        private bool _Flag_IsSet => _SPITLocation.HasValue;
+        public Spell.SpellFlag Flag => _Flag_IsSet ? (Spell.SpellFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagLocation, 4)) : default;
+        #endregion
+        public IReadOnlySetList<IEffectInternalGetter> Effects { get; private set; } = EmptySetList<EffectBinaryWrapper>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected SpellUnleveledBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static SpellUnleveledBinaryWrapper SpellUnleveledFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new SpellUnleveledBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x54495053: // SPIT
+                {
+                    _SPITLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.SPITDataTypeState = SpellUnleveled.SPITDataType.Has;
+                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Flag);
+                }
+                case 0x44494645: // EFID
+                {
+                    this.Effects = UtilityTranslation.ParseRepeatedTypelessSubrecord<EffectBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null,
+                        offset: offset,
+                        trigger: SpellUnleveled_Registration.EFID_HEADER,
+                        factory:  EffectBinaryWrapper.EffectFactory);
+                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Effects);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

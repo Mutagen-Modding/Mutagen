@@ -1453,6 +1453,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class SpellAbstractBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        ISpellAbstractInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SpellAbstract_Registration.Instance;
+        public new static SpellAbstract_Registration Registration => SpellAbstract_Registration.Instance;
+        protected override object CommonInstance => SpellAbstractCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellAbstractInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => SpellAbstractXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SpellAbstractBinaryWriteTranslation.Instance;
+
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected SpellAbstractBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+    }
+
     #endregion
 
     #endregion

@@ -2820,6 +2820,123 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class EnchantmentBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IEnchantmentInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Enchantment_Registration.Instance;
+        public new static Enchantment_Registration Registration => Enchantment_Registration.Instance;
+        protected override object CommonInstance => EnchantmentCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnchantmentInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => EnchantmentXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => EnchantmentBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        private int? _ENITLocation;
+        public Enchantment.ENITDataType ENITDataTypeState { get; private set; }
+        #region Type
+        private int _TypeLocation => _ENITLocation.Value + 0;
+        private bool _Type_IsSet => _ENITLocation.HasValue;
+        public Enchantment.EnchantmentType Type => _Type_IsSet ? (Enchantment.EnchantmentType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 4)) : default;
+        #endregion
+        #region ChargeAmount
+        private int _ChargeAmountLocation => _ENITLocation.Value + 4;
+        private bool _ChargeAmount_IsSet => _ENITLocation.HasValue;
+        public UInt32 ChargeAmount => _ChargeAmount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ChargeAmountLocation, 4)) : default;
+        #endregion
+        #region EnchantCost
+        private int _EnchantCostLocation => _ENITLocation.Value + 8;
+        private bool _EnchantCost_IsSet => _ENITLocation.HasValue;
+        public UInt32 EnchantCost => _EnchantCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantCostLocation, 4)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _ENITLocation.Value + 12;
+        private bool _Flags_IsSet => _ENITLocation.HasValue;
+        public Enchantment.Flag Flags => _Flags_IsSet ? (Enchantment.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
+        #endregion
+        public IReadOnlySetList<IEffectInternalGetter> Effects { get; private set; } = EmptySetList<EffectBinaryWrapper>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected EnchantmentBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static EnchantmentBinaryWrapper EnchantmentFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new EnchantmentBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Name);
+                }
+                case 0x54494E45: // ENIT
+                {
+                    _ENITLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.ENITDataTypeState = Enchantment.ENITDataType.Has;
+                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Flags);
+                }
+                case 0x44494645: // EFID
+                {
+                    this.Effects = UtilityTranslation.ParseRepeatedTypelessSubrecord<EffectBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null,
+                        offset: offset,
+                        trigger: Enchantment_Registration.EFID_HEADER,
+                        factory:  EffectBinaryWrapper.EffectFactory);
+                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Effects);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

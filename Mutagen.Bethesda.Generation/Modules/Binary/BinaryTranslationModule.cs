@@ -1494,6 +1494,21 @@ namespace Mutagen.Bethesda.Generation
                 && obj.Name != "ScriptObjectReference"
                 && obj.Name != "LandTexture"
                 && obj.Name != "HavokData"
+                && obj.Name != "Enchantment"
+                && obj.Name != "Effect"
+                && obj.Name != "ScriptEffect"
+                && obj.Name != "Spell"
+                && obj.Name != "SpellUnleveled"
+                && obj.Name != "SpellAbstract"
+                && obj.Name != "SpellLeveled"
+                && obj.Name != "Birthsign"
+                && obj.Name != "Activator"
+                && obj.Name != "AlchemicalApparatus"
+                && obj.Name != "ItemAbstract"
+                && obj.Name != "Armor"
+                && obj.Name != "Book"
+                && obj.Name != "Clothing"
+                && obj.Name != "ClothingAbstract"
                 ) return;
 
             var dataAccessor = new Accessor("_data");
@@ -1600,12 +1615,12 @@ namespace Mutagen.Bethesda.Generation
                         switch (data.Binary)
                         {
                             case BinaryGenerationType.Custom:
-                                CustomLogic.GenerateFillForWrapper(
+                                CustomLogic.GenerateForCustomFlagWrapperFields(
                                     fg: fg,
                                     objGen: obj,
-                                    field: field,
+                                    typeGen: field,
                                     dataAccessor: dataAccessor,
-                                    passedLength: ref passedLength);
+                                    currentPosition: ref passedLength);
                                 continue;
                             case BinaryGenerationType.DoNothing:
                             case BinaryGenerationType.NoGeneration:
@@ -1941,7 +1956,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (field.Field.Name == "Enchantments")
+                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "Containers")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)

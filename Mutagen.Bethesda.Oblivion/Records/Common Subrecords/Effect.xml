@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Effect" objType="Subrecord" GUID="85ccb56e-7055-4f2a-894d-f998f0ac9ab8" ID="53">
     <Fields>
-      <SpecialParse name="EffectInitial" recordType="EFID" />
+      <CustomLogic name="EffectInitial" recordType="EFID" />
       <Data recordType="EFIT">
         <Fields>
           <FormIDLink name="MagicEffect" type="EDIDChars" refName="MagicEffect" />

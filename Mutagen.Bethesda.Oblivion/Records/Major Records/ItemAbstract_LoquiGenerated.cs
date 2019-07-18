@@ -1485,6 +1485,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ItemAbstractBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IItemAbstractInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ItemAbstract_Registration.Instance;
+        public new static ItemAbstract_Registration Registration => ItemAbstract_Registration.Instance;
+        protected override object CommonInstance => ItemAbstractCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IItemAbstractInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => ItemAbstractXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ItemAbstractBinaryWriteTranslation.Instance;
+
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ItemAbstractBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+    }
+
     #endregion
 
     #endregion

@@ -14748,6 +14748,70 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LandTextures);
                 }
+                case 0x48434E45: // ENCH
+                {
+                    this._Enchantments = GroupBinaryWrapper<IEnchantmentInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Enchantments);
+                }
+                case 0x4C455053: // SPEL
+                {
+                    this._Spells = GroupBinaryWrapper<ISpellUnleveledInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Spells);
+                }
+                case 0x4E475342: // BSGN
+                {
+                    this._Birthsigns = GroupBinaryWrapper<IBirthsignInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Birthsigns);
+                }
+                case 0x49544341: // ACTI
+                {
+                    this._Activators = GroupBinaryWrapper<IActivatorInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Activators);
+                }
+                case 0x41505041: // APPA
+                {
+                    this._AlchemicalApparatus = GroupBinaryWrapper<IAlchemicalApparatusInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AlchemicalApparatus);
+                }
+                case 0x4F4D5241: // ARMO
+                {
+                    this._Armors = GroupBinaryWrapper<IArmorInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Armors);
+                }
+                case 0x4B4F4F42: // BOOK
+                {
+                    this._Books = GroupBinaryWrapper<IBookInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Books);
+                }
+                case 0x544F4C43: // CLOT
+                {
+                    this._Clothes = GroupBinaryWrapper<IClothingInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Clothes);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

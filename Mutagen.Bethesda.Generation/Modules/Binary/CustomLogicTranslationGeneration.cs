@@ -220,42 +220,45 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public void GenerateFillForWrapper(
+        public void GenerateForCustomFlagWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen,
-            TypeGeneration field,
+            TypeGeneration typeGen,
             Accessor dataAccessor,
-            ref int passedLength)
+            ref int currentPosition,
+            DataType dataType = null)
         {
-            var data = field.GetFieldData();
-            string loc;
+            var fieldData = typeGen.GetFieldData();
             string span;
-            var gen = this.Module.GetTypeGeneration(field.GetType());
-            if (data.HasTrigger)
+            var gen = this.Module.GetTypeGeneration(typeGen.GetType());
+            if (fieldData.HasTrigger)
             {
-                fg.AppendLine($"private int? _{field.Name}Location;");
-                fg.AppendLine($"public bool {field.Name}_IsSet => _{field.Name}Location.HasValue;");
-                loc = $"_{field.Name}Location.Value";
-                span = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, {loc}, _package.Meta)";
+                fg.AppendLine($"private int? _{typeGen.Name}Location;");
+                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+                span = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
             }
-            else if (!data.Length.HasValue
-                && !gen.ExpectedLength(objGen, field).HasValue)
+            else if (!fieldData.Length.HasValue
+                && !gen.ExpectedLength(objGen, typeGen).HasValue)
             {
                 throw new ArgumentException("Custom logic without trigger needs to define expected length");
             }
+            else if (dataType != null)
+            {
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                span = $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(objGen, typeGen).Value})";
+            }
             else
             {
-                loc = $"{passedLength}";
-                span = $"{dataAccessor}.Slice({loc})";
+                span = $"{dataAccessor}.Slice({currentPosition})";
             }
             using (var args = new ArgsWrapper(fg,
-                $"public {field.TypeName(getter: true)} {field.Name} => Get{field.Name}Custom"))
+                $"public {typeGen.TypeName(getter: true)} {typeGen.Name} => Get{typeGen.Name}Custom"))
             {
                 args.Add($"span: {span}");
             }
-            if (!data.HasTrigger)
+            if (!fieldData.HasTrigger)
             {
-                passedLength += data.Length ?? gen.ExpectedLength(objGen, field).Value;
+                currentPosition += fieldData.Length ?? gen.ExpectedLength(objGen, typeGen).Value;
             }
         }
 

@@ -18,42 +18,48 @@ namespace Mutagen.Bethesda.Oblivion
             Touch = 1,
             Target = 2
         }
+    }
 
-        static partial void SpecialParse_EffectInitial(Effect item, MutagenFrame frame, ErrorMaskBuilder errorMask)
+    namespace Internals
+    {
+        public partial class EffectBinaryCreateTranslation
         {
-            var subMeta = frame.MetaData.ReadSubRecord(frame);
-            if (subMeta.RecordLength != Mutagen.Bethesda.Constants.HEADER_LENGTH)
+            static partial void FillBinaryEffectInitialCustom(MutagenFrame frame, Effect item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                throw new ArgumentException($"Magic effect name must be length 4.  Was: {subMeta.RecordLength}");
-            }
-            var magicEffName = frame.ReadSpan(4);
+                var subMeta = frame.MetaData.ReadSubRecord(frame);
+                if (subMeta.RecordLength != Mutagen.Bethesda.Constants.HEADER_LENGTH)
+                {
+                    throw new ArgumentException($"Magic effect name must be length 4.  Was: {subMeta.RecordLength}");
+                }
+                var magicEffName = frame.ReadSpan(4);
 
-            var efitMeta = frame.MetaData.GetSubRecord(frame);
-            if (efitMeta.RecordType != Effect_Registration.EFIT_HEADER)
-            {
-                throw new ArgumentException("Expected EFIT header.");
-            }
-            if (efitMeta.RecordLength < Mutagen.Bethesda.Constants.HEADER_LENGTH)
-            {
-                throw new ArgumentException($"Magic effect ref length was less than 4.  Was: {efitMeta.RecordLength}");
-            }
-            var magicEffName2 = frame.GetSpan(amount: Mutagen.Bethesda.Constants.HEADER_LENGTH, offset: efitMeta.HeaderLength);
-            if (!magicEffName.SequenceEqual(magicEffName2))
-            {
-                throw new ArgumentException($"Magic effect names did not match. {BinaryStringUtility.ToZString(magicEffName)} != {BinaryStringUtility.ToZString(magicEffName2)}");
+                var efitMeta = frame.MetaData.GetSubRecord(frame);
+                if (efitMeta.RecordType != Effect_Registration.EFIT_HEADER)
+                {
+                    throw new ArgumentException("Expected EFIT header.");
+                }
+                if (efitMeta.RecordLength < Mutagen.Bethesda.Constants.HEADER_LENGTH)
+                {
+                    throw new ArgumentException($"Magic effect ref length was less than 4.  Was: {efitMeta.RecordLength}");
+                }
+                var magicEffName2 = frame.GetSpan(amount: Mutagen.Bethesda.Constants.HEADER_LENGTH, offset: efitMeta.HeaderLength);
+                if (!magicEffName.SequenceEqual(magicEffName2))
+                {
+                    throw new ArgumentException($"Magic effect names did not match. {BinaryStringUtility.ToZString(magicEffName)} != {BinaryStringUtility.ToZString(magicEffName2)}");
+                }
             }
         }
 
-        static partial void SpecialWrite_EffectInitial(
-            IEffectInternalGetter item,
-            MutagenWriter writer,
-            ErrorMaskBuilder errorMask)
+        public partial class EffectBinaryWriteTranslation
         {
-            using (HeaderExport.ExportSubRecordHeader(writer, Effect_Registration.EFID_HEADER))
+            static partial void WriteBinaryEffectInitialCustom(MutagenWriter writer, IEffectInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MagicEffect_Property);
+                using (HeaderExport.ExportSubRecordHeader(writer, Effect_Registration.EFID_HEADER))
+                {
+                    Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MagicEffect_Property);
+                }
             }
         }
     }

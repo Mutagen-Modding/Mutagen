@@ -377,24 +377,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Effect_Registration.TRIGGERING_RECORD_TYPE;
-        static partial void SpecialParse_EffectInitial(
-            Effect item,
-            MutagenFrame frame,
-            ErrorMaskBuilder errorMask);
-        static partial void SpecialWrite_EffectInitial(
-            IEffectInternalGetter item,
-            MutagenWriter writer,
-            ErrorMaskBuilder errorMask);
-        internal static void SpecialWrite_EffectInitial_Internal(
-            IEffectInternalGetter item,
-            MutagenWriter writer,
-            ErrorMaskBuilder errorMask)
-        {
-            SpecialWrite_EffectInitial(
-                item: item,
-                writer: writer,
-                errorMask: errorMask);
-        }
         [Flags]
         public enum EFITDataType
         {
@@ -510,9 +492,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x44494645: // EFID
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.MagicEffect) return TryGet<int?>.Failure;
-                    SpecialParse_EffectInitial(
+                    EffectBinaryCreateTranslation.FillBinaryEffectInitialCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
                         item: item,
-                        frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed(lastParsed);
                 }
@@ -2613,6 +2596,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static EffectBinaryWriteTranslation Instance = new EffectBinaryWriteTranslation();
 
+        static partial void WriteBinaryEffectInitialCustom(
+            MutagenWriter writer,
+            IEffectInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void WriteBinaryEffectInitial(
+            MutagenWriter writer,
+            IEffectInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WriteBinaryEffectInitialCustom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
         public static void Write_Embedded(
             IEffectInternalGetter item,
             MutagenWriter writer,
@@ -2628,9 +2630,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Effect.SpecialWrite_EffectInitial_Internal(
-                item: item,
+            EffectBinaryWriteTranslation.WriteBinaryEffectInitial(
                 writer: writer,
+                item: item,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
             if (item.EFITDataTypeState.HasFlag(Effect.EFITDataType.Has))
             {
@@ -2705,6 +2708,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static EffectBinaryCreateTranslation Instance = new EffectBinaryCreateTranslation();
 
+        static partial void FillBinaryEffectInitialCustom(
+            MutagenFrame frame,
+            Effect item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinaryEffectInitialCustomPublic(
+            MutagenFrame frame,
+            Effect item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinaryEffectInitialCustom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
     }
 
     #region Binary Write Mixins
@@ -2756,6 +2778,129 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
+    public partial class EffectBinaryWrapper : IEffectInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
+        public static Effect_Registration Registration => Effect_Registration.Instance;
+        protected object CommonInstance => EffectCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEffectInternalGetter)rhs, include);
+
+        protected object XmlWriteTranslator => EffectXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => EffectBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region EffectInitial
+        private int? _EffectInitialLocation;
+        public bool EffectInitial_IsSet => _EffectInitialLocation.HasValue;
+        #endregion
+        private int? _EFITLocation;
+        public Effect.EFITDataType EFITDataTypeState { get; private set; }
+        #region MagicEffect
+        private int _MagicEffectLocation => _EFITLocation.Value + 0;
+        private bool _MagicEffect_IsSet => _EFITLocation.HasValue;
+        public IEDIDLinkGetter<IMagicEffectInternalGetter> MagicEffect_Property => _MagicEffect_IsSet ? EDIDLink<IMagicEffectInternalGetter>.FactoryFromCache(edidRecordType: new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MagicEffectLocation, 4))), targetRecordType: MagicEffect_Registration.MGEF_HEADER, package: _package) : EDIDLink<IMagicEffectInternalGetter>.Empty;
+        public IMagicEffectInternalGetter MagicEffect => default;
+        #endregion
+        #region Magnitude
+        private int _MagnitudeLocation => _EFITLocation.Value + 4;
+        private bool _Magnitude_IsSet => _EFITLocation.HasValue;
+        public UInt32 Magnitude => _Magnitude_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MagnitudeLocation, 4)) : default;
+        #endregion
+        #region Area
+        private int _AreaLocation => _EFITLocation.Value + 8;
+        private bool _Area_IsSet => _EFITLocation.HasValue;
+        public UInt32 Area => _Area_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AreaLocation, 4)) : default;
+        #endregion
+        #region Duration
+        private int _DurationLocation => _EFITLocation.Value + 12;
+        private bool _Duration_IsSet => _EFITLocation.HasValue;
+        public UInt32 Duration => _Duration_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DurationLocation, 4)) : default;
+        #endregion
+        #region Type
+        private int _TypeLocation => _EFITLocation.Value + 16;
+        private bool _Type_IsSet => _EFITLocation.HasValue;
+        public Effect.EffectType Type => _Type_IsSet ? (Effect.EffectType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 4)) : default;
+        #endregion
+        #region ActorValue
+        private int _ActorValueLocation => _EFITLocation.Value + 20;
+        private bool _ActorValue_IsSet => _EFITLocation.HasValue;
+        public ActorValueExtended ActorValue => _ActorValue_IsSet ? (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ActorValueLocation, 4)) : default;
+        #endregion
+        #region ScriptEffect
+        public IScriptEffectInternalGetter ScriptEffect { get; private set; }
+        public bool ScriptEffect_IsSet => ScriptEffect != null;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected EffectBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static EffectBinaryWrapper EffectFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new EffectBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x44494645: // EFID
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.MagicEffect) return TryGet<int?>.Failure;
+                    _EffectInitialLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed(lastParsed);
+                }
+                case 0x54494645: // EFIT
+                {
+                    _EFITLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.EFITDataTypeState = Effect.EFITDataType.Has;
+                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.ActorValue);
+                }
+                case 0x54494353: // SCIT
+                {
+                    this.ScriptEffect = ScriptEffectBinaryWrapper.ScriptEffectFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.ScriptEffect);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
 
     #endregion
 

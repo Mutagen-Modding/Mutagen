@@ -4072,6 +4072,179 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ClothingAbstractBinaryWrapper :
+        ItemAbstractBinaryWrapper,
+        IClothingAbstractInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ClothingAbstract_Registration.Instance;
+        public new static ClothingAbstract_Registration Registration => ClothingAbstract_Registration.Instance;
+        protected override object CommonInstance => ClothingAbstractCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClothingAbstractInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => ClothingAbstractXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ClothingAbstractBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Script
+        private int? _ScriptLocation;
+        public bool Script_IsSet => _ScriptLocation.HasValue;
+        public IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptInternalGetter>.Empty;
+        public IScriptInternalGetter Script => default;
+        #endregion
+        #region Enchantment
+        private int? _EnchantmentLocation;
+        public bool Enchantment_IsSet => _EnchantmentLocation.HasValue;
+        public IFormIDSetLinkGetter<IEnchantmentInternalGetter> Enchantment_Property => _EnchantmentLocation.HasValue ? new FormIDSetLink<IEnchantmentInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EnchantmentLocation.Value, _package.Meta)))) : FormIDSetLink<IEnchantmentInternalGetter>.Empty;
+        public IEnchantmentInternalGetter Enchantment => default;
+        #endregion
+        #region EnchantmentPoints
+        private int? _EnchantmentPointsLocation;
+        public bool EnchantmentPoints_IsSet => _EnchantmentPointsLocation.HasValue;
+        public UInt16 EnchantmentPoints => _EnchantmentPointsLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EnchantmentPointsLocation.Value, _package.Meta)) : default;
+        #endregion
+        private int? _BMDTLocation;
+        public ClothingAbstract.BMDTDataType BMDTDataTypeState { get; private set; }
+        #region BipedFlags
+        private int _BipedFlagsLocation => _BMDTLocation.Value + 0;
+        private bool _BipedFlags_IsSet => _BMDTLocation.HasValue;
+        public BipedFlag BipedFlags => _BipedFlags_IsSet ? (BipedFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_BipedFlagsLocation, 2)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _BMDTLocation.Value + 2;
+        private bool _Flags_IsSet => _BMDTLocation.HasValue;
+        public EquipmentFlag Flags => _Flags_IsSet ? (EquipmentFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 2)) : default;
+        #endregion
+        #region MaleBipedModel
+        public IModelGetter MaleBipedModel { get; private set; }
+        public bool MaleBipedModel_IsSet => MaleBipedModel != null;
+        #endregion
+        #region MaleWorldModel
+        public IModelGetter MaleWorldModel { get; private set; }
+        public bool MaleWorldModel_IsSet => MaleWorldModel != null;
+        #endregion
+        #region MaleIcon
+        private int? _MaleIconLocation;
+        public bool MaleIcon_IsSet => _MaleIconLocation.HasValue;
+        public String MaleIcon => _MaleIconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MaleIconLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region FemaleBipedModel
+        public IModelGetter FemaleBipedModel { get; private set; }
+        public bool FemaleBipedModel_IsSet => FemaleBipedModel != null;
+        #endregion
+        #region FemaleWorldModel
+        public IModelGetter FemaleWorldModel { get; private set; }
+        public bool FemaleWorldModel_IsSet => FemaleWorldModel != null;
+        #endregion
+        #region FemaleIcon
+        private int? _FemaleIconLocation;
+        public bool FemaleIcon_IsSet => _FemaleIconLocation.HasValue;
+        public String FemaleIcon => _FemaleIconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FemaleIconLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ClothingAbstractBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Name);
+                }
+                case 0x49524353: // SCRI
+                {
+                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Script);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    _EnchantmentLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Enchantment);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    _EnchantmentPointsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.EnchantmentPoints);
+                }
+                case 0x54444D42: // BMDT
+                {
+                    _BMDTLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.BMDTDataTypeState = ClothingAbstract.BMDTDataType.Has;
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Flags);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.MaleBipedModel = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleBipedModel);
+                }
+                case 0x32444F4D: // MOD2
+                {
+                    this.MaleWorldModel = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleWorldModel);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _MaleIconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleIcon);
+                }
+                case 0x33444F4D: // MOD3
+                {
+                    this.FemaleBipedModel = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
+                }
+                case 0x34444F4D: // MOD4
+                {
+                    this.FemaleWorldModel = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
+                }
+                case 0x324F4349: // ICO2
+                {
+                    _FemaleIconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleIcon);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

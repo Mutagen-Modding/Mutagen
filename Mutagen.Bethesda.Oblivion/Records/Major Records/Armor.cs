@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,13 +13,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class ArmorBinaryCreateTranslation
     {
+        public static float GetArmorValue(ushort i) => i / 100f;
+
         static partial void FillBinaryArmorValueCustom(MutagenFrame frame, Armor item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (UInt16BinaryTranslation.Instance.Parse(
                 frame,
                 out var val))
             {
-                item.ArmorValue = val / 100f;
+                item.ArmorValue = GetArmorValue(val);
             }
         }
     }
@@ -30,6 +33,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             UInt16BinaryTranslation.Instance.Write(
                 writer,
                 (ushort)(item.ArmorValue * 100));
+        }
+    }
+
+    public partial class ArmorBinaryWrapper
+    {
+        public float GetArmorValueCustom(ReadOnlySpan<byte> span)
+        {
+            return ArmorBinaryCreateTranslation.GetArmorValue(BinaryPrimitives.ReadUInt16LittleEndian(span));
         }
     }
 }
