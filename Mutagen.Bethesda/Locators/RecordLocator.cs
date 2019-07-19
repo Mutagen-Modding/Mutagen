@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda
             {
                 var grupLoc = frame.Position;
                 var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-                if (!targetRec.Equals(Group_Registration.GRUP_HEADER))
+                if (!targetRec.Equals(Mutagen.Bethesda.Constants.GRUP))
                 {
                     throw new ArgumentException();
                 }
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda
             {
                 var grupLoc = frame.Position;
                 var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-                if (!targetRec.Equals(Group_Registration.GRUP_HEADER))
+                if (!targetRec.Equals(Mutagen.Bethesda.Constants.GRUP))
                 {
                     throw new ArgumentException();
                 }

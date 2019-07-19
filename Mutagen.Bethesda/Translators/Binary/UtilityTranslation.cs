@@ -806,11 +806,11 @@ namespace Mutagen.Bethesda
             {
                 if (!HeaderTranslation.TryParse(
                     frame,
-                    Group_Registration.GRUP_HEADER,
+                    Mutagen.Bethesda.Constants.GRUP,
                     out var grupLen,
                     frame.MetaData.GroupConstants.LengthLength))
                 {
-                    throw new ArgumentException($"Expected header was not read in: {Group_Registration.GRUP_HEADER}");
+                    throw new ArgumentException($"Expected header was not read in: {Mutagen.Bethesda.Constants.GRUP}");
                 }
                 var groupLen = checked((int)(grupLen - frame.MetaData.GroupConstants.TypeAndLengthLength));
                 frame = frame.ReadAndReframe(groupLen);
