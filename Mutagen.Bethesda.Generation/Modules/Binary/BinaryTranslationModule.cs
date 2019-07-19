@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Generation
         }
 
         public string BinaryWrapperClassName(ObjectGeneration obj) => $"{obj.Name}BinaryWrapper";
+        public string BinaryWrapperClass(ObjectGeneration obj) => $"{BinaryWrapperClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}";
 
         public BinaryTranslationModule(LoquiGenerator gen)
             : base(gen)
@@ -1489,10 +1490,10 @@ namespace Mutagen.Bethesda.Generation
             var needsMasters = await obj.GetNeedsMasters();
             var anyHasRecordTypes = (await obj.EntireClassTree()).Any(c => HasRecordTypeFields(c));
 
-            using (var args = new ClassWrapper(fg, $"{BinaryWrapperClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}"))
+            using (var args = new ClassWrapper(fg, $"{BinaryWrapperClass(obj)}"))
             {
                 args.Partial = true;
-                args.BaseClass = obj.HasLoquiBaseObject ? BinaryWrapperClassName(obj.BaseClass) : null;
+                args.BaseClass = obj.HasLoquiBaseObject ? BinaryWrapperClass(obj.BaseClass) : null;
                 args.Interfaces.Add(obj.Interface(getter: true, internalInterface: obj.HasInternalInterface));
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
             }
@@ -1697,7 +1698,7 @@ namespace Mutagen.Bethesda.Generation
                 if (!obj.Abstract)
                 {
                     using (var args = new FunctionWrapper(fg,
-                        $"public static {this.BinaryWrapperClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)} {obj.Name}Factory"))
+                        $"public static {this.BinaryWrapperClass(obj)} {obj.Name}Factory"))
                     {
                         if (obj.GetObjectType() == ObjectType.Mod)
                         {
