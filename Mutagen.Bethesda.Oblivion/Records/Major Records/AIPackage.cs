@@ -96,5 +96,42 @@ namespace Mutagen.Bethesda.Oblivion
                     length: 4);
             }
         }
+
+        public partial class AIPackageBinaryWrapper
+        {
+            public AIPackage.Flag GetFlagsCustom(
+                ReadOnlySpan<byte> span,
+                int location,
+                int? expectedLength,
+                BinaryWrapperFactoryPackage package)
+            {
+                span = span.Slice(_PKDTLocation.Value);
+                if (span.Length > 4)
+                {
+                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span));
+                }
+                else
+                {
+                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(span));
+                }
+            }
+
+            public AIPackage.GeneralTypeEnum GetGeneralTypeCustom(
+                ReadOnlySpan<byte> span,
+                int location,
+                int? expectedLength,
+                BinaryWrapperFactoryPackage package)
+            {
+                span = span.Slice(_PKDTLocation.Value);
+                if (span.Length > 4)
+                {
+                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4)));
+                }
+                else
+                {
+                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(span.Slice(2)));
+                }
+            }
+        }
     }
 }

@@ -2335,6 +2335,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class LeveledEntryBinaryWrapper<T> : ILeveledEntryGetter<T>
+        where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LeveledEntry_Registration.Instance;
+        public static LeveledEntry_Registration Registration => LeveledEntry_Registration.Instance;
+        protected object CommonInstance => LeveledEntryCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledEntryGetter<T>)rhs, include);
+
+        protected object XmlWriteTranslator => LeveledEntryXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => LeveledEntryBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(0, 2));
+        public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(2, 2).ToArray();
+        #region Reference
+        public IFormIDLinkGetter<T> Reference_Property => new FormIDLink<T>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public T Reference => default;
+        #endregion
+        #region Count
+        public bool Count_IsSet => _data.Length >= 10;
+        public Int16 Count => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(8, 2));
+        #endregion
+        #region Fluff2
+        public bool Fluff2_IsSet => _data.Length >= 12;
+        public ReadOnlySpan<Byte> Fluff2 => _data.Span.Slice(10, 2).ToArray();
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected LeveledEntryBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static LeveledEntryBinaryWrapper<T> LeveledEntryFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new LeveledEntryBinaryWrapper<T>(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

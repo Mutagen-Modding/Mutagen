@@ -70,14 +70,7 @@ namespace Mutagen.Bethesda.Binary
             }
             else
             {
-                var span = frame.Reader.RemainingSpan;
-                var index = span.IndexOf(default(byte));
-                if (index == -1)
-                {
-                    throw new ArgumentException();
-                }
-                frame.Reader.Position += index + 1;
-                item = BinaryStringUtility.ToZString(span.Slice(0, index));
+                item = BinaryStringUtility.ParseUnknownLengthString(frame.Reader);
             }
             return true;
         }

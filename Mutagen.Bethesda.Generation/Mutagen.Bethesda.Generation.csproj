@@ -88,6 +88,7 @@
     <Compile Include="Modules\Binary\LoquiBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\BufferBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ModKeyBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\PointBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\PrimitiveBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\SByteArrayBinaryTranslationGeneration.cs" />

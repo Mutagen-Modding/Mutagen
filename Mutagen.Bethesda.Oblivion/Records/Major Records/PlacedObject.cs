@@ -44,5 +44,17 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+
+        public partial class PlacedObjectBinaryWrapper
+        {
+            public bool GetOpenByDefaultCustom(
+                ReadOnlySpan<byte> span,
+                int location,
+                int? expectedLength,
+                BinaryWrapperFactoryPackage package)
+            {
+                return true;
+            }
+        }
     }
 }

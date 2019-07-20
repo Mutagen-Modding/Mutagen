@@ -147,18 +147,18 @@ namespace Mutagen.Bethesda.Generation
 
             if (data.RecordType.HasValue)
             {
-                fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => ({eType.TypeName(getter: true)}){getType};");
+                fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
             }
             else
             {
                 if (dataType == null)
                 {
-                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => ({eType.TypeName(getter: true)}){getType};");
+                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
                 }
                 else
                 {
                     DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
-                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => _{typeGen.Name}_IsSet ? ({eType.TypeName(getter: true)}){getType} : default;");
+                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => _{typeGen.Name}_IsSet ? {getType} : default;");
                 }
             }
 
@@ -186,11 +186,11 @@ namespace Mutagen.Bethesda.Generation
             switch (eType.ByteLength)
             {
                 case 1:
-                    return $"{dataAccessor}[0]";
+                    return $"({eType.TypeName(getter: true)}){dataAccessor}[0]";
                 case 2:
-                    return $"BinaryPrimitives.ReadUInt16LittleEndian({dataAccessor})";
+                    return $"({eType.TypeName(getter: true)})BinaryPrimitives.ReadUInt16LittleEndian({dataAccessor})";
                 case 4:
-                    return $"BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})";
+                    return $"({eType.TypeName(getter: true)})BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})";
                 default:
                     throw new NotImplementedException();
             }

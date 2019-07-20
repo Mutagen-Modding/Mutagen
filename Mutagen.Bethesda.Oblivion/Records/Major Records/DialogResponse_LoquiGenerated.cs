@@ -2737,6 +2737,118 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class DialogResponseBinaryWrapper : IDialogResponseInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
+        public static DialogResponse_Registration Registration => DialogResponse_Registration.Instance;
+        protected object CommonInstance => DialogResponseCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponseInternalGetter)rhs, include);
+
+        protected object XmlWriteTranslator => DialogResponseXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => DialogResponseBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        private int? _TRDTLocation;
+        public DialogResponse.TRDTDataType TRDTDataTypeState { get; private set; }
+        #region Emotion
+        private int _EmotionLocation => _TRDTLocation.Value + 0x0;
+        private bool _Emotion_IsSet => _TRDTLocation.HasValue;
+        public EmotionType Emotion => _Emotion_IsSet ? (EmotionType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_EmotionLocation, 4)) : default;
+        #endregion
+        #region EmotionValue
+        private int _EmotionValueLocation => _TRDTLocation.Value + 0x4;
+        private bool _EmotionValue_IsSet => _TRDTLocation.HasValue;
+        public Int32 EmotionValue => _EmotionValue_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_EmotionValueLocation, 4)) : default;
+        #endregion
+        #region Fluff1
+        private int _Fluff1Location => _TRDTLocation.Value + 0x8;
+        private bool _Fluff1_IsSet => _TRDTLocation.HasValue;
+        public ReadOnlySpan<Byte> Fluff1 => _Fluff1_IsSet ? _data.Span.Slice(_Fluff1Location, 4).ToArray() : default;
+        #endregion
+        public Byte ResponseNumber => _TRDTLocation.HasValue ? _data.Span[_TRDTLocation.Value + 12] : default;
+        #region Fluff2
+        private int _Fluff2Location => _TRDTLocation.Value + 0xD;
+        private bool _Fluff2_IsSet => _TRDTLocation.HasValue;
+        public ReadOnlySpan<Byte> Fluff2 => _Fluff2_IsSet ? _data.Span.Slice(_Fluff2Location, 3).ToArray() : default;
+        #endregion
+        #region ResponseText
+        private int? _ResponseTextLocation;
+        public bool ResponseText_IsSet => _ResponseTextLocation.HasValue;
+        public String ResponseText => _ResponseTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _ResponseTextLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region ActorNotes
+        private int? _ActorNotesLocation;
+        public bool ActorNotes_IsSet => _ActorNotesLocation.HasValue;
+        public String ActorNotes => _ActorNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _ActorNotesLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected DialogResponseBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static DialogResponseBinaryWrapper DialogResponseFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new DialogResponseBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x54445254: // TRDT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Fluff2) return TryGet<int?>.Failure;
+                    _TRDTLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.TRDTDataTypeState = DialogResponse.TRDTDataType.Has;
+                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Fluff2);
+                }
+                case 0x314D414E: // NAM1
+                {
+                    _ResponseTextLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
+                }
+                case 0x324D414E: // NAM2
+                {
+                    _ActorNotesLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ActorNotes);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

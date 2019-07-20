@@ -2662,6 +2662,130 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class LeveledCreatureBinaryWrapper :
+        NPCSpawnBinaryWrapper,
+        ILeveledCreatureInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
+        public new static LeveledCreature_Registration Registration => LeveledCreature_Registration.Instance;
+        protected override object CommonInstance => LeveledCreatureCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledCreatureInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => LeveledCreatureXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => LeveledCreatureBinaryWriteTranslation.Instance;
+
+        #region ChanceNone
+        private int? _ChanceNoneLocation;
+        public bool ChanceNone_IsSet => _ChanceNoneLocation.HasValue;
+        public Byte ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _ChanceNoneLocation.Value, _package.Meta)[0] : default;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public bool Flags_IsSet => _FlagsLocation.HasValue;
+        public LeveledFlag Flags => (LeveledFlag)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _FlagsLocation.Value, _package.Meta)[0];
+        #endregion
+        public IReadOnlySetList<ILeveledEntryGetter<INPCSpawnInternalGetter>> Entries { get; private set; } = EmptySetList<LeveledEntryBinaryWrapper<INPCSpawnInternalGetter>>.Instance;
+        #region Script
+        private int? _ScriptLocation;
+        public bool Script_IsSet => _ScriptLocation.HasValue;
+        public IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptInternalGetter>.Empty;
+        public IScriptInternalGetter Script => default;
+        #endregion
+        #region Template
+        private int? _TemplateLocation;
+        public bool Template_IsSet => _TemplateLocation.HasValue;
+        public IFormIDSetLinkGetter<INPCAbstractInternalGetter> Template_Property => _TemplateLocation.HasValue ? new FormIDSetLink<INPCAbstractInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.Meta)))) : FormIDSetLink<INPCAbstractInternalGetter>.Empty;
+        public INPCAbstractInternalGetter Template => default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected LeveledCreatureBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static LeveledCreatureBinaryWrapper LeveledCreatureFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new LeveledCreatureBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x444C564C: // LVLD
+                {
+                    _ChanceNoneLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.ChanceNone);
+                }
+                case 0x464C564C: // LVLF
+                {
+                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Flags);
+                }
+                case 0x4F4C564C: // LVLO
+                {
+                    this.Entries = BinaryWrapperSetList<LeveledEntryBinaryWrapper<INPCSpawnInternalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => LeveledEntryBinaryWrapper<INPCSpawnInternalGetter>.LeveledEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Entries);
+                }
+                case 0x49524353: // SCRI
+                {
+                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Script);
+                }
+                case 0x4D414E54: // TNAM
+                {
+                    _TemplateLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Template);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

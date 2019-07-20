@@ -2047,6 +2047,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class CreatureSoundBinaryWrapper : ICreatureSoundGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
+        public static CreatureSound_Registration Registration => CreatureSound_Registration.Instance;
+        protected object CommonInstance => CreatureSoundCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureSoundGetter)rhs, include);
+
+        protected object XmlWriteTranslator => CreatureSoundXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => CreatureSoundBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region SoundType
+        private int? _SoundTypeLocation;
+        public bool SoundType_IsSet => _SoundTypeLocation.HasValue;
+        public CreatureSound.CreatureSoundType SoundType => (CreatureSound.CreatureSoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _SoundTypeLocation.Value, _package.Meta));
+        #endregion
+        public IReadOnlySetList<ISoundItemGetter> Sounds { get; private set; } = EmptySetList<SoundItemBinaryWrapper>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected CreatureSoundBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static CreatureSoundBinaryWrapper CreatureSoundFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new CreatureSoundBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x54445343: // CSDT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return TryGet<int?>.Failure;
+                    _SoundTypeLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.SoundType);
+                }
+                case 0x49445343: // CSDI
+                case 0x43445343: // CSDC
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return TryGet<int?>.Failure;
+                    this.Sounds = UtilityTranslation.ParseRepeatedTypelessSubrecord<SoundItemBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null,
+                        trigger: SoundItem_Registration.TriggeringRecordTypes,
+                        factory:  SoundItemBinaryWrapper.SoundItemFactory);
+                    return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.Sounds);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

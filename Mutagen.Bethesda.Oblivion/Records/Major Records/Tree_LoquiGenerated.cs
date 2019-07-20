@@ -3961,6 +3961,174 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class TreeBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        ITreeInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
+        public new static Tree_Registration Registration => Tree_Registration.Instance;
+        protected override object CommonInstance => TreeCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITreeInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => TreeXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => TreeBinaryWriteTranslation.Instance;
+
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region Icon
+        private int? _IconLocation;
+        public bool Icon_IsSet => _IconLocation.HasValue;
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        #endregion
+        public IReadOnlySetList<UInt32> SpeedTreeSeeds { get; private set; } = EmptySetList<UInt32>.Instance;
+        private int? _CNAMLocation;
+        public Tree.CNAMDataType CNAMDataTypeState { get; private set; }
+        #region LeafCurvature
+        private int _LeafCurvatureLocation => _CNAMLocation.Value + 0x0;
+        private bool _LeafCurvature_IsSet => _CNAMLocation.HasValue;
+        public Single LeafCurvature => _LeafCurvature_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_LeafCurvatureLocation, 4)) : default;
+        #endregion
+        #region MinimumLeafAngle
+        private int _MinimumLeafAngleLocation => _CNAMLocation.Value + 0x4;
+        private bool _MinimumLeafAngle_IsSet => _CNAMLocation.HasValue;
+        public Single MinimumLeafAngle => _MinimumLeafAngle_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_MinimumLeafAngleLocation, 4)) : default;
+        #endregion
+        #region MaximumLeafAngle
+        private int _MaximumLeafAngleLocation => _CNAMLocation.Value + 0x8;
+        private bool _MaximumLeafAngle_IsSet => _CNAMLocation.HasValue;
+        public Single MaximumLeafAngle => _MaximumLeafAngle_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_MaximumLeafAngleLocation, 4)) : default;
+        #endregion
+        #region BranchDimmingValue
+        private int _BranchDimmingValueLocation => _CNAMLocation.Value + 0xC;
+        private bool _BranchDimmingValue_IsSet => _CNAMLocation.HasValue;
+        public Single BranchDimmingValue => _BranchDimmingValue_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BranchDimmingValueLocation, 4)) : default;
+        #endregion
+        #region LeafDimmingValue
+        private int _LeafDimmingValueLocation => _CNAMLocation.Value + 0x10;
+        private bool _LeafDimmingValue_IsSet => _CNAMLocation.HasValue;
+        public Single LeafDimmingValue => _LeafDimmingValue_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_LeafDimmingValueLocation, 4)) : default;
+        #endregion
+        #region ShadowRadius
+        private int _ShadowRadiusLocation => _CNAMLocation.Value + 0x14;
+        private bool _ShadowRadius_IsSet => _CNAMLocation.HasValue;
+        public Int32 ShadowRadius => _ShadowRadius_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ShadowRadiusLocation, 4)) : default;
+        #endregion
+        #region RockingSpeed
+        private int _RockingSpeedLocation => _CNAMLocation.Value + 0x18;
+        private bool _RockingSpeed_IsSet => _CNAMLocation.HasValue;
+        public Single RockingSpeed => _RockingSpeed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RockingSpeedLocation, 4)) : default;
+        #endregion
+        #region RustleSpeed
+        private int _RustleSpeedLocation => _CNAMLocation.Value + 0x1C;
+        private bool _RustleSpeed_IsSet => _CNAMLocation.HasValue;
+        public Single RustleSpeed => _RustleSpeed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RustleSpeedLocation, 4)) : default;
+        #endregion
+        private int? _BNAMLocation;
+        public Tree.BNAMDataType BNAMDataTypeState { get; private set; }
+        #region BillboardWidth
+        private int _BillboardWidthLocation => _BNAMLocation.Value + 0x0;
+        private bool _BillboardWidth_IsSet => _BNAMLocation.HasValue;
+        public Single BillboardWidth => _BillboardWidth_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BillboardWidthLocation, 4)) : default;
+        #endregion
+        #region BillboardHeight
+        private int _BillboardHeightLocation => _BNAMLocation.Value + 0x4;
+        private bool _BillboardHeight_IsSet => _BNAMLocation.HasValue;
+        public Single BillboardHeight => _BillboardHeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BillboardHeightLocation, 4)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected TreeBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static TreeBinaryWrapper TreeFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new TreeBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _IconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Icon);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.SpeedTreeSeeds = BinaryWrapperSetList<UInt32>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    _CNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.CNAMDataTypeState = Tree.CNAMDataType.Has;
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.RustleSpeed);
+                }
+                case 0x4D414E42: // BNAM
+                {
+                    _BNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.BNAMDataTypeState = Tree.BNAMDataType.Has;
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardHeight);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

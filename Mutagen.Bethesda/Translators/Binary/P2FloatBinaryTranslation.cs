@@ -1,5 +1,6 @@
 ﻿using Noggog;
 using System;
+using System.Buffers.Binary;
 using System.IO;
 
 namespace Mutagen.Bethesda.Binary
@@ -20,6 +21,13 @@ namespace Mutagen.Bethesda.Binary
         {
             FloatBinaryTranslation.Instance.WriteValue(writer, item.X);
             FloatBinaryTranslation.Instance.WriteValue(writer, item.Y);
+        }
+
+        public static P2Float Read(ReadOnlySpan<byte> span)
+        {
+            return new P2Float(
+                SpanExt.GetFloat(span),
+                SpanExt.GetFloat(span.Slice(4)));
         }
     }
 }

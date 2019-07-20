@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Generation
                         recConverter = $"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter";
                     }
                     var gen = this.Module.GetTypeGeneration(loqui.GetType());
-                    fg.AppendLine($"public IReadOnlyList<{list.SubTypeGeneration.TypeName(getter: true)}> {typeGen.Name} => BinaryWrapperNumberedList.FactoryForLoqui<{list.SubTypeGeneration.TypeName(getter: true)}>(_{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Slice({posStr}) : default, amount: {list.MaxValue.Value}, length: {gen.ExpectedLength(objGen, loqui)}, _package, {recConverter}, {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory);");
+                    fg.AppendLine($"public IReadOnlyList<{list.SubTypeGeneration.TypeName(getter: true)}> {typeGen.Name} => BinaryWrapperNumberedList.FactoryForLoqui<{list.SubTypeGeneration.TypeName(getter: true)}>(_{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Slice({posStr}) : default, amount: {list.MaxValue.Value}, length: {gen.ExpectedLength(objGen, loqui)}, _package, {recConverter}, {this.Module.BinaryWrapperClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory);");
                 }
                 else
                 {
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else if (list.SubTypeGeneration is LoquiType loqui)
             {
-                var typeName = this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration);
+                var typeName = this.Module.BinaryWrapperClassName(loqui);
                 fg.AppendLine($"public IReadOnly{(list.HasBeenSet ? "Set" : null)}List<{loqui.TypeName(getter: true)}> {typeGen.Name} {{ get; private set; }} = EmptySetList<{typeName}>.Instance;");
             }
             else
@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Generation
             LoquiType loqui = list.SubTypeGeneration as LoquiType;
             if (loqui != null)
             {
-                typeName = this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration);
+                typeName = this.Module.BinaryWrapperClassName(loqui);
             }
             else
             {
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
                                 if (subGenTypes.Count <= 1)
                                 {
-                                    args.Add($"factory:  {this.Module.BinaryWrapperClassName(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory");
+                                    args.Add($"factory:  {this.Module.BinaryWrapperClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory");
                                 }
                                 else
                                 {
@@ -557,46 +557,67 @@ namespace Mutagen.Bethesda.Generation
                 case ListBinaryType.Trigger:
                     fg.AppendLine("var subMeta = _package.Meta.ReadSubRecord(stream);");
                     fg.AppendLine("var subLen = subMeta.RecordLength;");
-                    using (var args = new ArgsWrapper(fg,
-                        $"this.{typeGen.Name} = BinaryWrapperSetList<{typeName}>.FactoryByStartIndex"))
+                    var expectedLen = subGen.ExpectedLength(objGen, list.SubTypeGeneration);
+                    if (expectedLen.HasValue)
                     {
-                        args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
-                        args.Add($"package: _package");
-                        args.Add($"itemLength: {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}");
-                        if (subGenTypes.Count <= 1)
+                        using (var args = new ArgsWrapper(fg,
+                            $"this.{typeGen.Name} = BinaryWrapperSetList<{typeName}>.FactoryByStartIndex"))
                         {
-                            args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
-                        }
-                        else
-                        {
-                            args.Add((subFg) =>
+                            args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
+                            args.Add($"package: _package");
+                            args.Add($"itemLength: {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}");
+                            if (subGenTypes.Count <= 1)
                             {
-                                subFg.AppendLine("getter: (s, r, p) =>");
-                                using (new BraceWrapper(subFg))
+                                args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
+                            }
+                            else
+                            {
+                                args.Add((subFg) =>
                                 {
-                                    subFg.AppendLine("switch (r.TypeInt)");
+                                    subFg.AppendLine("getter: (s, r, p) =>");
                                     using (new BraceWrapper(subFg))
                                     {
-                                        foreach (var item in subGenTypes)
+                                        subFg.AppendLine("switch (r.TypeInt)");
+                                        using (new BraceWrapper(subFg))
                                         {
-                                            foreach (var trigger in item.Key)
+                                            foreach (var item in subGenTypes)
                                             {
-                                                subFg.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
+                                                foreach (var trigger in item.Key)
+                                                {
+                                                    subFg.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
+                                                }
+                                                using (new DepthWrapper(subFg))
+                                                {
+                                                    LoquiType specificLoqui = item.Value as LoquiType;
+                                                    subFg.AppendLine($"return {subGen.GenerateForTypicalWrapper(objGen, specificLoqui, "s", "p")}");
+                                                }
                                             }
+                                            subFg.AppendLine("default:");
                                             using (new DepthWrapper(subFg))
                                             {
-                                                LoquiType specificLoqui = item.Value as LoquiType;
-                                                subFg.AppendLine($"return {subGen.GenerateForTypicalWrapper(objGen, specificLoqui, "s", "p")}");
+                                                subFg.AppendLine("throw new NotImplementedException();");
                                             }
                                         }
-                                        subFg.AppendLine("default:");
-                                        using (new DepthWrapper(subFg))
-                                        {
-                                            subFg.AppendLine("throw new NotImplementedException();");
-                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"this.{typeGen.Name} = BinaryWrapperSetList<{typeName}>.FactoryByLazyParse"))
+                        {
+                            args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
+                            args.Add($"package: _package");
+                            if (subGenTypes.Count <= 1)
+                            {
+                                args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
+                            }
+                            else
+                            {
+                                throw new NotImplementedException();
+                            }
                         }
                     }
                     fg.AppendLine("stream.Position += subLen;");

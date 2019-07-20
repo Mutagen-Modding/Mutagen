@@ -41,5 +41,17 @@ namespace Noggog
             span = ProcessNullTermination(span);
             return ToZString(span);
         }
+
+        public static string ParseUnknownLengthString(IBinaryReadStream stream)
+        {
+            var span = stream.RemainingSpan;
+            var index = span.IndexOf(default(byte));
+            if (index == -1)
+            {
+                throw new ArgumentException();
+            }
+            stream.Position += index + 1;
+            return BinaryStringUtility.ToZString(span.Slice(0, index));
+        }
     }
 }

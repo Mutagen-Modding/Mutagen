@@ -6819,6 +6819,287 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class WaterBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IWaterInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
+        public new static Water_Registration Registration => Water_Registration.Instance;
+        protected override object CommonInstance => WaterCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWaterInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => WaterXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
+
+        #region Texture
+        private int? _TextureLocation;
+        public bool Texture_IsSet => _TextureLocation.HasValue;
+        public String Texture => _TextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _TextureLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Opacity
+        private int? _OpacityLocation;
+        public bool Opacity_IsSet => _OpacityLocation.HasValue;
+        public Byte Opacity => _OpacityLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _OpacityLocation.Value, _package.Meta)[0] : default;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public bool Flags_IsSet => _FlagsLocation.HasValue;
+        public Water.Flag Flags => (Water.Flag)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _FlagsLocation.Value, _package.Meta)[0];
+        #endregion
+        #region MaterialID
+        private int? _MaterialIDLocation;
+        public bool MaterialID_IsSet => _MaterialIDLocation.HasValue;
+        public String MaterialID => _MaterialIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MaterialIDLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Sound
+        private int? _SoundLocation;
+        public bool Sound_IsSet => _SoundLocation.HasValue;
+        public IFormIDSetLinkGetter<ISoundInternalGetter> Sound_Property => _SoundLocation.HasValue ? new FormIDSetLink<ISoundInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundInternalGetter>.Empty;
+        public ISoundInternalGetter Sound => default;
+        #endregion
+        private int? _DATALocation;
+        public Water.DATADataType DATADataTypeState { get; private set; }
+        #region WindVelocity
+        private int _WindVelocityLocation => _DATALocation.Value + 0x0;
+        private bool _WindVelocity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
+        public Single WindVelocity => _WindVelocity_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WindVelocityLocation, 4)) : default;
+        #endregion
+        #region WindDirection
+        private int _WindDirectionLocation => _DATALocation.Value + 0x4;
+        private bool _WindDirection_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
+        public Single WindDirection => _WindDirection_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WindDirectionLocation, 4)) : default;
+        #endregion
+        #region WaveAmplitude
+        private int _WaveAmplitudeLocation => _DATALocation.Value + 0x8;
+        private bool _WaveAmplitude_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
+        public Single WaveAmplitude => _WaveAmplitude_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WaveAmplitudeLocation, 4)) : default;
+        #endregion
+        #region WaveFrequency
+        private int _WaveFrequencyLocation => _DATALocation.Value + 0xC;
+        private bool _WaveFrequency_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
+        public Single WaveFrequency => _WaveFrequency_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WaveFrequencyLocation, 4)) : default;
+        #endregion
+        #region SunPower
+        private int _SunPowerLocation => _DATALocation.Value + 0x10;
+        private bool _SunPower_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
+        public Single SunPower => _SunPower_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_SunPowerLocation, 4)) : default;
+        #endregion
+        #region ReflectivityAmount
+        private int _ReflectivityAmountLocation => _DATALocation.Value + 0x14;
+        private bool _ReflectivityAmount_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
+        public Single ReflectivityAmount => _ReflectivityAmount_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ReflectivityAmountLocation, 4)) : default;
+        #endregion
+        #region FresnelAmount
+        private int _FresnelAmountLocation => _DATALocation.Value + 0x18;
+        private bool _FresnelAmount_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
+        public Single FresnelAmount => _FresnelAmount_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FresnelAmountLocation, 4)) : default;
+        #endregion
+        #region ScrollXSpeed
+        private int _ScrollXSpeedLocation => _DATALocation.Value + 0x1C;
+        private bool _ScrollXSpeed_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
+        public Single ScrollXSpeed => _ScrollXSpeed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ScrollXSpeedLocation, 4)) : default;
+        #endregion
+        #region ScrollYSpeed
+        private int _ScrollYSpeedLocation => _DATALocation.Value + 0x20;
+        private bool _ScrollYSpeed_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
+        public Single ScrollYSpeed => _ScrollYSpeed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ScrollYSpeedLocation, 4)) : default;
+        #endregion
+        #region FogDistanceNearPlane
+        private int _FogDistanceNearPlaneLocation => _DATALocation.Value + 0x24;
+        private bool _FogDistanceNearPlane_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
+        public Single FogDistanceNearPlane => _FogDistanceNearPlane_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FogDistanceNearPlaneLocation, 4)) : default;
+        #endregion
+        #region FogDistanceFarPlane
+        private int _FogDistanceFarPlaneLocation => _DATALocation.Value + 0x28;
+        private bool _FogDistanceFarPlane_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
+        public Single FogDistanceFarPlane => _FogDistanceFarPlane_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FogDistanceFarPlaneLocation, 4)) : default;
+        #endregion
+        #region ShallowColor
+        private int _ShallowColorLocation => _DATALocation.Value + 0x2C;
+        private bool _ShallowColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
+        public Color ShallowColor => _ShallowColor_IsSet ? _data.Span.Slice(_ShallowColorLocation, 4).ReadColor() : default;
+        #endregion
+        #region DeepColor
+        private int _DeepColorLocation => _DATALocation.Value + 0x30;
+        private bool _DeepColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
+        public Color DeepColor => _DeepColor_IsSet ? _data.Span.Slice(_DeepColorLocation, 4).ReadColor() : default;
+        #endregion
+        #region ReflectionColor
+        private int _ReflectionColorLocation => _DATALocation.Value + 0x34;
+        private bool _ReflectionColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
+        public Color ReflectionColor => _ReflectionColor_IsSet ? _data.Span.Slice(_ReflectionColorLocation, 4).ReadColor() : default;
+        #endregion
+        public Byte TextureBlend => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 56] : default;
+        #region RainSimulatorForce
+        private int _RainSimulatorForceLocation => _DATALocation.Value + 0x3C;
+        private bool _RainSimulatorForce_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
+        public Single RainSimulatorForce => _RainSimulatorForce_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RainSimulatorForceLocation, 4)) : default;
+        #endregion
+        #region RainSimulatorVelocity
+        private int _RainSimulatorVelocityLocation => _DATALocation.Value + 0x40;
+        private bool _RainSimulatorVelocity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
+        public Single RainSimulatorVelocity => _RainSimulatorVelocity_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RainSimulatorVelocityLocation, 4)) : default;
+        #endregion
+        #region RainSimulatorFalloff
+        private int _RainSimulatorFalloffLocation => _DATALocation.Value + 0x44;
+        private bool _RainSimulatorFalloff_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
+        public Single RainSimulatorFalloff => _RainSimulatorFalloff_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RainSimulatorFalloffLocation, 4)) : default;
+        #endregion
+        #region RainSimulatorDampner
+        private int _RainSimulatorDampnerLocation => _DATALocation.Value + 0x48;
+        private bool _RainSimulatorDampner_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
+        public Single RainSimulatorDampner => _RainSimulatorDampner_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RainSimulatorDampnerLocation, 4)) : default;
+        #endregion
+        #region RainSimulatorStartingSize
+        private int _RainSimulatorStartingSizeLocation => _DATALocation.Value + 0x4C;
+        private bool _RainSimulatorStartingSize_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
+        public Single RainSimulatorStartingSize => _RainSimulatorStartingSize_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RainSimulatorStartingSizeLocation, 4)) : default;
+        #endregion
+        #region DisplacementSimulatorForce
+        private int _DisplacementSimulatorForceLocation => _DATALocation.Value + 0x50;
+        private bool _DisplacementSimulatorForce_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
+        public Single DisplacementSimulatorForce => _DisplacementSimulatorForce_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DisplacementSimulatorForceLocation, 4)) : default;
+        #endregion
+        #region DisplacementSimulatorVelocity
+        private int _DisplacementSimulatorVelocityLocation => _DATALocation.Value + 0x54;
+        private bool _DisplacementSimulatorVelocity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
+        public Single DisplacementSimulatorVelocity => _DisplacementSimulatorVelocity_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DisplacementSimulatorVelocityLocation, 4)) : default;
+        #endregion
+        #region DisplacementSimulatorFalloff
+        private int _DisplacementSimulatorFalloffLocation => _DATALocation.Value + 0x58;
+        private bool _DisplacementSimulatorFalloff_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
+        public Single DisplacementSimulatorFalloff => _DisplacementSimulatorFalloff_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DisplacementSimulatorFalloffLocation, 4)) : default;
+        #endregion
+        #region DisplacementSimulatorDampner
+        private int _DisplacementSimulatorDampnerLocation => _DATALocation.Value + 0x5C;
+        private bool _DisplacementSimulatorDampner_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
+        public Single DisplacementSimulatorDampner => _DisplacementSimulatorDampner_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DisplacementSimulatorDampnerLocation, 4)) : default;
+        #endregion
+        #region DisplacementSimulatorStartingSize
+        private int _DisplacementSimulatorStartingSizeLocation => _DATALocation.Value + 0x60;
+        private bool _DisplacementSimulatorStartingSize_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
+        public Single DisplacementSimulatorStartingSize => _DisplacementSimulatorStartingSize_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DisplacementSimulatorStartingSizeLocation, 4)) : default;
+        #endregion
+        #region Damage
+        private int _DamageLocation => _DATALocation.Value + 0x64;
+        private bool _Damage_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
+        public UInt16 Damage => _Damage_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_DamageLocation, 2)) : default;
+        #endregion
+        #region RelatedWaters
+        public IRelatedWatersGetter RelatedWaters { get; private set; }
+        public bool RelatedWaters_IsSet => RelatedWaters != null;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected WaterBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static WaterBinaryWrapper WaterFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new WaterBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4D414E54: // TNAM
+                {
+                    _TextureLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Texture);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    _OpacityLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    _MaterialIDLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.MaterialID);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    _SoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = Water.DATADataType.Has;
+                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                    if (subLen <= 0)
+                    {
+                        this.DATADataTypeState |= Water.DATADataType.Break0;
+                    }
+                    if (subLen <= 40)
+                    {
+                        this.DATADataTypeState |= Water.DATADataType.Break1;
+                    }
+                    if (subLen <= 60)
+                    {
+                        this.DATADataTypeState |= Water.DATADataType.Break2;
+                    }
+                    if (subLen <= 84)
+                    {
+                        this.DATADataTypeState |= Water.DATADataType.Break3;
+                    }
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Damage);
+                }
+                case 0x4D414E47: // GNAM
+                {
+                    this.RelatedWaters = RelatedWatersBinaryWrapper.RelatedWatersFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.RelatedWaters);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

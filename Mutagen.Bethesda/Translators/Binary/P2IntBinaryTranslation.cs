@@ -1,5 +1,6 @@
 ﻿using Noggog;
 using System;
+using System.Buffers.Binary;
 using System.IO;
 
 namespace Mutagen.Bethesda.Binary
@@ -20,6 +21,13 @@ namespace Mutagen.Bethesda.Binary
         {
             writer.Write(item.X);
             writer.Write(item.Y);
+        }
+
+        public static P2Int Read(ReadOnlySpan<byte> span)
+        {
+            return new P2Int(
+                BinaryPrimitives.ReadInt32LittleEndian(span),
+                BinaryPrimitives.ReadInt32LittleEndian(span.Slice(4)));
         }
     }
 }

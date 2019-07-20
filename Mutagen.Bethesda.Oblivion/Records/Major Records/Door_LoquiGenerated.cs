@@ -3091,6 +3091,163 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class DoorBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IDoorInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
+        public new static Door_Registration Registration => Door_Registration.Instance;
+        protected override object CommonInstance => DoorCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDoorInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => DoorXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region Script
+        private int? _ScriptLocation;
+        public bool Script_IsSet => _ScriptLocation.HasValue;
+        public IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptInternalGetter>.Empty;
+        public IScriptInternalGetter Script => default;
+        #endregion
+        #region OpenSound
+        private int? _OpenSoundLocation;
+        public bool OpenSound_IsSet => _OpenSoundLocation.HasValue;
+        public IFormIDSetLinkGetter<ISoundInternalGetter> OpenSound_Property => _OpenSoundLocation.HasValue ? new FormIDSetLink<ISoundInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OpenSoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundInternalGetter>.Empty;
+        public ISoundInternalGetter OpenSound => default;
+        #endregion
+        #region CloseSound
+        private int? _CloseSoundLocation;
+        public bool CloseSound_IsSet => _CloseSoundLocation.HasValue;
+        public IFormIDSetLinkGetter<ISoundInternalGetter> CloseSound_Property => _CloseSoundLocation.HasValue ? new FormIDSetLink<ISoundInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CloseSoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundInternalGetter>.Empty;
+        public ISoundInternalGetter CloseSound => default;
+        #endregion
+        #region LoopSound
+        private int? _LoopSoundLocation;
+        public bool LoopSound_IsSet => _LoopSoundLocation.HasValue;
+        public IFormIDSetLinkGetter<ISoundInternalGetter> LoopSound_Property => _LoopSoundLocation.HasValue ? new FormIDSetLink<ISoundInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LoopSoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundInternalGetter>.Empty;
+        public ISoundInternalGetter LoopSound => default;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public bool Flags_IsSet => _FlagsLocation.HasValue;
+        public Door.DoorFlag Flags => (Door.DoorFlag)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _FlagsLocation.Value, _package.Meta)[0];
+        #endregion
+        public IReadOnlySetList<IFormIDLinkGetter<IPlaceInternalGetter>> RandomTeleportDestinations { get; private set; } = EmptySetList<IFormIDLinkGetter<IPlaceInternalGetter>>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected DoorBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static DoorBinaryWrapper DoorFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new DoorBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Model);
+                }
+                case 0x49524353: // SCRI
+                {
+                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Script);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    _OpenSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.OpenSound);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    _CloseSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.CloseSound);
+                }
+                case 0x4D414E42: // BNAM
+                {
+                    _LoopSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.LoopSound);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Flags);
+                }
+                case 0x4D414E54: // TNAM
+                {
+                    this.RandomTeleportDestinations = BinaryWrapperSetList<IFormIDLinkGetter<IPlaceInternalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormIDLink<IPlaceInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: true));
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.RandomTeleportDestinations);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

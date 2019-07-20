@@ -2636,6 +2636,124 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class IdleAnimationBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IIdleAnimationInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => IdleAnimation_Registration.Instance;
+        public new static IdleAnimation_Registration Registration => IdleAnimation_Registration.Instance;
+        protected override object CommonInstance => IdleAnimationCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIdleAnimationInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => IdleAnimationXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
+
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
+        #region AnimationGroupSection
+        private int? _AnimationGroupSectionLocation;
+        public bool AnimationGroupSection_IsSet => _AnimationGroupSectionLocation.HasValue;
+        public IdleAnimation.AnimationGroupSectionEnum AnimationGroupSection => (IdleAnimation.AnimationGroupSectionEnum)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _AnimationGroupSectionLocation.Value, _package.Meta)[0];
+        #endregion
+        public IReadOnlySetList<IFormIDLinkGetter<IIdleAnimationInternalGetter>> RelatedIdleAnimations { get; private set; } = EmptySetList<IFormIDLinkGetter<IIdleAnimationInternalGetter>>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected IdleAnimationBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static IdleAnimationBinaryWrapper IdleAnimationFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new IdleAnimationBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Model);
+                }
+                case 0x41445443: // CTDA
+                case 0x54445443: // CTDT
+                {
+                    this.Conditions = BinaryWrapperSetList<ConditionBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    _AnimationGroupSectionLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationGroupSection);
+                }
+                case 0x41544144: // DATA
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.RelatedIdleAnimations = BinaryWrapperSetList<IFormIDLinkGetter<IIdleAnimationInternalGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormIDLink<IIdleAnimationInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

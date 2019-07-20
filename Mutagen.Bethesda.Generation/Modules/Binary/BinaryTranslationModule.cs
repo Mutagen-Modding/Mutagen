@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Generation
         }
 
         public string BinaryWrapperClassName(ObjectGeneration obj) => $"{obj.Name}BinaryWrapper";
+        public string BinaryWrapperClassName(LoquiType loqui) => $"{loqui.TargetObjectGeneration.Name}BinaryWrapper{loqui.GenericTypes(getter: true)}";
 
         public BinaryTranslationModule(LoquiGenerator gen)
             : base(gen)
@@ -64,30 +65,12 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(Int16Type)] = new PrimitiveBinaryTranslationGeneration<short>(expectedLen: 2);
             this._typeGenerations[typeof(Int32Type)] = new PrimitiveBinaryTranslationGeneration<int>(expectedLen: 4);
             this._typeGenerations[typeof(Int64Type)] = new PrimitiveBinaryTranslationGeneration<long>(expectedLen: 8);
-            this._typeGenerations[typeof(P3UInt16Type)] = new PrimitiveBinaryTranslationGeneration<P3UInt16>(expectedLen: 6)
-            {
-                PreferDirectTranslation = false
-            };
-            this._typeGenerations[typeof(P2FloatType)] = new PrimitiveBinaryTranslationGeneration<P2Float>(expectedLen: 8)
-            {
-                PreferDirectTranslation = false
-            };
-            this._typeGenerations[typeof(P3FloatType)] = new PrimitiveBinaryTranslationGeneration<P3Float>(expectedLen: 12)
-            {
-                PreferDirectTranslation = false
-            };
-            this._typeGenerations[typeof(P2Int32Type)] = new PrimitiveBinaryTranslationGeneration<P2Int>(expectedLen: 8)
-            {
-                PreferDirectTranslation = false
-            };
-            this._typeGenerations[typeof(P2Int16Type)] = new PrimitiveBinaryTranslationGeneration<P2Int16>(expectedLen: 4)
-            {
-                PreferDirectTranslation = false
-            };
-            this._typeGenerations[typeof(P2FloatType)] = new PrimitiveBinaryTranslationGeneration<P2Float>(expectedLen: 8)
-            {
-                PreferDirectTranslation = false
-            };
+            this._typeGenerations[typeof(P3UInt16Type)] = new PointBinaryTranslationGeneration<P3UInt16>(expectedLen: 6);
+            this._typeGenerations[typeof(P2FloatType)] = new PointBinaryTranslationGeneration<P2Float>(expectedLen: 8);
+            this._typeGenerations[typeof(P3FloatType)] = new PointBinaryTranslationGeneration<P3Float>(expectedLen: 12);
+            this._typeGenerations[typeof(P2Int32Type)] = new PointBinaryTranslationGeneration<P2Int>(expectedLen: 8);
+            this._typeGenerations[typeof(P2Int16Type)] = new PointBinaryTranslationGeneration<P2Int16>(expectedLen: 4);
+            this._typeGenerations[typeof(P2FloatType)] = new PointBinaryTranslationGeneration<P2Float>(expectedLen: 8);
             this._typeGenerations[typeof(StringType)] = new StringBinaryTranslationGeneration()
             {
                 PreferDirectTranslation = false
@@ -1439,76 +1422,17 @@ namespace Mutagen.Bethesda.Generation
 
         protected async Task GenerateImportWrapper(ObjectGeneration obj, FileGeneration fg)
         {
-            if (obj.Name != "Condition"
-                && obj.Name != "MajorRecord"
-                && obj.Name != "ModStats"
-                && obj.Name != "ModHeader"
-                && obj.Name != "OblivionMajorRecord"
-                && obj.Name != "SkyrimMajorRecord"
-                && obj.Name != "MasterReference"
-                && !obj.Name.Contains("GameSetting")
-                && !obj.Name.Contains("Global")
-                && obj.Name != "Grass"
-                && obj.Name != "Model"
-                && obj.Name != "Group"
-                && obj.Name != "OblivionMod"
-                && obj.Name != "Class"
-                && obj.Name != "ClassTraining"
-                && obj.Name != "Faction"
-                && obj.Name != "Relation"
-                && obj.Name != "Rank"
-                && obj.Name != "Hair"
-                && obj.Name != "Eye"
-                && obj.Name != "Race"
-                && obj.Name != "RaceRelation"
-                && obj.Name != "FacePart"
-                && obj.Name != "SkillBoost"
-                && obj.Name != "GenderedBodyData"
-                && obj.Name != "RaceStatsGendered"
-                && obj.Name != "RaceHair"
-                && obj.Name != "RaceVoices"
-                && obj.Name != "FaceGenData"
-                && obj.Name != "SkillBoost"
-                && obj.Name != "RaceVoices"
-                && obj.Name != "RaceHair"
-                && obj.Name != "RaceStats"
-                && obj.Name != "FacePart"
-                && obj.Name != "GenderedBodyData"
-                && obj.Name != "FaceGenData"
-                && obj.Name != "RaceRelation"
-                && obj.Name != "BodyData"
-                && obj.Name != "BodyPart"
-                && obj.Name != "Sound"
-                && obj.Name != "SoundData"
-                && obj.Name != "SoundDataExtended"
-                && obj.Name != "SkillRecord"
-                && obj.Name != "MagicEffect"
-                && obj.Name != "MagicEffectSubData"
-                && obj.Name != "Scripts"
-                && obj.Name != "ScriptFields"
-                && obj.Name != "ScriptMetaSummary"
-                && obj.Name != "LocalVariable"
-                && obj.Name != "Script"
-                && obj.Name != "ScriptReference"
-                && obj.Name != "ScriptVariableReference"
-                && obj.Name != "ScriptObjectReference"
-                && obj.Name != "LandTexture"
-                && obj.Name != "HavokData"
-                && obj.Name != "Enchantment"
-                && obj.Name != "Effect"
-                && obj.Name != "ScriptEffect"
-                && obj.Name != "Spell"
-                && obj.Name != "SpellUnleveled"
-                && obj.Name != "SpellAbstract"
-                && obj.Name != "SpellLeveled"
-                && obj.Name != "Birthsign"
-                && obj.Name != "Activator"
-                && obj.Name != "AlchemicalApparatus"
-                && obj.Name != "ItemAbstract"
-                && obj.Name != "Armor"
-                && obj.Name != "Book"
-                && obj.Name != "Clothing"
-                && obj.Name != "ClothingAbstract"
+            if (obj.Name.Contains("Cell")
+                || obj.Name.Contains("World")
+                || obj.Name.Contains("ListGroup")
+                || obj.Name.Contains("Region")
+                || obj.Name.Contains("Climate")
+                || obj.Name.Contains("Road")
+                || obj.Name.Contains("PathGrid")
+                || obj.Name.Contains("Weather")
+                || obj.Name.Contains("SkyrimMod")
+                || obj.Name.Contains("DialogTopic")
+                || obj.Name.Contains("LeveledItem")
                 ) return;
 
             var dataAccessor = new Accessor("_data");
@@ -1956,7 +1880,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "Containers")
+                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "Lights")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)

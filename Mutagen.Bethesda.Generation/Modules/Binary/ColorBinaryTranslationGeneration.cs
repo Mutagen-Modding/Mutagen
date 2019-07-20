@@ -37,5 +37,10 @@ namespace Mutagen.Bethesda.Generation
             if (!typeGen.CustomData.TryGetValue("ColorExtraByte", out var obj)) return false;
             return (bool)obj;
         }
+
+        public override string GenerateForTypicalWrapper(ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor, Accessor packageAccessor)
+        {
+            return $"{dataAccessor}.ReadColor()";
+        }
     }
 }

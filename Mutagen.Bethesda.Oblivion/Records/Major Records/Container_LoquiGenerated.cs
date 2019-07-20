@@ -3228,6 +3228,161 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ContainerBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IContainerInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Container_Registration.Instance;
+        public new static Container_Registration Registration => Container_Registration.Instance;
+        protected override object CommonInstance => ContainerCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IContainerInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => ContainerXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ContainerBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region Script
+        private int? _ScriptLocation;
+        public bool Script_IsSet => _ScriptLocation.HasValue;
+        public IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptInternalGetter>.Empty;
+        public IScriptInternalGetter Script => default;
+        #endregion
+        public IReadOnlySetList<IContainerItemGetter> Items { get; private set; } = EmptySetList<ContainerItemBinaryWrapper>.Instance;
+        private int? _DATALocation;
+        public Container.DATADataType DATADataTypeState { get; private set; }
+        #region Flags
+        private int _FlagsLocation => _DATALocation.Value + 0x0;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Container.ContainerFlag Flags => _Flags_IsSet ? (Container.ContainerFlag)_data.Span.Slice(_FlagsLocation, 1)[0] : default;
+        #endregion
+        #region Weight
+        private int _WeightLocation => _DATALocation.Value + 0x1;
+        private bool _Weight_IsSet => _DATALocation.HasValue;
+        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WeightLocation, 4)) : default;
+        #endregion
+        #region OpenSound
+        private int? _OpenSoundLocation;
+        public bool OpenSound_IsSet => _OpenSoundLocation.HasValue;
+        public IFormIDSetLinkGetter<ISoundInternalGetter> OpenSound_Property => _OpenSoundLocation.HasValue ? new FormIDSetLink<ISoundInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OpenSoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundInternalGetter>.Empty;
+        public ISoundInternalGetter OpenSound => default;
+        #endregion
+        #region CloseSound
+        private int? _CloseSoundLocation;
+        public bool CloseSound_IsSet => _CloseSoundLocation.HasValue;
+        public IFormIDSetLinkGetter<ISoundInternalGetter> CloseSound_Property => _CloseSoundLocation.HasValue ? new FormIDSetLink<ISoundInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CloseSoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundInternalGetter>.Empty;
+        public ISoundInternalGetter CloseSound => default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ContainerBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static ContainerBinaryWrapper ContainerFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new ContainerBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Container_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)Container_FieldIndex.Model);
+                }
+                case 0x49524353: // SCRI
+                {
+                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Container_FieldIndex.Script);
+                }
+                case 0x4F544E43: // CNTO
+                {
+                    this.Items = BinaryWrapperSetList<ContainerItemBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => ContainerItemBinaryWrapper.ContainerItemFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)Container_FieldIndex.Items);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = Container.DATADataType.Has;
+                    return TryGet<int?>.Succeed((int)Container_FieldIndex.Weight);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    _OpenSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Container_FieldIndex.OpenSound);
+                }
+                case 0x4D414E51: // QNAM
+                {
+                    _CloseSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Container_FieldIndex.CloseSound);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

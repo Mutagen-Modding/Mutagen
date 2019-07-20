@@ -2990,6 +2990,149 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class LandscapeBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        ILandscapeInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Landscape_Registration.Instance;
+        public new static Landscape_Registration Registration => Landscape_Registration.Instance;
+        protected override object CommonInstance => LandscapeCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILandscapeInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => LandscapeXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
+
+        #region Unknown
+        private int? _UnknownLocation;
+        public bool Unknown_IsSet => _UnknownLocation.HasValue;
+        public ReadOnlySpan<Byte> Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region VertexNormals
+        private int? _VertexNormalsLocation;
+        public bool VertexNormals_IsSet => _VertexNormalsLocation.HasValue;
+        public ReadOnlySpan<Byte> VertexNormals => _VertexNormalsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _VertexNormalsLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region VertexHeightMap
+        private int? _VertexHeightMapLocation;
+        public bool VertexHeightMap_IsSet => _VertexHeightMapLocation.HasValue;
+        public ReadOnlySpan<Byte> VertexHeightMap => _VertexHeightMapLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _VertexHeightMapLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region VertexColors
+        private int? _VertexColorsLocation;
+        public bool VertexColors_IsSet => _VertexColorsLocation.HasValue;
+        public ReadOnlySpan<Byte> VertexColors => _VertexColorsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _VertexColorsLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        public IReadOnlySetList<IBaseLayerInternalGetter> Layers { get; private set; } = EmptySetList<BaseLayerBinaryWrapper>.Instance;
+        public IReadOnlySetList<IFormIDLinkGetter<ILandTextureInternalGetter>> Textures { get; private set; } = EmptySetList<IFormIDLinkGetter<ILandTextureInternalGetter>>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected LandscapeBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static LandscapeBinaryWrapper LandscapeFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new LandscapeBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
+                }
+                case 0x4C4D4E56: // VNML
+                {
+                    _VertexNormalsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
+                }
+                case 0x54474856: // VHGT
+                {
+                    _VertexHeightMapLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
+                }
+                case 0x524C4356: // VCLR
+                {
+                    _VertexColorsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
+                }
+                case 0x54585442: // BTXT
+                case 0x54585441: // ATXT
+                {
+                    this.Layers = UtilityTranslation.ParseRepeatedTypelessSubrecord<BaseLayerBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null,
+                        trigger: BaseLayer_Registration.TriggeringRecordTypes,
+                        factory: (s, r, p, recConv) =>
+                        {
+                            switch (r.TypeInt)
+                            {
+                                case 0x54585442: // BTXT
+                                    return BaseLayerBinaryWrapper.BaseLayerFactory(s, p);
+                                case 0x54585441: // ATXT
+                                    return AlphaLayerBinaryWrapper.AlphaLayerFactory(s, p);
+                                default:
+                                    throw new NotImplementedException();
+                            }
+                        });
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
+                }
+                case 0x58455456: // VTEX
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.Textures = BinaryWrapperSetList<IFormIDLinkGetter<ILandTextureInternalGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormIDLink<ILandTextureInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

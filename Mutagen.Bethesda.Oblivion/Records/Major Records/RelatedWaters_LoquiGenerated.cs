@@ -1851,6 +1851,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RelatedWatersBinaryWrapper : IRelatedWatersGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RelatedWaters_Registration.Instance;
+        public static RelatedWaters_Registration Registration => RelatedWaters_Registration.Instance;
+        protected object CommonInstance => RelatedWatersCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelatedWatersGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RelatedWatersXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RelatedWatersBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region RelatedWaterDaytime
+        public IFormIDLinkGetter<IWaterInternalGetter> RelatedWaterDaytime_Property => new FormIDLink<IWaterInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IWaterInternalGetter RelatedWaterDaytime => default;
+        #endregion
+        #region RelatedWaterNighttime
+        public IFormIDLinkGetter<IWaterInternalGetter> RelatedWaterNighttime_Property => new FormIDLink<IWaterInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IWaterInternalGetter RelatedWaterNighttime => default;
+        #endregion
+        #region RelatedWaterUnderwater
+        public IFormIDLinkGetter<IWaterInternalGetter> RelatedWaterUnderwater_Property => new FormIDLink<IWaterInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4))));
+        public IWaterInternalGetter RelatedWaterUnderwater => default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RelatedWatersBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static RelatedWatersBinaryWrapper RelatedWatersFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new RelatedWatersBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

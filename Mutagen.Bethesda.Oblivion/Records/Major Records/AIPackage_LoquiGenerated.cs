@@ -3177,6 +3177,151 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class AIPackageBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IAIPackageInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => AIPackage_Registration.Instance;
+        public new static AIPackage_Registration Registration => AIPackage_Registration.Instance;
+        protected override object CommonInstance => AIPackageCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => AIPackageXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AIPackageBinaryWriteTranslation.Instance;
+
+        private int? _PKDTLocation;
+        public AIPackage.PKDTDataType PKDTDataTypeState { get; private set; }
+        #region Flags
+        private int _FlagsLocation => _PKDTLocation.Value + 0x0;
+        private bool _Flags_IsSet => _PKDTLocation.HasValue;
+        public AIPackage.Flag Flags => GetFlagsCustom(
+            span: _data,
+            location: _FlagsLocation,
+            expectedLength: 4,
+            package: _package);
+        #endregion
+        #region GeneralType
+        private int _GeneralTypeLocation => _PKDTLocation.Value + 0x4;
+        private bool _GeneralType_IsSet => _PKDTLocation.HasValue;
+        public AIPackage.GeneralTypeEnum GeneralType => GetGeneralTypeCustom(
+            span: _data,
+            location: _GeneralTypeLocation,
+            expectedLength: 4,
+            package: _package);
+        #endregion
+        #region Location
+        public IAIPackageLocationGetter Location { get; private set; }
+        public bool Location_IsSet => Location != null;
+        #endregion
+        #region Schedule
+        public IAIPackageScheduleGetter Schedule { get; private set; }
+        public bool Schedule_IsSet => Schedule != null;
+        #endregion
+        #region Target
+        public IAIPackageTargetGetter Target { get; private set; }
+        public bool Target_IsSet => Target != null;
+        #endregion
+        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected AIPackageBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static AIPackageBinaryWrapper AIPackageFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new AIPackageBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x54444B50: // PKDT
+                {
+                    _PKDTLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.PKDTDataTypeState = AIPackage.PKDTDataType.Has;
+                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.GeneralType);
+                }
+                case 0x54444C50: // PLDT
+                {
+                    this.Location = AIPackageLocationBinaryWrapper.AIPackageLocationFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Location);
+                }
+                case 0x54445350: // PSDT
+                {
+                    this.Schedule = AIPackageScheduleBinaryWrapper.AIPackageScheduleFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Schedule);
+                }
+                case 0x54445450: // PTDT
+                {
+                    this.Target = AIPackageTargetBinaryWrapper.AIPackageTargetFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Target);
+                }
+                case 0x41445443: // CTDA
+                case 0x54445443: // CTDT
+                {
+                    this.Conditions = BinaryWrapperSetList<ConditionBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Conditions);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

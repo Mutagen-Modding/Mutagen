@@ -3979,6 +3979,201 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class DialogItemBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IDialogItemInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => DialogItem_Registration.Instance;
+        public new static DialogItem_Registration Registration => DialogItem_Registration.Instance;
+        protected override object CommonInstance => DialogItemCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogItemInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => DialogItemXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => DialogItemBinaryWriteTranslation.Instance;
+
+        private int? _DATALocation;
+        public DialogItem.DATADataType DATADataTypeState { get; private set; }
+        #region DialogType
+        private int _DialogTypeLocation => _DATALocation.Value + 0x0;
+        private bool _DialogType_IsSet => _DATALocation.HasValue;
+        public DialogType DialogType => _DialogType_IsSet ? (DialogType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_DialogTypeLocation, 2)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation.Value + 0x2;
+        private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(DialogItem.DATADataType.Break0);
+        public DialogItem.Flag Flags => _Flags_IsSet ? (DialogItem.Flag)_data.Span.Slice(_FlagsLocation, 1)[0] : default;
+        #endregion
+        #region Quest
+        private int? _QuestLocation;
+        public bool Quest_IsSet => _QuestLocation.HasValue;
+        public IFormIDSetLinkGetter<IQuestInternalGetter> Quest_Property => _QuestLocation.HasValue ? new FormIDSetLink<IQuestInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _QuestLocation.Value, _package.Meta)))) : FormIDSetLink<IQuestInternalGetter>.Empty;
+        public IQuestInternalGetter Quest => default;
+        #endregion
+        #region PreviousTopic
+        private int? _PreviousTopicLocation;
+        public bool PreviousTopic_IsSet => _PreviousTopicLocation.HasValue;
+        public IFormIDSetLinkGetter<IDialogItemInternalGetter> PreviousTopic_Property => _PreviousTopicLocation.HasValue ? new FormIDSetLink<IDialogItemInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PreviousTopicLocation.Value, _package.Meta)))) : FormIDSetLink<IDialogItemInternalGetter>.Empty;
+        public IDialogItemInternalGetter PreviousTopic => default;
+        #endregion
+        public IReadOnlySetList<IFormIDLinkGetter<IDialogTopicInternalGetter>> Topics { get; private set; } = EmptySetList<IFormIDLinkGetter<IDialogTopicInternalGetter>>.Instance;
+        public IReadOnlySetList<IDialogResponseInternalGetter> Responses { get; private set; } = EmptySetList<DialogResponseBinaryWrapper>.Instance;
+        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
+        public IReadOnlySetList<IFormIDLinkGetter<IDialogTopicInternalGetter>> Choices { get; private set; } = EmptySetList<IFormIDLinkGetter<IDialogTopicInternalGetter>>.Instance;
+        public IReadOnlySetList<IFormIDLinkGetter<IDialogTopicInternalGetter>> LinkFrom { get; private set; } = EmptySetList<IFormIDLinkGetter<IDialogTopicInternalGetter>>.Instance;
+        #region Script
+        private IScriptFieldsGetter _Script;
+        public IScriptFieldsGetter Script => _Script ?? new ScriptFields();
+        public bool Script_IsSet => Script != null;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected DialogItemBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static DialogItemBinaryWrapper DialogItemFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new DialogItemBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = DialogItem.DATADataType.Has;
+                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                    if (subLen <= 2)
+                    {
+                        this.DATADataTypeState |= DialogItem.DATADataType.Break0;
+                    }
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Flags);
+                }
+                case 0x49545351: // QSTI
+                {
+                    _QuestLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
+                }
+                case 0x4D414E50: // PNAM
+                {
+                    _PreviousTopicLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
+                }
+                case 0x454D414E: // NAME
+                {
+                    this.Topics = BinaryWrapperSetList<IFormIDLinkGetter<IDialogTopicInternalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormIDLink<IDialogTopicInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: true));
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
+                }
+                case 0x54445254: // TRDT
+                {
+                    this.Responses = UtilityTranslation.ParseRepeatedTypelessSubrecord<DialogResponseBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null,
+                        trigger: DialogItem_Registration.TRDT_HEADER,
+                        factory:  DialogResponseBinaryWrapper.DialogResponseFactory);
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
+                }
+                case 0x41445443: // CTDA
+                case 0x54445443: // CTDT
+                {
+                    this.Conditions = BinaryWrapperSetList<ConditionBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
+                }
+                case 0x544C4354: // TCLT
+                {
+                    this.Choices = BinaryWrapperSetList<IFormIDLinkGetter<IDialogTopicInternalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormIDLink<IDialogTopicInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: true));
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
+                }
+                case 0x464C4354: // TCLF
+                {
+                    this.LinkFrom = BinaryWrapperSetList<IFormIDLinkGetter<IDialogTopicInternalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormIDLink<IDialogTopicInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: true));
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
+                }
+                case 0x52484353: // SCHR
+                case 0x44484353: // SCHD
+                {
+                    this._Script = ScriptFieldsBinaryWrapper.ScriptFieldsFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Script);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

@@ -3469,6 +3469,159 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class AmmoBinaryWrapper :
+        ItemAbstractBinaryWrapper,
+        IAmmoInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Ammo_Registration.Instance;
+        public new static Ammo_Registration Registration => Ammo_Registration.Instance;
+        protected override object CommonInstance => AmmoCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmmoInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => AmmoXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AmmoBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region Icon
+        private int? _IconLocation;
+        public bool Icon_IsSet => _IconLocation.HasValue;
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Enchantment
+        private int? _EnchantmentLocation;
+        public bool Enchantment_IsSet => _EnchantmentLocation.HasValue;
+        public IFormIDSetLinkGetter<IEnchantmentInternalGetter> Enchantment_Property => _EnchantmentLocation.HasValue ? new FormIDSetLink<IEnchantmentInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EnchantmentLocation.Value, _package.Meta)))) : FormIDSetLink<IEnchantmentInternalGetter>.Empty;
+        public IEnchantmentInternalGetter Enchantment => default;
+        #endregion
+        #region EnchantmentPoints
+        private int? _EnchantmentPointsLocation;
+        public bool EnchantmentPoints_IsSet => _EnchantmentPointsLocation.HasValue;
+        public UInt16 EnchantmentPoints => _EnchantmentPointsLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EnchantmentPointsLocation.Value, _package.Meta)) : default;
+        #endregion
+        private int? _DATALocation;
+        public Ammo.DATADataType DATADataTypeState { get; private set; }
+        #region Speed
+        private int _SpeedLocation => _DATALocation.Value + 0x0;
+        private bool _Speed_IsSet => _DATALocation.HasValue;
+        public Single Speed => _Speed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_SpeedLocation, 4)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation.Value + 0x4;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Ammo.AmmoFlag Flags => _Flags_IsSet ? (Ammo.AmmoFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
+        #endregion
+        #region Value
+        private int _ValueLocation => _DATALocation.Value + 0x8;
+        private bool _Value_IsSet => _DATALocation.HasValue;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ValueLocation, 4)) : default;
+        #endregion
+        #region Weight
+        private int _WeightLocation => _DATALocation.Value + 0xC;
+        private bool _Weight_IsSet => _DATALocation.HasValue;
+        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WeightLocation, 4)) : default;
+        #endregion
+        #region Damage
+        private int _DamageLocation => _DATALocation.Value + 0x10;
+        private bool _Damage_IsSet => _DATALocation.HasValue;
+        public UInt16 Damage => _Damage_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_DamageLocation, 2)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected AmmoBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static AmmoBinaryWrapper AmmoFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new AmmoBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _IconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Icon);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    _EnchantmentLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Enchantment);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    _EnchantmentPointsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.EnchantmentPoints);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = Ammo.DATADataType.Has;
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Damage);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

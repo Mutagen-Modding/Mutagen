@@ -49,6 +49,17 @@ namespace Mutagen.Bethesda.Binary
                 itemLength);
         }
 
+        public static IReadOnlySetList<T> FactoryByLazyParse(
+            ReadOnlyMemorySlice<byte> mem,
+            BinaryWrapperFactoryPackage package,
+            UtilityTranslation.BinaryWrapperFactory<T> getter)
+        {
+            return new BinaryWrapperLazyList(
+                mem,
+                package,
+                getter);
+        }
+
         private class BinaryWrapperListByLocationArray : IReadOnlySetList<T>
         {
             private int[] _locations;
@@ -163,6 +174,48 @@ namespace Mutagen.Bethesda.Binary
                     yield return this[i];
                 }
             }
+
+            IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        }
+
+        public class BinaryWrapperLazyList : IReadOnlySetList<T>
+        {
+            private readonly Lazy<IReadOnlyList<T>> _list;
+            private ReadOnlyMemorySlice<byte> _mem;
+            private BinaryWrapperFactoryPackage _package;
+            private UtilityTranslation.BinaryWrapperFactory<T> _getter;
+
+            public BinaryWrapperLazyList(
+                ReadOnlyMemorySlice<byte> mem,
+                BinaryWrapperFactoryPackage package,
+                UtilityTranslation.BinaryWrapperFactory<T> getter)
+            {
+                this._mem = mem;
+                this._getter = getter;
+                this._package = package;
+                this._list = new Lazy<IReadOnlyList<T>>(ConstructList, isThreadSafe: true);
+            }
+
+            private IReadOnlyList<T> ConstructList()
+            {
+                var ret = new List<T>();
+                using (var stream = new BinaryMemoryReadStream(_mem))
+                {
+                    while (!stream.Complete)
+                    {
+                        ret.Add(_getter(stream, _package));
+                    }
+                }
+                return ret;
+            }
+
+            public T this[int index] => this._list.Value[index];
+
+            public int Count => this._list.Value.Count;
+
+            public bool HasBeenSet => true;
+
+            public IEnumerator<T> GetEnumerator() => this._list.Value.GetEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
         }

@@ -12065,6 +12065,417 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class NPCBinaryWrapper :
+        NPCAbstractBinaryWrapper,
+        INPCInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => NPC_Registration.Instance;
+        public new static NPC_Registration Registration => NPC_Registration.Instance;
+        protected override object CommonInstance => NPCCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INPCInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => NPCXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NPCBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        private int? _ACBSLocation;
+        public NPC.ACBSDataType ACBSDataTypeState { get; private set; }
+        #region Flags
+        private int _FlagsLocation => _ACBSLocation.Value + 0x0;
+        private bool _Flags_IsSet => _ACBSLocation.HasValue;
+        public NPC.NPCFlag Flags => _Flags_IsSet ? (NPC.NPCFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
+        #endregion
+        #region BaseSpellPoints
+        private int _BaseSpellPointsLocation => _ACBSLocation.Value + 0x4;
+        private bool _BaseSpellPoints_IsSet => _ACBSLocation.HasValue;
+        public UInt16 BaseSpellPoints => _BaseSpellPoints_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_BaseSpellPointsLocation, 2)) : default;
+        #endregion
+        #region Fatigue
+        private int _FatigueLocation => _ACBSLocation.Value + 0x6;
+        private bool _Fatigue_IsSet => _ACBSLocation.HasValue;
+        public UInt16 Fatigue => _Fatigue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FatigueLocation, 2)) : default;
+        #endregion
+        #region BarterGold
+        private int _BarterGoldLocation => _ACBSLocation.Value + 0x8;
+        private bool _BarterGold_IsSet => _ACBSLocation.HasValue;
+        public UInt16 BarterGold => _BarterGold_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_BarterGoldLocation, 2)) : default;
+        #endregion
+        #region LevelOffset
+        private int _LevelOffsetLocation => _ACBSLocation.Value + 0xA;
+        private bool _LevelOffset_IsSet => _ACBSLocation.HasValue;
+        public Int16 LevelOffset => _LevelOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(_LevelOffsetLocation, 2)) : default;
+        #endregion
+        #region CalcMin
+        private int _CalcMinLocation => _ACBSLocation.Value + 0xC;
+        private bool _CalcMin_IsSet => _ACBSLocation.HasValue;
+        public UInt16 CalcMin => _CalcMin_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_CalcMinLocation, 2)) : default;
+        #endregion
+        #region CalcMax
+        private int _CalcMaxLocation => _ACBSLocation.Value + 0xE;
+        private bool _CalcMax_IsSet => _ACBSLocation.HasValue;
+        public UInt16 CalcMax => _CalcMax_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_CalcMaxLocation, 2)) : default;
+        #endregion
+        public IReadOnlySetList<IRankPlacementGetter> Factions { get; private set; } = EmptySetList<RankPlacementBinaryWrapper>.Instance;
+        #region DeathItem
+        private int? _DeathItemLocation;
+        public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
+        public IFormIDSetLinkGetter<IItemAbstractInternalGetter> DeathItem_Property => _DeathItemLocation.HasValue ? new FormIDSetLink<IItemAbstractInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DeathItemLocation.Value, _package.Meta)))) : FormIDSetLink<IItemAbstractInternalGetter>.Empty;
+        public IItemAbstractInternalGetter DeathItem => default;
+        #endregion
+        #region Race
+        private int? _RaceLocation;
+        public bool Race_IsSet => _RaceLocation.HasValue;
+        public IFormIDSetLinkGetter<IRaceInternalGetter> Race_Property => _RaceLocation.HasValue ? new FormIDSetLink<IRaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RaceLocation.Value, _package.Meta)))) : FormIDSetLink<IRaceInternalGetter>.Empty;
+        public IRaceInternalGetter Race => default;
+        #endregion
+        public IReadOnlySetList<IFormIDLinkGetter<ISpellAbstractInternalGetter>> Spells { get; private set; } = EmptySetList<IFormIDLinkGetter<ISpellAbstractInternalGetter>>.Instance;
+        #region Script
+        private int? _ScriptLocation;
+        public bool Script_IsSet => _ScriptLocation.HasValue;
+        public IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptInternalGetter>.Empty;
+        public IScriptInternalGetter Script => default;
+        #endregion
+        public IReadOnlySetList<IItemEntryGetter> Items { get; private set; } = EmptySetList<ItemEntryBinaryWrapper>.Instance;
+        private int? _AIDTLocation;
+        public NPC.AIDTDataType AIDTDataTypeState { get; private set; }
+        public Byte Aggression => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 0] : default;
+        public Byte Confidence => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 1] : default;
+        public Byte EnergyLevel => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 2] : default;
+        public Byte Responsibility => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 3] : default;
+        #region BuySellServices
+        private int _BuySellServicesLocation => _AIDTLocation.Value + 0x4;
+        private bool _BuySellServices_IsSet => _AIDTLocation.HasValue;
+        public NPC.BuySellServiceFlag BuySellServices => _BuySellServices_IsSet ? (NPC.BuySellServiceFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BuySellServicesLocation, 4)) : default;
+        #endregion
+        #region Teaches
+        private int _TeachesLocation => _AIDTLocation.Value + 0x8;
+        private bool _Teaches_IsSet => _AIDTLocation.HasValue;
+        public Skill Teaches => _Teaches_IsSet ? (Skill)_data.Span.Slice(_TeachesLocation, 1)[0] : default;
+        #endregion
+        public Byte MaximumTrainingLevel => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 9] : default;
+        #region Fluff
+        private int _FluffLocation => _AIDTLocation.Value + 0xA;
+        private bool _Fluff_IsSet => _AIDTLocation.HasValue;
+        public ReadOnlySpan<Byte> Fluff => _Fluff_IsSet ? _data.Span.Slice(_FluffLocation, 2).ToArray() : default;
+        #endregion
+        public IReadOnlySetList<IFormIDLinkGetter<IAIPackageInternalGetter>> AIPackages { get; private set; } = EmptySetList<IFormIDLinkGetter<IAIPackageInternalGetter>>.Instance;
+        public IReadOnlySetList<String> Animations { get; private set; } = EmptySetList<String>.Instance;
+        #region Class
+        private int? _ClassLocation;
+        public bool Class_IsSet => _ClassLocation.HasValue;
+        public IFormIDSetLinkGetter<IClassInternalGetter> Class_Property => _ClassLocation.HasValue ? new FormIDSetLink<IClassInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClassLocation.Value, _package.Meta)))) : FormIDSetLink<IClassInternalGetter>.Empty;
+        public IClassInternalGetter Class => default;
+        #endregion
+        private int? _DATALocation;
+        public NPC.DATADataType DATADataTypeState { get; private set; }
+        public Byte Armorer => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 0] : default;
+        public Byte Athletics => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 1] : default;
+        public Byte Blade => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 2] : default;
+        public Byte Block => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 3] : default;
+        public Byte Blunt => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 4] : default;
+        public Byte HandToHand => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 5] : default;
+        public Byte HeavyArmor => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 6] : default;
+        public Byte Alchemy => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 7] : default;
+        public Byte Alteration => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 8] : default;
+        public Byte Conjuration => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 9] : default;
+        public Byte Destruction => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 10] : default;
+        public Byte Illusion => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 11] : default;
+        public Byte Mysticism => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 12] : default;
+        public Byte Restoration => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 13] : default;
+        public Byte Acrobatics => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 14] : default;
+        public Byte LightArmor => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 15] : default;
+        public Byte Marksman => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 16] : default;
+        public Byte Mercantile => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 17] : default;
+        public Byte Security => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 18] : default;
+        public Byte Sneak => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 19] : default;
+        public Byte Speechcraft => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 20] : default;
+        #region Health
+        private int _HealthLocation => _DATALocation.Value + 0x15;
+        private bool _Health_IsSet => _DATALocation.HasValue;
+        public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HealthLocation, 4)) : default;
+        #endregion
+        public Byte Strength => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 25] : default;
+        public Byte Intelligence => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 26] : default;
+        public Byte Willpower => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 27] : default;
+        public Byte Agility => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 28] : default;
+        public Byte Speed => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 29] : default;
+        public Byte Endurance => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 30] : default;
+        public Byte Personality => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 31] : default;
+        public Byte Luck => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 32] : default;
+        #region Hair
+        private int? _HairLocation;
+        public bool Hair_IsSet => _HairLocation.HasValue;
+        public IFormIDSetLinkGetter<IHairInternalGetter> Hair_Property => _HairLocation.HasValue ? new FormIDSetLink<IHairInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HairLocation.Value, _package.Meta)))) : FormIDSetLink<IHairInternalGetter>.Empty;
+        public IHairInternalGetter Hair => default;
+        #endregion
+        #region HairLength
+        private int? _HairLengthLocation;
+        public bool HairLength_IsSet => _HairLengthLocation.HasValue;
+        public Single HairLength => _HairLengthLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _HairLengthLocation.Value, _package.Meta)) : default;
+        #endregion
+        public IReadOnlySetList<IFormIDLinkGetter<IEyeInternalGetter>> Eyes { get; private set; } = EmptySetList<IFormIDLinkGetter<IEyeInternalGetter>>.Instance;
+        #region HairColor
+        private int? _HairColorLocation;
+        public bool HairColor_IsSet => _HairColorLocation.HasValue;
+        public Color HairColor => _HairColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _HairColorLocation.Value, _package.Meta).ReadColor() : default;
+        #endregion
+        #region CombatStyle
+        private int? _CombatStyleLocation;
+        public bool CombatStyle_IsSet => _CombatStyleLocation.HasValue;
+        public IFormIDSetLinkGetter<ICombatStyleInternalGetter> CombatStyle_Property => _CombatStyleLocation.HasValue ? new FormIDSetLink<ICombatStyleInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CombatStyleLocation.Value, _package.Meta)))) : FormIDSetLink<ICombatStyleInternalGetter>.Empty;
+        public ICombatStyleInternalGetter CombatStyle => default;
+        #endregion
+        #region FaceGenGeometrySymmetric
+        private int? _FaceGenGeometrySymmetricLocation;
+        public bool FaceGenGeometrySymmetric_IsSet => _FaceGenGeometrySymmetricLocation.HasValue;
+        public ReadOnlySpan<Byte> FaceGenGeometrySymmetric => _FaceGenGeometrySymmetricLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FaceGenGeometrySymmetricLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region FaceGenGeometryAsymmetric
+        private int? _FaceGenGeometryAsymmetricLocation;
+        public bool FaceGenGeometryAsymmetric_IsSet => _FaceGenGeometryAsymmetricLocation.HasValue;
+        public ReadOnlySpan<Byte> FaceGenGeometryAsymmetric => _FaceGenGeometryAsymmetricLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FaceGenGeometryAsymmetricLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region FaceGenTextureSymmetric
+        private int? _FaceGenTextureSymmetricLocation;
+        public bool FaceGenTextureSymmetric_IsSet => _FaceGenTextureSymmetricLocation.HasValue;
+        public ReadOnlySpan<Byte> FaceGenTextureSymmetric => _FaceGenTextureSymmetricLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FaceGenTextureSymmetricLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region Unknown
+        private int? _UnknownLocation;
+        public bool Unknown_IsSet => _UnknownLocation.HasValue;
+        public ReadOnlySpan<Byte> Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected NPCBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static NPCBinaryWrapper NPCFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new NPCBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Model);
+                }
+                case 0x53424341: // ACBS
+                {
+                    _ACBSLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.ACBSDataTypeState = NPC.ACBSDataType.Has;
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.CalcMax);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    this.Factions = BinaryWrapperSetList<RankPlacementBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => RankPlacementBinaryWrapper.RankPlacementFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Factions);
+                }
+                case 0x4D414E49: // INAM
+                {
+                    _DeathItemLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.DeathItem);
+                }
+                case 0x4D414E52: // RNAM
+                {
+                    _RaceLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Race);
+                }
+                case 0x4F4C5053: // SPLO
+                {
+                    this.Spells = BinaryWrapperSetList<IFormIDLinkGetter<ISpellAbstractInternalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormIDLink<ISpellAbstractInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: true));
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Spells);
+                }
+                case 0x49524353: // SCRI
+                {
+                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Script);
+                }
+                case 0x4F544E43: // CNTO
+                {
+                    this.Items = BinaryWrapperSetList<ItemEntryBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => ItemEntryBinaryWrapper.ItemEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Items);
+                }
+                case 0x54444941: // AIDT
+                {
+                    _AIDTLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.AIDTDataTypeState = NPC.AIDTDataType.Has;
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Fluff);
+                }
+                case 0x44494B50: // PKID
+                {
+                    this.AIPackages = BinaryWrapperSetList<IFormIDLinkGetter<IAIPackageInternalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormIDLink<IAIPackageInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: true));
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.AIPackages);
+                }
+                case 0x5A46464B: // KFFZ
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.Animations = BinaryWrapperSetList<String>.FactoryByLazyParse(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Animations);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    _ClassLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Class);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = NPC.DATADataType.Has;
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Luck);
+                }
+                case 0x4D414E48: // HNAM
+                {
+                    _HairLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Hair);
+                }
+                case 0x4D414E4C: // LNAM
+                {
+                    _HairLengthLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.HairLength);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.Eyes = BinaryWrapperSetList<IFormIDLinkGetter<IEyeInternalGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormIDLink<IEyeInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Eyes);
+                }
+                case 0x524C4348: // HCLR
+                {
+                    _HairColorLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.HairColor);
+                }
+                case 0x4D414E5A: // ZNAM
+                {
+                    _CombatStyleLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.CombatStyle);
+                }
+                case 0x53474746: // FGGS
+                {
+                    _FaceGenGeometrySymmetricLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.FaceGenGeometrySymmetric);
+                }
+                case 0x41474746: // FGGA
+                {
+                    _FaceGenGeometryAsymmetricLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.FaceGenGeometryAsymmetric);
+                }
+                case 0x53544746: // FGTS
+                {
+                    _FaceGenTextureSymmetricLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.FaceGenTextureSymmetric);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Unknown);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

@@ -1862,6 +1862,91 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class SoundItemBinaryWrapper : ISoundItemGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SoundItem_Registration.Instance;
+        public static SoundItem_Registration Registration => SoundItem_Registration.Instance;
+        protected object CommonInstance => SoundItemCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundItemGetter)rhs, include);
+
+        protected object XmlWriteTranslator => SoundItemXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => SoundItemBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Sound
+        private int? _SoundLocation;
+        public bool Sound_IsSet => _SoundLocation.HasValue;
+        public IFormIDSetLinkGetter<ISoundInternalGetter> Sound_Property => _SoundLocation.HasValue ? new FormIDSetLink<ISoundInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundInternalGetter>.Empty;
+        public ISoundInternalGetter Sound => default;
+        #endregion
+        #region Chance
+        private int? _ChanceLocation;
+        public bool Chance_IsSet => _ChanceLocation.HasValue;
+        public Byte Chance => _ChanceLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _ChanceLocation.Value, _package.Meta)[0] : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected SoundItemBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static SoundItemBinaryWrapper SoundItemFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new SoundItemBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x49445343: // CSDI
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return TryGet<int?>.Failure;
+                    _SoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Sound);
+                }
+                case 0x43445343: // CSDC
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Chance) return TryGet<int?>.Failure;
+                    _ChanceLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Chance);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

@@ -3489,6 +3489,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class QuestBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IQuestInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Quest_Registration.Instance;
+        public new static Quest_Registration Registration => Quest_Registration.Instance;
+        protected override object CommonInstance => QuestCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => QuestXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => QuestBinaryWriteTranslation.Instance;
+
+        #region Script
+        private int? _ScriptLocation;
+        public bool Script_IsSet => _ScriptLocation.HasValue;
+        public IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptInternalGetter>.Empty;
+        public IScriptInternalGetter Script => default;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Icon
+        private int? _IconLocation;
+        public bool Icon_IsSet => _IconLocation.HasValue;
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        #endregion
+        private int? _DATALocation;
+        public Quest.DATADataType DATADataTypeState { get; private set; }
+        #region Flags
+        private int _FlagsLocation => _DATALocation.Value + 0x0;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Quest.Flag Flags => _Flags_IsSet ? (Quest.Flag)_data.Span.Slice(_FlagsLocation, 1)[0] : default;
+        #endregion
+        public Byte Priority => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 1] : default;
+        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
+        public IReadOnlySetList<IQuestStageGetter> Stages { get; private set; } = EmptySetList<QuestStageBinaryWrapper>.Instance;
+        public IReadOnlySetList<IQuestTargetInternalGetter> Targets { get; private set; } = EmptySetList<QuestTargetBinaryWrapper>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected QuestBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static QuestBinaryWrapper QuestFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new QuestBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x49524353: // SCRI
+                {
+                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Script);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Name);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _IconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Icon);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = Quest.DATADataType.Has;
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Priority);
+                }
+                case 0x41445443: // CTDA
+                case 0x54445443: // CTDT
+                {
+                    this.Conditions = BinaryWrapperSetList<ConditionBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Conditions);
+                }
+                case 0x58444E49: // INDX
+                {
+                    this.Stages = UtilityTranslation.ParseRepeatedTypelessSubrecord<QuestStageBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null,
+                        trigger: Quest_Registration.INDX_HEADER,
+                        factory:  QuestStageBinaryWrapper.QuestStageFactory);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
+                }
+                case 0x41545351: // QSTA
+                {
+                    this.Targets = UtilityTranslation.ParseRepeatedTypelessSubrecord<QuestTargetBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null,
+                        trigger: Quest_Registration.QSTA_HEADER,
+                        factory:  QuestTargetBinaryWrapper.QuestTargetFactory);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Targets);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

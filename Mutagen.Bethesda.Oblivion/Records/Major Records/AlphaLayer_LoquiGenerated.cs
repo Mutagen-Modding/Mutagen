@@ -1701,6 +1701,80 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class AlphaLayerBinaryWrapper :
+        BaseLayerBinaryWrapper,
+        IAlphaLayerInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
+        public new static AlphaLayer_Registration Registration => AlphaLayer_Registration.Instance;
+        protected override object CommonInstance => AlphaLayerCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAlphaLayerInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => AlphaLayerXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AlphaLayerBinaryWriteTranslation.Instance;
+
+        #region AlphaLayerData
+        private int? _AlphaLayerDataLocation;
+        public bool AlphaLayerData_IsSet => _AlphaLayerDataLocation.HasValue;
+        public ReadOnlySpan<Byte> AlphaLayerData => _AlphaLayerDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _AlphaLayerDataLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected AlphaLayerBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static AlphaLayerBinaryWrapper AlphaLayerFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new AlphaLayerBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x54585456: // VTXT
+                {
+                    _AlphaLayerDataLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)AlphaLayer_FieldIndex.AlphaLayerData);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

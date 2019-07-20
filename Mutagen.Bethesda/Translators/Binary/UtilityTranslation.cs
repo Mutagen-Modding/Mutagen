@@ -502,7 +502,11 @@ namespace Mutagen.Bethesda
             return ret.ToArray();
         }
 
-        public delegate T BinaryWrapperStreamFactory<T>(
+        public delegate T BinaryWrapperFactory<T>(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package);
+
+        public delegate T BinaryWrapperConverterFactory<T>(
             BinaryMemoryReadStream stream,
             BinaryWrapperFactoryPackage package,
             RecordTypeConverter recordTypeConverter);
@@ -544,7 +548,7 @@ namespace Mutagen.Bethesda
             BinaryMemoryReadStream stream,
             BinaryWrapperFactoryPackage package,
             ICollectionGetter<RecordType> trigger,
-            BinaryWrapperStreamFactory<T> factory,
+            BinaryWrapperConverterFactory<T> factory,
             RecordTypeConverter recordTypeConverter)
         {
             return ParseRepeatedTypelessSubrecord(
@@ -577,7 +581,7 @@ namespace Mutagen.Bethesda
             BinaryMemoryReadStream stream,
             BinaryWrapperFactoryPackage package,
             RecordType trigger,
-            BinaryWrapperStreamFactory<T> factory,
+            BinaryWrapperConverterFactory<T> factory,
             RecordTypeConverter recordTypeConverter)
         {
             return ParseRepeatedTypelessSubrecord(

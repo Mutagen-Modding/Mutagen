@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"if (subLen > {passedLen})");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"this.{dataType.StateName} |= {dataType.EnumName}.Range{item.RangeIndex};");
+                        fg.AppendLine($"this.{dataType.StateName} |= {objGen.ObjectName}.{dataType.EnumName}.Range{item.RangeIndex};");
                     }
                 }
                 passedLen += typeGen.GetPassedAmount(objGen, item.Field);

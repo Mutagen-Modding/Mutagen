@@ -3010,6 +3010,129 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class FloraBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IFloraInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
+        public new static Flora_Registration Registration => Flora_Registration.Instance;
+        protected override object CommonInstance => FloraCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFloraInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => FloraXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => FloraBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region Script
+        private int? _ScriptLocation;
+        public bool Script_IsSet => _ScriptLocation.HasValue;
+        public IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptInternalGetter>.Empty;
+        public IScriptInternalGetter Script => default;
+        #endregion
+        #region Ingredient
+        private int? _IngredientLocation;
+        public bool Ingredient_IsSet => _IngredientLocation.HasValue;
+        public IFormIDSetLinkGetter<IIngredientInternalGetter> Ingredient_Property => _IngredientLocation.HasValue ? new FormIDSetLink<IIngredientInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IngredientLocation.Value, _package.Meta)))) : FormIDSetLink<IIngredientInternalGetter>.Empty;
+        public IIngredientInternalGetter Ingredient => default;
+        #endregion
+        private int? _PFPCLocation;
+        public Flora.PFPCDataType PFPCDataTypeState { get; private set; }
+        public Byte Spring => _PFPCLocation.HasValue ? _data.Span[_PFPCLocation.Value + 0] : default;
+        public Byte Summer => _PFPCLocation.HasValue ? _data.Span[_PFPCLocation.Value + 1] : default;
+        public Byte Fall => _PFPCLocation.HasValue ? _data.Span[_PFPCLocation.Value + 2] : default;
+        public Byte Winter => _PFPCLocation.HasValue ? _data.Span[_PFPCLocation.Value + 3] : default;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected FloraBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static FloraBinaryWrapper FloraFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new FloraBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Model);
+                }
+                case 0x49524353: // SCRI
+                {
+                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Script);
+                }
+                case 0x47494650: // PFIG
+                {
+                    _IngredientLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Ingredient);
+                }
+                case 0x43504650: // PFPC
+                {
+                    _PFPCLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.PFPCDataTypeState = Flora.PFPCDataType.Has;
+                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Winter);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

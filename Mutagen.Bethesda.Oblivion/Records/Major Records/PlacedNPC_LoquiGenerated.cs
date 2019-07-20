@@ -3746,6 +3746,188 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class PlacedNPCBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IPlacedNPCInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => PlacedNPC_Registration.Instance;
+        public new static PlacedNPC_Registration Registration => PlacedNPC_Registration.Instance;
+        protected override object CommonInstance => PlacedNPCCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedNPCInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => PlacedNPCXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PlacedNPCBinaryWriteTranslation.Instance;
+
+        #region Base
+        private int? _BaseLocation;
+        public bool Base_IsSet => _BaseLocation.HasValue;
+        public IFormIDSetLinkGetter<INPCInternalGetter> Base_Property => _BaseLocation.HasValue ? new FormIDSetLink<INPCInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseLocation.Value, _package.Meta)))) : FormIDSetLink<INPCInternalGetter>.Empty;
+        public INPCInternalGetter Base => default;
+        #endregion
+        #region XPCIFluff
+        private int? _XPCIFluffLocation;
+        public bool XPCIFluff_IsSet => _XPCIFluffLocation.HasValue;
+        public ReadOnlySpan<Byte> XPCIFluff => _XPCIFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _XPCIFluffLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region FULLFluff
+        private int? _FULLFluffLocation;
+        public bool FULLFluff_IsSet => _FULLFluffLocation.HasValue;
+        public ReadOnlySpan<Byte> FULLFluff => _FULLFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FULLFluffLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region DistantLODData
+        public IDistantLODDataGetter DistantLODData { get; private set; }
+        public bool DistantLODData_IsSet => DistantLODData != null;
+        #endregion
+        #region EnableParent
+        public IEnableParentGetter EnableParent { get; private set; }
+        public bool EnableParent_IsSet => EnableParent != null;
+        #endregion
+        #region MerchantContainer
+        private int? _MerchantContainerLocation;
+        public bool MerchantContainer_IsSet => _MerchantContainerLocation.HasValue;
+        public IFormIDSetLinkGetter<IPlacedObjectInternalGetter> MerchantContainer_Property => _MerchantContainerLocation.HasValue ? new FormIDSetLink<IPlacedObjectInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MerchantContainerLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedObjectInternalGetter>.Empty;
+        public IPlacedObjectInternalGetter MerchantContainer => default;
+        #endregion
+        #region Horse
+        private int? _HorseLocation;
+        public bool Horse_IsSet => _HorseLocation.HasValue;
+        public IFormIDSetLinkGetter<IPlacedCreatureInternalGetter> Horse_Property => _HorseLocation.HasValue ? new FormIDSetLink<IPlacedCreatureInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HorseLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedCreatureInternalGetter>.Empty;
+        public IPlacedCreatureInternalGetter Horse => default;
+        #endregion
+        #region RagdollData
+        private int? _RagdollDataLocation;
+        public bool RagdollData_IsSet => _RagdollDataLocation.HasValue;
+        public ReadOnlySpan<Byte> RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _RagdollDataLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region Scale
+        private int? _ScaleLocation;
+        public bool Scale_IsSet => _ScaleLocation.HasValue;
+        public Single Scale => _ScaleLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _ScaleLocation.Value, _package.Meta)) : default;
+        #endregion
+        private int? _DATALocation;
+        public PlacedNPC.DATADataType DATADataTypeState { get; private set; }
+        #region Position
+        private int _PositionLocation => _DATALocation.Value + 0x0;
+        private bool _Position_IsSet => _DATALocation.HasValue;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation.Read(_data.Span.Slice(_PositionLocation, 12)) : default;
+        #endregion
+        #region Rotation
+        private int _RotationLocation => _DATALocation.Value + 0xC;
+        private bool _Rotation_IsSet => _DATALocation.HasValue;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation.Read(_data.Span.Slice(_RotationLocation, 12)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected PlacedNPCBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static PlacedNPCBinaryWrapper PlacedNPCFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new PlacedNPCBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x454D414E: // NAME
+                {
+                    _BaseLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Base);
+                }
+                case 0x49435058: // XPCI
+                {
+                    _XPCIFluffLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.XPCIFluff);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    _FULLFluffLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.FULLFluff);
+                }
+                case 0x444F4C58: // XLOD
+                {
+                    this.DistantLODData = DistantLODDataBinaryWrapper.DistantLODDataFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.DistantLODData);
+                }
+                case 0x50534558: // XESP
+                {
+                    this.EnableParent = EnableParentBinaryWrapper.EnableParentFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.EnableParent);
+                }
+                case 0x43524D58: // XMRC
+                {
+                    _MerchantContainerLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.MerchantContainer);
+                }
+                case 0x53524858: // XHRS
+                {
+                    _HorseLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Horse);
+                }
+                case 0x44475258: // XRGD
+                {
+                    _RagdollDataLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.RagdollData);
+                }
+                case 0x4C435358: // XSCL
+                {
+                    _ScaleLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Scale);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = PlacedNPC.DATADataType.Has;
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Rotation);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

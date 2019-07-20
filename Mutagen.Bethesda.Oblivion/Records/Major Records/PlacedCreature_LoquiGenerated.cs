@@ -3301,6 +3301,166 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class PlacedCreatureBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IPlacedCreatureInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => PlacedCreature_Registration.Instance;
+        public new static PlacedCreature_Registration Registration => PlacedCreature_Registration.Instance;
+        protected override object CommonInstance => PlacedCreatureCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedCreatureInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => PlacedCreatureXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PlacedCreatureBinaryWriteTranslation.Instance;
+
+        #region Base
+        private int? _BaseLocation;
+        public bool Base_IsSet => _BaseLocation.HasValue;
+        public IFormIDSetLinkGetter<ICreatureInternalGetter> Base_Property => _BaseLocation.HasValue ? new FormIDSetLink<ICreatureInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseLocation.Value, _package.Meta)))) : FormIDSetLink<ICreatureInternalGetter>.Empty;
+        public ICreatureInternalGetter Base => default;
+        #endregion
+        #region Owner
+        private int? _OwnerLocation;
+        public bool Owner_IsSet => _OwnerLocation.HasValue;
+        public IFormIDSetLinkGetter<IFactionInternalGetter> Owner_Property => _OwnerLocation.HasValue ? new FormIDSetLink<IFactionInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OwnerLocation.Value, _package.Meta)))) : FormIDSetLink<IFactionInternalGetter>.Empty;
+        public IFactionInternalGetter Owner => default;
+        #endregion
+        #region FactionRank
+        private int? _FactionRankLocation;
+        public bool FactionRank_IsSet => _FactionRankLocation.HasValue;
+        public Int32 FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FactionRankLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region GlobalVariable
+        private int? _GlobalVariableLocation;
+        public bool GlobalVariable_IsSet => _GlobalVariableLocation.HasValue;
+        public IFormIDSetLinkGetter<IGlobalInternalGetter> GlobalVariable_Property => _GlobalVariableLocation.HasValue ? new FormIDSetLink<IGlobalInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GlobalVariableLocation.Value, _package.Meta)))) : FormIDSetLink<IGlobalInternalGetter>.Empty;
+        public IGlobalInternalGetter GlobalVariable => default;
+        #endregion
+        #region EnableParent
+        public IEnableParentGetter EnableParent { get; private set; }
+        public bool EnableParent_IsSet => EnableParent != null;
+        #endregion
+        #region RagdollData
+        private int? _RagdollDataLocation;
+        public bool RagdollData_IsSet => _RagdollDataLocation.HasValue;
+        public ReadOnlySpan<Byte> RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _RagdollDataLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region Scale
+        private int? _ScaleLocation;
+        public bool Scale_IsSet => _ScaleLocation.HasValue;
+        public Single Scale => _ScaleLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _ScaleLocation.Value, _package.Meta)) : default;
+        #endregion
+        private int? _DATALocation;
+        public PlacedCreature.DATADataType DATADataTypeState { get; private set; }
+        #region Position
+        private int _PositionLocation => _DATALocation.Value + 0x0;
+        private bool _Position_IsSet => _DATALocation.HasValue;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation.Read(_data.Span.Slice(_PositionLocation, 12)) : default;
+        #endregion
+        #region Rotation
+        private int _RotationLocation => _DATALocation.Value + 0xC;
+        private bool _Rotation_IsSet => _DATALocation.HasValue;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation.Read(_data.Span.Slice(_RotationLocation, 12)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected PlacedCreatureBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static PlacedCreatureBinaryWrapper PlacedCreatureFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new PlacedCreatureBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x454D414E: // NAME
+                {
+                    _BaseLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Base);
+                }
+                case 0x4E574F58: // XOWN
+                {
+                    _OwnerLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Owner);
+                }
+                case 0x4B4E5258: // XRNK
+                {
+                    _FactionRankLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.FactionRank);
+                }
+                case 0x424C4758: // XGLB
+                {
+                    _GlobalVariableLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.GlobalVariable);
+                }
+                case 0x50534558: // XESP
+                {
+                    this.EnableParent = EnableParentBinaryWrapper.EnableParentFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.EnableParent);
+                }
+                case 0x44475258: // XRGD
+                {
+                    _RagdollDataLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.RagdollData);
+                }
+                case 0x4C435358: // XSCL
+                {
+                    _ScaleLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Scale);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = PlacedCreature.DATADataType.Has;
+                    return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Rotation);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

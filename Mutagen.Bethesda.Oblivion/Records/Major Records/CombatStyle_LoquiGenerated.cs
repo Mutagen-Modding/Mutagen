@@ -6995,6 +6995,246 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class CombatStyleBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        ICombatStyleInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
+        public new static CombatStyle_Registration Registration => CombatStyle_Registration.Instance;
+        protected override object CommonInstance => CombatStyleCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => CombatStyleXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
+
+        private int? _CSTDLocation;
+        public CombatStyle.CSTDDataType CSTDDataTypeState { get; private set; }
+        public Byte DodgePercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 0] : default;
+        public Byte LeftRightPercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 1] : default;
+        #region DodgeLeftRightTimerMin
+        private int _DodgeLeftRightTimerMinLocation => _CSTDLocation.Value + 0x4;
+        private bool _DodgeLeftRightTimerMin_IsSet => _CSTDLocation.HasValue;
+        public Single DodgeLeftRightTimerMin => _DodgeLeftRightTimerMin_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DodgeLeftRightTimerMinLocation, 4)) : default;
+        #endregion
+        #region DodgeLeftRightTimerMax
+        private int _DodgeLeftRightTimerMaxLocation => _CSTDLocation.Value + 0x8;
+        private bool _DodgeLeftRightTimerMax_IsSet => _CSTDLocation.HasValue;
+        public Single DodgeLeftRightTimerMax => _DodgeLeftRightTimerMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DodgeLeftRightTimerMaxLocation, 4)) : default;
+        #endregion
+        #region DodgeForwardTimerMin
+        private int _DodgeForwardTimerMinLocation => _CSTDLocation.Value + 0xC;
+        private bool _DodgeForwardTimerMin_IsSet => _CSTDLocation.HasValue;
+        public Single DodgeForwardTimerMin => _DodgeForwardTimerMin_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DodgeForwardTimerMinLocation, 4)) : default;
+        #endregion
+        #region DodgeForwardTimerMax
+        private int _DodgeForwardTimerMaxLocation => _CSTDLocation.Value + 0x10;
+        private bool _DodgeForwardTimerMax_IsSet => _CSTDLocation.HasValue;
+        public Single DodgeForwardTimerMax => _DodgeForwardTimerMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DodgeForwardTimerMaxLocation, 4)) : default;
+        #endregion
+        #region DodgeBackTimerMin
+        private int _DodgeBackTimerMinLocation => _CSTDLocation.Value + 0x14;
+        private bool _DodgeBackTimerMin_IsSet => _CSTDLocation.HasValue;
+        public Single DodgeBackTimerMin => _DodgeBackTimerMin_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DodgeBackTimerMinLocation, 4)) : default;
+        #endregion
+        #region DodgeBackTimerMax
+        private int _DodgeBackTimerMaxLocation => _CSTDLocation.Value + 0x18;
+        private bool _DodgeBackTimerMax_IsSet => _CSTDLocation.HasValue;
+        public Single DodgeBackTimerMax => _DodgeBackTimerMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DodgeBackTimerMaxLocation, 4)) : default;
+        #endregion
+        #region IdleTimerMin
+        private int _IdleTimerMinLocation => _CSTDLocation.Value + 0x1C;
+        private bool _IdleTimerMin_IsSet => _CSTDLocation.HasValue;
+        public Single IdleTimerMin => _IdleTimerMin_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_IdleTimerMinLocation, 4)) : default;
+        #endregion
+        #region IdleTimerMax
+        private int _IdleTimerMaxLocation => _CSTDLocation.Value + 0x20;
+        private bool _IdleTimerMax_IsSet => _CSTDLocation.HasValue;
+        public Single IdleTimerMax => _IdleTimerMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_IdleTimerMaxLocation, 4)) : default;
+        #endregion
+        public Byte BlockPercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 36] : default;
+        public Byte AttackPercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 37] : default;
+        #region RecoilStaggerBonusToAttack
+        private int _RecoilStaggerBonusToAttackLocation => _CSTDLocation.Value + 0x28;
+        private bool _RecoilStaggerBonusToAttack_IsSet => _CSTDLocation.HasValue;
+        public Single RecoilStaggerBonusToAttack => _RecoilStaggerBonusToAttack_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RecoilStaggerBonusToAttackLocation, 4)) : default;
+        #endregion
+        #region UnconsciousBonusToAttack
+        private int _UnconsciousBonusToAttackLocation => _CSTDLocation.Value + 0x2C;
+        private bool _UnconsciousBonusToAttack_IsSet => _CSTDLocation.HasValue;
+        public Single UnconsciousBonusToAttack => _UnconsciousBonusToAttack_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_UnconsciousBonusToAttackLocation, 4)) : default;
+        #endregion
+        #region HandToHandBonusToAttack
+        private int _HandToHandBonusToAttackLocation => _CSTDLocation.Value + 0x30;
+        private bool _HandToHandBonusToAttack_IsSet => _CSTDLocation.HasValue;
+        public Single HandToHandBonusToAttack => _HandToHandBonusToAttack_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HandToHandBonusToAttackLocation, 4)) : default;
+        #endregion
+        public Byte PowerAttackPercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 52] : default;
+        #region RecoilStaggerBonusToPowerAttack
+        private int _RecoilStaggerBonusToPowerAttackLocation => _CSTDLocation.Value + 0x38;
+        private bool _RecoilStaggerBonusToPowerAttack_IsSet => _CSTDLocation.HasValue;
+        public Single RecoilStaggerBonusToPowerAttack => _RecoilStaggerBonusToPowerAttack_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RecoilStaggerBonusToPowerAttackLocation, 4)) : default;
+        #endregion
+        #region UnconsciousBonusToPowerAttack
+        private int _UnconsciousBonusToPowerAttackLocation => _CSTDLocation.Value + 0x3C;
+        private bool _UnconsciousBonusToPowerAttack_IsSet => _CSTDLocation.HasValue;
+        public Single UnconsciousBonusToPowerAttack => _UnconsciousBonusToPowerAttack_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_UnconsciousBonusToPowerAttackLocation, 4)) : default;
+        #endregion
+        public Byte PowerAttackNormal => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 64] : default;
+        public Byte PowerAttackForward => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 65] : default;
+        public Byte PowerAttackBack => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 66] : default;
+        public Byte PowerAttackLeft => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 67] : default;
+        public Byte PowerAttackRight => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 68] : default;
+        #region HoldTimerMin
+        private int _HoldTimerMinLocation => _CSTDLocation.Value + 0x48;
+        private bool _HoldTimerMin_IsSet => _CSTDLocation.HasValue;
+        public Single HoldTimerMin => _HoldTimerMin_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HoldTimerMinLocation, 4)) : default;
+        #endregion
+        #region HoldTimerMax
+        private int _HoldTimerMaxLocation => _CSTDLocation.Value + 0x4C;
+        private bool _HoldTimerMax_IsSet => _CSTDLocation.HasValue;
+        public Single HoldTimerMax => _HoldTimerMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HoldTimerMaxLocation, 4)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _CSTDLocation.Value + 0x50;
+        private bool _Flags_IsSet => _CSTDLocation.HasValue;
+        public CombatStyle.Flag Flags => _Flags_IsSet ? (CombatStyle.Flag)_data.Span.Slice(_FlagsLocation, 1)[0] : default;
+        #endregion
+        public Byte AcrobaticDodgePercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 81] : default;
+        #region RangeMultOptimal
+        private int _RangeMultOptimalLocation => _CSTDLocation.Value + 0x54;
+        private bool _RangeMultOptimal_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break0);
+        public Single RangeMultOptimal => _RangeMultOptimal_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RangeMultOptimalLocation, 4)) : default;
+        #endregion
+        #region RangeMultMax
+        private int _RangeMultMaxLocation => _CSTDLocation.Value + 0x58;
+        private bool _RangeMultMax_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break0);
+        public Single RangeMultMax => _RangeMultMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RangeMultMaxLocation, 4)) : default;
+        #endregion
+        #region SwitchDistanceMelee
+        private int _SwitchDistanceMeleeLocation => _CSTDLocation.Value + 0x5C;
+        private bool _SwitchDistanceMelee_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1);
+        public Single SwitchDistanceMelee => _SwitchDistanceMelee_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_SwitchDistanceMeleeLocation, 4)) : default;
+        #endregion
+        #region SwitchDistanceRanged
+        private int _SwitchDistanceRangedLocation => _CSTDLocation.Value + 0x60;
+        private bool _SwitchDistanceRanged_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1);
+        public Single SwitchDistanceRanged => _SwitchDistanceRanged_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_SwitchDistanceRangedLocation, 4)) : default;
+        #endregion
+        #region BuffStandoffDistance
+        private int _BuffStandoffDistanceLocation => _CSTDLocation.Value + 0x64;
+        private bool _BuffStandoffDistance_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1);
+        public Single BuffStandoffDistance => _BuffStandoffDistance_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BuffStandoffDistanceLocation, 4)) : default;
+        #endregion
+        #region RangedStandoffDistance
+        private int _RangedStandoffDistanceLocation => _CSTDLocation.Value + 0x68;
+        private bool _RangedStandoffDistance_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break2);
+        public Single RangedStandoffDistance => _RangedStandoffDistance_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RangedStandoffDistanceLocation, 4)) : default;
+        #endregion
+        #region GroupStandoffDistance
+        private int _GroupStandoffDistanceLocation => _CSTDLocation.Value + 0x6C;
+        private bool _GroupStandoffDistance_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break2);
+        public Single GroupStandoffDistance => _GroupStandoffDistance_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_GroupStandoffDistanceLocation, 4)) : default;
+        #endregion
+        public Byte RushingAttackPercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 112] : default;
+        #region RushingAttackDistanceMult
+        private int _RushingAttackDistanceMultLocation => _CSTDLocation.Value + 0x74;
+        private bool _RushingAttackDistanceMult_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break3);
+        public Single RushingAttackDistanceMult => _RushingAttackDistanceMult_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RushingAttackDistanceMultLocation, 4)) : default;
+        #endregion
+        #region Advanced
+        public ICombatStyleAdvancedGetter Advanced { get; private set; }
+        public bool Advanced_IsSet => Advanced != null;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected CombatStyleBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static CombatStyleBinaryWrapper CombatStyleFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new CombatStyleBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x44545343: // CSTD
+                {
+                    _CSTDLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.CSTDDataTypeState = CombatStyle.CSTDDataType.Has;
+                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                    if (subLen <= 84)
+                    {
+                        this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break0;
+                    }
+                    if (subLen <= 92)
+                    {
+                        this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break1;
+                    }
+                    if (subLen <= 104)
+                    {
+                        this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break2;
+                    }
+                    if (subLen <= 112)
+                    {
+                        this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break3;
+                    }
+                    if (subLen <= 120)
+                    {
+                        this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break4;
+                    }
+                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
+                }
+                case 0x44415343: // CSAD
+                {
+                    this.Advanced = CombatStyleAdvancedBinaryWrapper.CombatStyleAdvancedFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Advanced);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

@@ -1987,6 +1987,94 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class QuestStageBinaryWrapper : IQuestStageGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => QuestStage_Registration.Instance;
+        public static QuestStage_Registration Registration => QuestStage_Registration.Instance;
+        protected object CommonInstance => QuestStageCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestStageGetter)rhs, include);
+
+        protected object XmlWriteTranslator => QuestStageXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => QuestStageBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Stage
+        private int? _StageLocation;
+        public UInt16 Stage => _StageLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _StageLocation.Value, _package.Meta)) : default;
+        #endregion
+        public IReadOnlySetList<ILogEntryGetter> LogEntries { get; private set; } = EmptySetList<LogEntryBinaryWrapper>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected QuestStageBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static QuestStageBinaryWrapper QuestStageFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new QuestStageBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x58444E49: // INDX
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
+                    _StageLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
+                }
+                case 0x54445351: // QSDT
+                case 0x41445443: // CTDA
+                case 0x54445443: // CTDT
+                case 0x4D414E43: // CNAM
+                case 0x52484353: // SCHR
+                case 0x44484353: // SCHD
+                {
+                    this.LogEntries = UtilityTranslation.ParseRepeatedTypelessSubrecord<LogEntryBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null,
+                        trigger: LogEntry_Registration.TriggeringRecordTypes,
+                        factory:  LogEntryBinaryWrapper.LogEntryFactory);
+                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

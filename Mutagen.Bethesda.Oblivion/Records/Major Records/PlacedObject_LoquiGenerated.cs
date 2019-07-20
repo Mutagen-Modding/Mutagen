@@ -6376,6 +6376,342 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class PlacedObjectBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IPlacedObjectInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
+        public new static PlacedObject_Registration Registration => PlacedObject_Registration.Instance;
+        protected override object CommonInstance => PlacedObjectCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedObjectInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => PlacedObjectXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
+
+        #region Base
+        private int? _BaseLocation;
+        public bool Base_IsSet => _BaseLocation.HasValue;
+        public IFormIDSetLinkGetter<IOblivionMajorRecordInternalGetter> Base_Property => _BaseLocation.HasValue ? new FormIDSetLink<IOblivionMajorRecordInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseLocation.Value, _package.Meta)))) : FormIDSetLink<IOblivionMajorRecordInternalGetter>.Empty;
+        public IOblivionMajorRecordInternalGetter Base => default;
+        #endregion
+        #region XPCIFluff
+        private int? _XPCIFluffLocation;
+        public bool XPCIFluff_IsSet => _XPCIFluffLocation.HasValue;
+        public ReadOnlySpan<Byte> XPCIFluff => _XPCIFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _XPCIFluffLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region FULLFluff
+        private int? _FULLFluffLocation;
+        public bool FULLFluff_IsSet => _FULLFluffLocation.HasValue;
+        public ReadOnlySpan<Byte> FULLFluff => _FULLFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FULLFluffLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region TeleportDestination
+        public ITeleportDestinationGetter TeleportDestination { get; private set; }
+        public bool TeleportDestination_IsSet => TeleportDestination != null;
+        #endregion
+        #region Lock
+        public ILockInformationGetter Lock { get; private set; }
+        public bool Lock_IsSet => Lock != null;
+        #endregion
+        #region Owner
+        private int? _OwnerLocation;
+        public bool Owner_IsSet => _OwnerLocation.HasValue;
+        public IFormIDSetLinkGetter<IOwner> Owner_Property => _OwnerLocation.HasValue ? new FormIDSetLink<IOwner>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OwnerLocation.Value, _package.Meta)))) : FormIDSetLink<IOwner>.Empty;
+        public IOwner Owner => default;
+        #endregion
+        #region FactionRank
+        private int? _FactionRankLocation;
+        public bool FactionRank_IsSet => _FactionRankLocation.HasValue;
+        public Int32 FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FactionRankLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region GlobalVariable
+        private int? _GlobalVariableLocation;
+        public bool GlobalVariable_IsSet => _GlobalVariableLocation.HasValue;
+        public IFormIDSetLinkGetter<IGlobalInternalGetter> GlobalVariable_Property => _GlobalVariableLocation.HasValue ? new FormIDSetLink<IGlobalInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GlobalVariableLocation.Value, _package.Meta)))) : FormIDSetLink<IGlobalInternalGetter>.Empty;
+        public IGlobalInternalGetter GlobalVariable => default;
+        #endregion
+        #region EnableParent
+        public IEnableParentGetter EnableParent { get; private set; }
+        public bool EnableParent_IsSet => EnableParent != null;
+        #endregion
+        #region Target
+        private int? _TargetLocation;
+        public bool Target_IsSet => _TargetLocation.HasValue;
+        public IFormIDSetLinkGetter<IPlaced> Target_Property => _TargetLocation.HasValue ? new FormIDSetLink<IPlaced>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TargetLocation.Value, _package.Meta)))) : FormIDSetLink<IPlaced>.Empty;
+        public IPlaced Target => default;
+        #endregion
+        #region SpeedTreeSeed
+        private int? _SpeedTreeSeedLocation;
+        public bool SpeedTreeSeed_IsSet => _SpeedTreeSeedLocation.HasValue;
+        public Byte SpeedTreeSeed => _SpeedTreeSeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _SpeedTreeSeedLocation.Value, _package.Meta)[0] : default;
+        #endregion
+        #region DistantLODData
+        public IDistantLODDataGetter DistantLODData { get; private set; }
+        public bool DistantLODData_IsSet => DistantLODData != null;
+        #endregion
+        #region Charge
+        private int? _ChargeLocation;
+        public bool Charge_IsSet => _ChargeLocation.HasValue;
+        public Single Charge => _ChargeLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _ChargeLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Health
+        private int? _HealthLocation;
+        public bool Health_IsSet => _HealthLocation.HasValue;
+        public Int32 Health => _HealthLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HealthLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region LevelModifier
+        private int? _LevelModifierLocation;
+        public bool LevelModifier_IsSet => _LevelModifierLocation.HasValue;
+        public Int32 LevelModifier => _LevelModifierLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LevelModifierLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Unknown
+        private int? _UnknownLocation;
+        public bool Unknown_IsSet => _UnknownLocation.HasValue;
+        public IFormIDSetLinkGetter<IOblivionMajorRecordInternalGetter> Unknown_Property => _UnknownLocation.HasValue ? new FormIDSetLink<IOblivionMajorRecordInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta)))) : FormIDSetLink<IOblivionMajorRecordInternalGetter>.Empty;
+        public IOblivionMajorRecordInternalGetter Unknown => default;
+        #endregion
+        #region ActionFlags
+        private int? _ActionFlagsLocation;
+        public bool ActionFlags_IsSet => _ActionFlagsLocation.HasValue;
+        public PlacedObject.ActionFlag ActionFlags => (PlacedObject.ActionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _ActionFlagsLocation.Value, _package.Meta));
+        #endregion
+        #region Count
+        private int? _CountLocation;
+        public bool Count_IsSet => _CountLocation.HasValue;
+        public Int32 Count => _CountLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CountLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region MapMarker
+        public IMapMarkerGetter MapMarker { get; private set; }
+        public bool MapMarker_IsSet => MapMarker != null;
+        #endregion
+        #region OpenByDefault
+        private int? _OpenByDefaultLocation;
+        public bool OpenByDefault_IsSet => _OpenByDefaultLocation.HasValue;
+        public Boolean OpenByDefault => GetOpenByDefaultCustom(
+            span: _data,
+            location: _OpenByDefaultLocation.Value,
+            expectedLength: default(int?),
+            package: _package);
+        #endregion
+        #region RagdollData
+        private int? _RagdollDataLocation;
+        public bool RagdollData_IsSet => _RagdollDataLocation.HasValue;
+        public ReadOnlySpan<Byte> RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _RagdollDataLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        #region Scale
+        private int? _ScaleLocation;
+        public bool Scale_IsSet => _ScaleLocation.HasValue;
+        public Single Scale => _ScaleLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _ScaleLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region ContainedSoul
+        private int? _ContainedSoulLocation;
+        public bool ContainedSoul_IsSet => _ContainedSoulLocation.HasValue;
+        public IFormIDSetLinkGetter<ISoulGemInternalGetter> ContainedSoul_Property => _ContainedSoulLocation.HasValue ? new FormIDSetLink<ISoulGemInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ContainedSoulLocation.Value, _package.Meta)))) : FormIDSetLink<ISoulGemInternalGetter>.Empty;
+        public ISoulGemInternalGetter ContainedSoul => default;
+        #endregion
+        private int? _DATALocation;
+        public PlacedObject.DATADataType DATADataTypeState { get; private set; }
+        #region Position
+        private int _PositionLocation => _DATALocation.Value + 0x0;
+        private bool _Position_IsSet => _DATALocation.HasValue;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation.Read(_data.Span.Slice(_PositionLocation, 12)) : default;
+        #endregion
+        #region Rotation
+        private int _RotationLocation => _DATALocation.Value + 0xC;
+        private bool _Rotation_IsSet => _DATALocation.HasValue;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation.Read(_data.Span.Slice(_RotationLocation, 12)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected PlacedObjectBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static PlacedObjectBinaryWrapper PlacedObjectFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new PlacedObjectBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x454D414E: // NAME
+                {
+                    _BaseLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
+                }
+                case 0x49435058: // XPCI
+                {
+                    _XPCIFluffLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XPCIFluff);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    _FULLFluffLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FULLFluff);
+                }
+                case 0x4C455458: // XTEL
+                {
+                    this.TeleportDestination = TeleportDestinationBinaryWrapper.TeleportDestinationFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportDestination);
+                }
+                case 0x434F4C58: // XLOC
+                {
+                    this.Lock = LockInformationBinaryWrapper.LockInformationFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Lock);
+                }
+                case 0x4E574F58: // XOWN
+                {
+                    _OwnerLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Owner);
+                }
+                case 0x4B4E5258: // XRNK
+                {
+                    _FactionRankLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FactionRank);
+                }
+                case 0x424C4758: // XGLB
+                {
+                    _GlobalVariableLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.GlobalVariable);
+                }
+                case 0x50534558: // XESP
+                {
+                    this.EnableParent = EnableParentBinaryWrapper.EnableParentFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EnableParent);
+                }
+                case 0x47525458: // XTRG
+                {
+                    _TargetLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Target);
+                }
+                case 0x44455358: // XSED
+                {
+                    _SpeedTreeSeedLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.SpeedTreeSeed);
+                }
+                case 0x444F4C58: // XLOD
+                {
+                    this.DistantLODData = DistantLODDataBinaryWrapper.DistantLODDataFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.DistantLODData);
+                }
+                case 0x47484358: // XCHG
+                {
+                    _ChargeLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Charge);
+                }
+                case 0x544C4858: // XHLT
+                {
+                    _HealthLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Health);
+                }
+                case 0x4D434C58: // XLCM
+                {
+                    _LevelModifierLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
+                }
+                case 0x4D545258: // XRTM
+                {
+                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
+                }
+                case 0x54434158: // XACT
+                {
+                    _ActionFlagsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ActionFlags);
+                }
+                case 0x544E4358: // XCNT
+                {
+                    _CountLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Count);
+                }
+                case 0x4B524D58: // XMRK
+                {
+                    stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
+                    this.MapMarker = MapMarkerBinaryWrapper.MapMarkerFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MapMarker);
+                }
+                case 0x4D414E4F: // ONAM
+                {
+                    _OpenByDefaultLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OpenByDefault);
+                }
+                case 0x44475258: // XRGD
+                {
+                    _RagdollDataLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollData);
+                }
+                case 0x4C435358: // XSCL
+                {
+                    _ScaleLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Scale);
+                }
+                case 0x4C4F5358: // XSOL
+                {
+                    _ContainedSoulLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ContainedSoul);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = PlacedObject.DATADataType.Has;
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Rotation);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

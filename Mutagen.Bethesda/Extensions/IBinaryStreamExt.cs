@@ -23,5 +23,14 @@ namespace Mutagen.Bethesda
             }
             return ret;
         }
+
+        public static Color ReadColor(this ReadOnlySpan<byte> span)
+        {
+            return Color.FromArgb(
+                alpha: 0,
+                red: span[0],
+                green: span[1],
+                blue: span[2]);
+        }
     }
 }

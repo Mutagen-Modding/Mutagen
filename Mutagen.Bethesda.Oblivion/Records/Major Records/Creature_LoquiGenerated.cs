@@ -10234,6 +10234,409 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class CreatureBinaryWrapper :
+        NPCAbstractBinaryWrapper,
+        ICreatureInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Creature_Registration.Instance;
+        public new static Creature_Registration Registration => Creature_Registration.Instance;
+        protected override object CommonInstance => CreatureCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => CreatureXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CreatureBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        public IReadOnlySetList<IItemEntryGetter> Items { get; private set; } = EmptySetList<ItemEntryBinaryWrapper>.Instance;
+        public IReadOnlySetList<IFormIDLinkGetter<ISpellAbstractInternalGetter>> Spells { get; private set; } = EmptySetList<IFormIDLinkGetter<ISpellAbstractInternalGetter>>.Instance;
+        public IReadOnlySetList<String> Models { get; private set; } = EmptySetList<String>.Instance;
+        #region NIFT
+        private int? _NIFTLocation;
+        public bool NIFT_IsSet => _NIFTLocation.HasValue;
+        public ReadOnlySpan<Byte> NIFT => _NIFTLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _NIFTLocation.Value, _package.Meta).ToArray() : default;
+        #endregion
+        private int? _ACBSLocation;
+        public Creature.ACBSDataType ACBSDataTypeState { get; private set; }
+        #region Flags
+        private int _FlagsLocation => _ACBSLocation.Value + 0x0;
+        private bool _Flags_IsSet => _ACBSLocation.HasValue;
+        public Creature.CreatureFlag Flags => _Flags_IsSet ? (Creature.CreatureFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
+        #endregion
+        #region BaseSpellPoints
+        private int _BaseSpellPointsLocation => _ACBSLocation.Value + 0x4;
+        private bool _BaseSpellPoints_IsSet => _ACBSLocation.HasValue;
+        public UInt16 BaseSpellPoints => _BaseSpellPoints_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_BaseSpellPointsLocation, 2)) : default;
+        #endregion
+        #region Fatigue
+        private int _FatigueLocation => _ACBSLocation.Value + 0x6;
+        private bool _Fatigue_IsSet => _ACBSLocation.HasValue;
+        public UInt16 Fatigue => _Fatigue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FatigueLocation, 2)) : default;
+        #endregion
+        #region BarterGold
+        private int _BarterGoldLocation => _ACBSLocation.Value + 0x8;
+        private bool _BarterGold_IsSet => _ACBSLocation.HasValue;
+        public UInt16 BarterGold => _BarterGold_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_BarterGoldLocation, 2)) : default;
+        #endregion
+        #region LevelOffset
+        private int _LevelOffsetLocation => _ACBSLocation.Value + 0xA;
+        private bool _LevelOffset_IsSet => _ACBSLocation.HasValue;
+        public Int16 LevelOffset => _LevelOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(_LevelOffsetLocation, 2)) : default;
+        #endregion
+        #region CalcMin
+        private int _CalcMinLocation => _ACBSLocation.Value + 0xC;
+        private bool _CalcMin_IsSet => _ACBSLocation.HasValue;
+        public UInt16 CalcMin => _CalcMin_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_CalcMinLocation, 2)) : default;
+        #endregion
+        #region CalcMax
+        private int _CalcMaxLocation => _ACBSLocation.Value + 0xE;
+        private bool _CalcMax_IsSet => _ACBSLocation.HasValue;
+        public UInt16 CalcMax => _CalcMax_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_CalcMaxLocation, 2)) : default;
+        #endregion
+        public IReadOnlySetList<IRankPlacementGetter> Factions { get; private set; } = EmptySetList<RankPlacementBinaryWrapper>.Instance;
+        #region DeathItem
+        private int? _DeathItemLocation;
+        public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
+        public IFormIDSetLinkGetter<IItemAbstractInternalGetter> DeathItem_Property => _DeathItemLocation.HasValue ? new FormIDSetLink<IItemAbstractInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DeathItemLocation.Value, _package.Meta)))) : FormIDSetLink<IItemAbstractInternalGetter>.Empty;
+        public IItemAbstractInternalGetter DeathItem => default;
+        #endregion
+        #region Script
+        private int? _ScriptLocation;
+        public bool Script_IsSet => _ScriptLocation.HasValue;
+        public IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptInternalGetter>.Empty;
+        public IScriptInternalGetter Script => default;
+        #endregion
+        private int? _AIDTLocation;
+        public Creature.AIDTDataType AIDTDataTypeState { get; private set; }
+        public Byte Aggression => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 0] : default;
+        public Byte Confidence => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 1] : default;
+        public Byte EnergyLevel => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 2] : default;
+        public Byte Responsibility => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 3] : default;
+        #region BuySellServices
+        private int _BuySellServicesLocation => _AIDTLocation.Value + 0x4;
+        private bool _BuySellServices_IsSet => _AIDTLocation.HasValue;
+        public NPC.BuySellServiceFlag BuySellServices => _BuySellServices_IsSet ? (NPC.BuySellServiceFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BuySellServicesLocation, 4)) : default;
+        #endregion
+        #region Teaches
+        private int _TeachesLocation => _AIDTLocation.Value + 0x8;
+        private bool _Teaches_IsSet => _AIDTLocation.HasValue;
+        public Skill Teaches => _Teaches_IsSet ? (Skill)_data.Span.Slice(_TeachesLocation, 1)[0] : default;
+        #endregion
+        public Byte MaximumTrainingLevel => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 9] : default;
+        public IReadOnlySetList<IFormIDLinkGetter<IAIPackageInternalGetter>> AIPackages { get; private set; } = EmptySetList<IFormIDLinkGetter<IAIPackageInternalGetter>>.Instance;
+        public IReadOnlySetList<String> Animations { get; private set; } = EmptySetList<String>.Instance;
+        private int? _DATALocation;
+        public Creature.DATADataType DATADataTypeState { get; private set; }
+        #region CreatureType
+        private int _CreatureTypeLocation => _DATALocation.Value + 0x0;
+        private bool _CreatureType_IsSet => _DATALocation.HasValue;
+        public Creature.CreatureTypeEnum CreatureType => _CreatureType_IsSet ? (Creature.CreatureTypeEnum)_data.Span.Slice(_CreatureTypeLocation, 1)[0] : default;
+        #endregion
+        public Byte CombatSkill => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 1] : default;
+        public Byte MagicSkill => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 2] : default;
+        public Byte StealthSkill => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 3] : default;
+        #region SoulLevel
+        private int _SoulLevelLocation => _DATALocation.Value + 0x4;
+        private bool _SoulLevel_IsSet => _DATALocation.HasValue;
+        public SoulLevel SoulLevel => _SoulLevel_IsSet ? (SoulLevel)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_SoulLevelLocation, 2)) : default;
+        #endregion
+        #region Health
+        private int _HealthLocation => _DATALocation.Value + 0x6;
+        private bool _Health_IsSet => _DATALocation.HasValue;
+        public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HealthLocation, 4)) : default;
+        #endregion
+        #region AttackDamage
+        private int _AttackDamageLocation => _DATALocation.Value + 0xA;
+        private bool _AttackDamage_IsSet => _DATALocation.HasValue;
+        public UInt16 AttackDamage => _AttackDamage_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_AttackDamageLocation, 2)) : default;
+        #endregion
+        public Byte Strength => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 12] : default;
+        public Byte Intelligence => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 13] : default;
+        public Byte Willpower => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 14] : default;
+        public Byte Agility => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 15] : default;
+        public Byte Speed => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 16] : default;
+        public Byte Endurance => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 17] : default;
+        public Byte Personality => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 18] : default;
+        public Byte Luck => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 19] : default;
+        #region AttackReach
+        private int? _AttackReachLocation;
+        public bool AttackReach_IsSet => _AttackReachLocation.HasValue;
+        public Byte AttackReach => _AttackReachLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _AttackReachLocation.Value, _package.Meta)[0] : default;
+        #endregion
+        #region CombatStyle
+        private int? _CombatStyleLocation;
+        public bool CombatStyle_IsSet => _CombatStyleLocation.HasValue;
+        public IFormIDSetLinkGetter<ICombatStyleInternalGetter> CombatStyle_Property => _CombatStyleLocation.HasValue ? new FormIDSetLink<ICombatStyleInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CombatStyleLocation.Value, _package.Meta)))) : FormIDSetLink<ICombatStyleInternalGetter>.Empty;
+        public ICombatStyleInternalGetter CombatStyle => default;
+        #endregion
+        #region TurningSpeed
+        private int? _TurningSpeedLocation;
+        public bool TurningSpeed_IsSet => _TurningSpeedLocation.HasValue;
+        public Single TurningSpeed => _TurningSpeedLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _TurningSpeedLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region BaseScale
+        private int? _BaseScaleLocation;
+        public bool BaseScale_IsSet => _BaseScaleLocation.HasValue;
+        public Single BaseScale => _BaseScaleLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseScaleLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region FootWeight
+        private int? _FootWeightLocation;
+        public bool FootWeight_IsSet => _FootWeightLocation.HasValue;
+        public Single FootWeight => _FootWeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _FootWeightLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region BloodSpray
+        private int? _BloodSprayLocation;
+        public bool BloodSpray_IsSet => _BloodSprayLocation.HasValue;
+        public String BloodSpray => _BloodSprayLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _BloodSprayLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region BloodDecal
+        private int? _BloodDecalLocation;
+        public bool BloodDecal_IsSet => _BloodDecalLocation.HasValue;
+        public String BloodDecal => _BloodDecalLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _BloodDecalLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region InheritsSoundFrom
+        private int? _InheritsSoundFromLocation;
+        public bool InheritsSoundFrom_IsSet => _InheritsSoundFromLocation.HasValue;
+        public IFormIDSetLinkGetter<ICreatureInternalGetter> InheritsSoundFrom_Property => _InheritsSoundFromLocation.HasValue ? new FormIDSetLink<ICreatureInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InheritsSoundFromLocation.Value, _package.Meta)))) : FormIDSetLink<ICreatureInternalGetter>.Empty;
+        public ICreatureInternalGetter InheritsSoundFrom => default;
+        #endregion
+        public IReadOnlySetList<ICreatureSoundGetter> Sounds { get; private set; } = EmptySetList<CreatureSoundBinaryWrapper>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected CreatureBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static CreatureBinaryWrapper CreatureFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new CreatureBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Model);
+                }
+                case 0x4F544E43: // CNTO
+                {
+                    this.Items = BinaryWrapperSetList<ItemEntryBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => ItemEntryBinaryWrapper.ItemEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Items);
+                }
+                case 0x4F4C5053: // SPLO
+                {
+                    this.Spells = BinaryWrapperSetList<IFormIDLinkGetter<ISpellAbstractInternalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormIDLink<ISpellAbstractInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: true));
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Spells);
+                }
+                case 0x5A46494E: // NIFZ
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.Models = BinaryWrapperSetList<String>.FactoryByLazyParse(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Models);
+                }
+                case 0x5446494E: // NIFT
+                {
+                    _NIFTLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.NIFT);
+                }
+                case 0x53424341: // ACBS
+                {
+                    _ACBSLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.ACBSDataTypeState = Creature.ACBSDataType.Has;
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.CalcMax);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    this.Factions = BinaryWrapperSetList<RankPlacementBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => RankPlacementBinaryWrapper.RankPlacementFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Factions);
+                }
+                case 0x4D414E49: // INAM
+                {
+                    _DeathItemLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.DeathItem);
+                }
+                case 0x49524353: // SCRI
+                {
+                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Script);
+                }
+                case 0x54444941: // AIDT
+                {
+                    _AIDTLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.AIDTDataTypeState = Creature.AIDTDataType.Has;
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.MaximumTrainingLevel);
+                }
+                case 0x44494B50: // PKID
+                {
+                    this.AIPackages = BinaryWrapperSetList<IFormIDLinkGetter<IAIPackageInternalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormIDLink<IAIPackageInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: true));
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.AIPackages);
+                }
+                case 0x5A46464B: // KFFZ
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.Animations = BinaryWrapperSetList<String>.FactoryByLazyParse(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Animations);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = Creature.DATADataType.Has;
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Luck);
+                }
+                case 0x4D414E52: // RNAM
+                {
+                    _AttackReachLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.AttackReach);
+                }
+                case 0x4D414E5A: // ZNAM
+                {
+                    _CombatStyleLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.CombatStyle);
+                }
+                case 0x4D414E54: // TNAM
+                {
+                    _TurningSpeedLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.TurningSpeed);
+                }
+                case 0x4D414E42: // BNAM
+                {
+                    _BaseScaleLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.BaseScale);
+                }
+                case 0x4D414E57: // WNAM
+                {
+                    _FootWeightLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.FootWeight);
+                }
+                case 0x304D414E: // NAM0
+                {
+                    _BloodSprayLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.BloodSpray);
+                }
+                case 0x314D414E: // NAM1
+                {
+                    _BloodDecalLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.BloodDecal);
+                }
+                case 0x52435343: // CSCR
+                {
+                    _InheritsSoundFromLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.InheritsSoundFrom);
+                }
+                case 0x54445343: // CSDT
+                case 0x49445343: // CSDI
+                case 0x43445343: // CSDC
+                {
+                    this.Sounds = UtilityTranslation.ParseRepeatedTypelessSubrecord<CreatureSoundBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null,
+                        trigger: CreatureSound_Registration.TriggeringRecordTypes,
+                        factory:  CreatureSoundBinaryWrapper.CreatureSoundFactory);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Sounds);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

@@ -141,7 +141,14 @@ namespace Mutagen.Bethesda.Generation
             Accessor dataAccessor,
             Accessor packageAccessor)
         {
-            return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor})";
+            if (typeGen.GetFieldData().HasTrigger)
+            {
+                return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor})";
+            }
+            else
+            {
+                return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}({dataAccessor})";
+            }
         }
     }
 }

@@ -1888,6 +1888,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class AIPackageTargetBinaryWrapper : IAIPackageTargetGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
+        public static AIPackageTarget_Registration Registration => AIPackageTarget_Registration.Instance;
+        protected object CommonInstance => AIPackageTargetCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageTargetGetter)rhs, include);
+
+        protected object XmlWriteTranslator => AIPackageTargetXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => AIPackageTargetBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public AIPackageTarget.ObjectTypeEnum ObjectType => (AIPackageTarget.ObjectTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
+        public Int32 Object => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        public Int32 Count => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected AIPackageTargetBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static AIPackageTargetBinaryWrapper AIPackageTargetFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new AIPackageTargetBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

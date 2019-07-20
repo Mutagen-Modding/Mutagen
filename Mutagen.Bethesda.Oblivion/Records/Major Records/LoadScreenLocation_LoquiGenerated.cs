@@ -1885,6 +1885,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class LoadScreenLocationBinaryWrapper : ILoadScreenLocationGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
+        public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
+        protected object CommonInstance => LoadScreenLocationCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenLocationGetter)rhs, include);
+
+        protected object XmlWriteTranslator => LoadScreenLocationXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => LoadScreenLocationBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Direct
+        public IFormIDLinkGetter<IPlaceInternalGetter> Direct_Property => new FormIDLink<IPlaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IPlaceInternalGetter Direct => default;
+        #endregion
+        #region Indirect
+        public IFormIDLinkGetter<IWorldspaceInternalGetter> Indirect_Property => new FormIDLink<IWorldspaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IWorldspaceInternalGetter Indirect => default;
+        #endregion
+        public P2Int16 GridPoint => P2Int16BinaryTranslation.Read(_data.Span.Slice(8, 4));
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected LoadScreenLocationBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static LoadScreenLocationBinaryWrapper LoadScreenLocationFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new LoadScreenLocationBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

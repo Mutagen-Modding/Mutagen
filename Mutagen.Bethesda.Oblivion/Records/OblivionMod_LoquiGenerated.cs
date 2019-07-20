@@ -14812,6 +14812,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Clothes);
                 }
+                case 0x544E4F43: // CONT
+                {
+                    this._Containers = GroupBinaryWrapper<IContainerInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Containers);
+                }
+                case 0x524F4F44: // DOOR
+                {
+                    this._Doors = GroupBinaryWrapper<IDoorInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Doors);
+                }
+                case 0x52474E49: // INGR
+                {
+                    this._Ingredients = GroupBinaryWrapper<IIngredientInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ingredients);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

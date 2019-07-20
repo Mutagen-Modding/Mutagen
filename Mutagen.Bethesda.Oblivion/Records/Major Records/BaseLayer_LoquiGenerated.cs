@@ -2091,6 +2091,93 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class BaseLayerBinaryWrapper : IBaseLayerInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
+        public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
+        protected virtual object CommonInstance => BaseLayerCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBaseLayerInternalGetter)rhs, include);
+
+        protected virtual object XmlWriteTranslator => BaseLayerXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected virtual object BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        private int? _BTXTLocation;
+        public BaseLayer.BTXTDataType BTXTDataTypeState { get; private set; }
+        #region Texture
+        private int _TextureLocation => _BTXTLocation.Value + 0x0;
+        private bool _Texture_IsSet => _BTXTLocation.HasValue;
+        public IFormIDLinkGetter<ILandTextureInternalGetter> Texture_Property => _Texture_IsSet ? new FormIDLink<ILandTextureInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TextureLocation, 4)))) : FormIDLink<ILandTextureInternalGetter>.Empty;
+        public ILandTextureInternalGetter Texture => default;
+        #endregion
+        #region Quadrant
+        private int _QuadrantLocation => _BTXTLocation.Value + 0x4;
+        private bool _Quadrant_IsSet => _BTXTLocation.HasValue;
+        public AlphaLayer.QuadrantEnum Quadrant => _Quadrant_IsSet ? (AlphaLayer.QuadrantEnum)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_QuadrantLocation, 2)) : default;
+        #endregion
+        #region LayerNumber
+        private int _LayerNumberLocation => _BTXTLocation.Value + 0x6;
+        private bool _LayerNumber_IsSet => _BTXTLocation.HasValue;
+        public UInt16 LayerNumber => _LayerNumber_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_LayerNumberLocation, 2)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected BaseLayerBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static BaseLayerBinaryWrapper BaseLayerFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new BaseLayerBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public virtual TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x54585442: // BTXT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.LayerNumber) return TryGet<int?>.Failure;
+                    _BTXTLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.BTXTDataTypeState = BaseLayer.BTXTDataType.Has;
+                    return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.LayerNumber);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

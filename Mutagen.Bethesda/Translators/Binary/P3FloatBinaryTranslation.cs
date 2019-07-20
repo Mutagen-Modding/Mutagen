@@ -23,5 +23,13 @@ namespace Mutagen.Bethesda.Binary
             FloatBinaryTranslation.Instance.WriteValue(writer, item.Y);
             FloatBinaryTranslation.Instance.WriteValue(writer, item.Z);
         }
+
+        public static P3Float Read(ReadOnlySpan<byte> span)
+        {
+            return new P3Float(
+                SpanExt.GetFloat(span),
+                SpanExt.GetFloat(span.Slice(4)),
+                SpanExt.GetFloat(span.Slice(8)));
+        }
     }
 }

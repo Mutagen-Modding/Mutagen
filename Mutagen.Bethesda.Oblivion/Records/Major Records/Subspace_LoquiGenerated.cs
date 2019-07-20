@@ -2179,6 +2179,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class SubspaceBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        ISubspaceInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Subspace_Registration.Instance;
+        public new static Subspace_Registration Registration => Subspace_Registration.Instance;
+        protected override object CommonInstance => SubspaceCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISubspaceInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => SubspaceXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SubspaceBinaryWriteTranslation.Instance;
+
+        private int? _DNAMLocation;
+        public Subspace.DNAMDataType DNAMDataTypeState { get; private set; }
+        #region X
+        private int _XLocation => _DNAMLocation.Value + 0x0;
+        private bool _X_IsSet => _DNAMLocation.HasValue;
+        public Single X => _X_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_XLocation, 4)) : default;
+        #endregion
+        #region Y
+        private int _YLocation => _DNAMLocation.Value + 0x4;
+        private bool _Y_IsSet => _DNAMLocation.HasValue;
+        public Single Y => _Y_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_YLocation, 4)) : default;
+        #endregion
+        #region Z
+        private int _ZLocation => _DNAMLocation.Value + 0x8;
+        private bool _Z_IsSet => _DNAMLocation.HasValue;
+        public Single Z => _Z_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ZLocation, 4)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected SubspaceBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static SubspaceBinaryWrapper SubspaceFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new SubspaceBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4D414E44: // DNAM
+                {
+                    _DNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DNAMDataTypeState = Subspace.DNAMDataType.Has;
+                    return TryGet<int?>.Succeed((int)Subspace_FieldIndex.Z);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion
