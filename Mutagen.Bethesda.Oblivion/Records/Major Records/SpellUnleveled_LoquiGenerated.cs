@@ -2798,22 +2798,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _SPITLocation;
         public SpellUnleveled.SPITDataType SPITDataTypeState { get; private set; }
         #region Type
-        private int _TypeLocation => _SPITLocation.Value + 0;
+        private int _TypeLocation => _SPITLocation.Value + 0x0;
         private bool _Type_IsSet => _SPITLocation.HasValue;
         public Spell.SpellType Type => _Type_IsSet ? (Spell.SpellType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 4)) : default;
         #endregion
         #region Cost
-        private int _CostLocation => _SPITLocation.Value + 4;
+        private int _CostLocation => _SPITLocation.Value + 0x4;
         private bool _Cost_IsSet => _SPITLocation.HasValue;
         public UInt32 Cost => _Cost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CostLocation, 4)) : default;
         #endregion
         #region Level
-        private int _LevelLocation => _SPITLocation.Value + 8;
+        private int _LevelLocation => _SPITLocation.Value + 0x8;
         private bool _Level_IsSet => _SPITLocation.HasValue;
         public Spell.SpellLevel Level => _Level_IsSet ? (Spell.SpellLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_LevelLocation, 4)) : default;
         #endregion
         #region Flag
-        private int _FlagLocation => _SPITLocation.Value + 12;
+        private int _FlagLocation => _SPITLocation.Value + 0xC;
         private bool _Flag_IsSet => _SPITLocation.HasValue;
         public Spell.SpellFlag Flag => _Flag_IsSet ? (Spell.SpellFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagLocation, 4)) : default;
         #endregion

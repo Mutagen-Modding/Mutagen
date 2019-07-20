@@ -2524,22 +2524,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _DATALocation;
         public Armor.DATADataType DATADataTypeState { get; private set; }
         #region ArmorValue
-        private int _ArmorValueLocation => _DATALocation.Value + 0;
+        private int _ArmorValueLocation => _DATALocation.Value + 0x0;
         private bool _ArmorValue_IsSet => _DATALocation.HasValue;
-        public Single ArmorValue => GetArmorValueCustom(span: _data.Span.Slice(_ArmorValueLocation, 2));
+        public Single ArmorValue => GetArmorValueCustom(
+            span: _data,
+            location: _ArmorValueLocation,
+            expectedLength: 2,
+            package: _package);
         #endregion
         #region Value
-        private int _ValueLocation => _DATALocation.Value + 2;
+        private int _ValueLocation => _DATALocation.Value + 0x2;
         private bool _Value_IsSet => _DATALocation.HasValue;
         public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Health
-        private int _HealthLocation => _DATALocation.Value + 6;
+        private int _HealthLocation => _DATALocation.Value + 0x6;
         private bool _Health_IsSet => _DATALocation.HasValue;
         public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HealthLocation, 4)) : default;
         #endregion
         #region Weight
-        private int _WeightLocation => _DATALocation.Value + 10;
+        private int _WeightLocation => _DATALocation.Value + 0xA;
         private bool _Weight_IsSet => _DATALocation.HasValue;
         public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WeightLocation, 4)) : default;
         #endregion

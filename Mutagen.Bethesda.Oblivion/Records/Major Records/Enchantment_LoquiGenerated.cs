@@ -2844,22 +2844,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _ENITLocation;
         public Enchantment.ENITDataType ENITDataTypeState { get; private set; }
         #region Type
-        private int _TypeLocation => _ENITLocation.Value + 0;
+        private int _TypeLocation => _ENITLocation.Value + 0x0;
         private bool _Type_IsSet => _ENITLocation.HasValue;
         public Enchantment.EnchantmentType Type => _Type_IsSet ? (Enchantment.EnchantmentType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 4)) : default;
         #endregion
         #region ChargeAmount
-        private int _ChargeAmountLocation => _ENITLocation.Value + 4;
+        private int _ChargeAmountLocation => _ENITLocation.Value + 0x4;
         private bool _ChargeAmount_IsSet => _ENITLocation.HasValue;
         public UInt32 ChargeAmount => _ChargeAmount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ChargeAmountLocation, 4)) : default;
         #endregion
         #region EnchantCost
-        private int _EnchantCostLocation => _ENITLocation.Value + 8;
+        private int _EnchantCostLocation => _ENITLocation.Value + 0x8;
         private bool _EnchantCost_IsSet => _ENITLocation.HasValue;
         public UInt32 EnchantCost => _EnchantCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantCostLocation, 4)) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _ENITLocation.Value + 12;
+        private int _FlagsLocation => _ENITLocation.Value + 0xC;
         private bool _Flags_IsSet => _ENITLocation.HasValue;
         public Enchantment.Flag Flags => _Flags_IsSet ? (Enchantment.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion

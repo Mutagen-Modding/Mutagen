@@ -2805,33 +2805,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _EFITLocation;
         public Effect.EFITDataType EFITDataTypeState { get; private set; }
         #region MagicEffect
-        private int _MagicEffectLocation => _EFITLocation.Value + 0;
+        private int _MagicEffectLocation => _EFITLocation.Value + 0x0;
         private bool _MagicEffect_IsSet => _EFITLocation.HasValue;
         public IEDIDLinkGetter<IMagicEffectInternalGetter> MagicEffect_Property => _MagicEffect_IsSet ? EDIDLink<IMagicEffectInternalGetter>.FactoryFromCache(edidRecordType: new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MagicEffectLocation, 4))), targetRecordType: MagicEffect_Registration.MGEF_HEADER, package: _package) : EDIDLink<IMagicEffectInternalGetter>.Empty;
         public IMagicEffectInternalGetter MagicEffect => default;
         #endregion
         #region Magnitude
-        private int _MagnitudeLocation => _EFITLocation.Value + 4;
+        private int _MagnitudeLocation => _EFITLocation.Value + 0x4;
         private bool _Magnitude_IsSet => _EFITLocation.HasValue;
         public UInt32 Magnitude => _Magnitude_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MagnitudeLocation, 4)) : default;
         #endregion
         #region Area
-        private int _AreaLocation => _EFITLocation.Value + 8;
+        private int _AreaLocation => _EFITLocation.Value + 0x8;
         private bool _Area_IsSet => _EFITLocation.HasValue;
         public UInt32 Area => _Area_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AreaLocation, 4)) : default;
         #endregion
         #region Duration
-        private int _DurationLocation => _EFITLocation.Value + 12;
+        private int _DurationLocation => _EFITLocation.Value + 0xC;
         private bool _Duration_IsSet => _EFITLocation.HasValue;
         public UInt32 Duration => _Duration_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DurationLocation, 4)) : default;
         #endregion
         #region Type
-        private int _TypeLocation => _EFITLocation.Value + 16;
+        private int _TypeLocation => _EFITLocation.Value + 0x10;
         private bool _Type_IsSet => _EFITLocation.HasValue;
         public Effect.EffectType Type => _Type_IsSet ? (Effect.EffectType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 4)) : default;
         #endregion
         #region ActorValue
-        private int _ActorValueLocation => _EFITLocation.Value + 20;
+        private int _ActorValueLocation => _EFITLocation.Value + 0x14;
         private bool _ActorValue_IsSet => _EFITLocation.HasValue;
         public ActorValueExtended ActorValue => _ActorValue_IsSet ? (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ActorValueLocation, 4)) : default;
         #endregion

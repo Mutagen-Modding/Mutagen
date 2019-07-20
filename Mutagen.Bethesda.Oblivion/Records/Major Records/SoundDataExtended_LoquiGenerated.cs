@@ -2002,9 +2002,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object XmlWriteTranslator => SoundDataExtendedXmlWriteTranslation.Instance;
         protected override object BinaryWriteTranslator => SoundDataExtendedBinaryWriteTranslation.Instance;
 
-        public Single StaticAttenuation => GetStaticAttenuationCustom(span: _data.Slice(8));
-        public Single StopTime => GetStopTimeCustom(span: _data.Slice(10));
-        public Single StartTime => GetStartTimeCustom(span: _data.Slice(11));
+        #region StaticAttenuation
+        public Single StaticAttenuation => GetStaticAttenuationCustom(
+            span: _data,
+            location: 8,
+            expectedLength: 2,
+            package: _package);
+        #endregion
+        #region StopTime
+        public Single StopTime => GetStopTimeCustom(
+            span: _data,
+            location: 10,
+            expectedLength: 1,
+            package: _package);
+        #endregion
+        #region StartTime
+        public Single StartTime => GetStartTimeCustom(
+            span: _data,
+            location: 11,
+            expectedLength: 1,
+            package: _package);
+        #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
         protected SoundDataExtendedBinaryWrapper(

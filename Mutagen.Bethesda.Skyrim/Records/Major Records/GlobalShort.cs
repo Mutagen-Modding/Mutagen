@@ -74,9 +74,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override char TypeChar => GlobalShort.TRIGGER_CHAR;
             public override float RawFloat => (float)this.Data;
 
-            public short GetDataCustom(ReadOnlySpan<byte> span)
+            public short GetDataCustom(
+                ReadOnlySpan<byte> span,
+                int location,
+                int? expectedLength,
+                BinaryWrapperFactoryPackage package)
             {
-                return (short)span.GetFloat();
+                return (short)HeaderTranslation.ExtractSubrecordSpan(span, location, package.Meta).GetFloat();
             }
         }
     }

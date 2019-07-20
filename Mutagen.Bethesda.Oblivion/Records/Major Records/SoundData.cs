@@ -111,14 +111,22 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public virtual ReadOnlySpan<byte> Marker => SoundData.SoundDataMarker;
 
-            public ushort GetMinimumAttenuationDistanceCustom(ReadOnlySpan<byte> span)
+            public ushort GetMinimumAttenuationDistanceCustom(
+                ReadOnlySpan<byte> span,
+                int location,
+                int? expectedLength,
+                BinaryWrapperFactoryPackage package)
             {
-                return (ushort)(span[0] * SoundData.MinAttenuationDistanceMultiplier);
+                return (ushort)(span[location] * SoundData.MinAttenuationDistanceMultiplier);
             }
 
-            public ushort GetMaximumAttenuationDistanceCustom(ReadOnlySpan<byte> span)
+            public ushort GetMaximumAttenuationDistanceCustom(
+                ReadOnlySpan<byte> span,
+                int location,
+                int? expectedLength,
+                BinaryWrapperFactoryPackage package)
             {
-                return (ushort)(span[0] * SoundData.MaxAttenuationDistanceMultiplier);
+                return (ushort)(span[location] * SoundData.MaxAttenuationDistanceMultiplier);
             }
         }
     }

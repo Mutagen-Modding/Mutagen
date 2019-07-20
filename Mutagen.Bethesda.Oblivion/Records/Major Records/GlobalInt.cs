@@ -82,9 +82,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override char TypeChar => GlobalInt.TRIGGER_CHAR;
             public override float RawFloat => (float)this.Data;
 
-            public int GetDataCustom(ReadOnlySpan<byte> span)
+            public int GetDataCustom(
+                ReadOnlySpan<byte> span,
+                int location,
+                int? expectedLength,
+                BinaryWrapperFactoryPackage package)
             {
-                return (int)span.GetFloat();
+                return (int)HeaderTranslation.ExtractSubrecordSpan(span, location, package.Meta).GetFloat();
             }
         }
     }

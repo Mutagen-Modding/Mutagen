@@ -3739,22 +3739,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _DATALocation;
         public Book.DATADataType DATADataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DATALocation.Value + 0;
+        private int _FlagsLocation => _DATALocation.Value + 0x0;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Book.BookFlag Flags => _Flags_IsSet ? (Book.BookFlag)_data.Span.Slice(_FlagsLocation, 1)[0] : default;
         #endregion
         #region Teaches
-        private int _TeachesLocation => _DATALocation.Value + 1;
+        private int _TeachesLocation => _DATALocation.Value + 0x1;
         private bool _Teaches_IsSet => _DATALocation.HasValue;
         public Skill Teaches => _Teaches_IsSet ? (Skill)_data.Span.Slice(_TeachesLocation, 1)[0] : default;
         #endregion
         #region Value
-        private int _ValueLocation => _DATALocation.Value + 2;
+        private int _ValueLocation => _DATALocation.Value + 0x2;
         private bool _Value_IsSet => _DATALocation.HasValue;
         public Single Value => _Value_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Weight
-        private int _WeightLocation => _DATALocation.Value + 6;
+        private int _WeightLocation => _DATALocation.Value + 0x6;
         private bool _Weight_IsSet => _DATALocation.HasValue;
         public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WeightLocation, 4)) : default;
         #endregion

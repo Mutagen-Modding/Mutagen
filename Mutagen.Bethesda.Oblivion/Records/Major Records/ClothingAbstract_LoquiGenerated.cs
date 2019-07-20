@@ -4113,12 +4113,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _BMDTLocation;
         public ClothingAbstract.BMDTDataType BMDTDataTypeState { get; private set; }
         #region BipedFlags
-        private int _BipedFlagsLocation => _BMDTLocation.Value + 0;
+        private int _BipedFlagsLocation => _BMDTLocation.Value + 0x0;
         private bool _BipedFlags_IsSet => _BMDTLocation.HasValue;
         public BipedFlag BipedFlags => _BipedFlags_IsSet ? (BipedFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_BipedFlagsLocation, 2)) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _BMDTLocation.Value + 2;
+        private int _FlagsLocation => _BMDTLocation.Value + 0x2;
         private bool _Flags_IsSet => _BMDTLocation.HasValue;
         public EquipmentFlag Flags => _Flags_IsSet ? (EquipmentFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 2)) : default;
         #endregion

@@ -2224,12 +2224,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _DATALocation;
         public Clothing.DATADataType DATADataTypeState { get; private set; }
         #region Value
-        private int _ValueLocation => _DATALocation.Value + 0;
+        private int _ValueLocation => _DATALocation.Value + 0x0;
         private bool _Value_IsSet => _DATALocation.HasValue;
         public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Weight
-        private int _WeightLocation => _DATALocation.Value + 4;
+        private int _WeightLocation => _DATALocation.Value + 0x4;
         private bool _Weight_IsSet => _DATALocation.HasValue;
         public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WeightLocation, 4)) : default;
         #endregion

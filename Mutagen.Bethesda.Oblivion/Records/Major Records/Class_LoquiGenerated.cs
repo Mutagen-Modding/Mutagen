@@ -3488,23 +3488,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Class.DATADataType DATADataTypeState { get; private set; }
         public IReadOnlyList<ActorValue> PrimaryAttributes => BinaryWrapperNumberedList.FactoryForEnum<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 2, enumLength: 4);
         #region Specialization
-        private int _SpecializationLocation => _DATALocation.Value + 8;
+        private int _SpecializationLocation => _DATALocation.Value + 0x8;
         private bool _Specialization_IsSet => _DATALocation.HasValue;
         public Class.SpecializationFlag Specialization => _Specialization_IsSet ? (Class.SpecializationFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SpecializationLocation, 4)) : default;
         #endregion
         public IReadOnlyList<ActorValue> SecondaryAttributes => BinaryWrapperNumberedList.FactoryForEnum<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 12) : default, amount: 7, enumLength: 4);
         #region Flags
-        private int _FlagsLocation => _DATALocation.Value + 40;
+        private int _FlagsLocation => _DATALocation.Value + 0x28;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public ClassFlag Flags => _Flags_IsSet ? (ClassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion
         #region ClassServices
-        private int _ClassServicesLocation => _DATALocation.Value + 44;
+        private int _ClassServicesLocation => _DATALocation.Value + 0x2C;
         private bool _ClassServices_IsSet => _DATALocation.HasValue;
         public ClassService ClassServices => _ClassServices_IsSet ? (ClassService)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ClassServicesLocation, 4)) : default;
         #endregion
         #region Training
-        private int _TrainingLocation => _DATALocation.Value + 48;
+        private int _TrainingLocation => _DATALocation.Value + 0x30;
         private bool _Training_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Class.DATADataType.Break0);
         private IClassTrainingGetter _Training => _Training_IsSet ? ClassTrainingBinaryWrapper.ClassTrainingFactory(new BinaryMemoryReadStream(_data.Slice(_TrainingLocation)), _package) : default;
         public IClassTrainingGetter Training => _Training ?? new ClassTraining();

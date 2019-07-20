@@ -2442,22 +2442,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _SLSDLocation;
         public LocalVariable.SLSDDataType SLSDDataTypeState { get; private set; }
         #region Index
-        private int _IndexLocation => _SLSDLocation.Value + 0;
+        private int _IndexLocation => _SLSDLocation.Value + 0x0;
         private bool _Index_IsSet => _SLSDLocation.HasValue;
         public Int32 Index => _Index_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_IndexLocation, 4)) : default;
         #endregion
         #region Fluff
-        private int _FluffLocation => _SLSDLocation.Value + 4;
+        private int _FluffLocation => _SLSDLocation.Value + 0x4;
         private bool _Fluff_IsSet => _SLSDLocation.HasValue;
         public ReadOnlySpan<Byte> Fluff => _Fluff_IsSet ? _data.Span.Slice(_FluffLocation, 12).ToArray() : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _SLSDLocation.Value + 16;
+        private int _FlagsLocation => _SLSDLocation.Value + 0x10;
         private bool _Flags_IsSet => _SLSDLocation.HasValue;
         public Script.LocalVariableFlag Flags => _Flags_IsSet ? (Script.LocalVariableFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion
         #region Fluff2
-        private int _Fluff2Location => _SLSDLocation.Value + 20;
+        private int _Fluff2Location => _SLSDLocation.Value + 0x14;
         private bool _Fluff2_IsSet => _SLSDLocation.HasValue;
         public ReadOnlySpan<Byte> Fluff2 => _Fluff2_IsSet ? _data.Span.Slice(_Fluff2Location, 4).ToArray() : default;
         #endregion

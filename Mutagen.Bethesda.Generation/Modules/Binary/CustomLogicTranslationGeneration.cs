@@ -228,13 +228,13 @@ namespace Mutagen.Bethesda.Generation
             DataType dataType = null)
         {
             var fieldData = typeGen.GetFieldData();
-            string span;
             var gen = this.Module.GetTypeGeneration(typeGen.GetType());
+            string loc;
             if (fieldData.HasTrigger)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
                 fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
-                span = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
+                loc = $"_{typeGen.Name}Location.Value";
             }
             else if (!fieldData.Length.HasValue
                 && !gen.ExpectedLength(objGen, typeGen).HasValue)
@@ -243,17 +243,20 @@ namespace Mutagen.Bethesda.Generation
             }
             else if (dataType != null)
             {
+                loc = $"_{typeGen.Name}Location";
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
-                span = $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(objGen, typeGen).Value})";
             }
             else
             {
-                span = $"{dataAccessor}.Slice({currentPosition})";
+                loc = $"{currentPosition}";
             }
             using (var args = new ArgsWrapper(fg,
                 $"public {typeGen.TypeName(getter: true)} {typeGen.Name} => Get{typeGen.Name}Custom"))
             {
-                args.Add($"span: {span}");
+                args.Add($"span: {dataAccessor}");
+                args.Add($"location: {loc}");
+                args.Add($"expectedLength: {this.ExpectedLength(objGen, typeGen)?.ToString() ?? "default(int?)"}");
+                args.Add($"package: _package");
             }
             if (!fieldData.HasTrigger)
             {

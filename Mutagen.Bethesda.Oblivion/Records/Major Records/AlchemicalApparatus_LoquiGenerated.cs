@@ -3201,22 +3201,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _DATALocation;
         public AlchemicalApparatus.DATADataType DATADataTypeState { get; private set; }
         #region Type
-        private int _TypeLocation => _DATALocation.Value + 0;
+        private int _TypeLocation => _DATALocation.Value + 0x0;
         private bool _Type_IsSet => _DATALocation.HasValue;
         public AlchemicalApparatus.ApparatusType Type => _Type_IsSet ? (AlchemicalApparatus.ApparatusType)_data.Span.Slice(_TypeLocation, 1)[0] : default;
         #endregion
         #region Value
-        private int _ValueLocation => _DATALocation.Value + 1;
+        private int _ValueLocation => _DATALocation.Value + 0x1;
         private bool _Value_IsSet => _DATALocation.HasValue;
         public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Weight
-        private int _WeightLocation => _DATALocation.Value + 5;
+        private int _WeightLocation => _DATALocation.Value + 0x5;
         private bool _Weight_IsSet => _DATALocation.HasValue;
         public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WeightLocation, 4)) : default;
         #endregion
         #region Quality
-        private int _QualityLocation => _DATALocation.Value + 9;
+        private int _QualityLocation => _DATALocation.Value + 0x9;
         private bool _Quality_IsSet => _DATALocation.HasValue;
         public Single Quality => _Quality_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_QualityLocation, 4)) : default;
         #endregion

@@ -3823,27 +3823,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _DATALocation;
         public SkillRecord.DATADataType DATADataTypeState { get; private set; }
         #region Action
-        private int _ActionLocation => _DATALocation.Value + 0;
+        private int _ActionLocation => _DATALocation.Value + 0x0;
         private bool _Action_IsSet => _DATALocation.HasValue;
         public ActorValue Action => _Action_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ActionLocation, 4)) : default;
         #endregion
         #region Attribute
-        private int _AttributeLocation => _DATALocation.Value + 4;
+        private int _AttributeLocation => _DATALocation.Value + 0x4;
         private bool _Attribute_IsSet => _DATALocation.HasValue;
         public ActorValue Attribute => _Attribute_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_AttributeLocation, 4)) : default;
         #endregion
         #region Specialization
-        private int _SpecializationLocation => _DATALocation.Value + 8;
+        private int _SpecializationLocation => _DATALocation.Value + 0x8;
         private bool _Specialization_IsSet => _DATALocation.HasValue;
         public Specialization Specialization => _Specialization_IsSet ? (Specialization)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SpecializationLocation, 4)) : default;
         #endregion
         #region UseValueFirst
-        private int _UseValueFirstLocation => _DATALocation.Value + 12;
+        private int _UseValueFirstLocation => _DATALocation.Value + 0xC;
         private bool _UseValueFirst_IsSet => _DATALocation.HasValue;
         public Single UseValueFirst => _UseValueFirst_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_UseValueFirstLocation, 4)) : default;
         #endregion
         #region UseValueSecond
-        private int _UseValueSecondLocation => _DATALocation.Value + 16;
+        private int _UseValueSecondLocation => _DATALocation.Value + 0x10;
         private bool _UseValueSecond_IsSet => _DATALocation.HasValue;
         public Single UseValueSecond => _UseValueSecond_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_UseValueSecondLocation, 4)) : default;
         #endregion

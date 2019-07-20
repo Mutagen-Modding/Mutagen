@@ -2452,24 +2452,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _SCITLocation;
         public ScriptEffect.SCITDataType SCITDataTypeState { get; private set; }
         #region Script
-        private int _ScriptLocation => _SCITLocation.Value + 0;
+        private int _ScriptLocation => _SCITLocation.Value + 0x0;
         private bool _Script_IsSet => _SCITLocation.HasValue;
         public IFormIDLinkGetter<IScriptInternalGetter> Script_Property => _Script_IsSet ? new FormIDLink<IScriptInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ScriptLocation, 4)))) : FormIDLink<IScriptInternalGetter>.Empty;
         public IScriptInternalGetter Script => default;
         #endregion
         #region MagicSchool
-        private int _MagicSchoolLocation => _SCITLocation.Value + 4;
+        private int _MagicSchoolLocation => _SCITLocation.Value + 0x4;
         private bool _MagicSchool_IsSet => _SCITLocation.HasValue && !SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0);
         public MagicSchool MagicSchool => _MagicSchool_IsSet ? (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MagicSchoolLocation, 4)) : default;
         #endregion
         #region VisualEffect
-        private int _VisualEffectLocation => _SCITLocation.Value + 8;
+        private int _VisualEffectLocation => _SCITLocation.Value + 0x8;
         private bool _VisualEffect_IsSet => _SCITLocation.HasValue && !SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0);
         public IEDIDLinkGetter<IMagicEffectInternalGetter> VisualEffect_Property => _VisualEffect_IsSet ? EDIDLink<IMagicEffectInternalGetter>.FactoryFromCache(edidRecordType: new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_VisualEffectLocation, 4))), targetRecordType: MagicEffect_Registration.MGEF_HEADER, package: _package) : EDIDLink<IMagicEffectInternalGetter>.Empty;
         public IMagicEffectInternalGetter VisualEffect => default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _SCITLocation.Value + 12;
+        private int _FlagsLocation => _SCITLocation.Value + 0xC;
         private bool _Flags_IsSet => _SCITLocation.HasValue && !SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1);
         public ScriptEffect.Flag Flags => _Flags_IsSet ? (ScriptEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion

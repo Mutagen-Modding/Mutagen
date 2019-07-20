@@ -86,19 +86,31 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public override ReadOnlySpan<byte> Marker => SoundDataExtended.SoundDataExtendedMarker;
 
-            public float GetStaticAttenuationCustom(ReadOnlySpan<byte> span)
+            public float GetStaticAttenuationCustom(
+                ReadOnlySpan<byte> span,
+                int location,
+                int? expectedLength,
+                BinaryWrapperFactoryPackage package)
             {
-                return SoundDataExtendedBinaryCreateTranslation.ConvertAttenuation(BinaryPrimitives.ReadUInt16LittleEndian(span));
+                return SoundDataExtendedBinaryCreateTranslation.ConvertAttenuation(BinaryPrimitives.ReadUInt16LittleEndian(span.Slice(location)));
             }
 
-            public float GetStopTimeCustom(ReadOnlySpan<byte> span)
+            public float GetStopTimeCustom(
+                ReadOnlySpan<byte> span,
+                int location,
+                int? expectedLength,
+                BinaryWrapperFactoryPackage package)
             {
-                return SoundDataExtendedBinaryCreateTranslation.ConvertTime(span[0]);
+                return SoundDataExtendedBinaryCreateTranslation.ConvertTime(span[location]);
             }
 
-            public float GetStartTimeCustom(ReadOnlySpan<byte> span)
+            public float GetStartTimeCustom(
+                ReadOnlySpan<byte> span,
+                int location,
+                int? expectedLength,
+                BinaryWrapperFactoryPackage package)
             {
-                return SoundDataExtendedBinaryCreateTranslation.ConvertTime(span[0]);
+                return SoundDataExtendedBinaryCreateTranslation.ConvertTime(span[location]);
             }
         }
     }

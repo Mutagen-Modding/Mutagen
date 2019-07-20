@@ -4323,54 +4323,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _DATALocation;
         public MagicEffect.DATADataType DATADataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DATALocation.Value + 0;
+        private int _FlagsLocation => _DATALocation.Value + 0x0;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public MagicEffect.MagicFlag Flags => _Flags_IsSet ? (MagicEffect.MagicFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion
         #region BaseCost
-        private int _BaseCostLocation => _DATALocation.Value + 4;
+        private int _BaseCostLocation => _DATALocation.Value + 0x4;
         private bool _BaseCost_IsSet => _DATALocation.HasValue;
         public Single BaseCost => _BaseCost_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BaseCostLocation, 4)) : default;
         #endregion
         #region Unused
-        private int _UnusedLocation => _DATALocation.Value + 8;
+        private int _UnusedLocation => _DATALocation.Value + 0x8;
         private bool _Unused_IsSet => _DATALocation.HasValue;
         public ReadOnlySpan<Byte> Unused => _Unused_IsSet ? _data.Span.Slice(_UnusedLocation, 4).ToArray() : default;
         #endregion
         #region MagicSchool
-        private int _MagicSchoolLocation => _DATALocation.Value + 12;
+        private int _MagicSchoolLocation => _DATALocation.Value + 0xC;
         private bool _MagicSchool_IsSet => _DATALocation.HasValue;
         public MagicSchool MagicSchool => _MagicSchool_IsSet ? (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MagicSchoolLocation, 4)) : default;
         #endregion
         #region Resistance
-        private int _ResistanceLocation => _DATALocation.Value + 16;
+        private int _ResistanceLocation => _DATALocation.Value + 0x10;
         private bool _Resistance_IsSet => _DATALocation.HasValue;
         public Resistance Resistance => _Resistance_IsSet ? (Resistance)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ResistanceLocation, 4)) : default;
         #endregion
         #region CounterEffectCount
-        private int _CounterEffectCountLocation => _DATALocation.Value + 20;
+        private int _CounterEffectCountLocation => _DATALocation.Value + 0x14;
         private bool _CounterEffectCount_IsSet => _DATALocation.HasValue;
         public UInt32 CounterEffectCount => _CounterEffectCount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CounterEffectCountLocation, 4)) : default;
         #endregion
         #region Light
-        private int _LightLocation => _DATALocation.Value + 24;
+        private int _LightLocation => _DATALocation.Value + 0x18;
         private bool _Light_IsSet => _DATALocation.HasValue;
         public IFormIDLinkGetter<ILightInternalGetter> Light_Property => _Light_IsSet ? new FormIDLink<ILightInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 4)))) : FormIDLink<ILightInternalGetter>.Empty;
         public ILightInternalGetter Light => default;
         #endregion
         #region ProjectileSpeed
-        private int _ProjectileSpeedLocation => _DATALocation.Value + 28;
+        private int _ProjectileSpeedLocation => _DATALocation.Value + 0x1C;
         private bool _ProjectileSpeed_IsSet => _DATALocation.HasValue;
         public Single ProjectileSpeed => _ProjectileSpeed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ProjectileSpeedLocation, 4)) : default;
         #endregion
         #region EffectShader
-        private int _EffectShaderLocation => _DATALocation.Value + 32;
+        private int _EffectShaderLocation => _DATALocation.Value + 0x20;
         private bool _EffectShader_IsSet => _DATALocation.HasValue;
         public IFormIDLinkGetter<IEffectShaderInternalGetter> EffectShader_Property => _EffectShader_IsSet ? new FormIDLink<IEffectShaderInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectShaderLocation, 4)))) : FormIDLink<IEffectShaderInternalGetter>.Empty;
         public IEffectShaderInternalGetter EffectShader => default;
         #endregion
         #region SubData
-        private int _SubDataLocation => _DATALocation.Value + 36;
+        private int _SubDataLocation => _DATALocation.Value + 0x24;
         private bool _SubData_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0);
         private IMagicEffectSubDataGetter _SubData => _SubData_IsSet ? MagicEffectSubDataBinaryWrapper.MagicEffectSubDataFactory(new BinaryMemoryReadStream(_data.Slice(_SubDataLocation)), _package) : default;
         public IMagicEffectSubDataGetter SubData => _SubData ?? new MagicEffectSubData();

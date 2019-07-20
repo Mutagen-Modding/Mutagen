@@ -2145,8 +2145,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected ReadOnlyMemorySlice<byte> _data;
         protected BinaryWrapperFactoryPackage _package;
 
-        public UInt16 MinimumAttenuationDistance => GetMinimumAttenuationDistanceCustom(span: _data.Slice(0));
-        public UInt16 MaximumAttenuationDistance => GetMaximumAttenuationDistanceCustom(span: _data.Slice(1));
+        #region MinimumAttenuationDistance
+        public UInt16 MinimumAttenuationDistance => GetMinimumAttenuationDistanceCustom(
+            span: _data,
+            location: 0,
+            expectedLength: 1,
+            package: _package);
+        #endregion
+        #region MaximumAttenuationDistance
+        public UInt16 MaximumAttenuationDistance => GetMaximumAttenuationDistanceCustom(
+            span: _data,
+            location: 1,
+            expectedLength: 1,
+            package: _package);
+        #endregion
         public SByte FrequencyAdjustment => (sbyte)_data.Span.Slice(2, 1)[0];
         public SoundData.Flag Flags => (SoundData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);

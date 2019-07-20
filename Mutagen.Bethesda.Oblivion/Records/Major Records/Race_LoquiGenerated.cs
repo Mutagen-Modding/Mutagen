@@ -6704,32 +6704,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Race.DATADataType DATADataTypeState { get; private set; }
         public IReadOnlyList<ISkillBoostGetter> SkillBoosts => BinaryWrapperNumberedList.FactoryForLoqui<ISkillBoostGetter>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 7, length: 2, _package, null, SkillBoostBinaryWrapper.SkillBoostFactory);
         #region Fluff
-        private int _FluffLocation => _DATALocation.Value + 14;
+        private int _FluffLocation => _DATALocation.Value + 0xE;
         private bool _Fluff_IsSet => _DATALocation.HasValue;
         public ReadOnlySpan<Byte> Fluff => _Fluff_IsSet ? _data.Span.Slice(_FluffLocation, 4).ToArray() : default;
         #endregion
         #region MaleHeight
-        private int _MaleHeightLocation => _DATALocation.Value + 18;
+        private int _MaleHeightLocation => _DATALocation.Value + 0x12;
         private bool _MaleHeight_IsSet => _DATALocation.HasValue;
         public Single MaleHeight => _MaleHeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_MaleHeightLocation, 4)) : default;
         #endregion
         #region FemaleHeight
-        private int _FemaleHeightLocation => _DATALocation.Value + 22;
+        private int _FemaleHeightLocation => _DATALocation.Value + 0x16;
         private bool _FemaleHeight_IsSet => _DATALocation.HasValue;
         public Single FemaleHeight => _FemaleHeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FemaleHeightLocation, 4)) : default;
         #endregion
         #region MaleWeight
-        private int _MaleWeightLocation => _DATALocation.Value + 26;
+        private int _MaleWeightLocation => _DATALocation.Value + 0x1A;
         private bool _MaleWeight_IsSet => _DATALocation.HasValue;
         public Single MaleWeight => _MaleWeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_MaleWeightLocation, 4)) : default;
         #endregion
         #region FemaleWeight
-        private int _FemaleWeightLocation => _DATALocation.Value + 30;
+        private int _FemaleWeightLocation => _DATALocation.Value + 0x1E;
         private bool _FemaleWeight_IsSet => _DATALocation.HasValue;
         public Single FemaleWeight => _FemaleWeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FemaleWeightLocation, 4)) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation.Value + 34;
+        private int _FlagsLocation => _DATALocation.Value + 0x22;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Race.Flag Flags => _Flags_IsSet ? (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 2)) : default;
         #endregion
