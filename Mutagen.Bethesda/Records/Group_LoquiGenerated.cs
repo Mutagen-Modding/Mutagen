@@ -311,6 +311,7 @@ namespace Mutagen.Bethesda
         }
 
         #region Mutagen
+        public new static readonly RecordType GRUP_RECORD_TYPE = Group_Registration.TRIGGERING_RECORD_TYPE;
         public static readonly RecordType T_RecordType;
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()

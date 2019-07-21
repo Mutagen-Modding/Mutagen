@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Generation
                         if (obj.HasLoquiBaseObject)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"{this.TranslationCreateClass(obj.BaseClass)}.FillPublicElement{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
+                                $"{this.TranslationCreateClass(obj.BaseClass)}.FillPublicElement{ModuleNickname}"))
                             {
                                 args.Add("item: item");
                                 args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
