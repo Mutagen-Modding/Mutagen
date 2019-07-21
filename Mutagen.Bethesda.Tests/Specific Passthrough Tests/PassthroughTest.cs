@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Tests
                 // Do normal
                 if (Settings.TestNormal)
                 {
-                    var mod = await ImportBinary(orderedPath, modKey);
+                    var mod = await ImportBinary(this.FilePath.Path, modKey);
 
                     foreach (var record in mod.MajorRecords.Items)
                     {
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Tests
 
                 if (Settings.TestBinaryWrapper)
                 {
-                    var bytes = File.ReadAllBytes(orderedPath);
+                    var bytes = File.ReadAllBytes(this.FilePath.Path);
                     var wrapper = OblivionModBinaryWrapper.OblivionModFactory(
                         new MemorySlice<byte>(bytes),
                         modKey);
