@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
-            if (obj.GetObjectType() == ObjectType.Group && !obj.IsTopClass)
+            if (obj.GetObjectType() == ObjectType.Group)
             {
                 var grupLoqui = await obj.GetGroupLoquiType();
                 if (grupLoqui.GenericDef == null)

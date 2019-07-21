@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = WorldspaceBlock_Registration.TRIGGERING_RECORD_TYPE;
+        public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)WorldspaceSubBlock.GRUP_RECORD_TYPE;
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
