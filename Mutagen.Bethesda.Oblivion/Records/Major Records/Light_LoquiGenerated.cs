@@ -203,7 +203,6 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState |= DATADataType.Range0;
                 this.RaiseAndSetIfChanged(ref this._FalloffExponent, value, nameof(FalloffExponent));
             }
         }
@@ -217,7 +216,6 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState |= DATADataType.Range0;
                 this.RaiseAndSetIfChanged(ref this._FOV, value, nameof(FOV));
             }
         }
@@ -230,6 +228,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
                 this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
             }
         }
@@ -242,6 +241,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
                 this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
             }
         }
@@ -381,6 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new Light();
             try
             {
+                ret.DATADataTypeState |= Light.DATADataType.Break0;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElementXml(
@@ -546,7 +547,7 @@ namespace Mutagen.Bethesda.Oblivion
         public enum DATADataType
         {
             Has = 1,
-            Range0 = 2
+            Break0 = 2
         }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
@@ -770,29 +771,30 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Flags = default(Light.LightFlag);
                     }
-                    if (dataFrame.TotalLength > 24)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FalloffExponentParse))
                     {
-                        item.DATADataTypeState |= Light.DATADataType.Range0;
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single FalloffExponentParse))
-                        {
-                            item.FalloffExponent = FalloffExponentParse;
-                        }
-                        else
-                        {
-                            item.FalloffExponent = default(Single);
-                        }
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single FOVParse))
-                        {
-                            item.FOV = FOVParse;
-                        }
-                        else
-                        {
-                            item.FOV = default(Single);
-                        }
+                        item.FalloffExponent = FalloffExponentParse;
+                    }
+                    else
+                    {
+                        item.FalloffExponent = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FOVParse))
+                    {
+                        item.FOV = FOVParse;
+                    }
+                    else
+                    {
+                        item.FOV = default(Single);
+                    }
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= DATADataType.Break0;
+                        return TryGet<int?>.Succeed((int)Light_FieldIndex.FOV);
                     }
                     item.Value = dataFrame.ReadUInt32();
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -2535,44 +2537,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         fieldIndex: (int)Light_FieldIndex.Flags,
                         errorMask: errorMask);
                 }
-                if (item.DATADataTypeState.HasFlag(Light.DATADataType.Range0))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FalloffExponent),
-                            item: item.FalloffExponent,
-                            fieldIndex: (int)Light_FieldIndex.FalloffExponent,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FOV),
-                            item: item.FOV,
-                            fieldIndex: (int)Light_FieldIndex.FOV,
-                            errorMask: errorMask);
-                    }
-                }
-                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Value) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Value),
-                        item: item.Value,
-                        fieldIndex: (int)Light_FieldIndex.Value,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Weight) ?? true))
+                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
                 {
                     FloatXmlTranslation.Instance.Write(
                         node: node,
-                        name: nameof(item.Weight),
-                        item: item.Weight,
-                        fieldIndex: (int)Light_FieldIndex.Weight,
+                        name: nameof(item.FalloffExponent),
+                        item: item.FalloffExponent,
+                        fieldIndex: (int)Light_FieldIndex.FalloffExponent,
                         errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FOV),
+                        item: item.FOV,
+                        fieldIndex: (int)Light_FieldIndex.FOV,
+                        errorMask: errorMask);
+                }
+                if (!item.DATADataTypeState.HasFlag(Light.DATADataType.Break0))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Value) ?? true))
+                    {
+                        UInt32XmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.Value),
+                            item: item.Value,
+                            fieldIndex: (int)Light_FieldIndex.Value,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Weight) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.Weight),
+                            item: item.Weight,
+                            fieldIndex: (int)Light_FieldIndex.Weight,
+                            errorMask: errorMask);
+                    }
+                }
+                else
+                {
+                    node.Add(new XElement("HasDATADataType"));
                 }
             }
             if (item.Fade_IsSet
@@ -2942,7 +2948,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
-                    item.DATADataTypeState |= Light.DATADataType.Range0;
                     break;
                 case "FOV":
                     try
@@ -2995,6 +3000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState &= ~Light.DATADataType.Break0;
                     break;
                 case "Weight":
                     try
@@ -3891,19 +3897,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.Flags,
                         length: 4);
-                    if (item.DATADataTypeState.HasFlag(Light.DATADataType.Range0))
-                    {
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.FalloffExponent);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.FOV);
-                    }
-                    writer.Write(item.Value);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Weight);
+                        item: item.FalloffExponent);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FOV);
+                    if (!item.DATADataTypeState.HasFlag(Light.DATADataType.Break0))
+                    {
+                        writer.Write(item.Value);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.Weight);
+                    }
                 }
             }
             if (item.Fade_IsSet)
@@ -4102,22 +4108,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region FalloffExponent
         private int _FalloffExponentLocation => _DATALocation.Value + 0x10;
-        private bool _FalloffExponent_IsSet => _DATALocation.HasValue && DATADataTypeState.HasFlag(Light.DATADataType.Range0);
+        private bool _FalloffExponent_IsSet => _DATALocation.HasValue;
         public Single FalloffExponent => _FalloffExponent_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FalloffExponentLocation, 4)) : default;
         #endregion
         #region FOV
         private int _FOVLocation => _DATALocation.Value + 0x14;
-        private bool _FOV_IsSet => _DATALocation.HasValue && DATADataTypeState.HasFlag(Light.DATADataType.Range0);
+        private bool _FOV_IsSet => _DATALocation.HasValue;
         public Single FOV => _FOV_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FOVLocation, 4)) : default;
         #endregion
         #region Value
         private int _ValueLocation => _DATALocation.Value + 0x18;
-        private bool _Value_IsSet => _DATALocation.HasValue;
+        private bool _Value_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break0);
         public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation.Value + 0x1C;
-        private bool _Weight_IsSet => _DATALocation.HasValue;
+        private bool _Weight_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break0);
         public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WeightLocation, 4)) : default;
         #endregion
         #region Fade
@@ -4200,13 +4206,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.DATADataTypeState = Light.DATADataType.Has;
                     var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
-                    if (subLen > 16)
+                    if (subLen <= 24)
                     {
-                        this.DATADataTypeState |= Light.DATADataType.Range0;
-                    }
-                    if (subLen > 20)
-                    {
-                        this.DATADataTypeState |= Light.DATADataType.Range0;
+                        this.DATADataTypeState |= Light.DATADataType.Break0;
                     }
                     return TryGet<int?>.Succeed((int)Light_FieldIndex.Weight);
                 }

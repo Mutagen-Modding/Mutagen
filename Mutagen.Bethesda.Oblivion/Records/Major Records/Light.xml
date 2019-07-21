@@ -13,10 +13,9 @@
           <UInt32 name="Radius" />
           <Color name="Color" extraByte="true" />
           <Enum name="Flags" enumName="Light.LightFlag" byteLength="4" />
-          <Range Min="24">
-            <Float name="FalloffExponent" default="1" />
-            <Float name="FOV" default="90" />
-          </Range>
+          <Float name="FalloffExponent" default="1" />
+          <Float name="FOV" default="90" />
+          <Break />
           <UInt32 name="Value" />
           <Float name="Weight" />
         </Fields>
