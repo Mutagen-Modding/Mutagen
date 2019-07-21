@@ -21,9 +21,6 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public static ModKey ModKey;
         public static string DataPath;
         public static string BinaryPath;
-        public static TempFolder ProcessedFilesFolder;
-        public static byte[] PathGridBytes;
-        public static MutagenMemoryReadStream PathGridReader;
 
         [GlobalSetup]
         public async Task Setup()
@@ -45,27 +42,12 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             Mod = await OblivionMod.CreateFromBinary(
                 DataPath,
                 ModKey);
-
-            var passthrough = new Oblivion_Passthrough_Test(Settings, new Target()
-            {
-                Path = $"Oblivion.esm",
-                Do = true,
-                GameMode = GameMode.Oblivion,
-            });
-            ProcessedFilesFolder = await passthrough.SetupProcessedFiles();
-            using (var stream = new BinaryReadStream(passthrough.ProcessedPath(ProcessedFilesFolder)))
-            {
-                stream.Position = 0xCF614B;
-                PathGridBytes = stream.ReadBytes(0x14C7);
-            }
-            PathGridReader = new MutagenMemoryReadStream(PathGridBytes, GameMode.Oblivion);
         }
 
         [GlobalCleanup]
         public void Cleanup()
         {
             TempFolder.Dispose();
-            ProcessedFilesFolder.Dispose();
         }
 
         [Benchmark]
@@ -82,19 +64,6 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             Mod.WriteToBinary(
                 BinaryPath,
                 ModKey);
-        }
-
-        [Benchmark]
-        public PathGrid PathGridImporting()
-        {
-            PathGridReader.Position = 0;
-            var pathGrid = new PathGrid(FormKey.NULL);
-            PathGridBinaryCreateTranslation.FillBinaryPointToPointConnectionsCustomPublic(
-                new Binary.MutagenFrame(PathGridReader),
-                pathGrid,
-                masterReferences: null,
-                errorMask: null);
-            return pathGrid;
         }
     }
 }
