@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
             XElement convert = new XElement(XName.Get("Ref", LoquiGenerator.Namespace));
             convert.Add(node.Attribute("name"));
             var dir = new XElement(XName.Get("Direct", LoquiGenerator.Namespace));
-            dir.Add(new XAttribute("refName", "Bethesda.Group"));
+            dir.Add(new XAttribute("refName", "Group"));
             convert.Add(dir);
             var gen = new XElement(XName.Get("GenericSpecification", LoquiGenerator.Namespace));
             var nameKey = ObjectNamedKey.Factory(node.GetAttribute("refName"), this.ObjectGen.ProtoGen.Protocol);

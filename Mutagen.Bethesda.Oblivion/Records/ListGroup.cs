@@ -4,6 +4,7 @@ using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Folder;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
 using Noggog.Utility;
 using System;
@@ -14,7 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Oblivion
 {
     public static class ListGroupExt
     {

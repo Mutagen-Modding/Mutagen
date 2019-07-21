@@ -5,6 +5,14 @@
     <LangVersion>7.3</LangVersion>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702; 1998</NoWarn>
+    <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
+    <NoWarn>1701;1702; 1998</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj" />
     <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj" />
@@ -13,6 +21,7 @@
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Records\Group.cs" />
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
@@ -83,5 +92,8 @@
       <DependentUpon>SkyrimMajorRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="ProtocolDefinition_Skyrim.cs" />
+    <Compile Include="Records\Group_LoquiGenerated.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

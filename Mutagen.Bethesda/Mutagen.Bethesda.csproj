@@ -32,6 +32,7 @@
     <Compile Include="Translators\Binary\Binary Wrapper\BinaryWrapperSetList.cs" />
     <Compile Include="Translators\Binary\Binary Wrapper\BinaryWrapperNumberedList.cs" />
     <Compile Include="Translators\Binary\Binary Wrapper\ReadOnlySetList.cs" />
+    <Compile Include="Records\GroupAbstract.cs" /> 
     <Compile Include="Translators\Binary\LoquiBinaryWrapperTranslation.cs" />
     <Compile Include="Translators\Binary\MetaData.cs" />
     <Compile Include="Core\Utility.cs" />
@@ -75,18 +76,6 @@
     <Compile Include="Patching\Pipeline.cs" />
     <Compile Include="Locators\RecordInterest.cs" />
     <Compile Include="Locators\RecordLocator.cs" />
-    <Compile Include="Records\Group.cs">
-      <DependentUpon>Group.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Group_LoquiGenerated.cs">
-      <DependentUpon>Group.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\ListGroup.cs">
-      <DependentUpon>Group.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\ListGroup_LoquiGenerated.cs">
-      <DependentUpon>Group.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>

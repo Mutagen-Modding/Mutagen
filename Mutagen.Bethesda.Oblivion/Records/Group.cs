@@ -15,59 +15,28 @@ using Mutagen.Bethesda.Folder;
 using System.Xml.Linq;
 using DynamicData;
 using Loqui.Xml;
+using Mutagen.Bethesda.Oblivion.Internals;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class Group<T> : IEnumerable<T>, IGroupCommon<T>
-        where T : IMajorRecordInternal, IXmlItem, IBinaryItem
+    public partial class Group<T> : GroupAbstract<T>
     {
-        private Lazy<IObservableCache<T, string>> _editorIDCache;
-        public IObservableCache<T, string> ByEditorID => _editorIDCache.Value;
-
-        public IMod SourceMod { get; private set; }
-
-        public Group(IModGetter getter)
+        public Group(IModGetter getter) : base(getter)
         {
         }
 
-        public Group(IMod mod)
+        public Group(IMod mod) : base(mod)
         {
-            this.SourceMod = mod;
         }
 
-        partial void CustomCtor()
-        {
-            _editorIDCache = new Lazy<IObservableCache<T, string>>(() =>
-            {
-                return this.Items.Connect()
-                    .RemoveKey()
-                    .AddKey(m => m.EditorID)
-                    .AsObservableCache();
-            },
-            isThreadSafe: true);
-        }
-
-        public override string ToString()
-        {
-            return $"Group<{typeof(T).Name}>({this.Items.Count})";
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return _Items.Items.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _Items.GetEnumerator();
-        }
+        protected override IObservableCache<T, FormKey> InternalItems => throw new NotImplementedException();
     }
 
     public static class GroupExt
     {
-        public static readonly Group_TranslationMask<MajorRecord_TranslationMask> XmlFolderTranslationMask = new Group_TranslationMask<MajorRecord_TranslationMask>(true)
+        public static readonly Group_TranslationMask<OblivionMajorRecord_TranslationMask> XmlFolderTranslationMask = new Group_TranslationMask<OblivionMajorRecord_TranslationMask>(true)
         {
-            Items = new MaskItem<bool, MajorRecord_TranslationMask>(false, default)
+            Items = new MaskItem<bool, OblivionMajorRecord_TranslationMask>(false, default)
         };
         public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
 
@@ -77,7 +46,7 @@ namespace Mutagen.Bethesda
             string name,
             ErrorMaskBuilder errorMask,
             int index)
-            where T : MajorRecord, ILoquiObject<T>, IFormKey, IXmlItem, IBinaryItem
+            where T : OblivionMajorRecord, ILoquiObject<T>, IFormKey, IXmlItem, IBinaryItem
         {
             using (errorMask?.PushIndex(index))
             {
@@ -133,7 +102,7 @@ namespace Mutagen.Bethesda
             string name,
             ErrorMaskBuilder errorMask,
             int index)
-            where T : MajorRecord, ILoquiObject<T>, IFormKey, IXmlItem, IBinaryItem
+            where T : OblivionMajorRecord, ILoquiObject<T>, IFormKey, IXmlItem, IBinaryItem
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             using (errorMask?.PushIndex(index))
@@ -177,11 +146,6 @@ namespace Mutagen.Bethesda
 
     namespace Internals
     {
-        public static class GroupRecordTypeGetter<T>
-        {
-            public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)LoquiRegistration.GetRegister(typeof(T)).ClassType.GetField(Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER).GetValue(null);
-        }
-
         public partial class GroupBinaryWriteTranslation
         {
             static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
@@ -189,7 +153,7 @@ namespace Mutagen.Bethesda
                 IGroupGetter<T> item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
-                where T : IMajorRecordInternalGetter, IXmlItem, IBinaryItem
+                where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer,
@@ -211,77 +175,16 @@ namespace Mutagen.Bethesda
 
         public partial class GroupBinaryWrapper<T>
         {
-            private class GroupMajorRecordCacheWrapper : IReadOnlyCache<T, FormKey>
-            {
-                private readonly IReadOnlyDictionary<FormKey, int> _locs;
-                private readonly ReadOnlyMemorySlice<byte> _data;
-                private readonly BinaryWrapperFactoryPackage _package;
-
-                public GroupMajorRecordCacheWrapper(
-                    IReadOnlyDictionary<FormKey, int> locs,
-                    ReadOnlyMemorySlice<byte> data,
-                    BinaryWrapperFactoryPackage package)
-                {
-                    this._locs = locs;
-                    this._data = data;
-                    this._package = package;
-                }
-
-                public T this[FormKey key] => ConstructWrapper(this._locs[key]);
-
-                public int Count => this._locs.Count;
-
-                public IEnumerable<FormKey> Keys => this._locs.Keys;
-
-                public IEnumerable<T> Values => this.Select(kv => kv.Value);
-
-                public bool ContainsKey(FormKey key) => this._locs.ContainsKey(key);
-
-                public IEnumerator<IKeyValue<T, FormKey>> GetEnumerator()
-                {
-                    foreach (var kv in this._locs)
-                    {
-                        yield return new KeyValue<T, FormKey>(kv.Key, ConstructWrapper(kv.Value));
-                    }
-                }
-
-                IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
-
-                private T ConstructWrapper(int pos)
-                {
-                    return LoquiBinaryWrapperTranslation<T>.Create(
-                       stream: new BinaryMemoryReadStream(this._data.Slice(pos)),
-                       package: _package,
-                       recordTypeConverter: null);
-                }
-            }
-
-            private GroupMajorRecordCacheWrapper _Items;
+            private GroupMajorRecordCacheWrapper<T> _Items;
             public IReadOnlyCache<T, FormKey> Items => _Items;
 
             partial void CustomCtor(BinaryMemoryReadStream stream, int offset)
             {
-                Dictionary<FormKey, int> locationDict = new Dictionary<FormKey, int>();
-
-                var groupMeta = _package.Meta.Group(stream.Data.Span.Slice(stream.Position - _package.Meta.GroupConstants.HeaderLength));
-                var finalPos = stream.Position + groupMeta.ContentLength;
-                // Parse MajorRecord locations
-                while (stream.Position < finalPos)
-                {
-                    MajorRecordMeta majorMeta = this._package.Meta.MajorRecord(stream.RemainingSpan);
-                    if (majorMeta.RecordType != GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE)
-                    {
-                        throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
-                    }
-                    var formKey = FormKey.Factory(_package.MasterReferences, majorMeta.FormID.Raw);
-                    locationDict.Add(formKey, stream.Position - offset);
-                    stream.Position += checked((int)majorMeta.TotalLength);
-                }
-
-                _Items = new GroupMajorRecordCacheWrapper(
-                    locs: locationDict,
-                    data: this._data,
-                    package: this._package);
+                _Items = GroupMajorRecordCacheWrapper<T>.Factory(
+                    stream,
+                    _data,
+                    _package,
+                    offset);
             }
         }
     }

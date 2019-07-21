@@ -16,8 +16,6 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda;
-using Mutagen.Bethesda.Internals;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -32,6 +30,7 @@ using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -441,14 +440,6 @@ namespace Mutagen.Bethesda.Skyrim
         private IEnumerable<ILink> GetLinks()
         {
             foreach (var item in ModHeader.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in GameSettings.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in Globals.Links)
             {
                 yield return item;
             }

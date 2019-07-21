@@ -11,12 +11,12 @@ using System.Text;
 using Loqui;
 using Noggog;
 using Noggog.Notifying;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Skyrim.Internals;
+using CSharpExt.Rx;
+using DynamicData;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -29,27 +29,26 @@ using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Internals;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class ListGroup<T> :
-        LoquiNotifyingObject,
-        IListGroup<T>,
-        ILoquiObjectSetter<ListGroup<T>>,
-        ILinkSubContainer,
-        IEquatable<ListGroup<T>>,
+    public partial class Group<T> :
+        IGroup<T>,
+        ILoquiObjectSetter<Group<T>>,
+        IEquatable<Group<T>>,
         IEqualsMask
-        where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+        where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ListGroup_Registration.Instance;
-        public static ListGroup_Registration Registration => ListGroup_Registration.Instance;
-        protected object CommonInstance => ListGroupCommon.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
+        public static Group_Registration Registration => Group_Registration.Instance;
+        protected object CommonInstance => GroupCommon.Instance;
         object ILoquiObject.CommonInstance => this.CommonInstance;
 
         #region Ctor
-        public ListGroup()
+        protected Group()
         {
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
@@ -57,20 +56,12 @@ namespace Mutagen.Bethesda
         partial void CustomCtor();
         #endregion
 
-        static ListGroup()
+        static Group()
         {
             T_RecordType = (RecordType)LoquiRegistration.GetRegister(typeof(T)).GetType().GetField(Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER).GetValue(null);
             
         }
 
-        #region ContainedRecordType
-        private String _ContainedRecordType;
-        public String ContainedRecordType
-        {
-            get => this._ContainedRecordType;
-            protected set => this.RaiseAndSetIfReferenceChanged(ref this._ContainedRecordType, value, nameof(ContainedRecordType));
-        }
-        #endregion
         #region GroupType
         private GroupTypeEnum _GroupType;
         public GroupTypeEnum GroupType
@@ -93,29 +84,26 @@ namespace Mutagen.Bethesda
                 }
             }
         }
-        ReadOnlySpan<Byte> IListGroupGetter<T>.LastModified => this.LastModified;
+        ReadOnlySpan<Byte> IGroupGetter<T>.LastModified => this.LastModified;
         #endregion
         #region Items
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceList<T> _Items = new SourceList<T>();
-        public ISourceList<T> Items => _Items;
+        private readonly SourceSetCache<T, FormKey> _Items = new SourceSetCache<T, FormKey>((item) => item.FormKey);
+        public ISourceSetCache<T, FormKey> Items => _Items;
         #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<T> IListGroup<T>.Items => _Items;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<T> IListGroupGetter<T>.Items => _Items;
+        ISourceCache<T, FormKey> IGroup<T>.Items => _Items;
+        IReadOnlyCache<T, FormKey> IGroupGetter<T>.Items => _Items;
         #endregion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IListGroupGetter<T>)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
         #region To String
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ListGroupMixIn.ToString(
+            GroupMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -126,32 +114,46 @@ namespace Mutagen.Bethesda
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IListGroupGetter<T> rhs)) return false;
-            return ((ListGroupCommon)this.CommonInstance).Equals(this, rhs);
+            if (!(obj is IGroupGetter<T> rhs)) return false;
+            return ((GroupCommon)this.CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(ListGroup<T> obj)
+        public bool Equals(Group<T> obj)
         {
-            return ((ListGroupCommon)this.CommonInstance).Equals(this, obj);
+            return ((GroupCommon)this.CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ListGroupCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((GroupCommon)this.CommonInstance).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
-        protected object XmlWriteTranslator => ListGroupXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         #region Xml Create
         [DebuggerStepThrough]
-        public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
+        public static Group<T> CreateFromXml<T_TranslMask>(
             XElement node,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
+            MissingCreate missing = MissingCreate.New,
+            Group_TranslationMask<T_TranslMask> translationMask = null)
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            return CreateFromXml(
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
+            XElement node,
+            out Group_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            Group_TranslationMask<T_TranslMask> translationMask = null,
             MissingCreate missing = MissingCreate.New)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-            where T_TranslMask : class, ITranslationMask, new()
+            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = CreateFromXml(
@@ -159,11 +161,11 @@ namespace Mutagen.Bethesda
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
-            errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static ListGroup<T> CreateFromXml(
+        public static Group<T> CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -173,23 +175,17 @@ namespace Mutagen.Bethesda
             {
                 case MissingCreate.New:
                 case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new ListGroup<T>() : null;
+                    if (node == null) return missing == MissingCreate.New ? new Group<T>() : null;
                     break;
                 default:
                     break;
             }
-            var ret = new ListGroup<T>();
+            var ret = new Group<T>();
             try
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ListGroupXmlCreateTranslation<T>.FillPublicElementXml(
+                    GroupXmlCreateTranslation<T>.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -205,13 +201,26 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
+        public static Group<T> CreateFromXml<T_TranslMask>(
             string path,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New,
+            Group_TranslationMask<T_TranslMask> translationMask = null)
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            return CreateFromXml(
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
+            string path,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            Group_TranslationMask<T_TranslMask> translationMask = null,
             MissingCreate missing = MissingCreate.New)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-            where T_TranslMask : class, ITranslationMask, new()
+            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return CreateFromXml(
@@ -221,13 +230,13 @@ namespace Mutagen.Bethesda
                 translationMask: translationMask);
         }
 
-        public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
+        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             string path,
             ErrorMaskBuilder errorMask,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            Group_TranslationMask<T_TranslMask> translationMask = null,
             MissingCreate missing = MissingCreate.New)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-            where T_TranslMask : class, ITranslationMask, new()
+            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return CreateFromXml(
@@ -237,13 +246,26 @@ namespace Mutagen.Bethesda
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
+        public static Group<T> CreateFromXml<T_TranslMask>(
             Stream stream,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New,
+            Group_TranslationMask<T_TranslMask> translationMask = null)
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            var node = XDocument.Load(stream).Root;
+            return CreateFromXml(
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
+            Stream stream,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            Group_TranslationMask<T_TranslMask> translationMask = null,
             MissingCreate missing = MissingCreate.New)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-            where T_TranslMask : class, ITranslationMask, new()
+            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -253,13 +275,13 @@ namespace Mutagen.Bethesda
                 translationMask: translationMask);
         }
 
-        public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
+        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             Stream stream,
             ErrorMaskBuilder errorMask,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            Group_TranslationMask<T_TranslMask> translationMask = null,
             MissingCreate missing = MissingCreate.New)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-            where T_TranslMask : class, ITranslationMask, new()
+            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -270,32 +292,17 @@ namespace Mutagen.Bethesda
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            ListGroup<T> item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
-            switch ((ListGroup_FieldIndex)index)
+            switch ((Group_FieldIndex)index)
             {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                case ListGroup_FieldIndex.GroupType:
-                case ListGroup_FieldIndex.LastModified:
-                case ListGroup_FieldIndex.Items:
+                case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.Items:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -304,42 +311,30 @@ namespace Mutagen.Bethesda
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in Items.Items.WhereCastable<T, ILinkContainer>()
-                .SelectMany((f) => f.Links))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
-            where M : IMod
-        {
-            foreach (var item in Items.Items.WhereCastable<T, ILinkSubContainer>())
-            {
-                item.Link(
-                    modList,
-                    sourceMod);
-            }
-        }
-
         #endregion
 
         #region Binary Translation
-        protected object BinaryWriteTranslator => ListGroupBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         #region Binary Create
         [DebuggerStepThrough]
-        public static async Task<(ListGroup<T> Object, ListGroup_ErrorMask<T_ErrMask> ErrorMask)> CreateFromBinary_Error<T_ErrMask>(
+        public static async Task<Group<T>> CreateFromBinary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            return await CreateFromBinary(
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static async Task<(Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask)> CreateFromBinary_Error<T_ErrMask>(
             MutagenFrame frame,
             MasterReferences masterReferences,
             bool doMasks = true)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = await CreateFromBinary(
@@ -347,16 +342,16 @@ namespace Mutagen.Bethesda
                 frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            return (ret, ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder));
+            return (ret, Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder));
         }
 
-        public static async Task<ListGroup<T>> CreateFromBinary(
+        public static async Task<Group<T>> CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            var ret = new ListGroup<T>();
+            var ret = new Group<T>();
             await UtilityAsyncTranslation.GroupParse(
                 record: ret,
                 frame: frame,
@@ -371,12 +366,12 @@ namespace Mutagen.Bethesda
         #endregion
 
         protected static void FillBinaryStructs(
-            ListGroup<T> item,
+            Group<T> item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            ListGroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeCustomPublic(
+            GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustomPublic(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
@@ -404,7 +399,7 @@ namespace Mutagen.Bethesda
         }
 
         protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
-            ListGroup<T> item,
+            Group<T> item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -421,17 +416,16 @@ namespace Mutagen.Bethesda
                         await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<T>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: T_RecordType,
-                            thread: true,
                             item: item.Items,
-                            fieldIndex: (int)ListGroup_FieldIndex.Items,
+                            fieldIndex: (int)Group_FieldIndex.Items,
                             lengthLength: 4,
                             errorMask: errorMask,
-                            transl: async (MutagenFrame r, ErrorMaskBuilder listErrMask) =>
+                            transl: (MutagenFrame r, ErrorMaskBuilder dictSubMask) =>
                             {
-                                return await LoquiBinaryAsyncTranslation<T>.Instance.Parse(
+                                return LoquiBinaryAsyncTranslation<T>.Instance.Parse(
                                     frame: r,
-                                    errorMask: listErrMask,
-                                    masterReferences: masterReferences).ConfigureAwait(false);
+                                    errorMask: dictSubMask,
+                                    masterReferences: masterReferences);
                             }).ConfigureAwait(false);
                         return TryGet<int?>.Failure;
                     }
@@ -443,31 +437,31 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        public ListGroup<T> Copy<T_CopyMask>(
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null)
-            where T_CopyMask : class, new()
+        public Group<T> Copy<T_CopyMask>(
+            Group_CopyMask<T_CopyMask> copyMask = null,
+            Group<T> def = null)
+            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
         {
-            return ListGroup<T>.Copy(
+            return Group<T>.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static ListGroup<T> Copy<T_CopyMask>(
-            ListGroup<T> item,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null)
-            where T_CopyMask : class, new()
+        public static Group<T> Copy<T_CopyMask>(
+            Group<T> item,
+            Group_CopyMask<T_CopyMask> copyMask = null,
+            Group<T> def = null)
+            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
         {
-            ListGroup<T> ret;
-            if (item.GetType().Equals(typeof(ListGroup<T>)))
+            Group<T> ret;
+            if (item.GetType().Equals(typeof(Group<T>)))
             {
-                ret = new ListGroup<T>();
+                ret = new Group<T>();
             }
             else
             {
-                ret = (ListGroup<T>)System.Activator.CreateInstance(item.GetType());
+                ret = (Group<T>)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom<T_CopyMask>(
                 item,
@@ -476,20 +470,20 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static ListGroup<T> Copy_ToLoqui<T_CopyMask>(
-            ListGroup<T> item,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null)
-            where T_CopyMask : class, new()
+        public static Group<T> Copy_ToLoqui<T_CopyMask>(
+            Group<T> item,
+            Group_CopyMask<T_CopyMask> copyMask = null,
+            Group<T> def = null)
+            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
         {
-            ListGroup<T> ret;
-            if (item.GetType().Equals(typeof(ListGroup<T>)))
+            Group<T> ret;
+            if (item.GetType().Equals(typeof(Group<T>)))
             {
-                ret = new ListGroup<T>() as ListGroup<T>;
+                ret = new Group<T>() as Group<T>;
             }
             else
             {
-                ret = (ListGroup<T>)System.Activator.CreateInstance(item.GetType());
+                ret = (Group<T>)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom<T_CopyMask>(
                 item,
@@ -498,10 +492,10 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public void CopyFieldsFrom<T_CopyMask>(ListGroup<T> rhs)
-            where T_CopyMask : class, new()
+        public void CopyFieldsFrom<T_CopyMask>(Group<T> rhs)
+            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
         {
-            this.CopyFieldsFrom<ErrorMaskPlaceholder, T_CopyMask>(
+            this.CopyFieldsFrom<SkyrimMajorRecord_ErrorMask, T_CopyMask>(
                 rhs: rhs,
                 def: null,
                 doMasks: false,
@@ -510,12 +504,12 @@ namespace Mutagen.Bethesda
         }
 
         public void CopyFieldsFrom<T_CopyMask>(
-            ListGroup<T> rhs,
-            ListGroup_CopyMask<T_CopyMask> copyMask,
-            ListGroup<T> def = null)
-            where T_CopyMask : class, new()
+            Group<T> rhs,
+            Group_CopyMask<T_CopyMask> copyMask,
+            Group<T> def = null)
+            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
         {
-            this.CopyFieldsFrom<ErrorMaskPlaceholder, T_CopyMask>(
+            this.CopyFieldsFrom<SkyrimMajorRecord_ErrorMask, T_CopyMask>(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
@@ -524,32 +518,32 @@ namespace Mutagen.Bethesda
         }
 
         public void CopyFieldsFrom<T_ErrMask, T_CopyMask>(
-            ListGroup<T> rhs,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null,
+            Group<T> rhs,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            Group_CopyMask<T_CopyMask> copyMask = null,
+            Group<T> def = null,
             bool doMasks = true)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-            where T_CopyMask : class, new()
+            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ListGroupCommon.CopyFieldsFrom<T, T_CopyMask>(
+            GroupCommon.CopyFieldsFrom<T, T_CopyMask>(
                 item: this,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
-            errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         public void CopyFieldsFrom<T_CopyMask>(
-            ListGroup<T> rhs,
+            Group<T> rhs,
             ErrorMaskBuilder errorMask,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null)
-            where T_CopyMask : class, new()
+            Group_CopyMask<T_CopyMask> copyMask = null,
+            Group<T> def = null)
+            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
         {
-            ListGroupCommon.CopyFieldsFrom<T, T_CopyMask>(
+            GroupCommon.CopyFieldsFrom<T, T_CopyMask>(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -559,19 +553,17 @@ namespace Mutagen.Bethesda
 
         protected void SetNthObject(ushort index, object obj)
         {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+            Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                    throw new ArgumentException($"Tried to set at a derivative index {index}");
-                case ListGroup_FieldIndex.GroupType:
+                case Group_FieldIndex.GroupType:
                     this.GroupType = (GroupTypeEnum)obj;
                     break;
-                case ListGroup_FieldIndex.LastModified:
+                case Group_FieldIndex.LastModified:
                     this.LastModified = (Byte[])obj;
                     break;
-                case ListGroup_FieldIndex.Items:
-                    this._Items.SetTo((SourceSetList<T>)obj);
+                case Group_FieldIndex.Items:
+                    this.Items.SetTo((IEnumerable<T>)(SourceSetCache<T, FormKey>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -580,35 +572,35 @@ namespace Mutagen.Bethesda
 
         public void Clear()
         {
-            ListGroupCommon.Instance.Clear(this);
+            GroupCommon.Instance.Clear(this);
         }
 
-        public static ListGroup<T> Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public static Group<T> Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new ListGroup<T>();
+            var ret = new Group<T>();
             foreach (var pair in fields)
             {
-                CopyInInternal_ListGroup(ret, pair);
+                CopyInInternal_Group(ret, pair);
             }
             return ret;
         }
 
-        protected static void CopyInInternal_ListGroup(ListGroup<T> obj, KeyValuePair<ushort, object> pair)
+        protected static void CopyInInternal_Group(Group<T> obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out ListGroup_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out Group_FieldIndex enu))
             {
                 throw new ArgumentException($"Unknown index: {pair.Key}");
             }
             switch (enu)
             {
-                case ListGroup_FieldIndex.GroupType:
+                case Group_FieldIndex.GroupType:
                     obj.GroupType = (GroupTypeEnum)pair.Value;
                     break;
-                case ListGroup_FieldIndex.LastModified:
+                case Group_FieldIndex.LastModified:
                     obj.LastModified = (Byte[])pair.Value;
                     break;
-                case ListGroup_FieldIndex.Items:
-                    obj._Items.SetTo((SourceSetList<T>)pair.Value);
+                case Group_FieldIndex.Items:
+                    obj.Items.SetTo((IEnumerable<T>)(SourceSetCache<T, FormKey>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -618,35 +610,31 @@ namespace Mutagen.Bethesda
     #endregion
 
     #region Interface
-    public partial interface IListGroup<T> :
-        IListGroupGetter<T>,
-        ILoquiObjectSetter<IListGroup<T>>
-        where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+    public partial interface IGroup<T> :
+        IGroupGetter<T>,
+        ILoquiObjectSetter<IGroup<T>>
+        where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
     {
         new GroupTypeEnum GroupType { get; set; }
 
         new Byte[] LastModified { get; set; }
 
-        new IList<T> Items { get; }
+        new ISourceCache<T, FormKey> Items { get; }
         void CopyFieldsFrom<T_CopyMask>(
-            ListGroup<T> rhs,
+            Group<T> rhs,
             ErrorMaskBuilder errorMask = null,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null)
-            where T_CopyMask : class, new();
+            Group_CopyMask<T_CopyMask> copyMask = null,
+            Group<T> def = null)
+            where T_CopyMask : SkyrimMajorRecord_CopyMask, new();
     }
 
-    public partial interface IListGroupGetter<out T> :
+    public partial interface IGroupGetter<out T> :
         ILoquiObject,
-        ILoquiObject<IListGroupGetter<T>>,
+        ILoquiObject<IGroupGetter<T>>,
         IXmlItem,
         IBinaryItem
-        where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
     {
-        #region ContainedRecordType
-        String ContainedRecordType { get; }
-
-        #endregion
         #region GroupType
         GroupTypeEnum GroupType { get; }
 
@@ -656,7 +644,7 @@ namespace Mutagen.Bethesda
 
         #endregion
         #region Items
-        IReadOnlyList<T> Items { get; }
+        IReadOnlyCache<T, FormKey> Items { get; }
         #endregion
 
     }
@@ -664,46 +652,46 @@ namespace Mutagen.Bethesda
     #endregion
 
     #region Common MixIn
-    public static class ListGroupMixIn
+    public static class GroupMixIn
     {
-        public static void Clear<T>(this IListGroup<T> item)
-            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+        public static void Clear<T>(this IGroup<T> item)
+            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
         {
-            ((ListGroupCommon)item.CommonInstance).Clear(item: item);
+            ((GroupCommon)item.CommonInstance).Clear(item: item);
         }
 
-        public static ListGroup_Mask<bool> GetEqualsMask<T>(
-            this IListGroupGetter<T> item,
-            IListGroupGetter<T> rhs,
+        public static Group_Mask<bool> GetEqualsMask<T>(
+            this IGroupGetter<T> item,
+            IGroupGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((ListGroupCommon)item.CommonInstance).GetEqualsMask(
+            return ((GroupCommon)item.CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString<T>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             string name = null,
-            ListGroup_Mask<bool> printMask = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            Group_Mask<bool> printMask = null)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((ListGroupCommon)item.CommonInstance).ToString(
+            return ((GroupCommon)item.CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString<T>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             FileGeneration fg,
             string name = null,
-            ListGroup_Mask<bool> printMask = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            Group_Mask<bool> printMask = null)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            ((ListGroupCommon)item.CommonInstance).ToString(
+            ((GroupCommon)item.CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -711,31 +699,31 @@ namespace Mutagen.Bethesda
         }
 
         public static bool HasBeenSet<T>(
-            this IListGroupGetter<T> item,
-            ListGroup_Mask<bool?> checkMask)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            this IGroupGetter<T> item,
+            Group_Mask<bool?> checkMask)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((ListGroupCommon)item.CommonInstance).HasBeenSet(
+            return ((GroupCommon)item.CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ListGroup_Mask<bool> GetHasBeenSetMask<T>(this IListGroupGetter<T> item)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        public static Group_Mask<bool> GetHasBeenSetMask<T>(this IGroupGetter<T> item)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            var ret = new ListGroup_Mask<bool>();
-            ((ListGroupCommon)item.CommonInstance).FillHasBeenSetMask(
+            var ret = new Group_Mask<bool>();
+            ((GroupCommon)item.CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals<T>(
-            this IListGroupGetter<T> item,
-            IListGroupGetter<T> rhs)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            this IGroupGetter<T> item,
+            IGroupGetter<T> rhs)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((ListGroupCommon)item.CommonInstance).Equals(
+            return ((GroupCommon)item.CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -745,74 +733,71 @@ namespace Mutagen.Bethesda
 
 }
 
-namespace Mutagen.Bethesda.Internals
+namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum ListGroup_FieldIndex
+    public enum Group_FieldIndex
     {
-        ContainedRecordType = 0,
-        GroupType = 1,
-        LastModified = 2,
-        Items = 3,
+        GroupType = 0,
+        LastModified = 1,
+        Items = 2,
     }
     #endregion
 
     #region Registration
-    public class ListGroup_Registration : ILoquiRegistration
+    public class Group_Registration : ILoquiRegistration
     {
-        public static readonly ListGroup_Registration Instance = new ListGroup_Registration();
+        public static readonly Group_Registration Instance = new Group_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Bethesda.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Bethesda.ProtocolKey,
-            msgID: 12,
+            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
+            msgID: 16,
             version: 0);
 
-        public const string GUID = "e0e6ef16-9b52-4726-ba0d-7e7c9b0277cb";
+        public const string GUID = "566180fb-53c9-4677-ad3d-c6c55fef91bf";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(ListGroup_Mask<>);
+        public static readonly Type MaskType = typeof(Group_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ListGroup_ErrorMask<>);
+        public static readonly Type ErrorMaskType = typeof(Group_ErrorMask<>);
 
-        public static readonly Type ClassType = typeof(ListGroup<>);
+        public static readonly Type ClassType = typeof(Group<>);
 
-        public static readonly Type GetterType = typeof(IListGroupGetter<>);
+        public static readonly Type GetterType = typeof(IGroupGetter<>);
 
         public static readonly Type InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IListGroup<>);
+        public static readonly Type SetterType = typeof(IGroup<>);
 
         public static readonly Type InternalSetterType = null;
 
-        public static readonly Type CommonType = typeof(ListGroupCommon);
+        public static readonly Type CommonType = typeof(GroupCommon);
 
-        public const string FullName = "Mutagen.Bethesda.ListGroup";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.Group";
 
-        public const string Name = "ListGroup";
+        public const string Name = "Group";
 
-        public const string Namespace = "Mutagen.Bethesda";
+        public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
         public const byte GenericCount = 1;
 
-        public static readonly Type GenericRegistrationType = typeof(ListGroup_Registration<>);
+        public static readonly Type GenericRegistrationType = typeof(Group_Registration<>);
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
             switch (str.Upper)
             {
-                case "CONTAINEDRECORDTYPE":
-                    return (ushort)ListGroup_FieldIndex.ContainedRecordType;
                 case "GROUPTYPE":
-                    return (ushort)ListGroup_FieldIndex.GroupType;
+                    return (ushort)Group_FieldIndex.GroupType;
                 case "LASTMODIFIED":
-                    return (ushort)ListGroup_FieldIndex.LastModified;
+                    return (ushort)Group_FieldIndex.LastModified;
                 case "ITEMS":
-                    return (ushort)ListGroup_FieldIndex.Items;
+                    return (ushort)Group_FieldIndex.Items;
                 default:
                     return null;
             }
@@ -820,14 +805,12 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+            Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.Items:
-                    return true;
-                case ListGroup_FieldIndex.ContainedRecordType:
-                case ListGroup_FieldIndex.GroupType:
-                case ListGroup_FieldIndex.LastModified:
+                case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.Items:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -836,14 +819,12 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+            Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.Items:
-                    return true;
-                case ListGroup_FieldIndex.ContainedRecordType:
-                case ListGroup_FieldIndex.GroupType:
-                case ListGroup_FieldIndex.LastModified:
+                case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.Items:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -852,13 +833,12 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+            Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                case ListGroup_FieldIndex.GroupType:
-                case ListGroup_FieldIndex.LastModified:
-                case ListGroup_FieldIndex.Items:
+                case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.Items:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -867,16 +847,14 @@ namespace Mutagen.Bethesda.Internals
 
         public static string GetNthName(ushort index)
         {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+            Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                    return "ContainedRecordType";
-                case ListGroup_FieldIndex.GroupType:
+                case Group_FieldIndex.GroupType:
                     return "GroupType";
-                case ListGroup_FieldIndex.LastModified:
+                case Group_FieldIndex.LastModified:
                     return "LastModified";
-                case ListGroup_FieldIndex.Items:
+                case Group_FieldIndex.Items:
                     return "Items";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -885,14 +863,12 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+            Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                    return true;
-                case ListGroup_FieldIndex.GroupType:
-                case ListGroup_FieldIndex.LastModified:
-                case ListGroup_FieldIndex.Items:
+                case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.Items:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -901,14 +877,12 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool IsProtected(ushort index)
         {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+            Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                    return true;
-                case ListGroup_FieldIndex.GroupType:
-                case ListGroup_FieldIndex.LastModified:
-                case ListGroup_FieldIndex.Items:
+                case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.Items:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -917,12 +891,12 @@ namespace Mutagen.Bethesda.Internals
 
         public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
 
-        public static readonly Type XmlWriteTranslation = typeof(ListGroupXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(GroupXmlWriteTranslation);
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
-        public const int NumStructFields = 3;
+        public const int NumStructFields = 2;
         public const int NumTypedFields = 1;
-        public static readonly Type BinaryWriteTranslation = typeof(ListGroupBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(GroupBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -954,24 +928,22 @@ namespace Mutagen.Bethesda.Internals
 
     }
 
-    public class ListGroup_Registration<T> : ListGroup_Registration
-        where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+    public class Group_Registration<T> : Group_Registration
+        where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
     {
-        public static readonly ListGroup_Registration<T> GenericInstance = new ListGroup_Registration<T>();
+        public static readonly Group_Registration<T> GenericInstance = new Group_Registration<T>();
 
         public new static Type GetNthType(ushort index)
         {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+            Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                    return typeof(String);
-                case ListGroup_FieldIndex.GroupType:
+                case Group_FieldIndex.GroupType:
                     return typeof(GroupTypeEnum);
-                case ListGroup_FieldIndex.LastModified:
+                case Group_FieldIndex.LastModified:
                     return typeof(Byte[]);
-                case ListGroup_FieldIndex.Items:
-                    return typeof(SourceSetList<T>);
+                case Group_FieldIndex.Items:
+                    return typeof(SourceSetCache<T, FormKey>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -981,23 +953,23 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Common
-    public partial class ListGroupCommon
+    public partial class GroupCommon
     {
-        public static readonly ListGroupCommon Instance = new ListGroupCommon();
+        public static readonly GroupCommon Instance = new GroupCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom<T, T_CopyMask>(
-            ListGroup<T> item,
-            ListGroup<T> rhs,
-            ListGroup<T> def,
+            Group<T> item,
+            Group<T> rhs,
+            Group<T> def,
             ErrorMaskBuilder errorMask,
-            ListGroup_CopyMask<T_CopyMask> copyMask)
-            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
-            where T_CopyMask : class, new()
+            Group_CopyMask<T_CopyMask> copyMask)
+            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
         {
             if (copyMask?.GroupType ?? true)
             {
-                errorMask?.PushIndex((int)ListGroup_FieldIndex.GroupType);
+                errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
                 try
                 {
                     item.GroupType = rhs.GroupType;
@@ -1014,7 +986,7 @@ namespace Mutagen.Bethesda.Internals
             }
             if (copyMask?.LastModified ?? true)
             {
-                errorMask?.PushIndex((int)ListGroup_FieldIndex.LastModified);
+                errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
                 try
                 {
                     item.LastModified = rhs.LastModified;
@@ -1031,18 +1003,18 @@ namespace Mutagen.Bethesda.Internals
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {
-                errorMask?.PushIndex((int)ListGroup_FieldIndex.Items);
+                errorMask?.PushIndex((int)Group_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetToWithDefault<T, T>(
-                        rhs: rhs.Items,
-                        def: def?.Items,
-                        converter: (r, d) =>
+                    item.Items.SetToWithDefault(
+                        rhs.Items,
+                        def?.Items,
+                        (r, d) =>
                         {
                             switch (copyMask?.Items.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
-                                    return (T)r;
+                                    return r;
                                 case CopyOption.MakeCopy:
                                     return LoquiRegistration.GetCopyFunc<T>()(r, null, d);
                                 default:
@@ -1066,8 +1038,8 @@ namespace Mutagen.Bethesda.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear<T>(IListGroup<T> item)
-            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+        public virtual void Clear<T>(IGroup<T> item)
+            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
         {
             ClearPartial();
             item.GroupType = default(GroupTypeEnum);
@@ -1075,14 +1047,14 @@ namespace Mutagen.Bethesda.Internals
             item.Items.Clear();
         }
 
-        public ListGroup_Mask<bool> GetEqualsMask<T>(
-            IListGroupGetter<T> item,
-            IListGroupGetter<T> rhs,
+        public Group_Mask<bool> GetEqualsMask<T>(
+            IGroupGetter<T> item,
+            IGroupGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            var ret = new ListGroup_Mask<bool>();
-            ((ListGroupCommon)item.CommonInstance).FillEqualsMask(
+            var ret = new Group_Mask<bool>();
+            ((GroupCommon)item.CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1091,27 +1063,27 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public void FillEqualsMask<T>(
-            IListGroupGetter<T> item,
-            IListGroupGetter<T> rhs,
-            ListGroup_Mask<bool> ret,
+            IGroupGetter<T> item,
+            IGroupGetter<T> rhs,
+            Group_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             if (rhs == null) return;
-            ret.ContainedRecordType = string.Equals(item.ContainedRecordType, rhs.ContainedRecordType);
             ret.GroupType = item.GroupType == rhs.GroupType;
             ret.LastModified = MemoryExtensions.SequenceEqual(item.LastModified, rhs.LastModified);
-            ret.Items = item.Items.CollectionEqualsHelper(
-                rhs.Items,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
-                include);
+            ret.Items = EqualsMaskHelper.CacheEqualsHelper(
+                lhs: item.Items,
+                rhs: rhs.Items,
+                maskGetter: (k, l, r) => l.GetEqualsMask(r, include),
+                include: include);
         }
 
         public string ToString<T>(
-            IListGroupGetter<T> item,
+            IGroupGetter<T> item,
             string name = null,
-            ListGroup_Mask<bool> printMask = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            Group_Mask<bool> printMask = null)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             var fg = new FileGeneration();
             ToString(
@@ -1123,19 +1095,19 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public void ToString<T>(
-            IListGroupGetter<T> item,
+            IGroupGetter<T> item,
             FileGeneration fg,
             string name = null,
-            ListGroup_Mask<bool> printMask = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            Group_Mask<bool> printMask = null)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             if (name == null)
             {
-                fg.AppendLine($"ListGroup<{typeof(T).Name}> =>");
+                fg.AppendLine($"Group<{typeof(T).Name}> =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ListGroup<{typeof(T).Name}>) =>");
+                fg.AppendLine($"{name} (Group<{typeof(T).Name}>) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1149,15 +1121,11 @@ namespace Mutagen.Bethesda.Internals
         }
 
         protected static void ToStringFields<T>(
-            IListGroupGetter<T> item,
+            IGroupGetter<T> item,
             FileGeneration fg,
-            ListGroup_Mask<bool> printMask = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            Group_Mask<bool> printMask = null)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            if (printMask?.ContainedRecordType ?? true)
-            {
-                fg.AppendLine($"ContainedRecordType => {item.ContainedRecordType}");
-            }
             if (printMask?.GroupType ?? true)
             {
                 fg.AppendLine($"GroupType => {item.GroupType}");
@@ -1177,7 +1145,7 @@ namespace Mutagen.Bethesda.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem.Value?.ToString(fg, "Item");
                         }
                         fg.AppendLine("]");
                     }
@@ -1187,44 +1155,41 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public bool HasBeenSet<T>(
-            IListGroupGetter<T> item,
-            ListGroup_Mask<bool?> checkMask)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            IGroupGetter<T> item,
+            Group_Mask<bool?> checkMask)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             return true;
         }
 
         public void FillHasBeenSetMask<T>(
-            IListGroupGetter<T> item,
-            ListGroup_Mask<bool> mask)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            IGroupGetter<T> item,
+            Group_Mask<bool> mask)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            mask.ContainedRecordType = true;
             mask.GroupType = true;
             mask.LastModified = true;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(true, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetIMask())));
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, SkyrimMajorRecord_Mask<bool>>>>(true, item.Items.Values.Select((i) => new MaskItemIndexed<FormKey, bool, SkyrimMajorRecord_Mask<bool>>(i.FormKey, true, i.GetHasBeenSetMask())));
         }
 
         #region Equals and Hash
         public virtual bool Equals<T>(
-            IListGroupGetter<T> lhs,
-            IListGroupGetter<T> rhs)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            IGroupGetter<T> lhs,
+            IGroupGetter<T> rhs)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.ContainedRecordType, rhs.ContainedRecordType)) return false;
             if (lhs.GroupType != rhs.GroupType) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.LastModified, rhs.LastModified)) return false;
             if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
             return true;
         }
 
-        public virtual int GetHashCode<T>(IListGroupGetter<T> item)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        public virtual int GetHashCode<T>(IGroupGetter<T> item)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(item.ContainedRecordType).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
@@ -1239,70 +1204,82 @@ namespace Mutagen.Bethesda.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class ListGroupXmlWriteTranslation : IXmlWriteTranslator
+    public partial class GroupXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static ListGroupXmlWriteTranslation Instance = new ListGroupXmlWriteTranslation();
+        public readonly static GroupXmlWriteTranslation Instance = new GroupXmlWriteTranslation();
 
         public static void WriteToNodeXml<T>(
-            IListGroupGetter<T> item,
+            IGroupGetter<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.GroupType) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.GroupType) ?? true))
             {
                 EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
                     node: node,
                     name: nameof(item.GroupType),
                     item: item.GroupType,
-                    fieldIndex: (int)ListGroup_FieldIndex.GroupType,
+                    fieldIndex: (int)Group_FieldIndex.GroupType,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.LastModified) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.LastModified) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LastModified),
                     item: item.LastModified,
-                    fieldIndex: (int)ListGroup_FieldIndex.LastModified,
+                    fieldIndex: (int)Group_FieldIndex.LastModified,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.Items) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.Items) ?? true))
             {
-                ListXmlTranslation<T>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Items),
-                    item: item.Items,
-                    fieldIndex: (int)ListGroup_FieldIndex.Items,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ListGroup_FieldIndex.Items),
-                    transl: (XElement subNode, T subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        var loquiItem = subItem;
-                        ((IXmlWriteTranslator)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
+                try
+                {
+                    errorMask?.PushIndex((int)Group_FieldIndex.Items);
+                    KeyedDictXmlTranslation<FormKey, T>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Items),
+                        items: item.Items.Values,
+                        translationMask: translationMask,
+                        errorMask: errorMask,
+                        valTransl: (XElement subNode, T subItem, ErrorMaskBuilder dictSubMask, TranslationCrystal dictTranslMask) =>
+                        {
+                            var loquiItem = subItem;
+                            ((SkyrimMajorRecordXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
+                                item: loquiItem,
+                                node: subNode,
+                                name: null,
+                                errorMask: dictSubMask,
+                                translationMask: dictTranslMask);
+                        });
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
 
         public void Write<T>(
             XElement node,
-            IListGroupGetter<T> item,
+            IGroupGetter<T> item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.ListGroup");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Group");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.ListGroup");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Group");
             }
             WriteToNodeXml(
                 item: item,
@@ -1323,18 +1300,18 @@ namespace Mutagen.Bethesda.Internals
 
         public void Write<T>(
             XElement node,
-            IListGroupGetter<T> item,
+            IGroupGetter<T> item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
             string name = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             try
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IListGroupGetter<T>)item,
+                    item: (IGroupGetter<T>)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1353,13 +1330,13 @@ namespace Mutagen.Bethesda.Internals
 
     }
 
-    public partial class ListGroupXmlCreateTranslation<T>
-        where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+    public partial class GroupXmlCreateTranslation<T>
+        where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
     {
-        public readonly static ListGroupXmlCreateTranslation<T> Instance = new ListGroupXmlCreateTranslation<T>();
+        public readonly static GroupXmlCreateTranslation<T> Instance = new GroupXmlCreateTranslation<T>();
 
         public static void FillPublicXml(
-            IListGroup<T> item,
+            IGroup<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1368,7 +1345,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ListGroupXmlCreateTranslation<T>.FillPublicElementXml(
+                    GroupXmlCreateTranslation<T>.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1384,7 +1361,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void FillPublicElementXml(
-            IListGroup<T> item,
+            IGroup<T> item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1395,7 +1372,7 @@ namespace Mutagen.Bethesda.Internals
                 case "GroupType":
                     try
                     {
-                        errorMask?.PushIndex((int)ListGroup_FieldIndex.GroupType);
+                        errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
                         if (EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
                             node: node,
                             item: out GroupTypeEnum GroupTypeParse,
@@ -1421,7 +1398,7 @@ namespace Mutagen.Bethesda.Internals
                 case "LastModified":
                     try
                     {
-                        errorMask?.PushIndex((int)ListGroup_FieldIndex.LastModified);
+                        errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
                         if (ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             item: out Byte[] LastModifiedParse,
@@ -1445,32 +1422,13 @@ namespace Mutagen.Bethesda.Internals
                     }
                     break;
                 case "Items":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ListGroup_FieldIndex.Items);
-                        if (ListXmlTranslation<T>.Instance.Parse(
-                            node: node,
-                            enumer: out var ItemsItem,
-                            transl: LoquiXmlTranslation<T>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Items.SetTo(ItemsItem);
-                        }
-                        else
-                        {
-                            item.Items.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    KeyedDictXmlTranslation<FormKey, T>.Instance.ParseInto(
+                        node: node,
+                        item: item.Items,
+                        fieldIndex: (int)Group_FieldIndex.Items,
+                        errorMask: errorMask,
+                        translationMask: translationMask,
+                        valTransl: LoquiXmlTranslation<T>.Instance.Parse);
                     break;
                 default:
                     break;
@@ -1480,39 +1438,39 @@ namespace Mutagen.Bethesda.Internals
     }
 
     #region Xml Write Mixins
-    public static class ListGroupXmlTranslationMixIn
+    public static class GroupXmlTranslationMixIn
     {
         public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             XElement node,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
+            out Group_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            Group_TranslationMask<T_TranslMask> translationMask = null,
             string name = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-            where T_TranslMask : class, ITranslationMask, new()
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
+            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             string path,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            Group_TranslationMask<T_TranslMask> translationMask = null,
             bool doMasks = true,
             string name = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-            where T_TranslMask : class, ITranslationMask, new()
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
+            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1526,13 +1484,13 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml<T>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
             bool doMasks = true,
             string name = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             var node = new XElement("topnode");
             WriteToXml<T>(
@@ -1545,15 +1503,15 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             Stream stream,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            Group_TranslationMask<T_TranslMask> translationMask = null,
             bool doMasks = true,
             string name = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-            where T_TranslMask : class, ITranslationMask, new()
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
+            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1567,13 +1525,13 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml<T>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
             bool doMasks = true,
             string name = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             var node = new XElement("topnode");
             WriteToXml<T>(
@@ -1586,14 +1544,14 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml<T>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
             string name = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1602,15 +1560,15 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             XElement node,
             string name = null,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-            where T_TranslMask : class, ITranslationMask, new()
+            Group_TranslationMask<T_TranslMask> translationMask = null)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
+            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1619,14 +1577,14 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml<T, T_TranslMask>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             string path,
             string name = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
-            where T_TranslMask : class, ITranslationMask, new()
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = new XElement("topnode");
-            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1636,14 +1594,14 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml<T, T_TranslMask>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             Stream stream,
             string name = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
-            where T_TranslMask : class, ITranslationMask, new()
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = new XElement("topnode");
-            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1658,40 +1616,37 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Mask
-    public class ListGroup_Mask<T> : IMask<T>, IEquatable<ListGroup_Mask<T>>
+    public class Group_Mask<T> : IMask<T>, IEquatable<Group_Mask<T>>
     {
         #region Ctors
-        public ListGroup_Mask()
+        public Group_Mask()
         {
         }
 
-        public ListGroup_Mask(T initialValue)
+        public Group_Mask(T initialValue)
         {
-            this.ContainedRecordType = initialValue;
             this.GroupType = initialValue;
             this.LastModified = initialValue;
-            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>>>>(initialValue, null);
+            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, SkyrimMajorRecord_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
-        public T ContainedRecordType;
         public T GroupType;
         public T LastModified;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>>>> Items;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, SkyrimMajorRecord_Mask<T>>>> Items;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is ListGroup_Mask<T> rhs)) return false;
+            if (!(obj is Group_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(ListGroup_Mask<T> rhs)
+        public bool Equals(Group_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.ContainedRecordType, rhs.ContainedRecordType)) return false;
             if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
             if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
             if (!object.Equals(this.Items, rhs.Items)) return false;
@@ -1700,7 +1655,6 @@ namespace Mutagen.Bethesda.Internals
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.ContainedRecordType?.GetHashCode());
             ret = ret.CombineHashCode(this.GroupType?.GetHashCode());
             ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
             ret = ret.CombineHashCode(this.Items?.GetHashCode());
@@ -1712,7 +1666,6 @@ namespace Mutagen.Bethesda.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.ContainedRecordType)) return false;
             if (!eval(this.GroupType)) return false;
             if (!eval(this.LastModified)) return false;
             if (this.Items != null)
@@ -1723,7 +1676,7 @@ namespace Mutagen.Bethesda.Internals
                     foreach (var item in this.Items.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (!item.Specific.AllEqual(eval)) return false;
+                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
                     }
                 }
             }
@@ -1732,37 +1685,29 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         #region Translate
-        public ListGroup_Mask<R> Translate<R>(Func<T, R> eval)
+        public Group_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new ListGroup_Mask<R>();
+            var ret = new Group_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(ListGroup_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(Group_Mask<R> obj, Func<T, R> eval)
         {
-            obj.ContainedRecordType = eval(this.ContainedRecordType);
             obj.GroupType = eval(this.GroupType);
             obj.LastModified = eval(this.LastModified);
             if (Items != null)
             {
-                obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>>>>();
+                obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>>>>();
                 obj.Items.Overall = eval(this.Items.Overall);
                 if (Items.Specific != null)
                 {
-                    List<MaskItemIndexed<R, IMask<R>>> l = new List<MaskItemIndexed<R, IMask<R>>>();
+                    List<MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>>> l = new List<MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>>>();
                     obj.Items.Specific = l;
-                    foreach (var item in Items.Specific.WithIndex())
+                    foreach (var item in Items.Specific)
                     {
-                        MaskItemIndexed<R, IMask<R>> mask = default;
-                        mask.Index = item.Index;
-                        if (item.Item != null)
-                        {
-                            mask = new MaskItemIndexed<R, IMask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            throw new NotImplementedException();
-                        }
-                        l.Add(mask);
+                        MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>> mask = default(MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>>);
+                        throw new NotImplementedException();
                     }
                 }
             }
@@ -1782,23 +1727,19 @@ namespace Mutagen.Bethesda.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(ListGroup_Mask<bool> printMask = null)
+        public string ToString(Group_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, ListGroup_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Group_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(ListGroup_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(Group_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.ContainedRecordType ?? true)
-                {
-                    fg.AppendLine($"ContainedRecordType => {ContainedRecordType}");
-                }
                 if (printMask?.GroupType ?? true)
                 {
                     fg.AppendLine($"GroupType => {GroupType}");
@@ -1824,7 +1765,7 @@ namespace Mutagen.Bethesda.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    subItem?.ToString(fg);
+                                    fg.AppendLine($" => {subItem}");
                                 }
                                 fg.AppendLine("]");
                             }
@@ -1839,8 +1780,8 @@ namespace Mutagen.Bethesda.Internals
 
     }
 
-    public class ListGroup_ErrorMask<T_ErrMask> : IErrorMask, IErrorMask<ListGroup_ErrorMask<T_ErrMask>>
-        where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+    public class Group_ErrorMask<T_ErrMask> : IErrorMask, IErrorMask<Group_ErrorMask<T_ErrMask>>
+        where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
     {
         #region Members
         public Exception Overall { get; set; }
@@ -1856,7 +1797,6 @@ namespace Mutagen.Bethesda.Internals
                 return _warnings;
             }
         }
-        public Exception ContainedRecordType;
         public Exception GroupType;
         public Exception LastModified;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>> Items;
@@ -1865,16 +1805,14 @@ namespace Mutagen.Bethesda.Internals
         #region IErrorMask
         public object GetNthMask(int index)
         {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+            Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                    return ContainedRecordType;
-                case ListGroup_FieldIndex.GroupType:
+                case Group_FieldIndex.GroupType:
                     return GroupType;
-                case ListGroup_FieldIndex.LastModified:
+                case Group_FieldIndex.LastModified:
                     return LastModified;
-                case ListGroup_FieldIndex.Items:
+                case Group_FieldIndex.Items:
                     return Items;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1883,19 +1821,16 @@ namespace Mutagen.Bethesda.Internals
 
         public void SetNthException(int index, Exception ex)
         {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+            Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                    this.ContainedRecordType = ex;
-                    break;
-                case ListGroup_FieldIndex.GroupType:
+                case Group_FieldIndex.GroupType:
                     this.GroupType = ex;
                     break;
-                case ListGroup_FieldIndex.LastModified:
+                case Group_FieldIndex.LastModified:
                     this.LastModified = ex;
                     break;
-                case ListGroup_FieldIndex.Items:
+                case Group_FieldIndex.Items:
                     this.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>(ex, null);
                     break;
                 default:
@@ -1905,19 +1840,16 @@ namespace Mutagen.Bethesda.Internals
 
         public void SetNthMask(int index, object obj)
         {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+            Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                    this.ContainedRecordType = (Exception)obj;
-                    break;
-                case ListGroup_FieldIndex.GroupType:
+                case Group_FieldIndex.GroupType:
                     this.GroupType = (Exception)obj;
                     break;
-                case ListGroup_FieldIndex.LastModified:
+                case Group_FieldIndex.LastModified:
                     this.LastModified = (Exception)obj;
                     break;
-                case ListGroup_FieldIndex.Items:
+                case Group_FieldIndex.Items:
                     this.Items = (MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>)obj;
                     break;
                 default:
@@ -1928,7 +1860,6 @@ namespace Mutagen.Bethesda.Internals
         public bool IsInError()
         {
             if (Overall != null) return true;
-            if (ContainedRecordType != null) return true;
             if (GroupType != null) return true;
             if (LastModified != null) return true;
             if (Items != null) return true;
@@ -1946,7 +1877,7 @@ namespace Mutagen.Bethesda.Internals
 
         public void ToString(FileGeneration fg)
         {
-            fg.AppendLine("ListGroup_ErrorMask =>");
+            fg.AppendLine("Group_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1966,7 +1897,6 @@ namespace Mutagen.Bethesda.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            fg.AppendLine($"ContainedRecordType => {ContainedRecordType}");
             fg.AppendLine($"GroupType => {GroupType}");
             fg.AppendLine($"LastModified => {LastModified}");
             fg.AppendLine("Items =>");
@@ -1984,7 +1914,7 @@ namespace Mutagen.Bethesda.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            subItem?.ToString(fg);
+                            fg.AppendLine($" => {subItem}");
                         }
                         fg.AppendLine("]");
                     }
@@ -1995,16 +1925,15 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         #region Combine
-        public ListGroup_ErrorMask<T_ErrMask> Combine(ListGroup_ErrorMask<T_ErrMask> rhs)
+        public Group_ErrorMask<T_ErrMask> Combine(Group_ErrorMask<T_ErrMask> rhs)
         {
-            var ret = new ListGroup_ErrorMask<T_ErrMask>();
-            ret.ContainedRecordType = this.ContainedRecordType.Combine(rhs.ContainedRecordType);
+            var ret = new Group_ErrorMask<T_ErrMask>();
             ret.GroupType = this.GroupType.Combine(rhs.GroupType);
             ret.LastModified = this.LastModified.Combine(rhs.LastModified);
             ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, T_ErrMask>>(this.Items.Specific.And(rhs.Items.Specific)));
             return ret;
         }
-        public static ListGroup_ErrorMask<T_ErrMask> Combine(ListGroup_ErrorMask<T_ErrMask> lhs, ListGroup_ErrorMask<T_ErrMask> rhs)
+        public static Group_ErrorMask<T_ErrMask> Combine(Group_ErrorMask<T_ErrMask> lhs, Group_ErrorMask<T_ErrMask> rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2012,31 +1941,29 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         #region Factory
-        public static ListGroup_ErrorMask<T_ErrMask> Factory(ErrorMaskBuilder errorMask)
+        public static Group_ErrorMask<T_ErrMask> Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            return new ListGroup_ErrorMask<T_ErrMask>();
+            return new Group_ErrorMask<T_ErrMask>();
         }
         #endregion
 
     }
-    public class ListGroup_CopyMask<T_CopyMask>
-        where T_CopyMask : class, new()
+    public class Group_CopyMask<T_CopyMask>
+        where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
     {
-        public ListGroup_CopyMask()
+        public Group_CopyMask()
         {
         }
 
-        public ListGroup_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        public Group_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
-            this.ContainedRecordType = defaultOn;
             this.GroupType = defaultOn;
             this.LastModified = defaultOn;
             this.Items = new MaskItem<CopyOption, T_CopyMask>(deepCopyOption, default);
         }
 
         #region Members
-        public bool ContainedRecordType;
         public bool GroupType;
         public bool LastModified;
         public MaskItem<CopyOption, T_CopyMask> Items;
@@ -2044,25 +1971,23 @@ namespace Mutagen.Bethesda.Internals
 
     }
 
-    public class ListGroup_TranslationMask<T_TranslMask> : ITranslationMask
-        where T_TranslMask : class, ITranslationMask, new()
+    public class Group_TranslationMask<T_TranslMask> : ITranslationMask
+        where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
     {
         #region Members
         private TranslationCrystal _crystal;
-        public bool ContainedRecordType;
         public bool GroupType;
         public bool LastModified;
         public MaskItem<bool, T_TranslMask> Items;
         #endregion
 
         #region Ctors
-        public ListGroup_TranslationMask()
+        public Group_TranslationMask()
         {
         }
 
-        public ListGroup_TranslationMask(bool defaultOn)
+        public Group_TranslationMask(bool defaultOn)
         {
-            this.ContainedRecordType = defaultOn;
             this.GroupType = defaultOn;
             this.LastModified = defaultOn;
             this.Items = new MaskItem<bool, T_TranslMask>(defaultOn, null);
@@ -2084,7 +2009,6 @@ namespace Mutagen.Bethesda.Internals
 
         protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
-            ret.Add((ContainedRecordType, null));
             ret.Add((GroupType, null));
             ret.Add((LastModified, null));
             ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
@@ -2093,25 +2017,25 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Binary Translation
-    public partial class ListGroupBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class GroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ListGroupBinaryWriteTranslation Instance = new ListGroupBinaryWriteTranslation();
+        public readonly static GroupBinaryWriteTranslation Instance = new GroupBinaryWriteTranslation();
 
-        static partial void WriteBinaryContainedRecordTypeCustom<T>(
+        static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
             MutagenWriter writer,
-            IListGroupGetter<T> item,
+            IGroupGetter<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>;
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem;
 
-        public static void WriteBinaryContainedRecordType<T>(
+        public static void WriteBinaryContainedRecordTypeParse<T>(
             MutagenWriter writer,
-            IListGroupGetter<T> item,
+            IGroupGetter<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            WriteBinaryContainedRecordTypeCustom(
+            WriteBinaryContainedRecordTypeParseCustom(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -2119,13 +2043,13 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void Write_Embedded<T>(
-            IListGroupGetter<T> item,
+            IGroupGetter<T> item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            ListGroupBinaryWriteTranslation.WriteBinaryContainedRecordType(
+            GroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -2140,25 +2064,25 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void Write_RecordTypes<T>(
-            IListGroupGetter<T> item,
+            IGroupGetter<T> item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
-                items: item.Items,
-                fieldIndex: (int)ListGroup_FieldIndex.Items,
+                items: item.Items.Values,
+                fieldIndex: (int)Group_FieldIndex.Items,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, T subItem, ErrorMaskBuilder listErrorMask) =>
+                transl: (MutagenWriter r, T dictSubItem, ErrorMaskBuilder dictSubMask) =>
                 {
-                    var loquiItem = subItem;
-                    ((IBinaryWriteTranslator)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                    var loquiItem = dictSubItem;
+                    ((SkyrimMajorRecordBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                         item: loquiItem,
-                        writer: subWriter,
-                        errorMask: listErrorMask,
+                        writer: r,
+                        errorMask: dictSubMask,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
                 });
@@ -2166,15 +2090,15 @@ namespace Mutagen.Bethesda.Internals
 
         public void Write<T>(
             MutagenWriter writer,
-            IListGroupGetter<T> item,
+            IGroupGetter<T> item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: ListGroup_Registration.GRUP_HEADER,
+                record: Group_Registration.GRUP_HEADER,
                 type: ObjectType.Group))
             {
                 Write_Embedded(
@@ -2203,24 +2127,24 @@ namespace Mutagen.Bethesda.Internals
 
     }
 
-    public partial class ListGroupBinaryCreateTranslation<T>
-        where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+    public partial class GroupBinaryCreateTranslation<T>
+        where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
     {
-        public readonly static ListGroupBinaryCreateTranslation<T> Instance = new ListGroupBinaryCreateTranslation<T>();
+        public readonly static GroupBinaryCreateTranslation<T> Instance = new GroupBinaryCreateTranslation<T>();
 
-        static partial void FillBinaryContainedRecordTypeCustom(
+        static partial void FillBinaryContainedRecordTypeParseCustom(
             MutagenFrame frame,
-            ListGroup<T> item,
+            Group<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
-        public static void FillBinaryContainedRecordTypeCustomPublic(
+        public static void FillBinaryContainedRecordTypeParseCustomPublic(
             MutagenFrame frame,
-            ListGroup<T> item,
+            Group<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            FillBinaryContainedRecordTypeCustom(
+            FillBinaryContainedRecordTypeParseCustom(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
@@ -2230,35 +2154,35 @@ namespace Mutagen.Bethesda.Internals
     }
 
     #region Binary Write Mixins
-    public static class ListGroupBinaryTranslationMixIn
+    public static class GroupBinaryTranslationMixIn
     {
         public static void WriteToBinary<T, T_ErrMask>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             MutagenWriter writer,
             MasterReferences masterReferences,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
+            out Group_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
+            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ListGroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         public static void WriteToBinary<T>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            ((ListGroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2267,13 +2191,13 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToBinary<T, T_ErrMask>(
-            this IListGroupGetter<T> item,
+            this IGroupGetter<T> item,
             MutagenWriter writer,
             MasterReferences masterReferences)
-            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
+            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            ((ListGroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2283,6 +2207,74 @@ namespace Mutagen.Bethesda.Internals
 
     }
     #endregion
+
+    public partial class GroupBinaryWrapper<T> : IGroupGetter<T>
+        where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
+        public static Group_Registration Registration => Group_Registration.Instance;
+        protected object CommonInstance => GroupCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
+
+        protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        public ReadOnlySpan<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected GroupBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static GroupBinaryWrapper<T> GroupFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new GroupBinaryWrapper<T>(
+                bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.GroupConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillRecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                default:
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+    }
 
     #endregion
 

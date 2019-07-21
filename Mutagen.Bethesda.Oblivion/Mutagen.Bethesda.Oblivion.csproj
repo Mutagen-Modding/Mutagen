@@ -88,6 +88,18 @@
     <Compile Include="Records\Common Subrecords\WeatherChance_LoquiGenerated.cs">
       <DependentUpon>WeatherChance.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Group.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Group_LoquiGenerated.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\ListGroup.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\ListGroup_LoquiGenerated.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Activator_LoquiGenerated.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>

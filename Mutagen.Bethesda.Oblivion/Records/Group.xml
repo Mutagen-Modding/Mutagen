@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Group" objType="Group" recordType="GRUP" ctorPermission="protected" GUID="35a37d0b-4676-4dba-9410-a5972e262f5d" ID="11">
-    <Generic name="T" isLoqui="true" getterVariance="Out">
-      <Where>MajorRecord</Where>
+  <Object name="Group" objType="Group" recordType="GRUP" ctorPermission="protected" setBaseClass="false" GUID="284f4b98-0fd4-45a4-aeb7-16a9c4cbc7f0" ID="170">
+    <Generic name="T" isLoqui="true" getterVariance="Out" override="true">
+      <Where>OblivionMajorRecord</Where>
     </Generic>
     <Fields>
       <CustomLogic byteLength="4" name="ContainedRecordTypeParse" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" byteLength="4" nullable="NotNull" />
-      <Dict name="Items" lengthLength="4" asyncItems="true" hasBeenSet="False" >
+      <Dict name="Items" lengthLength="4" asyncItems="true" hasBeenSet="False">
         <KeyedValue keyAccessor="FormKey" keyType="FormKey">
           <Ref>
             <Generic>T</Generic>
@@ -17,13 +17,13 @@
       </Dict>
     </Fields>
   </Object>
-  <Object name="ListGroup" objType="Group" recordType="GRUP" GUID="e0e6ef16-9b52-4726-ba0d-7e7c9b0277cb" ID="12">
+  <Object name="ListGroup" objType="Group" recordType="GRUP" GUID="d6349d4b-0de2-4c44-bd06-d005ee62aa00" ID="171">
     <Generic name="T" isLoqui="true" getterVariance="Out" />
     <Fields>
       <String name="ContainedRecordType" derivative="true" binary="Custom" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" byteLength="4" nullable="NotNull" />
-      <List name="Items" lengthLength="4" hasBeenSet="False" asyncItems="true" thread="true" >
+      <List name="Items" lengthLength="4" hasBeenSet="False" asyncItems="true" thread="true">
         <Ref>
           <Generic>T</Generic>
         </Ref>

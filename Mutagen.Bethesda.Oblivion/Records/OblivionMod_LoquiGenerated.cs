@@ -16,8 +16,6 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using Mutagen.Bethesda;
-using Mutagen.Bethesda.Internals;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -32,6 +30,7 @@ using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -1757,229 +1756,394 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in GameSettings.Links)
+            if (GameSettings is ILinkSubContainer GameSettingslinkCont)
             {
-                yield return item;
+                foreach (var item in GameSettingslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Globals.Links)
+            if (Globals is ILinkSubContainer GlobalslinkCont)
             {
-                yield return item;
+                foreach (var item in GlobalslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Classes.Links)
+            if (Classes is ILinkSubContainer ClasseslinkCont)
             {
-                yield return item;
+                foreach (var item in ClasseslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Factions.Links)
+            if (Factions is ILinkSubContainer FactionslinkCont)
             {
-                yield return item;
+                foreach (var item in FactionslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Hairs.Links)
+            if (Hairs is ILinkSubContainer HairslinkCont)
             {
-                yield return item;
+                foreach (var item in HairslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Eyes.Links)
+            if (Eyes is ILinkSubContainer EyeslinkCont)
             {
-                yield return item;
+                foreach (var item in EyeslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Races.Links)
+            if (Races is ILinkSubContainer RaceslinkCont)
             {
-                yield return item;
+                foreach (var item in RaceslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Sounds.Links)
+            if (Sounds is ILinkSubContainer SoundslinkCont)
             {
-                yield return item;
+                foreach (var item in SoundslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Skills.Links)
+            if (Skills is ILinkSubContainer SkillslinkCont)
             {
-                yield return item;
+                foreach (var item in SkillslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in MagicEffects.Links)
+            if (MagicEffects is ILinkSubContainer MagicEffectslinkCont)
             {
-                yield return item;
+                foreach (var item in MagicEffectslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Scripts.Links)
+            if (Scripts is ILinkSubContainer ScriptslinkCont)
             {
-                yield return item;
+                foreach (var item in ScriptslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in LandTextures.Links)
+            if (LandTextures is ILinkSubContainer LandTextureslinkCont)
             {
-                yield return item;
+                foreach (var item in LandTextureslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Enchantments.Links)
+            if (Enchantments is ILinkSubContainer EnchantmentslinkCont)
             {
-                yield return item;
+                foreach (var item in EnchantmentslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Spells.Links)
+            if (Spells is ILinkSubContainer SpellslinkCont)
             {
-                yield return item;
+                foreach (var item in SpellslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Birthsigns.Links)
+            if (Birthsigns is ILinkSubContainer BirthsignslinkCont)
             {
-                yield return item;
+                foreach (var item in BirthsignslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Activators.Links)
+            if (Activators is ILinkSubContainer ActivatorslinkCont)
             {
-                yield return item;
+                foreach (var item in ActivatorslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in AlchemicalApparatus.Links)
+            if (AlchemicalApparatus is ILinkSubContainer AlchemicalApparatuslinkCont)
             {
-                yield return item;
+                foreach (var item in AlchemicalApparatuslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Armors.Links)
+            if (Armors is ILinkSubContainer ArmorslinkCont)
             {
-                yield return item;
+                foreach (var item in ArmorslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Books.Links)
+            if (Books is ILinkSubContainer BookslinkCont)
             {
-                yield return item;
+                foreach (var item in BookslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Clothes.Links)
+            if (Clothes is ILinkSubContainer ClotheslinkCont)
             {
-                yield return item;
+                foreach (var item in ClotheslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Containers.Links)
+            if (Containers is ILinkSubContainer ContainerslinkCont)
             {
-                yield return item;
+                foreach (var item in ContainerslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Doors.Links)
+            if (Doors is ILinkSubContainer DoorslinkCont)
             {
-                yield return item;
+                foreach (var item in DoorslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Ingredients.Links)
+            if (Ingredients is ILinkSubContainer IngredientslinkCont)
             {
-                yield return item;
+                foreach (var item in IngredientslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Lights.Links)
+            if (Lights is ILinkSubContainer LightslinkCont)
             {
-                yield return item;
+                foreach (var item in LightslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Miscellaneous.Links)
+            if (Miscellaneous is ILinkSubContainer MiscellaneouslinkCont)
             {
-                yield return item;
+                foreach (var item in MiscellaneouslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Statics.Links)
+            if (Statics is ILinkSubContainer StaticslinkCont)
             {
-                yield return item;
+                foreach (var item in StaticslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Grasses.Links)
+            if (Grasses is ILinkSubContainer GrasseslinkCont)
             {
-                yield return item;
+                foreach (var item in GrasseslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Trees.Links)
+            if (Trees is ILinkSubContainer TreeslinkCont)
             {
-                yield return item;
+                foreach (var item in TreeslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Flora.Links)
+            if (Flora is ILinkSubContainer FloralinkCont)
             {
-                yield return item;
+                foreach (var item in FloralinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Furnature.Links)
+            if (Furnature is ILinkSubContainer FurnaturelinkCont)
             {
-                yield return item;
+                foreach (var item in FurnaturelinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Weapons.Links)
+            if (Weapons is ILinkSubContainer WeaponslinkCont)
             {
-                yield return item;
+                foreach (var item in WeaponslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Ammo.Links)
+            if (Ammo is ILinkSubContainer AmmolinkCont)
             {
-                yield return item;
+                foreach (var item in AmmolinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in NPCs.Links)
+            if (NPCs is ILinkSubContainer NPCslinkCont)
             {
-                yield return item;
+                foreach (var item in NPCslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Creatures.Links)
+            if (Creatures is ILinkSubContainer CreatureslinkCont)
             {
-                yield return item;
+                foreach (var item in CreatureslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in LeveledCreatures.Links)
+            if (LeveledCreatures is ILinkSubContainer LeveledCreatureslinkCont)
             {
-                yield return item;
+                foreach (var item in LeveledCreatureslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in SoulGems.Links)
+            if (SoulGems is ILinkSubContainer SoulGemslinkCont)
             {
-                yield return item;
+                foreach (var item in SoulGemslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Keys.Links)
+            if (Keys is ILinkSubContainer KeyslinkCont)
             {
-                yield return item;
+                foreach (var item in KeyslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Potions.Links)
+            if (Potions is ILinkSubContainer PotionslinkCont)
             {
-                yield return item;
+                foreach (var item in PotionslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Subspaces.Links)
+            if (Subspaces is ILinkSubContainer SubspaceslinkCont)
             {
-                yield return item;
+                foreach (var item in SubspaceslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in SigilStones.Links)
+            if (SigilStones is ILinkSubContainer SigilStoneslinkCont)
             {
-                yield return item;
+                foreach (var item in SigilStoneslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in LeveledItems.Links)
+            if (LeveledItems is ILinkSubContainer LeveledItemslinkCont)
             {
-                yield return item;
+                foreach (var item in LeveledItemslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Weathers.Links)
+            if (Weathers is ILinkSubContainer WeatherslinkCont)
             {
-                yield return item;
+                foreach (var item in WeatherslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Climates.Links)
+            if (Climates is ILinkSubContainer ClimateslinkCont)
             {
-                yield return item;
+                foreach (var item in ClimateslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Regions.Links)
+            if (Regions is ILinkSubContainer RegionslinkCont)
             {
-                yield return item;
+                foreach (var item in RegionslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
             foreach (var item in Cells.Links)
             {
                 yield return item;
             }
-            foreach (var item in Worldspaces.Links)
+            if (Worldspaces is ILinkSubContainer WorldspaceslinkCont)
             {
-                yield return item;
+                foreach (var item in WorldspaceslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in DialogTopics.Links)
+            if (DialogTopics is ILinkSubContainer DialogTopicslinkCont)
             {
-                yield return item;
+                foreach (var item in DialogTopicslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Quests.Links)
+            if (Quests is ILinkSubContainer QuestslinkCont)
             {
-                yield return item;
+                foreach (var item in QuestslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in IdleAnimations.Links)
+            if (IdleAnimations is ILinkSubContainer IdleAnimationslinkCont)
             {
-                yield return item;
+                foreach (var item in IdleAnimationslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in AIPackages.Links)
+            if (AIPackages is ILinkSubContainer AIPackageslinkCont)
             {
-                yield return item;
+                foreach (var item in AIPackageslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in CombatStyles.Links)
+            if (CombatStyles is ILinkSubContainer CombatStyleslinkCont)
             {
-                yield return item;
+                foreach (var item in CombatStyleslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in LoadScreens.Links)
+            if (LoadScreens is ILinkSubContainer LoadScreenslinkCont)
             {
-                yield return item;
+                foreach (var item in LoadScreenslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in LeveledSpells.Links)
+            if (LeveledSpells is ILinkSubContainer LeveledSpellslinkCont)
             {
-                yield return item;
+                foreach (var item in LeveledSpellslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in AnimatedObjects.Links)
+            if (AnimatedObjects is ILinkSubContainer AnimatedObjectslinkCont)
             {
-                yield return item;
+                foreach (var item in AnimatedObjectslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in Waters.Links)
+            if (Waters is ILinkSubContainer WaterslinkCont)
             {
-                yield return item;
+                foreach (var item in WaterslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in EffectShaders.Links)
+            if (EffectShaders is ILinkSubContainer EffectShaderslinkCont)
             {
-                yield return item;
+                foreach (var item in EffectShaderslinkCont.Links)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }

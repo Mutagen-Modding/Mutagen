@@ -27,8 +27,6 @@ namespace Mutagen.Bethesda.Tests
             {
                 ret.NPCs.Items.Set(mod.Mod.NPCs.Items.Items);
             }
-            int wer = 23;
-            wer++;
         }
     }
 }
