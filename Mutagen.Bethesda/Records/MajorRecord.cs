@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda
         bool IMajorRecordCommon.IsCompressed
         {
             get => this.MajorRecordFlags.HasFlag(MajorRecordFlag.Compressed);
-            set => this.MajorRecordFlags.SetFlag(MajorRecordFlag.Compressed, value);
+            set => this.MajorRecordFlags = this.MajorRecordFlags.SetFlag(MajorRecordFlag.Compressed, value);
         }
 
         public static void FillBinary(
