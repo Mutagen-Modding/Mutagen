@@ -1880,7 +1880,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "Lights")
+                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "LeveledItems")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)

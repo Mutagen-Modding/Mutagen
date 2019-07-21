@@ -14836,6 +14836,142 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ingredients);
                 }
+                case 0x4847494C: // LIGH
+                {
+                    this._Lights = GroupBinaryWrapper<ILightInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Lights);
+                }
+                case 0x4353494D: // MISC
+                {
+                    this._Miscellaneous = GroupBinaryWrapper<IMiscellaneousInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Miscellaneous);
+                }
+                case 0x54415453: // STAT
+                {
+                    this._Statics = GroupBinaryWrapper<IStaticInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Statics);
+                }
+                case 0x53415247: // GRAS
+                {
+                    this._Grasses = GroupBinaryWrapper<IGrassInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Grasses);
+                }
+                case 0x45455254: // TREE
+                {
+                    this._Trees = GroupBinaryWrapper<ITreeInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Trees);
+                }
+                case 0x524F4C46: // FLOR
+                {
+                    this._Flora = GroupBinaryWrapper<IFloraInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Flora);
+                }
+                case 0x4E525546: // FURN
+                {
+                    this._Furnature = GroupBinaryWrapper<IFurnatureInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Furnature);
+                }
+                case 0x50414557: // WEAP
+                {
+                    this._Weapons = GroupBinaryWrapper<IWeaponInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weapons);
+                }
+                case 0x4F4D4D41: // AMMO
+                {
+                    this._Ammo = GroupBinaryWrapper<IAmmoInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ammo);
+                }
+                case 0x5F43504E: // NPC_
+                {
+                    this._NPCs = GroupBinaryWrapper<INPCInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.NPCs);
+                }
+                case 0x41455243: // CREA
+                {
+                    this._Creatures = GroupBinaryWrapper<ICreatureInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Creatures);
+                }
+                case 0x434C564C: // LVLC
+                {
+                    this._LeveledCreatures = GroupBinaryWrapper<ILeveledCreatureInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledCreatures);
+                }
+                case 0x4D474C53: // SLGM
+                {
+                    this._SoulGems = GroupBinaryWrapper<ISoulGemInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SoulGems);
+                }
+                case 0x4D59454B: // KEYM
+                {
+                    this._Keys = GroupBinaryWrapper<IKeyInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Keys);
+                }
+                case 0x48434C41: // ALCH
+                {
+                    this._Potions = GroupBinaryWrapper<IPotionInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Potions);
+                }
+                case 0x50534253: // SBSP
+                {
+                    this._Subspaces = GroupBinaryWrapper<ISubspaceInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Subspaces);
+                }
+                case 0x54534753: // SGST
+                {
+                    this._SigilStones = GroupBinaryWrapper<ISigilStoneInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SigilStones);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

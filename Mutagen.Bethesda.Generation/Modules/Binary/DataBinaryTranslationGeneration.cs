@@ -143,13 +143,17 @@ namespace Mutagen.Bethesda.Generation
                         generatedStart = true;
                         fg.AppendLine($"var subLen = _package.Meta.SubRecord(_data.Slice({locationAccessor})).RecordLength;");
                     }
-                    fg.AppendLine($"if (subLen > {passedLen})");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"this.{dataType.StateName} |= {objGen.ObjectName}.{dataType.EnumName}.Range{item.RangeIndex};");
-                    }
                 }
                 passedLen += typeGen.GetPassedAmount(objGen, item.Field);
+            }
+            for (int i = 0; i < dataType.RangeIndices.Count; i++)
+            {
+                var range = dataType.RangeIndices[i];
+                fg.AppendLine($"if (subLen > {range.DataSetSizeMin})");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"this.{dataType.StateName} |= {objGen.ObjectName}.{dataType.EnumName}.Range{i};");
+                }
             }
         }
 
