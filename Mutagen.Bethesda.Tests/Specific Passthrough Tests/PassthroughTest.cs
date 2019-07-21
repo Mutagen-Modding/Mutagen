@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            if (!Settings.ReuseCaches || !File.Exists(orderedPath))
+            if (Settings.ReorderRecords && (!Settings.ReuseCaches || !File.Exists(orderedPath)))
             {
                 try
                 {
@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Tests
             if (!Settings.ReuseCaches || !File.Exists(alignedPath))
             {
                 ModRecordAligner.Align(
-                    inputPath: orderedPath,
+                    inputPath: Settings.ReorderRecords ? orderedPath : uncompressedPath,
                     outputPath: alignedPath,
                     gameMode: this.GameMode,
                     alignmentRules: GetAlignmentRules(),

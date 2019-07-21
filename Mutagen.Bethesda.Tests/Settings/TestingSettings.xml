@@ -15,6 +15,7 @@
   <Object name="PassthroughSettings" GUID="b6e04291-8a1a-4f43-baa4-0f5fc5074d8b" ID="3">
     <Fields>
       <Bool name="ReuseCaches" />
+      <Bool name="ReorderRecords" />
       <Bool name="DeleteCachesAfter" default="true" />
       <Bool name="TestNormal" />
       <Bool name="TestBinaryWrapper" />

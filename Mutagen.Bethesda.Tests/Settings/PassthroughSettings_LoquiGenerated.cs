@@ -55,6 +55,14 @@ namespace Mutagen.Bethesda.Tests
             set => this.RaiseAndSetIfChanged(ref this._ReuseCaches, value, nameof(ReuseCaches));
         }
         #endregion
+        #region ReorderRecords
+        private Boolean _ReorderRecords;
+        public Boolean ReorderRecords
+        {
+            get => this._ReorderRecords;
+            set => this.RaiseAndSetIfChanged(ref this._ReorderRecords, value, nameof(ReorderRecords));
+        }
+        #endregion
         #region DeleteCachesAfter
         private Boolean _DeleteCachesAfter;
         public readonly static Boolean _DeleteCachesAfter_Default = true;
@@ -391,6 +399,7 @@ namespace Mutagen.Bethesda.Tests
             switch ((PassthroughSettings_FieldIndex)index)
             {
                 case PassthroughSettings_FieldIndex.ReuseCaches:
+                case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
                 case PassthroughSettings_FieldIndex.TestBinaryWrapper:
@@ -516,6 +525,9 @@ namespace Mutagen.Bethesda.Tests
                 case PassthroughSettings_FieldIndex.ReuseCaches:
                     this.ReuseCaches = (Boolean)obj;
                     break;
+                case PassthroughSettings_FieldIndex.ReorderRecords:
+                    this.ReorderRecords = (Boolean)obj;
+                    break;
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                     this.DeleteCachesAfter = (Boolean)obj;
                     break;
@@ -562,6 +574,9 @@ namespace Mutagen.Bethesda.Tests
                 case PassthroughSettings_FieldIndex.ReuseCaches:
                     obj.ReuseCaches = (Boolean)pair.Value;
                     break;
+                case PassthroughSettings_FieldIndex.ReorderRecords:
+                    obj.ReorderRecords = (Boolean)pair.Value;
+                    break;
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                     obj.DeleteCachesAfter = (Boolean)pair.Value;
                     break;
@@ -591,6 +606,8 @@ namespace Mutagen.Bethesda.Tests
     {
         new Boolean ReuseCaches { get; set; }
 
+        new Boolean ReorderRecords { get; set; }
+
         new Boolean DeleteCachesAfter { get; set; }
 
         new Boolean TestNormal { get; set; }
@@ -615,6 +632,10 @@ namespace Mutagen.Bethesda.Tests
     {
         #region ReuseCaches
         Boolean ReuseCaches { get; }
+
+        #endregion
+        #region ReorderRecords
+        Boolean ReorderRecords { get; }
 
         #endregion
         #region DeleteCachesAfter
@@ -723,11 +744,12 @@ namespace Mutagen.Bethesda.Tests.Internals
     public enum PassthroughSettings_FieldIndex
     {
         ReuseCaches = 0,
-        DeleteCachesAfter = 1,
-        TestNormal = 2,
-        TestBinaryWrapper = 3,
-        TestImport = 4,
-        TestFolder = 5,
+        ReorderRecords = 1,
+        DeleteCachesAfter = 2,
+        TestNormal = 3,
+        TestBinaryWrapper = 4,
+        TestImport = 5,
+        TestFolder = 6,
     }
     #endregion
 
@@ -745,9 +767,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "b6e04291-8a1a-4f43-baa4-0f5fc5074d8b";
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(PassthroughSettings_Mask<>);
 
@@ -781,6 +803,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case "REUSECACHES":
                     return (ushort)PassthroughSettings_FieldIndex.ReuseCaches;
+                case "REORDERRECORDS":
+                    return (ushort)PassthroughSettings_FieldIndex.ReorderRecords;
                 case "DELETECACHESAFTER":
                     return (ushort)PassthroughSettings_FieldIndex.DeleteCachesAfter;
                 case "TESTNORMAL":
@@ -802,6 +826,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case PassthroughSettings_FieldIndex.ReuseCaches:
+                case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
                 case PassthroughSettings_FieldIndex.TestBinaryWrapper:
@@ -819,6 +844,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case PassthroughSettings_FieldIndex.ReuseCaches:
+                case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
                 case PassthroughSettings_FieldIndex.TestBinaryWrapper:
@@ -836,6 +862,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case PassthroughSettings_FieldIndex.ReuseCaches:
+                case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
                 case PassthroughSettings_FieldIndex.TestBinaryWrapper:
@@ -854,6 +881,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case PassthroughSettings_FieldIndex.ReuseCaches:
                     return "ReuseCaches";
+                case PassthroughSettings_FieldIndex.ReorderRecords:
+                    return "ReorderRecords";
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                     return "DeleteCachesAfter";
                 case PassthroughSettings_FieldIndex.TestNormal:
@@ -875,6 +904,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case PassthroughSettings_FieldIndex.ReuseCaches:
+                case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
                 case PassthroughSettings_FieldIndex.TestBinaryWrapper:
@@ -892,6 +922,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case PassthroughSettings_FieldIndex.ReuseCaches:
+                case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
                 case PassthroughSettings_FieldIndex.TestBinaryWrapper:
@@ -909,6 +940,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case PassthroughSettings_FieldIndex.ReuseCaches:
+                    return typeof(Boolean);
+                case PassthroughSettings_FieldIndex.ReorderRecords:
                     return typeof(Boolean);
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                     return typeof(Boolean);
@@ -977,6 +1010,23 @@ namespace Mutagen.Bethesda.Tests.Internals
                 try
                 {
                     item.ReuseCaches = rhs.ReuseCaches;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.ReorderRecords ?? true)
+            {
+                errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReorderRecords);
+                try
+                {
+                    item.ReorderRecords = rhs.ReorderRecords;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1083,6 +1133,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             ClearPartial();
             item.ReuseCaches = default(Boolean);
+            item.ReorderRecords = default(Boolean);
             item.DeleteCachesAfter = PassthroughSettings._DeleteCachesAfter_Default;
             item.TestNormal = default(Boolean);
             item.TestBinaryWrapper = default(Boolean);
@@ -1112,6 +1163,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (rhs == null) return;
             ret.ReuseCaches = item.ReuseCaches == rhs.ReuseCaches;
+            ret.ReorderRecords = item.ReorderRecords == rhs.ReorderRecords;
             ret.DeleteCachesAfter = item.DeleteCachesAfter == rhs.DeleteCachesAfter;
             ret.TestNormal = item.TestNormal == rhs.TestNormal;
             ret.TestBinaryWrapper = item.TestBinaryWrapper == rhs.TestBinaryWrapper;
@@ -1167,6 +1219,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 fg.AppendLine($"ReuseCaches => {item.ReuseCaches}");
             }
+            if (printMask?.ReorderRecords ?? true)
+            {
+                fg.AppendLine($"ReorderRecords => {item.ReorderRecords}");
+            }
             if (printMask?.DeleteCachesAfter ?? true)
             {
                 fg.AppendLine($"DeleteCachesAfter => {item.DeleteCachesAfter}");
@@ -1201,6 +1257,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             PassthroughSettings_Mask<bool> mask)
         {
             mask.ReuseCaches = true;
+            mask.ReorderRecords = true;
             mask.DeleteCachesAfter = true;
             mask.TestNormal = true;
             mask.TestBinaryWrapper = true;
@@ -1216,6 +1273,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.ReuseCaches != rhs.ReuseCaches) return false;
+            if (lhs.ReorderRecords != rhs.ReorderRecords) return false;
             if (lhs.DeleteCachesAfter != rhs.DeleteCachesAfter) return false;
             if (lhs.TestNormal != rhs.TestNormal) return false;
             if (lhs.TestBinaryWrapper != rhs.TestBinaryWrapper) return false;
@@ -1228,6 +1286,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             int ret = 0;
             ret = HashHelper.GetHashCode(item.ReuseCaches).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ReorderRecords).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.DeleteCachesAfter).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.TestNormal).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.TestBinaryWrapper).CombineHashCode(ret);
@@ -1261,6 +1320,15 @@ namespace Mutagen.Bethesda.Tests.Internals
                     name: nameof(item.ReuseCaches),
                     item: item.ReuseCaches,
                     fieldIndex: (int)PassthroughSettings_FieldIndex.ReuseCaches,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReorderRecords) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ReorderRecords),
+                    item: item.ReorderRecords,
+                    fieldIndex: (int)PassthroughSettings_FieldIndex.ReorderRecords,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.DeleteCachesAfter) ?? true))
@@ -1430,6 +1498,35 @@ namespace Mutagen.Bethesda.Tests.Internals
                             else
                             {
                                 item.ReuseCaches = default(Boolean);
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    break;
+                case "ReorderRecords":
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReorderRecords) ?? true))
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReorderRecords);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean ReorderRecordsParse,
+                                errorMask: errorMask))
+                            {
+                                item.ReorderRecords = ReorderRecordsParse;
+                            }
+                            else
+                            {
+                                item.ReorderRecords = default(Boolean);
                             }
                         }
                         catch (Exception ex)
@@ -1765,6 +1862,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public PassthroughSettings_Mask(T initialValue)
         {
             this.ReuseCaches = initialValue;
+            this.ReorderRecords = initialValue;
             this.DeleteCachesAfter = initialValue;
             this.TestNormal = initialValue;
             this.TestBinaryWrapper = initialValue;
@@ -1775,6 +1873,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         #region Members
         public T ReuseCaches;
+        public T ReorderRecords;
         public T DeleteCachesAfter;
         public T TestNormal;
         public T TestBinaryWrapper;
@@ -1793,6 +1892,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (rhs == null) return false;
             if (!object.Equals(this.ReuseCaches, rhs.ReuseCaches)) return false;
+            if (!object.Equals(this.ReorderRecords, rhs.ReorderRecords)) return false;
             if (!object.Equals(this.DeleteCachesAfter, rhs.DeleteCachesAfter)) return false;
             if (!object.Equals(this.TestNormal, rhs.TestNormal)) return false;
             if (!object.Equals(this.TestBinaryWrapper, rhs.TestBinaryWrapper)) return false;
@@ -1804,6 +1904,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.ReuseCaches?.GetHashCode());
+            ret = ret.CombineHashCode(this.ReorderRecords?.GetHashCode());
             ret = ret.CombineHashCode(this.DeleteCachesAfter?.GetHashCode());
             ret = ret.CombineHashCode(this.TestNormal?.GetHashCode());
             ret = ret.CombineHashCode(this.TestBinaryWrapper?.GetHashCode());
@@ -1818,6 +1919,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool AllEqual(Func<T, bool> eval)
         {
             if (!eval(this.ReuseCaches)) return false;
+            if (!eval(this.ReorderRecords)) return false;
             if (!eval(this.DeleteCachesAfter)) return false;
             if (!eval(this.TestNormal)) return false;
             if (!eval(this.TestBinaryWrapper)) return false;
@@ -1838,6 +1940,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         protected void Translate_InternalFill<R>(PassthroughSettings_Mask<R> obj, Func<T, R> eval)
         {
             obj.ReuseCaches = eval(this.ReuseCaches);
+            obj.ReorderRecords = eval(this.ReorderRecords);
             obj.DeleteCachesAfter = eval(this.DeleteCachesAfter);
             obj.TestNormal = eval(this.TestNormal);
             obj.TestBinaryWrapper = eval(this.TestBinaryWrapper);
@@ -1874,6 +1977,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 if (printMask?.ReuseCaches ?? true)
                 {
                     fg.AppendLine($"ReuseCaches => {ReuseCaches}");
+                }
+                if (printMask?.ReorderRecords ?? true)
+                {
+                    fg.AppendLine($"ReorderRecords => {ReorderRecords}");
                 }
                 if (printMask?.DeleteCachesAfter ?? true)
                 {
@@ -1919,6 +2026,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
         public Exception ReuseCaches;
+        public Exception ReorderRecords;
         public Exception DeleteCachesAfter;
         public Exception TestNormal;
         public Exception TestBinaryWrapper;
@@ -1934,6 +2042,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case PassthroughSettings_FieldIndex.ReuseCaches:
                     return ReuseCaches;
+                case PassthroughSettings_FieldIndex.ReorderRecords:
+                    return ReorderRecords;
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                     return DeleteCachesAfter;
                 case PassthroughSettings_FieldIndex.TestNormal:
@@ -1956,6 +2066,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case PassthroughSettings_FieldIndex.ReuseCaches:
                     this.ReuseCaches = ex;
+                    break;
+                case PassthroughSettings_FieldIndex.ReorderRecords:
+                    this.ReorderRecords = ex;
                     break;
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                     this.DeleteCachesAfter = ex;
@@ -1985,6 +2098,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.ReuseCaches:
                     this.ReuseCaches = (Exception)obj;
                     break;
+                case PassthroughSettings_FieldIndex.ReorderRecords:
+                    this.ReorderRecords = (Exception)obj;
+                    break;
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                     this.DeleteCachesAfter = (Exception)obj;
                     break;
@@ -2009,6 +2125,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (Overall != null) return true;
             if (ReuseCaches != null) return true;
+            if (ReorderRecords != null) return true;
             if (DeleteCachesAfter != null) return true;
             if (TestNormal != null) return true;
             if (TestBinaryWrapper != null) return true;
@@ -2049,6 +2166,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         protected void ToString_FillInternal(FileGeneration fg)
         {
             fg.AppendLine($"ReuseCaches => {ReuseCaches}");
+            fg.AppendLine($"ReorderRecords => {ReorderRecords}");
             fg.AppendLine($"DeleteCachesAfter => {DeleteCachesAfter}");
             fg.AppendLine($"TestNormal => {TestNormal}");
             fg.AppendLine($"TestBinaryWrapper => {TestBinaryWrapper}");
@@ -2062,6 +2180,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             var ret = new PassthroughSettings_ErrorMask();
             ret.ReuseCaches = this.ReuseCaches.Combine(rhs.ReuseCaches);
+            ret.ReorderRecords = this.ReorderRecords.Combine(rhs.ReorderRecords);
             ret.DeleteCachesAfter = this.DeleteCachesAfter.Combine(rhs.DeleteCachesAfter);
             ret.TestNormal = this.TestNormal.Combine(rhs.TestNormal);
             ret.TestBinaryWrapper = this.TestBinaryWrapper.Combine(rhs.TestBinaryWrapper);
@@ -2094,6 +2213,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public PassthroughSettings_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
             this.ReuseCaches = defaultOn;
+            this.ReorderRecords = defaultOn;
             this.DeleteCachesAfter = defaultOn;
             this.TestNormal = defaultOn;
             this.TestBinaryWrapper = defaultOn;
@@ -2103,6 +2223,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         #region Members
         public bool ReuseCaches;
+        public bool ReorderRecords;
         public bool DeleteCachesAfter;
         public bool TestNormal;
         public bool TestBinaryWrapper;
@@ -2117,6 +2238,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         #region Members
         private TranslationCrystal _crystal;
         public bool ReuseCaches;
+        public bool ReorderRecords;
         public bool DeleteCachesAfter;
         public bool TestNormal;
         public bool TestBinaryWrapper;
@@ -2132,6 +2254,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public PassthroughSettings_TranslationMask(bool defaultOn)
         {
             this.ReuseCaches = defaultOn;
+            this.ReorderRecords = defaultOn;
             this.DeleteCachesAfter = defaultOn;
             this.TestNormal = defaultOn;
             this.TestBinaryWrapper = defaultOn;
@@ -2156,6 +2279,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
             ret.Add((ReuseCaches, null));
+            ret.Add((ReorderRecords, null));
             ret.Add((DeleteCachesAfter, null));
             ret.Add((TestNormal, null));
             ret.Add((TestBinaryWrapper, null));
