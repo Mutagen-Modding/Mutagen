@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -7,19 +7,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public interface IRecordConstants
-    {
-        GameMode GameMode { get; }
-        ObjectType ObjectType { get; }
-        sbyte HeaderLength { get; }
-        sbyte LengthLength { get; }
-        sbyte LengthAfterLength { get; }
-        sbyte LengthAfterType { get; }
-        sbyte TypeAndLengthLength { get; }
-        bool HeaderIncludedInLength { get; }
-    }
-
-    public class RecordConstants : IRecordConstants
+    public class RecordConstants
     {
         public ObjectType ObjectType { get; }
         public GameMode GameMode { get; }
@@ -47,15 +35,31 @@ namespace Mutagen.Bethesda.Binary
         }
     }
 
+    public class MajorRecordConstants : RecordConstants
+    {
+        public sbyte FlagLocation { get; }
+
+        public MajorRecordConstants(
+            GameMode gameMode,
+            ObjectType type, 
+            sbyte headerLength,
+            sbyte lengthLength,
+            sbyte flagsLoc) 
+            : base(gameMode, type, headerLength, lengthLength)
+        {
+            this.FlagLocation = flagsLoc;
+        }
+    }
+
     public class MetaDataConstants
     {
         public GameMode GameMode { get; private set; }
         public sbyte ModHeaderLength { get; private set; }
         public sbyte ModHeaderFluffLength { get; private set; }
 
-        public IRecordConstants GroupConstants { get; private set; }
-        public IRecordConstants MajorConstants { get; private set; }
-        public IRecordConstants SubConstants { get; private set; }
+        public RecordConstants GroupConstants { get; private set; }
+        public MajorRecordConstants MajorConstants { get; private set; }
+        public RecordConstants SubConstants { get; private set; }
 
         public static readonly MetaDataConstants Oblivion = new MetaDataConstants()
         {
@@ -67,11 +71,12 @@ namespace Mutagen.Bethesda.Binary
                 ObjectType.Group,
                 headerLength: 20,
                 lengthLength: 4),
-            MajorConstants = new RecordConstants(
+            MajorConstants = new MajorRecordConstants(
                 GameMode.Oblivion,
                 ObjectType.Record,
                 headerLength: 20,
-                lengthLength: 4),
+                lengthLength: 4,
+                flagsLoc: 8),
             SubConstants = new RecordConstants(
                 GameMode.Oblivion,
                 ObjectType.Subrecord,
@@ -89,11 +94,12 @@ namespace Mutagen.Bethesda.Binary
                 ObjectType.Group,
                 headerLength: 24,
                 lengthLength: 4),
-            MajorConstants = new RecordConstants(
+            MajorConstants = new MajorRecordConstants(
                 GameMode.Skyrim,
                 ObjectType.Record,
                 headerLength: 24,
-                lengthLength: 4),
+                lengthLength: 4,
+                flagsLoc: 8),
             SubConstants = new RecordConstants(
                 GameMode.Skyrim,
                 ObjectType.Subrecord,
@@ -114,7 +120,7 @@ namespace Mutagen.Bethesda.Binary
         public SubRecordMeta GetSubRecord(IBinaryReadStream stream) => new SubRecordMeta(this, stream.GetSpan(this.SubConstants.HeaderLength));
         public SubRecordMeta ReadSubRecord(IBinaryReadStream stream) => new SubRecordMeta(this, stream.ReadSpan(this.SubConstants.HeaderLength));
 
-        public IRecordConstants Constants(ObjectType type)
+        public RecordConstants Constants(ObjectType type)
         {
             switch (type)
             {

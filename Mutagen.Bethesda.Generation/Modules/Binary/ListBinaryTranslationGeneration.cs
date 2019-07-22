@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else if (listBinaryType == ListBinaryType.Trigger)
             {
-                fg.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(IRecordConstants.HeaderLength)};");
+                fg.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(RecordConstants.HeaderLength)};");
             }
 
             bool threading = list.CustomData.TryGetValue(ThreadKey, out var t)

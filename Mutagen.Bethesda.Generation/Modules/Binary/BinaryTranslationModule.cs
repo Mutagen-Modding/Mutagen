@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (field is DataType set)
             {
-                fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(IRecordConstants.HeaderLength)};");
+                fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(RecordConstants.HeaderLength)};");
                 fg.AppendLine($"var dataFrame = {frameAccessor}.SpawnWithLength(contentLength);");
                 fg.AppendLine($"if (!dataFrame.Complete)");
                 using (new BraceWrapper(fg))
