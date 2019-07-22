@@ -1,4 +1,4 @@
-using Mutagen.Bethesda.Binary;
+﻿using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -217,6 +217,7 @@ namespace Mutagen.Bethesda.Binary
         public int MajorRecordFlags => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(8, 4));
         public FormID FormID => FormID.Factory(BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(12, 4)));
         public long TotalLength => this.HeaderLength + this.RecordLength;
+        public bool IsCompressed => (this.MajorRecordFlags & Mutagen.Bethesda.Constants.CompressedFlag) > 0;
     }
 
     public ref struct SubRecordMeta
