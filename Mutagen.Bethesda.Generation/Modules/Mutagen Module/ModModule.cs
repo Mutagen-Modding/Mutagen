@@ -23,11 +23,11 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectData().ObjectType != ObjectType.Mod) return;
-            if (!obj.Node.TryGetAttribute<GameMode>(Mutagen.Bethesda.Generation.Constants.GAME_MODE, out var gameMode))
+            if (!obj.Node.TryGetAttribute<GameMode>(Mutagen.Bethesda.Generation.Constants.GameMode, out var gameMode))
             {
                 throw new ArgumentException("Mod object must specify game mode enum.");
             }
-            obj.CustomData[Mutagen.Bethesda.Generation.Constants.GAME_MODE] = gameMode;
+            obj.CustomData[Mutagen.Bethesda.Generation.Constants.GameMode] = gameMode;
             fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{gameMode};");
             fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroupGetter)}<T>() => this.GetGroupGetter<T>();");
             fg.AppendLine($"ISourceCache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");

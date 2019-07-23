@@ -3887,6 +3887,157 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class ClimateBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IClimateInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
+        public new static Climate_Registration Registration => Climate_Registration.Instance;
+        protected override object CommonInstance => ClimateCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClimateInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => ClimateXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ClimateBinaryWriteTranslation.Instance;
+
+        public IReadOnlySetList<IWeatherChanceGetter> Weathers { get; private set; } = EmptySetList<WeatherChanceBinaryWrapper>.Instance;
+        #region SunTexture
+        private int? _SunTextureLocation;
+        public bool SunTexture_IsSet => _SunTextureLocation.HasValue;
+        public String SunTexture => _SunTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _SunTextureLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region SunGlareTexture
+        private int? _SunGlareTextureLocation;
+        public bool SunGlareTexture_IsSet => _SunGlareTextureLocation.HasValue;
+        public String SunGlareTexture => _SunGlareTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _SunGlareTextureLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        private int? _TNAMLocation;
+        public Climate.TNAMDataType TNAMDataTypeState { get; private set; }
+        #region SunriseBegin
+        private int _SunriseBeginLocation => _TNAMLocation.Value + 0x0;
+        private bool _SunriseBegin_IsSet => GetSunriseBeginIsSetCustom();
+        public DateTime SunriseBegin => GetSunriseBeginCustom();
+        #endregion
+        #region SunriseEnd
+        private int _SunriseEndLocation => _TNAMLocation.Value + 0x1;
+        private bool _SunriseEnd_IsSet => GetSunriseEndIsSetCustom();
+        public DateTime SunriseEnd => GetSunriseEndCustom();
+        #endregion
+        #region SunsetBegin
+        private int _SunsetBeginLocation => _TNAMLocation.Value + 0x2;
+        private bool _SunsetBegin_IsSet => GetSunsetBeginIsSetCustom();
+        public DateTime SunsetBegin => GetSunsetBeginCustom();
+        #endregion
+        #region SunsetEnd
+        private int _SunsetEndLocation => _TNAMLocation.Value + 0x3;
+        private bool _SunsetEnd_IsSet => GetSunsetEndIsSetCustom();
+        public DateTime SunsetEnd => GetSunsetEndCustom();
+        #endregion
+        public Byte Volatility => _TNAMLocation.HasValue ? _data.Span[_TNAMLocation.Value + 4] : default;
+        #region Phase
+        private int _PhaseLocation => _TNAMLocation.Value + 0x5;
+        private bool _Phase_IsSet => GetPhaseIsSetCustom();
+        public Climate.MoonPhase Phase => GetPhaseCustom();
+        #endregion
+        #region PhaseLength
+        private int _PhaseLengthLocation => _TNAMLocation.Value + 0x6;
+        private bool _PhaseLength_IsSet => GetPhaseLengthIsSetCustom();
+        public Byte PhaseLength => GetPhaseLengthCustom();
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected ClimateBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static ClimateBinaryWrapper ClimateFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new ClimateBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x54534C57: // WLST
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.Weathers = BinaryWrapperSetList<WeatherChanceBinaryWrapper>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => WeatherChanceBinaryWrapper.WeatherChanceFactory(new BinaryMemoryReadStream(s), p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Weathers);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    _SunTextureLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
+                }
+                case 0x4D414E47: // GNAM
+                {
+                    _SunGlareTextureLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunGlareTexture);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Model);
+                }
+                case 0x4D414E54: // TNAM
+                {
+                    _TNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.TNAMDataTypeState = Climate.TNAMDataType.Has;
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

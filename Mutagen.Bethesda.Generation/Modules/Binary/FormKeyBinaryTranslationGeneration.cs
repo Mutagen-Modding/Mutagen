@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Generation
             int currentPosition,
             DataType dataType)
         {
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (data.RecordType.HasValue
                 || this.ExpectedLength(objGen, typeGen) == null)
             {

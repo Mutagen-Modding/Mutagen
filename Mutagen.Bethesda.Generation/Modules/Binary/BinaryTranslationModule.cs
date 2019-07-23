@@ -1427,13 +1427,10 @@ namespace Mutagen.Bethesda.Generation
                 || obj.Name.Contains("World")
                 || obj.Name.Contains("ListGroup")
                 || obj.Name.Contains("Region")
-                || obj.Name.Contains("Climate")
                 || obj.Name.Contains("Road")
                 || obj.Name.Contains("PathGrid")
-                || obj.Name.Contains("Weather")
                 || obj.Name.Contains("SkyrimMod")
                 || obj.Name.Contains("DialogTopic")
-                || obj.Name.Contains("LeveledItem")
                 ) return;
 
             var dataAccessor = new Accessor("_data");
@@ -1511,7 +1508,7 @@ namespace Mutagen.Bethesda.Generation
                         if (await field.ObjectGen.IsMajorRecord()) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
                         var data = field.GetFieldData();
-                        switch (data.Binary)
+                        switch (data.BinaryWrapperFallback)
                         {
                             case BinaryGenerationType.Custom:
                                 passedLength += CustomLogic.ExpectedLength(obj, field).Value;
@@ -1537,7 +1534,7 @@ namespace Mutagen.Bethesda.Generation
                     })
                     {
                         var data = field.GetFieldData();
-                        switch (data.Binary)
+                        switch (data.BinaryWrapperFallback)
                         {
                             case BinaryGenerationType.Custom:
                                 CustomLogic.GenerateForCustomFlagWrapperFields(
@@ -1572,7 +1569,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
                     var data = field.GetFieldData();
-                    switch (data.Binary)
+                    switch (data.BinaryWrapperFallback)
                     {
                         case BinaryGenerationType.Normal:
                         case BinaryGenerationType.Custom:
@@ -1881,14 +1878,14 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "LeveledItems")
+                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "Regions")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)
                                     || !fieldData.HasTrigger
                                     || fieldData.TriggeringRecordTypes.Count == 0) continue;
-                                if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
-                                if (field.Field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
+                                if (fieldData.BinaryWrapperFallback == BinaryGenerationType.NoGeneration) continue;
+                                if (field.Field.Derivative && fieldData.BinaryWrapperFallback != BinaryGenerationType.Custom) continue;
                                 if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                                 {
                                     throw new ArgumentException("Unsupported type generator: " + field.Field);

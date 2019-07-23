@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}ByteArrayBinaryTranslation.Instance.Write"))
             {
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (data.HasTrigger)
             {
                 fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(RecordConstants.HeaderLength)};");
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationAccessor)
         {
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.Namespace}ByteArrayBinaryTranslation.Instance.Parse",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Generation
             int currentPosition,
             DataType dataType = null)
         {
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (data.HasTrigger)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
         {
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (!data.RecordType.HasValue)
             {
                 return checked((int)data.Length.Value);

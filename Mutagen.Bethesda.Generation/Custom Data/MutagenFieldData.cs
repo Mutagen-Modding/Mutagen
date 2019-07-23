@@ -18,9 +18,9 @@ namespace Mutagen.Bethesda.Generation
         public bool HasTrigger => this.TriggeringRecordAccessors.Count > 0 || SubLoquiTypes.Count > 0;
         public bool Optional;
         public int? Length;
-        public bool IncludeInLength;
-        public bool Vestigial;
         public BinaryGenerationType Binary;
+        public BinaryGenerationType? BinaryWrapper;
+        public BinaryGenerationType BinaryWrapperFallback => this.BinaryWrapper ?? this.Binary;
         public bool CustomFolder;
         public Dictionary<RecordType, ObjectGeneration> SubLoquiTypes = new Dictionary<RecordType, ObjectGeneration>();
         public IEnumerable<KeyValuePair<IEnumerable<RecordType>, TypeGeneration>> GenerationTypes => GetGenerationTypes();

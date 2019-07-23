@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Generation
                 })
                 {
                     var data = field.Field.GetFieldData();
-                    switch (data.Binary)
+                    switch (data.BinaryWrapperFallback)
                     {
                         case BinaryGenerationType.Custom:
                             this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
@@ -175,7 +175,17 @@ namespace Mutagen.Bethesda.Generation
                 extraChecks.Append($"{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Range{dataMeta.RangeIndex})");
             }
             fg.AppendLine($"private int _{typeGen.Name}Location => _{dataType.GetFieldData().RecordType}Location.Value + 0x{pos.ToString("X")};");
-            fg.AppendLine($"private bool _{typeGen.Name}_IsSet => _{dataType.GetFieldData().RecordType}Location.HasValue{(extraChecks.Length > 0 ? $" && {extraChecks}" : null)};");
+            switch (typeGen.GetFieldData().BinaryWrapperFallback)
+            {
+                case BinaryGenerationType.Normal:
+                    fg.AppendLine($"private bool _{typeGen.Name}_IsSet => _{dataType.GetFieldData().RecordType}Location.HasValue{(extraChecks.Length > 0 ? $" && {extraChecks}" : null)};");
+                    break;
+                case BinaryGenerationType.Custom:
+                    fg.AppendLine($"private bool _{typeGen.Name}_IsSet => Get{typeGen.Name}IsSetCustom();");
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

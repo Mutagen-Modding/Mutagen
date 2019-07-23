@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -26,6 +27,43 @@ namespace Mutagen.Bethesda.Oblivion
                 && parseVal > 0)
             {
                 item.Flags |= LeveledFlag.CalculateForEachItemInCount;
+            }
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class LeveledItemBinaryWrapper
+        {
+            private bool _vestigialMarker;
+
+            bool GetFlagsIsSetCustom() => _FlagsLocation.HasValue || _vestigialMarker;
+
+            public LeveledFlag GetFlagsCustom()
+            {
+                var ret = _FlagsLocation.HasValue ? (LeveledFlag)HeaderTranslation.ExtractSubrecordSpan(_data.Span, _FlagsLocation.Value, _package.Meta)[0] : default;
+                if (_vestigialMarker)
+                {
+                    ret |= LeveledFlag.CalculateForEachItemInCount;
+                }
+                return ret;
+            }
+
+            public void VestigialSpecialParse(
+                BinaryMemoryReadStream stream,
+                int offset,
+                RecordType type,
+                int? lastParsed)
+            {
+                var subMeta = _package.Meta.ReadSubRecord(stream);
+                if (subMeta.RecordLength != 1)
+                {
+                    throw new ArgumentException($"Unexpected length: {subMeta.RecordLength}");
+                }
+                if (stream.ReadByte() > 0)
+                {
+                    this._vestigialMarker = true;
+                }
             }
         }
     }

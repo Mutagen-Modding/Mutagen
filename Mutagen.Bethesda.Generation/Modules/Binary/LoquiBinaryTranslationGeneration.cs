@@ -332,5 +332,15 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"recordTypeConverter: {converterAccessor}");
             }
         }
+
+        public override string GenerateForTypicalWrapper(
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            Accessor packageAccessor)
+        {
+            LoquiType loqui = typeGen as LoquiType;
+            return $"{this.Module.BinaryWrapperClass(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}(s), p)";
+        }
     }
 }

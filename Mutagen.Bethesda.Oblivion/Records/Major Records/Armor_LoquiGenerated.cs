@@ -2525,8 +2525,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Armor.DATADataType DATADataTypeState { get; private set; }
         #region ArmorValue
         private int _ArmorValueLocation => _DATALocation.Value + 0x0;
-        private bool _ArmorValue_IsSet => _DATALocation.HasValue;
-        public Single ArmorValue => GetArmorValueCustom(location: _ArmorValueLocation);
+        private bool _ArmorValue_IsSet => GetArmorValueIsSetCustom();
+        public Single ArmorValue => GetArmorValueCustom();
         #endregion
         #region Value
         private int _ValueLocation => _DATALocation.Value + 0x2;

@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationMaskAccessor)
         {
             Mutagen.Bethesda.Generation.StringType stringType = typeGen as Mutagen.Bethesda.Generation.StringType;
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}StringBinaryTranslation.Instance.Write"))
             {
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (data.HasTrigger)
             {
                 fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(RecordConstants.HeaderLength)};");

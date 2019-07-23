@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         public static bool TryGetFieldData(this TypeGeneration typeGen, out MutagenFieldData fieldData)
         {
-            if (typeGen.CustomData.TryGetValue(Constants.DATA_KEY, out var dataObj))
+            if (typeGen.CustomData.TryGetValue(Constants.DataKey, out var dataObj))
             {
                 fieldData = (MutagenFieldData)dataObj;
                 return true;

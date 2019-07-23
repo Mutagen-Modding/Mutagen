@@ -8,8 +8,12 @@ namespace Mutagen.Bethesda.Generation
 {
     public class Constants
     {
-        public readonly static string DATA_KEY = "MutagenData";
-        public readonly static string OBJECT_TYPE = "objType";
-        public readonly static string GAME_MODE = "gameMode";
+        public readonly static string DataKey = "MutagenData";
+        public readonly static string ObjectType = "objType";
+        public readonly static string GameMode = "gameMode";
+        public readonly static string Binary = "binary";
+        public readonly static string BinaryWrapper = "binaryWrapper";
+        public readonly static string Optional = "optional";
+        public readonly static string ByteLength = "byteLength";
     }
 }

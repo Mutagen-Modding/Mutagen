@@ -74,5 +74,23 @@ namespace Mutagen.Bethesda.Generation
         public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
 
         public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
+
+        public override async Task GenerateWrapperRecordTypeParse(
+            FileGeneration fg, 
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen, 
+            Accessor locationAccessor, 
+            Accessor packageAccessor, 
+            Accessor converterAccessor)
+        {
+            using (var args = new ArgsWrapper(fg,
+                $"{typeGen.Name}SpecialParse"))
+            {
+                args.AddPassArg("stream");
+                args.AddPassArg("offset");
+                args.AddPassArg("type");
+                args.AddPassArg("lastParsed");
+            }
+        }
     }
 }

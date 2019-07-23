@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}FilePathBinaryTranslation.Instance.Write"))
             {
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (data.HasTrigger)
             {
                 fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationAccessor)
         {
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.Namespace}FilePathBinaryTranslation.Instance.Parse",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))

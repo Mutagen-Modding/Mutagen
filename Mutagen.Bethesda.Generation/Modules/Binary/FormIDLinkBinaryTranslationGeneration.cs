@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Generation
                         translationMaskAccessor: translationMaskAccessor);
                     break;
                 case FormIDLinkType.FormIDTypeEnum.EDIDChars:
-                    var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+                    var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
                     using (var args = new ArgsWrapper(fg,
                         $"{this.Namespace}RecordTypeBinaryTranslation.Instance.Write"))
                     {

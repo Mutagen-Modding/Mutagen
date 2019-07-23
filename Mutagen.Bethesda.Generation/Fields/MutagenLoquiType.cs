@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
             await base.Load(node, requireName);
             if (this.RefType == LoquiRefType.Interface)
             {
-                if (!node.TryGetAttribute<ObjectType>(Mutagen.Bethesda.Generation.Constants.OBJECT_TYPE, out _interfObjectType))
+                if (!node.TryGetAttribute<ObjectType>(Mutagen.Bethesda.Generation.Constants.ObjectType, out _interfObjectType))
                 {
                     throw new ArgumentException("Interface Ref Type was specified without supplying object type");
                 }

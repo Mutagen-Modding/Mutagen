@@ -2038,6 +2038,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class WeatherTypeBinaryWrapper : IWeatherTypeGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => WeatherType_Registration.Instance;
+        public static WeatherType_Registration Registration => WeatherType_Registration.Instance;
+        protected object CommonInstance => WeatherTypeCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherTypeGetter)rhs, include);
+
+        protected object XmlWriteTranslator => WeatherTypeXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => WeatherTypeBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        public Color Sunrise => _data.Span.Slice(0, 4).ReadColor();
+        public Color Day => _data.Span.Slice(4, 4).ReadColor();
+        public Color Sunset => _data.Span.Slice(8, 4).ReadColor();
+        public Color Night => _data.Span.Slice(12, 4).ReadColor();
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected WeatherTypeBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static WeatherTypeBinaryWrapper WeatherTypeFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new WeatherTypeBinaryWrapper(
+                bytes: stream.RemainingMemory.Slice(0, 16),
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

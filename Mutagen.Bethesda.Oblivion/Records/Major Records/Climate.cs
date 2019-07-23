@@ -84,6 +84,15 @@ namespace Mutagen.Bethesda.Oblivion
                 return true;
             }
 
+            public static DateTime GetDate(byte b)
+            {
+                if (b > 144)
+                {
+                    throw new ArgumentException("Cannot have a time value greater than 144");
+                }
+                return DateTime.MinValue.AddMinutes(b * 10);
+            }
+
             static partial void FillBinarySunriseBeginCustom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (GetDate(frame.Reader.ReadUInt8(), out var date, errorMask))
@@ -116,26 +125,43 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
+            public static int GetPhaseInt(byte b) => b / 64;
+            public static byte GetPhaseLen(byte b) => (byte)(b % 64);
+
             static partial void FillBinaryPhaseCustom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                var b1 = frame.Reader.ReadUInt8();
-                var eInt = b1 / 64;
-                var phaseLen = (byte)(b1 % 64);
-                if (EnumExt.TryParse<Climate.MoonPhase>(eInt, out var e))
+                var b = frame.Reader.ReadUInt8();
+                if (EnumExt.TryParse<Climate.MoonPhase>(GetPhaseInt(b), out var e))
                 {
                     item.Phase = e;
                 }
                 else
                 {
                     errorMask.ReportException(
-                        new ArgumentException($"Unknown moon phase type: {b1}"));
+                        new ArgumentException($"Unknown moon phase type: {b}"));
                 }
-                item.PhaseLength = phaseLen;
+                item.PhaseLength = GetPhaseLen(b);
             }
 
             static partial void FillBinaryPhaseLengthCustom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             { // Handled in Phase section
             }
+        }
+
+        public partial class ClimateBinaryWrapper
+        {
+            private bool GetSunriseBeginIsSetCustom() => _TNAMLocation.HasValue;
+            private bool GetSunriseEndIsSetCustom() => _TNAMLocation.HasValue;
+            private bool GetSunsetBeginIsSetCustom() => _TNAMLocation.HasValue;
+            private bool GetSunsetEndIsSetCustom() => _TNAMLocation.HasValue;
+            private bool GetPhaseIsSetCustom() => _TNAMLocation.HasValue;
+            private bool GetPhaseLengthIsSetCustom() => _TNAMLocation.HasValue;
+            private DateTime GetSunriseBeginCustom() => ClimateBinaryCreateTranslation.GetDate(_data.Span[_SunriseBeginLocation]);
+            private DateTime GetSunriseEndCustom() => ClimateBinaryCreateTranslation.GetDate(_data.Span[_SunriseEndLocation]);
+            private DateTime GetSunsetBeginCustom() => ClimateBinaryCreateTranslation.GetDate(_data.Span[_SunsetBeginLocation]);
+            private DateTime GetSunsetEndCustom() => ClimateBinaryCreateTranslation.GetDate(_data.Span[_SunsetEndLocation]);
+            private Climate.MoonPhase GetPhaseCustom() => (Climate.MoonPhase)ClimateBinaryCreateTranslation.GetPhaseInt(_data.Span[_PhaseLocation]);
+            private byte GetPhaseLengthCustom() => ClimateBinaryCreateTranslation.GetPhaseLen(_data.Span[_PhaseLocation]);
         }
     }
 }

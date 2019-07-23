@@ -7456,6 +7456,268 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class WeatherBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IWeatherInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
+        public new static Weather_Registration Registration => Weather_Registration.Instance;
+        protected override object CommonInstance => WeatherCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => WeatherXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
+
+        #region TextureLowerLayer
+        private int? _TextureLowerLayerLocation;
+        public bool TextureLowerLayer_IsSet => _TextureLowerLayerLocation.HasValue;
+        public String TextureLowerLayer => _TextureLowerLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _TextureLowerLayerLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region TextureUpperLayer
+        private int? _TextureUpperLayerLocation;
+        public bool TextureUpperLayer_IsSet => _TextureUpperLayerLocation.HasValue;
+        public String TextureUpperLayer => _TextureUpperLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _TextureUpperLayerLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Model
+        public IModelGetter Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        public IReadOnlySetList<IWeatherTypeGetter> WeatherTypes { get; private set; } = EmptySetList<WeatherTypeBinaryWrapper>.Instance;
+        private int? _FNAMLocation;
+        public Weather.FNAMDataType FNAMDataTypeState { get; private set; }
+        #region FogDayNear
+        private int _FogDayNearLocation => _FNAMLocation.Value + 0x0;
+        private bool _FogDayNear_IsSet => _FNAMLocation.HasValue;
+        public Single FogDayNear => _FogDayNear_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FogDayNearLocation, 4)) : default;
+        #endregion
+        #region FogDayFar
+        private int _FogDayFarLocation => _FNAMLocation.Value + 0x4;
+        private bool _FogDayFar_IsSet => _FNAMLocation.HasValue;
+        public Single FogDayFar => _FogDayFar_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FogDayFarLocation, 4)) : default;
+        #endregion
+        #region FogNightNear
+        private int _FogNightNearLocation => _FNAMLocation.Value + 0x8;
+        private bool _FogNightNear_IsSet => _FNAMLocation.HasValue;
+        public Single FogNightNear => _FogNightNear_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FogNightNearLocation, 4)) : default;
+        #endregion
+        #region FogNightFar
+        private int _FogNightFarLocation => _FNAMLocation.Value + 0xC;
+        private bool _FogNightFar_IsSet => _FNAMLocation.HasValue;
+        public Single FogNightFar => _FogNightFar_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FogNightFarLocation, 4)) : default;
+        #endregion
+        private int? _HNAMLocation;
+        public Weather.HNAMDataType HNAMDataTypeState { get; private set; }
+        #region HdrEyeAdaptSpeed
+        private int _HdrEyeAdaptSpeedLocation => _HNAMLocation.Value + 0x0;
+        private bool _HdrEyeAdaptSpeed_IsSet => _HNAMLocation.HasValue;
+        public Single HdrEyeAdaptSpeed => _HdrEyeAdaptSpeed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrEyeAdaptSpeedLocation, 4)) : default;
+        #endregion
+        #region HdrBlurRadius
+        private int _HdrBlurRadiusLocation => _HNAMLocation.Value + 0x4;
+        private bool _HdrBlurRadius_IsSet => _HNAMLocation.HasValue;
+        public Single HdrBlurRadius => _HdrBlurRadius_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrBlurRadiusLocation, 4)) : default;
+        #endregion
+        #region HdrBlurPasses
+        private int _HdrBlurPassesLocation => _HNAMLocation.Value + 0x8;
+        private bool _HdrBlurPasses_IsSet => _HNAMLocation.HasValue;
+        public Single HdrBlurPasses => _HdrBlurPasses_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrBlurPassesLocation, 4)) : default;
+        #endregion
+        #region HdrEmissiveMult
+        private int _HdrEmissiveMultLocation => _HNAMLocation.Value + 0xC;
+        private bool _HdrEmissiveMult_IsSet => _HNAMLocation.HasValue;
+        public Single HdrEmissiveMult => _HdrEmissiveMult_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrEmissiveMultLocation, 4)) : default;
+        #endregion
+        #region HdrTargetLum
+        private int _HdrTargetLumLocation => _HNAMLocation.Value + 0x10;
+        private bool _HdrTargetLum_IsSet => _HNAMLocation.HasValue;
+        public Single HdrTargetLum => _HdrTargetLum_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrTargetLumLocation, 4)) : default;
+        #endregion
+        #region HdrUpperLumClamp
+        private int _HdrUpperLumClampLocation => _HNAMLocation.Value + 0x14;
+        private bool _HdrUpperLumClamp_IsSet => _HNAMLocation.HasValue;
+        public Single HdrUpperLumClamp => _HdrUpperLumClamp_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrUpperLumClampLocation, 4)) : default;
+        #endregion
+        #region HdrBrightScale
+        private int _HdrBrightScaleLocation => _HNAMLocation.Value + 0x18;
+        private bool _HdrBrightScale_IsSet => _HNAMLocation.HasValue;
+        public Single HdrBrightScale => _HdrBrightScale_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrBrightScaleLocation, 4)) : default;
+        #endregion
+        #region HdrBrightClamp
+        private int _HdrBrightClampLocation => _HNAMLocation.Value + 0x1C;
+        private bool _HdrBrightClamp_IsSet => _HNAMLocation.HasValue;
+        public Single HdrBrightClamp => _HdrBrightClamp_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrBrightClampLocation, 4)) : default;
+        #endregion
+        #region HdrLumRampNoTex
+        private int _HdrLumRampNoTexLocation => _HNAMLocation.Value + 0x20;
+        private bool _HdrLumRampNoTex_IsSet => _HNAMLocation.HasValue;
+        public Single HdrLumRampNoTex => _HdrLumRampNoTex_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrLumRampNoTexLocation, 4)) : default;
+        #endregion
+        #region HdrLumRampMin
+        private int _HdrLumRampMinLocation => _HNAMLocation.Value + 0x24;
+        private bool _HdrLumRampMin_IsSet => _HNAMLocation.HasValue;
+        public Single HdrLumRampMin => _HdrLumRampMin_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrLumRampMinLocation, 4)) : default;
+        #endregion
+        #region HdrLumRampMax
+        private int _HdrLumRampMaxLocation => _HNAMLocation.Value + 0x28;
+        private bool _HdrLumRampMax_IsSet => _HNAMLocation.HasValue;
+        public Single HdrLumRampMax => _HdrLumRampMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrLumRampMaxLocation, 4)) : default;
+        #endregion
+        #region HdrSunlightDimmer
+        private int _HdrSunlightDimmerLocation => _HNAMLocation.Value + 0x2C;
+        private bool _HdrSunlightDimmer_IsSet => _HNAMLocation.HasValue;
+        public Single HdrSunlightDimmer => _HdrSunlightDimmer_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrSunlightDimmerLocation, 4)) : default;
+        #endregion
+        #region HdrGrassDimmer
+        private int _HdrGrassDimmerLocation => _HNAMLocation.Value + 0x30;
+        private bool _HdrGrassDimmer_IsSet => _HNAMLocation.HasValue;
+        public Single HdrGrassDimmer => _HdrGrassDimmer_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrGrassDimmerLocation, 4)) : default;
+        #endregion
+        #region HdrTreeDimmer
+        private int _HdrTreeDimmerLocation => _HNAMLocation.Value + 0x34;
+        private bool _HdrTreeDimmer_IsSet => _HNAMLocation.HasValue;
+        public Single HdrTreeDimmer => _HdrTreeDimmer_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrTreeDimmerLocation, 4)) : default;
+        #endregion
+        private int? _DATALocation;
+        public Weather.DATADataType DATADataTypeState { get; private set; }
+        public Byte WindSpeed => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 0] : default;
+        public Byte CloudSpeedLower => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 1] : default;
+        public Byte CloudSpeedUpper => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 2] : default;
+        public Byte TransDelta => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 3] : default;
+        public Byte SunGlare => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 4] : default;
+        public Byte SunDamage => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 5] : default;
+        public Byte PrecipitationBeginFadeIn => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 6] : default;
+        public Byte PrecipitationEndFadeOut => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 7] : default;
+        public Byte ThunderLightningBeginFadeIn => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 8] : default;
+        public Byte ThunderLightningEndFadeOut => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 9] : default;
+        public Byte ThunderLightningFrequency => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 10] : default;
+        #region Classification
+        private int _ClassificationLocation => _DATALocation.Value + 0xB;
+        private bool _Classification_IsSet => _DATALocation.HasValue;
+        public Weather.WeatherClassification Classification => _Classification_IsSet ? (Weather.WeatherClassification)_data.Span.Slice(_ClassificationLocation, 1)[0] : default;
+        #endregion
+        #region LightningColor
+        private int _LightningColorLocation => _DATALocation.Value + 0xC;
+        private bool _LightningColor_IsSet => _DATALocation.HasValue;
+        public Color LightningColor => _LightningColor_IsSet ? _data.Span.Slice(_LightningColorLocation, 3).ReadColor() : default;
+        #endregion
+        public IReadOnlySetList<IWeatherSoundGetter> Sounds { get; private set; } = EmptySetList<WeatherSoundBinaryWrapper>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected WeatherBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static WeatherBinaryWrapper WeatherFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new WeatherBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4D414E43: // CNAM
+                {
+                    _TextureLowerLayerLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureLowerLayer);
+                }
+                case 0x4D414E44: // DNAM
+                {
+                    _TextureUpperLayerLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureUpperLayer);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryWrapper.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Model);
+                }
+                case 0x304D414E: // NAM0
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.WeatherTypes = BinaryWrapperSetList<WeatherTypeBinaryWrapper>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 16,
+                        getter: (s, p) => WeatherTypeBinaryWrapper.WeatherTypeFactory(new BinaryMemoryReadStream(s), p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.WeatherTypes);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    _FNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.FNAMDataTypeState = Weather.FNAMDataType.Has;
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogNightFar);
+                }
+                case 0x4D414E48: // HNAM
+                {
+                    _HNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.HNAMDataTypeState = Weather.HNAMDataType.Has;
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.HdrTreeDimmer);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.DATADataTypeState = Weather.DATADataType.Has;
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.LightningColor);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    this.Sounds = BinaryWrapperSetList<WeatherSoundBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => WeatherSoundBinaryWrapper.WeatherSoundFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

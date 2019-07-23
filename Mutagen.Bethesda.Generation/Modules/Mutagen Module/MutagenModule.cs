@@ -36,18 +36,17 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
         {
-            var data = field.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData(field)) as MutagenFieldData;
-            data.Optional = node.GetAttribute<bool>("optional", false);
+            var data = field.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(field)) as MutagenFieldData;
+            data.Optional = node.GetAttribute<bool>(Constants.Optional, false);
             if (data.Optional && !data.RecordType.HasValue)
             {
                 throw new ArgumentException($"{obj.Name} {field.Name} cannot have an optional field if it is not a record typed field.");
             }
-            data.IncludeInLength = node.GetAttribute<bool>("includeInLength", true);
-            data.Vestigial = node.GetAttribute<bool>("vestigial", false);
-            data.Binary = node.GetAttribute<BinaryGenerationType>("binary", BinaryGenerationType.Normal);
+            data.Binary = node.GetAttribute<BinaryGenerationType>(Constants.Binary, BinaryGenerationType.Normal);
+            data.BinaryWrapper = node.GetAttribute<BinaryGenerationType?>(Constants.BinaryWrapper, default);
             ModifyGRUPAttributes(field);
             await base.PostFieldLoad(obj, field, node);
-            data.Length = node.GetAttribute<int?>("byteLength", null);
+            data.Length = node.GetAttribute<int?>(Constants.ByteLength, null);
             if (!data.Length.HasValue
                 && !data.RecordType.HasValue
                 && !(field is NothingType)

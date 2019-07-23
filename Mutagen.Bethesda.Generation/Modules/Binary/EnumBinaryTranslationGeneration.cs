@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationMaskAccessor)
         {
             var eType = typeGen as EnumType;
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Write"))
             {
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             var eType = typeGen as EnumType;
             if (data.HasTrigger)
             {
@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Generation
             DataType dataType)
         {
             var eType = typeGen as EnumType;
-            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
 
             if (data.HasTrigger)
             {

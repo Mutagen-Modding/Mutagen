@@ -2413,6 +2413,117 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class LeveledItemBinaryWrapper :
+        ItemAbstractBinaryWrapper,
+        ILeveledItemInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
+        public new static LeveledItem_Registration Registration => LeveledItem_Registration.Instance;
+        protected override object CommonInstance => LeveledItemCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledItemInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => LeveledItemXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
+
+        #region ChanceNone
+        private int? _ChanceNoneLocation;
+        public bool ChanceNone_IsSet => _ChanceNoneLocation.HasValue;
+        public Byte ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _ChanceNoneLocation.Value, _package.Meta)[0] : default;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public bool Flags_IsSet => GetFlagsIsSetCustom();
+        public LeveledFlag Flags => GetFlagsCustom();
+        #endregion
+        public IReadOnlySetList<ILeveledEntryGetter<IItemAbstractInternalGetter>> Entries { get; private set; } = EmptySetList<LeveledEntryBinaryWrapper<IItemAbstractInternalGetter>>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected LeveledItemBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static LeveledItemBinaryWrapper LeveledItemFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new LeveledItemBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x444C564C: // LVLD
+                {
+                    _ChanceNoneLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
+                }
+                case 0x464C564C: // LVLF
+                {
+                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
+                }
+                case 0x4F4C564C: // LVLO
+                {
+                    this.Entries = BinaryWrapperSetList<LeveledEntryBinaryWrapper<IItemAbstractInternalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => LeveledEntryBinaryWrapper<IItemAbstractInternalGetter>.LeveledEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: UtilityTranslation.ParseSubrecordLocations(
+                            stream: stream,
+                            meta: _package.Meta,
+                            trigger: type,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
+                }
+                case 0x41544144: // DATA
+                {
+                    VestigialSpecialParse(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return TryGet<int?>.Succeed(null);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

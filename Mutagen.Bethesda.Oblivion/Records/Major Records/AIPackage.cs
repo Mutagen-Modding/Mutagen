@@ -99,7 +99,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class AIPackageBinaryWrapper
         {
-            public AIPackage.Flag GetFlagsCustom(int location)
+            public bool GetFlagsIsSetCustom() => _PKDTLocation.HasValue;
+            public AIPackage.Flag GetFlagsCustom()
             {
                 var span = _data.Span.Slice(_PKDTLocation.Value);
                 if (span.Length > 4)
@@ -112,7 +113,8 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            public AIPackage.GeneralTypeEnum GetGeneralTypeCustom(int location)
+            public bool GetGeneralTypeIsSetCustom() => _PKDTLocation.HasValue;
+            public AIPackage.GeneralTypeEnum GetGeneralTypeCustom()
             {
                 var span = _data.Span.Slice(_PKDTLocation.Value);
                 if (span.Length > 4)

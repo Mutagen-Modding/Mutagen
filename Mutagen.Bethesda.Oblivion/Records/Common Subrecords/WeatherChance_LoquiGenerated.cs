@@ -1747,6 +1747,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class WeatherChanceBinaryWrapper : IWeatherChanceGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => WeatherChance_Registration.Instance;
+        public static WeatherChance_Registration Registration => WeatherChance_Registration.Instance;
+        protected object CommonInstance => WeatherChanceCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherChanceGetter)rhs, include);
+
+        protected object XmlWriteTranslator => WeatherChanceXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => WeatherChanceBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Weather
+        public IFormIDLinkGetter<IWeatherInternalGetter> Weather_Property => new FormIDLink<IWeatherInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IWeatherInternalGetter Weather => default;
+        #endregion
+        public Int32 Chance => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected WeatherChanceBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static WeatherChanceBinaryWrapper WeatherChanceFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new WeatherChanceBinaryWrapper(
+                bytes: stream.RemainingMemory.Slice(0, 8),
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

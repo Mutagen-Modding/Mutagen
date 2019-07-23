@@ -3197,13 +3197,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public AIPackage.PKDTDataType PKDTDataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _PKDTLocation.Value + 0x0;
-        private bool _Flags_IsSet => _PKDTLocation.HasValue;
-        public AIPackage.Flag Flags => GetFlagsCustom(location: _FlagsLocation);
+        private bool _Flags_IsSet => GetFlagsIsSetCustom();
+        public AIPackage.Flag Flags => GetFlagsCustom();
         #endregion
         #region GeneralType
         private int _GeneralTypeLocation => _PKDTLocation.Value + 0x4;
-        private bool _GeneralType_IsSet => _PKDTLocation.HasValue;
-        public AIPackage.GeneralTypeEnum GeneralType => GetGeneralTypeCustom(location: _GeneralTypeLocation);
+        private bool _GeneralType_IsSet => GetGeneralTypeIsSetCustom();
+        public AIPackage.GeneralTypeEnum GeneralType => GetGeneralTypeCustom();
         #endregion
         #region Location
         public IAIPackageLocationGetter Location { get; private set; }

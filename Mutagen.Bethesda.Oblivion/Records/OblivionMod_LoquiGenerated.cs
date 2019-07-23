@@ -15136,6 +15136,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SigilStones);
                 }
+                case 0x494C564C: // LVLI
+                {
+                    this._LeveledItems = GroupBinaryWrapper<ILeveledItemInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledItems);
+                }
+                case 0x52485457: // WTHR
+                {
+                    this._Weathers = GroupBinaryWrapper<IWeatherInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weathers);
+                }
+                case 0x544D4C43: // CLMT
+                {
+                    this._Climates = GroupBinaryWrapper<IClimateInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Climates);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

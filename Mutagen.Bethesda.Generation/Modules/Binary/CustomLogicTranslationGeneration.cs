@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"public {typeGen.TypeName(getter: true)} {typeGen.Name} => Get{typeGen.Name}Custom"))
             {
-                if (!fieldData.HasTrigger)
+                if (!fieldData.HasTrigger && dataType == null)
                 {
                     args.Add($"location: {loc}");
                 }

@@ -83,6 +83,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="binaryWrapper" type="MutagenBinaryType" >
+            <xs:annotation>
+              <xs:documentation>
+                How to generate binary wrapper translations.  Defaults to "binary" setting if missing
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="byteLength" type="xs:integer" >
             <xs:annotation>
               <xs:documentation>
