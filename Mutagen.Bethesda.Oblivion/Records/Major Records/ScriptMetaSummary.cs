@@ -40,13 +40,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class ScriptMetaSummaryBinaryWrapper
         {
-            public int GetCompiledSizeCustom(
-                ReadOnlySpan<byte> span,
-                int location,
-                int? expectedLength,
-                BinaryWrapperFactoryPackage package)
+            public int GetCompiledSizeCustom(int location)
             {
-                return BinaryPrimitives.ReadInt32LittleEndian(span.Slice(location));
+                return BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(location));
             }
         }
     }

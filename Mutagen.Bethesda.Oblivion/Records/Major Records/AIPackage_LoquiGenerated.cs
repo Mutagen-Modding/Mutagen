@@ -3198,20 +3198,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Flags
         private int _FlagsLocation => _PKDTLocation.Value + 0x0;
         private bool _Flags_IsSet => _PKDTLocation.HasValue;
-        public AIPackage.Flag Flags => GetFlagsCustom(
-            span: _data,
-            location: _FlagsLocation,
-            expectedLength: 4,
-            package: _package);
+        public AIPackage.Flag Flags => GetFlagsCustom(location: _FlagsLocation);
         #endregion
         #region GeneralType
         private int _GeneralTypeLocation => _PKDTLocation.Value + 0x4;
         private bool _GeneralType_IsSet => _PKDTLocation.HasValue;
-        public AIPackage.GeneralTypeEnum GeneralType => GetGeneralTypeCustom(
-            span: _data,
-            location: _GeneralTypeLocation,
-            expectedLength: 4,
-            package: _package);
+        public AIPackage.GeneralTypeEnum GeneralType => GetGeneralTypeCustom(location: _GeneralTypeLocation);
         #endregion
         #region Location
         public IAIPackageLocationGetter Location { get; private set; }

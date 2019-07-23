@@ -253,10 +253,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"public {typeGen.TypeName(getter: true)} {typeGen.Name} => Get{typeGen.Name}Custom"))
             {
-                args.Add($"span: {dataAccessor}");
                 args.Add($"location: {loc}");
-                args.Add($"expectedLength: {this.ExpectedLength(objGen, typeGen)?.ToString() ?? "default(int?)"}");
-                args.Add($"package: _package");
             }
             if (!fieldData.HasTrigger)
             {

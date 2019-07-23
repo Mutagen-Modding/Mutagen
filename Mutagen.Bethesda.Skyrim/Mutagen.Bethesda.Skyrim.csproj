@@ -21,7 +21,9 @@
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Records\Group.cs" />
+    <Compile Include="Records\Group.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>

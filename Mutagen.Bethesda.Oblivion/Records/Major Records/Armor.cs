@@ -38,13 +38,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class ArmorBinaryWrapper
     {
-        public float GetArmorValueCustom(
-            ReadOnlySpan<byte> span,
-            int location,
-            int? expectedLength,
-            BinaryWrapperFactoryPackage package)
+        public float GetArmorValueCustom(int location)
         {
-            return ArmorBinaryCreateTranslation.GetArmorValue(BinaryPrimitives.ReadUInt16LittleEndian(span.Slice(location)));
+            return ArmorBinaryCreateTranslation.GetArmorValue(BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(location)));
         }
     }
 }

@@ -99,13 +99,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class AIPackageBinaryWrapper
         {
-            public AIPackage.Flag GetFlagsCustom(
-                ReadOnlySpan<byte> span,
-                int location,
-                int? expectedLength,
-                BinaryWrapperFactoryPackage package)
+            public AIPackage.Flag GetFlagsCustom(int location)
             {
-                span = span.Slice(_PKDTLocation.Value);
+                var span = _data.Span.Slice(_PKDTLocation.Value);
                 if (span.Length > 4)
                 {
                     return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span));
@@ -116,13 +112,9 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            public AIPackage.GeneralTypeEnum GetGeneralTypeCustom(
-                ReadOnlySpan<byte> span,
-                int location,
-                int? expectedLength,
-                BinaryWrapperFactoryPackage package)
+            public AIPackage.GeneralTypeEnum GetGeneralTypeCustom(int location)
             {
-                span = span.Slice(_PKDTLocation.Value);
+                var span = _data.Span.Slice(_PKDTLocation.Value);
                 if (span.Length > 4)
                 {
                     return EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4)));
