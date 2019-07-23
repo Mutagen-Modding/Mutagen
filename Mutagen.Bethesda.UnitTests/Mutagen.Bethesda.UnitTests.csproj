@@ -49,6 +49,7 @@
     <Compile Include="ModKey_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordType_Tests.cs" />
+    <Compile Include="UtilityTranslation_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
