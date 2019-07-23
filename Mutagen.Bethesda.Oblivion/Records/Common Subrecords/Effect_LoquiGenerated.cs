@@ -2798,10 +2798,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected ReadOnlyMemorySlice<byte> _data;
         protected BinaryWrapperFactoryPackage _package;
 
-        #region EffectInitial
-        private int? _EffectInitialLocation;
-        public bool EffectInitial_IsSet => _EffectInitialLocation.HasValue;
-        #endregion
         private int? _EFITLocation;
         public Effect.EFITDataType EFITDataTypeState { get; private set; }
         #region MagicEffect
@@ -2879,7 +2875,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x44494645: // EFID
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.MagicEffect) return TryGet<int?>.Failure;
-                    _EffectInitialLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed(lastParsed);
                 }
                 case 0x54494645: // EFIT

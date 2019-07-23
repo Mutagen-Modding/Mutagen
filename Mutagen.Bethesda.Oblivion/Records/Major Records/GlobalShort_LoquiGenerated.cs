@@ -1917,8 +1917,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Data
         private int? _DataLocation;
-        public bool Data_IsSet => _DataLocation.HasValue;
-        public Int16 Data => GetDataCustom(location: _DataLocation.Value);
+        public bool Data_IsSet => GetDataIsSetCustom();
+        public Int16 Data => GetDataCustom();
         #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 

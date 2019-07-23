@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Generation
             if (fieldData.HasTrigger)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
-                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+                fg.AppendLine($"public bool {typeGen.Name}_IsSet => Get{typeGen.Name}IsSetCustom();");
                 loc = $"_{typeGen.Name}Location.Value";
             }
             else if (!fieldData.Length.HasValue
@@ -253,7 +253,10 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"public {typeGen.TypeName(getter: true)} {typeGen.Name} => Get{typeGen.Name}Custom"))
             {
-                args.Add($"location: {loc}");
+                if (!fieldData.HasTrigger)
+                {
+                    args.Add($"location: {loc}");
+                }
             }
             if (!fieldData.HasTrigger)
             {
@@ -269,12 +272,18 @@ namespace Mutagen.Bethesda.Generation
             int passedLength, 
             DataType data = null)
         {
-            var fieldData = typeGen.GetFieldData();
-            if (fieldData.HasTrigger)
-            {
-                fg.AppendLine($"private int? _{typeGen.Name}Location;");
-                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
-            }
+            // ToDo
+        }
+
+        public override async Task GenerateWrapperRecordTypeParse(
+            FileGeneration fg, 
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen, 
+            Accessor locationAccessor, 
+            Accessor packageAccessor, 
+            Accessor converterAccessor)
+        {
+            // ToDo
         }
 
         public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)

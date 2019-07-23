@@ -1533,10 +1533,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object XmlWriteTranslator => GlobalXmlWriteTranslation.Instance;
         protected override object BinaryWriteTranslator => GlobalBinaryWriteTranslation.Instance;
 
-        #region TypeChar
-        private int? _TypeCharLocation;
-        public bool TypeChar_IsSet => _TypeCharLocation.HasValue;
-        #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
         protected GlobalBinaryWrapper(
@@ -1558,7 +1554,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4D414E46: // FNAM
                 {
-                    _TypeCharLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed(null);
                 }
                 default:

@@ -2811,10 +2811,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IScriptMetaSummaryGetter MetadataSummary => _MetadataSummary ?? new ScriptMetaSummary();
         public bool MetadataSummary_IsSet => MetadataSummary != null;
         #endregion
-        #region MetadataSummaryOld
-        private int? _MetadataSummaryOldLocation;
-        public bool MetadataSummaryOld_IsSet => _MetadataSummaryOldLocation.HasValue;
-        #endregion
         #region CompiledScript
         private int? _CompiledScriptLocation;
         public bool CompiledScript_IsSet => _CompiledScriptLocation.HasValue;
@@ -2876,7 +2872,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x44484353: // SCHD
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.CompiledScript) return TryGet<int?>.Failure;
-                    _MetadataSummaryOldLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed(lastParsed);
                 }
                 case 0x41444353: // SCDA

@@ -74,9 +74,11 @@ namespace Mutagen.Bethesda.Oblivion
             public override char TypeChar => GlobalShort.TRIGGER_CHAR;
             public override float RawFloat => (float)this.Data;
 
-            public short GetDataCustom(int location)
+            public bool GetDataIsSetCustom() => _DataLocation.HasValue;
+
+            public short GetDataCustom()
             {
-                return (short)HeaderTranslation.ExtractSubrecordSpan(_data.Span, location, _package.Meta).GetFloat();
+                return (short)HeaderTranslation.ExtractSubrecordSpan(_data.Span, _DataLocation.Value, _package.Meta).GetFloat();
             }
         }
     }

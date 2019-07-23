@@ -6489,8 +6489,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region OpenByDefault
         private int? _OpenByDefaultLocation;
-        public bool OpenByDefault_IsSet => _OpenByDefaultLocation.HasValue;
-        public Boolean OpenByDefault => GetOpenByDefaultCustom(location: _OpenByDefaultLocation.Value);
+        public bool OpenByDefault_IsSet => GetOpenByDefaultIsSetCustom();
+        public Boolean OpenByDefault => GetOpenByDefaultCustom();
         #endregion
         #region RagdollData
         private int? _RagdollDataLocation;
