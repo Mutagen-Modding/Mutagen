@@ -56,15 +56,15 @@ namespace Mutagen.Bethesda.Oblivion
                     new ArgumentException($"Could not find FLTV."));
                 return null;
             }
-            var fnamMeta = frame.MetaData.SubRecord(subrecordSpan.Slice(locs[0]));
-            if (fnamMeta.RecordLength != 1)
+            var fnamFrame = frame.MetaData.SubRecordFrame(subrecordSpan.Slice(locs[0]));
+            if (fnamFrame.DataSpan.Length != 1)
             {
                 errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"FNAM had non 1 length: {fnamMeta.RecordLength}"));
+                    new ArgumentException($"FNAM had non 1 length: {fnamFrame.DataSpan.Length}"));
             }
 
             // Create proper Global subclass
-            var triggerChar = (char)subrecordSpan[locs[0] + fnamMeta.HeaderLength];
+            var triggerChar = (char)fnamFrame.DataSpan[0];
             Global g;
             switch (triggerChar)
             {
@@ -92,7 +92,8 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask);
 
             // Read data
-            g.RawFloat = subrecordSpan.Slice(locs[1] + fnamMeta.HeaderLength).GetFloat();
+            var fltvFrame = frame.MetaData.SubRecordFrame(subrecordSpan.Slice(locs[1]));
+            g.RawFloat = fltvFrame.DataSpan.GetFloat();
             
             // Skip to end
             frame.Reader.Position = initialPos + majorMeta.TotalLength;

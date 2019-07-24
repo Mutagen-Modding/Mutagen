@@ -114,11 +114,33 @@ namespace Mutagen.Bethesda.Binary
         public GroupRecordMeta GetGroup(IBinaryReadStream stream) => new GroupRecordMeta(this, stream.GetSpan(this.GroupConstants.HeaderLength));
         public GroupRecordMeta ReadGroup(IBinaryReadStream stream) => new GroupRecordMeta(this, stream.ReadSpan(this.GroupConstants.HeaderLength));
         public MajorRecordMeta MajorRecord(ReadOnlySpan<byte> span) => new MajorRecordMeta(this, span);
+        public MajorRecordFrame MajorRecordFrame(ReadOnlySpan<byte> span) => new MajorRecordFrame(this, span);
         public MajorRecordMeta GetMajorRecord(IBinaryReadStream stream) => new MajorRecordMeta(this, stream.GetSpan(this.MajorConstants.HeaderLength));
+        public MajorRecordFrame GetMajorRecordFrame(IBinaryReadStream stream)
+        {
+            var meta = GetMajorRecord(stream);
+            return new MajorRecordFrame(meta, stream.GetSpan(meta.HeaderLength, checked((int)meta.RecordLength)));
+        }
         public MajorRecordMeta ReadMajorRecord(IBinaryReadStream stream) => new MajorRecordMeta(this, stream.ReadSpan(this.MajorConstants.HeaderLength));
+        public MajorRecordFrame ReadMajorRecordFrame(IBinaryReadStream stream)
+        {
+            var meta = ReadMajorRecord(stream);
+            return new MajorRecordFrame(meta, stream.ReadSpan(0, checked((int)meta.RecordLength)));
+        }
         public SubRecordMeta SubRecord(ReadOnlySpan<byte> span) => new SubRecordMeta(this, span);
+        public SubRecordFrame SubRecordFrame(ReadOnlySpan<byte> span) => new SubRecordFrame(this, span);
         public SubRecordMeta GetSubRecord(IBinaryReadStream stream) => new SubRecordMeta(this, stream.GetSpan(this.SubConstants.HeaderLength));
+        public SubRecordFrame GetSubRecordFrame(IBinaryReadStream stream)
+        {
+            var meta = GetSubRecord(stream);
+            return new SubRecordFrame(meta, stream.GetSpan(meta.HeaderLength, meta.RecordLength));
+        }
         public SubRecordMeta ReadSubRecord(IBinaryReadStream stream) => new SubRecordMeta(this, stream.ReadSpan(this.SubConstants.HeaderLength));
+        public SubRecordFrame ReadSubRecordFrame(IBinaryReadStream stream)
+        {
+            var meta = ReadSubRecord(stream);
+            return new SubRecordFrame(meta, stream.ReadSpan(0, meta.RecordLength));
+        }
 
         public RecordConstants Constants(ObjectType type)
         {
@@ -220,6 +242,24 @@ namespace Mutagen.Bethesda.Binary
         public bool IsCompressed => (this.MajorRecordFlags & Mutagen.Bethesda.Constants.CompressedFlag) > 0;
     }
 
+    public ref struct MajorRecordFrame
+    {
+        public MajorRecordMeta Header { get; }
+        public ReadOnlySpan<byte> DataSpan { get; }
+
+        public MajorRecordFrame(MetaDataConstants meta, ReadOnlySpan<byte> span)
+        {
+            this.Header = meta.MajorRecord(span);
+            this.DataSpan = span.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
+        }
+
+        public MajorRecordFrame(MajorRecordMeta meta, ReadOnlySpan<byte> span)
+        {
+            this.Header = meta;
+            this.DataSpan = span;
+        }
+    }
+
     public ref struct SubRecordMeta
     {
         private MetaDataConstants meta;
@@ -236,5 +276,23 @@ namespace Mutagen.Bethesda.Binary
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
         public ushort RecordLength => BinaryPrimitives.ReadUInt16LittleEndian(this.Span.Slice(4, 2));
         public int TotalLength => this.HeaderLength + this.RecordLength;
+    }
+
+    public ref struct SubRecordFrame
+    {
+        public SubRecordMeta Header { get; }
+        public ReadOnlySpan<byte> DataSpan { get; }
+
+        public SubRecordFrame(MetaDataConstants meta, ReadOnlySpan<byte> span)
+        {
+            this.Header = meta.SubRecord(span);
+            this.DataSpan = span.Slice(this.Header.HeaderLength, this.Header.RecordLength);
+        }
+
+        public SubRecordFrame(SubRecordMeta meta, ReadOnlySpan<byte> span)
+        {
+            this.Header = meta;
+            this.DataSpan = span;
+        }
     }
 }
