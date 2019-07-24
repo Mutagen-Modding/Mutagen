@@ -608,6 +608,85 @@ namespace Mutagen.Bethesda
                 cache[new RecordType(edid)] = item.Value;
             }
         }
+
+        /// <summary>
+        /// Parses span data and enumerates pairs of record type -> locations
+        /// 
+        /// It is assumed the span contains only subrecords
+        /// </summary>
+        /// <param name="span">Bytes containing subrecords</param>
+        /// <param name="meta">Metadata to use in subrecord parsing</param>
+        /// <returns>Enumerable of KeyValue pairs of encountered RecordTypes and their locations relative to the input span</returns>
+        public static IEnumerable<KeyValuePair<RecordType, int>> EnumerateSubrecords(ReadOnlyMemorySlice<byte> span, MetaDataConstants meta)
+        {
+            int loc = 0;
+            while (span.Length > loc)
+            {
+                var subMeta = meta.SubRecord(span.Slice(loc));
+                var len = subMeta.TotalLength;
+                yield return new KeyValuePair<RecordType, int>(subMeta.RecordType, loc);
+                loc += len;
+            }
+        }
+
+        /// <summary>
+        /// Locates the first encountered instances of all given subrecord types, and returns an array of their locations
+        /// -1 represents a recordtype that was not found.
+        /// 
+        /// Not suggested to use with high numbers of record types, as it is an N^2 algorithm
+        /// </summary>
+        /// <param name="data">Subrecord data to be parsed</param>
+        /// <param name="recordTypes">Record types to locate</param>
+        /// <param name="meta">Metadata to use in subrecord parsing</param>
+        /// <returns>Array of found record locations</returns>
+        public static int[] FindFirstSubrecords(ReadOnlySpan<byte> data, MetaDataConstants meta, params RecordType[] recordTypes)
+        {
+            int loc = 0;
+            int[] ret = new int[recordTypes.Length];
+            for (int i = 0; i < ret.Length; i++)
+            {
+                ret[i] = -1;
+            }
+            while (data.Length > loc)
+            {
+                var subMeta = meta.SubRecord(data.Slice(loc));
+                var recType = subMeta.RecordType;
+                for (int i = 0; i < recordTypes.Length; i++)
+                {
+                    if (recordTypes[i] == recType && ret[i] == -1)
+                    {
+                        ret[i] = loc;
+                        bool breakOut = false;
+                        for (int j = 0; j < ret.Length; j++)
+                        {
+                            if (ret[j] == -1)
+                            {
+                                breakOut = true;
+                                break;
+                            }
+                        }
+                        if (breakOut)
+                        {
+                            break;
+                        }
+                    }
+                }
+                loc += subMeta.TotalLength;
+            }
+            return ret;
+        }
+
+        public static int FindFirstSubrecord(ReadOnlySpan<byte> data, MetaDataConstants meta, RecordType recordType, bool navigateToContent = false)
+        {
+            int loc = 0;
+            while (data.Length > loc)
+            {
+                var subMeta = meta.SubRecord(data.Slice(loc));
+                if (subMeta.RecordType == recordType) return navigateToContent ? (loc + meta.SubConstants.HeaderLength) : loc;
+                loc += subMeta.TotalLength;
+            }
+            return -1;
+        }
     }
 
     public static class UtilityAsyncTranslation
