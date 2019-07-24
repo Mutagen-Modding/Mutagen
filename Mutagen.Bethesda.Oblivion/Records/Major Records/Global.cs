@@ -2,6 +2,7 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
 using System;
@@ -21,6 +22,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Global
     {
         public static readonly RecordType FNAM = new RecordType("FNAM");
+        public static readonly RecordType FLTV = new RecordType("FLTV");
 
         public abstract float RawFloat { get; set; }
         public abstract char TypeChar { get; }
@@ -31,33 +33,38 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            // Skip to FNAM
             var initialPos = frame.Position;
-            if (HeaderTranslation.ReadNextRecordType(frame.Reader, out var recLen) != Global_Registration.GLOB_HEADER)
+            var majorMeta = frame.MetaData.ReadMajorRecord(frame);
+            if (majorMeta.RecordType != Global_Registration.GLOB_HEADER)
             {
                 throw new ArgumentException();
             }
-            frame.CheckUpcomingRead(18);
-            frame.Reader.Position += 16;
-            var edidLength = frame.Reader.ReadInt16();
-            frame.Reader.Position += edidLength;
 
-            // Confirm FNAM
-            var type = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len);
-            if (!type.Equals(FNAM))
+            var subrecordSpan = frame.GetSpan(checked((int)majorMeta.RecordLength));
+
+            // Find FNAM
+            var locs = UtilityTranslation.FindFirstSubrecords(subrecordSpan, frame.MetaData, FNAM, FLTV);
+            if (locs[0] < 0)
             {
                 errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"Could not find FNAM in its expected location: {frame.Position}"));
+                    new ArgumentException($"Could not find FNAM."));
                 return null;
             }
-            if (len != 1)
+            if (locs[1] < 0)
             {
                 errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"FNAM had non 1 length: {len}"));
+                    new ArgumentException($"Could not find FLTV."));
+                return null;
+            }
+            var fnamMeta = frame.MetaData.SubRecord(subrecordSpan.Slice(locs[0]));
+            if (fnamMeta.RecordLength != 1)
+            {
+                errorMask.ReportExceptionOrThrow(
+                    new ArgumentException($"FNAM had non 1 length: {fnamMeta.RecordLength}"));
             }
 
             // Create proper Global subclass
-            var triggerChar = (char)frame.Reader.ReadUInt8();
+            var triggerChar = (char)subrecordSpan[locs[0] + fnamMeta.HeaderLength];
             Global g;
             switch (triggerChar)
             {
@@ -77,21 +84,18 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             // Fill with major record fields
-            frame.Reader.Position = initialPos + 8;
+            frame.Reader.Position = initialPos + frame.MetaData.MajorConstants.TypeAndLengthLength;
             OblivionMajorRecord.FillBinary(
                 frame,
                 g,
                 masterReferences,
                 errorMask);
 
-            // Skip to and read data
-            frame.Reader.Position += 13;
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame,
-                out var rawFloat))
-            {
-                g.RawFloat = rawFloat;
-            }
+            // Read data
+            g.RawFloat = subrecordSpan.Slice(locs[1] + fnamMeta.HeaderLength).GetFloat();
+            
+            // Skip to end
+            frame.Reader.Position = initialPos + majorMeta.TotalLength;
             return g;
         }
     }

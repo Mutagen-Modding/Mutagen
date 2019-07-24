@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda
         /// <param name="recordTypes">Record types to locate</param>
         /// <param name="meta">Metadata to use in subrecord parsing</param>
         /// <returns>Array of found record locations</returns>
-        public static int[] FindFirstEncounteredSubrecords(ReadOnlySpan<byte> data, MetaDataConstants meta, params RecordType[] recordTypes)
+        public static int[] FindFirstSubrecords(ReadOnlySpan<byte> data, MetaDataConstants meta, params RecordType[] recordTypes)
         {
             int loc = 0;
             int[] ret = new int[recordTypes.Length];
@@ -676,13 +676,13 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static int FindFirstSubrecord(ReadOnlySpan<byte> data, MetaDataConstants meta, RecordType recordType)
+        public static int FindFirstSubrecord(ReadOnlySpan<byte> data, MetaDataConstants meta, RecordType recordType, bool navigateToContent = false)
         {
             int loc = 0;
             while (data.Length > loc)
             {
                 var subMeta = meta.SubRecord(data.Slice(loc));
-                if (subMeta.RecordType == recordType) return loc;
+                if (subMeta.RecordType == recordType) return navigateToContent ? (loc + meta.SubConstants.HeaderLength) : loc;
                 loc += subMeta.TotalLength;
             }
             return -1;

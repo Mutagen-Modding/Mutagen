@@ -78,38 +78,38 @@ namespace Mutagen.Bethesda.UnitTests
         }
         #endregion
 
-        #region FindFirstEncounteredSubrecords
+        #region FindFirstSubrecords
         [Fact]
-        public void FindFirstEncounteredSubrecords_Empty()
+        public void FindFirstSubrecords_Empty()
         {
             var b = new byte[0];
-            var ret = UtilityTranslation.FindFirstEncounteredSubrecords(b.AsSpan(), MetaDataConstants.Oblivion, FirstTypicalType, SecondTypicalType);
+            var ret = UtilityTranslation.FindFirstSubrecords(b.AsSpan(), MetaDataConstants.Oblivion, FirstTypicalType, SecondTypicalType);
             Assert.Equal(2, ret.Length);
             Assert.Equal(-1, ret[0]);
             Assert.Equal(-1, ret[1]);
         }
 
         [Fact]
-        public void FindFirstEncounteredSubrecords_Typical()
+        public void FindFirstSubrecords_Typical()
         {
-            var ret = UtilityTranslation.FindFirstEncounteredSubrecords(GetTypical().Span, MetaDataConstants.Oblivion, SecondTypicalType, FirstTypicalType);
+            var ret = UtilityTranslation.FindFirstSubrecords(GetTypical().Span, MetaDataConstants.Oblivion, SecondTypicalType, FirstTypicalType);
             Assert.Equal(2, ret.Length);
             Assert.Equal(SecondTypicalLocation, ret[0]);
             Assert.Equal(FirstTypicalLocation, ret[1]);
         }
 
         [Fact]
-        public void FindFirstEncounteredSubrecords_Single()
+        public void FindFirstSubrecords_Single()
         {
-            var ret = UtilityTranslation.FindFirstEncounteredSubrecords(GetTypical().Span, MetaDataConstants.Oblivion, SecondTypicalType);
+            var ret = UtilityTranslation.FindFirstSubrecords(GetTypical().Span, MetaDataConstants.Oblivion, SecondTypicalType);
             Assert.Single(ret);
             Assert.Equal(SecondTypicalLocation, ret[0]);
         }
 
         [Fact]
-        public void FindFirstEncounteredSubrecords_Duplicate()
+        public void FindFirstSubrecords_Duplicate()
         {
-            var ret = UtilityTranslation.FindFirstEncounteredSubrecords(GetDuplicate().Span, MetaDataConstants.Oblivion, SecondTypicalType, FirstTypicalType);
+            var ret = UtilityTranslation.FindFirstSubrecords(GetDuplicate().Span, MetaDataConstants.Oblivion, SecondTypicalType, FirstTypicalType);
             Assert.Equal(2, ret.Length);
             Assert.Equal(SecondTypicalLocation, ret[0]);
             Assert.Equal(FirstTypicalLocation, ret[1]);
