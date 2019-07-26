@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class RegionBinaryCreateTranslation
     {
-        public static readonly int RDAT_LEN = 14;
         public static readonly RecordType RDOT = new RecordType("RDOT");
         public static readonly RecordType RDWT = new RecordType("RDWT");
         public static readonly RecordType RDMP = new RecordType("RDMP");
@@ -30,55 +30,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static void ParseRegionData(MutagenFrame frame, Region item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static bool IsExpected(RegionData.RegionDataType dataType, RecordType recordType)
         {
-            RegionData.RegionDataType dataType = (RegionData.RegionDataType)frame.Reader.GetUInt32(offset: 6);
-            var recType = HeaderTranslation.GetNextSubRecordType(
-                frame.Reader,
-                out var len,
-                offset: 14);
             switch (dataType)
             {
                 case RegionData.RegionDataType.Objects:
-                    if (!recType.Equals(RDOT))
-                    {
-                        len = -6;
-                    }
+                    if (!recordType.Equals(RDOT)) return false;
                     break;
                 case RegionData.RegionDataType.Weather:
-                    if (!recType.Equals(RDWT))
-                    {
-                        len = -6;
-                    }
+                    if (!recordType.Equals(RDWT)) return false;
                     break;
                 case RegionData.RegionDataType.MapName:
-                    if (!recType.Equals(RDMP))
-                    {
-                        len = -6;
-                    }
+                    if (!recordType.Equals(RDMP)) return false;
                     break;
                 case RegionData.RegionDataType.Icon:
-                    if (!recType.Equals(ICON))
-                    {
-                        len = -6;
-                    }
+                    if (!recordType.Equals(ICON)) return false;
                     break;
                 case RegionData.RegionDataType.Grasses:
-                    if (!recType.Equals(RDGS))
-                    {
-                        len = -6;
-                    }
+                    if (!recordType.Equals(RDGS)) return false;
                     break;
                 case RegionData.RegionDataType.Sounds:
-                    if (!recType.Equals(RDSD) && !recType.Equals(RDMD))
-                    {
-                        len = -6;
-                    }
+                    if (!recordType.Equals(RDSD) && !recordType.Equals(RDMD)) return false;
                     break;
                 default:
                     break;
             }
-            len += RDAT_LEN + 6;
+            return true;
+        }
+
+        static void ParseRegionData(MutagenFrame frame, Region item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        {
+            var rdatFrame = frame.MetaData.GetSubRecordFrame(frame);
+            RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.DataSpan);
+            var subMeta = frame.MetaData.GetSubRecord(frame, offset: rdatFrame.Header.TotalLength);
+            int len = rdatFrame.Header.TotalLength;
+            if (IsExpected(dataType, subMeta.RecordType))
+            {
+                len += subMeta.TotalLength;
+            }
             switch (dataType)
             {
                 case RegionData.RegionDataType.Objects:
@@ -91,10 +80,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Grasses = RegionDataGrasses.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
                 case RegionData.RegionDataType.Sounds:
-                    var nextRec = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var nextLen, offset: len);
-                    if (nextRec.Equals(RDSD) || nextRec.Equals(RDMD))
+                    var nextRec = frame.MetaData.GetSubRecord(frame, offset: len);
+                    if (nextRec.RecordType.Equals(RDSD) || nextRec.RecordType.Equals(RDMD))
                     {
-                        len += nextLen + 6;
+                        len += nextRec.TotalLength;
                     }
                     item.Sounds = RegionDataSounds.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
@@ -102,8 +91,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Weather = RegionDataWeather.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
                 case RegionData.RegionDataType.Icon:
-                    frame.Position += 6 + RDAT_LEN;
-                    len = len - 6 - RDAT_LEN;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength + rdatFrame.Header.TotalLength;
+                    len = len - frame.MetaData.SubConstants.HeaderLength - rdatFrame.Header.TotalLength;
                     if (StringBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(len, checkFraming: false),
                         out var iconVal))
