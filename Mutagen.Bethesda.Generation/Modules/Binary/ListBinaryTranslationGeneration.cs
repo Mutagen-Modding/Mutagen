@@ -521,17 +521,32 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add(subFg =>
                                 {
                                     using (var subArgs = new FunctionWrapper(subFg,
-                                        $"locs: UtilityTranslation.ParseSubrecordLocations"))
+                                        $"locs: UtilityTranslation.ParseRecordLocations"))
                                     {
                                         subArgs.AddPassArg("stream");
-                                        subArgs.Add("meta: _package.Meta");
                                         subArgs.Add("trigger: type");
+                                        switch (loqui.TargetObjectGeneration.GetObjectType())
+                                        {
+                                            case ObjectType.Subrecord:
+                                                subArgs.Add($"constants: _package.Meta.{nameof(MetaDataConstants.SubConstants)}");
+                                                break;
+                                            case ObjectType.Record:
+                                                subArgs.Add($"constants: _package.Meta.{nameof(MetaDataConstants.MajorConstants)}");
+                                                break;
+                                            case ObjectType.Group:
+                                                subArgs.Add($"constants: _package.Meta.{nameof(MetaDataConstants.GroupConstants)}");
+                                                break;
+                                            case ObjectType.Mod:
+                                            default:
+                                                throw new NotImplementedException();
+                                        }
                                         subArgs.Add("skipHeader: false");
                                     }
                                 });
                             }
                         }
                     }
+
                     else
                     {
                         using (var args = new ArgsWrapper(fg,
@@ -543,10 +558,10 @@ namespace Mutagen.Bethesda.Generation
                             args.Add(subFg =>
                             {
                                 using (var subArgs = new FunctionWrapper(subFg,
-                                    $"locs: UtilityTranslation.ParseSubrecordLocations"))
+                                    $"locs: UtilityTranslation.ParseRecordLocations"))
                                 {
                                     subArgs.AddPassArg("stream");
-                                    subArgs.Add("meta: _package.Meta");
+                                    subArgs.Add($"constants: _package.Meta.{nameof(MetaDataConstants.SubConstants)}");
                                     subArgs.Add("trigger: type");
                                     subArgs.Add("skipHeader: true");
                                 }

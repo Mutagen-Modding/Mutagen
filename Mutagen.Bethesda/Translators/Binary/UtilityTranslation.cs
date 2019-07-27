@@ -506,28 +506,28 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static int[] ParseSubrecordLocations(
+        public static int[] ParseRecordLocations(
             BinaryMemoryReadStream stream,
-            MetaDataConstants meta,
             RecordType trigger,
+            RecordConstants constants,
             bool skipHeader)
         {
             List<int> ret = new List<int>();
             var startingPos = stream.Position;
             while (!stream.Complete)
             {
-                var subMeta = meta.GetSubRecord(stream);
-                if (subMeta.RecordType != trigger) break;
+                var varMeta = constants.GetVariableMeta(stream);
+                if (varMeta.RecordType != trigger) break;
                 if (skipHeader)
                 {
-                    stream.Position += subMeta.HeaderLength;
+                    stream.Position += varMeta.HeaderLength;
                     ret.Add(stream.Position - startingPos);
-                    stream.Position += subMeta.RecordLength;
+                    stream.Position += (int)varMeta.RecordLength;
                 }
                 else
                 {
                     ret.Add(stream.Position - startingPos);
-                    stream.Position += subMeta.TotalLength;
+                    stream.Position += (int)varMeta.TotalLength;
                 }
             }
             return ret.ToArray();

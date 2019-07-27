@@ -2616,9 +2616,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<IGrassInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
-                        locs: UtilityTranslation.ParseSubrecordLocations(
+                        locs: UtilityTranslation.ParseRecordLocations(
                             stream: stream,
-                            meta: _package.Meta,
+                            constants: _package.Meta.SubConstants,
                             trigger: type,
                             skipHeader: true));
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.PotentialGrass);

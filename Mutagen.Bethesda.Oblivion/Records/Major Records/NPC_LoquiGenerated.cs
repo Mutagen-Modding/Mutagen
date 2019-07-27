@@ -12324,10 +12324,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package,
                         recordTypeConverter: null,
                         getter: (s, p, recConv) => RankPlacementBinaryWrapper.RankPlacementFactory(new BinaryMemoryReadStream(s), p, recConv),
-                        locs: UtilityTranslation.ParseSubrecordLocations(
+                        locs: UtilityTranslation.ParseRecordLocations(
                             stream: stream,
-                            meta: _package.Meta,
                             trigger: type,
+                            constants: _package.Meta.SubConstants,
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Factions);
                 }
@@ -12347,9 +12347,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<ISpellAbstractInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
-                        locs: UtilityTranslation.ParseSubrecordLocations(
+                        locs: UtilityTranslation.ParseRecordLocations(
                             stream: stream,
-                            meta: _package.Meta,
+                            constants: _package.Meta.SubConstants,
                             trigger: type,
                             skipHeader: true));
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Spells);
@@ -12366,10 +12366,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package,
                         recordTypeConverter: null,
                         getter: (s, p, recConv) => ItemEntryBinaryWrapper.ItemEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
-                        locs: UtilityTranslation.ParseSubrecordLocations(
+                        locs: UtilityTranslation.ParseRecordLocations(
                             stream: stream,
-                            meta: _package.Meta,
                             trigger: type,
+                            constants: _package.Meta.SubConstants,
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Items);
                 }
@@ -12385,9 +12385,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<IAIPackageInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
-                        locs: UtilityTranslation.ParseSubrecordLocations(
+                        locs: UtilityTranslation.ParseRecordLocations(
                             stream: stream,
-                            meta: _package.Meta,
+                            constants: _package.Meta.SubConstants,
                             trigger: type,
                             skipHeader: true));
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.AIPackages);
