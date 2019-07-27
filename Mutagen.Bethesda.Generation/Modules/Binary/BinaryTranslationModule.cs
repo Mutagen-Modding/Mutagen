@@ -1786,7 +1786,14 @@ namespace Mutagen.Bethesda.Generation
                                     }
                                     break;
                                 case ObjectType.Group:
-                                    call = $"{nameof(UtilityTranslation.FillRecordTypesForWrapper)}";
+                                    if (obj.IsTopLevelGroup())
+                                    {
+                                        call = $"{nameof(UtilityTranslation.FillMajorRecordsForWrapper)}";
+                                    }
+                                    else
+                                    {
+                                        call = $"{nameof(UtilityTranslation.FillGroupRecordsForWrapper)}";
+                                    }
                                     break;
                                 case ObjectType.Mod:
                                     call = $"{nameof(UtilityTranslation.FillModTypesForWrapper)}";

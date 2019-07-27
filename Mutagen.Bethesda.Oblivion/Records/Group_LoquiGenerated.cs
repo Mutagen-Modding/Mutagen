@@ -2282,7 +2282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.GroupConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
-            UtilityTranslation.FillRecordTypesForWrapper(
+            UtilityTranslation.FillMajorRecordsForWrapper(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

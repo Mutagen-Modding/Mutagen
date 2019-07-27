@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static void FillRecordTypesForWrapper(
+        public static void FillMajorRecordsForWrapper(
             BinaryMemoryReadStream stream,
             long finalPos,
             int offset,
@@ -417,6 +417,37 @@ namespace Mutagen.Bethesda
                 if (startPos == stream.Position)
                 {
                     stream.Position += checked((int)majorMeta.TotalLength);
+                }
+                lastParsed = parsed.Value;
+            }
+        }
+
+        public static void FillGroupRecordsForWrapper(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            MetaDataConstants meta,
+            RecordTypeConverter recordTypeConverter,
+            RecordTypeFillWrapper fill)
+        {
+            int? lastParsed = null;
+            while (stream.Position < finalPos)
+            {
+                GroupRecordMeta groupMeta = meta.Group(stream.RemainingSpan);
+                if (!groupMeta.IsGroup)
+                {
+                    throw new DataMisalignedException();
+                }
+                var startPos = stream.Position;
+                var parsed = fill(
+                    stream: stream,
+                    offset: offset,
+                    type: recordTypeConverter.ConvertToStandard(groupMeta.RecordType),
+                    lastParsed: lastParsed);
+                if (parsed.Failed) break;
+                if (startPos == stream.Position)
+                {
+                    stream.Position += checked((int)groupMeta.TotalLength);
                 }
                 lastParsed = parsed.Value;
             }
