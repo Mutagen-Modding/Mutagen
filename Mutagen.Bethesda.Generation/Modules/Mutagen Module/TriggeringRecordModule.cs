@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 throw new ArgumentException($"{obj.Name} {field.Name} cannot have both record type and marker type defined");
             }
-            if (obj.Name.Equals("Group") && (field.Name?.Equals("Items") ?? false))
+            if (obj.IsTopLevelGroup() && (field.Name?.Equals("Items") ?? false))
             {
                 DictType dict = field as DictType;
                 LoquiType loqui = dict.ValueTypeGen as LoquiType;
