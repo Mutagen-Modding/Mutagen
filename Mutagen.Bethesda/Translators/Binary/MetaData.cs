@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -33,6 +33,10 @@ namespace Mutagen.Bethesda.Binary
             this.TypeAndLengthLength = (sbyte)(Constants.HEADER_LENGTH + this.LengthLength);
             this.HeaderIncludedInLength = type == ObjectType.Group;
         }
+
+        public VariableHeaderMeta VariableMeta(ReadOnlySpan<byte> span) => new VariableHeaderMeta(this, span);
+        public VariableHeaderMeta GetVariableMeta(IBinaryReadStream stream, int offset = 0) => new VariableHeaderMeta(this, stream.GetSpan(this.HeaderLength, offset));
+        public VariableHeaderMeta ReadVariableMeta(IBinaryReadStream stream) => new VariableHeaderMeta(this, stream.ReadSpan(this.HeaderLength));
     }
 
     public class MajorRecordConstants : RecordConstants
@@ -110,9 +114,11 @@ namespace Mutagen.Bethesda.Binary
         public ModHeaderMeta Header(ReadOnlySpan<byte> span) => new ModHeaderMeta(this, span);
         public ModHeaderMeta GetHeader(IBinaryReadStream stream) => new ModHeaderMeta(this, stream.GetSpan(this.ModHeaderLength));
         public ModHeaderMeta ReadHeader(IBinaryReadStream stream) => new ModHeaderMeta(this, stream.ReadSpan(this.ModHeaderLength));
+
         public GroupRecordMeta Group(ReadOnlySpan<byte> span) => new GroupRecordMeta(this, span);
         public GroupRecordMeta GetGroup(IBinaryReadStream stream, int offset = 0) => new GroupRecordMeta(this, stream.GetSpan(this.GroupConstants.HeaderLength, offset));
         public GroupRecordMeta ReadGroup(IBinaryReadStream stream, int offset = 0) => new GroupRecordMeta(this, stream.ReadSpan(this.GroupConstants.HeaderLength, offset));
+
         public MajorRecordMeta MajorRecord(ReadOnlySpan<byte> span) => new MajorRecordMeta(this, span);
         public MajorRecordFrame MajorRecordFrame(ReadOnlySpan<byte> span) => new MajorRecordFrame(this, span);
         public MajorRecordMeta GetMajorRecord(IBinaryReadStream stream, int offset = 0) => new MajorRecordMeta(this, stream.GetSpan(this.MajorConstants.HeaderLength, offset));
@@ -127,6 +133,7 @@ namespace Mutagen.Bethesda.Binary
             var meta = ReadMajorRecord(stream);
             return new MajorRecordFrame(meta, stream.ReadSpan(checked((int)meta.RecordLength)));
         }
+
         public SubRecordMeta SubRecord(ReadOnlySpan<byte> span) => new SubRecordMeta(this, span);
         public SubRecordFrame SubRecordFrame(ReadOnlySpan<byte> span) => new SubRecordFrame(this, span);
         public SubRecordMeta GetSubRecord(IBinaryReadStream stream, int offset = 0) => new SubRecordMeta(this, stream.GetSpan(this.SubConstants.HeaderLength, offset));
@@ -141,7 +148,7 @@ namespace Mutagen.Bethesda.Binary
             var meta = ReadSubRecord(stream);
             return new SubRecordFrame(meta, stream.ReadSpan(meta.RecordLength));
         }
-
+        
         public RecordConstants Constants(ObjectType type)
         {
             switch (type)
@@ -194,6 +201,40 @@ namespace Mutagen.Bethesda.Binary
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
         public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
         public long TotalLength => this.HeaderLength + this.RecordLength;
+    }
+
+    public ref struct VariableHeaderMeta
+    {
+        public ReadOnlySpan<byte> Span { get; }
+        public RecordConstants Constants { get; }
+
+        public VariableHeaderMeta(RecordConstants constants, ReadOnlySpan<byte> span)
+        {
+            this.Constants = constants;
+            this.Span = span.Slice(0, constants.HeaderLength);
+        }
+
+        public sbyte HeaderLength => this.Constants.HeaderLength;
+        public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
+        public uint RecordLength
+        {
+            get
+            {
+                switch (this.Constants.LengthLength)
+                {
+                    case 1:
+                        return this.Span[4];
+                    case 2:
+                        return BinaryPrimitives.ReadUInt16LittleEndian(this.Span.Slice(4, 2));
+                    case 4:
+                        return BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
+        public int TypeAndLengthLength => this.Constants.TypeAndLengthLength;
+        public long TotalLength => this.Constants.HeaderIncludedInLength ? this.RecordLength : (this.HeaderLength + this.RecordLength);
     }
 
     public ref struct GroupRecordMeta
