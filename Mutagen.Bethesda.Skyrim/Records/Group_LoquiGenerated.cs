@@ -2228,6 +2228,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected ReadOnlyMemorySlice<byte> _data;
         protected BinaryWrapperFactoryPackage _package;
 
+        #region ContainedRecordTypeParse
+        partial void ContainedRecordTypeParseCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         public ReadOnlySpan<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);

@@ -7145,6 +7145,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _RushingAttackDistanceMult_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break3);
         public Single RushingAttackDistanceMult => _RushingAttackDistanceMult_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RushingAttackDistanceMultLocation, 4)) : default;
         #endregion
+        #region SecondaryFlags
+        partial void SecondaryFlagsCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
         #region Advanced
         public ICombatStyleAdvancedGetter Advanced { get; private set; }
         public bool Advanced_IsSet => Advanced != null;

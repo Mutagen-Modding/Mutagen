@@ -2798,6 +2798,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected ReadOnlyMemorySlice<byte> _data;
         protected BinaryWrapperFactoryPackage _package;
 
+        #region EffectInitial
+        partial void EffectInitialCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
         private int? _EFITLocation;
         public Effect.EFITDataType EFITDataTypeState { get; private set; }
         #region MagicEffect
@@ -2875,6 +2880,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x44494645: // EFID
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.MagicEffect) return TryGet<int?>.Failure;
+                    EffectInitialCustomParse(
+                        stream,
+                        offset);
                     return TryGet<int?>.Succeed(lastParsed);
                 }
                 case 0x54494645: // EFIT

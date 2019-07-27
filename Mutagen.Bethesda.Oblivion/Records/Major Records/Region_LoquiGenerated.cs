@@ -3614,6 +3614,118 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RegionBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IRegionInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
+        public new static Region_Registration Registration => Region_Registration.Instance;
+        protected override object CommonInstance => RegionCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => RegionXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
+
+        #region MapColor
+        private int? _MapColorLocation;
+        public bool MapColor_IsSet => _MapColorLocation.HasValue;
+        public Color MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _MapColorLocation.Value, _package.Meta).ReadColor() : default;
+        #endregion
+        #region Worldspace
+        private int? _WorldspaceLocation;
+        public bool Worldspace_IsSet => _WorldspaceLocation.HasValue;
+        public IFormIDSetLinkGetter<IWorldspaceInternalGetter> Worldspace_Property => _WorldspaceLocation.HasValue ? new FormIDSetLink<IWorldspaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorldspaceLocation.Value, _package.Meta)))) : FormIDSetLink<IWorldspaceInternalGetter>.Empty;
+        public IWorldspaceInternalGetter Worldspace => default;
+        #endregion
+        public IReadOnlySetList<IRegionAreaGetter> Areas { get; private set; } = EmptySetList<RegionAreaBinaryWrapper>.Instance;
+        #region RegionAreaLogic
+        partial void RegionAreaLogicCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RegionBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static RegionBinaryWrapper RegionFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new RegionBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(stream, offset);
+            UtilityTranslation.FillSubrecordTypesForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x524C4352: // RCLR
+                {
+                    _MapColorLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
+                }
+                case 0x4D414E57: // WNAM
+                {
+                    _WorldspaceLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
+                }
+                case 0x494C5052: // RPLI
+                case 0x444C5052: // RPLD
+                {
+                    this.Areas = UtilityTranslation.ParseRepeatedTypelessSubrecord<RegionAreaBinaryWrapper>(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null,
+                        trigger: RegionArea_Registration.TriggeringRecordTypes,
+                        factory:  RegionAreaBinaryWrapper.RegionAreaFactory);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);
+                }
+                case 0x54414452: // RDAT
+                {
+                    RegionAreaLogicCustomParse(
+                        stream,
+                        offset);
+                    return TryGet<int?>.Succeed(null);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

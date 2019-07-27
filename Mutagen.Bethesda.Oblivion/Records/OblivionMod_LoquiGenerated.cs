@@ -15160,6 +15160,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Climates);
                 }
+                case 0x4E474552: // REGN
+                {
+                    this._Regions = GroupBinaryWrapper<IRegionInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Regions);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -30,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static bool IsExpected(RegionData.RegionDataType dataType, RecordType recordType)
+        public static bool IsExpected(RegionData.RegionDataType dataType, RecordType recordType)
         {
             switch (dataType)
             {
@@ -133,6 +134,108 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Sounds_IsSet)
             {
                 item.Sounds.WriteToBinary(writer, masterReferences);
+            }
+        }
+    }
+
+    public partial class RegionBinaryWrapper : IRegionInternalGetter
+    {
+        #region Icon
+        private int? _IconLocation;
+        private int? _SecondaryIconLocation;
+        public bool Icon_IsSet => _IconLocation.HasValue || _SecondaryIconLocation.HasValue;
+        public String Icon
+        {
+            get
+            {
+                if (_IconLocation.HasValue)
+                {
+                    return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta));
+                }
+                if (_SecondaryIconLocation.HasValue)
+                {
+                    return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _SecondaryIconLocation.Value, _package.Meta));
+                }
+                return default;
+            }
+        }
+        #endregion
+
+        private ReadOnlyMemorySlice<byte>? _ObjectsSpan;
+        public bool Objects_IsSet => _ObjectsSpan.HasValue;
+        public IRegionDataObjectsInternalGetter Objects => RegionDataObjectsBinaryWrapper.RegionDataObjectsFactory(new BinaryMemoryReadStream(_ObjectsSpan.Value), _package);
+
+        private ReadOnlyMemorySlice<byte>? _WeatherSpan;
+        public bool Weather_IsSet => _WeatherSpan.HasValue;
+        public IRegionDataWeatherInternalGetter Weather => RegionDataWeatherBinaryWrapper.RegionDataWeatherFactory(new BinaryMemoryReadStream(_WeatherSpan.Value), _package);
+        
+        private ReadOnlyMemorySlice<byte>? _MapNameSpan;
+        public bool MapName_IsSet => _MapNameSpan.HasValue;
+        public IRegionDataMapNameInternalGetter MapName => RegionDataMapNameBinaryWrapper.RegionDataMapNameFactory(new BinaryMemoryReadStream(_MapNameSpan.Value), _package);
+        
+        private ReadOnlyMemorySlice<byte>? _GrassesSpan;
+        public bool Grasses_IsSet => _GrassesSpan.HasValue;
+        public IRegionDataGrassesInternalGetter Grasses => RegionDataGrassesBinaryWrapper.RegionDataGrassesFactory(new BinaryMemoryReadStream(_GrassesSpan.Value), _package);
+
+        private ReadOnlyMemorySlice<byte>? _SoundsSpan;
+        public bool Sounds_IsSet => _SoundsSpan.HasValue;
+        public IRegionDataSoundsInternalGetter Sounds => RegionDataSoundsBinaryWrapper.RegionDataSoundsFactory(new BinaryMemoryReadStream(_SoundsSpan.Value), _package);
+
+        partial void RegionAreaLogicCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset)
+        {
+            var rdat = this._package.Meta.GetSubRecord(stream);
+            while (rdat.RecordType.Equals(Region_Registration.RDAT_HEADER))
+            {
+                ParseRegionData(stream, offset);
+                if (stream.Complete) break;
+                rdat = this._package.Meta.GetSubRecord(stream);
+            }
+        }
+
+        private void ParseRegionData(BinaryMemoryReadStream stream, int offset)
+        {
+            int loc = stream.Position - offset;
+            var rdatFrame = this._package.Meta.ReadSubRecordFrame(stream);
+            RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.DataSpan);
+            var len = rdatFrame.Header.TotalLength;
+            if (!stream.Complete)
+            {
+                var contentMeta = this._package.Meta.GetSubRecord(stream);
+                if (RegionBinaryCreateTranslation.IsExpected(dataType, contentMeta.RecordType))
+                {
+                    len += contentMeta.TotalLength;
+                    stream.Position += contentMeta.TotalLength;
+                }
+            }
+            switch (dataType)
+            {
+                case RegionData.RegionDataType.Objects:
+                    _ObjectsSpan = this._data.Slice(loc, len);
+                    break;
+                case RegionData.RegionDataType.MapName:
+                    _MapNameSpan = this._data.Slice(loc, len);
+                    break;
+                case RegionData.RegionDataType.Grasses:
+                    _GrassesSpan = this._data.Slice(loc, len);
+                    break;
+                case RegionData.RegionDataType.Sounds:
+                    var nextRec = this._package.Meta.GetSubRecord(stream);
+                    if (nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDSD) || nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDMD))
+                    {
+                        len += nextRec.TotalLength;
+                    }
+                    _SoundsSpan = this._data.Slice(loc, len);
+                    break;
+                case RegionData.RegionDataType.Weather:
+                    _WeatherSpan = this._data.Slice(loc, len);
+                    break;
+                case RegionData.RegionDataType.Icon:
+                    _SecondaryIconLocation = loc + rdatFrame.Header.TotalLength;
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
         }
     }

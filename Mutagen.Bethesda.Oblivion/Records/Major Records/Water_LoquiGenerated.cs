@@ -6863,6 +6863,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         private int? _DATALocation;
         public Water.DATADataType DATADataTypeState { get; private set; }
+        #region NothingCustomLogic
+        partial void NothingCustomLogicCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
         #region WindVelocity
         private int _WindVelocityLocation => _DATALocation.Value + 0x0;
         private bool _WindVelocity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
@@ -6913,6 +6918,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _FogDistanceNearPlane_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
         public Single FogDistanceNearPlane => _FogDistanceNearPlane_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FogDistanceNearPlaneLocation, 4)) : default;
         #endregion
+        #region BloodCustomLogic
+        partial void BloodCustomLogicCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
         #region FogDistanceFarPlane
         private int _FogDistanceFarPlaneLocation => _DATALocation.Value + 0x28;
         private bool _FogDistanceFarPlane_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
@@ -6934,6 +6944,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Color ReflectionColor => _ReflectionColor_IsSet ? _data.Span.Slice(_ReflectionColorLocation, 4).ReadColor() : default;
         #endregion
         public Byte TextureBlend => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 56] : default;
+        #region OilCustomLogic
+        partial void OilCustomLogicCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
         #region RainSimulatorForce
         private int _RainSimulatorForceLocation => _DATALocation.Value + 0x3C;
         private bool _RainSimulatorForce_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
@@ -6963,6 +6978,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int _DisplacementSimulatorForceLocation => _DATALocation.Value + 0x50;
         private bool _DisplacementSimulatorForce_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
         public Single DisplacementSimulatorForce => _DisplacementSimulatorForce_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DisplacementSimulatorForceLocation, 4)) : default;
+        #endregion
+        #region OddExtraBytes
+        partial void OddExtraBytesCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
         #endregion
         #region DisplacementSimulatorVelocity
         private int _DisplacementSimulatorVelocityLocation => _DATALocation.Value + 0x54;

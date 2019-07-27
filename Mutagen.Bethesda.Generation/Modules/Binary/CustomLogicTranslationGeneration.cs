@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -272,7 +273,12 @@ namespace Mutagen.Bethesda.Generation
             int passedLength, 
             DataType data = null)
         {
-            // ToDo
+            using (var args = new ArgsWrapper(fg,
+                $"partial void {typeGen.Name}CustomParse"))
+            {
+                args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                args.Add($"int offset");
+            }
         }
 
         public override async Task GenerateWrapperRecordTypeParse(
@@ -283,7 +289,12 @@ namespace Mutagen.Bethesda.Generation
             Accessor packageAccessor, 
             Accessor converterAccessor)
         {
-            // ToDo
+            using (var args = new ArgsWrapper(fg,
+                $"{typeGen.Name}CustomParse"))
+            {
+                args.Add("stream");
+                args.Add("offset");
+            }
         }
 
         public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
