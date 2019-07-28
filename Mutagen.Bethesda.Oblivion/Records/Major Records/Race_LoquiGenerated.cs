@@ -1428,13 +1428,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case Race_FieldIndex.Spells:
-                    this._Spells.SetTo((SourceSetList<IFormIDLink<Spell>>)obj);
+                    this._Spells.SetTo((ISetList<IFormIDLink<Spell>>)obj);
                     break;
                 case Race_FieldIndex.Relations:
-                    this._Relations.SetTo((SourceSetList<RaceRelation>)obj);
+                    this._Relations.SetTo((ISetList<RaceRelation>)obj);
                     break;
                 case Race_FieldIndex.SkillBoosts:
-                    this._SkillBoosts.SetTo((SourceSetList<SkillBoost>)obj);
+                    this._SkillBoosts.SetTo((IList<SkillBoost>)obj);
                     break;
                 case Race_FieldIndex.Fluff:
                     this.Fluff = (Byte[])obj;
@@ -1473,16 +1473,16 @@ namespace Mutagen.Bethesda.Oblivion
                     this.RaceStats = (RaceStatsGendered)obj;
                     break;
                 case Race_FieldIndex.FaceData:
-                    this._FaceData.SetTo((SourceSetList<FacePart>)obj);
+                    this._FaceData.SetTo((ISetList<FacePart>)obj);
                     break;
                 case Race_FieldIndex.BodyData:
                     this.BodyData = (GenderedBodyData)obj;
                     break;
                 case Race_FieldIndex.Hairs:
-                    this._Hairs.SetTo((SourceSetList<IFormIDLink<Hair>>)obj);
+                    this._Hairs.SetTo((ISetList<IFormIDLink<Hair>>)obj);
                     break;
                 case Race_FieldIndex.Eyes:
-                    this._Eyes.SetTo((SourceSetList<IFormIDLink<Eye>>)obj);
+                    this._Eyes.SetTo((ISetList<IFormIDLink<Eye>>)obj);
                     break;
                 case Race_FieldIndex.FaceGenData:
                     this.FaceGenData = (FaceGenData)obj;
@@ -1529,13 +1529,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case Race_FieldIndex.Spells:
-                    obj._Spells.SetTo((SourceSetList<IFormIDLink<Spell>>)pair.Value);
+                    obj._Spells.SetTo((ISetList<IFormIDLink<Spell>>)pair.Value);
                     break;
                 case Race_FieldIndex.Relations:
-                    obj._Relations.SetTo((SourceSetList<RaceRelation>)pair.Value);
+                    obj._Relations.SetTo((ISetList<RaceRelation>)pair.Value);
                     break;
                 case Race_FieldIndex.SkillBoosts:
-                    obj._SkillBoosts.SetTo((SourceSetList<SkillBoost>)pair.Value);
+                    obj._SkillBoosts.SetTo((IList<SkillBoost>)pair.Value);
                     break;
                 case Race_FieldIndex.Fluff:
                     obj.Fluff = (Byte[])pair.Value;
@@ -1574,16 +1574,16 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.RaceStats = (RaceStatsGendered)pair.Value;
                     break;
                 case Race_FieldIndex.FaceData:
-                    obj._FaceData.SetTo((SourceSetList<FacePart>)pair.Value);
+                    obj._FaceData.SetTo((ISetList<FacePart>)pair.Value);
                     break;
                 case Race_FieldIndex.BodyData:
                     obj.BodyData = (GenderedBodyData)pair.Value;
                     break;
                 case Race_FieldIndex.Hairs:
-                    obj._Hairs.SetTo((SourceSetList<IFormIDLink<Hair>>)pair.Value);
+                    obj._Hairs.SetTo((ISetList<IFormIDLink<Hair>>)pair.Value);
                     break;
                 case Race_FieldIndex.Eyes:
-                    obj._Eyes.SetTo((SourceSetList<IFormIDLink<Eye>>)pair.Value);
+                    obj._Eyes.SetTo((ISetList<IFormIDLink<Eye>>)pair.Value);
                     break;
                 case Race_FieldIndex.FaceGenData:
                     obj.FaceGenData = (FaceGenData)pair.Value;
@@ -2273,11 +2273,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Description:
                     return typeof(String);
                 case Race_FieldIndex.Spells:
-                    return typeof(SourceSetList<IFormIDLink<Spell>>);
+                    return typeof(ISetList<IFormIDLink<Spell>>);
                 case Race_FieldIndex.Relations:
-                    return typeof(SourceSetList<RaceRelation>);
+                    return typeof(ISetList<RaceRelation>);
                 case Race_FieldIndex.SkillBoosts:
-                    return typeof(SourceSetList<SkillBoost>);
+                    return typeof(IList<SkillBoost>);
                 case Race_FieldIndex.Fluff:
                     return typeof(Byte[]);
                 case Race_FieldIndex.MaleHeight:
@@ -2303,13 +2303,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.RaceStats:
                     return typeof(RaceStatsGendered);
                 case Race_FieldIndex.FaceData:
-                    return typeof(SourceSetList<FacePart>);
+                    return typeof(ISetList<FacePart>);
                 case Race_FieldIndex.BodyData:
                     return typeof(GenderedBodyData);
                 case Race_FieldIndex.Hairs:
-                    return typeof(SourceSetList<IFormIDLink<Hair>>);
+                    return typeof(ISetList<IFormIDLink<Hair>>);
                 case Race_FieldIndex.Eyes:
-                    return typeof(SourceSetList<IFormIDLink<Eye>>);
+                    return typeof(ISetList<IFormIDLink<Eye>>);
                 case Race_FieldIndex.FaceGenData:
                     return typeof(FaceGenData);
                 case Race_FieldIndex.Unknown:

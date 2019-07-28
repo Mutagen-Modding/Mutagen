@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (LogEntry.Flag)obj;
                     break;
                 case LogEntry_FieldIndex.Conditions:
-                    this._Conditions.SetTo((SourceSetList<Condition>)obj);
+                    this._Conditions.SetTo((ISetList<Condition>)obj);
                     break;
                 case LogEntry_FieldIndex.Entry:
                     this.Entry = (String)obj;
@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (LogEntry.Flag)pair.Value;
                     break;
                 case LogEntry_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((SourceSetList<Condition>)pair.Value);
+                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
                     break;
                 case LogEntry_FieldIndex.Entry:
                     obj.Entry = (String)pair.Value;
@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LogEntry_FieldIndex.Flags:
                     return typeof(LogEntry.Flag);
                 case LogEntry_FieldIndex.Conditions:
-                    return typeof(SourceSetList<Condition>);
+                    return typeof(ISetList<Condition>);
                 case LogEntry_FieldIndex.Entry:
                     return typeof(String);
                 case LogEntry_FieldIndex.ResultScript:

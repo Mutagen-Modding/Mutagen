@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.SubCellsTimestamp = (Byte[])obj;
                     break;
                 case Worldspace_FieldIndex.SubCells:
-                    this._SubCells.SetTo((SourceSetList<WorldspaceBlock>)obj);
+                    this._SubCells.SetTo((ISetList<WorldspaceBlock>)obj);
                     break;
                 case Worldspace_FieldIndex.UsingOffsetLength:
                     this.UsingOffsetLength = (Boolean)obj;
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.SubCellsTimestamp = (Byte[])pair.Value;
                     break;
                 case Worldspace_FieldIndex.SubCells:
-                    obj._SubCells.SetTo((SourceSetList<WorldspaceBlock>)pair.Value);
+                    obj._SubCells.SetTo((ISetList<WorldspaceBlock>)pair.Value);
                     break;
                 case Worldspace_FieldIndex.UsingOffsetLength:
                     obj.UsingOffsetLength = (Boolean)pair.Value;
@@ -1795,7 +1795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCellsTimestamp:
                     return typeof(Byte[]);
                 case Worldspace_FieldIndex.SubCells:
-                    return typeof(SourceSetList<WorldspaceBlock>);
+                    return typeof(ISetList<WorldspaceBlock>);
                 case Worldspace_FieldIndex.UsingOffsetLength:
                     return typeof(Boolean);
                 default:

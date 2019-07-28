@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LastModified = (Byte[])obj;
                     break;
                 case WorldspaceBlock_FieldIndex.Items:
-                    this._Items.SetTo((SourceSetList<WorldspaceSubBlock>)obj);
+                    this._Items.SetTo((ISetList<WorldspaceSubBlock>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LastModified = (Byte[])pair.Value;
                     break;
                 case WorldspaceBlock_FieldIndex.Items:
-                    obj._Items.SetTo((SourceSetList<WorldspaceSubBlock>)pair.Value);
+                    obj._Items.SetTo((ISetList<WorldspaceSubBlock>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case WorldspaceBlock_FieldIndex.LastModified:
                     return typeof(Byte[]);
                 case WorldspaceBlock_FieldIndex.Items:
-                    return typeof(SourceSetList<WorldspaceSubBlock>);
+                    return typeof(ISetList<WorldspaceSubBlock>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

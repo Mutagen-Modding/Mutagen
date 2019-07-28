@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataWeather_FieldIndex.Weathers:
-                    this._Weathers.SetTo((SourceSetList<WeatherChance>)obj);
+                    this._Weathers.SetTo((ISetList<WeatherChance>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataWeather_FieldIndex.Weathers:
-                    obj._Weathers.SetTo((SourceSetList<WeatherChance>)pair.Value);
+                    obj._Weathers.SetTo((ISetList<WeatherChance>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataWeather_FieldIndex.Weathers:
-                    return typeof(SourceSetList<WeatherChance>);
+                    return typeof(ISetList<WeatherChance>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }

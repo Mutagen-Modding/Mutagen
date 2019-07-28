@@ -882,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Worldspace_Property.Set((IFormIDSetLink<Worldspace>)obj);
                     break;
                 case Region_FieldIndex.Areas:
-                    this._Areas.SetTo((SourceSetList<RegionArea>)obj);
+                    this._Areas.SetTo((ISetList<RegionArea>)obj);
                     break;
                 case Region_FieldIndex.Objects:
                     this.Objects = (RegionDataObjects)obj;
@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Worldspace_Property.Set((IFormIDSetLink<Worldspace>)pair.Value);
                     break;
                 case Region_FieldIndex.Areas:
-                    obj._Areas.SetTo((SourceSetList<RegionArea>)pair.Value);
+                    obj._Areas.SetTo((ISetList<RegionArea>)pair.Value);
                     break;
                 case Region_FieldIndex.Objects:
                     obj.Objects = (RegionDataObjects)pair.Value;
@@ -1393,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Region_FieldIndex.Worldspace:
                     return typeof(IFormIDSetLink<Worldspace>);
                 case Region_FieldIndex.Areas:
-                    return typeof(SourceSetList<RegionArea>);
+                    return typeof(ISetList<RegionArea>);
                 case Region_FieldIndex.Objects:
                     return typeof(RegionDataObjects);
                 case Region_FieldIndex.Weather:

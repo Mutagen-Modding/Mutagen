@@ -701,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case Birthsign_FieldIndex.Spells:
-                    this._Spells.SetTo((SourceSetList<IFormIDLink<Spell>>)obj);
+                    this._Spells.SetTo((ISetList<IFormIDLink<Spell>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -742,7 +742,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case Birthsign_FieldIndex.Spells:
-                    obj._Spells.SetTo((SourceSetList<IFormIDLink<Spell>>)pair.Value);
+                    obj._Spells.SetTo((ISetList<IFormIDLink<Spell>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1082,7 +1082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Birthsign_FieldIndex.Description:
                     return typeof(String);
                 case Birthsign_FieldIndex.Spells:
-                    return typeof(SourceSetList<IFormIDLink<Spell>>);
+                    return typeof(ISetList<IFormIDLink<Spell>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

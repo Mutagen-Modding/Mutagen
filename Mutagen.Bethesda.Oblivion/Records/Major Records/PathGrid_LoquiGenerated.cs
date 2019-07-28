@@ -658,16 +658,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PathGrid_FieldIndex.PointToPointConnections:
-                    this._PointToPointConnections.SetTo((SourceSetList<PathGridPoint>)obj);
+                    this._PointToPointConnections.SetTo((ISetList<PathGridPoint>)obj);
                     break;
                 case PathGrid_FieldIndex.Unknown:
                     this.Unknown = (Byte[])obj;
                     break;
                 case PathGrid_FieldIndex.InterCellConnections:
-                    this._InterCellConnections.SetTo((SourceSetList<InterCellPoint>)obj);
+                    this._InterCellConnections.SetTo((ISetList<InterCellPoint>)obj);
                     break;
                 case PathGrid_FieldIndex.PointToReferenceMappings:
-                    this._PointToReferenceMappings.SetTo((SourceSetList<PointToReferenceMapping>)obj);
+                    this._PointToReferenceMappings.SetTo((ISetList<PointToReferenceMapping>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -699,16 +699,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PathGrid_FieldIndex.PointToPointConnections:
-                    obj._PointToPointConnections.SetTo((SourceSetList<PathGridPoint>)pair.Value);
+                    obj._PointToPointConnections.SetTo((ISetList<PathGridPoint>)pair.Value);
                     break;
                 case PathGrid_FieldIndex.Unknown:
                     obj.Unknown = (Byte[])pair.Value;
                     break;
                 case PathGrid_FieldIndex.InterCellConnections:
-                    obj._InterCellConnections.SetTo((SourceSetList<InterCellPoint>)pair.Value);
+                    obj._InterCellConnections.SetTo((ISetList<InterCellPoint>)pair.Value);
                     break;
                 case PathGrid_FieldIndex.PointToReferenceMappings:
-                    obj._PointToReferenceMappings.SetTo((SourceSetList<PointToReferenceMapping>)pair.Value);
+                    obj._PointToReferenceMappings.SetTo((ISetList<PointToReferenceMapping>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1031,13 +1031,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PathGrid_FieldIndex.PointToPointConnections:
-                    return typeof(SourceSetList<PathGridPoint>);
+                    return typeof(ISetList<PathGridPoint>);
                 case PathGrid_FieldIndex.Unknown:
                     return typeof(Byte[]);
                 case PathGrid_FieldIndex.InterCellConnections:
-                    return typeof(SourceSetList<InterCellPoint>);
+                    return typeof(ISetList<InterCellPoint>);
                 case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return typeof(SourceSetList<PointToReferenceMapping>);
+                    return typeof(ISetList<PointToReferenceMapping>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

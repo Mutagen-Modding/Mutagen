@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Tests
                     this.PassthroughSettings = (PassthroughSettings)obj;
                     break;
                 case TestingSettings_FieldIndex.TargetGroups:
-                    this._TargetGroups.SetTo((SourceSetList<TargetGroup>)obj);
+                    this._TargetGroups.SetTo((IList<TargetGroup>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Tests
                     obj.PassthroughSettings = (PassthroughSettings)pair.Value;
                     break;
                 case TestingSettings_FieldIndex.TargetGroups:
-                    obj._TargetGroups.SetTo((SourceSetList<TargetGroup>)pair.Value);
+                    obj._TargetGroups.SetTo((IList<TargetGroup>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.PassthroughSettings:
                     return typeof(PassthroughSettings);
                 case TestingSettings_FieldIndex.TargetGroups:
-                    return typeof(SourceSetList<TargetGroup>);
+                    return typeof(IList<TargetGroup>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Lighting = (CellLighting)obj;
                     break;
                 case Cell_FieldIndex.Regions:
-                    this._Regions.SetTo((SourceSetList<IFormIDLink<Region>>)obj);
+                    this._Regions.SetTo((ISetList<IFormIDLink<Region>>)obj);
                     break;
                 case Cell_FieldIndex.MusicType:
                     this.MusicType = (MusicType)obj;
@@ -1235,19 +1235,19 @@ namespace Mutagen.Bethesda.Oblivion
                     this.PersistentTimestamp = (Byte[])obj;
                     break;
                 case Cell_FieldIndex.Persistent:
-                    this._Persistent.SetTo((SourceSetList<IPlaced>)obj);
+                    this._Persistent.SetTo((ISetList<IPlaced>)obj);
                     break;
                 case Cell_FieldIndex.TemporaryTimestamp:
                     this.TemporaryTimestamp = (Byte[])obj;
                     break;
                 case Cell_FieldIndex.Temporary:
-                    this._Temporary.SetTo((SourceSetList<IPlaced>)obj);
+                    this._Temporary.SetTo((ISetList<IPlaced>)obj);
                     break;
                 case Cell_FieldIndex.VisibleWhenDistantTimestamp:
                     this.VisibleWhenDistantTimestamp = (Byte[])obj;
                     break;
                 case Cell_FieldIndex.VisibleWhenDistant:
-                    this._VisibleWhenDistant.SetTo((SourceSetList<IPlaced>)obj);
+                    this._VisibleWhenDistant.SetTo((ISetList<IPlaced>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Lighting = (CellLighting)pair.Value;
                     break;
                 case Cell_FieldIndex.Regions:
-                    obj._Regions.SetTo((SourceSetList<IFormIDLink<Region>>)pair.Value);
+                    obj._Regions.SetTo((ISetList<IFormIDLink<Region>>)pair.Value);
                     break;
                 case Cell_FieldIndex.MusicType:
                     obj.MusicType = (MusicType)pair.Value;
@@ -1327,19 +1327,19 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.PersistentTimestamp = (Byte[])pair.Value;
                     break;
                 case Cell_FieldIndex.Persistent:
-                    obj._Persistent.SetTo((SourceSetList<IPlaced>)pair.Value);
+                    obj._Persistent.SetTo((ISetList<IPlaced>)pair.Value);
                     break;
                 case Cell_FieldIndex.TemporaryTimestamp:
                     obj.TemporaryTimestamp = (Byte[])pair.Value;
                     break;
                 case Cell_FieldIndex.Temporary:
-                    obj._Temporary.SetTo((SourceSetList<IPlaced>)pair.Value);
+                    obj._Temporary.SetTo((ISetList<IPlaced>)pair.Value);
                     break;
                 case Cell_FieldIndex.VisibleWhenDistantTimestamp:
                     obj.VisibleWhenDistantTimestamp = (Byte[])pair.Value;
                     break;
                 case Cell_FieldIndex.VisibleWhenDistant:
-                    obj._VisibleWhenDistant.SetTo((SourceSetList<IPlaced>)pair.Value);
+                    obj._VisibleWhenDistant.SetTo((ISetList<IPlaced>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1984,7 +1984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Lighting:
                     return typeof(CellLighting);
                 case Cell_FieldIndex.Regions:
-                    return typeof(SourceSetList<IFormIDLink<Region>>);
+                    return typeof(ISetList<IFormIDLink<Region>>);
                 case Cell_FieldIndex.MusicType:
                     return typeof(MusicType);
                 case Cell_FieldIndex.WaterHeight:
@@ -2008,15 +2008,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.PersistentTimestamp:
                     return typeof(Byte[]);
                 case Cell_FieldIndex.Persistent:
-                    return typeof(SourceSetList<IPlaced>);
+                    return typeof(ISetList<IPlaced>);
                 case Cell_FieldIndex.TemporaryTimestamp:
                     return typeof(Byte[]);
                 case Cell_FieldIndex.Temporary:
-                    return typeof(SourceSetList<IPlaced>);
+                    return typeof(ISetList<IPlaced>);
                 case Cell_FieldIndex.VisibleWhenDistantTimestamp:
                     return typeof(Byte[]);
                 case Cell_FieldIndex.VisibleWhenDistant:
-                    return typeof(SourceSetList<IPlaced>);
+                    return typeof(ISetList<IPlaced>);
                 default:
                     return Place_Registration.GetNthType(index);
             }

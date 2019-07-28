@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (LeveledFlag)obj;
                     break;
                 case LeveledSpell_FieldIndex.Entries:
-                    this._Entries.SetTo((SourceSetList<LeveledEntry<SpellAbstract>>)obj);
+                    this._Entries.SetTo((ISetList<LeveledEntry<SpellAbstract>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -689,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (LeveledFlag)pair.Value;
                     break;
                 case LeveledSpell_FieldIndex.Entries:
-                    obj._Entries.SetTo((SourceSetList<LeveledEntry<SpellAbstract>>)pair.Value);
+                    obj._Entries.SetTo((ISetList<LeveledEntry<SpellAbstract>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1008,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledSpell_FieldIndex.Flags:
                     return typeof(LeveledFlag);
                 case LeveledSpell_FieldIndex.Entries:
-                    return typeof(SourceSetList<LeveledEntry<SpellAbstract>>);
+                    return typeof(ISetList<LeveledEntry<SpellAbstract>>);
                 default:
                     return SpellAbstract_Registration.GetNthType(index);
             }

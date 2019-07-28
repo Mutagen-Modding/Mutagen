@@ -690,13 +690,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case IdleAnimation_FieldIndex.Conditions:
-                    this._Conditions.SetTo((SourceSetList<Condition>)obj);
+                    this._Conditions.SetTo((ISetList<Condition>)obj);
                     break;
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
                     this.AnimationGroupSection = (IdleAnimation.AnimationGroupSectionEnum)obj;
                     break;
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    this._RelatedIdleAnimations.SetTo((SourceSetList<IFormIDLink<IdleAnimation>>)obj);
+                    this._RelatedIdleAnimations.SetTo((ISetList<IFormIDLink<IdleAnimation>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -731,13 +731,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case IdleAnimation_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((SourceSetList<Condition>)pair.Value);
+                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
                     break;
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
                     obj.AnimationGroupSection = (IdleAnimation.AnimationGroupSectionEnum)pair.Value;
                     break;
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    obj._RelatedIdleAnimations.SetTo((SourceSetList<IFormIDLink<IdleAnimation>>)pair.Value);
+                    obj._RelatedIdleAnimations.SetTo((ISetList<IFormIDLink<IdleAnimation>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1068,11 +1068,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case IdleAnimation_FieldIndex.Model:
                     return typeof(Model);
                 case IdleAnimation_FieldIndex.Conditions:
-                    return typeof(SourceSetList<Condition>);
+                    return typeof(ISetList<Condition>);
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
                     return typeof(IdleAnimation.AnimationGroupSectionEnum);
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    return typeof(SourceSetList<IFormIDLink<IdleAnimation>>);
+                    return typeof(ISetList<IFormIDLink<IdleAnimation>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

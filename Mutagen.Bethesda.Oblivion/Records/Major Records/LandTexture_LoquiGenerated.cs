@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.TextureSpecularExponent = (Byte)obj;
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    this._PotentialGrass.SetTo((SourceSetList<IFormIDLink<Grass>>)obj);
+                    this._PotentialGrass.SetTo((ISetList<IFormIDLink<Grass>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.TextureSpecularExponent = (Byte)pair.Value;
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    obj._PotentialGrass.SetTo((SourceSetList<IFormIDLink<Grass>>)pair.Value);
+                    obj._PotentialGrass.SetTo((ISetList<IFormIDLink<Grass>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LandTexture_FieldIndex.TextureSpecularExponent:
                     return typeof(Byte);
                 case LandTexture_FieldIndex.PotentialGrass:
-                    return typeof(SourceSetList<IFormIDLink<Grass>>);
+                    return typeof(ISetList<IFormIDLink<Grass>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

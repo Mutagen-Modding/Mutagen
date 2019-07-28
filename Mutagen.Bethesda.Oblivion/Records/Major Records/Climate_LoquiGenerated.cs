@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Climate_FieldIndex.Weathers:
-                    this._Weathers.SetTo((SourceSetList<WeatherChance>)obj);
+                    this._Weathers.SetTo((ISetList<WeatherChance>)obj);
                     break;
                 case Climate_FieldIndex.SunTexture:
                     this.SunTexture = (String)obj;
@@ -929,7 +929,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Climate_FieldIndex.Weathers:
-                    obj._Weathers.SetTo((SourceSetList<WeatherChance>)pair.Value);
+                    obj._Weathers.SetTo((ISetList<WeatherChance>)pair.Value);
                     break;
                 case Climate_FieldIndex.SunTexture:
                     obj.SunTexture = (String)pair.Value;
@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Climate_FieldIndex.Weathers:
-                    return typeof(SourceSetList<WeatherChance>);
+                    return typeof(ISetList<WeatherChance>);
                 case Climate_FieldIndex.SunTexture:
                     return typeof(String);
                 case Climate_FieldIndex.SunGlareTexture:

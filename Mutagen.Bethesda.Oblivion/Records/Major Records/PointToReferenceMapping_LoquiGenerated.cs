@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Reference_Property.Set((IFormIDLink<IPlaced>)obj);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
-                    this._Points.SetTo((SourceSetList<Int16>)obj);
+                    this._Points.SetTo((IList<Int16>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Reference_Property.Set((IFormIDLink<IPlaced>)pair.Value);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
-                    obj._Points.SetTo((SourceSetList<Int16>)pair.Value);
+                    obj._Points.SetTo((IList<Int16>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PointToReferenceMapping_FieldIndex.Reference:
                     return typeof(IFormIDLink<IPlaced>);
                 case PointToReferenceMapping_FieldIndex.Points:
-                    return typeof(SourceSetList<Int16>);
+                    return typeof(IList<Int16>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

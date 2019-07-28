@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Name = (String)obj;
                     break;
                 case Faction_FieldIndex.Relations:
-                    this._Relations.SetTo((SourceSetList<Relation>)obj);
+                    this._Relations.SetTo((ISetList<Relation>)obj);
                     break;
                 case Faction_FieldIndex.Flags:
                     this.Flags = (Faction.FactionFlag)obj;
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.CrimeGoldMultiplier = (Single)obj;
                     break;
                 case Faction_FieldIndex.Ranks:
-                    this._Ranks.SetTo((SourceSetList<Rank>)obj);
+                    this._Ranks.SetTo((ISetList<Rank>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Name = (String)pair.Value;
                     break;
                 case Faction_FieldIndex.Relations:
-                    obj._Relations.SetTo((SourceSetList<Relation>)pair.Value);
+                    obj._Relations.SetTo((ISetList<Relation>)pair.Value);
                     break;
                 case Faction_FieldIndex.Flags:
                     obj.Flags = (Faction.FactionFlag)pair.Value;
@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.CrimeGoldMultiplier = (Single)pair.Value;
                     break;
                 case Faction_FieldIndex.Ranks:
-                    obj._Ranks.SetTo((SourceSetList<Rank>)pair.Value);
+                    obj._Ranks.SetTo((ISetList<Rank>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1142,13 +1142,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.Name:
                     return typeof(String);
                 case Faction_FieldIndex.Relations:
-                    return typeof(SourceSetList<Relation>);
+                    return typeof(ISetList<Relation>);
                 case Faction_FieldIndex.Flags:
                     return typeof(Faction.FactionFlag);
                 case Faction_FieldIndex.CrimeGoldMultiplier:
                     return typeof(Single);
                 case Faction_FieldIndex.Ranks:
-                    return typeof(SourceSetList<Rank>);
+                    return typeof(ISetList<Rank>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

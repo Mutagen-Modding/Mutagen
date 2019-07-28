@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.NumConnectionsFluffBytes = (Byte[])obj;
                     break;
                 case RoadPoint_FieldIndex.Connections:
-                    this._Connections.SetTo((SourceSetList<P3Float>)obj);
+                    this._Connections.SetTo((IList<P3Float>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.NumConnectionsFluffBytes = (Byte[])pair.Value;
                     break;
                 case RoadPoint_FieldIndex.Connections:
-                    obj._Connections.SetTo((SourceSetList<P3Float>)pair.Value);
+                    obj._Connections.SetTo((IList<P3Float>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
                     return typeof(Byte[]);
                 case RoadPoint_FieldIndex.Connections:
-                    return typeof(SourceSetList<P3Float>);
+                    return typeof(IList<P3Float>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

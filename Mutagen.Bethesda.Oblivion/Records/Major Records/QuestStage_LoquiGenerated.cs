@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Stage = (UInt16)obj;
                     break;
                 case QuestStage_FieldIndex.LogEntries:
-                    this._LogEntries.SetTo((SourceSetList<LogEntry>)obj);
+                    this._LogEntries.SetTo((ISetList<LogEntry>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Stage = (UInt16)pair.Value;
                     break;
                 case QuestStage_FieldIndex.LogEntries:
-                    obj._LogEntries.SetTo((SourceSetList<LogEntry>)pair.Value);
+                    obj._LogEntries.SetTo((ISetList<LogEntry>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case QuestStage_FieldIndex.Stage:
                     return typeof(UInt16);
                 case QuestStage_FieldIndex.LogEntries:
-                    return typeof(SourceSetList<LogEntry>);
+                    return typeof(ISetList<LogEntry>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

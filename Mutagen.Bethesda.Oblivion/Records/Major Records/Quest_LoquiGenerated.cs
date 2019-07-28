@@ -847,13 +847,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Priority = (Byte)obj;
                     break;
                 case Quest_FieldIndex.Conditions:
-                    this._Conditions.SetTo((SourceSetList<Condition>)obj);
+                    this._Conditions.SetTo((ISetList<Condition>)obj);
                     break;
                 case Quest_FieldIndex.Stages:
-                    this._Stages.SetTo((SourceSetList<QuestStage>)obj);
+                    this._Stages.SetTo((ISetList<QuestStage>)obj);
                     break;
                 case Quest_FieldIndex.Targets:
-                    this._Targets.SetTo((SourceSetList<QuestTarget>)obj);
+                    this._Targets.SetTo((ISetList<QuestTarget>)obj);
                     break;
                 case Quest_FieldIndex.DATADataTypeState:
                     this.DATADataTypeState = (Quest.DATADataType)obj;
@@ -903,13 +903,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Priority = (Byte)pair.Value;
                     break;
                 case Quest_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((SourceSetList<Condition>)pair.Value);
+                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
                     break;
                 case Quest_FieldIndex.Stages:
-                    obj._Stages.SetTo((SourceSetList<QuestStage>)pair.Value);
+                    obj._Stages.SetTo((ISetList<QuestStage>)pair.Value);
                     break;
                 case Quest_FieldIndex.Targets:
-                    obj._Targets.SetTo((SourceSetList<QuestTarget>)pair.Value);
+                    obj._Targets.SetTo((ISetList<QuestTarget>)pair.Value);
                     break;
                 case Quest_FieldIndex.DATADataTypeState:
                     obj.DATADataTypeState = (Quest.DATADataType)pair.Value;
@@ -1332,11 +1332,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Quest_FieldIndex.Priority:
                     return typeof(Byte);
                 case Quest_FieldIndex.Conditions:
-                    return typeof(SourceSetList<Condition>);
+                    return typeof(ISetList<Condition>);
                 case Quest_FieldIndex.Stages:
-                    return typeof(SourceSetList<QuestStage>);
+                    return typeof(ISetList<QuestStage>);
                 case Quest_FieldIndex.Targets:
-                    return typeof(SourceSetList<QuestTarget>);
+                    return typeof(ISetList<QuestTarget>);
                 case Quest_FieldIndex.DATADataTypeState:
                     return typeof(Quest.DATADataType);
                 default:

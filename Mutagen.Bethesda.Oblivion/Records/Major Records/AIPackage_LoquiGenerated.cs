@@ -812,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Target = (AIPackageTarget)obj;
                     break;
                 case AIPackage_FieldIndex.Conditions:
-                    this._Conditions.SetTo((SourceSetList<Condition>)obj);
+                    this._Conditions.SetTo((ISetList<Condition>)obj);
                     break;
                 case AIPackage_FieldIndex.PKDTDataTypeState:
                     this.PKDTDataTypeState = (AIPackage.PKDTDataType)obj;
@@ -862,7 +862,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Target = (AIPackageTarget)pair.Value;
                     break;
                 case AIPackage_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((SourceSetList<Condition>)pair.Value);
+                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
                     break;
                 case AIPackage_FieldIndex.PKDTDataTypeState:
                     obj.PKDTDataTypeState = (AIPackage.PKDTDataType)pair.Value;
@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIPackage_FieldIndex.Target:
                     return typeof(AIPackageTarget);
                 case AIPackage_FieldIndex.Conditions:
-                    return typeof(SourceSetList<Condition>);
+                    return typeof(ISetList<Condition>);
                 case AIPackage_FieldIndex.PKDTDataTypeState:
                     return typeof(AIPackage.PKDTDataType);
                 default:

@@ -806,10 +806,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.VertexColors = (Byte[])obj;
                     break;
                 case Landscape_FieldIndex.Layers:
-                    this._Layers.SetTo((SourceSetList<BaseLayer>)obj);
+                    this._Layers.SetTo((ISetList<BaseLayer>)obj);
                     break;
                 case Landscape_FieldIndex.Textures:
-                    this._Textures.SetTo((SourceSetList<IFormIDLink<LandTexture>>)obj);
+                    this._Textures.SetTo((ISetList<IFormIDLink<LandTexture>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -853,10 +853,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.VertexColors = (Byte[])pair.Value;
                     break;
                 case Landscape_FieldIndex.Layers:
-                    obj._Layers.SetTo((SourceSetList<BaseLayer>)pair.Value);
+                    obj._Layers.SetTo((ISetList<BaseLayer>)pair.Value);
                     break;
                 case Landscape_FieldIndex.Textures:
-                    obj._Textures.SetTo((SourceSetList<IFormIDLink<LandTexture>>)pair.Value);
+                    obj._Textures.SetTo((ISetList<IFormIDLink<LandTexture>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1233,9 +1233,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.VertexColors:
                     return typeof(Byte[]);
                 case Landscape_FieldIndex.Layers:
-                    return typeof(SourceSetList<BaseLayer>);
+                    return typeof(ISetList<BaseLayer>);
                 case Landscape_FieldIndex.Textures:
-                    return typeof(SourceSetList<IFormIDLink<LandTexture>>);
+                    return typeof(ISetList<IFormIDLink<LandTexture>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

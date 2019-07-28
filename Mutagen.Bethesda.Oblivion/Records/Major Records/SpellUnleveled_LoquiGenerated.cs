@@ -701,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flag = (Spell.SpellFlag)obj;
                     break;
                 case SpellUnleveled_FieldIndex.Effects:
-                    this._Effects.SetTo((SourceSetList<Effect>)obj);
+                    this._Effects.SetTo((ISetList<Effect>)obj);
                     break;
                 case SpellUnleveled_FieldIndex.SPITDataTypeState:
                     this.SPITDataTypeState = (SpellUnleveled.SPITDataType)obj;
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flag = (Spell.SpellFlag)pair.Value;
                     break;
                 case SpellUnleveled_FieldIndex.Effects:
-                    obj._Effects.SetTo((SourceSetList<Effect>)pair.Value);
+                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
                     break;
                 case SpellUnleveled_FieldIndex.SPITDataTypeState:
                     obj.SPITDataTypeState = (SpellUnleveled.SPITDataType)pair.Value;
@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SpellUnleveled_FieldIndex.Flag:
                     return typeof(Spell.SpellFlag);
                 case SpellUnleveled_FieldIndex.Effects:
-                    return typeof(SourceSetList<Effect>);
+                    return typeof(ISetList<Effect>);
                 case SpellUnleveled_FieldIndex.SPITDataTypeState:
                     return typeof(SpellUnleveled.SPITDataType);
                 default:

@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.SubData = (MagicEffectSubData)obj;
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
-                    this._CounterEffects.SetTo((SourceSetList<IEDIDLink<MagicEffect>>)obj);
+                    this._CounterEffects.SetTo((ISetList<IEDIDLink<MagicEffect>>)obj);
                     break;
                 case MagicEffect_FieldIndex.DATADataTypeState:
                     this.DATADataTypeState = (MagicEffect.DATADataType)obj;
@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.SubData = (MagicEffectSubData)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
-                    obj._CounterEffects.SetTo((SourceSetList<IEDIDLink<MagicEffect>>)pair.Value);
+                    obj._CounterEffects.SetTo((ISetList<IEDIDLink<MagicEffect>>)pair.Value);
                     break;
                 case MagicEffect_FieldIndex.DATADataTypeState:
                     obj.DATADataTypeState = (MagicEffect.DATADataType)pair.Value;
@@ -1698,7 +1698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.SubData:
                     return typeof(MagicEffectSubData);
                 case MagicEffect_FieldIndex.CounterEffects:
-                    return typeof(SourceSetList<IEDIDLink<MagicEffect>>);
+                    return typeof(ISetList<IEDIDLink<MagicEffect>>);
                 case MagicEffect_FieldIndex.DATADataTypeState:
                     return typeof(MagicEffect.DATADataType);
                 default:

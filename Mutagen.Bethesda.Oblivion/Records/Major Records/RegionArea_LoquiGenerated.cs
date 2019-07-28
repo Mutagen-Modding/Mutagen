@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.EdgeFallOff = (UInt32)obj;
                     break;
                 case RegionArea_FieldIndex.RegionPoints:
-                    this._RegionPoints.SetTo((SourceSetList<P2Float>)obj);
+                    this._RegionPoints.SetTo((ISetList<P2Float>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.EdgeFallOff = (UInt32)pair.Value;
                     break;
                 case RegionArea_FieldIndex.RegionPoints:
-                    obj._RegionPoints.SetTo((SourceSetList<P2Float>)pair.Value);
+                    obj._RegionPoints.SetTo((ISetList<P2Float>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionArea_FieldIndex.EdgeFallOff:
                     return typeof(UInt32);
                 case RegionArea_FieldIndex.RegionPoints:
-                    return typeof(SourceSetList<P2Float>);
+                    return typeof(ISetList<P2Float>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

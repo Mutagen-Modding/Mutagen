@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (LeveledFlag)obj;
                     break;
                 case LeveledCreature_FieldIndex.Entries:
-                    this._Entries.SetTo((SourceSetList<LeveledEntry<NPCSpawn>>)obj);
+                    this._Entries.SetTo((ISetList<LeveledEntry<NPCSpawn>>)obj);
                     break;
                 case LeveledCreature_FieldIndex.Script:
                     this.Script_Property.Set((IFormIDSetLink<Script>)obj);
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (LeveledFlag)pair.Value;
                     break;
                 case LeveledCreature_FieldIndex.Entries:
-                    obj._Entries.SetTo((SourceSetList<LeveledEntry<NPCSpawn>>)pair.Value);
+                    obj._Entries.SetTo((ISetList<LeveledEntry<NPCSpawn>>)pair.Value);
                     break;
                 case LeveledCreature_FieldIndex.Script:
                     obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.Flags:
                     return typeof(LeveledFlag);
                 case LeveledCreature_FieldIndex.Entries:
-                    return typeof(SourceSetList<LeveledEntry<NPCSpawn>>);
+                    return typeof(ISetList<LeveledEntry<NPCSpawn>>);
                 case LeveledCreature_FieldIndex.Script:
                     return typeof(IFormIDSetLink<Script>);
                 case LeveledCreature_FieldIndex.Template:

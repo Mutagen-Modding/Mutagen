@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    this._Quests.SetTo((SourceSetList<IFormIDLink<Quest>>)obj);
+                    this._Quests.SetTo((ISetList<IFormIDLink<Quest>>)obj);
                     break;
                 case DialogTopic_FieldIndex.Name:
                     this.Name = (String)obj;
@@ -716,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Timestamp = (Byte[])obj;
                     break;
                 case DialogTopic_FieldIndex.Items:
-                    this._Items.SetTo((SourceSetList<DialogItem>)obj);
+                    this._Items.SetTo((ISetList<DialogItem>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    obj._Quests.SetTo((SourceSetList<IFormIDLink<Quest>>)pair.Value);
+                    obj._Quests.SetTo((ISetList<IFormIDLink<Quest>>)pair.Value);
                     break;
                 case DialogTopic_FieldIndex.Name:
                     obj.Name = (String)pair.Value;
@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Timestamp = (Byte[])pair.Value;
                     break;
                 case DialogTopic_FieldIndex.Items:
-                    obj._Items.SetTo((SourceSetList<DialogItem>)pair.Value);
+                    obj._Items.SetTo((ISetList<DialogItem>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1105,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    return typeof(SourceSetList<IFormIDLink<Quest>>);
+                    return typeof(ISetList<IFormIDLink<Quest>>);
                 case DialogTopic_FieldIndex.Name:
                     return typeof(String);
                 case DialogTopic_FieldIndex.DialogType:
@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogTopic_FieldIndex.Timestamp:
                     return typeof(Byte[]);
                 case DialogTopic_FieldIndex.Items:
-                    return typeof(SourceSetList<DialogItem>);
+                    return typeof(ISetList<DialogItem>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

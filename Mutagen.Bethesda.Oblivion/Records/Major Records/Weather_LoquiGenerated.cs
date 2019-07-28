@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case Weather_FieldIndex.WeatherTypes:
-                    this._WeatherTypes.SetTo((SourceSetList<WeatherType>)obj);
+                    this._WeatherTypes.SetTo((ISetList<WeatherType>)obj);
                     break;
                 case Weather_FieldIndex.FogDayNear:
                     this.FogDayNear = (Single)obj;
@@ -1568,7 +1568,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LightningColor = (Color)obj;
                     break;
                 case Weather_FieldIndex.Sounds:
-                    this._Sounds.SetTo((SourceSetList<WeatherSound>)obj);
+                    this._Sounds.SetTo((ISetList<WeatherSound>)obj);
                     break;
                 case Weather_FieldIndex.FNAMDataTypeState:
                     this.FNAMDataTypeState = (Weather.FNAMDataType)obj;
@@ -1618,7 +1618,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case Weather_FieldIndex.WeatherTypes:
-                    obj._WeatherTypes.SetTo((SourceSetList<WeatherType>)pair.Value);
+                    obj._WeatherTypes.SetTo((ISetList<WeatherType>)pair.Value);
                     break;
                 case Weather_FieldIndex.FogDayNear:
                     obj.FogDayNear = (Single)pair.Value;
@@ -1714,7 +1714,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LightningColor = (Color)pair.Value;
                     break;
                 case Weather_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((SourceSetList<WeatherSound>)pair.Value);
+                    obj._Sounds.SetTo((ISetList<WeatherSound>)pair.Value);
                     break;
                 case Weather_FieldIndex.FNAMDataTypeState:
                     obj.FNAMDataTypeState = (Weather.FNAMDataType)pair.Value;
@@ -2622,7 +2622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.Model:
                     return typeof(Model);
                 case Weather_FieldIndex.WeatherTypes:
-                    return typeof(SourceSetList<WeatherType>);
+                    return typeof(ISetList<WeatherType>);
                 case Weather_FieldIndex.FogDayNear:
                     return typeof(Single);
                 case Weather_FieldIndex.FogDayFar:
@@ -2686,7 +2686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.LightningColor:
                     return typeof(Color);
                 case Weather_FieldIndex.Sounds:
-                    return typeof(SourceSetList<WeatherSound>);
+                    return typeof(ISetList<WeatherSound>);
                 case Weather_FieldIndex.FNAMDataTypeState:
                     return typeof(Weather.FNAMDataType);
                 case Weather_FieldIndex.HNAMDataTypeState:

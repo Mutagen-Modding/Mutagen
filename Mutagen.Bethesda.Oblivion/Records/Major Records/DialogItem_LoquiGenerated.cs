@@ -923,19 +923,19 @@ namespace Mutagen.Bethesda.Oblivion
                     this.PreviousTopic_Property.Set((IFormIDSetLink<DialogItem>)obj);
                     break;
                 case DialogItem_FieldIndex.Topics:
-                    this._Topics.SetTo((SourceSetList<IFormIDLink<DialogTopic>>)obj);
+                    this._Topics.SetTo((ISetList<IFormIDLink<DialogTopic>>)obj);
                     break;
                 case DialogItem_FieldIndex.Responses:
-                    this._Responses.SetTo((SourceSetList<DialogResponse>)obj);
+                    this._Responses.SetTo((ISetList<DialogResponse>)obj);
                     break;
                 case DialogItem_FieldIndex.Conditions:
-                    this._Conditions.SetTo((SourceSetList<Condition>)obj);
+                    this._Conditions.SetTo((ISetList<Condition>)obj);
                     break;
                 case DialogItem_FieldIndex.Choices:
-                    this._Choices.SetTo((SourceSetList<IFormIDLink<DialogTopic>>)obj);
+                    this._Choices.SetTo((ISetList<IFormIDLink<DialogTopic>>)obj);
                     break;
                 case DialogItem_FieldIndex.LinkFrom:
-                    this._LinkFrom.SetTo((SourceSetList<IFormIDLink<DialogTopic>>)obj);
+                    this._LinkFrom.SetTo((ISetList<IFormIDLink<DialogTopic>>)obj);
                     break;
                 case DialogItem_FieldIndex.Script:
                     this.Script.CopyFieldsFrom(rhs: (ScriptFields)obj);
@@ -985,19 +985,19 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.PreviousTopic_Property.Set((IFormIDSetLink<DialogItem>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Topics:
-                    obj._Topics.SetTo((SourceSetList<IFormIDLink<DialogTopic>>)pair.Value);
+                    obj._Topics.SetTo((ISetList<IFormIDLink<DialogTopic>>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Responses:
-                    obj._Responses.SetTo((SourceSetList<DialogResponse>)pair.Value);
+                    obj._Responses.SetTo((ISetList<DialogResponse>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((SourceSetList<Condition>)pair.Value);
+                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Choices:
-                    obj._Choices.SetTo((SourceSetList<IFormIDLink<DialogTopic>>)pair.Value);
+                    obj._Choices.SetTo((ISetList<IFormIDLink<DialogTopic>>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.LinkFrom:
-                    obj._LinkFrom.SetTo((SourceSetList<IFormIDLink<DialogTopic>>)pair.Value);
+                    obj._LinkFrom.SetTo((ISetList<IFormIDLink<DialogTopic>>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Script:
                     obj.Script.CopyFieldsFrom(rhs: (ScriptFields)pair.Value);
@@ -1447,15 +1447,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.PreviousTopic:
                     return typeof(IFormIDSetLink<DialogItem>);
                 case DialogItem_FieldIndex.Topics:
-                    return typeof(SourceSetList<IFormIDLink<DialogTopic>>);
+                    return typeof(ISetList<IFormIDLink<DialogTopic>>);
                 case DialogItem_FieldIndex.Responses:
-                    return typeof(SourceSetList<DialogResponse>);
+                    return typeof(ISetList<DialogResponse>);
                 case DialogItem_FieldIndex.Conditions:
-                    return typeof(SourceSetList<Condition>);
+                    return typeof(ISetList<Condition>);
                 case DialogItem_FieldIndex.Choices:
-                    return typeof(SourceSetList<IFormIDLink<DialogTopic>>);
+                    return typeof(ISetList<IFormIDLink<DialogTopic>>);
                 case DialogItem_FieldIndex.LinkFrom:
-                    return typeof(SourceSetList<IFormIDLink<DialogTopic>>);
+                    return typeof(ISetList<IFormIDLink<DialogTopic>>);
                 case DialogItem_FieldIndex.Script:
                     return typeof(ScriptFields);
                 case DialogItem_FieldIndex.DATADataTypeState:

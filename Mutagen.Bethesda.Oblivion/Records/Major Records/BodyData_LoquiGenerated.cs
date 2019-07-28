@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case BodyData_FieldIndex.BodyParts:
-                    this._BodyParts.SetTo((SourceSetList<BodyPart>)obj);
+                    this._BodyParts.SetTo((ISetList<BodyPart>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case BodyData_FieldIndex.BodyParts:
-                    obj._BodyParts.SetTo((SourceSetList<BodyPart>)pair.Value);
+                    obj._BodyParts.SetTo((ISetList<BodyPart>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -848,7 +848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case BodyData_FieldIndex.Model:
                     return typeof(Model);
                 case BodyData_FieldIndex.BodyParts:
-                    return typeof(SourceSetList<BodyPart>);
+                    return typeof(ISetList<BodyPart>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

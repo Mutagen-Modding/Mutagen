@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case ModHeader_FieldIndex.MasterReferences:
-                    this._MasterReferences.SetTo((SourceSetList<MasterReference>)obj);
+                    this._MasterReferences.SetTo((ISetList<MasterReference>)obj);
                     break;
                 case ModHeader_FieldIndex.VestigialData:
                     this.VestigialData = (UInt64)obj;
@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case ModHeader_FieldIndex.MasterReferences:
-                    obj._MasterReferences.SetTo((SourceSetList<MasterReference>)pair.Value);
+                    obj._MasterReferences.SetTo((ISetList<MasterReference>)pair.Value);
                     break;
                 case ModHeader_FieldIndex.VestigialData:
                     obj.VestigialData = (UInt64)pair.Value;
@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ModHeader_FieldIndex.Description:
                     return typeof(String);
                 case ModHeader_FieldIndex.MasterReferences:
-                    return typeof(SourceSetList<MasterReference>);
+                    return typeof(ISetList<MasterReference>);
                 case ModHeader_FieldIndex.VestigialData:
                     return typeof(UInt64);
                 default:

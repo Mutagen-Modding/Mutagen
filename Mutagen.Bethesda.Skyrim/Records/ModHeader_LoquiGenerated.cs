@@ -913,10 +913,10 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Description = (String)obj;
                     break;
                 case ModHeader_FieldIndex.MasterReferences:
-                    this._MasterReferences.SetTo((SourceSetList<MasterReference>)obj);
+                    this._MasterReferences.SetTo((ISetList<MasterReference>)obj);
                     break;
                 case ModHeader_FieldIndex.OverriddenForms:
-                    this._OverriddenForms.SetTo((SourceSetList<IFormIDLink<SkyrimMajorRecord>>)obj);
+                    this._OverriddenForms.SetTo((ISetList<IFormIDLink<SkyrimMajorRecord>>)obj);
                     break;
                 case ModHeader_FieldIndex.INTV:
                     this.INTV = (Int32)obj;
@@ -983,10 +983,10 @@ namespace Mutagen.Bethesda.Skyrim
                     obj.Description = (String)pair.Value;
                     break;
                 case ModHeader_FieldIndex.MasterReferences:
-                    obj._MasterReferences.SetTo((SourceSetList<MasterReference>)pair.Value);
+                    obj._MasterReferences.SetTo((ISetList<MasterReference>)pair.Value);
                     break;
                 case ModHeader_FieldIndex.OverriddenForms:
-                    obj._OverriddenForms.SetTo((SourceSetList<IFormIDLink<SkyrimMajorRecord>>)pair.Value);
+                    obj._OverriddenForms.SetTo((ISetList<IFormIDLink<SkyrimMajorRecord>>)pair.Value);
                     break;
                 case ModHeader_FieldIndex.INTV:
                     obj.INTV = (Int32)pair.Value;
@@ -1497,9 +1497,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.Description:
                     return typeof(String);
                 case ModHeader_FieldIndex.MasterReferences:
-                    return typeof(SourceSetList<MasterReference>);
+                    return typeof(ISetList<MasterReference>);
                 case ModHeader_FieldIndex.OverriddenForms:
-                    return typeof(SourceSetList<IFormIDLink<SkyrimMajorRecord>>);
+                    return typeof(ISetList<IFormIDLink<SkyrimMajorRecord>>);
                 case ModHeader_FieldIndex.INTV:
                     return typeof(Int32);
                 case ModHeader_FieldIndex.INCC:

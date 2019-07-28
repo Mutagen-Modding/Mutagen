@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Script_Property.Set((IFormIDSetLink<Script>)obj);
                     break;
                 case Container_FieldIndex.Items:
-                    this._Items.SetTo((SourceSetList<ContainerItem>)obj);
+                    this._Items.SetTo((ISetList<ContainerItem>)obj);
                     break;
                 case Container_FieldIndex.Flags:
                     this.Flags = (Container.ContainerFlag)obj;
@@ -881,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
                     break;
                 case Container_FieldIndex.Items:
-                    obj._Items.SetTo((SourceSetList<ContainerItem>)pair.Value);
+                    obj._Items.SetTo((ISetList<ContainerItem>)pair.Value);
                     break;
                 case Container_FieldIndex.Flags:
                     obj.Flags = (Container.ContainerFlag)pair.Value;
@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Container_FieldIndex.Script:
                     return typeof(IFormIDSetLink<Script>);
                 case Container_FieldIndex.Items:
-                    return typeof(SourceSetList<ContainerItem>);
+                    return typeof(ISetList<ContainerItem>);
                 case Container_FieldIndex.Flags:
                     return typeof(Container.ContainerFlag);
                 case Container_FieldIndex.Weight:

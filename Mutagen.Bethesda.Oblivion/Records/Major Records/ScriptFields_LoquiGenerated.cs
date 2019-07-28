@@ -716,10 +716,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.SourceCode = (String)obj;
                     break;
                 case ScriptFields_FieldIndex.LocalVariables:
-                    this._LocalVariables.SetTo((SourceSetList<LocalVariable>)obj);
+                    this._LocalVariables.SetTo((ISetList<LocalVariable>)obj);
                     break;
                 case ScriptFields_FieldIndex.References:
-                    this._References.SetTo((SourceSetList<ScriptReference>)obj);
+                    this._References.SetTo((ISetList<ScriptReference>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -759,10 +759,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.SourceCode = (String)pair.Value;
                     break;
                 case ScriptFields_FieldIndex.LocalVariables:
-                    obj._LocalVariables.SetTo((SourceSetList<LocalVariable>)pair.Value);
+                    obj._LocalVariables.SetTo((ISetList<LocalVariable>)pair.Value);
                     break;
                 case ScriptFields_FieldIndex.References:
-                    obj._References.SetTo((SourceSetList<ScriptReference>)pair.Value);
+                    obj._References.SetTo((ISetList<ScriptReference>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1095,9 +1095,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptFields_FieldIndex.SourceCode:
                     return typeof(String);
                 case ScriptFields_FieldIndex.LocalVariables:
-                    return typeof(SourceSetList<LocalVariable>);
+                    return typeof(ISetList<LocalVariable>);
                 case ScriptFields_FieldIndex.References:
-                    return typeof(SourceSetList<ScriptReference>);
+                    return typeof(ISetList<ScriptReference>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

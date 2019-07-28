@@ -833,13 +833,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Icon = (String)obj;
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
-                    this._PrimaryAttributes.SetTo((SourceSetList<ActorValue>)obj);
+                    this._PrimaryAttributes.SetTo((IList<ActorValue>)obj);
                     break;
                 case Class_FieldIndex.Specialization:
                     this.Specialization = (Class.SpecializationFlag)obj;
                     break;
                 case Class_FieldIndex.SecondaryAttributes:
-                    this._SecondaryAttributes.SetTo((SourceSetList<ActorValue>)obj);
+                    this._SecondaryAttributes.SetTo((IList<ActorValue>)obj);
                     break;
                 case Class_FieldIndex.Flags:
                     this.Flags = (ClassFlag)obj;
@@ -892,13 +892,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Icon = (String)pair.Value;
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
-                    obj._PrimaryAttributes.SetTo((SourceSetList<ActorValue>)pair.Value);
+                    obj._PrimaryAttributes.SetTo((IList<ActorValue>)pair.Value);
                     break;
                 case Class_FieldIndex.Specialization:
                     obj.Specialization = (Class.SpecializationFlag)pair.Value;
                     break;
                 case Class_FieldIndex.SecondaryAttributes:
-                    obj._SecondaryAttributes.SetTo((SourceSetList<ActorValue>)pair.Value);
+                    obj._SecondaryAttributes.SetTo((IList<ActorValue>)pair.Value);
                     break;
                 case Class_FieldIndex.Flags:
                     obj.Flags = (ClassFlag)pair.Value;
@@ -1345,11 +1345,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.Icon:
                     return typeof(String);
                 case Class_FieldIndex.PrimaryAttributes:
-                    return typeof(SourceSetList<ActorValue>);
+                    return typeof(IList<ActorValue>);
                 case Class_FieldIndex.Specialization:
                     return typeof(Class.SpecializationFlag);
                 case Class_FieldIndex.SecondaryAttributes:
-                    return typeof(SourceSetList<ActorValue>);
+                    return typeof(IList<ActorValue>);
                 case Class_FieldIndex.Flags:
                     return typeof(ClassFlag);
                 case Class_FieldIndex.ClassServices:

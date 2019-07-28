@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case LoadScreen_FieldIndex.Locations:
-                    this._Locations.SetTo((SourceSetList<LoadScreenLocation>)obj);
+                    this._Locations.SetTo((ISetList<LoadScreenLocation>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case LoadScreen_FieldIndex.Locations:
-                    obj._Locations.SetTo((SourceSetList<LoadScreenLocation>)pair.Value);
+                    obj._Locations.SetTo((ISetList<LoadScreenLocation>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LoadScreen_FieldIndex.Description:
                     return typeof(String);
                 case LoadScreen_FieldIndex.Locations:
-                    return typeof(SourceSetList<LoadScreenLocation>);
+                    return typeof(ISetList<LoadScreenLocation>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

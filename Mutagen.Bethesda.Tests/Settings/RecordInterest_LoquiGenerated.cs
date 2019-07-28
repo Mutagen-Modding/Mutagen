@@ -473,10 +473,10 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case RecordInterest_FieldIndex.InterestingTypes:
-                    this._InterestingTypes.SetTo((SourceSetList<String>)obj);
+                    this._InterestingTypes.SetTo((IList<String>)obj);
                     break;
                 case RecordInterest_FieldIndex.UninterestingTypes:
-                    this._UninterestingTypes.SetTo((SourceSetList<String>)obj);
+                    this._UninterestingTypes.SetTo((IList<String>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -507,10 +507,10 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case RecordInterest_FieldIndex.InterestingTypes:
-                    obj._InterestingTypes.SetTo((SourceSetList<String>)pair.Value);
+                    obj._InterestingTypes.SetTo((IList<String>)pair.Value);
                     break;
                 case RecordInterest_FieldIndex.UninterestingTypes:
-                    obj._UninterestingTypes.SetTo((SourceSetList<String>)pair.Value);
+                    obj._UninterestingTypes.SetTo((IList<String>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -776,9 +776,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case RecordInterest_FieldIndex.InterestingTypes:
-                    return typeof(SourceSetList<String>);
+                    return typeof(IList<String>);
                 case RecordInterest_FieldIndex.UninterestingTypes:
-                    return typeof(SourceSetList<String>);
+                    return typeof(IList<String>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

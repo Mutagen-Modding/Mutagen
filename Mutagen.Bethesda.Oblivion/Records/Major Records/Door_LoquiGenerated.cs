@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (Door.DoorFlag)obj;
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    this._RandomTeleportDestinations.SetTo((SourceSetList<IFormIDLink<Place>>)obj);
+                    this._RandomTeleportDestinations.SetTo((ISetList<IFormIDLink<Place>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (Door.DoorFlag)pair.Value;
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    obj._RandomTeleportDestinations.SetTo((SourceSetList<IFormIDLink<Place>>)pair.Value);
+                    obj._RandomTeleportDestinations.SetTo((ISetList<IFormIDLink<Place>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.Flags:
                     return typeof(Door.DoorFlag);
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    return typeof(SourceSetList<IFormIDLink<Place>>);
+                    return typeof(ISetList<IFormIDLink<Place>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

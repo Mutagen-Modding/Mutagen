@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataObjects_FieldIndex.Objects:
-                    this._Objects.SetTo((SourceSetList<RegionDataObject>)obj);
+                    this._Objects.SetTo((ISetList<RegionDataObject>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataObjects_FieldIndex.Objects:
-                    obj._Objects.SetTo((SourceSetList<RegionDataObject>)pair.Value);
+                    obj._Objects.SetTo((ISetList<RegionDataObject>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataObjects_FieldIndex.Objects:
-                    return typeof(SourceSetList<RegionDataObject>);
+                    return typeof(ISetList<RegionDataObject>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }

@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MusicType = (MusicType)obj;
                     break;
                 case RegionDataSounds_FieldIndex.Sounds:
-                    this._Sounds.SetTo((SourceSetList<RegionSound>)obj);
+                    this._Sounds.SetTo((ISetList<RegionSound>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.MusicType = (MusicType)pair.Value;
                     break;
                 case RegionDataSounds_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((SourceSetList<RegionSound>)pair.Value);
+                    obj._Sounds.SetTo((ISetList<RegionSound>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -925,7 +925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionDataSounds_FieldIndex.MusicType:
                     return typeof(MusicType);
                 case RegionDataSounds_FieldIndex.Sounds:
-                    return typeof(SourceSetList<RegionSound>);
+                    return typeof(ISetList<RegionSound>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }

@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Icon = (String)obj;
                     break;
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                    this._SpeedTreeSeeds.SetTo((SourceSetList<UInt32>)obj);
+                    this._SpeedTreeSeeds.SetTo((ISetList<UInt32>)obj);
                     break;
                 case Tree_FieldIndex.LeafCurvature:
                     this.LeafCurvature = (Single)obj;
@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Icon = (String)pair.Value;
                     break;
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                    obj._SpeedTreeSeeds.SetTo((SourceSetList<UInt32>)pair.Value);
+                    obj._SpeedTreeSeeds.SetTo((ISetList<UInt32>)pair.Value);
                     break;
                 case Tree_FieldIndex.LeafCurvature:
                     obj.LeafCurvature = (Single)pair.Value;
@@ -1543,7 +1543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Tree_FieldIndex.Icon:
                     return typeof(String);
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                    return typeof(SourceSetList<UInt32>);
+                    return typeof(ISetList<UInt32>);
                 case Tree_FieldIndex.LeafCurvature:
                     return typeof(Single);
                 case Tree_FieldIndex.MinimumLeafAngle:

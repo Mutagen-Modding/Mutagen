@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.SoundType = (CreatureSound.CreatureSoundType)obj;
                     break;
                 case CreatureSound_FieldIndex.Sounds:
-                    this._Sounds.SetTo((SourceSetList<SoundItem>)obj);
+                    this._Sounds.SetTo((ISetList<SoundItem>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.SoundType = (CreatureSound.CreatureSoundType)pair.Value;
                     break;
                 case CreatureSound_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((SourceSetList<SoundItem>)pair.Value);
+                    obj._Sounds.SetTo((ISetList<SoundItem>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -867,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CreatureSound_FieldIndex.SoundType:
                     return typeof(CreatureSound.CreatureSoundType);
                 case CreatureSound_FieldIndex.Sounds:
-                    return typeof(SourceSetList<SoundItem>);
+                    return typeof(ISetList<SoundItem>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

@@ -529,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataGrasses_FieldIndex.Grasses:
-                    this._Grasses.SetTo((SourceSetList<IFormIDLink<Grass>>)obj);
+                    this._Grasses.SetTo((ISetList<IFormIDLink<Grass>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataGrasses_FieldIndex.Grasses:
-                    obj._Grasses.SetTo((SourceSetList<IFormIDLink<Grass>>)pair.Value);
+                    obj._Grasses.SetTo((ISetList<IFormIDLink<Grass>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataGrasses_FieldIndex.Grasses:
-                    return typeof(SourceSetList<IFormIDLink<Grass>>);
+                    return typeof(ISetList<IFormIDLink<Grass>>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }

@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Road_FieldIndex.Points:
-                    this._Points.SetTo((SourceSetList<RoadPoint>)obj);
+                    this._Points.SetTo((ISetList<RoadPoint>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Road_FieldIndex.Points:
-                    obj._Points.SetTo((SourceSetList<RoadPoint>)pair.Value);
+                    obj._Points.SetTo((ISetList<RoadPoint>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Road_FieldIndex.Points:
-                    return typeof(SourceSetList<RoadPoint>);
+                    return typeof(ISetList<RoadPoint>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

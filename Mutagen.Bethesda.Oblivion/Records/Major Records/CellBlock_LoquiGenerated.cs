@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LastModified = (Byte[])obj;
                     break;
                 case CellBlock_FieldIndex.Items:
-                    this._Items.SetTo((SourceSetList<CellSubBlock>)obj);
+                    this._Items.SetTo((ISetList<CellSubBlock>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LastModified = (Byte[])pair.Value;
                     break;
                 case CellBlock_FieldIndex.Items:
-                    obj._Items.SetTo((SourceSetList<CellSubBlock>)pair.Value);
+                    obj._Items.SetTo((ISetList<CellSubBlock>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -921,7 +921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CellBlock_FieldIndex.LastModified:
                     return typeof(Byte[]);
                 case CellBlock_FieldIndex.Items:
-                    return typeof(SourceSetList<CellSubBlock>);
+                    return typeof(ISetList<CellSubBlock>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

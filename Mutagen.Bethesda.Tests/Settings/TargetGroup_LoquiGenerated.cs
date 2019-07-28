@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Tests
                     this.Do = (Boolean)obj;
                     break;
                 case TargetGroup_FieldIndex.Targets:
-                    this._Targets.SetTo((SourceSetList<Target>)obj);
+                    this._Targets.SetTo((IList<Target>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Tests
                     obj.Do = (Boolean)pair.Value;
                     break;
                 case TargetGroup_FieldIndex.Targets:
-                    obj._Targets.SetTo((SourceSetList<Target>)pair.Value);
+                    obj._Targets.SetTo((IList<Target>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TargetGroup_FieldIndex.Do:
                     return typeof(Boolean);
                 case TargetGroup_FieldIndex.Targets:
-                    return typeof(SourceSetList<Target>);
+                    return typeof(IList<Target>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

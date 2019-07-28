@@ -867,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (IngredientFlag)obj;
                     break;
                 case Ingredient_FieldIndex.Effects:
-                    this._Effects.SetTo((SourceSetList<Effect>)obj);
+                    this._Effects.SetTo((ISetList<Effect>)obj);
                     break;
                 case Ingredient_FieldIndex.ENITDataTypeState:
                     this.ENITDataTypeState = (Ingredient.ENITDataType)obj;
@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (IngredientFlag)pair.Value;
                     break;
                 case Ingredient_FieldIndex.Effects:
-                    obj._Effects.SetTo((SourceSetList<Effect>)pair.Value);
+                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
                     break;
                 case Ingredient_FieldIndex.ENITDataTypeState:
                     obj.ENITDataTypeState = (Ingredient.ENITDataType)pair.Value;
@@ -1362,7 +1362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ingredient_FieldIndex.Flags:
                     return typeof(IngredientFlag);
                 case Ingredient_FieldIndex.Effects:
-                    return typeof(SourceSetList<Effect>);
+                    return typeof(ISetList<Effect>);
                 case Ingredient_FieldIndex.ENITDataTypeState:
                     return typeof(Ingredient.ENITDataType);
                 default:

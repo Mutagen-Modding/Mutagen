@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Script_Property.Set((IFormIDSetLink<Script>)obj);
                     break;
                 case SigilStone_FieldIndex.Effects:
-                    this._Effects.SetTo((SourceSetList<Effect>)obj);
+                    this._Effects.SetTo((ISetList<Effect>)obj);
                     break;
                 case SigilStone_FieldIndex.Uses:
                     this.Uses = (Byte)obj;
@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
                     break;
                 case SigilStone_FieldIndex.Effects:
-                    obj._Effects.SetTo((SourceSetList<Effect>)pair.Value);
+                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
                     break;
                 case SigilStone_FieldIndex.Uses:
                     obj.Uses = (Byte)pair.Value;
@@ -1324,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SigilStone_FieldIndex.Script:
                     return typeof(IFormIDSetLink<Script>);
                 case SigilStone_FieldIndex.Effects:
-                    return typeof(SourceSetList<Effect>);
+                    return typeof(ISetList<Effect>);
                 case SigilStone_FieldIndex.Uses:
                     return typeof(Byte);
                 case SigilStone_FieldIndex.Value:

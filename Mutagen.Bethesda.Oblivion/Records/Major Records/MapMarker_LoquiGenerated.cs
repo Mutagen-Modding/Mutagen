@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Name = (String)obj;
                     break;
                 case MapMarker_FieldIndex.Types:
-                    this._Types.SetTo((SourceSetList<MapMarker.Type>)obj);
+                    this._Types.SetTo((ISetList<MapMarker.Type>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Name = (String)pair.Value;
                     break;
                 case MapMarker_FieldIndex.Types:
-                    obj._Types.SetTo((SourceSetList<MapMarker.Type>)pair.Value);
+                    obj._Types.SetTo((ISetList<MapMarker.Type>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -906,7 +906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MapMarker_FieldIndex.Name:
                     return typeof(String);
                 case MapMarker_FieldIndex.Types:
-                    return typeof(SourceSetList<MapMarker.Type>);
+                    return typeof(ISetList<MapMarker.Type>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

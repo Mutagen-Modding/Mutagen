@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LastModified = (Byte[])obj;
                     break;
                 case ListGroup_FieldIndex.Items:
-                    this._Items.SetTo((SourceSetList<T>)obj);
+                    this._Items.SetTo((IList<T>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LastModified = (Byte[])pair.Value;
                     break;
                 case ListGroup_FieldIndex.Items:
-                    obj._Items.SetTo((SourceSetList<T>)pair.Value);
+                    obj._Items.SetTo((IList<T>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ListGroup_FieldIndex.LastModified:
                     return typeof(Byte[]);
                 case ListGroup_FieldIndex.Items:
-                    return typeof(SourceSetList<T>);
+                    return typeof(IList<T>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

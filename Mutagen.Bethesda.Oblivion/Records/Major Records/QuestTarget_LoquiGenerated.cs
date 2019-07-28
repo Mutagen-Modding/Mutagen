@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (QuestTarget.Flag)obj;
                     break;
                 case QuestTarget_FieldIndex.Conditions:
-                    this._Conditions.SetTo((SourceSetList<Condition>)obj);
+                    this._Conditions.SetTo((ISetList<Condition>)obj);
                     break;
                 case QuestTarget_FieldIndex.QSTADataTypeState:
                     this.QSTADataTypeState = (QuestTarget.QSTADataType)obj;
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (QuestTarget.Flag)pair.Value;
                     break;
                 case QuestTarget_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((SourceSetList<Condition>)pair.Value);
+                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
                     break;
                 case QuestTarget_FieldIndex.QSTADataTypeState:
                     obj.QSTADataTypeState = (QuestTarget.QSTADataType)pair.Value;
@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case QuestTarget_FieldIndex.Flags:
                     return typeof(QuestTarget.Flag);
                 case QuestTarget_FieldIndex.Conditions:
-                    return typeof(SourceSetList<Condition>);
+                    return typeof(ISetList<Condition>);
                 case QuestTarget_FieldIndex.QSTADataTypeState:
                     return typeof(QuestTarget.QSTADataType);
                 default:
