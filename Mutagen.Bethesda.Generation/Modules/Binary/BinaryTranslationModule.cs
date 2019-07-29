@@ -1426,7 +1426,6 @@ namespace Mutagen.Bethesda.Generation
             if (obj.Name.Contains("Cell")
                 || obj.Name.Contains("World")
                 || obj.Name.Contains("ListGroup")
-                || obj.Name.Contains("Region")
                 || obj.Name.Contains("Road")
                 || obj.Name.Contains("PathGrid")
                 || obj.Name.Contains("SkyrimMod")
@@ -1787,7 +1786,14 @@ namespace Mutagen.Bethesda.Generation
                                     }
                                     break;
                                 case ObjectType.Group:
-                                    call = $"{nameof(UtilityTranslation.FillRecordTypesForWrapper)}";
+                                    if (obj.IsTopLevelGroup())
+                                    {
+                                        call = $"{nameof(UtilityTranslation.FillMajorRecordsForWrapper)}";
+                                    }
+                                    else
+                                    {
+                                        call = $"{nameof(UtilityTranslation.FillGroupRecordsForWrapper)}";
+                                    }
                                     break;
                                 case ObjectType.Mod:
                                     call = $"{nameof(UtilityTranslation.FillModTypesForWrapper)}";
@@ -1878,7 +1884,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "Regions")
+                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "Cells")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)

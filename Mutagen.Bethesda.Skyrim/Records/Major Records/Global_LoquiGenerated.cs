@@ -1533,6 +1533,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object XmlWriteTranslator => GlobalXmlWriteTranslation.Instance;
         protected override object BinaryWriteTranslator => GlobalBinaryWriteTranslation.Instance;
 
+        #region TypeChar
+        partial void TypeCharCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
         protected GlobalBinaryWrapper(
@@ -1554,6 +1559,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4D414E46: // FNAM
                 {
+                    TypeCharCustomParse(
+                        stream,
+                        offset);
                     return TryGet<int?>.Succeed(null);
                 }
                 default:

@@ -1,4 +1,4 @@
-﻿using Loqui.Generation;
+using Loqui.Generation;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -91,6 +91,13 @@ namespace Mutagen.Bethesda.Generation
             if (objGen.Name == "MajorRecord") return true;
             await Task.WhenAll(objGen.BaseClassTrail().Select(bo => bo.LoadingCompleteTask.Task));
             return objGen.BaseClassTrail().Any(bo => bo.Name == "MajorRecord");
+        }
+
+        public static bool IsTopLevelGroup(this ObjectGeneration objGen)
+        {
+            if (objGen.GetObjectType() != ObjectType.Group) return false;
+            if (objGen.Name == "Group") return true;
+            return false;
         }
 
         public static ObjectType GetObjectType(this ObjectGeneration objGen)

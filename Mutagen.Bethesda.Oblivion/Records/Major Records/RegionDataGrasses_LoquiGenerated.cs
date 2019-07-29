@@ -1796,6 +1796,83 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RegionDataGrassesBinaryWrapper :
+        RegionDataBinaryWrapper,
+        IRegionDataGrassesInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RegionDataGrasses_Registration.Instance;
+        public new static RegionDataGrasses_Registration Registration => RegionDataGrasses_Registration.Instance;
+        protected override object CommonInstance => RegionDataGrassesCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataGrassesInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => RegionDataGrassesXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => RegionDataGrassesBinaryWriteTranslation.Instance;
+
+        public IReadOnlySetList<IFormIDLinkGetter<IGrassInternalGetter>> Grasses { get; private set; } = EmptySetList<IFormIDLinkGetter<IGrassInternalGetter>>.Instance;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RegionDataGrassesBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static RegionDataGrassesBinaryWrapper RegionDataGrassesFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new RegionDataGrassesBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x53474452: // RDGS
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.Grasses = BinaryWrapperSetList<IFormIDLinkGetter<IGrassInternalGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormIDLink<IGrassInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)RegionDataGrasses_FieldIndex.Grasses);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

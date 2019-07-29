@@ -2012,6 +2012,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RegionDataBinaryWrapper : IRegionDataInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RegionData_Registration.Instance;
+        public static RegionData_Registration Registration => RegionData_Registration.Instance;
+        protected virtual object CommonInstance => RegionDataCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataInternalGetter)rhs, include);
+
+        protected virtual object XmlWriteTranslator => RegionDataXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected virtual object BinaryWriteTranslator => RegionDataBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        private int? _RDATLocation;
+        public RegionData.RDATDataType RDATDataTypeState { get; private set; }
+        #region DataType
+        private int _DataTypeLocation => _RDATLocation.Value + 0x0;
+        private bool _DataType_IsSet => _RDATLocation.HasValue;
+        public RegionData.RegionDataType DataType => _DataType_IsSet ? (RegionData.RegionDataType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_DataTypeLocation, 4)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _RDATLocation.Value + 0x4;
+        private bool _Flags_IsSet => _RDATLocation.HasValue;
+        public RegionData.RegionDataFlag Flags => _Flags_IsSet ? (RegionData.RegionDataFlag)_data.Span.Slice(_FlagsLocation, 1)[0] : default;
+        #endregion
+        public Byte Priority => _RDATLocation.HasValue ? _data.Span[_RDATLocation.Value + 5] : default;
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RegionDataBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public virtual TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x54414452: // RDAT
+                {
+                    _RDATLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    this.RDATDataTypeState = RegionData.RDATDataType.Has;
+                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Priority);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+    }
+
     #endregion
 
     #endregion

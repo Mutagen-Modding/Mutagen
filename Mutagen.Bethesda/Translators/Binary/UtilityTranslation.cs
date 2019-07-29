@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static void FillRecordTypesForWrapper(
+        public static void FillMajorRecordsForWrapper(
             BinaryMemoryReadStream stream,
             long finalPos,
             int offset,
@@ -417,6 +417,37 @@ namespace Mutagen.Bethesda
                 if (startPos == stream.Position)
                 {
                     stream.Position += checked((int)majorMeta.TotalLength);
+                }
+                lastParsed = parsed.Value;
+            }
+        }
+
+        public static void FillGroupRecordsForWrapper(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            MetaDataConstants meta,
+            RecordTypeConverter recordTypeConverter,
+            RecordTypeFillWrapper fill)
+        {
+            int? lastParsed = null;
+            while (stream.Position < finalPos)
+            {
+                GroupRecordMeta groupMeta = meta.Group(stream.RemainingSpan);
+                if (!groupMeta.IsGroup)
+                {
+                    throw new DataMisalignedException();
+                }
+                var startPos = stream.Position;
+                var parsed = fill(
+                    stream: stream,
+                    offset: offset,
+                    type: recordTypeConverter.ConvertToStandard(groupMeta.RecordType),
+                    lastParsed: lastParsed);
+                if (parsed.Failed) break;
+                if (startPos == stream.Position)
+                {
+                    stream.Position += checked((int)groupMeta.TotalLength);
                 }
                 lastParsed = parsed.Value;
             }
@@ -475,28 +506,28 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static int[] ParseSubrecordLocations(
+        public static int[] ParseRecordLocations(
             BinaryMemoryReadStream stream,
-            MetaDataConstants meta,
             RecordType trigger,
+            RecordConstants constants,
             bool skipHeader)
         {
             List<int> ret = new List<int>();
             var startingPos = stream.Position;
             while (!stream.Complete)
             {
-                var subMeta = meta.GetSubRecord(stream);
-                if (subMeta.RecordType != trigger) break;
+                var varMeta = constants.GetVariableMeta(stream);
+                if (varMeta.RecordType != trigger) break;
                 if (skipHeader)
                 {
-                    stream.Position += subMeta.HeaderLength;
+                    stream.Position += varMeta.HeaderLength;
                     ret.Add(stream.Position - startingPos);
-                    stream.Position += subMeta.RecordLength;
+                    stream.Position += (int)varMeta.RecordLength;
                 }
                 else
                 {
                     ret.Add(stream.Position - startingPos);
-                    stream.Position += subMeta.TotalLength;
+                    stream.Position += (int)varMeta.TotalLength;
                 }
             }
             return ret.ToArray();

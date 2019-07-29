@@ -4097,9 +4097,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<IDialogTopicInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
-                        locs: UtilityTranslation.ParseSubrecordLocations(
+                        locs: UtilityTranslation.ParseRecordLocations(
                             stream: stream,
-                            meta: _package.Meta,
+                            constants: _package.Meta.SubConstants,
                             trigger: type,
                             skipHeader: true));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
@@ -4122,10 +4122,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package,
                         recordTypeConverter: null,
                         getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
-                        locs: UtilityTranslation.ParseSubrecordLocations(
+                        locs: UtilityTranslation.ParseRecordLocations(
                             stream: stream,
-                            meta: _package.Meta,
                             trigger: type,
+                            constants: _package.Meta.SubConstants,
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
                 }
@@ -4135,9 +4135,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<IDialogTopicInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
-                        locs: UtilityTranslation.ParseSubrecordLocations(
+                        locs: UtilityTranslation.ParseRecordLocations(
                             stream: stream,
-                            meta: _package.Meta,
+                            constants: _package.Meta.SubConstants,
                             trigger: type,
                             skipHeader: true));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
@@ -4148,9 +4148,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<IDialogTopicInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
-                        locs: UtilityTranslation.ParseSubrecordLocations(
+                        locs: UtilityTranslation.ParseRecordLocations(
                             stream: stream,
-                            meta: _package.Meta,
+                            constants: _package.Meta.SubConstants,
                             trigger: type,
                             skipHeader: true));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);

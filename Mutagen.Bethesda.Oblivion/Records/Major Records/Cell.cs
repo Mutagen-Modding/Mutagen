@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -54,19 +55,19 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public static async Task CustomBinaryEndImport(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
+                CustomBinaryEnd(frame, obj, masterReferences, errorMask);
+            }
+
+            private static void CustomBinaryEnd(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
                 if (frame.Reader.Complete) return;
-                var next = HeaderTranslation.GetNextType(
-                    reader: frame.Reader,
-                    contentLength: out var len,
-                    finalPos: out var finalPos,
-                    hopGroup: false);
-                if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
-                var formKey = FormKey.Factory(masterReferences, frame.Reader.GetUInt32(offset: 8));
-                var grupType = (GroupTypeEnum)frame.Reader.GetInt32(offset: 12);
-                if (grupType == GroupTypeEnum.CellChildren)
+                var groupMeta = frame.MetaData.GetGroup(frame);
+                if (!groupMeta.IsGroup) return;
+                var formKey = FormKey.Factory(masterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
+                if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
                 {
-                    frame.Reader.Position += 16;
-                    obj.Timestamp = frame.Reader.ReadBytes(4);
+                    obj.Timestamp = groupMeta.LastModifiedSpan.ToArray();
+                    frame.Position += groupMeta.HeaderLength;
                     if (formKey != obj.FormKey)
                     {
                         throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
@@ -76,20 +77,16 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     return;
                 }
-                var subFrame = frame.SpawnWithLength(len - frame.MetaData.MajorConstants.HeaderLength);
+                var subFrame = frame.SpawnWithLength(groupMeta.ContentLength);
                 while (!subFrame.Complete)
                 {
-                    var persistGroup = HeaderTranslation.GetNextType(
-                        reader: frame.Reader,
-                        contentLength: out var persistLen,
-                        finalPos: out var _,
-                        hopGroup: false);
-                    if (!persistGroup.Equals(Group_Registration.GRUP_HEADER))
+                    var persistGroupMeta = frame.MetaData.GetGroup(frame);
+                    if (!persistGroupMeta.IsGroup)
                     {
                         throw new ArgumentException();
                     }
-                    GroupTypeEnum type = (GroupTypeEnum)subFrame.Reader.GetUInt32(offset: 12);
-                    var itemFrame = frame.SpawnWithLength(persistLen);
+                    GroupTypeEnum type = (GroupTypeEnum)persistGroupMeta.GroupType;
+                    var itemFrame = frame.SpawnWithLength(persistGroupMeta.TotalLength);
                     switch (type)
                     {
                         case GroupTypeEnum.CellPersistentChildren:
@@ -134,59 +131,58 @@ namespace Mutagen.Bethesda.Oblivion
                 ErrorMaskBuilder errorMask,
                 bool persistentParse)
             {
-                frame.Reader.Position += 8;
-                var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
+                var groupMeta = frame.MetaData.ReadGroup(frame);
+                var formKey = FormKey.Factory(masterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
                 if (formKey != obj.FormKey)
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
-                frame.Reader.Position += 4;
                 if (persistentParse)
                 {
-                    obj.PersistentTimestamp = frame.Reader.ReadBytes(4);
+                    obj.PersistentTimestamp = groupMeta.LastModifiedSpan.ToArray();
                 }
                 else
                 {
-                    obj.VisibleWhenDistantTimestamp = frame.Reader.ReadBytes(4);
+                    obj.VisibleWhenDistantTimestamp = groupMeta.LastModifiedSpan.ToArray();
                 }
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
                     frame: frame,
                     fieldIndex: fieldIndex,
                     item: coll,
-                    lengthLength: 4,
+                    lengthLength: frame.MetaData.MajorConstants.LengthLength,
                     errorMask: errorMask,
                     transl: (MutagenFrame r, RecordType header, out IPlaced placed, ErrorMaskBuilder errMaskInternal) =>
                     {
                         switch (header.TypeInt)
                         {
                             case 0x45524341: // "ACRE":
-                            if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
-                                    frame: r,
-                                    item: out var placedCrea,
-                                    masterReferences: masterReferences,
-                                    errorMask: errMaskInternal))
+                                if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
+                                        frame: r,
+                                        item: out var placedCrea,
+                                        masterReferences: masterReferences,
+                                        errorMask: errMaskInternal))
                                 {
                                     placed = placedCrea;
                                     return true;
                                 }
                                 break;
                             case 0x52484341: //"ACHR":
-                            if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
-                                    frame: r,
-                                    item: out var placedNPC,
-                                    masterReferences: masterReferences,
-                                    errorMask: errMaskInternal))
+                                if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
+                                        frame: r,
+                                        item: out var placedNPC,
+                                        masterReferences: masterReferences,
+                                        errorMask: errMaskInternal))
                                 {
                                     placed = placedNPC;
                                     return true;
                                 }
                                 break;
                             case 0x52464552: // "REFR":
-                            if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
-                                    frame: r,
-                                    item: out var placedObj,
-                                    masterReferences: masterReferences,
-                                    errorMask: errMaskInternal))
+                                if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
+                                        frame: r,
+                                        item: out var placedObj,
+                                        masterReferences: masterReferences,
+                                        errorMask: errMaskInternal))
                                 {
                                     placed = placedObj;
                                     return true;
@@ -234,52 +230,51 @@ namespace Mutagen.Bethesda.Oblivion
 
             static void ParseTemporary(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                frame.Reader.Position += 8;
-                var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
+                var groupMeta = frame.MetaData.ReadGroup(frame);
+                var formKey = FormKey.Factory(masterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
                 if (formKey != obj.FormKey)
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
-                frame.Reader.Position += 4;
-                obj.TemporaryTimestamp = frame.Reader.ReadBytes(4);
+                obj.TemporaryTimestamp = groupMeta.LastModifiedSpan.ToArray();
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
                     frame: frame,
                     item: obj.Temporary,
                     fieldIndex: (int)Cell_FieldIndex.Persistent,
-                    lengthLength: 4,
+                    lengthLength: frame.MetaData.MajorConstants.LengthLength,
                     errorMask: errorMask,
                     transl: (MutagenFrame r, RecordType header, out IPlaced placed, ErrorMaskBuilder listSubMask) =>
                     {
                         switch (header.TypeInt)
                         {
                             case 0x45524341: // "ACRE":
-                            if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
-                                    frame: r,
-                                    item: out var placedCrea,
-                                    masterReferences: masterReferences,
-                                    errorMask: errorMask))
+                                if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
+                                        frame: r,
+                                        item: out var placedCrea,
+                                        masterReferences: masterReferences,
+                                        errorMask: errorMask))
                                 {
                                     placed = placedCrea;
                                     return true;
                                 }
                                 break;
                             case 0x52484341: //"ACHR":
-                            if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
-                                    frame: r,
-                                    item: out var placedNPC,
-                                    masterReferences: masterReferences,
-                                    errorMask: errorMask))
+                                if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
+                                        frame: r,
+                                        item: out var placedNPC,
+                                        masterReferences: masterReferences,
+                                        errorMask: errorMask))
                                 {
                                     placed = placedNPC;
                                     return true;
                                 }
                                 break;
                             case 0x52464552: // "REFR":
-                            if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
-                                    frame: r,
-                                    item: out var placedObj,
-                                    masterReferences: masterReferences,
-                                    errorMask: errorMask))
+                                if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
+                                        frame: r,
+                                        item: out var placedObj,
+                                        masterReferences: masterReferences,
+                                        errorMask: errorMask))
                                 {
                                     placed = placedObj;
                                     return true;

@@ -2498,10 +2498,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package,
                         recordTypeConverter: null,
                         getter: (s, p, recConv) => LeveledEntryBinaryWrapper<IItemAbstractInternalGetter>.LeveledEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
-                        locs: UtilityTranslation.ParseSubrecordLocations(
+                        locs: UtilityTranslation.ParseRecordLocations(
                             stream: stream,
-                            meta: _package.Meta,
                             trigger: type,
+                            constants: _package.Meta.SubConstants,
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
                 }

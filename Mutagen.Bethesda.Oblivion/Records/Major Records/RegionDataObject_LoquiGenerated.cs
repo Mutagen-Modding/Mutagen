@@ -3719,6 +3719,70 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RegionDataObjectBinaryWrapper : IRegionDataObjectGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RegionDataObject_Registration.Instance;
+        public static RegionDataObject_Registration Registration => RegionDataObject_Registration.Instance;
+        protected object CommonInstance => RegionDataObjectCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RegionDataObjectXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RegionDataObjectBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+
+        #region Object
+        public IFormIDLinkGetter<IOblivionMajorRecordInternalGetter> Object_Property => new FormIDLink<IOblivionMajorRecordInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IOblivionMajorRecordInternalGetter Object => default;
+        #endregion
+        public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(4, 2));
+        public ReadOnlySpan<Byte> Unknown1 => _data.Span.Slice(6, 2).ToArray();
+        public Single Density => SpanExt.GetFloat(_data.Span.Slice(8, 4));
+        public Byte Clustering => _data.Span[12];
+        public Byte MinSlope => _data.Span[13];
+        public Byte MaxSlope => _data.Span[14];
+        public RegionDataObject.Flag Flags => (RegionDataObject.Flag)_data.Span.Slice(15, 1)[0];
+        public UInt16 RadiusWrtPercent => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(16, 2));
+        public UInt16 Radius => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(18, 2));
+        public Single MinHeight => SpanExt.GetFloat(_data.Span.Slice(20, 4));
+        public Single MaxHeight => SpanExt.GetFloat(_data.Span.Slice(24, 4));
+        public Single Sink => SpanExt.GetFloat(_data.Span.Slice(28, 4));
+        public Single SinkVariance => SpanExt.GetFloat(_data.Span.Slice(32, 4));
+        public Single SizeVariance => SpanExt.GetFloat(_data.Span.Slice(36, 4));
+        public P3UInt16 AngleVariance => P3UInt16BinaryTranslation.Read(_data.Span.Slice(40, 6));
+        public ReadOnlySpan<Byte> Unknown2 => _data.Span.Slice(46, 6).ToArray();
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RegionDataObjectBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+        {
+            this._data = bytes;
+            this._package = package;
+        }
+
+        public static RegionDataObjectBinaryWrapper RegionDataObjectFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new RegionDataObjectBinaryWrapper(
+                bytes: stream.RemainingMemory.Slice(0, 52),
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

@@ -2620,6 +2620,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected ReadOnlyMemorySlice<byte> _data;
         protected BinaryWrapperFactoryPackage _package;
 
+        #region InitialParser
+        partial void InitialParserCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(1, 3).ToArray();
         public Single ComparisonValue => SpanExt.GetFloat(_data.Span.Slice(4, 4));
         public Function Function => (Function)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));

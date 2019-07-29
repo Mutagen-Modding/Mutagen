@@ -1708,6 +1708,80 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RegionDataMapNameBinaryWrapper :
+        RegionDataBinaryWrapper,
+        IRegionDataMapNameInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RegionDataMapName_Registration.Instance;
+        public new static RegionDataMapName_Registration Registration => RegionDataMapName_Registration.Instance;
+        protected override object CommonInstance => RegionDataMapNameCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataMapNameInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => RegionDataMapNameXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => RegionDataMapNameBinaryWriteTranslation.Instance;
+
+        #region MapName
+        private int? _MapNameLocation;
+        public bool MapName_IsSet => _MapNameLocation.HasValue;
+        public String MapName => _MapNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MapNameLocation.Value, _package.Meta)) : default;
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected RegionDataMapNameBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static RegionDataMapNameBinaryWrapper RegionDataMapNameFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new RegionDataMapNameBinaryWrapper(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+                stream: stream,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x504D4452: // RDMP
+                {
+                    _MapNameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)RegionDataMapName_FieldIndex.MapName);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Region" objType="Record" recordType="REGN" baseClass="OblivionMajorRecord" GUID="638d02e0-687a-49ad-a934-6f2ed1e05c3a" ID="107">
     <Fields>
-      <String name="Icon" recordType="ICON" />
+      <String name="Icon" recordType="ICON" binaryWrapper="NoGeneration" />
       <Color name="MapColor" recordType="RCLR" extraByte="true" />
       <FormIDLink name="Worldspace" refName="Worldspace" recordType="WNAM" />
       <RefList name="Areas" refName="RegionArea" />
