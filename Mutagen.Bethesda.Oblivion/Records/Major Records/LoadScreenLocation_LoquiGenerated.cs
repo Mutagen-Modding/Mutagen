@@ -99,15 +99,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ILoadScreenLocationGetter rhs)) return false;
-            return ((LoadScreenLocationCommon)this.CommonInstance).Equals(this, rhs);
+            return ((LoadScreenLocationCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(LoadScreenLocation obj)
         {
-            return ((LoadScreenLocationCommon)this.CommonInstance).Equals(this, obj);
+            return ((LoadScreenLocationCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LoadScreenLocationCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LoadScreenLocationCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ILoadScreenLocation item)
         {
-            ((LoadScreenLocationCommon)item.CommonInstance).Clear(item: item);
+            ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static LoadScreenLocation_Mask<bool> GetEqualsMask(
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILoadScreenLocationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LoadScreenLocationCommon)item.CommonInstance).GetEqualsMask(
+            return ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LoadScreenLocation_Mask<bool> printMask = null)
         {
-            return ((LoadScreenLocationCommon)item.CommonInstance).ToString(
+            return ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LoadScreenLocation_Mask<bool> printMask = null)
         {
-            ((LoadScreenLocationCommon)item.CommonInstance).ToString(
+            ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenLocationGetter item,
             LoadScreenLocation_Mask<bool?> checkMask)
         {
-            return ((LoadScreenLocationCommon)item.CommonInstance).HasBeenSet(
+            return ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LoadScreenLocation_Mask<bool> GetHasBeenSetMask(this ILoadScreenLocationGetter item)
         {
             var ret = new LoadScreenLocation_Mask<bool>();
-            ((LoadScreenLocationCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenLocationGetter item,
             ILoadScreenLocationGetter rhs)
         {
-            return ((LoadScreenLocationCommon)item.CommonInstance).Equals(
+            return ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new LoadScreenLocation_Mask<bool>();
-            ((LoadScreenLocationCommon)item.CommonInstance).FillEqualsMask(
+            ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

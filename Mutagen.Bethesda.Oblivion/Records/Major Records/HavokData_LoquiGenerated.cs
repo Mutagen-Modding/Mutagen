@@ -98,15 +98,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IHavokDataGetter rhs)) return false;
-            return ((HavokDataCommon)this.CommonInstance).Equals(this, rhs);
+            return ((HavokDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(HavokData obj)
         {
-            return ((HavokDataCommon)this.CommonInstance).Equals(this, obj);
+            return ((HavokDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((HavokDataCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((HavokDataCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IHavokData item)
         {
-            ((HavokDataCommon)item.CommonInstance).Clear(item: item);
+            ((HavokDataCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static HavokData_Mask<bool> GetEqualsMask(
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
             IHavokDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((HavokDataCommon)item.CommonInstance).GetEqualsMask(
+            return ((HavokDataCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             HavokData_Mask<bool> printMask = null)
         {
-            return ((HavokDataCommon)item.CommonInstance).ToString(
+            return ((HavokDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             HavokData_Mask<bool> printMask = null)
         {
-            ((HavokDataCommon)item.CommonInstance).ToString(
+            ((HavokDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IHavokDataGetter item,
             HavokData_Mask<bool?> checkMask)
         {
-            return ((HavokDataCommon)item.CommonInstance).HasBeenSet(
+            return ((HavokDataCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static HavokData_Mask<bool> GetHasBeenSetMask(this IHavokDataGetter item)
         {
             var ret = new HavokData_Mask<bool>();
-            ((HavokDataCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((HavokDataCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IHavokDataGetter item,
             IHavokDataGetter rhs)
         {
-            return ((HavokDataCommon)item.CommonInstance).Equals(
+            return ((HavokDataCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new HavokData_Mask<bool>();
-            ((HavokDataCommon)item.CommonInstance).FillEqualsMask(
+            ((HavokDataCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

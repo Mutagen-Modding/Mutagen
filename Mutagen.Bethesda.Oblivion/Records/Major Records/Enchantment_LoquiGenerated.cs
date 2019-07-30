@@ -181,15 +181,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IEnchantmentInternalGetter rhs)) return false;
-            return ((EnchantmentCommon)this.CommonInstance).Equals(this, rhs);
+            return ((EnchantmentCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Enchantment obj)
         {
-            return ((EnchantmentCommon)this.CommonInstance).Equals(this, obj);
+            return ((EnchantmentCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((EnchantmentCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((EnchantmentCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -441,17 +441,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Enchantment(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Enchantment obj, Enchantment rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Enchantment(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -740,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (Enchantment.Flag)obj;
                     break;
                 case Enchantment_FieldIndex.Effects:
-                    this._Effects.SetTo((SourceSetList<Effect>)obj);
+                    this._Effects.SetTo((ISetList<Effect>)obj);
                     break;
                 case Enchantment_FieldIndex.ENITDataTypeState:
                     this.ENITDataTypeState = (Enchantment.ENITDataType)obj;
@@ -790,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (Enchantment.Flag)pair.Value;
                     break;
                 case Enchantment_FieldIndex.Effects:
-                    obj._Effects.SetTo((SourceSetList<Effect>)pair.Value);
+                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
                     break;
                 case Enchantment_FieldIndex.ENITDataTypeState:
                     obj.ENITDataTypeState = (Enchantment.ENITDataType)pair.Value;
@@ -889,7 +878,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IEnchantmentInternal item)
         {
-            ((EnchantmentCommon)item.CommonInstance).Clear(item: item);
+            ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Enchantment_Mask<bool> GetEqualsMask(
@@ -897,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion
             IEnchantmentInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((EnchantmentCommon)item.CommonInstance).GetEqualsMask(
+            return ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -908,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Enchantment_Mask<bool> printMask = null)
         {
-            return ((EnchantmentCommon)item.CommonInstance).ToString(
+            return ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -920,7 +909,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Enchantment_Mask<bool> printMask = null)
         {
-            ((EnchantmentCommon)item.CommonInstance).ToString(
+            ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -931,7 +920,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnchantmentInternalGetter item,
             Enchantment_Mask<bool?> checkMask)
         {
-            return ((EnchantmentCommon)item.CommonInstance).HasBeenSet(
+            return ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -939,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Enchantment_Mask<bool> GetHasBeenSetMask(this IEnchantmentInternalGetter item)
         {
             var ret = new Enchantment_Mask<bool>();
-            ((EnchantmentCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -949,7 +938,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnchantmentInternalGetter item,
             IEnchantmentInternalGetter rhs)
         {
-            return ((EnchantmentCommon)item.CommonInstance).Equals(
+            return ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1178,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.Flags:
                     return typeof(Enchantment.Flag);
                 case Enchantment_FieldIndex.Effects:
-                    return typeof(SourceSetList<Effect>);
+                    return typeof(ISetList<Effect>);
                 case Enchantment_FieldIndex.ENITDataTypeState:
                     return typeof(Enchantment.ENITDataType);
                 default:
@@ -1412,7 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Enchantment_Mask<bool>();
-            ((EnchantmentCommon)item.CommonInstance).FillEqualsMask(
+            ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1669,6 +1658,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Enchantment obj, Enchantment rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Enchantment(getNextFormKey());
+            ret.CopyFieldsFrom((Enchantment)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Enchantment)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

@@ -162,15 +162,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IScriptEffectInternalGetter rhs)) return false;
-            return ((ScriptEffectCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ScriptEffectCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(ScriptEffect obj)
         {
-            return ((ScriptEffectCommon)this.CommonInstance).Equals(this, obj);
+            return ((ScriptEffectCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ScriptEffectCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ScriptEffectCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -794,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IScriptEffectInternal item)
         {
-            ((ScriptEffectCommon)item.CommonInstance).Clear(item: item);
+            ((ScriptEffectCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static ScriptEffect_Mask<bool> GetEqualsMask(
@@ -802,7 +802,7 @@ namespace Mutagen.Bethesda.Oblivion
             IScriptEffectInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ScriptEffectCommon)item.CommonInstance).GetEqualsMask(
+            return ((ScriptEffectCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             ScriptEffect_Mask<bool> printMask = null)
         {
-            return ((ScriptEffectCommon)item.CommonInstance).ToString(
+            return ((ScriptEffectCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             ScriptEffect_Mask<bool> printMask = null)
         {
-            ((ScriptEffectCommon)item.CommonInstance).ToString(
+            ((ScriptEffectCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -836,7 +836,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptEffectInternalGetter item,
             ScriptEffect_Mask<bool?> checkMask)
         {
-            return ((ScriptEffectCommon)item.CommonInstance).HasBeenSet(
+            return ((ScriptEffectCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -844,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ScriptEffect_Mask<bool> GetHasBeenSetMask(this IScriptEffectInternalGetter item)
         {
             var ret = new ScriptEffect_Mask<bool>();
-            ((ScriptEffectCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ScriptEffectCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptEffectInternalGetter item,
             IScriptEffectInternalGetter rhs)
         {
-            return ((ScriptEffectCommon)item.CommonInstance).Equals(
+            return ((ScriptEffectCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ScriptEffect_Mask<bool>();
-            ((ScriptEffectCommon)item.CommonInstance).FillEqualsMask(
+            ((ScriptEffectCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

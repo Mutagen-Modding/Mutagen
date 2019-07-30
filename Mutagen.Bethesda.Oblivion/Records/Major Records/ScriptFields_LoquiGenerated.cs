@@ -138,15 +138,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IScriptFieldsGetter rhs)) return false;
-            return ((ScriptFieldsCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ScriptFieldsCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(ScriptFields obj)
         {
-            return ((ScriptFieldsCommon)this.CommonInstance).Equals(this, obj);
+            return ((ScriptFieldsCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ScriptFieldsCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ScriptFieldsCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -716,10 +716,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.SourceCode = (String)obj;
                     break;
                 case ScriptFields_FieldIndex.LocalVariables:
-                    this._LocalVariables.SetTo((SourceSetList<LocalVariable>)obj);
+                    this._LocalVariables.SetTo((ISetList<LocalVariable>)obj);
                     break;
                 case ScriptFields_FieldIndex.References:
-                    this._References.SetTo((SourceSetList<ScriptReference>)obj);
+                    this._References.SetTo((ISetList<ScriptReference>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -759,10 +759,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.SourceCode = (String)pair.Value;
                     break;
                 case ScriptFields_FieldIndex.LocalVariables:
-                    obj._LocalVariables.SetTo((SourceSetList<LocalVariable>)pair.Value);
+                    obj._LocalVariables.SetTo((ISetList<LocalVariable>)pair.Value);
                     break;
                 case ScriptFields_FieldIndex.References:
-                    obj._References.SetTo((SourceSetList<ScriptReference>)pair.Value);
+                    obj._References.SetTo((ISetList<ScriptReference>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IScriptFields item)
         {
-            ((ScriptFieldsCommon)item.CommonInstance).Clear(item: item);
+            ((ScriptFieldsCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static ScriptFields_Mask<bool> GetEqualsMask(
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion
             IScriptFieldsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ScriptFieldsCommon)item.CommonInstance).GetEqualsMask(
+            return ((ScriptFieldsCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             ScriptFields_Mask<bool> printMask = null)
         {
-            return ((ScriptFieldsCommon)item.CommonInstance).ToString(
+            return ((ScriptFieldsCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             ScriptFields_Mask<bool> printMask = null)
         {
-            ((ScriptFieldsCommon)item.CommonInstance).ToString(
+            ((ScriptFieldsCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptFieldsGetter item,
             ScriptFields_Mask<bool?> checkMask)
         {
-            return ((ScriptFieldsCommon)item.CommonInstance).HasBeenSet(
+            return ((ScriptFieldsCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ScriptFields_Mask<bool> GetHasBeenSetMask(this IScriptFieldsGetter item)
         {
             var ret = new ScriptFields_Mask<bool>();
-            ((ScriptFieldsCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ScriptFieldsCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptFieldsGetter item,
             IScriptFieldsGetter rhs)
         {
-            return ((ScriptFieldsCommon)item.CommonInstance).Equals(
+            return ((ScriptFieldsCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1095,9 +1095,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptFields_FieldIndex.SourceCode:
                     return typeof(String);
                 case ScriptFields_FieldIndex.LocalVariables:
-                    return typeof(SourceSetList<LocalVariable>);
+                    return typeof(ISetList<LocalVariable>);
                 case ScriptFields_FieldIndex.References:
-                    return typeof(SourceSetList<ScriptReference>);
+                    return typeof(ISetList<ScriptReference>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1342,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ScriptFields_Mask<bool>();
-            ((ScriptFieldsCommon)item.CommonInstance).FillEqualsMask(
+            ((ScriptFieldsCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

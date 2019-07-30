@@ -106,15 +106,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is ISkyrimModGetter rhs)) return false;
-            return ((SkyrimModCommon)this.CommonInstance).Equals(this, rhs);
+            return ((SkyrimModCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(SkyrimMod obj)
         {
-            return ((SkyrimModCommon)this.CommonInstance).Equals(this, obj);
+            return ((SkyrimModCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SkyrimModCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SkyrimModCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this ISkyrimMod item)
         {
-            ((SkyrimModCommon)item.CommonInstance).Clear(item: item);
+            ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static SkyrimMod_Mask<bool> GetEqualsMask(
@@ -1023,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim
             ISkyrimModGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SkyrimModCommon)item.CommonInstance).GetEqualsMask(
+            return ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             SkyrimMod_Mask<bool> printMask = null)
         {
-            return ((SkyrimModCommon)item.CommonInstance).ToString(
+            return ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             SkyrimMod_Mask<bool> printMask = null)
         {
-            ((SkyrimModCommon)item.CommonInstance).ToString(
+            ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1057,7 +1057,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimModGetter item,
             SkyrimMod_Mask<bool?> checkMask)
         {
-            return ((SkyrimModCommon)item.CommonInstance).HasBeenSet(
+            return ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1065,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static SkyrimMod_Mask<bool> GetHasBeenSetMask(this ISkyrimModGetter item)
         {
             var ret = new SkyrimMod_Mask<bool>();
-            ((SkyrimModCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimModGetter item,
             ISkyrimModGetter rhs)
         {
-            return ((SkyrimModCommon)item.CommonInstance).Equals(
+            return ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1084,13 +1084,13 @@ namespace Mutagen.Bethesda.Skyrim
         public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>(this ISkyrimModGetter obj)
             where T : IMajorRecordInternalGetter
         {
-            return (IReadOnlyCache<T, FormKey>)((SkyrimModCommon)obj.CommonInstance).GetGroup<T>(obj: obj);
+            return (IReadOnlyCache<T, FormKey>)((SkyrimModCommon)((ILoquiObject)obj).CommonInstance).GetGroup<T>(obj: obj);
         }
 
         public static ISourceCache<T, FormKey> GetGroup<T>(this ISkyrimMod obj)
             where T : IMajorRecordInternal
         {
-            return (ISourceCache<T, FormKey>)((SkyrimModCommon)obj.CommonInstance).GetGroup<T>(obj: obj);
+            return (ISourceCache<T, FormKey>)((SkyrimModCommon)((ILoquiObject)obj).CommonInstance).GetGroup<T>(obj: obj);
         }
         #endregion
 
@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SkyrimMod_Mask<bool>();
-            ((SkyrimModCommon)item.CommonInstance).FillEqualsMask(
+            ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

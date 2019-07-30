@@ -124,15 +124,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IBaseLayerInternalGetter rhs)) return false;
-            return ((BaseLayerCommon)this.CommonInstance).Equals(this, rhs);
+            return ((BaseLayerCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(BaseLayer obj)
         {
-            return ((BaseLayerCommon)this.CommonInstance).Equals(this, obj);
+            return ((BaseLayerCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((BaseLayerCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((BaseLayerCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -722,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IBaseLayerInternal item)
         {
-            ((BaseLayerCommon)item.CommonInstance).Clear(item: item);
+            ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static BaseLayer_Mask<bool> GetEqualsMask(
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
             IBaseLayerInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BaseLayerCommon)item.CommonInstance).GetEqualsMask(
+            return ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             BaseLayer_Mask<bool> printMask = null)
         {
-            return ((BaseLayerCommon)item.CommonInstance).ToString(
+            return ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             BaseLayer_Mask<bool> printMask = null)
         {
-            ((BaseLayerCommon)item.CommonInstance).ToString(
+            ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBaseLayerInternalGetter item,
             BaseLayer_Mask<bool?> checkMask)
         {
-            return ((BaseLayerCommon)item.CommonInstance).HasBeenSet(
+            return ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static BaseLayer_Mask<bool> GetHasBeenSetMask(this IBaseLayerInternalGetter item)
         {
             var ret = new BaseLayer_Mask<bool>();
-            ((BaseLayerCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBaseLayerInternalGetter item,
             IBaseLayerInternalGetter rhs)
         {
-            return ((BaseLayerCommon)item.CommonInstance).Equals(
+            return ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new BaseLayer_Mask<bool>();
-            ((BaseLayerCommon)item.CommonInstance).FillEqualsMask(
+            ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

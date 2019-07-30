@@ -91,15 +91,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRelationGetter rhs)) return false;
-            return ((RelationCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RelationCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Relation obj)
         {
-            return ((RelationCommon)this.CommonInstance).Equals(this, obj);
+            return ((RelationCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RelationCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RelationCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRelation item)
         {
-            ((RelationCommon)item.CommonInstance).Clear(item: item);
+            ((RelationCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Relation_Mask<bool> GetEqualsMask(
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRelationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RelationCommon)item.CommonInstance).GetEqualsMask(
+            return ((RelationCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Relation_Mask<bool> printMask = null)
         {
-            return ((RelationCommon)item.CommonInstance).ToString(
+            return ((RelationCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Relation_Mask<bool> printMask = null)
         {
-            ((RelationCommon)item.CommonInstance).ToString(
+            ((RelationCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelationGetter item,
             Relation_Mask<bool?> checkMask)
         {
-            return ((RelationCommon)item.CommonInstance).HasBeenSet(
+            return ((RelationCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Relation_Mask<bool> GetHasBeenSetMask(this IRelationGetter item)
         {
             var ret = new Relation_Mask<bool>();
-            ((RelationCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RelationCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -622,7 +622,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelationGetter item,
             IRelationGetter rhs)
         {
-            return ((RelationCommon)item.CommonInstance).Equals(
+            return ((RelationCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -896,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Relation_Mask<bool>();
-            ((RelationCommon)item.CommonInstance).FillEqualsMask(
+            ((RelationCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

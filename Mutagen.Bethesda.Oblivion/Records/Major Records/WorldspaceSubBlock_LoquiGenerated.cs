@@ -129,15 +129,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IWorldspaceSubBlockGetter rhs)) return false;
-            return ((WorldspaceSubBlockCommon)this.CommonInstance).Equals(this, rhs);
+            return ((WorldspaceSubBlockCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(WorldspaceSubBlock obj)
         {
-            return ((WorldspaceSubBlockCommon)this.CommonInstance).Equals(this, obj);
+            return ((WorldspaceSubBlockCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WorldspaceSubBlockCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceSubBlockCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LastModified = (Byte[])obj;
                     break;
                 case WorldspaceSubBlock_FieldIndex.Items:
-                    this._Items.SetTo((SourceSetList<Cell>)obj);
+                    this._Items.SetTo((ISetList<Cell>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LastModified = (Byte[])pair.Value;
                     break;
                 case WorldspaceSubBlock_FieldIndex.Items:
-                    obj._Items.SetTo((SourceSetList<Cell>)pair.Value);
+                    obj._Items.SetTo((ISetList<Cell>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IWorldspaceSubBlock item)
         {
-            ((WorldspaceSubBlockCommon)item.CommonInstance).Clear(item: item);
+            ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static WorldspaceSubBlock_Mask<bool> GetEqualsMask(
@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWorldspaceSubBlockGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WorldspaceSubBlockCommon)item.CommonInstance).GetEqualsMask(
+            return ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             WorldspaceSubBlock_Mask<bool> printMask = null)
         {
-            return ((WorldspaceSubBlockCommon)item.CommonInstance).ToString(
+            return ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             WorldspaceSubBlock_Mask<bool> printMask = null)
         {
-            ((WorldspaceSubBlockCommon)item.CommonInstance).ToString(
+            ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceSubBlockGetter item,
             WorldspaceSubBlock_Mask<bool?> checkMask)
         {
-            return ((WorldspaceSubBlockCommon)item.CommonInstance).HasBeenSet(
+            return ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -742,7 +742,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static WorldspaceSubBlock_Mask<bool> GetHasBeenSetMask(this IWorldspaceSubBlockGetter item)
         {
             var ret = new WorldspaceSubBlock_Mask<bool>();
-            ((WorldspaceSubBlockCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceSubBlockGetter item,
             IWorldspaceSubBlockGetter rhs)
         {
-            return ((WorldspaceSubBlockCommon)item.CommonInstance).Equals(
+            return ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case WorldspaceSubBlock_FieldIndex.LastModified:
                     return typeof(Byte[]);
                 case WorldspaceSubBlock_FieldIndex.Items:
-                    return typeof(SourceSetList<Cell>);
+                    return typeof(ISetList<Cell>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1136,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new WorldspaceSubBlock_Mask<bool>();
-            ((WorldspaceSubBlockCommon)item.CommonInstance).FillEqualsMask(
+            ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

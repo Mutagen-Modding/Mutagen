@@ -74,15 +74,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IScriptReferenceGetter rhs)) return false;
-            return ((ScriptReferenceCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ScriptReferenceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(ScriptReference obj)
         {
-            return ((ScriptReferenceCommon)this.CommonInstance).Equals(this, obj);
+            return ((ScriptReferenceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ScriptReferenceCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ScriptReferenceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IScriptReference item)
         {
-            ((ScriptReferenceCommon)item.CommonInstance).Clear(item: item);
+            ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static ScriptReference_Mask<bool> GetEqualsMask(
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Oblivion
             IScriptReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ScriptReferenceCommon)item.CommonInstance).GetEqualsMask(
+            return ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             ScriptReference_Mask<bool> printMask = null)
         {
-            return ((ScriptReferenceCommon)item.CommonInstance).ToString(
+            return ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             ScriptReference_Mask<bool> printMask = null)
         {
-            ((ScriptReferenceCommon)item.CommonInstance).ToString(
+            ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptReferenceGetter item,
             ScriptReference_Mask<bool?> checkMask)
         {
-            return ((ScriptReferenceCommon)item.CommonInstance).HasBeenSet(
+            return ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ScriptReference_Mask<bool> GetHasBeenSetMask(this IScriptReferenceGetter item)
         {
             var ret = new ScriptReference_Mask<bool>();
-            ((ScriptReferenceCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptReferenceGetter item,
             IScriptReferenceGetter rhs)
         {
-            return ((ScriptReferenceCommon)item.CommonInstance).Equals(
+            return ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ScriptReference_Mask<bool>();
-            ((ScriptReferenceCommon)item.CommonInstance).FillEqualsMask(
+            ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

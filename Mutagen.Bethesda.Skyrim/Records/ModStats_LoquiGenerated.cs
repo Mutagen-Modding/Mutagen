@@ -98,15 +98,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IModStatsGetter rhs)) return false;
-            return ((ModStatsCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ModStatsCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(ModStats obj)
         {
-            return ((ModStatsCommon)this.CommonInstance).Equals(this, obj);
+            return ((ModStatsCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ModStatsCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ModStatsCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IModStats item)
         {
-            ((ModStatsCommon)item.CommonInstance).Clear(item: item);
+            ((ModStatsCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static ModStats_Mask<bool> GetEqualsMask(
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Skyrim
             IModStatsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ModStatsCommon)item.CommonInstance).GetEqualsMask(
+            return ((ModStatsCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             ModStats_Mask<bool> printMask = null)
         {
-            return ((ModStatsCommon)item.CommonInstance).ToString(
+            return ((ModStatsCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             ModStats_Mask<bool> printMask = null)
         {
-            ((ModStatsCommon)item.CommonInstance).ToString(
+            ((ModStatsCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModStatsGetter item,
             ModStats_Mask<bool?> checkMask)
         {
-            return ((ModStatsCommon)item.CommonInstance).HasBeenSet(
+            return ((ModStatsCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ModStats_Mask<bool> GetHasBeenSetMask(this IModStatsGetter item)
         {
             var ret = new ModStats_Mask<bool>();
-            ((ModStatsCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ModStatsCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModStatsGetter item,
             IModStatsGetter rhs)
         {
-            return ((ModStatsCommon)item.CommonInstance).Equals(
+            return ((ModStatsCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ModStats_Mask<bool>();
-            ((ModStatsCommon)item.CommonInstance).FillEqualsMask(
+            ((ModStatsCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

@@ -141,15 +141,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ILoadScreenInternalGetter rhs)) return false;
-            return ((LoadScreenCommon)this.CommonInstance).Equals(this, rhs);
+            return ((LoadScreenCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(LoadScreen obj)
         {
-            return ((LoadScreenCommon)this.CommonInstance).Equals(this, obj);
+            return ((LoadScreenCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LoadScreenCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LoadScreenCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -388,17 +388,6 @@ namespace Mutagen.Bethesda.Oblivion
         public LoadScreen(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(LoadScreen obj, LoadScreen rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new LoadScreen(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -662,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case LoadScreen_FieldIndex.Locations:
-                    this._Locations.SetTo((SourceSetList<LoadScreenLocation>)obj);
+                    this._Locations.SetTo((ISetList<LoadScreenLocation>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -700,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case LoadScreen_FieldIndex.Locations:
-                    obj._Locations.SetTo((SourceSetList<LoadScreenLocation>)pair.Value);
+                    obj._Locations.SetTo((ISetList<LoadScreenLocation>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -776,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ILoadScreenInternal item)
         {
-            ((LoadScreenCommon)item.CommonInstance).Clear(item: item);
+            ((LoadScreenCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static LoadScreen_Mask<bool> GetEqualsMask(
@@ -784,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILoadScreenInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LoadScreenCommon)item.CommonInstance).GetEqualsMask(
+            return ((LoadScreenCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -795,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LoadScreen_Mask<bool> printMask = null)
         {
-            return ((LoadScreenCommon)item.CommonInstance).ToString(
+            return ((LoadScreenCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -807,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LoadScreen_Mask<bool> printMask = null)
         {
-            ((LoadScreenCommon)item.CommonInstance).ToString(
+            ((LoadScreenCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -818,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenInternalGetter item,
             LoadScreen_Mask<bool?> checkMask)
         {
-            return ((LoadScreenCommon)item.CommonInstance).HasBeenSet(
+            return ((LoadScreenCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -826,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LoadScreen_Mask<bool> GetHasBeenSetMask(this ILoadScreenInternalGetter item)
         {
             var ret = new LoadScreen_Mask<bool>();
-            ((LoadScreenCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((LoadScreenCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -836,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenInternalGetter item,
             ILoadScreenInternalGetter rhs)
         {
-            return ((LoadScreenCommon)item.CommonInstance).Equals(
+            return ((LoadScreenCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1019,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LoadScreen_FieldIndex.Description:
                     return typeof(String);
                 case LoadScreen_FieldIndex.Locations:
-                    return typeof(SourceSetList<LoadScreenLocation>);
+                    return typeof(ISetList<LoadScreenLocation>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1210,7 +1199,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new LoadScreen_Mask<bool>();
-            ((LoadScreenCommon)item.CommonInstance).FillEqualsMask(
+            ((LoadScreenCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1445,6 +1434,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(LoadScreen obj, LoadScreen rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new LoadScreen(getNextFormKey());
+            ret.CopyFieldsFrom((LoadScreen)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (LoadScreen)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

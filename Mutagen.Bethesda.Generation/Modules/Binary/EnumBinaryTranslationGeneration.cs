@@ -126,7 +126,26 @@ namespace Mutagen.Bethesda.Generation
             DataType dataType)
         {
             var eType = typeGen as EnumType;
-            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
+            var data = typeGen.GetFieldData();
+            switch (data.BinaryWrapperFallback)
+            {
+                case BinaryGenerationType.Normal:
+                    break;
+                case BinaryGenerationType.DoNothing:
+                case BinaryGenerationType.NoGeneration:
+                    return;
+                case BinaryGenerationType.Custom:
+                    this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
+                        fg,
+                        objGen,
+                        typeGen,
+                        dataAccessor,
+                        ref currentPosition,
+                        dataType);
+                    return;
+                default:
+                    throw new NotImplementedException();
+            }
 
             if (data.HasTrigger)
             {

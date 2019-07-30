@@ -74,15 +74,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IGlobalInternalGetter rhs)) return false;
-            return ((GlobalCommon)this.CommonInstance).Equals(this, rhs);
+            return ((GlobalCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Global obj)
         {
-            return ((GlobalCommon)this.CommonInstance).Equals(this, obj);
+            return ((GlobalCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GlobalCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((GlobalCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IGlobalInternal item)
         {
-            ((GlobalCommon)item.CommonInstance).Clear(item: item);
+            ((GlobalCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Global_Mask<bool> GetEqualsMask(
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
             IGlobalInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GlobalCommon)item.CommonInstance).GetEqualsMask(
+            return ((GlobalCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             Global_Mask<bool> printMask = null)
         {
-            return ((GlobalCommon)item.CommonInstance).ToString(
+            return ((GlobalCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             Global_Mask<bool> printMask = null)
         {
-            ((GlobalCommon)item.CommonInstance).ToString(
+            ((GlobalCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGlobalInternalGetter item,
             Global_Mask<bool?> checkMask)
         {
-            return ((GlobalCommon)item.CommonInstance).HasBeenSet(
+            return ((GlobalCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Global_Mask<bool> GetHasBeenSetMask(this IGlobalInternalGetter item)
         {
             var ret = new Global_Mask<bool>();
-            ((GlobalCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((GlobalCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGlobalInternalGetter item,
             IGlobalInternalGetter rhs)
         {
-            return ((GlobalCommon)item.CommonInstance).Equals(
+            return ((GlobalCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Global_Mask<bool>();
-            ((GlobalCommon)item.CommonInstance).FillEqualsMask(
+            ((GlobalCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -925,6 +925,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Global obj, Global rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
     }
     #endregion

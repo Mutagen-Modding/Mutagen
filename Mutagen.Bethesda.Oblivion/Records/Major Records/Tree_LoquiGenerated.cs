@@ -295,15 +295,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ITreeInternalGetter rhs)) return false;
-            return ((TreeCommon)this.CommonInstance).Equals(this, rhs);
+            return ((TreeCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Tree obj)
         {
-            return ((TreeCommon)this.CommonInstance).Equals(this, obj);
+            return ((TreeCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((TreeCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((TreeCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -541,17 +541,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Tree(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Tree obj, Tree rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Tree(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -922,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Icon = (String)obj;
                     break;
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                    this._SpeedTreeSeeds.SetTo((SourceSetList<UInt32>)obj);
+                    this._SpeedTreeSeeds.SetTo((ISetList<UInt32>)obj);
                     break;
                 case Tree_FieldIndex.LeafCurvature:
                     this.LeafCurvature = (Single)obj;
@@ -996,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Icon = (String)pair.Value;
                     break;
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                    obj._SpeedTreeSeeds.SetTo((SourceSetList<UInt32>)pair.Value);
+                    obj._SpeedTreeSeeds.SetTo((ISetList<UInt32>)pair.Value);
                     break;
                 case Tree_FieldIndex.LeafCurvature:
                     obj.LeafCurvature = (Single)pair.Value;
@@ -1180,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ITreeInternal item)
         {
-            ((TreeCommon)item.CommonInstance).Clear(item: item);
+            ((TreeCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Tree_Mask<bool> GetEqualsMask(
@@ -1188,7 +1177,7 @@ namespace Mutagen.Bethesda.Oblivion
             ITreeInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((TreeCommon)item.CommonInstance).GetEqualsMask(
+            return ((TreeCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1199,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Tree_Mask<bool> printMask = null)
         {
-            return ((TreeCommon)item.CommonInstance).ToString(
+            return ((TreeCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1211,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Tree_Mask<bool> printMask = null)
         {
-            ((TreeCommon)item.CommonInstance).ToString(
+            ((TreeCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1222,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITreeInternalGetter item,
             Tree_Mask<bool?> checkMask)
         {
-            return ((TreeCommon)item.CommonInstance).HasBeenSet(
+            return ((TreeCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1230,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Tree_Mask<bool> GetHasBeenSetMask(this ITreeInternalGetter item)
         {
             var ret = new Tree_Mask<bool>();
-            ((TreeCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((TreeCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1240,7 +1229,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITreeInternalGetter item,
             ITreeInternalGetter rhs)
         {
-            return ((TreeCommon)item.CommonInstance).Equals(
+            return ((TreeCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1543,7 +1532,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Tree_FieldIndex.Icon:
                     return typeof(String);
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                    return typeof(SourceSetList<UInt32>);
+                    return typeof(ISetList<UInt32>);
                 case Tree_FieldIndex.LeafCurvature:
                     return typeof(Single);
                 case Tree_FieldIndex.MinimumLeafAngle:
@@ -1947,7 +1936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Tree_Mask<bool>();
-            ((TreeCommon)item.CommonInstance).FillEqualsMask(
+            ((TreeCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2281,6 +2270,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Tree obj, Tree rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Tree(getNextFormKey());
+            ret.CopyFieldsFrom((Tree)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Tree)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

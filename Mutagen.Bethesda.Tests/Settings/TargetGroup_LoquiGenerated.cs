@@ -94,15 +94,15 @@ namespace Mutagen.Bethesda.Tests
         public override bool Equals(object obj)
         {
             if (!(obj is ITargetGroupGetter rhs)) return false;
-            return ((TargetGroupCommon)this.CommonInstance).Equals(this, rhs);
+            return ((TargetGroupCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(TargetGroup obj)
         {
-            return ((TargetGroupCommon)this.CommonInstance).Equals(this, obj);
+            return ((TargetGroupCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((TargetGroupCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((TargetGroupCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Tests
                     this.Do = (Boolean)obj;
                     break;
                 case TargetGroup_FieldIndex.Targets:
-                    this._Targets.SetTo((SourceSetList<Target>)obj);
+                    this._Targets.SetTo((IList<Target>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Tests
                     obj.Do = (Boolean)pair.Value;
                     break;
                 case TargetGroup_FieldIndex.Targets:
-                    obj._Targets.SetTo((SourceSetList<Target>)pair.Value);
+                    obj._Targets.SetTo((IList<Target>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public static void Clear(this ITargetGroup item)
         {
-            ((TargetGroupCommon)item.CommonInstance).Clear(item: item);
+            ((TargetGroupCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static TargetGroup_Mask<bool> GetEqualsMask(
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Tests
             ITargetGroupGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((TargetGroupCommon)item.CommonInstance).GetEqualsMask(
+            return ((TargetGroupCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null,
             TargetGroup_Mask<bool> printMask = null)
         {
-            return ((TargetGroupCommon)item.CommonInstance).ToString(
+            return ((TargetGroupCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null,
             TargetGroup_Mask<bool> printMask = null)
         {
-            ((TargetGroupCommon)item.CommonInstance).ToString(
+            ((TargetGroupCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Tests
             this ITargetGroupGetter item,
             TargetGroup_Mask<bool?> checkMask)
         {
-            return ((TargetGroupCommon)item.CommonInstance).HasBeenSet(
+            return ((TargetGroupCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Tests
         public static TargetGroup_Mask<bool> GetHasBeenSetMask(this ITargetGroupGetter item)
         {
             var ret = new TargetGroup_Mask<bool>();
-            ((TargetGroupCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((TargetGroupCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Tests
             this ITargetGroupGetter item,
             ITargetGroupGetter rhs)
         {
-            return ((TargetGroupCommon)item.CommonInstance).Equals(
+            return ((TargetGroupCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TargetGroup_FieldIndex.Do:
                     return typeof(Boolean);
                 case TargetGroup_FieldIndex.Targets:
-                    return typeof(SourceSetList<Target>);
+                    return typeof(IList<Target>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new TargetGroup_Mask<bool>();
-            ((TargetGroupCommon)item.CommonInstance).FillEqualsMask(
+            ((TargetGroupCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

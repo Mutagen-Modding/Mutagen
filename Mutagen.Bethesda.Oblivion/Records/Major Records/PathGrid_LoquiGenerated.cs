@@ -141,15 +141,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IPathGridInternalGetter rhs)) return false;
-            return ((PathGridCommon)this.CommonInstance).Equals(this, rhs);
+            return ((PathGridCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(PathGrid obj)
         {
-            return ((PathGridCommon)this.CommonInstance).Equals(this, obj);
+            return ((PathGridCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PathGridCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((PathGridCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -391,17 +391,6 @@ namespace Mutagen.Bethesda.Oblivion
         public PathGrid(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(PathGrid obj, PathGrid rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new PathGrid(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -658,16 +647,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PathGrid_FieldIndex.PointToPointConnections:
-                    this._PointToPointConnections.SetTo((SourceSetList<PathGridPoint>)obj);
+                    this._PointToPointConnections.SetTo((ISetList<PathGridPoint>)obj);
                     break;
                 case PathGrid_FieldIndex.Unknown:
                     this.Unknown = (Byte[])obj;
                     break;
                 case PathGrid_FieldIndex.InterCellConnections:
-                    this._InterCellConnections.SetTo((SourceSetList<InterCellPoint>)obj);
+                    this._InterCellConnections.SetTo((ISetList<InterCellPoint>)obj);
                     break;
                 case PathGrid_FieldIndex.PointToReferenceMappings:
-                    this._PointToReferenceMappings.SetTo((SourceSetList<PointToReferenceMapping>)obj);
+                    this._PointToReferenceMappings.SetTo((ISetList<PointToReferenceMapping>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -699,16 +688,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PathGrid_FieldIndex.PointToPointConnections:
-                    obj._PointToPointConnections.SetTo((SourceSetList<PathGridPoint>)pair.Value);
+                    obj._PointToPointConnections.SetTo((ISetList<PathGridPoint>)pair.Value);
                     break;
                 case PathGrid_FieldIndex.Unknown:
                     obj.Unknown = (Byte[])pair.Value;
                     break;
                 case PathGrid_FieldIndex.InterCellConnections:
-                    obj._InterCellConnections.SetTo((SourceSetList<InterCellPoint>)pair.Value);
+                    obj._InterCellConnections.SetTo((ISetList<InterCellPoint>)pair.Value);
                     break;
                 case PathGrid_FieldIndex.PointToReferenceMappings:
-                    obj._PointToReferenceMappings.SetTo((SourceSetList<PointToReferenceMapping>)pair.Value);
+                    obj._PointToReferenceMappings.SetTo((ISetList<PointToReferenceMapping>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -782,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IPathGridInternal item)
         {
-            ((PathGridCommon)item.CommonInstance).Clear(item: item);
+            ((PathGridCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static PathGrid_Mask<bool> GetEqualsMask(
@@ -790,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
             IPathGridInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PathGridCommon)item.CommonInstance).GetEqualsMask(
+            return ((PathGridCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -801,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PathGrid_Mask<bool> printMask = null)
         {
-            return ((PathGridCommon)item.CommonInstance).ToString(
+            return ((PathGridCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -813,7 +802,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PathGrid_Mask<bool> printMask = null)
         {
-            ((PathGridCommon)item.CommonInstance).ToString(
+            ((PathGridCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -824,7 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridInternalGetter item,
             PathGrid_Mask<bool?> checkMask)
         {
-            return ((PathGridCommon)item.CommonInstance).HasBeenSet(
+            return ((PathGridCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -832,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static PathGrid_Mask<bool> GetHasBeenSetMask(this IPathGridInternalGetter item)
         {
             var ret = new PathGrid_Mask<bool>();
-            ((PathGridCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((PathGridCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -842,7 +831,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridInternalGetter item,
             IPathGridInternalGetter rhs)
         {
-            return ((PathGridCommon)item.CommonInstance).Equals(
+            return ((PathGridCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1031,13 +1020,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PathGrid_FieldIndex.PointToPointConnections:
-                    return typeof(SourceSetList<PathGridPoint>);
+                    return typeof(ISetList<PathGridPoint>);
                 case PathGrid_FieldIndex.Unknown:
                     return typeof(Byte[]);
                 case PathGrid_FieldIndex.InterCellConnections:
-                    return typeof(SourceSetList<InterCellPoint>);
+                    return typeof(ISetList<InterCellPoint>);
                 case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return typeof(SourceSetList<PointToReferenceMapping>);
+                    return typeof(ISetList<PointToReferenceMapping>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1268,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new PathGrid_Mask<bool>();
-            ((PathGridCommon)item.CommonInstance).FillEqualsMask(
+            ((PathGridCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1553,6 +1542,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(PathGrid obj, PathGrid rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new PathGrid(getNextFormKey());
+            ret.CopyFieldsFrom((PathGrid)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (PathGrid)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

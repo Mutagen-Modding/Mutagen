@@ -90,15 +90,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IInterCellPointGetter rhs)) return false;
-            return ((InterCellPointCommon)this.CommonInstance).Equals(this, rhs);
+            return ((InterCellPointCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(InterCellPoint obj)
         {
-            return ((InterCellPointCommon)this.CommonInstance).Equals(this, obj);
+            return ((InterCellPointCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((InterCellPointCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((InterCellPointCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IInterCellPoint item)
         {
-            ((InterCellPointCommon)item.CommonInstance).Clear(item: item);
+            ((InterCellPointCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static InterCellPoint_Mask<bool> GetEqualsMask(
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Oblivion
             IInterCellPointGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((InterCellPointCommon)item.CommonInstance).GetEqualsMask(
+            return ((InterCellPointCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             InterCellPoint_Mask<bool> printMask = null)
         {
-            return ((InterCellPointCommon)item.CommonInstance).ToString(
+            return ((InterCellPointCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             InterCellPoint_Mask<bool> printMask = null)
         {
-            ((InterCellPointCommon)item.CommonInstance).ToString(
+            ((InterCellPointCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IInterCellPointGetter item,
             InterCellPoint_Mask<bool?> checkMask)
         {
-            return ((InterCellPointCommon)item.CommonInstance).HasBeenSet(
+            return ((InterCellPointCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static InterCellPoint_Mask<bool> GetHasBeenSetMask(this IInterCellPointGetter item)
         {
             var ret = new InterCellPoint_Mask<bool>();
-            ((InterCellPointCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((InterCellPointCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IInterCellPointGetter item,
             IInterCellPointGetter rhs)
         {
-            return ((InterCellPointCommon)item.CommonInstance).Equals(
+            return ((InterCellPointCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new InterCellPoint_Mask<bool>();
-            ((InterCellPointCommon)item.CommonInstance).FillEqualsMask(
+            ((InterCellPointCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

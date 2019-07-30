@@ -247,6 +247,26 @@ namespace Mutagen.Bethesda.Generation
             DataType dataType)
         {
             LoquiType loqui = typeGen as LoquiType;
+            var data = typeGen.GetFieldData();
+            switch (data.BinaryWrapperFallback)
+            {
+                case BinaryGenerationType.Normal:
+                    break;
+                case BinaryGenerationType.DoNothing:
+                case BinaryGenerationType.NoGeneration:
+                    return;
+                case BinaryGenerationType.Custom:
+                    this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
+                        fg,
+                        objGen,
+                        typeGen,
+                        dataAccessor,
+                        ref currentPosition,
+                        dataType);
+                    return;
+                default:
+                    throw new NotImplementedException();
+            }
             switch (loqui.SingletonType)
             {
                 case SingletonLevel.None:

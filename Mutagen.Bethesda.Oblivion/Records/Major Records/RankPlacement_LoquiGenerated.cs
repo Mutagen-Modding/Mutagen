@@ -107,15 +107,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRankPlacementGetter rhs)) return false;
-            return ((RankPlacementCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RankPlacementCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(RankPlacement obj)
         {
-            return ((RankPlacementCommon)this.CommonInstance).Equals(this, obj);
+            return ((RankPlacementCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RankPlacementCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RankPlacementCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRankPlacement item)
         {
-            ((RankPlacementCommon)item.CommonInstance).Clear(item: item);
+            ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static RankPlacement_Mask<bool> GetEqualsMask(
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRankPlacementGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RankPlacementCommon)item.CommonInstance).GetEqualsMask(
+            return ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RankPlacement_Mask<bool> printMask = null)
         {
-            return ((RankPlacementCommon)item.CommonInstance).ToString(
+            return ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RankPlacement_Mask<bool> printMask = null)
         {
-            ((RankPlacementCommon)item.CommonInstance).ToString(
+            ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRankPlacementGetter item,
             RankPlacement_Mask<bool?> checkMask)
         {
-            return ((RankPlacementCommon)item.CommonInstance).HasBeenSet(
+            return ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RankPlacement_Mask<bool> GetHasBeenSetMask(this IRankPlacementGetter item)
         {
             var ret = new RankPlacement_Mask<bool>();
-            ((RankPlacementCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRankPlacementGetter item,
             IRankPlacementGetter rhs)
         {
-            return ((RankPlacementCommon)item.CommonInstance).Equals(
+            return ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RankPlacement_Mask<bool>();
-            ((RankPlacementCommon)item.CommonInstance).FillEqualsMask(
+            ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

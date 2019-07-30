@@ -248,15 +248,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IPlacedCreatureInternalGetter rhs)) return false;
-            return ((PlacedCreatureCommon)this.CommonInstance).Equals(this, rhs);
+            return ((PlacedCreatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(PlacedCreature obj)
         {
-            return ((PlacedCreatureCommon)this.CommonInstance).Equals(this, obj);
+            return ((PlacedCreatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PlacedCreatureCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((PlacedCreatureCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -528,17 +528,6 @@ namespace Mutagen.Bethesda.Oblivion
         public PlacedCreature(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(PlacedCreature obj, PlacedCreature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new PlacedCreature(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1083,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IPlacedCreatureInternal item)
         {
-            ((PlacedCreatureCommon)item.CommonInstance).Clear(item: item);
+            ((PlacedCreatureCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static PlacedCreature_Mask<bool> GetEqualsMask(
@@ -1091,7 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion
             IPlacedCreatureInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PlacedCreatureCommon)item.CommonInstance).GetEqualsMask(
+            return ((PlacedCreatureCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1102,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PlacedCreature_Mask<bool> printMask = null)
         {
-            return ((PlacedCreatureCommon)item.CommonInstance).ToString(
+            return ((PlacedCreatureCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1114,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PlacedCreature_Mask<bool> printMask = null)
         {
-            ((PlacedCreatureCommon)item.CommonInstance).ToString(
+            ((PlacedCreatureCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1125,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedCreatureInternalGetter item,
             PlacedCreature_Mask<bool?> checkMask)
         {
-            return ((PlacedCreatureCommon)item.CommonInstance).HasBeenSet(
+            return ((PlacedCreatureCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1133,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static PlacedCreature_Mask<bool> GetHasBeenSetMask(this IPlacedCreatureInternalGetter item)
         {
             var ret = new PlacedCreature_Mask<bool>();
-            ((PlacedCreatureCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((PlacedCreatureCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1143,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedCreatureInternalGetter item,
             IPlacedCreatureInternalGetter rhs)
         {
-            return ((PlacedCreatureCommon)item.CommonInstance).Equals(
+            return ((PlacedCreatureCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1750,7 +1739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new PlacedCreature_Mask<bool>();
-            ((PlacedCreatureCommon)item.CommonInstance).FillEqualsMask(
+            ((PlacedCreatureCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2061,6 +2050,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(PlacedCreature obj, PlacedCreature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new PlacedCreature(getNextFormKey());
+            ret.CopyFieldsFrom((PlacedCreature)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (PlacedCreature)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

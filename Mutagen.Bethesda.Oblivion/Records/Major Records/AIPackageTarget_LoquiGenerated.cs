@@ -98,15 +98,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IAIPackageTargetGetter rhs)) return false;
-            return ((AIPackageTargetCommon)this.CommonInstance).Equals(this, rhs);
+            return ((AIPackageTargetCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(AIPackageTarget obj)
         {
-            return ((AIPackageTargetCommon)this.CommonInstance).Equals(this, obj);
+            return ((AIPackageTargetCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((AIPackageTargetCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((AIPackageTargetCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IAIPackageTarget item)
         {
-            ((AIPackageTargetCommon)item.CommonInstance).Clear(item: item);
+            ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static AIPackageTarget_Mask<bool> GetEqualsMask(
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
             IAIPackageTargetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AIPackageTargetCommon)item.CommonInstance).GetEqualsMask(
+            return ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             AIPackageTarget_Mask<bool> printMask = null)
         {
-            return ((AIPackageTargetCommon)item.CommonInstance).ToString(
+            return ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             AIPackageTarget_Mask<bool> printMask = null)
         {
-            ((AIPackageTargetCommon)item.CommonInstance).ToString(
+            ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageTargetGetter item,
             AIPackageTarget_Mask<bool?> checkMask)
         {
-            return ((AIPackageTargetCommon)item.CommonInstance).HasBeenSet(
+            return ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageTarget_Mask<bool> GetHasBeenSetMask(this IAIPackageTargetGetter item)
         {
             var ret = new AIPackageTarget_Mask<bool>();
-            ((AIPackageTargetCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageTargetGetter item,
             IAIPackageTargetGetter rhs)
         {
-            return ((AIPackageTargetCommon)item.CommonInstance).Equals(
+            return ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new AIPackageTarget_Mask<bool>();
-            ((AIPackageTargetCommon)item.CommonInstance).FillEqualsMask(
+            ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

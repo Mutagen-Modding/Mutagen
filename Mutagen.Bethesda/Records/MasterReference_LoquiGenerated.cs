@@ -107,15 +107,15 @@ namespace Mutagen.Bethesda
         public override bool Equals(object obj)
         {
             if (!(obj is IMasterReferenceGetter rhs)) return false;
-            return ((MasterReferenceCommon)this.CommonInstance).Equals(this, rhs);
+            return ((MasterReferenceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(MasterReference obj)
         {
-            return ((MasterReferenceCommon)this.CommonInstance).Equals(this, obj);
+            return ((MasterReferenceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((MasterReferenceCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((MasterReferenceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda
     {
         public static void Clear(this IMasterReference item)
         {
-            ((MasterReferenceCommon)item.CommonInstance).Clear(item: item);
+            ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static MasterReference_Mask<bool> GetEqualsMask(
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda
             IMasterReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MasterReferenceCommon)item.CommonInstance).GetEqualsMask(
+            return ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda
             string name = null,
             MasterReference_Mask<bool> printMask = null)
         {
-            return ((MasterReferenceCommon)item.CommonInstance).ToString(
+            return ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda
             string name = null,
             MasterReference_Mask<bool> printMask = null)
         {
-            ((MasterReferenceCommon)item.CommonInstance).ToString(
+            ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda
             this IMasterReferenceGetter item,
             MasterReference_Mask<bool?> checkMask)
         {
-            return ((MasterReferenceCommon)item.CommonInstance).HasBeenSet(
+            return ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda
         public static MasterReference_Mask<bool> GetHasBeenSetMask(this IMasterReferenceGetter item)
         {
             var ret = new MasterReference_Mask<bool>();
-            ((MasterReferenceCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -658,7 +658,7 @@ namespace Mutagen.Bethesda
             this IMasterReferenceGetter item,
             IMasterReferenceGetter rhs)
         {
-            return ((MasterReferenceCommon)item.CommonInstance).Equals(
+            return ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new MasterReference_Mask<bool>();
-            ((MasterReferenceCommon)item.CommonInstance).FillEqualsMask(
+            ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

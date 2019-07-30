@@ -568,15 +568,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ICombatStyleInternalGetter rhs)) return false;
-            return ((CombatStyleCommon)this.CommonInstance).Equals(this, rhs);
+            return ((CombatStyleCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(CombatStyle obj)
         {
-            return ((CombatStyleCommon)this.CommonInstance).Equals(this, obj);
+            return ((CombatStyleCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((CombatStyleCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((CombatStyleCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -838,17 +838,6 @@ namespace Mutagen.Bethesda.Oblivion
         public CombatStyle(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(CombatStyle obj, CombatStyle rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new CombatStyle(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1913,7 +1902,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ICombatStyleInternal item)
         {
-            ((CombatStyleCommon)item.CommonInstance).Clear(item: item);
+            ((CombatStyleCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static CombatStyle_Mask<bool> GetEqualsMask(
@@ -1921,7 +1910,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICombatStyleInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CombatStyleCommon)item.CommonInstance).GetEqualsMask(
+            return ((CombatStyleCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1932,7 +1921,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             CombatStyle_Mask<bool> printMask = null)
         {
-            return ((CombatStyleCommon)item.CommonInstance).ToString(
+            return ((CombatStyleCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1944,7 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             CombatStyle_Mask<bool> printMask = null)
         {
-            ((CombatStyleCommon)item.CommonInstance).ToString(
+            ((CombatStyleCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1955,7 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleInternalGetter item,
             CombatStyle_Mask<bool?> checkMask)
         {
-            return ((CombatStyleCommon)item.CommonInstance).HasBeenSet(
+            return ((CombatStyleCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1963,7 +1952,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CombatStyle_Mask<bool> GetHasBeenSetMask(this ICombatStyleInternalGetter item)
         {
             var ret = new CombatStyle_Mask<bool>();
-            ((CombatStyleCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((CombatStyleCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1973,7 +1962,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleInternalGetter item,
             ICombatStyleInternalGetter rhs)
         {
-            return ((CombatStyleCommon)item.CommonInstance).Equals(
+            return ((CombatStyleCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -3369,7 +3358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new CombatStyle_Mask<bool>();
-            ((CombatStyleCommon)item.CommonInstance).FillEqualsMask(
+            ((CombatStyleCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -3856,6 +3845,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(CombatStyle obj, CombatStyle rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new CombatStyle(getNextFormKey());
+            ret.CopyFieldsFrom((CombatStyle)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (CombatStyle)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

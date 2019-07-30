@@ -242,15 +242,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ICombatStyleAdvancedGetter rhs)) return false;
-            return ((CombatStyleAdvancedCommon)this.CommonInstance).Equals(this, rhs);
+            return ((CombatStyleAdvancedCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(CombatStyleAdvanced obj)
         {
-            return ((CombatStyleAdvancedCommon)this.CommonInstance).Equals(this, obj);
+            return ((CombatStyleAdvancedCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((CombatStyleAdvancedCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((CombatStyleAdvancedCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ICombatStyleAdvanced item)
         {
-            ((CombatStyleAdvancedCommon)item.CommonInstance).Clear(item: item);
+            ((CombatStyleAdvancedCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static CombatStyleAdvanced_Mask<bool> GetEqualsMask(
@@ -1155,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICombatStyleAdvancedGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CombatStyleAdvancedCommon)item.CommonInstance).GetEqualsMask(
+            return ((CombatStyleAdvancedCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             CombatStyleAdvanced_Mask<bool> printMask = null)
         {
-            return ((CombatStyleAdvancedCommon)item.CommonInstance).ToString(
+            return ((CombatStyleAdvancedCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             CombatStyleAdvanced_Mask<bool> printMask = null)
         {
-            ((CombatStyleAdvancedCommon)item.CommonInstance).ToString(
+            ((CombatStyleAdvancedCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvancedGetter item,
             CombatStyleAdvanced_Mask<bool?> checkMask)
         {
-            return ((CombatStyleAdvancedCommon)item.CommonInstance).HasBeenSet(
+            return ((CombatStyleAdvancedCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CombatStyleAdvanced_Mask<bool> GetHasBeenSetMask(this ICombatStyleAdvancedGetter item)
         {
             var ret = new CombatStyleAdvanced_Mask<bool>();
-            ((CombatStyleAdvancedCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((CombatStyleAdvancedCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvancedGetter item,
             ICombatStyleAdvancedGetter rhs)
         {
-            return ((CombatStyleAdvancedCommon)item.CommonInstance).Equals(
+            return ((CombatStyleAdvancedCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -2051,7 +2051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new CombatStyleAdvanced_Mask<bool>();
-            ((CombatStyleAdvancedCommon)item.CommonInstance).FillEqualsMask(
+            ((CombatStyleAdvancedCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

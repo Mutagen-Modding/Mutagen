@@ -127,15 +127,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ISubspaceInternalGetter rhs)) return false;
-            return ((SubspaceCommon)this.CommonInstance).Equals(this, rhs);
+            return ((SubspaceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Subspace obj)
         {
-            return ((SubspaceCommon)this.CommonInstance).Equals(this, obj);
+            return ((SubspaceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SubspaceCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SubspaceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -352,17 +352,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Subspace(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Subspace obj, Subspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Subspace(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -735,7 +724,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ISubspaceInternal item)
         {
-            ((SubspaceCommon)item.CommonInstance).Clear(item: item);
+            ((SubspaceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Subspace_Mask<bool> GetEqualsMask(
@@ -743,7 +732,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISubspaceInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SubspaceCommon)item.CommonInstance).GetEqualsMask(
+            return ((SubspaceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -754,7 +743,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Subspace_Mask<bool> printMask = null)
         {
-            return ((SubspaceCommon)item.CommonInstance).ToString(
+            return ((SubspaceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -766,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Subspace_Mask<bool> printMask = null)
         {
-            ((SubspaceCommon)item.CommonInstance).ToString(
+            ((SubspaceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -777,7 +766,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISubspaceInternalGetter item,
             Subspace_Mask<bool?> checkMask)
         {
-            return ((SubspaceCommon)item.CommonInstance).HasBeenSet(
+            return ((SubspaceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -785,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Subspace_Mask<bool> GetHasBeenSetMask(this ISubspaceInternalGetter item)
         {
             var ret = new Subspace_Mask<bool>();
-            ((SubspaceCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((SubspaceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -795,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISubspaceInternalGetter item,
             ISubspaceInternalGetter rhs)
         {
-            return ((SubspaceCommon)item.CommonInstance).Equals(
+            return ((SubspaceCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1134,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Subspace_Mask<bool>();
-            ((SubspaceCommon)item.CommonInstance).FillEqualsMask(
+            ((SubspaceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1334,6 +1323,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Subspace obj, Subspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Subspace(getNextFormKey());
+            ret.CopyFieldsFrom((Subspace)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Subspace)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

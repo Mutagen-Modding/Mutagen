@@ -103,15 +103,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRegionSoundGetter rhs)) return false;
-            return ((RegionSoundCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RegionSoundCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(RegionSound obj)
         {
-            return ((RegionSoundCommon)this.CommonInstance).Equals(this, obj);
+            return ((RegionSoundCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RegionSoundCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RegionSoundCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRegionSound item)
         {
-            ((RegionSoundCommon)item.CommonInstance).Clear(item: item);
+            ((RegionSoundCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static RegionSound_Mask<bool> GetEqualsMask(
@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionSoundGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionSoundCommon)item.CommonInstance).GetEqualsMask(
+            return ((RegionSoundCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionSound_Mask<bool> printMask = null)
         {
-            return ((RegionSoundCommon)item.CommonInstance).ToString(
+            return ((RegionSoundCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionSound_Mask<bool> printMask = null)
         {
-            ((RegionSoundCommon)item.CommonInstance).ToString(
+            ((RegionSoundCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSoundGetter item,
             RegionSound_Mask<bool?> checkMask)
         {
-            return ((RegionSoundCommon)item.CommonInstance).HasBeenSet(
+            return ((RegionSoundCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionSound_Mask<bool> GetHasBeenSetMask(this IRegionSoundGetter item)
         {
             var ret = new RegionSound_Mask<bool>();
-            ((RegionSoundCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RegionSoundCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSoundGetter item,
             IRegionSoundGetter rhs)
         {
-            return ((RegionSoundCommon)item.CommonInstance).Equals(
+            return ((RegionSoundCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionSound_Mask<bool>();
-            ((RegionSoundCommon)item.CommonInstance).FillEqualsMask(
+            ((RegionSoundCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

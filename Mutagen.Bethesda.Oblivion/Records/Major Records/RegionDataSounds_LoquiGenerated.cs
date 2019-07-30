@@ -114,15 +114,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRegionDataSoundsInternalGetter rhs)) return false;
-            return ((RegionDataSoundsCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RegionDataSoundsCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(RegionDataSounds obj)
         {
-            return ((RegionDataSoundsCommon)this.CommonInstance).Equals(this, obj);
+            return ((RegionDataSoundsCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RegionDataSoundsCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RegionDataSoundsCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MusicType = (MusicType)obj;
                     break;
                 case RegionDataSounds_FieldIndex.Sounds:
-                    this._Sounds.SetTo((SourceSetList<RegionSound>)obj);
+                    this._Sounds.SetTo((ISetList<RegionSound>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.MusicType = (MusicType)pair.Value;
                     break;
                 case RegionDataSounds_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((SourceSetList<RegionSound>)pair.Value);
+                    obj._Sounds.SetTo((ISetList<RegionSound>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -695,7 +695,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRegionDataSoundsInternal item)
         {
-            ((RegionDataSoundsCommon)item.CommonInstance).Clear(item: item);
+            ((RegionDataSoundsCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static RegionDataSounds_Mask<bool> GetEqualsMask(
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionDataSoundsInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionDataSoundsCommon)item.CommonInstance).GetEqualsMask(
+            return ((RegionDataSoundsCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -714,7 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionDataSounds_Mask<bool> printMask = null)
         {
-            return ((RegionDataSoundsCommon)item.CommonInstance).ToString(
+            return ((RegionDataSoundsCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionDataSounds_Mask<bool> printMask = null)
         {
-            ((RegionDataSoundsCommon)item.CommonInstance).ToString(
+            ((RegionDataSoundsCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataSoundsInternalGetter item,
             RegionDataSounds_Mask<bool?> checkMask)
         {
-            return ((RegionDataSoundsCommon)item.CommonInstance).HasBeenSet(
+            return ((RegionDataSoundsCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionDataSounds_Mask<bool> GetHasBeenSetMask(this IRegionDataSoundsInternalGetter item)
         {
             var ret = new RegionDataSounds_Mask<bool>();
-            ((RegionDataSoundsCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RegionDataSoundsCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataSoundsInternalGetter item,
             IRegionDataSoundsInternalGetter rhs)
         {
-            return ((RegionDataSoundsCommon)item.CommonInstance).Equals(
+            return ((RegionDataSoundsCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -925,7 +925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionDataSounds_FieldIndex.MusicType:
                     return typeof(MusicType);
                 case RegionDataSounds_FieldIndex.Sounds:
-                    return typeof(SourceSetList<RegionSound>);
+                    return typeof(ISetList<RegionSound>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }
@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionDataSounds_Mask<bool>();
-            ((RegionDataSoundsCommon)item.CommonInstance).FillEqualsMask(
+            ((RegionDataSoundsCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

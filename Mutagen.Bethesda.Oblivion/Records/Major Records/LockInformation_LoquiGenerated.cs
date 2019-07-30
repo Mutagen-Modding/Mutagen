@@ -115,15 +115,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ILockInformationGetter rhs)) return false;
-            return ((LockInformationCommon)this.CommonInstance).Equals(this, rhs);
+            return ((LockInformationCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(LockInformation obj)
         {
-            return ((LockInformationCommon)this.CommonInstance).Equals(this, obj);
+            return ((LockInformationCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LockInformationCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LockInformationCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ILockInformation item)
         {
-            ((LockInformationCommon)item.CommonInstance).Clear(item: item);
+            ((LockInformationCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static LockInformation_Mask<bool> GetEqualsMask(
@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILockInformationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LockInformationCommon)item.CommonInstance).GetEqualsMask(
+            return ((LockInformationCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LockInformation_Mask<bool> printMask = null)
         {
-            return ((LockInformationCommon)item.CommonInstance).ToString(
+            return ((LockInformationCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LockInformation_Mask<bool> printMask = null)
         {
-            ((LockInformationCommon)item.CommonInstance).ToString(
+            ((LockInformationCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILockInformationGetter item,
             LockInformation_Mask<bool?> checkMask)
         {
-            return ((LockInformationCommon)item.CommonInstance).HasBeenSet(
+            return ((LockInformationCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LockInformation_Mask<bool> GetHasBeenSetMask(this ILockInformationGetter item)
         {
             var ret = new LockInformation_Mask<bool>();
-            ((LockInformationCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((LockInformationCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILockInformationGetter item,
             ILockInformationGetter rhs)
         {
-            return ((LockInformationCommon)item.CommonInstance).Equals(
+            return ((LockInformationCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new LockInformation_Mask<bool>();
-            ((LockInformationCommon)item.CommonInstance).FillEqualsMask(
+            ((LockInformationCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

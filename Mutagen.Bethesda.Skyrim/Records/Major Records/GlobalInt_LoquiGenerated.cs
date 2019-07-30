@@ -100,15 +100,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IGlobalIntInternalGetter rhs)) return false;
-            return ((GlobalIntCommon)this.CommonInstance).Equals(this, rhs);
+            return ((GlobalIntCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(GlobalInt obj)
         {
-            return ((GlobalIntCommon)this.CommonInstance).Equals(this, obj);
+            return ((GlobalIntCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GlobalIntCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((GlobalIntCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -314,17 +314,6 @@ namespace Mutagen.Bethesda.Skyrim
         public GlobalInt(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(GlobalInt obj, GlobalInt rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new GlobalInt(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -634,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IGlobalIntInternal item)
         {
-            ((GlobalIntCommon)item.CommonInstance).Clear(item: item);
+            ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static GlobalInt_Mask<bool> GetEqualsMask(
@@ -642,7 +631,7 @@ namespace Mutagen.Bethesda.Skyrim
             IGlobalIntInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GlobalIntCommon)item.CommonInstance).GetEqualsMask(
+            return ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -653,7 +642,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             GlobalInt_Mask<bool> printMask = null)
         {
-            return ((GlobalIntCommon)item.CommonInstance).ToString(
+            return ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -665,7 +654,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             GlobalInt_Mask<bool> printMask = null)
         {
-            ((GlobalIntCommon)item.CommonInstance).ToString(
+            ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -676,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGlobalIntInternalGetter item,
             GlobalInt_Mask<bool?> checkMask)
         {
-            return ((GlobalIntCommon)item.CommonInstance).HasBeenSet(
+            return ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -684,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static GlobalInt_Mask<bool> GetHasBeenSetMask(this IGlobalIntInternalGetter item)
         {
             var ret = new GlobalInt_Mask<bool>();
-            ((GlobalIntCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -694,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGlobalIntInternalGetter item,
             IGlobalIntInternalGetter rhs)
         {
-            return ((GlobalIntCommon)item.CommonInstance).Equals(
+            return ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -979,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new GlobalInt_Mask<bool>();
-            ((GlobalIntCommon)item.CommonInstance).FillEqualsMask(
+            ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1198,6 +1187,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(GlobalInt obj, GlobalInt rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new GlobalInt(getNextFormKey());
+            ret.CopyFieldsFrom((GlobalInt)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (GlobalInt)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

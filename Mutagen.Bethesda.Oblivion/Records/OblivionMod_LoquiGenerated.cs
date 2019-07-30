@@ -536,15 +536,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IOblivionModGetter rhs)) return false;
-            return ((OblivionModCommon)this.CommonInstance).Equals(this, rhs);
+            return ((OblivionModCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(OblivionMod obj)
         {
-            return ((OblivionModCommon)this.CommonInstance).Equals(this, obj);
+            return ((OblivionModCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((OblivionModCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((OblivionModCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -5633,7 +5633,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IOblivionMod item)
         {
-            ((OblivionModCommon)item.CommonInstance).Clear(item: item);
+            ((OblivionModCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static OblivionMod_Mask<bool> GetEqualsMask(
@@ -5641,7 +5641,7 @@ namespace Mutagen.Bethesda.Oblivion
             IOblivionModGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((OblivionModCommon)item.CommonInstance).GetEqualsMask(
+            return ((OblivionModCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -5652,7 +5652,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             OblivionMod_Mask<bool> printMask = null)
         {
-            return ((OblivionModCommon)item.CommonInstance).ToString(
+            return ((OblivionModCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -5664,7 +5664,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             OblivionMod_Mask<bool> printMask = null)
         {
-            ((OblivionModCommon)item.CommonInstance).ToString(
+            ((OblivionModCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -5675,7 +5675,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionModGetter item,
             OblivionMod_Mask<bool?> checkMask)
         {
-            return ((OblivionModCommon)item.CommonInstance).HasBeenSet(
+            return ((OblivionModCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -5683,7 +5683,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod_Mask<bool> GetHasBeenSetMask(this IOblivionModGetter item)
         {
             var ret = new OblivionMod_Mask<bool>();
-            ((OblivionModCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((OblivionModCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -5693,7 +5693,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionModGetter item,
             IOblivionModGetter rhs)
         {
-            return ((OblivionModCommon)item.CommonInstance).Equals(
+            return ((OblivionModCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -5702,13 +5702,13 @@ namespace Mutagen.Bethesda.Oblivion
         public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>(this IOblivionModGetter obj)
             where T : IMajorRecordInternalGetter
         {
-            return (IReadOnlyCache<T, FormKey>)((OblivionModCommon)obj.CommonInstance).GetGroup<T>(obj: obj);
+            return (IReadOnlyCache<T, FormKey>)((OblivionModCommon)((ILoquiObject)obj).CommonInstance).GetGroup<T>(obj: obj);
         }
 
         public static ISourceCache<T, FormKey> GetGroup<T>(this IOblivionMod obj)
             where T : IMajorRecordInternal
         {
-            return (ISourceCache<T, FormKey>)((OblivionModCommon)obj.CommonInstance).GetGroup<T>(obj: obj);
+            return (ISourceCache<T, FormKey>)((OblivionModCommon)((ILoquiObject)obj).CommonInstance).GetGroup<T>(obj: obj);
         }
         #endregion
 
@@ -7927,7 +7927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new OblivionMod_Mask<bool>();
-            ((OblivionModCommon)item.CommonInstance).FillEqualsMask(
+            ((OblivionModCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

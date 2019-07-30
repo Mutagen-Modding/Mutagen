@@ -110,15 +110,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IClassTrainingGetter rhs)) return false;
-            return ((ClassTrainingCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ClassTrainingCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(ClassTraining obj)
         {
-            return ((ClassTrainingCommon)this.CommonInstance).Equals(this, obj);
+            return ((ClassTrainingCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ClassTrainingCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ClassTrainingCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IClassTraining item)
         {
-            ((ClassTrainingCommon)item.CommonInstance).Clear(item: item);
+            ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static ClassTraining_Mask<bool> GetEqualsMask(
@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
             IClassTrainingGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ClassTrainingCommon)item.CommonInstance).GetEqualsMask(
+            return ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             ClassTraining_Mask<bool> printMask = null)
         {
-            return ((ClassTrainingCommon)item.CommonInstance).ToString(
+            return ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             ClassTraining_Mask<bool> printMask = null)
         {
-            ((ClassTrainingCommon)item.CommonInstance).ToString(
+            ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassTrainingGetter item,
             ClassTraining_Mask<bool?> checkMask)
         {
-            return ((ClassTrainingCommon)item.CommonInstance).HasBeenSet(
+            return ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -635,7 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ClassTraining_Mask<bool> GetHasBeenSetMask(this IClassTrainingGetter item)
         {
             var ret = new ClassTraining_Mask<bool>();
-            ((ClassTrainingCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassTrainingGetter item,
             IClassTrainingGetter rhs)
         {
-            return ((ClassTrainingCommon)item.CommonInstance).Equals(
+            return ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -947,7 +947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ClassTraining_Mask<bool>();
-            ((ClassTrainingCommon)item.CommonInstance).FillEqualsMask(
+            ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

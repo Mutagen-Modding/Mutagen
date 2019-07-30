@@ -205,15 +205,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IDialogItemInternalGetter rhs)) return false;
-            return ((DialogItemCommon)this.CommonInstance).Equals(this, rhs);
+            return ((DialogItemCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(DialogItem obj)
         {
-            return ((DialogItemCommon)this.CommonInstance).Equals(this, obj);
+            return ((DialogItemCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DialogItemCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((DialogItemCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -541,17 +541,6 @@ namespace Mutagen.Bethesda.Oblivion
         public DialogItem(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(DialogItem obj, DialogItem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new DialogItem(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -923,19 +912,19 @@ namespace Mutagen.Bethesda.Oblivion
                     this.PreviousTopic_Property.Set((IFormIDSetLink<DialogItem>)obj);
                     break;
                 case DialogItem_FieldIndex.Topics:
-                    this._Topics.SetTo((SourceSetList<IFormIDLink<DialogTopic>>)obj);
+                    this._Topics.SetTo((ISetList<IFormIDLink<DialogTopic>>)obj);
                     break;
                 case DialogItem_FieldIndex.Responses:
-                    this._Responses.SetTo((SourceSetList<DialogResponse>)obj);
+                    this._Responses.SetTo((ISetList<DialogResponse>)obj);
                     break;
                 case DialogItem_FieldIndex.Conditions:
-                    this._Conditions.SetTo((SourceSetList<Condition>)obj);
+                    this._Conditions.SetTo((ISetList<Condition>)obj);
                     break;
                 case DialogItem_FieldIndex.Choices:
-                    this._Choices.SetTo((SourceSetList<IFormIDLink<DialogTopic>>)obj);
+                    this._Choices.SetTo((ISetList<IFormIDLink<DialogTopic>>)obj);
                     break;
                 case DialogItem_FieldIndex.LinkFrom:
-                    this._LinkFrom.SetTo((SourceSetList<IFormIDLink<DialogTopic>>)obj);
+                    this._LinkFrom.SetTo((ISetList<IFormIDLink<DialogTopic>>)obj);
                     break;
                 case DialogItem_FieldIndex.Script:
                     this.Script.CopyFieldsFrom(rhs: (ScriptFields)obj);
@@ -985,19 +974,19 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.PreviousTopic_Property.Set((IFormIDSetLink<DialogItem>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Topics:
-                    obj._Topics.SetTo((SourceSetList<IFormIDLink<DialogTopic>>)pair.Value);
+                    obj._Topics.SetTo((ISetList<IFormIDLink<DialogTopic>>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Responses:
-                    obj._Responses.SetTo((SourceSetList<DialogResponse>)pair.Value);
+                    obj._Responses.SetTo((ISetList<DialogResponse>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((SourceSetList<Condition>)pair.Value);
+                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Choices:
-                    obj._Choices.SetTo((SourceSetList<IFormIDLink<DialogTopic>>)pair.Value);
+                    obj._Choices.SetTo((ISetList<IFormIDLink<DialogTopic>>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.LinkFrom:
-                    obj._LinkFrom.SetTo((SourceSetList<IFormIDLink<DialogTopic>>)pair.Value);
+                    obj._LinkFrom.SetTo((ISetList<IFormIDLink<DialogTopic>>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Script:
                     obj.Script.CopyFieldsFrom(rhs: (ScriptFields)pair.Value);
@@ -1118,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IDialogItemInternal item)
         {
-            ((DialogItemCommon)item.CommonInstance).Clear(item: item);
+            ((DialogItemCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static DialogItem_Mask<bool> GetEqualsMask(
@@ -1126,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
             IDialogItemInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DialogItemCommon)item.CommonInstance).GetEqualsMask(
+            return ((DialogItemCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1137,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             DialogItem_Mask<bool> printMask = null)
         {
-            return ((DialogItemCommon)item.CommonInstance).ToString(
+            return ((DialogItemCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1149,7 +1138,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             DialogItem_Mask<bool> printMask = null)
         {
-            ((DialogItemCommon)item.CommonInstance).ToString(
+            ((DialogItemCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1160,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogItemInternalGetter item,
             DialogItem_Mask<bool?> checkMask)
         {
-            return ((DialogItemCommon)item.CommonInstance).HasBeenSet(
+            return ((DialogItemCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1168,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static DialogItem_Mask<bool> GetHasBeenSetMask(this IDialogItemInternalGetter item)
         {
             var ret = new DialogItem_Mask<bool>();
-            ((DialogItemCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((DialogItemCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1178,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogItemInternalGetter item,
             IDialogItemInternalGetter rhs)
         {
-            return ((DialogItemCommon)item.CommonInstance).Equals(
+            return ((DialogItemCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1447,15 +1436,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.PreviousTopic:
                     return typeof(IFormIDSetLink<DialogItem>);
                 case DialogItem_FieldIndex.Topics:
-                    return typeof(SourceSetList<IFormIDLink<DialogTopic>>);
+                    return typeof(ISetList<IFormIDLink<DialogTopic>>);
                 case DialogItem_FieldIndex.Responses:
-                    return typeof(SourceSetList<DialogResponse>);
+                    return typeof(ISetList<DialogResponse>);
                 case DialogItem_FieldIndex.Conditions:
-                    return typeof(SourceSetList<Condition>);
+                    return typeof(ISetList<Condition>);
                 case DialogItem_FieldIndex.Choices:
-                    return typeof(SourceSetList<IFormIDLink<DialogTopic>>);
+                    return typeof(ISetList<IFormIDLink<DialogTopic>>);
                 case DialogItem_FieldIndex.LinkFrom:
-                    return typeof(SourceSetList<IFormIDLink<DialogTopic>>);
+                    return typeof(ISetList<IFormIDLink<DialogTopic>>);
                 case DialogItem_FieldIndex.Script:
                     return typeof(ScriptFields);
                 case DialogItem_FieldIndex.DATADataTypeState:
@@ -1789,7 +1778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new DialogItem_Mask<bool>();
-            ((DialogItemCommon)item.CommonInstance).FillEqualsMask(
+            ((DialogItemCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2201,6 +2190,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(DialogItem obj, DialogItem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new DialogItem(getNextFormKey());
+            ret.CopyFieldsFrom((DialogItem)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (DialogItem)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

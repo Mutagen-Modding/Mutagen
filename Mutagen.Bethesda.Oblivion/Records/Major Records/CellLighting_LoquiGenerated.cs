@@ -148,15 +148,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ICellLightingGetter rhs)) return false;
-            return ((CellLightingCommon)this.CommonInstance).Equals(this, rhs);
+            return ((CellLightingCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(CellLighting obj)
         {
-            return ((CellLightingCommon)this.CommonInstance).Equals(this, obj);
+            return ((CellLightingCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((CellLightingCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((CellLightingCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ICellLighting item)
         {
-            ((CellLightingCommon)item.CommonInstance).Clear(item: item);
+            ((CellLightingCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static CellLighting_Mask<bool> GetEqualsMask(
@@ -770,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICellLightingGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CellLightingCommon)item.CommonInstance).GetEqualsMask(
+            return ((CellLightingCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             CellLighting_Mask<bool> printMask = null)
         {
-            return ((CellLightingCommon)item.CommonInstance).ToString(
+            return ((CellLightingCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             CellLighting_Mask<bool> printMask = null)
         {
-            ((CellLightingCommon)item.CommonInstance).ToString(
+            ((CellLightingCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -804,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellLightingGetter item,
             CellLighting_Mask<bool?> checkMask)
         {
-            return ((CellLightingCommon)item.CommonInstance).HasBeenSet(
+            return ((CellLightingCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -812,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CellLighting_Mask<bool> GetHasBeenSetMask(this ICellLightingGetter item)
         {
             var ret = new CellLighting_Mask<bool>();
-            ((CellLightingCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((CellLightingCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellLightingGetter item,
             ICellLightingGetter rhs)
         {
-            return ((CellLightingCommon)item.CommonInstance).Equals(
+            return ((CellLightingCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new CellLighting_Mask<bool>();
-            ((CellLightingCommon)item.CommonInstance).FillEqualsMask(
+            ((CellLightingCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

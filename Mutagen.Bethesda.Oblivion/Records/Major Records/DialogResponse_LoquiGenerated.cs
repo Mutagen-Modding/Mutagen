@@ -211,15 +211,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IDialogResponseInternalGetter rhs)) return false;
-            return ((DialogResponseCommon)this.CommonInstance).Equals(this, rhs);
+            return ((DialogResponseCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(DialogResponse obj)
         {
-            return ((DialogResponseCommon)this.CommonInstance).Equals(this, obj);
+            return ((DialogResponseCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DialogResponseCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((DialogResponseCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IDialogResponseInternal item)
         {
-            ((DialogResponseCommon)item.CommonInstance).Clear(item: item);
+            ((DialogResponseCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static DialogResponse_Mask<bool> GetEqualsMask(
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
             IDialogResponseInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DialogResponseCommon)item.CommonInstance).GetEqualsMask(
+            return ((DialogResponseCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             DialogResponse_Mask<bool> printMask = null)
         {
-            return ((DialogResponseCommon)item.CommonInstance).ToString(
+            return ((DialogResponseCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -884,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             DialogResponse_Mask<bool> printMask = null)
         {
-            ((DialogResponseCommon)item.CommonInstance).ToString(
+            ((DialogResponseCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponseInternalGetter item,
             DialogResponse_Mask<bool?> checkMask)
         {
-            return ((DialogResponseCommon)item.CommonInstance).HasBeenSet(
+            return ((DialogResponseCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -903,7 +903,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static DialogResponse_Mask<bool> GetHasBeenSetMask(this IDialogResponseInternalGetter item)
         {
             var ret = new DialogResponse_Mask<bool>();
-            ((DialogResponseCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((DialogResponseCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponseInternalGetter item,
             IDialogResponseInternalGetter rhs)
         {
-            return ((DialogResponseCommon)item.CommonInstance).Equals(
+            return ((DialogResponseCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1377,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new DialogResponse_Mask<bool>();
-            ((DialogResponseCommon)item.CommonInstance).FillEqualsMask(
+            ((DialogResponseCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

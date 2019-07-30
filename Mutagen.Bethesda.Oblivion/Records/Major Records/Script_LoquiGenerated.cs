@@ -85,15 +85,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IScriptInternalGetter rhs)) return false;
-            return ((ScriptCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ScriptCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Script obj)
         {
-            return ((ScriptCommon)this.CommonInstance).Equals(this, obj);
+            return ((ScriptCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ScriptCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ScriptCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -355,17 +355,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Script(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Script obj, Script rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Script(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -691,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IScriptInternal item)
         {
-            ((ScriptCommon)item.CommonInstance).Clear(item: item);
+            ((ScriptCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Script_Mask<bool> GetEqualsMask(
@@ -699,7 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
             IScriptInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ScriptCommon)item.CommonInstance).GetEqualsMask(
+            return ((ScriptCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -710,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Script_Mask<bool> printMask = null)
         {
-            return ((ScriptCommon)item.CommonInstance).ToString(
+            return ((ScriptCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -722,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Script_Mask<bool> printMask = null)
         {
-            ((ScriptCommon)item.CommonInstance).ToString(
+            ((ScriptCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -733,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptInternalGetter item,
             Script_Mask<bool?> checkMask)
         {
-            return ((ScriptCommon)item.CommonInstance).HasBeenSet(
+            return ((ScriptCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -741,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Script_Mask<bool> GetHasBeenSetMask(this IScriptInternalGetter item)
         {
             var ret = new Script_Mask<bool>();
-            ((ScriptCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ScriptCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -751,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptInternalGetter item,
             IScriptInternalGetter rhs)
         {
-            return ((ScriptCommon)item.CommonInstance).Equals(
+            return ((ScriptCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1023,7 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Script_Mask<bool>();
-            ((ScriptCommon)item.CommonInstance).FillEqualsMask(
+            ((ScriptCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1216,6 +1205,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Script obj, Script rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Script(getNextFormKey());
+            ret.CopyFieldsFrom((Script)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Script)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

@@ -288,15 +288,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IBookInternalGetter rhs)) return false;
-            return ((BookCommon)this.CommonInstance).Equals(this, rhs);
+            return ((BookCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Book obj)
         {
-            return ((BookCommon)this.CommonInstance).Equals(this, obj);
+            return ((BookCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((BookCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((BookCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -552,17 +552,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Book(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Book obj, Book rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Book(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1161,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IBookInternal item)
         {
-            ((BookCommon)item.CommonInstance).Clear(item: item);
+            ((BookCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Book_Mask<bool> GetEqualsMask(
@@ -1169,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
             IBookInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BookCommon)item.CommonInstance).GetEqualsMask(
+            return ((BookCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1180,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Book_Mask<bool> printMask = null)
         {
-            return ((BookCommon)item.CommonInstance).ToString(
+            return ((BookCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1192,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Book_Mask<bool> printMask = null)
         {
-            ((BookCommon)item.CommonInstance).ToString(
+            ((BookCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1203,7 +1192,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBookInternalGetter item,
             Book_Mask<bool?> checkMask)
         {
-            return ((BookCommon)item.CommonInstance).HasBeenSet(
+            return ((BookCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1211,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Book_Mask<bool> GetHasBeenSetMask(this IBookInternalGetter item)
         {
             var ret = new Book_Mask<bool>();
-            ((BookCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((BookCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1221,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBookInternalGetter item,
             IBookInternalGetter rhs)
         {
-            return ((BookCommon)item.CommonInstance).Equals(
+            return ((BookCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1904,7 +1893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Book_Mask<bool>();
-            ((BookCommon)item.CommonInstance).FillEqualsMask(
+            ((BookCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2264,6 +2253,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Book obj, Book rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Book(getNextFormKey());
+            ret.CopyFieldsFrom((Book)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Book)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

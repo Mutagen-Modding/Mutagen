@@ -305,15 +305,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IPlacedNPCInternalGetter rhs)) return false;
-            return ((PlacedNPCCommon)this.CommonInstance).Equals(this, rhs);
+            return ((PlacedNPCCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(PlacedNPC obj)
         {
-            return ((PlacedNPCCommon)this.CommonInstance).Equals(this, obj);
+            return ((PlacedNPCCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PlacedNPCCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((PlacedNPCCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -587,17 +587,6 @@ namespace Mutagen.Bethesda.Oblivion
         public PlacedNPC(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(PlacedNPC obj, PlacedNPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new PlacedNPC(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1220,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IPlacedNPCInternal item)
         {
-            ((PlacedNPCCommon)item.CommonInstance).Clear(item: item);
+            ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static PlacedNPC_Mask<bool> GetEqualsMask(
@@ -1228,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion
             IPlacedNPCInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PlacedNPCCommon)item.CommonInstance).GetEqualsMask(
+            return ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1239,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PlacedNPC_Mask<bool> printMask = null)
         {
-            return ((PlacedNPCCommon)item.CommonInstance).ToString(
+            return ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1251,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PlacedNPC_Mask<bool> printMask = null)
         {
-            ((PlacedNPCCommon)item.CommonInstance).ToString(
+            ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1262,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedNPCInternalGetter item,
             PlacedNPC_Mask<bool?> checkMask)
         {
-            return ((PlacedNPCCommon)item.CommonInstance).HasBeenSet(
+            return ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1270,7 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static PlacedNPC_Mask<bool> GetHasBeenSetMask(this IPlacedNPCInternalGetter item)
         {
             var ret = new PlacedNPC_Mask<bool>();
-            ((PlacedNPCCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1280,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedNPCInternalGetter item,
             IPlacedNPCInternalGetter rhs)
         {
-            return ((PlacedNPCCommon)item.CommonInstance).Equals(
+            return ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1997,7 +1986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new PlacedNPC_Mask<bool>();
-            ((PlacedNPCCommon)item.CommonInstance).FillEqualsMask(
+            ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2347,6 +2336,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(PlacedNPC obj, PlacedNPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new PlacedNPC(getNextFormKey());
+            ret.CopyFieldsFrom((PlacedNPC)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (PlacedNPC)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

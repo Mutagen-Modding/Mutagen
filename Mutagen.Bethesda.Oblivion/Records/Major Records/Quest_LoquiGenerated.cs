@@ -215,15 +215,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IQuestInternalGetter rhs)) return false;
-            return ((QuestCommon)this.CommonInstance).Equals(this, rhs);
+            return ((QuestCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Quest obj)
         {
-            return ((QuestCommon)this.CommonInstance).Equals(this, obj);
+            return ((QuestCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((QuestCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((QuestCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -495,17 +495,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Quest(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Quest obj, Quest rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Quest(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -847,13 +836,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Priority = (Byte)obj;
                     break;
                 case Quest_FieldIndex.Conditions:
-                    this._Conditions.SetTo((SourceSetList<Condition>)obj);
+                    this._Conditions.SetTo((ISetList<Condition>)obj);
                     break;
                 case Quest_FieldIndex.Stages:
-                    this._Stages.SetTo((SourceSetList<QuestStage>)obj);
+                    this._Stages.SetTo((ISetList<QuestStage>)obj);
                     break;
                 case Quest_FieldIndex.Targets:
-                    this._Targets.SetTo((SourceSetList<QuestTarget>)obj);
+                    this._Targets.SetTo((ISetList<QuestTarget>)obj);
                     break;
                 case Quest_FieldIndex.DATADataTypeState:
                     this.DATADataTypeState = (Quest.DATADataType)obj;
@@ -903,13 +892,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Priority = (Byte)pair.Value;
                     break;
                 case Quest_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((SourceSetList<Condition>)pair.Value);
+                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
                     break;
                 case Quest_FieldIndex.Stages:
-                    obj._Stages.SetTo((SourceSetList<QuestStage>)pair.Value);
+                    obj._Stages.SetTo((ISetList<QuestStage>)pair.Value);
                     break;
                 case Quest_FieldIndex.Targets:
-                    obj._Targets.SetTo((SourceSetList<QuestTarget>)pair.Value);
+                    obj._Targets.SetTo((ISetList<QuestTarget>)pair.Value);
                     break;
                 case Quest_FieldIndex.DATADataTypeState:
                     obj.DATADataTypeState = (Quest.DATADataType)pair.Value;
@@ -1023,7 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IQuestInternal item)
         {
-            ((QuestCommon)item.CommonInstance).Clear(item: item);
+            ((QuestCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Quest_Mask<bool> GetEqualsMask(
@@ -1031,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion
             IQuestInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((QuestCommon)item.CommonInstance).GetEqualsMask(
+            return ((QuestCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1042,7 +1031,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Quest_Mask<bool> printMask = null)
         {
-            return ((QuestCommon)item.CommonInstance).ToString(
+            return ((QuestCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1054,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Quest_Mask<bool> printMask = null)
         {
-            ((QuestCommon)item.CommonInstance).ToString(
+            ((QuestCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1065,7 +1054,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestInternalGetter item,
             Quest_Mask<bool?> checkMask)
         {
-            return ((QuestCommon)item.CommonInstance).HasBeenSet(
+            return ((QuestCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1073,7 +1062,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Quest_Mask<bool> GetHasBeenSetMask(this IQuestInternalGetter item)
         {
             var ret = new Quest_Mask<bool>();
-            ((QuestCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((QuestCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1083,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestInternalGetter item,
             IQuestInternalGetter rhs)
         {
-            return ((QuestCommon)item.CommonInstance).Equals(
+            return ((QuestCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1332,11 +1321,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Quest_FieldIndex.Priority:
                     return typeof(Byte);
                 case Quest_FieldIndex.Conditions:
-                    return typeof(SourceSetList<Condition>);
+                    return typeof(ISetList<Condition>);
                 case Quest_FieldIndex.Stages:
-                    return typeof(SourceSetList<QuestStage>);
+                    return typeof(ISetList<QuestStage>);
                 case Quest_FieldIndex.Targets:
-                    return typeof(SourceSetList<QuestTarget>);
+                    return typeof(ISetList<QuestTarget>);
                 case Quest_FieldIndex.DATADataTypeState:
                     return typeof(Quest.DATADataType);
                 default:
@@ -1660,7 +1649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Quest_Mask<bool>();
-            ((QuestCommon)item.CommonInstance).FillEqualsMask(
+            ((QuestCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1999,6 +1988,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Quest obj, Quest rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Quest(getNextFormKey());
+            ret.CopyFieldsFrom((Quest)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Quest)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

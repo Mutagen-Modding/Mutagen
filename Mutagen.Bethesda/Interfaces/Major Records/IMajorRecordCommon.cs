@@ -4,12 +4,17 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public interface IMajorRecordCommon : IFormKey, IDuplicatable, IXmlFolderItem, ILinkSubContainer
+    public interface IMajorRecordCommon : IMajorRecordCommonGetter, ILinkSubContainer
     {
-        string EditorID { get; }
-        bool IsCompressed { get; set; }
-        int MajorRecordFlagsRaw { get; set; }
-        new FormKey FormKey { get; }
+        new bool IsCompressed { get; set; }
+        new int MajorRecordFlagsRaw { get; set; }
     }
 
+    public interface IMajorRecordCommonGetter : IFormKey, IDuplicatable, IXmlFolderItem
+    {
+        string EditorID { get; }
+        bool IsCompressed { get; }
+        int MajorRecordFlagsRaw { get; }
+        new FormKey FormKey { get; }
+    }
 }

@@ -199,6 +199,25 @@ namespace Mutagen.Bethesda.Generation
             DataType dataType = null)
         {
             var data = typeGen.GetFieldData();
+            switch (data.BinaryWrapperFallback)
+            {
+                case BinaryGenerationType.Normal:
+                    break;
+                case BinaryGenerationType.DoNothing:
+                case BinaryGenerationType.NoGeneration:
+                    return;
+                case BinaryGenerationType.Custom:
+                    this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
+                        fg,
+                        objGen,
+                        typeGen,
+                        dataAccessor,
+                        ref currentPosition,
+                        dataType);
+                    return;
+                default:
+                    throw new NotImplementedException();
+            }
             if (data.HasTrigger)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");

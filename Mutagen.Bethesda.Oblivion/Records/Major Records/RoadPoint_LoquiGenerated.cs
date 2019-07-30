@@ -112,15 +112,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRoadPointGetter rhs)) return false;
-            return ((RoadPointCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RoadPointCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(RoadPoint obj)
         {
-            return ((RoadPointCommon)this.CommonInstance).Equals(this, obj);
+            return ((RoadPointCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RoadPointCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RoadPointCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.NumConnectionsFluffBytes = (Byte[])obj;
                     break;
                 case RoadPoint_FieldIndex.Connections:
-                    this._Connections.SetTo((SourceSetList<P3Float>)obj);
+                    this._Connections.SetTo((IList<P3Float>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.NumConnectionsFluffBytes = (Byte[])pair.Value;
                     break;
                 case RoadPoint_FieldIndex.Connections:
-                    obj._Connections.SetTo((SourceSetList<P3Float>)pair.Value);
+                    obj._Connections.SetTo((IList<P3Float>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRoadPoint item)
         {
-            ((RoadPointCommon)item.CommonInstance).Clear(item: item);
+            ((RoadPointCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static RoadPoint_Mask<bool> GetEqualsMask(
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRoadPointGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RoadPointCommon)item.CommonInstance).GetEqualsMask(
+            return ((RoadPointCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RoadPoint_Mask<bool> printMask = null)
         {
-            return ((RoadPointCommon)item.CommonInstance).ToString(
+            return ((RoadPointCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RoadPoint_Mask<bool> printMask = null)
         {
-            ((RoadPointCommon)item.CommonInstance).ToString(
+            ((RoadPointCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPointGetter item,
             RoadPoint_Mask<bool?> checkMask)
         {
-            return ((RoadPointCommon)item.CommonInstance).HasBeenSet(
+            return ((RoadPointCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RoadPoint_Mask<bool> GetHasBeenSetMask(this IRoadPointGetter item)
         {
             var ret = new RoadPoint_Mask<bool>();
-            ((RoadPointCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RoadPointCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPointGetter item,
             IRoadPointGetter rhs)
         {
-            return ((RoadPointCommon)item.CommonInstance).Equals(
+            return ((RoadPointCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
                     return typeof(Byte[]);
                 case RoadPoint_FieldIndex.Connections:
-                    return typeof(SourceSetList<P3Float>);
+                    return typeof(IList<P3Float>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RoadPoint_Mask<bool>();
-            ((RoadPointCommon)item.CommonInstance).FillEqualsMask(
+            ((RoadPointCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

@@ -106,15 +106,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ISoundDataInternalGetter rhs)) return false;
-            return ((SoundDataCommon)this.CommonInstance).Equals(this, rhs);
+            return ((SoundDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(SoundData obj)
         {
-            return ((SoundDataCommon)this.CommonInstance).Equals(this, obj);
+            return ((SoundDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SoundDataCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SoundDataCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ISoundDataInternal item)
         {
-            ((SoundDataCommon)item.CommonInstance).Clear(item: item);
+            ((SoundDataCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static SoundData_Mask<bool> GetEqualsMask(
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISoundDataInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SoundDataCommon)item.CommonInstance).GetEqualsMask(
+            return ((SoundDataCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SoundData_Mask<bool> printMask = null)
         {
-            return ((SoundDataCommon)item.CommonInstance).ToString(
+            return ((SoundDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SoundData_Mask<bool> printMask = null)
         {
-            ((SoundDataCommon)item.CommonInstance).ToString(
+            ((SoundDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataInternalGetter item,
             SoundData_Mask<bool?> checkMask)
         {
-            return ((SoundDataCommon)item.CommonInstance).HasBeenSet(
+            return ((SoundDataCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SoundData_Mask<bool> GetHasBeenSetMask(this ISoundDataInternalGetter item)
         {
             var ret = new SoundData_Mask<bool>();
-            ((SoundDataCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((SoundDataCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataInternalGetter item,
             ISoundDataInternalGetter rhs)
         {
-            return ((SoundDataCommon)item.CommonInstance).Equals(
+            return ((SoundDataCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SoundData_Mask<bool>();
-            ((SoundDataCommon)item.CommonInstance).FillEqualsMask(
+            ((SoundDataCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

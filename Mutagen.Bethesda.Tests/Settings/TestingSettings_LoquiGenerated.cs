@@ -135,15 +135,15 @@ namespace Mutagen.Bethesda.Tests
         public override bool Equals(object obj)
         {
             if (!(obj is ITestingSettingsGetter rhs)) return false;
-            return ((TestingSettingsCommon)this.CommonInstance).Equals(this, rhs);
+            return ((TestingSettingsCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(TestingSettings obj)
         {
-            return ((TestingSettingsCommon)this.CommonInstance).Equals(this, obj);
+            return ((TestingSettingsCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((TestingSettingsCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((TestingSettingsCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Tests
                     this.PassthroughSettings = (PassthroughSettings)obj;
                     break;
                 case TestingSettings_FieldIndex.TargetGroups:
-                    this._TargetGroups.SetTo((SourceSetList<TargetGroup>)obj);
+                    this._TargetGroups.SetTo((IList<TargetGroup>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Tests
                     obj.PassthroughSettings = (PassthroughSettings)pair.Value;
                     break;
                 case TestingSettings_FieldIndex.TargetGroups:
-                    obj._TargetGroups.SetTo((SourceSetList<TargetGroup>)pair.Value);
+                    obj._TargetGroups.SetTo((IList<TargetGroup>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public static void Clear(this ITestingSettings item)
         {
-            ((TestingSettingsCommon)item.CommonInstance).Clear(item: item);
+            ((TestingSettingsCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static TestingSettings_Mask<bool> GetEqualsMask(
@@ -693,7 +693,7 @@ namespace Mutagen.Bethesda.Tests
             ITestingSettingsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((TestingSettingsCommon)item.CommonInstance).GetEqualsMask(
+            return ((TestingSettingsCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null,
             TestingSettings_Mask<bool> printMask = null)
         {
-            return ((TestingSettingsCommon)item.CommonInstance).ToString(
+            return ((TestingSettingsCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -716,7 +716,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null,
             TestingSettings_Mask<bool> printMask = null)
         {
-            ((TestingSettingsCommon)item.CommonInstance).ToString(
+            ((TestingSettingsCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Tests
             this ITestingSettingsGetter item,
             TestingSettings_Mask<bool?> checkMask)
         {
-            return ((TestingSettingsCommon)item.CommonInstance).HasBeenSet(
+            return ((TestingSettingsCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Tests
         public static TestingSettings_Mask<bool> GetHasBeenSetMask(this ITestingSettingsGetter item)
         {
             var ret = new TestingSettings_Mask<bool>();
-            ((TestingSettingsCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((TestingSettingsCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Tests
             this ITestingSettingsGetter item,
             ITestingSettingsGetter rhs)
         {
-            return ((TestingSettingsCommon)item.CommonInstance).Equals(
+            return ((TestingSettingsCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.PassthroughSettings:
                     return typeof(PassthroughSettings);
                 case TestingSettings_FieldIndex.TargetGroups:
-                    return typeof(SourceSetList<TargetGroup>);
+                    return typeof(IList<TargetGroup>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new TestingSettings_Mask<bool>();
-            ((TestingSettingsCommon)item.CommonInstance).FillEqualsMask(
+            ((TestingSettingsCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

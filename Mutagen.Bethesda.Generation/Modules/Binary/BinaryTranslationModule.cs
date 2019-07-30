@@ -1535,14 +1535,6 @@ namespace Mutagen.Bethesda.Generation
                         var data = field.GetFieldData();
                         switch (data.BinaryWrapperFallback)
                         {
-                            case BinaryGenerationType.Custom:
-                                CustomLogic.GenerateForCustomFlagWrapperFields(
-                                    fg: fg,
-                                    objGen: obj,
-                                    typeGen: field,
-                                    dataAccessor: dataAccessor,
-                                    currentPosition: ref passedLength);
-                                continue;
                             case BinaryGenerationType.DoNothing:
                             case BinaryGenerationType.NoGeneration:
                                 continue;

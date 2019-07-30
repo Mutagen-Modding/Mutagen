@@ -1013,15 +1013,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is INPCInternalGetter rhs)) return false;
-            return ((NPCCommon)this.CommonInstance).Equals(this, rhs);
+            return ((NPCCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(NPC obj)
         {
-            return ((NPCCommon)this.CommonInstance).Equals(this, obj);
+            return ((NPCCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((NPCCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((NPCCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -1425,17 +1425,6 @@ namespace Mutagen.Bethesda.Oblivion
         public NPC(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(NPC obj, NPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new NPC(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -2048,7 +2037,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.CalcMax = (UInt16)obj;
                     break;
                 case NPC_FieldIndex.Factions:
-                    this._Factions.SetTo((SourceSetList<RankPlacement>)obj);
+                    this._Factions.SetTo((ISetList<RankPlacement>)obj);
                     break;
                 case NPC_FieldIndex.DeathItem:
                     this.DeathItem_Property.Set((IFormIDSetLink<ItemAbstract>)obj);
@@ -2057,13 +2046,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Race_Property.Set((IFormIDSetLink<Race>)obj);
                     break;
                 case NPC_FieldIndex.Spells:
-                    this._Spells.SetTo((SourceSetList<IFormIDLink<SpellAbstract>>)obj);
+                    this._Spells.SetTo((ISetList<IFormIDLink<SpellAbstract>>)obj);
                     break;
                 case NPC_FieldIndex.Script:
                     this.Script_Property.Set((IFormIDSetLink<Script>)obj);
                     break;
                 case NPC_FieldIndex.Items:
-                    this._Items.SetTo((SourceSetList<ItemEntry>)obj);
+                    this._Items.SetTo((ISetList<ItemEntry>)obj);
                     break;
                 case NPC_FieldIndex.Aggression:
                     this.Aggression = (Byte)obj;
@@ -2090,10 +2079,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Fluff = (Byte[])obj;
                     break;
                 case NPC_FieldIndex.AIPackages:
-                    this._AIPackages.SetTo((SourceSetList<IFormIDLink<AIPackage>>)obj);
+                    this._AIPackages.SetTo((ISetList<IFormIDLink<AIPackage>>)obj);
                     break;
                 case NPC_FieldIndex.Animations:
-                    this._Animations.SetTo((SourceSetList<String>)obj);
+                    this._Animations.SetTo((ISetList<String>)obj);
                     break;
                 case NPC_FieldIndex.Class:
                     this.Class_Property.Set((IFormIDSetLink<Class>)obj);
@@ -2195,7 +2184,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.HairLength = (Single)obj;
                     break;
                 case NPC_FieldIndex.Eyes:
-                    this._Eyes.SetTo((SourceSetList<IFormIDLink<Eye>>)obj);
+                    this._Eyes.SetTo((ISetList<IFormIDLink<Eye>>)obj);
                     break;
                 case NPC_FieldIndex.HairColor:
                     this.HairColor = (Color)obj;
@@ -2281,7 +2270,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.CalcMax = (UInt16)pair.Value;
                     break;
                 case NPC_FieldIndex.Factions:
-                    obj._Factions.SetTo((SourceSetList<RankPlacement>)pair.Value);
+                    obj._Factions.SetTo((ISetList<RankPlacement>)pair.Value);
                     break;
                 case NPC_FieldIndex.DeathItem:
                     obj.DeathItem_Property.Set((IFormIDSetLink<ItemAbstract>)pair.Value);
@@ -2290,13 +2279,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Race_Property.Set((IFormIDSetLink<Race>)pair.Value);
                     break;
                 case NPC_FieldIndex.Spells:
-                    obj._Spells.SetTo((SourceSetList<IFormIDLink<SpellAbstract>>)pair.Value);
+                    obj._Spells.SetTo((ISetList<IFormIDLink<SpellAbstract>>)pair.Value);
                     break;
                 case NPC_FieldIndex.Script:
                     obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
                     break;
                 case NPC_FieldIndex.Items:
-                    obj._Items.SetTo((SourceSetList<ItemEntry>)pair.Value);
+                    obj._Items.SetTo((ISetList<ItemEntry>)pair.Value);
                     break;
                 case NPC_FieldIndex.Aggression:
                     obj.Aggression = (Byte)pair.Value;
@@ -2323,10 +2312,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Fluff = (Byte[])pair.Value;
                     break;
                 case NPC_FieldIndex.AIPackages:
-                    obj._AIPackages.SetTo((SourceSetList<IFormIDLink<AIPackage>>)pair.Value);
+                    obj._AIPackages.SetTo((ISetList<IFormIDLink<AIPackage>>)pair.Value);
                     break;
                 case NPC_FieldIndex.Animations:
-                    obj._Animations.SetTo((SourceSetList<String>)pair.Value);
+                    obj._Animations.SetTo((ISetList<String>)pair.Value);
                     break;
                 case NPC_FieldIndex.Class:
                     obj.Class_Property.Set((IFormIDSetLink<Class>)pair.Value);
@@ -2428,7 +2417,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.HairLength = (Single)pair.Value;
                     break;
                 case NPC_FieldIndex.Eyes:
-                    obj._Eyes.SetTo((SourceSetList<IFormIDLink<Eye>>)pair.Value);
+                    obj._Eyes.SetTo((ISetList<IFormIDLink<Eye>>)pair.Value);
                     break;
                 case NPC_FieldIndex.HairColor:
                     obj.HairColor = (Color)pair.Value;
@@ -2953,7 +2942,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this INPCInternal item)
         {
-            ((NPCCommon)item.CommonInstance).Clear(item: item);
+            ((NPCCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static NPC_Mask<bool> GetEqualsMask(
@@ -2961,7 +2950,7 @@ namespace Mutagen.Bethesda.Oblivion
             INPCInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((NPCCommon)item.CommonInstance).GetEqualsMask(
+            return ((NPCCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -2972,7 +2961,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             NPC_Mask<bool> printMask = null)
         {
-            return ((NPCCommon)item.CommonInstance).ToString(
+            return ((NPCCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -2984,7 +2973,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             NPC_Mask<bool> printMask = null)
         {
-            ((NPCCommon)item.CommonInstance).ToString(
+            ((NPCCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -2995,7 +2984,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCInternalGetter item,
             NPC_Mask<bool?> checkMask)
         {
-            return ((NPCCommon)item.CommonInstance).HasBeenSet(
+            return ((NPCCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -3003,7 +2992,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static NPC_Mask<bool> GetHasBeenSetMask(this INPCInternalGetter item)
         {
             var ret = new NPC_Mask<bool>();
-            ((NPCCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((NPCCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -3013,7 +3002,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCInternalGetter item,
             INPCInternalGetter rhs)
         {
-            return ((NPCCommon)item.CommonInstance).Equals(
+            return ((NPCCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -3860,17 +3849,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.CalcMax:
                     return typeof(UInt16);
                 case NPC_FieldIndex.Factions:
-                    return typeof(SourceSetList<RankPlacement>);
+                    return typeof(ISetList<RankPlacement>);
                 case NPC_FieldIndex.DeathItem:
                     return typeof(IFormIDSetLink<ItemAbstract>);
                 case NPC_FieldIndex.Race:
                     return typeof(IFormIDSetLink<Race>);
                 case NPC_FieldIndex.Spells:
-                    return typeof(SourceSetList<IFormIDLink<SpellAbstract>>);
+                    return typeof(ISetList<IFormIDLink<SpellAbstract>>);
                 case NPC_FieldIndex.Script:
                     return typeof(IFormIDSetLink<Script>);
                 case NPC_FieldIndex.Items:
-                    return typeof(SourceSetList<ItemEntry>);
+                    return typeof(ISetList<ItemEntry>);
                 case NPC_FieldIndex.Aggression:
                     return typeof(Byte);
                 case NPC_FieldIndex.Confidence:
@@ -3888,9 +3877,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Fluff:
                     return typeof(Byte[]);
                 case NPC_FieldIndex.AIPackages:
-                    return typeof(SourceSetList<IFormIDLink<AIPackage>>);
+                    return typeof(ISetList<IFormIDLink<AIPackage>>);
                 case NPC_FieldIndex.Animations:
-                    return typeof(SourceSetList<String>);
+                    return typeof(ISetList<String>);
                 case NPC_FieldIndex.Class:
                     return typeof(IFormIDSetLink<Class>);
                 case NPC_FieldIndex.Armorer:
@@ -3958,7 +3947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.HairLength:
                     return typeof(Single);
                 case NPC_FieldIndex.Eyes:
-                    return typeof(SourceSetList<IFormIDLink<Eye>>);
+                    return typeof(ISetList<IFormIDLink<Eye>>);
                 case NPC_FieldIndex.HairColor:
                     return typeof(Color);
                 case NPC_FieldIndex.CombatStyle:
@@ -5450,7 +5439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new NPC_Mask<bool>();
-            ((NPCCommon)item.CommonInstance).FillEqualsMask(
+            ((NPCCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -6493,6 +6482,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(NPC obj, NPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new NPC(getNextFormKey());
+            ret.CopyFieldsFrom((NPC)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (NPC)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

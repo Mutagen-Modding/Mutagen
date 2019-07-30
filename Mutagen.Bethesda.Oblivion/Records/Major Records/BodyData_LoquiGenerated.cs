@@ -116,15 +116,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IBodyDataGetter rhs)) return false;
-            return ((BodyDataCommon)this.CommonInstance).Equals(this, rhs);
+            return ((BodyDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(BodyData obj)
         {
-            return ((BodyDataCommon)this.CommonInstance).Equals(this, obj);
+            return ((BodyDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((BodyDataCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((BodyDataCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case BodyData_FieldIndex.BodyParts:
-                    this._BodyParts.SetTo((SourceSetList<BodyPart>)obj);
+                    this._BodyParts.SetTo((ISetList<BodyPart>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case BodyData_FieldIndex.BodyParts:
-                    obj._BodyParts.SetTo((SourceSetList<BodyPart>)pair.Value);
+                    obj._BodyParts.SetTo((ISetList<BodyPart>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IBodyData item)
         {
-            ((BodyDataCommon)item.CommonInstance).Clear(item: item);
+            ((BodyDataCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static BodyData_Mask<bool> GetEqualsMask(
@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
             IBodyDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BodyDataCommon)item.CommonInstance).GetEqualsMask(
+            return ((BodyDataCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -642,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             BodyData_Mask<bool> printMask = null)
         {
-            return ((BodyDataCommon)item.CommonInstance).ToString(
+            return ((BodyDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             BodyData_Mask<bool> printMask = null)
         {
-            ((BodyDataCommon)item.CommonInstance).ToString(
+            ((BodyDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBodyDataGetter item,
             BodyData_Mask<bool?> checkMask)
         {
-            return ((BodyDataCommon)item.CommonInstance).HasBeenSet(
+            return ((BodyDataCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static BodyData_Mask<bool> GetHasBeenSetMask(this IBodyDataGetter item)
         {
             var ret = new BodyData_Mask<bool>();
-            ((BodyDataCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((BodyDataCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBodyDataGetter item,
             IBodyDataGetter rhs)
         {
-            return ((BodyDataCommon)item.CommonInstance).Equals(
+            return ((BodyDataCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -848,7 +848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case BodyData_FieldIndex.Model:
                     return typeof(Model);
                 case BodyData_FieldIndex.BodyParts:
-                    return typeof(SourceSetList<BodyPart>);
+                    return typeof(ISetList<BodyPart>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new BodyData_Mask<bool>();
-            ((BodyDataCommon)item.CommonInstance).FillEqualsMask(
+            ((BodyDataCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

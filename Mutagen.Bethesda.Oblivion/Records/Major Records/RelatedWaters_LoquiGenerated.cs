@@ -98,15 +98,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRelatedWatersGetter rhs)) return false;
-            return ((RelatedWatersCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RelatedWatersCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(RelatedWaters obj)
         {
-            return ((RelatedWatersCommon)this.CommonInstance).Equals(this, obj);
+            return ((RelatedWatersCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RelatedWatersCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RelatedWatersCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRelatedWaters item)
         {
-            ((RelatedWatersCommon)item.CommonInstance).Clear(item: item);
+            ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static RelatedWaters_Mask<bool> GetEqualsMask(
@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRelatedWatersGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RelatedWatersCommon)item.CommonInstance).GetEqualsMask(
+            return ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RelatedWaters_Mask<bool> printMask = null)
         {
-            return ((RelatedWatersCommon)item.CommonInstance).ToString(
+            return ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RelatedWaters_Mask<bool> printMask = null)
         {
-            ((RelatedWatersCommon)item.CommonInstance).ToString(
+            ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelatedWatersGetter item,
             RelatedWaters_Mask<bool?> checkMask)
         {
-            return ((RelatedWatersCommon)item.CommonInstance).HasBeenSet(
+            return ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -635,7 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RelatedWaters_Mask<bool> GetHasBeenSetMask(this IRelatedWatersGetter item)
         {
             var ret = new RelatedWaters_Mask<bool>();
-            ((RelatedWatersCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelatedWatersGetter item,
             IRelatedWatersGetter rhs)
         {
-            return ((RelatedWatersCommon)item.CommonInstance).Equals(
+            return ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -949,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RelatedWaters_Mask<bool>();
-            ((RelatedWatersCommon)item.CommonInstance).FillEqualsMask(
+            ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

@@ -114,15 +114,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRegionAreaGetter rhs)) return false;
-            return ((RegionAreaCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RegionAreaCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(RegionArea obj)
         {
-            return ((RegionAreaCommon)this.CommonInstance).Equals(this, obj);
+            return ((RegionAreaCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RegionAreaCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RegionAreaCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.EdgeFallOff = (UInt32)obj;
                     break;
                 case RegionArea_FieldIndex.RegionPoints:
-                    this._RegionPoints.SetTo((SourceSetList<P2Float>)obj);
+                    this._RegionPoints.SetTo((ISetList<P2Float>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.EdgeFallOff = (UInt32)pair.Value;
                     break;
                 case RegionArea_FieldIndex.RegionPoints:
-                    obj._RegionPoints.SetTo((SourceSetList<P2Float>)pair.Value);
+                    obj._RegionPoints.SetTo((ISetList<P2Float>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRegionArea item)
         {
-            ((RegionAreaCommon)item.CommonInstance).Clear(item: item);
+            ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static RegionArea_Mask<bool> GetEqualsMask(
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionAreaGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionAreaCommon)item.CommonInstance).GetEqualsMask(
+            return ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionArea_Mask<bool> printMask = null)
         {
-            return ((RegionAreaCommon)item.CommonInstance).ToString(
+            return ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionArea_Mask<bool> printMask = null)
         {
-            ((RegionAreaCommon)item.CommonInstance).ToString(
+            ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionAreaGetter item,
             RegionArea_Mask<bool?> checkMask)
         {
-            return ((RegionAreaCommon)item.CommonInstance).HasBeenSet(
+            return ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionArea_Mask<bool> GetHasBeenSetMask(this IRegionAreaGetter item)
         {
             var ret = new RegionArea_Mask<bool>();
-            ((RegionAreaCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionAreaGetter item,
             IRegionAreaGetter rhs)
         {
-            return ((RegionAreaCommon)item.CommonInstance).Equals(
+            return ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionArea_FieldIndex.EdgeFallOff:
                     return typeof(UInt32);
                 case RegionArea_FieldIndex.RegionPoints:
-                    return typeof(SourceSetList<P2Float>);
+                    return typeof(ISetList<P2Float>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionArea_Mask<bool>();
-            ((RegionAreaCommon)item.CommonInstance).FillEqualsMask(
+            ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

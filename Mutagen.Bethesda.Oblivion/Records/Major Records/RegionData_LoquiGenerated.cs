@@ -128,15 +128,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRegionDataInternalGetter rhs)) return false;
-            return ((RegionDataCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RegionDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(RegionData obj)
         {
-            return ((RegionDataCommon)this.CommonInstance).Equals(this, obj);
+            return ((RegionDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RegionDataCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RegionDataCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRegionDataInternal item)
         {
-            ((RegionDataCommon)item.CommonInstance).Clear(item: item);
+            ((RegionDataCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static RegionData_Mask<bool> GetEqualsMask(
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionDataInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionDataCommon)item.CommonInstance).GetEqualsMask(
+            return ((RegionDataCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionData_Mask<bool> printMask = null)
         {
-            return ((RegionDataCommon)item.CommonInstance).ToString(
+            return ((RegionDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionData_Mask<bool> printMask = null)
         {
-            ((RegionDataCommon)item.CommonInstance).ToString(
+            ((RegionDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataInternalGetter item,
             RegionData_Mask<bool?> checkMask)
         {
-            return ((RegionDataCommon)item.CommonInstance).HasBeenSet(
+            return ((RegionDataCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionData_Mask<bool> GetHasBeenSetMask(this IRegionDataInternalGetter item)
         {
             var ret = new RegionData_Mask<bool>();
-            ((RegionDataCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RegionDataCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataInternalGetter item,
             IRegionDataInternalGetter rhs)
         {
-            return ((RegionDataCommon)item.CommonInstance).Equals(
+            return ((RegionDataCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionData_Mask<bool>();
-            ((RegionDataCommon)item.CommonInstance).FillEqualsMask(
+            ((RegionDataCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

@@ -312,15 +312,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IModHeaderGetter rhs)) return false;
-            return ((ModHeaderCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ModHeaderCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(ModHeader obj)
         {
-            return ((ModHeaderCommon)this.CommonInstance).Equals(this, obj);
+            return ((ModHeaderCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ModHeaderCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ModHeaderCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -913,10 +913,10 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Description = (String)obj;
                     break;
                 case ModHeader_FieldIndex.MasterReferences:
-                    this._MasterReferences.SetTo((SourceSetList<MasterReference>)obj);
+                    this._MasterReferences.SetTo((ISetList<MasterReference>)obj);
                     break;
                 case ModHeader_FieldIndex.OverriddenForms:
-                    this._OverriddenForms.SetTo((SourceSetList<IFormIDLink<SkyrimMajorRecord>>)obj);
+                    this._OverriddenForms.SetTo((ISetList<IFormIDLink<SkyrimMajorRecord>>)obj);
                     break;
                 case ModHeader_FieldIndex.INTV:
                     this.INTV = (Int32)obj;
@@ -983,10 +983,10 @@ namespace Mutagen.Bethesda.Skyrim
                     obj.Description = (String)pair.Value;
                     break;
                 case ModHeader_FieldIndex.MasterReferences:
-                    obj._MasterReferences.SetTo((SourceSetList<MasterReference>)pair.Value);
+                    obj._MasterReferences.SetTo((ISetList<MasterReference>)pair.Value);
                     break;
                 case ModHeader_FieldIndex.OverriddenForms:
-                    obj._OverriddenForms.SetTo((SourceSetList<IFormIDLink<SkyrimMajorRecord>>)pair.Value);
+                    obj._OverriddenForms.SetTo((ISetList<IFormIDLink<SkyrimMajorRecord>>)pair.Value);
                     break;
                 case ModHeader_FieldIndex.INTV:
                     obj.INTV = (Int32)pair.Value;
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IModHeader item)
         {
-            ((ModHeaderCommon)item.CommonInstance).Clear(item: item);
+            ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static ModHeader_Mask<bool> GetEqualsMask(
@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Skyrim
             IModHeaderGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ModHeaderCommon)item.CommonInstance).GetEqualsMask(
+            return ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1152,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             ModHeader_Mask<bool> printMask = null)
         {
-            return ((ModHeaderCommon)item.CommonInstance).ToString(
+            return ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             ModHeader_Mask<bool> printMask = null)
         {
-            ((ModHeaderCommon)item.CommonInstance).ToString(
+            ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1175,7 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModHeaderGetter item,
             ModHeader_Mask<bool?> checkMask)
         {
-            return ((ModHeaderCommon)item.CommonInstance).HasBeenSet(
+            return ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ModHeader_Mask<bool> GetHasBeenSetMask(this IModHeaderGetter item)
         {
             var ret = new ModHeader_Mask<bool>();
-            ((ModHeaderCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModHeaderGetter item,
             IModHeaderGetter rhs)
         {
-            return ((ModHeaderCommon)item.CommonInstance).Equals(
+            return ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1497,9 +1497,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.Description:
                     return typeof(String);
                 case ModHeader_FieldIndex.MasterReferences:
-                    return typeof(SourceSetList<MasterReference>);
+                    return typeof(ISetList<MasterReference>);
                 case ModHeader_FieldIndex.OverriddenForms:
-                    return typeof(SourceSetList<IFormIDLink<SkyrimMajorRecord>>);
+                    return typeof(ISetList<IFormIDLink<SkyrimMajorRecord>>);
                 case ModHeader_FieldIndex.INTV:
                     return typeof(Int32);
                 case ModHeader_FieldIndex.INCC:
@@ -1963,7 +1963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ModHeader_Mask<bool>();
-            ((ModHeaderCommon)item.CommonInstance).FillEqualsMask(
+            ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

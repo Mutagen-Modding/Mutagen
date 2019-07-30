@@ -90,15 +90,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRaceHairGetter rhs)) return false;
-            return ((RaceHairCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RaceHairCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(RaceHair obj)
         {
-            return ((RaceHairCommon)this.CommonInstance).Equals(this, obj);
+            return ((RaceHairCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RaceHairCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RaceHairCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRaceHair item)
         {
-            ((RaceHairCommon)item.CommonInstance).Clear(item: item);
+            ((RaceHairCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static RaceHair_Mask<bool> GetEqualsMask(
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceHairGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RaceHairCommon)item.CommonInstance).GetEqualsMask(
+            return ((RaceHairCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RaceHair_Mask<bool> printMask = null)
         {
-            return ((RaceHairCommon)item.CommonInstance).ToString(
+            return ((RaceHairCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RaceHair_Mask<bool> printMask = null)
         {
-            ((RaceHairCommon)item.CommonInstance).ToString(
+            ((RaceHairCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceHairGetter item,
             RaceHair_Mask<bool?> checkMask)
         {
-            return ((RaceHairCommon)item.CommonInstance).HasBeenSet(
+            return ((RaceHairCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RaceHair_Mask<bool> GetHasBeenSetMask(this IRaceHairGetter item)
         {
             var ret = new RaceHair_Mask<bool>();
-            ((RaceHairCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RaceHairCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceHairGetter item,
             IRaceHairGetter rhs)
         {
-            return ((RaceHairCommon)item.CommonInstance).Equals(
+            return ((RaceHairCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RaceHair_Mask<bool>();
-            ((RaceHairCommon)item.CommonInstance).FillEqualsMask(
+            ((RaceHairCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

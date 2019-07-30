@@ -74,15 +74,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ISpellLeveledInternalGetter rhs)) return false;
-            return ((SpellLeveledCommon)this.CommonInstance).Equals(this, rhs);
+            return ((SpellLeveledCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(SpellLeveled obj)
         {
-            return ((SpellLeveledCommon)this.CommonInstance).Equals(this, obj);
+            return ((SpellLeveledCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SpellLeveledCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SpellLeveledCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -277,17 +277,6 @@ namespace Mutagen.Bethesda.Oblivion
         public SpellLeveled(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(SpellLeveled obj, SpellLeveled rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new SpellLeveled(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -548,7 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ISpellLeveledInternal item)
         {
-            ((SpellLeveledCommon)item.CommonInstance).Clear(item: item);
+            ((SpellLeveledCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static SpellLeveled_Mask<bool> GetEqualsMask(
@@ -556,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISpellLeveledInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SpellLeveledCommon)item.CommonInstance).GetEqualsMask(
+            return ((SpellLeveledCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -567,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SpellLeveled_Mask<bool> printMask = null)
         {
-            return ((SpellLeveledCommon)item.CommonInstance).ToString(
+            return ((SpellLeveledCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -579,7 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SpellLeveled_Mask<bool> printMask = null)
         {
-            ((SpellLeveledCommon)item.CommonInstance).ToString(
+            ((SpellLeveledCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -590,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISpellLeveledInternalGetter item,
             SpellLeveled_Mask<bool?> checkMask)
         {
-            return ((SpellLeveledCommon)item.CommonInstance).HasBeenSet(
+            return ((SpellLeveledCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -598,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SpellLeveled_Mask<bool> GetHasBeenSetMask(this ISpellLeveledInternalGetter item)
         {
             var ret = new SpellLeveled_Mask<bool>();
-            ((SpellLeveledCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((SpellLeveledCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -608,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISpellLeveledInternalGetter item,
             ISpellLeveledInternalGetter rhs)
         {
-            return ((SpellLeveledCommon)item.CommonInstance).Equals(
+            return ((SpellLeveledCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -850,7 +839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SpellLeveled_Mask<bool>();
-            ((SpellLeveledCommon)item.CommonInstance).FillEqualsMask(
+            ((SpellLeveledCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1088,6 +1077,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(SpellLeveled obj, SpellLeveled rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new SpellLeveled(getNextFormKey());
+            ret.CopyFieldsFrom((SpellLeveled)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (SpellLeveled)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

@@ -286,18 +286,18 @@ namespace Mutagen.Bethesda.Binary
     public ref struct MajorRecordFrame
     {
         public MajorRecordMeta Header { get; }
-        public ReadOnlySpan<byte> DataSpan { get; }
+        public ReadOnlySpan<byte> ContentSpan { get; }
 
         public MajorRecordFrame(MetaDataConstants meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta.MajorRecord(span);
-            this.DataSpan = span.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
+            this.ContentSpan = span.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
         }
 
         public MajorRecordFrame(MajorRecordMeta meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta;
-            this.DataSpan = span;
+            this.ContentSpan = span;
         }
     }
 
@@ -322,18 +322,18 @@ namespace Mutagen.Bethesda.Binary
     public ref struct SubRecordFrame
     {
         public SubRecordMeta Header { get; }
-        public ReadOnlySpan<byte> DataSpan { get; }
+        public ReadOnlySpan<byte> ContentSpan { get; }
 
         public SubRecordFrame(MetaDataConstants meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta.SubRecord(span);
-            this.DataSpan = span.Slice(this.Header.HeaderLength, this.Header.RecordLength);
+            this.ContentSpan = span.Slice(this.Header.HeaderLength, this.Header.RecordLength);
         }
 
         public SubRecordFrame(SubRecordMeta meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta;
-            this.DataSpan = span;
+            this.ContentSpan = span;
         }
     }
 }

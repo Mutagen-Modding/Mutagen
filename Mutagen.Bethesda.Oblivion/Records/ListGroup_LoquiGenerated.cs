@@ -128,15 +128,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IListGroupGetter<T> rhs)) return false;
-            return ((ListGroupCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ListGroupCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(ListGroup<T> obj)
         {
-            return ((ListGroupCommon)this.CommonInstance).Equals(this, obj);
+            return ((ListGroupCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ListGroupCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ListGroupCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LastModified = (Byte[])obj;
                     break;
                 case ListGroup_FieldIndex.Items:
-                    this._Items.SetTo((SourceSetList<T>)obj);
+                    this._Items.SetTo((IList<T>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LastModified = (Byte[])pair.Value;
                     break;
                 case ListGroup_FieldIndex.Items:
-                    obj._Items.SetTo((SourceSetList<T>)pair.Value);
+                    obj._Items.SetTo((IList<T>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void Clear<T>(this IListGroup<T> item)
             where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
         {
-            ((ListGroupCommon)item.CommonInstance).Clear(item: item);
+            ((ListGroupCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static ListGroup_Mask<bool> GetEqualsMask<T>(
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
             where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
-            return ((ListGroupCommon)item.CommonInstance).GetEqualsMask(
+            return ((ListGroupCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Oblivion
             ListGroup_Mask<bool> printMask = null)
             where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
-            return ((ListGroupCommon)item.CommonInstance).ToString(
+            return ((ListGroupCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
             ListGroup_Mask<bool> printMask = null)
             where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
-            ((ListGroupCommon)item.CommonInstance).ToString(
+            ((ListGroupCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -716,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
             ListGroup_Mask<bool?> checkMask)
             where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
-            return ((ListGroupCommon)item.CommonInstance).HasBeenSet(
+            return ((ListGroupCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
             where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             var ret = new ListGroup_Mask<bool>();
-            ((ListGroupCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ListGroupCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
             IListGroupGetter<T> rhs)
             where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
-            return ((ListGroupCommon)item.CommonInstance).Equals(
+            return ((ListGroupCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ListGroup_FieldIndex.LastModified:
                     return typeof(Byte[]);
                 case ListGroup_FieldIndex.Items:
-                    return typeof(SourceSetList<T>);
+                    return typeof(IList<T>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T : IXmlItem, IBinaryItem, ILoquiObject<T>
         {
             var ret = new ListGroup_Mask<bool>();
-            ((ListGroupCommon)item.CommonInstance).FillEqualsMask(
+            ((ListGroupCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

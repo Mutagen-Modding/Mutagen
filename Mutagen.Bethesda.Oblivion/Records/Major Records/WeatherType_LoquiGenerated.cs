@@ -108,15 +108,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IWeatherTypeGetter rhs)) return false;
-            return ((WeatherTypeCommon)this.CommonInstance).Equals(this, rhs);
+            return ((WeatherTypeCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(WeatherType obj)
         {
-            return ((WeatherTypeCommon)this.CommonInstance).Equals(this, obj);
+            return ((WeatherTypeCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WeatherTypeCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((WeatherTypeCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IWeatherType item)
         {
-            ((WeatherTypeCommon)item.CommonInstance).Clear(item: item);
+            ((WeatherTypeCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static WeatherType_Mask<bool> GetEqualsMask(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWeatherTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WeatherTypeCommon)item.CommonInstance).GetEqualsMask(
+            return ((WeatherTypeCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             WeatherType_Mask<bool> printMask = null)
         {
-            return ((WeatherTypeCommon)item.CommonInstance).ToString(
+            return ((WeatherTypeCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             WeatherType_Mask<bool> printMask = null)
         {
-            ((WeatherTypeCommon)item.CommonInstance).ToString(
+            ((WeatherTypeCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherTypeGetter item,
             WeatherType_Mask<bool?> checkMask)
         {
-            return ((WeatherTypeCommon)item.CommonInstance).HasBeenSet(
+            return ((WeatherTypeCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherType_Mask<bool> GetHasBeenSetMask(this IWeatherTypeGetter item)
         {
             var ret = new WeatherType_Mask<bool>();
-            ((WeatherTypeCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((WeatherTypeCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherTypeGetter item,
             IWeatherTypeGetter rhs)
         {
-            return ((WeatherTypeCommon)item.CommonInstance).Equals(
+            return ((WeatherTypeCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new WeatherType_Mask<bool>();
-            ((WeatherTypeCommon)item.CommonInstance).FillEqualsMask(
+            ((WeatherTypeCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

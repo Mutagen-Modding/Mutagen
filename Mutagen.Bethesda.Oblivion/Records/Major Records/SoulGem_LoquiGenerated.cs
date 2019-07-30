@@ -256,15 +256,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ISoulGemInternalGetter rhs)) return false;
-            return ((SoulGemCommon)this.CommonInstance).Equals(this, rhs);
+            return ((SoulGemCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(SoulGem obj)
         {
-            return ((SoulGemCommon)this.CommonInstance).Equals(this, obj);
+            return ((SoulGemCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SoulGemCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SoulGemCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -512,17 +512,6 @@ namespace Mutagen.Bethesda.Oblivion
         public SoulGem(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(SoulGem obj, SoulGem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new SoulGem(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1052,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ISoulGemInternal item)
         {
-            ((SoulGemCommon)item.CommonInstance).Clear(item: item);
+            ((SoulGemCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static SoulGem_Mask<bool> GetEqualsMask(
@@ -1060,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISoulGemInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SoulGemCommon)item.CommonInstance).GetEqualsMask(
+            return ((SoulGemCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1071,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SoulGem_Mask<bool> printMask = null)
         {
-            return ((SoulGemCommon)item.CommonInstance).ToString(
+            return ((SoulGemCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1083,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SoulGem_Mask<bool> printMask = null)
         {
-            ((SoulGemCommon)item.CommonInstance).ToString(
+            ((SoulGemCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1094,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoulGemInternalGetter item,
             SoulGem_Mask<bool?> checkMask)
         {
-            return ((SoulGemCommon)item.CommonInstance).HasBeenSet(
+            return ((SoulGemCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1102,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SoulGem_Mask<bool> GetHasBeenSetMask(this ISoulGemInternalGetter item)
         {
             var ret = new SoulGem_Mask<bool>();
-            ((SoulGemCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((SoulGemCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1112,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoulGemInternalGetter item,
             ISoulGemInternalGetter rhs)
         {
-            return ((SoulGemCommon)item.CommonInstance).Equals(
+            return ((SoulGemCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1702,7 +1691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SoulGem_Mask<bool>();
-            ((SoulGemCommon)item.CommonInstance).FillEqualsMask(
+            ((SoulGemCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2030,6 +2019,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(SoulGem obj, SoulGem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new SoulGem(getNextFormKey());
+            ret.CopyFieldsFrom((SoulGem)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (SoulGem)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

@@ -169,15 +169,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ILogEntryGetter rhs)) return false;
-            return ((LogEntryCommon)this.CommonInstance).Equals(this, rhs);
+            return ((LogEntryCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(LogEntry obj)
         {
-            return ((LogEntryCommon)this.CommonInstance).Equals(this, obj);
+            return ((LogEntryCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LogEntryCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LogEntryCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (LogEntry.Flag)obj;
                     break;
                 case LogEntry_FieldIndex.Conditions:
-                    this._Conditions.SetTo((SourceSetList<Condition>)obj);
+                    this._Conditions.SetTo((ISetList<Condition>)obj);
                     break;
                 case LogEntry_FieldIndex.Entry:
                     this.Entry = (String)obj;
@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (LogEntry.Flag)pair.Value;
                     break;
                 case LogEntry_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((SourceSetList<Condition>)pair.Value);
+                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
                     break;
                 case LogEntry_FieldIndex.Entry:
                     obj.Entry = (String)pair.Value;
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ILogEntry item)
         {
-            ((LogEntryCommon)item.CommonInstance).Clear(item: item);
+            ((LogEntryCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static LogEntry_Mask<bool> GetEqualsMask(
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILogEntryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LogEntryCommon)item.CommonInstance).GetEqualsMask(
+            return ((LogEntryCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LogEntry_Mask<bool> printMask = null)
         {
-            return ((LogEntryCommon)item.CommonInstance).ToString(
+            return ((LogEntryCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -804,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LogEntry_Mask<bool> printMask = null)
         {
-            ((LogEntryCommon)item.CommonInstance).ToString(
+            ((LogEntryCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -815,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILogEntryGetter item,
             LogEntry_Mask<bool?> checkMask)
         {
-            return ((LogEntryCommon)item.CommonInstance).HasBeenSet(
+            return ((LogEntryCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LogEntry_Mask<bool> GetHasBeenSetMask(this ILogEntryGetter item)
         {
             var ret = new LogEntry_Mask<bool>();
-            ((LogEntryCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((LogEntryCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILogEntryGetter item,
             ILogEntryGetter rhs)
         {
-            return ((LogEntryCommon)item.CommonInstance).Equals(
+            return ((LogEntryCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LogEntry_FieldIndex.Flags:
                     return typeof(LogEntry.Flag);
                 case LogEntry_FieldIndex.Conditions:
-                    return typeof(SourceSetList<Condition>);
+                    return typeof(ISetList<Condition>);
                 case LogEntry_FieldIndex.Entry:
                     return typeof(String);
                 case LogEntry_FieldIndex.ResultScript:
@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new LogEntry_Mask<bool>();
-            ((LogEntryCommon)item.CommonInstance).FillEqualsMask(
+            ((LogEntryCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

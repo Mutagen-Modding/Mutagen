@@ -77,24 +77,6 @@ namespace Mutagen.Bethesda.Generation
                     SkipIfOnlyOneLine = true
                 })
                 {
-                    var data = field.Field.GetFieldData();
-                    switch (data.BinaryWrapperFallback)
-                    {
-                        case BinaryGenerationType.Custom:
-                            this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
-                                fg: fg,
-                                objGen: objGen,
-                                typeGen: field.Field,
-                                dataAccessor: dataAccessor,
-                                currentPosition: ref dataPassedLength,
-                                dataType: dataType);
-                            continue;
-                        case BinaryGenerationType.DoNothing:
-                        case BinaryGenerationType.NoGeneration:
-                            continue;
-                        default:
-                            break;
-                    }
                     subTypeGen.GenerateWrapperFields(
                         fg,
                         objGen,

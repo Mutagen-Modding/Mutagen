@@ -210,15 +210,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IFloraInternalGetter rhs)) return false;
-            return ((FloraCommon)this.CommonInstance).Equals(this, rhs);
+            return ((FloraCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Flora obj)
         {
-            return ((FloraCommon)this.CommonInstance).Equals(this, obj);
+            return ((FloraCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((FloraCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((FloraCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -471,17 +471,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Flora(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Flora obj, Flora rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Flora(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -958,7 +947,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IFloraInternal item)
         {
-            ((FloraCommon)item.CommonInstance).Clear(item: item);
+            ((FloraCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Flora_Mask<bool> GetEqualsMask(
@@ -966,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
             IFloraInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FloraCommon)item.CommonInstance).GetEqualsMask(
+            return ((FloraCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -977,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Flora_Mask<bool> printMask = null)
         {
-            return ((FloraCommon)item.CommonInstance).ToString(
+            return ((FloraCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -989,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Flora_Mask<bool> printMask = null)
         {
-            ((FloraCommon)item.CommonInstance).ToString(
+            ((FloraCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1000,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraInternalGetter item,
             Flora_Mask<bool?> checkMask)
         {
-            return ((FloraCommon)item.CommonInstance).HasBeenSet(
+            return ((FloraCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1008,7 +997,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Flora_Mask<bool> GetHasBeenSetMask(this IFloraInternalGetter item)
         {
             var ret = new Flora_Mask<bool>();
-            ((FloraCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((FloraCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1018,7 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraInternalGetter item,
             IFloraInternalGetter rhs)
         {
-            return ((FloraCommon)item.CommonInstance).Equals(
+            return ((FloraCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1564,7 +1553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Flora_Mask<bool>();
-            ((FloraCommon)item.CommonInstance).FillEqualsMask(
+            ((FloraCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1843,6 +1832,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Flora obj, Flora rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Flora(getNextFormKey());
+            ret.CopyFieldsFrom((Flora)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Flora)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

@@ -180,15 +180,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IHairInternalGetter rhs)) return false;
-            return ((HairCommon)this.CommonInstance).Equals(this, rhs);
+            return ((HairCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Hair obj)
         {
-            return ((HairCommon)this.CommonInstance).Equals(this, obj);
+            return ((HairCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((HairCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((HairCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -397,17 +397,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Hair(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Hair obj, Hair rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Hair(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -825,7 +814,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IHairInternal item)
         {
-            ((HairCommon)item.CommonInstance).Clear(item: item);
+            ((HairCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Hair_Mask<bool> GetEqualsMask(
@@ -833,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
             IHairInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((HairCommon)item.CommonInstance).GetEqualsMask(
+            return ((HairCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -844,7 +833,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Hair_Mask<bool> printMask = null)
         {
-            return ((HairCommon)item.CommonInstance).ToString(
+            return ((HairCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -856,7 +845,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Hair_Mask<bool> printMask = null)
         {
-            ((HairCommon)item.CommonInstance).ToString(
+            ((HairCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -867,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IHairInternalGetter item,
             Hair_Mask<bool?> checkMask)
         {
-            return ((HairCommon)item.CommonInstance).HasBeenSet(
+            return ((HairCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -875,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Hair_Mask<bool> GetHasBeenSetMask(this IHairInternalGetter item)
         {
             var ret = new Hair_Mask<bool>();
-            ((HairCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((HairCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -885,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IHairInternalGetter item,
             IHairInternalGetter rhs)
         {
-            return ((HairCommon)item.CommonInstance).Equals(
+            return ((HairCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1320,7 +1309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Hair_Mask<bool>();
-            ((HairCommon)item.CommonInstance).FillEqualsMask(
+            ((HairCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1561,6 +1550,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Hair obj, Hair rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Hair(getNextFormKey());
+            ret.CopyFieldsFrom((Hair)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Hair)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

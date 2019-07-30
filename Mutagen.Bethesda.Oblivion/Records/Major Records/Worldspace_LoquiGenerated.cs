@@ -404,15 +404,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IWorldspaceInternalGetter rhs)) return false;
-            return ((WorldspaceCommon)this.CommonInstance).Equals(this, rhs);
+            return ((WorldspaceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Worldspace obj)
         {
-            return ((WorldspaceCommon)this.CommonInstance).Equals(this, obj);
+            return ((WorldspaceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WorldspaceCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -693,17 +693,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Worldspace(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Worldspace(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1123,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.SubCellsTimestamp = (Byte[])obj;
                     break;
                 case Worldspace_FieldIndex.SubCells:
-                    this._SubCells.SetTo((SourceSetList<WorldspaceBlock>)obj);
+                    this._SubCells.SetTo((ISetList<WorldspaceBlock>)obj);
                     break;
                 case Worldspace_FieldIndex.UsingOffsetLength:
                     this.UsingOffsetLength = (Boolean)obj;
@@ -1200,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.SubCellsTimestamp = (Byte[])pair.Value;
                     break;
                 case Worldspace_FieldIndex.SubCells:
-                    obj._SubCells.SetTo((SourceSetList<WorldspaceBlock>)pair.Value);
+                    obj._SubCells.SetTo((ISetList<WorldspaceBlock>)pair.Value);
                     break;
                 case Worldspace_FieldIndex.UsingOffsetLength:
                     obj.UsingOffsetLength = (Boolean)pair.Value;
@@ -1398,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IWorldspaceInternal item)
         {
-            ((WorldspaceCommon)item.CommonInstance).Clear(item: item);
+            ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Worldspace_Mask<bool> GetEqualsMask(
@@ -1406,7 +1395,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWorldspaceInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WorldspaceCommon)item.CommonInstance).GetEqualsMask(
+            return ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1417,7 +1406,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Worldspace_Mask<bool> printMask = null)
         {
-            return ((WorldspaceCommon)item.CommonInstance).ToString(
+            return ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1429,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Worldspace_Mask<bool> printMask = null)
         {
-            ((WorldspaceCommon)item.CommonInstance).ToString(
+            ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1440,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceInternalGetter item,
             Worldspace_Mask<bool?> checkMask)
         {
-            return ((WorldspaceCommon)item.CommonInstance).HasBeenSet(
+            return ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1448,7 +1437,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Worldspace_Mask<bool> GetHasBeenSetMask(this IWorldspaceInternalGetter item)
         {
             var ret = new Worldspace_Mask<bool>();
-            ((WorldspaceCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1458,7 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceInternalGetter item,
             IWorldspaceInternalGetter rhs)
         {
-            return ((WorldspaceCommon)item.CommonInstance).Equals(
+            return ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1795,7 +1784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCellsTimestamp:
                     return typeof(Byte[]);
                 case Worldspace_FieldIndex.SubCells:
-                    return typeof(SourceSetList<WorldspaceBlock>);
+                    return typeof(ISetList<WorldspaceBlock>);
                 case Worldspace_FieldIndex.UsingOffsetLength:
                     return typeof(Boolean);
                 default:
@@ -2415,7 +2404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Worldspace_Mask<bool>();
-            ((WorldspaceCommon)item.CommonInstance).FillEqualsMask(
+            ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2896,6 +2885,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Worldspace(getNextFormKey());
+            ret.CopyFieldsFrom((Worldspace)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Worldspace)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

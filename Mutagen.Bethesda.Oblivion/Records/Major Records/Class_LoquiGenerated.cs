@@ -242,15 +242,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IClassInternalGetter rhs)) return false;
-            return ((ClassCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ClassCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Class obj)
         {
-            return ((ClassCommon)this.CommonInstance).Equals(this, obj);
+            return ((ClassCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ClassCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ClassCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -476,17 +476,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Class(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Class obj, Class rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Class(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -833,13 +822,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Icon = (String)obj;
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
-                    this._PrimaryAttributes.SetTo((SourceSetList<ActorValue>)obj);
+                    this._PrimaryAttributes.SetTo((IList<ActorValue>)obj);
                     break;
                 case Class_FieldIndex.Specialization:
                     this.Specialization = (Class.SpecializationFlag)obj;
                     break;
                 case Class_FieldIndex.SecondaryAttributes:
-                    this._SecondaryAttributes.SetTo((SourceSetList<ActorValue>)obj);
+                    this._SecondaryAttributes.SetTo((IList<ActorValue>)obj);
                     break;
                 case Class_FieldIndex.Flags:
                     this.Flags = (ClassFlag)obj;
@@ -892,13 +881,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Icon = (String)pair.Value;
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
-                    obj._PrimaryAttributes.SetTo((SourceSetList<ActorValue>)pair.Value);
+                    obj._PrimaryAttributes.SetTo((IList<ActorValue>)pair.Value);
                     break;
                 case Class_FieldIndex.Specialization:
                     obj.Specialization = (Class.SpecializationFlag)pair.Value;
                     break;
                 case Class_FieldIndex.SecondaryAttributes:
-                    obj._SecondaryAttributes.SetTo((SourceSetList<ActorValue>)pair.Value);
+                    obj._SecondaryAttributes.SetTo((IList<ActorValue>)pair.Value);
                     break;
                 case Class_FieldIndex.Flags:
                     obj.Flags = (ClassFlag)pair.Value;
@@ -1030,7 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IClassInternal item)
         {
-            ((ClassCommon)item.CommonInstance).Clear(item: item);
+            ((ClassCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Class_Mask<bool> GetEqualsMask(
@@ -1038,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion
             IClassInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ClassCommon)item.CommonInstance).GetEqualsMask(
+            return ((ClassCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1049,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Class_Mask<bool> printMask = null)
         {
-            return ((ClassCommon)item.CommonInstance).ToString(
+            return ((ClassCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1061,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Class_Mask<bool> printMask = null)
         {
-            ((ClassCommon)item.CommonInstance).ToString(
+            ((ClassCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1072,7 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassInternalGetter item,
             Class_Mask<bool?> checkMask)
         {
-            return ((ClassCommon)item.CommonInstance).HasBeenSet(
+            return ((ClassCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1080,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Class_Mask<bool> GetHasBeenSetMask(this IClassInternalGetter item)
         {
             var ret = new Class_Mask<bool>();
-            ((ClassCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ClassCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1090,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassInternalGetter item,
             IClassInternalGetter rhs)
         {
-            return ((ClassCommon)item.CommonInstance).Equals(
+            return ((ClassCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1345,11 +1334,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.Icon:
                     return typeof(String);
                 case Class_FieldIndex.PrimaryAttributes:
-                    return typeof(SourceSetList<ActorValue>);
+                    return typeof(IList<ActorValue>);
                 case Class_FieldIndex.Specialization:
                     return typeof(Class.SpecializationFlag);
                 case Class_FieldIndex.SecondaryAttributes:
-                    return typeof(SourceSetList<ActorValue>);
+                    return typeof(IList<ActorValue>);
                 case Class_FieldIndex.Flags:
                     return typeof(ClassFlag);
                 case Class_FieldIndex.ClassServices:
@@ -1685,7 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Class_Mask<bool>();
-            ((ClassCommon)item.CommonInstance).FillEqualsMask(
+            ((ClassCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1991,6 +1980,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Class obj, Class rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Class(getNextFormKey());
+            ret.CopyFieldsFrom((Class)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Class)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

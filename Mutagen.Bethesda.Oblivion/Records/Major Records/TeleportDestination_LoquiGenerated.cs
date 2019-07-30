@@ -99,15 +99,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ITeleportDestinationGetter rhs)) return false;
-            return ((TeleportDestinationCommon)this.CommonInstance).Equals(this, rhs);
+            return ((TeleportDestinationCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(TeleportDestination obj)
         {
-            return ((TeleportDestinationCommon)this.CommonInstance).Equals(this, obj);
+            return ((TeleportDestinationCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((TeleportDestinationCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((TeleportDestinationCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ITeleportDestination item)
         {
-            ((TeleportDestinationCommon)item.CommonInstance).Clear(item: item);
+            ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static TeleportDestination_Mask<bool> GetEqualsMask(
@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
             ITeleportDestinationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((TeleportDestinationCommon)item.CommonInstance).GetEqualsMask(
+            return ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             TeleportDestination_Mask<bool> printMask = null)
         {
-            return ((TeleportDestinationCommon)item.CommonInstance).ToString(
+            return ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             TeleportDestination_Mask<bool> printMask = null)
         {
-            ((TeleportDestinationCommon)item.CommonInstance).ToString(
+            ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITeleportDestinationGetter item,
             TeleportDestination_Mask<bool?> checkMask)
         {
-            return ((TeleportDestinationCommon)item.CommonInstance).HasBeenSet(
+            return ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static TeleportDestination_Mask<bool> GetHasBeenSetMask(this ITeleportDestinationGetter item)
         {
             var ret = new TeleportDestination_Mask<bool>();
-            ((TeleportDestinationCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITeleportDestinationGetter item,
             ITeleportDestinationGetter rhs)
         {
-            return ((TeleportDestinationCommon)item.CommonInstance).Equals(
+            return ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new TeleportDestination_Mask<bool>();
-            ((TeleportDestinationCommon)item.CommonInstance).FillEqualsMask(
+            ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

@@ -168,15 +168,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IBirthsignInternalGetter rhs)) return false;
-            return ((BirthsignCommon)this.CommonInstance).Equals(this, rhs);
+            return ((BirthsignCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Birthsign obj)
         {
-            return ((BirthsignCommon)this.CommonInstance).Equals(this, obj);
+            return ((BirthsignCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((BirthsignCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((BirthsignCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -416,17 +416,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Birthsign(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Birthsign obj, Birthsign rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Birthsign(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -701,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case Birthsign_FieldIndex.Spells:
-                    this._Spells.SetTo((SourceSetList<IFormIDLink<Spell>>)obj);
+                    this._Spells.SetTo((ISetList<IFormIDLink<Spell>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -742,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case Birthsign_FieldIndex.Spells:
-                    obj._Spells.SetTo((SourceSetList<IFormIDLink<Spell>>)pair.Value);
+                    obj._Spells.SetTo((ISetList<IFormIDLink<Spell>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -828,7 +817,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IBirthsignInternal item)
         {
-            ((BirthsignCommon)item.CommonInstance).Clear(item: item);
+            ((BirthsignCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Birthsign_Mask<bool> GetEqualsMask(
@@ -836,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
             IBirthsignInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BirthsignCommon)item.CommonInstance).GetEqualsMask(
+            return ((BirthsignCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -847,7 +836,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Birthsign_Mask<bool> printMask = null)
         {
-            return ((BirthsignCommon)item.CommonInstance).ToString(
+            return ((BirthsignCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -859,7 +848,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Birthsign_Mask<bool> printMask = null)
         {
-            ((BirthsignCommon)item.CommonInstance).ToString(
+            ((BirthsignCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -870,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBirthsignInternalGetter item,
             Birthsign_Mask<bool?> checkMask)
         {
-            return ((BirthsignCommon)item.CommonInstance).HasBeenSet(
+            return ((BirthsignCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -878,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Birthsign_Mask<bool> GetHasBeenSetMask(this IBirthsignInternalGetter item)
         {
             var ret = new Birthsign_Mask<bool>();
-            ((BirthsignCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((BirthsignCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -888,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBirthsignInternalGetter item,
             IBirthsignInternalGetter rhs)
         {
-            return ((BirthsignCommon)item.CommonInstance).Equals(
+            return ((BirthsignCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1082,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Birthsign_FieldIndex.Description:
                     return typeof(String);
                 case Birthsign_FieldIndex.Spells:
-                    return typeof(SourceSetList<IFormIDLink<Spell>>);
+                    return typeof(ISetList<IFormIDLink<Spell>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1290,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Birthsign_Mask<bool>();
-            ((BirthsignCommon)item.CommonInstance).FillEqualsMask(
+            ((BirthsignCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1541,6 +1530,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Birthsign obj, Birthsign rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Birthsign(getNextFormKey());
+            ret.CopyFieldsFrom((Birthsign)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Birthsign)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

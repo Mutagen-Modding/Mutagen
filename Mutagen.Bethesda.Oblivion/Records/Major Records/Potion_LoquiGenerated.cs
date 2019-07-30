@@ -244,15 +244,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IPotionInternalGetter rhs)) return false;
-            return ((PotionCommon)this.CommonInstance).Equals(this, rhs);
+            return ((PotionCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Potion obj)
         {
-            return ((PotionCommon)this.CommonInstance).Equals(this, obj);
+            return ((PotionCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PotionCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((PotionCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -511,17 +511,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Potion(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Potion obj, Potion rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Potion(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -867,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (IngredientFlag)obj;
                     break;
                 case Potion_FieldIndex.Effects:
-                    this._Effects.SetTo((SourceSetList<Effect>)obj);
+                    this._Effects.SetTo((ISetList<Effect>)obj);
                     break;
                 case Potion_FieldIndex.ENITDataTypeState:
                     this.ENITDataTypeState = (Potion.ENITDataType)obj;
@@ -923,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (IngredientFlag)pair.Value;
                     break;
                 case Potion_FieldIndex.Effects:
-                    obj._Effects.SetTo((SourceSetList<Effect>)pair.Value);
+                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
                     break;
                 case Potion_FieldIndex.ENITDataTypeState:
                     obj.ENITDataTypeState = (Potion.ENITDataType)pair.Value;
@@ -1049,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IPotionInternal item)
         {
-            ((PotionCommon)item.CommonInstance).Clear(item: item);
+            ((PotionCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Potion_Mask<bool> GetEqualsMask(
@@ -1057,7 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion
             IPotionInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PotionCommon)item.CommonInstance).GetEqualsMask(
+            return ((PotionCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1068,7 +1057,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Potion_Mask<bool> printMask = null)
         {
-            return ((PotionCommon)item.CommonInstance).ToString(
+            return ((PotionCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1080,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Potion_Mask<bool> printMask = null)
         {
-            ((PotionCommon)item.CommonInstance).ToString(
+            ((PotionCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1091,7 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPotionInternalGetter item,
             Potion_Mask<bool?> checkMask)
         {
-            return ((PotionCommon)item.CommonInstance).HasBeenSet(
+            return ((PotionCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1099,7 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Potion_Mask<bool> GetHasBeenSetMask(this IPotionInternalGetter item)
         {
             var ret = new Potion_Mask<bool>();
-            ((PotionCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((PotionCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1109,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPotionInternalGetter item,
             IPotionInternalGetter rhs)
         {
-            return ((PotionCommon)item.CommonInstance).Equals(
+            return ((PotionCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1362,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Flags:
                     return typeof(IngredientFlag);
                 case Potion_FieldIndex.Effects:
-                    return typeof(SourceSetList<Effect>);
+                    return typeof(ISetList<Effect>);
                 case Potion_FieldIndex.ENITDataTypeState:
                     return typeof(Potion.ENITDataType);
                 default:
@@ -1704,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Potion_Mask<bool>();
-            ((PotionCommon)item.CommonInstance).FillEqualsMask(
+            ((PotionCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2049,6 +2038,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Potion obj, Potion rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Potion(getNextFormKey());
+            ret.CopyFieldsFrom((Potion)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Potion)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

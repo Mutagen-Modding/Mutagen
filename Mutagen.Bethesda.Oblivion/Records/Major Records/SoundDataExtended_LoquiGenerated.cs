@@ -109,15 +109,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ISoundDataExtendedInternalGetter rhs)) return false;
-            return ((SoundDataExtendedCommon)this.CommonInstance).Equals(this, rhs);
+            return ((SoundDataExtendedCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(SoundDataExtended obj)
         {
-            return ((SoundDataExtendedCommon)this.CommonInstance).Equals(this, obj);
+            return ((SoundDataExtendedCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SoundDataExtendedCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SoundDataExtendedCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ISoundDataExtendedInternal item)
         {
-            ((SoundDataExtendedCommon)item.CommonInstance).Clear(item: item);
+            ((SoundDataExtendedCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static SoundDataExtended_Mask<bool> GetEqualsMask(
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISoundDataExtendedInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SoundDataExtendedCommon)item.CommonInstance).GetEqualsMask(
+            return ((SoundDataExtendedCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -622,7 +622,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SoundDataExtended_Mask<bool> printMask = null)
         {
-            return ((SoundDataExtendedCommon)item.CommonInstance).ToString(
+            return ((SoundDataExtendedCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SoundDataExtended_Mask<bool> printMask = null)
         {
-            ((SoundDataExtendedCommon)item.CommonInstance).ToString(
+            ((SoundDataExtendedCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataExtendedInternalGetter item,
             SoundDataExtended_Mask<bool?> checkMask)
         {
-            return ((SoundDataExtendedCommon)item.CommonInstance).HasBeenSet(
+            return ((SoundDataExtendedCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SoundDataExtended_Mask<bool> GetHasBeenSetMask(this ISoundDataExtendedInternalGetter item)
         {
             var ret = new SoundDataExtended_Mask<bool>();
-            ((SoundDataExtendedCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((SoundDataExtendedCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataExtendedInternalGetter item,
             ISoundDataExtendedInternalGetter rhs)
         {
-            return ((SoundDataExtendedCommon)item.CommonInstance).Equals(
+            return ((SoundDataExtendedCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SoundDataExtended_Mask<bool>();
-            ((SoundDataExtendedCommon)item.CommonInstance).FillEqualsMask(
+            ((SoundDataExtendedCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

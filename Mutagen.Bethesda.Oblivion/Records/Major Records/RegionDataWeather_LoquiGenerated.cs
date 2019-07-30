@@ -88,15 +88,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRegionDataWeatherInternalGetter rhs)) return false;
-            return ((RegionDataWeatherCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RegionDataWeatherCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(RegionDataWeather obj)
         {
-            return ((RegionDataWeatherCommon)this.CommonInstance).Equals(this, obj);
+            return ((RegionDataWeatherCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RegionDataWeatherCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RegionDataWeatherCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataWeather_FieldIndex.Weathers:
-                    this._Weathers.SetTo((SourceSetList<WeatherChance>)obj);
+                    this._Weathers.SetTo((ISetList<WeatherChance>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataWeather_FieldIndex.Weathers:
-                    obj._Weathers.SetTo((SourceSetList<WeatherChance>)pair.Value);
+                    obj._Weathers.SetTo((ISetList<WeatherChance>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRegionDataWeatherInternal item)
         {
-            ((RegionDataWeatherCommon)item.CommonInstance).Clear(item: item);
+            ((RegionDataWeatherCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static RegionDataWeather_Mask<bool> GetEqualsMask(
@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionDataWeatherInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionDataWeatherCommon)item.CommonInstance).GetEqualsMask(
+            return ((RegionDataWeatherCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionDataWeather_Mask<bool> printMask = null)
         {
-            return ((RegionDataWeatherCommon)item.CommonInstance).ToString(
+            return ((RegionDataWeatherCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionDataWeather_Mask<bool> printMask = null)
         {
-            ((RegionDataWeatherCommon)item.CommonInstance).ToString(
+            ((RegionDataWeatherCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -667,7 +667,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataWeatherInternalGetter item,
             RegionDataWeather_Mask<bool?> checkMask)
         {
-            return ((RegionDataWeatherCommon)item.CommonInstance).HasBeenSet(
+            return ((RegionDataWeatherCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionDataWeather_Mask<bool> GetHasBeenSetMask(this IRegionDataWeatherInternalGetter item)
         {
             var ret = new RegionDataWeather_Mask<bool>();
-            ((RegionDataWeatherCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RegionDataWeatherCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataWeatherInternalGetter item,
             IRegionDataWeatherInternalGetter rhs)
         {
-            return ((RegionDataWeatherCommon)item.CommonInstance).Equals(
+            return ((RegionDataWeatherCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataWeather_FieldIndex.Weathers:
-                    return typeof(SourceSetList<WeatherChance>);
+                    return typeof(ISetList<WeatherChance>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionDataWeather_Mask<bool>();
-            ((RegionDataWeatherCommon)item.CommonInstance).FillEqualsMask(
+            ((RegionDataWeatherCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

@@ -162,15 +162,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ILeveledEntryGetter<T> rhs)) return false;
-            return ((LeveledEntryCommon)this.CommonInstance).Equals(this, rhs);
+            return ((LeveledEntryCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(LeveledEntry<T> obj)
         {
-            return ((LeveledEntryCommon)this.CommonInstance).Equals(this, obj);
+            return ((LeveledEntryCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LeveledEntryCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LeveledEntryCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void Clear<T>(this ILeveledEntry<T> item)
             where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
         {
-            ((LeveledEntryCommon)item.CommonInstance).Clear(item: item);
+            ((LeveledEntryCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static LeveledEntry_Mask<bool> GetEqualsMask<T>(
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Oblivion
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
             where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((LeveledEntryCommon)item.CommonInstance).GetEqualsMask(
+            return ((LeveledEntryCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledEntry_Mask<bool> printMask = null)
             where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((LeveledEntryCommon)item.CommonInstance).ToString(
+            return ((LeveledEntryCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledEntry_Mask<bool> printMask = null)
             where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            ((LeveledEntryCommon)item.CommonInstance).ToString(
+            ((LeveledEntryCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledEntry_Mask<bool?> checkMask)
             where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((LeveledEntryCommon)item.CommonInstance).HasBeenSet(
+            return ((LeveledEntryCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -785,7 +785,7 @@ namespace Mutagen.Bethesda.Oblivion
             where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             var ret = new LeveledEntry_Mask<bool>();
-            ((LeveledEntryCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((LeveledEntryCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILeveledEntryGetter<T> rhs)
             where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((LeveledEntryCommon)item.CommonInstance).Equals(
+            return ((LeveledEntryCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             var ret = new LeveledEntry_Mask<bool>();
-            ((LeveledEntryCommon)item.CommonInstance).FillEqualsMask(
+            ((LeveledEntryCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

@@ -74,15 +74,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IGameSettingInternalGetter rhs)) return false;
-            return ((GameSettingCommon)this.CommonInstance).Equals(this, rhs);
+            return ((GameSettingCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(GameSetting obj)
         {
-            return ((GameSettingCommon)this.CommonInstance).Equals(this, obj);
+            return ((GameSettingCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GameSettingCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((GameSettingCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IGameSettingInternal item)
         {
-            ((GameSettingCommon)item.CommonInstance).Clear(item: item);
+            ((GameSettingCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static GameSetting_Mask<bool> GetEqualsMask(
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
             IGameSettingInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GameSettingCommon)item.CommonInstance).GetEqualsMask(
+            return ((GameSettingCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             GameSetting_Mask<bool> printMask = null)
         {
-            return ((GameSettingCommon)item.CommonInstance).ToString(
+            return ((GameSettingCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             GameSetting_Mask<bool> printMask = null)
         {
-            ((GameSettingCommon)item.CommonInstance).ToString(
+            ((GameSettingCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGameSettingInternalGetter item,
             GameSetting_Mask<bool?> checkMask)
         {
-            return ((GameSettingCommon)item.CommonInstance).HasBeenSet(
+            return ((GameSettingCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static GameSetting_Mask<bool> GetHasBeenSetMask(this IGameSettingInternalGetter item)
         {
             var ret = new GameSetting_Mask<bool>();
-            ((GameSettingCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((GameSettingCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGameSettingInternalGetter item,
             IGameSettingInternalGetter rhs)
         {
-            return ((GameSettingCommon)item.CommonInstance).Equals(
+            return ((GameSettingCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -721,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new GameSetting_Mask<bool>();
-            ((GameSettingCommon)item.CommonInstance).FillEqualsMask(
+            ((GameSettingCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -891,6 +891,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(GameSetting obj, GameSetting rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
     }
     #endregion

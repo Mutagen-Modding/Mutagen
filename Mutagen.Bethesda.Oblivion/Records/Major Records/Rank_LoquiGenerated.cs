@@ -178,15 +178,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRankGetter rhs)) return false;
-            return ((RankCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RankCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Rank obj)
         {
-            return ((RankCommon)this.CommonInstance).Equals(this, obj);
+            return ((RankCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RankCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RankCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRank item)
         {
-            ((RankCommon)item.CommonInstance).Clear(item: item);
+            ((RankCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Rank_Mask<bool> GetEqualsMask(
@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRankGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RankCommon)item.CommonInstance).GetEqualsMask(
+            return ((RankCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Rank_Mask<bool> printMask = null)
         {
-            return ((RankCommon)item.CommonInstance).ToString(
+            return ((RankCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Rank_Mask<bool> printMask = null)
         {
-            ((RankCommon)item.CommonInstance).ToString(
+            ((RankCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRankGetter item,
             Rank_Mask<bool?> checkMask)
         {
-            return ((RankCommon)item.CommonInstance).HasBeenSet(
+            return ((RankCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Rank_Mask<bool> GetHasBeenSetMask(this IRankGetter item)
         {
             var ret = new Rank_Mask<bool>();
-            ((RankCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RankCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -798,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRankGetter item,
             IRankGetter rhs)
         {
-            return ((RankCommon)item.CommonInstance).Equals(
+            return ((RankCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Rank_Mask<bool>();
-            ((RankCommon)item.CommonInstance).FillEqualsMask(
+            ((RankCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

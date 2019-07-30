@@ -317,15 +317,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ILightInternalGetter rhs)) return false;
-            return ((LightCommon)this.CommonInstance).Equals(this, rhs);
+            return ((LightCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Light obj)
         {
-            return ((LightCommon)this.CommonInstance).Equals(this, obj);
+            return ((LightCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LightCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LightCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -586,17 +586,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Light(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Light obj, Light rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Light(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1239,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ILightInternal item)
         {
-            ((LightCommon)item.CommonInstance).Clear(item: item);
+            ((LightCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Light_Mask<bool> GetEqualsMask(
@@ -1247,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILightInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LightCommon)item.CommonInstance).GetEqualsMask(
+            return ((LightCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1258,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Light_Mask<bool> printMask = null)
         {
-            return ((LightCommon)item.CommonInstance).ToString(
+            return ((LightCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1270,7 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Light_Mask<bool> printMask = null)
         {
-            ((LightCommon)item.CommonInstance).ToString(
+            ((LightCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1281,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILightInternalGetter item,
             Light_Mask<bool?> checkMask)
         {
-            return ((LightCommon)item.CommonInstance).HasBeenSet(
+            return ((LightCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1289,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Light_Mask<bool> GetHasBeenSetMask(this ILightInternalGetter item)
         {
             var ret = new Light_Mask<bool>();
-            ((LightCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((LightCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1299,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILightInternalGetter item,
             ILightInternalGetter rhs)
         {
-            return ((LightCommon)item.CommonInstance).Equals(
+            return ((LightCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -2058,7 +2047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Light_Mask<bool>();
-            ((LightCommon)item.CommonInstance).FillEqualsMask(
+            ((LightCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2434,6 +2423,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Light obj, Light rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Light(getNextFormKey());
+            ret.CopyFieldsFrom((Light)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Light)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

@@ -154,15 +154,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ISpellUnleveledInternalGetter rhs)) return false;
-            return ((SpellUnleveledCommon)this.CommonInstance).Equals(this, rhs);
+            return ((SpellUnleveledCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(SpellUnleveled obj)
         {
-            return ((SpellUnleveledCommon)this.CommonInstance).Equals(this, obj);
+            return ((SpellUnleveledCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SpellUnleveledCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SpellUnleveledCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -412,17 +412,6 @@ namespace Mutagen.Bethesda.Oblivion
         public SpellUnleveled(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(SpellUnleveled obj, SpellUnleveled rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new SpellUnleveled(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -701,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flag = (Spell.SpellFlag)obj;
                     break;
                 case SpellUnleveled_FieldIndex.Effects:
-                    this._Effects.SetTo((SourceSetList<Effect>)obj);
+                    this._Effects.SetTo((ISetList<Effect>)obj);
                     break;
                 case SpellUnleveled_FieldIndex.SPITDataTypeState:
                     this.SPITDataTypeState = (SpellUnleveled.SPITDataType)obj;
@@ -748,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flag = (Spell.SpellFlag)pair.Value;
                     break;
                 case SpellUnleveled_FieldIndex.Effects:
-                    obj._Effects.SetTo((SourceSetList<Effect>)pair.Value);
+                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
                     break;
                 case SpellUnleveled_FieldIndex.SPITDataTypeState:
                     obj.SPITDataTypeState = (SpellUnleveled.SPITDataType)pair.Value;
@@ -837,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ISpellUnleveledInternal item)
         {
-            ((SpellUnleveledCommon)item.CommonInstance).Clear(item: item);
+            ((SpellUnleveledCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static SpellUnleveled_Mask<bool> GetEqualsMask(
@@ -845,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISpellUnleveledInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SpellUnleveledCommon)item.CommonInstance).GetEqualsMask(
+            return ((SpellUnleveledCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -856,7 +845,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SpellUnleveled_Mask<bool> printMask = null)
         {
-            return ((SpellUnleveledCommon)item.CommonInstance).ToString(
+            return ((SpellUnleveledCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -868,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SpellUnleveled_Mask<bool> printMask = null)
         {
-            ((SpellUnleveledCommon)item.CommonInstance).ToString(
+            ((SpellUnleveledCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -879,7 +868,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISpellUnleveledInternalGetter item,
             SpellUnleveled_Mask<bool?> checkMask)
         {
-            return ((SpellUnleveledCommon)item.CommonInstance).HasBeenSet(
+            return ((SpellUnleveledCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -887,7 +876,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SpellUnleveled_Mask<bool> GetHasBeenSetMask(this ISpellUnleveledInternalGetter item)
         {
             var ret = new SpellUnleveled_Mask<bool>();
-            ((SpellUnleveledCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((SpellUnleveledCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -897,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISpellUnleveledInternalGetter item,
             ISpellUnleveledInternalGetter rhs)
         {
-            return ((SpellUnleveledCommon)item.CommonInstance).Equals(
+            return ((SpellUnleveledCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1115,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SpellUnleveled_FieldIndex.Flag:
                     return typeof(Spell.SpellFlag);
                 case SpellUnleveled_FieldIndex.Effects:
-                    return typeof(SourceSetList<Effect>);
+                    return typeof(ISetList<Effect>);
                 case SpellUnleveled_FieldIndex.SPITDataTypeState:
                     return typeof(SpellUnleveled.SPITDataType);
                 default:
@@ -1327,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SpellUnleveled_Mask<bool>();
-            ((SpellUnleveledCommon)item.CommonInstance).FillEqualsMask(
+            ((SpellUnleveledCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1636,6 +1625,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(SpellUnleveled obj, SpellUnleveled rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new SpellUnleveled(getNextFormKey());
+            ret.CopyFieldsFrom((SpellUnleveled)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (SpellUnleveled)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

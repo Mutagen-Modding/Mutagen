@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>cbcdb5825d1b6257e96d3ada82f273a99a65c8b6</Sha>
+         <Sha>24a31421351bf5088ed5c6aede8492fce88fa5f4</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-21-2019 17:03:19</CommitDate>
-         <Description>SetBaseClass option to not set base class if unspecified</Description>
+         <CommitDate>07-28-2019 14:01:27</CommitDate>
+         <Description>ListType:  TypeName swapped to ListInterface usage</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

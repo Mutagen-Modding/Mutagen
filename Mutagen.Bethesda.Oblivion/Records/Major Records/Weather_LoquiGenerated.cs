@@ -605,15 +605,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IWeatherInternalGetter rhs)) return false;
-            return ((WeatherCommon)this.CommonInstance).Equals(this, rhs);
+            return ((WeatherCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Weather obj)
         {
-            return ((WeatherCommon)this.CommonInstance).Equals(this, obj);
+            return ((WeatherCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WeatherCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((WeatherCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -914,17 +914,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Weather(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Weather obj, Weather rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Weather(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1472,7 +1461,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case Weather_FieldIndex.WeatherTypes:
-                    this._WeatherTypes.SetTo((SourceSetList<WeatherType>)obj);
+                    this._WeatherTypes.SetTo((ISetList<WeatherType>)obj);
                     break;
                 case Weather_FieldIndex.FogDayNear:
                     this.FogDayNear = (Single)obj;
@@ -1568,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LightningColor = (Color)obj;
                     break;
                 case Weather_FieldIndex.Sounds:
-                    this._Sounds.SetTo((SourceSetList<WeatherSound>)obj);
+                    this._Sounds.SetTo((ISetList<WeatherSound>)obj);
                     break;
                 case Weather_FieldIndex.FNAMDataTypeState:
                     this.FNAMDataTypeState = (Weather.FNAMDataType)obj;
@@ -1618,7 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case Weather_FieldIndex.WeatherTypes:
-                    obj._WeatherTypes.SetTo((SourceSetList<WeatherType>)pair.Value);
+                    obj._WeatherTypes.SetTo((ISetList<WeatherType>)pair.Value);
                     break;
                 case Weather_FieldIndex.FogDayNear:
                     obj.FogDayNear = (Single)pair.Value;
@@ -1714,7 +1703,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LightningColor = (Color)pair.Value;
                     break;
                 case Weather_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((SourceSetList<WeatherSound>)pair.Value);
+                    obj._Sounds.SetTo((ISetList<WeatherSound>)pair.Value);
                     break;
                 case Weather_FieldIndex.FNAMDataTypeState:
                     obj.FNAMDataTypeState = (Weather.FNAMDataType)pair.Value;
@@ -2017,7 +2006,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IWeatherInternal item)
         {
-            ((WeatherCommon)item.CommonInstance).Clear(item: item);
+            ((WeatherCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Weather_Mask<bool> GetEqualsMask(
@@ -2025,7 +2014,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWeatherInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WeatherCommon)item.CommonInstance).GetEqualsMask(
+            return ((WeatherCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -2036,7 +2025,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Weather_Mask<bool> printMask = null)
         {
-            return ((WeatherCommon)item.CommonInstance).ToString(
+            return ((WeatherCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -2048,7 +2037,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Weather_Mask<bool> printMask = null)
         {
-            ((WeatherCommon)item.CommonInstance).ToString(
+            ((WeatherCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -2059,7 +2048,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherInternalGetter item,
             Weather_Mask<bool?> checkMask)
         {
-            return ((WeatherCommon)item.CommonInstance).HasBeenSet(
+            return ((WeatherCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -2067,7 +2056,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Weather_Mask<bool> GetHasBeenSetMask(this IWeatherInternalGetter item)
         {
             var ret = new Weather_Mask<bool>();
-            ((WeatherCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((WeatherCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -2077,7 +2066,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherInternalGetter item,
             IWeatherInternalGetter rhs)
         {
-            return ((WeatherCommon)item.CommonInstance).Equals(
+            return ((WeatherCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -2622,7 +2611,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.Model:
                     return typeof(Model);
                 case Weather_FieldIndex.WeatherTypes:
-                    return typeof(SourceSetList<WeatherType>);
+                    return typeof(ISetList<WeatherType>);
                 case Weather_FieldIndex.FogDayNear:
                     return typeof(Single);
                 case Weather_FieldIndex.FogDayFar:
@@ -2686,7 +2675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.LightningColor:
                     return typeof(Color);
                 case Weather_FieldIndex.Sounds:
-                    return typeof(SourceSetList<WeatherSound>);
+                    return typeof(ISetList<WeatherSound>);
                 case Weather_FieldIndex.FNAMDataTypeState:
                     return typeof(Weather.FNAMDataType);
                 case Weather_FieldIndex.HNAMDataTypeState:
@@ -3534,7 +3523,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Weather_Mask<bool>();
-            ((WeatherCommon)item.CommonInstance).FillEqualsMask(
+            ((WeatherCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -4091,6 +4080,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Weather obj, Weather rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Weather(getNextFormKey());
+            ret.CopyFieldsFrom((Weather)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Weather)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

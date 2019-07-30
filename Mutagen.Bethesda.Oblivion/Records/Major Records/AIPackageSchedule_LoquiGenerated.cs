@@ -114,15 +114,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IAIPackageScheduleGetter rhs)) return false;
-            return ((AIPackageScheduleCommon)this.CommonInstance).Equals(this, rhs);
+            return ((AIPackageScheduleCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(AIPackageSchedule obj)
         {
-            return ((AIPackageScheduleCommon)this.CommonInstance).Equals(this, obj);
+            return ((AIPackageScheduleCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((AIPackageScheduleCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((AIPackageScheduleCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IAIPackageSchedule item)
         {
-            ((AIPackageScheduleCommon)item.CommonInstance).Clear(item: item);
+            ((AIPackageScheduleCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static AIPackageSchedule_Mask<bool> GetEqualsMask(
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
             IAIPackageScheduleGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AIPackageScheduleCommon)item.CommonInstance).GetEqualsMask(
+            return ((AIPackageScheduleCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             AIPackageSchedule_Mask<bool> printMask = null)
         {
-            return ((AIPackageScheduleCommon)item.CommonInstance).ToString(
+            return ((AIPackageScheduleCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             AIPackageSchedule_Mask<bool> printMask = null)
         {
-            ((AIPackageScheduleCommon)item.CommonInstance).ToString(
+            ((AIPackageScheduleCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageScheduleGetter item,
             AIPackageSchedule_Mask<bool?> checkMask)
         {
-            return ((AIPackageScheduleCommon)item.CommonInstance).HasBeenSet(
+            return ((AIPackageScheduleCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageSchedule_Mask<bool> GetHasBeenSetMask(this IAIPackageScheduleGetter item)
         {
             var ret = new AIPackageSchedule_Mask<bool>();
-            ((AIPackageScheduleCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((AIPackageScheduleCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageScheduleGetter item,
             IAIPackageScheduleGetter rhs)
         {
-            return ((AIPackageScheduleCommon)item.CommonInstance).Equals(
+            return ((AIPackageScheduleCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1048,7 +1048,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new AIPackageSchedule_Mask<bool>();
-            ((AIPackageScheduleCommon)item.CommonInstance).FillEqualsMask(
+            ((AIPackageScheduleCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

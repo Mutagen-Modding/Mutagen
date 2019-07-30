@@ -100,15 +100,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IGlobalShortInternalGetter rhs)) return false;
-            return ((GlobalShortCommon)this.CommonInstance).Equals(this, rhs);
+            return ((GlobalShortCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(GlobalShort obj)
         {
-            return ((GlobalShortCommon)this.CommonInstance).Equals(this, obj);
+            return ((GlobalShortCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GlobalShortCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((GlobalShortCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -314,17 +314,6 @@ namespace Mutagen.Bethesda.Oblivion
         public GlobalShort(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(GlobalShort obj, GlobalShort rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new GlobalShort(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -634,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IGlobalShortInternal item)
         {
-            ((GlobalShortCommon)item.CommonInstance).Clear(item: item);
+            ((GlobalShortCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static GlobalShort_Mask<bool> GetEqualsMask(
@@ -642,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
             IGlobalShortInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GlobalShortCommon)item.CommonInstance).GetEqualsMask(
+            return ((GlobalShortCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -653,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             GlobalShort_Mask<bool> printMask = null)
         {
-            return ((GlobalShortCommon)item.CommonInstance).ToString(
+            return ((GlobalShortCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -665,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             GlobalShort_Mask<bool> printMask = null)
         {
-            ((GlobalShortCommon)item.CommonInstance).ToString(
+            ((GlobalShortCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -676,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGlobalShortInternalGetter item,
             GlobalShort_Mask<bool?> checkMask)
         {
-            return ((GlobalShortCommon)item.CommonInstance).HasBeenSet(
+            return ((GlobalShortCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -684,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static GlobalShort_Mask<bool> GetHasBeenSetMask(this IGlobalShortInternalGetter item)
         {
             var ret = new GlobalShort_Mask<bool>();
-            ((GlobalShortCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((GlobalShortCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -694,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGlobalShortInternalGetter item,
             IGlobalShortInternalGetter rhs)
         {
-            return ((GlobalShortCommon)item.CommonInstance).Equals(
+            return ((GlobalShortCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -979,7 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new GlobalShort_Mask<bool>();
-            ((GlobalShortCommon)item.CommonInstance).FillEqualsMask(
+            ((GlobalShortCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1198,6 +1187,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(GlobalShort obj, GlobalShort rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new GlobalShort(getNextFormKey());
+            ret.CopyFieldsFrom((GlobalShort)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (GlobalShort)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

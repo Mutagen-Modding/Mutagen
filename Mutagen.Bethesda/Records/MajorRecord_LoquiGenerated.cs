@@ -129,15 +129,15 @@ namespace Mutagen.Bethesda
         public override bool Equals(object obj)
         {
             if (!(obj is IMajorRecordInternalGetter rhs)) return false;
-            return ((MajorRecordCommon)this.CommonInstance).Equals(this, rhs);
+            return ((MajorRecordCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(MajorRecord obj)
         {
-            return ((MajorRecordCommon)this.CommonInstance).Equals(this, obj);
+            return ((MajorRecordCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((MajorRecordCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((MajorRecordCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -363,7 +363,6 @@ namespace Mutagen.Bethesda
         {
         }
 
-        public abstract IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords = null);
         public virtual IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -651,7 +650,7 @@ namespace Mutagen.Bethesda
     {
         public static void Clear(this IMajorRecordInternal item)
         {
-            ((MajorRecordCommon)item.CommonInstance).Clear(item: item);
+            ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static MajorRecord_Mask<bool> GetEqualsMask(
@@ -659,7 +658,7 @@ namespace Mutagen.Bethesda
             IMajorRecordInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MajorRecordCommon)item.CommonInstance).GetEqualsMask(
+            return ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -670,7 +669,7 @@ namespace Mutagen.Bethesda
             string name = null,
             MajorRecord_Mask<bool> printMask = null)
         {
-            return ((MajorRecordCommon)item.CommonInstance).ToString(
+            return ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -682,7 +681,7 @@ namespace Mutagen.Bethesda
             string name = null,
             MajorRecord_Mask<bool> printMask = null)
         {
-            ((MajorRecordCommon)item.CommonInstance).ToString(
+            ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -693,7 +692,7 @@ namespace Mutagen.Bethesda
             this IMajorRecordInternalGetter item,
             MajorRecord_Mask<bool?> checkMask)
         {
-            return ((MajorRecordCommon)item.CommonInstance).HasBeenSet(
+            return ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -701,7 +700,7 @@ namespace Mutagen.Bethesda
         public static MajorRecord_Mask<bool> GetHasBeenSetMask(this IMajorRecordInternalGetter item)
         {
             var ret = new MajorRecord_Mask<bool>();
-            ((MajorRecordCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -711,10 +710,23 @@ namespace Mutagen.Bethesda
             this IMajorRecordInternalGetter item,
             IMajorRecordInternalGetter rhs)
         {
-            return ((MajorRecordCommon)item.CommonInstance).Equals(
+            return ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
+
+        #region Mutagen
+        public static IMajorRecordCommon Duplicate(
+            this MajorRecord item,
+            Func<FormKey> getNextFormKey,
+            IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords = null)
+        {
+            return ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).Duplicate(
+                item: item,
+                getNextFormKey: getNextFormKey,
+                duplicatedRecords: duplicatedRecords);
+        }
+        #endregion
 
     }
     #endregion
@@ -1186,7 +1198,7 @@ namespace Mutagen.Bethesda.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new MajorRecord_Mask<bool>();
-            ((MajorRecordCommon)item.CommonInstance).FillEqualsMask(
+            ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1318,6 +1330,16 @@ namespace Mutagen.Bethesda.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(MajorRecord obj, MajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public virtual IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
     }
     #endregion

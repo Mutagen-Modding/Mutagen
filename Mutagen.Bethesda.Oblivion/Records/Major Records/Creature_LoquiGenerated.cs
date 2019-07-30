@@ -830,15 +830,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ICreatureInternalGetter rhs)) return false;
-            return ((CreatureCommon)this.CommonInstance).Equals(this, rhs);
+            return ((CreatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Creature obj)
         {
-            return ((CreatureCommon)this.CommonInstance).Equals(this, obj);
+            return ((CreatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((CreatureCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((CreatureCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -1217,17 +1217,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Creature(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Creature obj, Creature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Creature(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1828,13 +1817,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case Creature_FieldIndex.Items:
-                    this._Items.SetTo((SourceSetList<ItemEntry>)obj);
+                    this._Items.SetTo((ISetList<ItemEntry>)obj);
                     break;
                 case Creature_FieldIndex.Spells:
-                    this._Spells.SetTo((SourceSetList<IFormIDLink<SpellAbstract>>)obj);
+                    this._Spells.SetTo((ISetList<IFormIDLink<SpellAbstract>>)obj);
                     break;
                 case Creature_FieldIndex.Models:
-                    this._Models.SetTo((SourceSetList<String>)obj);
+                    this._Models.SetTo((ISetList<String>)obj);
                     break;
                 case Creature_FieldIndex.NIFT:
                     this.NIFT = (Byte[])obj;
@@ -1861,7 +1850,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.CalcMax = (UInt16)obj;
                     break;
                 case Creature_FieldIndex.Factions:
-                    this._Factions.SetTo((SourceSetList<RankPlacement>)obj);
+                    this._Factions.SetTo((ISetList<RankPlacement>)obj);
                     break;
                 case Creature_FieldIndex.DeathItem:
                     this.DeathItem_Property.Set((IFormIDSetLink<ItemAbstract>)obj);
@@ -1891,10 +1880,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MaximumTrainingLevel = (Byte)obj;
                     break;
                 case Creature_FieldIndex.AIPackages:
-                    this._AIPackages.SetTo((SourceSetList<IFormIDLink<AIPackage>>)obj);
+                    this._AIPackages.SetTo((ISetList<IFormIDLink<AIPackage>>)obj);
                     break;
                 case Creature_FieldIndex.Animations:
-                    this._Animations.SetTo((SourceSetList<String>)obj);
+                    this._Animations.SetTo((ISetList<String>)obj);
                     break;
                 case Creature_FieldIndex.CreatureType:
                     this.CreatureType = (Creature.CreatureTypeEnum)obj;
@@ -1966,7 +1955,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.InheritsSoundFrom_Property.Set((IFormIDSetLink<Creature>)obj);
                     break;
                 case Creature_FieldIndex.Sounds:
-                    this._Sounds.SetTo((SourceSetList<CreatureSound>)obj);
+                    this._Sounds.SetTo((ISetList<CreatureSound>)obj);
                     break;
                 case Creature_FieldIndex.ACBSDataTypeState:
                     this.ACBSDataTypeState = (Creature.ACBSDataType)obj;
@@ -2013,13 +2002,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case Creature_FieldIndex.Items:
-                    obj._Items.SetTo((SourceSetList<ItemEntry>)pair.Value);
+                    obj._Items.SetTo((ISetList<ItemEntry>)pair.Value);
                     break;
                 case Creature_FieldIndex.Spells:
-                    obj._Spells.SetTo((SourceSetList<IFormIDLink<SpellAbstract>>)pair.Value);
+                    obj._Spells.SetTo((ISetList<IFormIDLink<SpellAbstract>>)pair.Value);
                     break;
                 case Creature_FieldIndex.Models:
-                    obj._Models.SetTo((SourceSetList<String>)pair.Value);
+                    obj._Models.SetTo((ISetList<String>)pair.Value);
                     break;
                 case Creature_FieldIndex.NIFT:
                     obj.NIFT = (Byte[])pair.Value;
@@ -2046,7 +2035,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.CalcMax = (UInt16)pair.Value;
                     break;
                 case Creature_FieldIndex.Factions:
-                    obj._Factions.SetTo((SourceSetList<RankPlacement>)pair.Value);
+                    obj._Factions.SetTo((ISetList<RankPlacement>)pair.Value);
                     break;
                 case Creature_FieldIndex.DeathItem:
                     obj.DeathItem_Property.Set((IFormIDSetLink<ItemAbstract>)pair.Value);
@@ -2076,10 +2065,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.MaximumTrainingLevel = (Byte)pair.Value;
                     break;
                 case Creature_FieldIndex.AIPackages:
-                    obj._AIPackages.SetTo((SourceSetList<IFormIDLink<AIPackage>>)pair.Value);
+                    obj._AIPackages.SetTo((ISetList<IFormIDLink<AIPackage>>)pair.Value);
                     break;
                 case Creature_FieldIndex.Animations:
-                    obj._Animations.SetTo((SourceSetList<String>)pair.Value);
+                    obj._Animations.SetTo((ISetList<String>)pair.Value);
                     break;
                 case Creature_FieldIndex.CreatureType:
                     obj.CreatureType = (Creature.CreatureTypeEnum)pair.Value;
@@ -2151,7 +2140,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.InheritsSoundFrom_Property.Set((IFormIDSetLink<Creature>)pair.Value);
                     break;
                 case Creature_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((SourceSetList<CreatureSound>)pair.Value);
+                    obj._Sounds.SetTo((ISetList<CreatureSound>)pair.Value);
                     break;
                 case Creature_FieldIndex.ACBSDataTypeState:
                     obj.ACBSDataTypeState = (Creature.ACBSDataType)pair.Value;
@@ -2558,7 +2547,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ICreatureInternal item)
         {
-            ((CreatureCommon)item.CommonInstance).Clear(item: item);
+            ((CreatureCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Creature_Mask<bool> GetEqualsMask(
@@ -2566,7 +2555,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICreatureInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CreatureCommon)item.CommonInstance).GetEqualsMask(
+            return ((CreatureCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -2577,7 +2566,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Creature_Mask<bool> printMask = null)
         {
-            return ((CreatureCommon)item.CommonInstance).ToString(
+            return ((CreatureCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -2589,7 +2578,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Creature_Mask<bool> printMask = null)
         {
-            ((CreatureCommon)item.CommonInstance).ToString(
+            ((CreatureCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -2600,7 +2589,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICreatureInternalGetter item,
             Creature_Mask<bool?> checkMask)
         {
-            return ((CreatureCommon)item.CommonInstance).HasBeenSet(
+            return ((CreatureCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -2608,7 +2597,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Creature_Mask<bool> GetHasBeenSetMask(this ICreatureInternalGetter item)
         {
             var ret = new Creature_Mask<bool>();
-            ((CreatureCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((CreatureCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -2618,7 +2607,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICreatureInternalGetter item,
             ICreatureInternalGetter rhs)
         {
-            return ((CreatureCommon)item.CommonInstance).Equals(
+            return ((CreatureCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -3291,11 +3280,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Model:
                     return typeof(Model);
                 case Creature_FieldIndex.Items:
-                    return typeof(SourceSetList<ItemEntry>);
+                    return typeof(ISetList<ItemEntry>);
                 case Creature_FieldIndex.Spells:
-                    return typeof(SourceSetList<IFormIDLink<SpellAbstract>>);
+                    return typeof(ISetList<IFormIDLink<SpellAbstract>>);
                 case Creature_FieldIndex.Models:
-                    return typeof(SourceSetList<String>);
+                    return typeof(ISetList<String>);
                 case Creature_FieldIndex.NIFT:
                     return typeof(Byte[]);
                 case Creature_FieldIndex.Flags:
@@ -3313,7 +3302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.CalcMax:
                     return typeof(UInt16);
                 case Creature_FieldIndex.Factions:
-                    return typeof(SourceSetList<RankPlacement>);
+                    return typeof(ISetList<RankPlacement>);
                 case Creature_FieldIndex.DeathItem:
                     return typeof(IFormIDSetLink<ItemAbstract>);
                 case Creature_FieldIndex.Script:
@@ -3333,9 +3322,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.MaximumTrainingLevel:
                     return typeof(Byte);
                 case Creature_FieldIndex.AIPackages:
-                    return typeof(SourceSetList<IFormIDLink<AIPackage>>);
+                    return typeof(ISetList<IFormIDLink<AIPackage>>);
                 case Creature_FieldIndex.Animations:
-                    return typeof(SourceSetList<String>);
+                    return typeof(ISetList<String>);
                 case Creature_FieldIndex.CreatureType:
                     return typeof(Creature.CreatureTypeEnum);
                 case Creature_FieldIndex.CombatSkill:
@@ -3383,7 +3372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.InheritsSoundFrom:
                     return typeof(IFormIDSetLink<Creature>);
                 case Creature_FieldIndex.Sounds:
-                    return typeof(SourceSetList<CreatureSound>);
+                    return typeof(ISetList<CreatureSound>);
                 case Creature_FieldIndex.ACBSDataTypeState:
                     return typeof(Creature.ACBSDataType);
                 case Creature_FieldIndex.AIDTDataTypeState:
@@ -4603,7 +4592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Creature_Mask<bool>();
-            ((CreatureCommon)item.CommonInstance).FillEqualsMask(
+            ((CreatureCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -5535,6 +5524,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Creature obj, Creature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Creature(getNextFormKey());
+            ret.CopyFieldsFrom((Creature)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Creature)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

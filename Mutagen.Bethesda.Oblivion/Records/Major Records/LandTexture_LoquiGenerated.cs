@@ -168,15 +168,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ILandTextureInternalGetter rhs)) return false;
-            return ((LandTextureCommon)this.CommonInstance).Equals(this, rhs);
+            return ((LandTextureCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(LandTexture obj)
         {
-            return ((LandTextureCommon)this.CommonInstance).Equals(this, obj);
+            return ((LandTextureCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LandTextureCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LandTextureCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -416,17 +416,6 @@ namespace Mutagen.Bethesda.Oblivion
         public LandTexture(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(LandTexture obj, LandTexture rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new LandTexture(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -697,7 +686,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.TextureSpecularExponent = (Byte)obj;
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    this._PotentialGrass.SetTo((SourceSetList<IFormIDLink<Grass>>)obj);
+                    this._PotentialGrass.SetTo((ISetList<IFormIDLink<Grass>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -738,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.TextureSpecularExponent = (Byte)pair.Value;
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    obj._PotentialGrass.SetTo((SourceSetList<IFormIDLink<Grass>>)pair.Value);
+                    obj._PotentialGrass.SetTo((ISetList<IFormIDLink<Grass>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -824,7 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ILandTextureInternal item)
         {
-            ((LandTextureCommon)item.CommonInstance).Clear(item: item);
+            ((LandTextureCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static LandTexture_Mask<bool> GetEqualsMask(
@@ -832,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILandTextureInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LandTextureCommon)item.CommonInstance).GetEqualsMask(
+            return ((LandTextureCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -843,7 +832,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LandTexture_Mask<bool> printMask = null)
         {
-            return ((LandTextureCommon)item.CommonInstance).ToString(
+            return ((LandTextureCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -855,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LandTexture_Mask<bool> printMask = null)
         {
-            ((LandTextureCommon)item.CommonInstance).ToString(
+            ((LandTextureCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -866,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureInternalGetter item,
             LandTexture_Mask<bool?> checkMask)
         {
-            return ((LandTextureCommon)item.CommonInstance).HasBeenSet(
+            return ((LandTextureCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -874,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LandTexture_Mask<bool> GetHasBeenSetMask(this ILandTextureInternalGetter item)
         {
             var ret = new LandTexture_Mask<bool>();
-            ((LandTextureCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((LandTextureCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -884,7 +873,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureInternalGetter item,
             ILandTextureInternalGetter rhs)
         {
-            return ((LandTextureCommon)item.CommonInstance).Equals(
+            return ((LandTextureCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1079,7 +1068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LandTexture_FieldIndex.TextureSpecularExponent:
                     return typeof(Byte);
                 case LandTexture_FieldIndex.PotentialGrass:
-                    return typeof(SourceSetList<IFormIDLink<Grass>>);
+                    return typeof(ISetList<IFormIDLink<Grass>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1309,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new LandTexture_Mask<bool>();
-            ((LandTextureCommon)item.CommonInstance).FillEqualsMask(
+            ((LandTextureCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1567,6 +1556,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(LandTexture obj, LandTexture rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new LandTexture(getNextFormKey());
+            ret.CopyFieldsFrom((LandTexture)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (LandTexture)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

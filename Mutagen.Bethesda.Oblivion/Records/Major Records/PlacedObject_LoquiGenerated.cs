@@ -600,15 +600,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IPlacedObjectInternalGetter rhs)) return false;
-            return ((PlacedObjectCommon)this.CommonInstance).Equals(this, rhs);
+            return ((PlacedObjectCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(PlacedObject obj)
         {
-            return ((PlacedObjectCommon)this.CommonInstance).Equals(this, obj);
+            return ((PlacedObjectCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PlacedObjectCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((PlacedObjectCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -937,17 +937,6 @@ namespace Mutagen.Bethesda.Oblivion
         public PlacedObject(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(PlacedObject obj, PlacedObject rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new PlacedObject(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1950,7 +1939,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IPlacedObjectInternal item)
         {
-            ((PlacedObjectCommon)item.CommonInstance).Clear(item: item);
+            ((PlacedObjectCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static PlacedObject_Mask<bool> GetEqualsMask(
@@ -1958,7 +1947,7 @@ namespace Mutagen.Bethesda.Oblivion
             IPlacedObjectInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PlacedObjectCommon)item.CommonInstance).GetEqualsMask(
+            return ((PlacedObjectCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1969,7 +1958,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PlacedObject_Mask<bool> printMask = null)
         {
-            return ((PlacedObjectCommon)item.CommonInstance).ToString(
+            return ((PlacedObjectCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1981,7 +1970,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PlacedObject_Mask<bool> printMask = null)
         {
-            ((PlacedObjectCommon)item.CommonInstance).ToString(
+            ((PlacedObjectCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1992,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedObjectInternalGetter item,
             PlacedObject_Mask<bool?> checkMask)
         {
-            return ((PlacedObjectCommon)item.CommonInstance).HasBeenSet(
+            return ((PlacedObjectCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -2000,7 +1989,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static PlacedObject_Mask<bool> GetHasBeenSetMask(this IPlacedObjectInternalGetter item)
         {
             var ret = new PlacedObject_Mask<bool>();
-            ((PlacedObjectCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((PlacedObjectCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -2010,7 +1999,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedObjectInternalGetter item,
             IPlacedObjectInternalGetter rhs)
         {
-            return ((PlacedObjectCommon)item.CommonInstance).Equals(
+            return ((PlacedObjectCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -3363,7 +3352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new PlacedObject_Mask<bool>();
-            ((PlacedObjectCommon)item.CommonInstance).FillEqualsMask(
+            ((PlacedObjectCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -3950,6 +3939,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(PlacedObject obj, PlacedObject rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new PlacedObject(getNextFormKey());
+            ret.CopyFieldsFrom((PlacedObject)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (PlacedObject)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion
