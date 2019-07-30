@@ -57,14 +57,14 @@ namespace Mutagen.Bethesda.Oblivion
                 return null;
             }
             var fnamFrame = frame.MetaData.SubRecordFrame(subrecordSpan.Slice(locs[0]));
-            if (fnamFrame.DataSpan.Length != 1)
+            if (fnamFrame.ContentSpan.Length != 1)
             {
                 errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"FNAM had non 1 length: {fnamFrame.DataSpan.Length}"));
+                    new ArgumentException($"FNAM had non 1 length: {fnamFrame.ContentSpan.Length}"));
             }
 
             // Create proper Global subclass
-            var triggerChar = (char)fnamFrame.DataSpan[0];
+            var triggerChar = (char)fnamFrame.ContentSpan[0];
             Global g;
             switch (triggerChar)
             {
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             // Read data
             var fltvFrame = frame.MetaData.SubRecordFrame(subrecordSpan.Slice(locs[1]));
-            g.RawFloat = fltvFrame.DataSpan.GetFloat();
+            g.RawFloat = fltvFrame.ContentSpan.GetFloat();
             
             // Skip to end
             frame.Reader.Position = initialPos + majorMeta.TotalLength;
