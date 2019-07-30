@@ -186,18 +186,18 @@ namespace Mutagen.Bethesda.Binary
 
     public ref struct ModHeaderMeta
     {
-        private MetaDataConstants meta;
+        public MetaDataConstants Meta { get; }
         public ReadOnlySpan<byte> Span { get; }
 
         public ModHeaderMeta(MetaDataConstants meta, ReadOnlySpan<byte> span)
         {
-            this.meta = meta;
+            this.Meta = meta;
             this.Span = span.Slice(0, meta.ModHeaderLength);
         }
 
-        public GameMode GameMode => meta.GameMode;
+        public GameMode GameMode => Meta.GameMode;
         public bool HasContent => this.Span.Length >= this.HeaderLength;
-        public sbyte HeaderLength => meta.ModHeaderLength;
+        public sbyte HeaderLength => Meta.ModHeaderLength;
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
         public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
         public long TotalLength => this.HeaderLength + this.RecordLength;
@@ -239,17 +239,17 @@ namespace Mutagen.Bethesda.Binary
 
     public ref struct GroupRecordMeta
     {
-        private MetaDataConstants meta;
+        public MetaDataConstants Meta { get; }
         public ReadOnlySpan<byte> Span { get; }
 
         public GroupRecordMeta(MetaDataConstants meta, ReadOnlySpan<byte> span)
         {
-            this.meta = meta;
+            this.Meta = meta;
             this.Span = span.Slice(0, meta.GroupConstants.HeaderLength);
         }
 
-        public GameMode GameMode => meta.GameMode;
-        public sbyte HeaderLength => meta.GroupConstants.HeaderLength;
+        public GameMode GameMode => Meta.GameMode;
+        public sbyte HeaderLength => Meta.GroupConstants.HeaderLength;
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
         public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
         public ReadOnlySpan<byte> ContainedRecordTypeSpan => this.Span.Slice(8, 4);
@@ -259,22 +259,22 @@ namespace Mutagen.Bethesda.Binary
         public long TotalLength => this.RecordLength;
         public bool IsGroup => this.RecordType == Constants.GRUP;
         public uint ContentLength => checked((uint)(this.TotalLength - this.HeaderLength));
-        public int TypeAndLengthLength => meta.GroupConstants.TypeAndLengthLength;
+        public int TypeAndLengthLength => Meta.GroupConstants.TypeAndLengthLength;
     }
 
     public ref struct MajorRecordMeta
     {
-        private MetaDataConstants meta;
+        public MetaDataConstants Meta { get; }
         public ReadOnlySpan<byte> Span { get; }
 
         public MajorRecordMeta(MetaDataConstants meta, ReadOnlySpan<byte> span)
         {
-            this.meta = meta;
+            this.Meta = meta;
             this.Span = span.Slice(0, meta.MajorConstants.HeaderLength);
         }
-
-        public GameMode GameMode => meta.GameMode;
-        public sbyte HeaderLength => meta.MajorConstants.HeaderLength;
+        
+        public GameMode GameMode => Meta.GameMode;
+        public sbyte HeaderLength => Meta.MajorConstants.HeaderLength;
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
         public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
         public int MajorRecordFlags => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(8, 4));
@@ -303,17 +303,17 @@ namespace Mutagen.Bethesda.Binary
 
     public ref struct SubRecordMeta
     {
-        private MetaDataConstants meta;
+        public MetaDataConstants Meta { get; }
         public ReadOnlySpan<byte> Span { get; }
 
         public SubRecordMeta(MetaDataConstants meta, ReadOnlySpan<byte> span)
         {
-            this.meta = meta;
+            this.Meta = meta;
             this.Span = span.Slice(0, meta.SubConstants.HeaderLength);
         }
 
-        public GameMode GameMode => meta.GameMode;
-        public sbyte HeaderLength => meta.SubConstants.HeaderLength;
+        public GameMode GameMode => Meta.GameMode;
+        public sbyte HeaderLength => Meta.SubConstants.HeaderLength;
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
         public ushort RecordLength => BinaryPrimitives.ReadUInt16LittleEndian(this.Span.Slice(4, 2));
         public int TotalLength => this.HeaderLength + this.RecordLength;
