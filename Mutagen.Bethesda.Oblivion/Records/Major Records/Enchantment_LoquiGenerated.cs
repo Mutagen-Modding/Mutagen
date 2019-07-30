@@ -1662,7 +1662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         partial void PostDuplicate(Enchantment obj, Enchantment rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Enchantment(getNextFormKey());
             ret.CopyFieldsFrom((Enchantment)item);

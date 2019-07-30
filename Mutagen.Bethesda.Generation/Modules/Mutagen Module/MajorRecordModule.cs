@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"partial void PostDuplicate({obj.Name} obj, {obj.ObjectName} rhs, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords);");
             fg.AppendLine();
 
-            fg.AppendLine($"public{obj.FunctionOverride()}{nameof(IMajorRecordCommon)} Duplicate({nameof(IMajorRecordCommon)} item, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords)");
+            fg.AppendLine($"public{obj.FunctionOverride()}{nameof(IMajorRecordCommon)} Duplicate({nameof(IMajorRecordCommonGetter)} item, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords)");
             using (new BraceWrapper(fg))
             {
                 if (obj.Abstract)

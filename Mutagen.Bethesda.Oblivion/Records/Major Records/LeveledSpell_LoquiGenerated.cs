@@ -1465,7 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         partial void PostDuplicate(LeveledSpell obj, LeveledSpell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new LeveledSpell(getNextFormKey());
             ret.CopyFieldsFrom((LeveledSpell)item);

@@ -2087,7 +2087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         partial void PostDuplicate(Grass obj, Grass rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Grass(getNextFormKey());
             ret.CopyFieldsFrom((Grass)item);

@@ -11,12 +11,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Mutagen.Bethesda
 {
-    public partial interface IMajorRecord : IFormKey, IDuplicatable, IMajorRecordCommon
+    public partial interface IMajorRecord : IFormKey, IMajorRecordCommon
     {
         new FormKey FormKey { get; }
+    }
+
+    public partial interface IMajorRecordGetter : IDuplicatable
+    {
     }
 
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormKey.ToString()}")]
@@ -41,6 +46,11 @@ namespace Mutagen.Bethesda
         {
             get => this.MajorRecordFlags.HasFlag(MajorRecordFlag.Compressed);
             set => this.MajorRecordFlags = this.MajorRecordFlags.SetFlag(MajorRecordFlag.Compressed, value);
+        }
+
+        bool IMajorRecordCommonGetter.IsCompressed
+        {
+            get => this.MajorRecordFlags.HasFlag(MajorRecordFlag.Compressed);
         }
 
         public static void FillBinary(
@@ -105,6 +115,21 @@ namespace Mutagen.Bethesda.Internals
             NewExpression newExp = Expression.New(ctorInfo, param);
             LambdaExpression lambda = Expression.Lambda(typeof(MajorRecordActivator<T>), newExp, param);
             Activator = (MajorRecordActivator<T>)lambda.Compile();
+        }
+    }
+
+    public partial class MajorRecordBinaryWrapper : IMajorRecordCommonGetter
+    {
+        public bool IsCompressed => ((MajorRecord.MajorRecordFlag)this.MajorRecordFlagsRaw).HasFlag(MajorRecord.MajorRecordFlag.Compressed);
+
+        public Task WriteToXmlFolder(DirectoryPath? dir, string name, XElement node, int counter, ErrorMaskBuilder errorMask)
+        {
+            throw new NotImplementedException();
+        }
+
+        object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecordTracker)
+        {
+            return ((MajorRecordCommon)this.CommonInstance).Duplicate(this, getNextFormKey, duplicatedRecordTracker);
         }
     }
 }
