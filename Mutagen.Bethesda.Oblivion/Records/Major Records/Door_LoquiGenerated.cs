@@ -201,15 +201,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IDoorInternalGetter rhs)) return false;
-            return ((DoorCommon)this.CommonInstance).Equals(this, rhs);
+            return ((DoorCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Door obj)
         {
-            return ((DoorCommon)this.CommonInstance).Equals(this, obj);
+            return ((DoorCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DoorCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((DoorCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -473,17 +473,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Door(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Door obj, Door rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Door(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -986,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IDoorInternal item)
         {
-            ((DoorCommon)item.CommonInstance).Clear(item: item);
+            ((DoorCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Door_Mask<bool> GetEqualsMask(
@@ -994,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion
             IDoorInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DoorCommon)item.CommonInstance).GetEqualsMask(
+            return ((DoorCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1005,7 +994,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Door_Mask<bool> printMask = null)
         {
-            return ((DoorCommon)item.CommonInstance).ToString(
+            return ((DoorCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1017,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Door_Mask<bool> printMask = null)
         {
-            ((DoorCommon)item.CommonInstance).ToString(
+            ((DoorCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1028,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDoorInternalGetter item,
             Door_Mask<bool?> checkMask)
         {
-            return ((DoorCommon)item.CommonInstance).HasBeenSet(
+            return ((DoorCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1036,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Door_Mask<bool> GetHasBeenSetMask(this IDoorInternalGetter item)
         {
             var ret = new Door_Mask<bool>();
-            ((DoorCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((DoorCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1046,7 +1035,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDoorInternalGetter item,
             IDoorInternalGetter rhs)
         {
-            return ((DoorCommon)item.CommonInstance).Equals(
+            return ((DoorCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1603,7 +1592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Door_Mask<bool>();
-            ((DoorCommon)item.CommonInstance).FillEqualsMask(
+            ((DoorCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1925,6 +1914,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Door obj, Door rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Door(getNextFormKey());
+            ret.CopyFieldsFrom((Door)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Door)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

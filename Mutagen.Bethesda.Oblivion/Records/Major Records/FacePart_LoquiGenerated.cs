@@ -154,15 +154,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IFacePartGetter rhs)) return false;
-            return ((FacePartCommon)this.CommonInstance).Equals(this, rhs);
+            return ((FacePartCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(FacePart obj)
         {
-            return ((FacePartCommon)this.CommonInstance).Equals(this, obj);
+            return ((FacePartCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((FacePartCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((FacePartCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -695,7 +695,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IFacePart item)
         {
-            ((FacePartCommon)item.CommonInstance).Clear(item: item);
+            ((FacePartCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static FacePart_Mask<bool> GetEqualsMask(
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Oblivion
             IFacePartGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FacePartCommon)item.CommonInstance).GetEqualsMask(
+            return ((FacePartCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -714,7 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             FacePart_Mask<bool> printMask = null)
         {
-            return ((FacePartCommon)item.CommonInstance).ToString(
+            return ((FacePartCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             FacePart_Mask<bool> printMask = null)
         {
-            ((FacePartCommon)item.CommonInstance).ToString(
+            ((FacePartCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFacePartGetter item,
             FacePart_Mask<bool?> checkMask)
         {
-            return ((FacePartCommon)item.CommonInstance).HasBeenSet(
+            return ((FacePartCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static FacePart_Mask<bool> GetHasBeenSetMask(this IFacePartGetter item)
         {
             var ret = new FacePart_Mask<bool>();
-            ((FacePartCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((FacePartCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFacePartGetter item,
             IFacePartGetter rhs)
         {
-            return ((FacePartCommon)item.CommonInstance).Equals(
+            return ((FacePartCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new FacePart_Mask<bool>();
-            ((FacePartCommon)item.CommonInstance).FillEqualsMask(
+            ((FacePartCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

@@ -158,15 +158,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IFaceGenDataGetter rhs)) return false;
-            return ((FaceGenDataCommon)this.CommonInstance).Equals(this, rhs);
+            return ((FaceGenDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(FaceGenData obj)
         {
-            return ((FaceGenDataCommon)this.CommonInstance).Equals(this, obj);
+            return ((FaceGenDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((FaceGenDataCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((FaceGenDataCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IFaceGenData item)
         {
-            ((FaceGenDataCommon)item.CommonInstance).Clear(item: item);
+            ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static FaceGenData_Mask<bool> GetEqualsMask(
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion
             IFaceGenDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FaceGenDataCommon)item.CommonInstance).GetEqualsMask(
+            return ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             FaceGenData_Mask<bool> printMask = null)
         {
-            return ((FaceGenDataCommon)item.CommonInstance).ToString(
+            return ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -722,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             FaceGenData_Mask<bool> printMask = null)
         {
-            ((FaceGenDataCommon)item.CommonInstance).ToString(
+            ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFaceGenDataGetter item,
             FaceGenData_Mask<bool?> checkMask)
         {
-            return ((FaceGenDataCommon)item.CommonInstance).HasBeenSet(
+            return ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static FaceGenData_Mask<bool> GetHasBeenSetMask(this IFaceGenDataGetter item)
         {
             var ret = new FaceGenData_Mask<bool>();
-            ((FaceGenDataCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFaceGenDataGetter item,
             IFaceGenDataGetter rhs)
         {
-            return ((FaceGenDataCommon)item.CommonInstance).Equals(
+            return ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new FaceGenData_Mask<bool>();
-            ((FaceGenDataCommon)item.CommonInstance).FillEqualsMask(
+            ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

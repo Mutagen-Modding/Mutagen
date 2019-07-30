@@ -129,15 +129,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IWorldspaceBlockGetter rhs)) return false;
-            return ((WorldspaceBlockCommon)this.CommonInstance).Equals(this, rhs);
+            return ((WorldspaceBlockCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(WorldspaceBlock obj)
         {
-            return ((WorldspaceBlockCommon)this.CommonInstance).Equals(this, obj);
+            return ((WorldspaceBlockCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WorldspaceBlockCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceBlockCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -693,7 +693,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IWorldspaceBlock item)
         {
-            ((WorldspaceBlockCommon)item.CommonInstance).Clear(item: item);
+            ((WorldspaceBlockCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static WorldspaceBlock_Mask<bool> GetEqualsMask(
@@ -701,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWorldspaceBlockGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WorldspaceBlockCommon)item.CommonInstance).GetEqualsMask(
+            return ((WorldspaceBlockCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             WorldspaceBlock_Mask<bool> printMask = null)
         {
-            return ((WorldspaceBlockCommon)item.CommonInstance).ToString(
+            return ((WorldspaceBlockCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -724,7 +724,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             WorldspaceBlock_Mask<bool> printMask = null)
         {
-            ((WorldspaceBlockCommon)item.CommonInstance).ToString(
+            ((WorldspaceBlockCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceBlockGetter item,
             WorldspaceBlock_Mask<bool?> checkMask)
         {
-            return ((WorldspaceBlockCommon)item.CommonInstance).HasBeenSet(
+            return ((WorldspaceBlockCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -743,7 +743,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static WorldspaceBlock_Mask<bool> GetHasBeenSetMask(this IWorldspaceBlockGetter item)
         {
             var ret = new WorldspaceBlock_Mask<bool>();
-            ((WorldspaceBlockCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((WorldspaceBlockCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceBlockGetter item,
             IWorldspaceBlockGetter rhs)
         {
-            return ((WorldspaceBlockCommon)item.CommonInstance).Equals(
+            return ((WorldspaceBlockCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1136,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new WorldspaceBlock_Mask<bool>();
-            ((WorldspaceBlockCommon)item.CommonInstance).FillEqualsMask(
+            ((WorldspaceBlockCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

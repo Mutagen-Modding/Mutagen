@@ -96,15 +96,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IPointToReferenceMappingGetter rhs)) return false;
-            return ((PointToReferenceMappingCommon)this.CommonInstance).Equals(this, rhs);
+            return ((PointToReferenceMappingCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(PointToReferenceMapping obj)
         {
-            return ((PointToReferenceMappingCommon)this.CommonInstance).Equals(this, obj);
+            return ((PointToReferenceMappingCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PointToReferenceMappingCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((PointToReferenceMappingCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IPointToReferenceMapping item)
         {
-            ((PointToReferenceMappingCommon)item.CommonInstance).Clear(item: item);
+            ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static PointToReferenceMapping_Mask<bool> GetEqualsMask(
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
             IPointToReferenceMappingGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PointToReferenceMappingCommon)item.CommonInstance).GetEqualsMask(
+            return ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PointToReferenceMapping_Mask<bool> printMask = null)
         {
-            return ((PointToReferenceMappingCommon)item.CommonInstance).ToString(
+            return ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PointToReferenceMapping_Mask<bool> printMask = null)
         {
-            ((PointToReferenceMappingCommon)item.CommonInstance).ToString(
+            ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPointToReferenceMappingGetter item,
             PointToReferenceMapping_Mask<bool?> checkMask)
         {
-            return ((PointToReferenceMappingCommon)item.CommonInstance).HasBeenSet(
+            return ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static PointToReferenceMapping_Mask<bool> GetHasBeenSetMask(this IPointToReferenceMappingGetter item)
         {
             var ret = new PointToReferenceMapping_Mask<bool>();
-            ((PointToReferenceMappingCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPointToReferenceMappingGetter item,
             IPointToReferenceMappingGetter rhs)
         {
-            return ((PointToReferenceMappingCommon)item.CommonInstance).Equals(
+            return ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new PointToReferenceMapping_Mask<bool>();
-            ((PointToReferenceMappingCommon)item.CommonInstance).FillEqualsMask(
+            ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

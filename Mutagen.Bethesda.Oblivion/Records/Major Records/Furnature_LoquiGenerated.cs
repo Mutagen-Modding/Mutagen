@@ -165,15 +165,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IFurnatureInternalGetter rhs)) return false;
-            return ((FurnatureCommon)this.CommonInstance).Equals(this, rhs);
+            return ((FurnatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Furnature obj)
         {
-            return ((FurnatureCommon)this.CommonInstance).Equals(this, obj);
+            return ((FurnatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((FurnatureCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((FurnatureCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -407,17 +407,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Furnature(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Furnature obj, Furnature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Furnature(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -827,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IFurnatureInternal item)
         {
-            ((FurnatureCommon)item.CommonInstance).Clear(item: item);
+            ((FurnatureCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Furnature_Mask<bool> GetEqualsMask(
@@ -835,7 +824,7 @@ namespace Mutagen.Bethesda.Oblivion
             IFurnatureInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FurnatureCommon)item.CommonInstance).GetEqualsMask(
+            return ((FurnatureCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -846,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Furnature_Mask<bool> printMask = null)
         {
-            return ((FurnatureCommon)item.CommonInstance).ToString(
+            return ((FurnatureCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -858,7 +847,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Furnature_Mask<bool> printMask = null)
         {
-            ((FurnatureCommon)item.CommonInstance).ToString(
+            ((FurnatureCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -869,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFurnatureInternalGetter item,
             Furnature_Mask<bool?> checkMask)
         {
-            return ((FurnatureCommon)item.CommonInstance).HasBeenSet(
+            return ((FurnatureCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -877,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Furnature_Mask<bool> GetHasBeenSetMask(this IFurnatureInternalGetter item)
         {
             var ret = new Furnature_Mask<bool>();
-            ((FurnatureCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((FurnatureCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -887,7 +876,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFurnatureInternalGetter item,
             IFurnatureInternalGetter rhs)
         {
-            return ((FurnatureCommon)item.CommonInstance).Equals(
+            return ((FurnatureCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1311,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Furnature_Mask<bool>();
-            ((FurnatureCommon)item.CommonInstance).FillEqualsMask(
+            ((FurnatureCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1552,6 +1541,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Furnature obj, Furnature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Furnature(getNextFormKey());
+            ret.CopyFieldsFrom((Furnature)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Furnature)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

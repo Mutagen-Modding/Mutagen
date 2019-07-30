@@ -129,15 +129,15 @@ namespace Mutagen.Bethesda.Tests
         public override bool Equals(object obj)
         {
             if (!(obj is IPassthroughSettingsGetter rhs)) return false;
-            return ((PassthroughSettingsCommon)this.CommonInstance).Equals(this, rhs);
+            return ((PassthroughSettingsCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(PassthroughSettings obj)
         {
-            return ((PassthroughSettingsCommon)this.CommonInstance).Equals(this, obj);
+            return ((PassthroughSettingsCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PassthroughSettingsCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((PassthroughSettingsCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public static void Clear(this IPassthroughSettings item)
         {
-            ((PassthroughSettingsCommon)item.CommonInstance).Clear(item: item);
+            ((PassthroughSettingsCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static PassthroughSettings_Mask<bool> GetEqualsMask(
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Tests
             IPassthroughSettingsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PassthroughSettingsCommon)item.CommonInstance).GetEqualsMask(
+            return ((PassthroughSettingsCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null,
             PassthroughSettings_Mask<bool> printMask = null)
         {
-            return ((PassthroughSettingsCommon)item.CommonInstance).ToString(
+            return ((PassthroughSettingsCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null,
             PassthroughSettings_Mask<bool> printMask = null)
         {
-            ((PassthroughSettingsCommon)item.CommonInstance).ToString(
+            ((PassthroughSettingsCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Tests
             this IPassthroughSettingsGetter item,
             PassthroughSettings_Mask<bool?> checkMask)
         {
-            return ((PassthroughSettingsCommon)item.CommonInstance).HasBeenSet(
+            return ((PassthroughSettingsCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Tests
         public static PassthroughSettings_Mask<bool> GetHasBeenSetMask(this IPassthroughSettingsGetter item)
         {
             var ret = new PassthroughSettings_Mask<bool>();
-            ((PassthroughSettingsCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((PassthroughSettingsCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Tests
             this IPassthroughSettingsGetter item,
             IPassthroughSettingsGetter rhs)
         {
-            return ((PassthroughSettingsCommon)item.CommonInstance).Equals(
+            return ((PassthroughSettingsCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new PassthroughSettings_Mask<bool>();
-            ((PassthroughSettingsCommon)item.CommonInstance).FillEqualsMask(
+            ((PassthroughSettingsCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

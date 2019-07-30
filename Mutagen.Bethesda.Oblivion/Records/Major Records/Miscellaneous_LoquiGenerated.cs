@@ -204,15 +204,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IMiscellaneousInternalGetter rhs)) return false;
-            return ((MiscellaneousCommon)this.CommonInstance).Equals(this, rhs);
+            return ((MiscellaneousCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Miscellaneous obj)
         {
-            return ((MiscellaneousCommon)this.CommonInstance).Equals(this, obj);
+            return ((MiscellaneousCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((MiscellaneousCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((MiscellaneousCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -458,17 +458,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Miscellaneous(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Miscellaneous obj, Miscellaneous rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Miscellaneous(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -936,7 +925,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IMiscellaneousInternal item)
         {
-            ((MiscellaneousCommon)item.CommonInstance).Clear(item: item);
+            ((MiscellaneousCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Miscellaneous_Mask<bool> GetEqualsMask(
@@ -944,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion
             IMiscellaneousInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MiscellaneousCommon)item.CommonInstance).GetEqualsMask(
+            return ((MiscellaneousCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -955,7 +944,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Miscellaneous_Mask<bool> printMask = null)
         {
-            return ((MiscellaneousCommon)item.CommonInstance).ToString(
+            return ((MiscellaneousCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -967,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Miscellaneous_Mask<bool> printMask = null)
         {
-            ((MiscellaneousCommon)item.CommonInstance).ToString(
+            ((MiscellaneousCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -978,7 +967,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMiscellaneousInternalGetter item,
             Miscellaneous_Mask<bool?> checkMask)
         {
-            return ((MiscellaneousCommon)item.CommonInstance).HasBeenSet(
+            return ((MiscellaneousCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -986,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Miscellaneous_Mask<bool> GetHasBeenSetMask(this IMiscellaneousInternalGetter item)
         {
             var ret = new Miscellaneous_Mask<bool>();
-            ((MiscellaneousCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((MiscellaneousCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -996,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMiscellaneousInternalGetter item,
             IMiscellaneousInternalGetter rhs)
         {
-            return ((MiscellaneousCommon)item.CommonInstance).Equals(
+            return ((MiscellaneousCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1498,7 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Miscellaneous_Mask<bool>();
-            ((MiscellaneousCommon)item.CommonInstance).FillEqualsMask(
+            ((MiscellaneousCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1794,6 +1783,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Miscellaneous obj, Miscellaneous rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Miscellaneous(getNextFormKey());
+            ret.CopyFieldsFrom((Miscellaneous)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Miscellaneous)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

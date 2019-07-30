@@ -112,15 +112,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IPathGridPointGetter rhs)) return false;
-            return ((PathGridPointCommon)this.CommonInstance).Equals(this, rhs);
+            return ((PathGridPointCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(PathGridPoint obj)
         {
-            return ((PathGridPointCommon)this.CommonInstance).Equals(this, obj);
+            return ((PathGridPointCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PathGridPointCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((PathGridPointCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IPathGridPoint item)
         {
-            ((PathGridPointCommon)item.CommonInstance).Clear(item: item);
+            ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static PathGridPoint_Mask<bool> GetEqualsMask(
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
             IPathGridPointGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PathGridPointCommon)item.CommonInstance).GetEqualsMask(
+            return ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PathGridPoint_Mask<bool> printMask = null)
         {
-            return ((PathGridPointCommon)item.CommonInstance).ToString(
+            return ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PathGridPoint_Mask<bool> printMask = null)
         {
-            ((PathGridPointCommon)item.CommonInstance).ToString(
+            ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridPointGetter item,
             PathGridPoint_Mask<bool?> checkMask)
         {
-            return ((PathGridPointCommon)item.CommonInstance).HasBeenSet(
+            return ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static PathGridPoint_Mask<bool> GetHasBeenSetMask(this IPathGridPointGetter item)
         {
             var ret = new PathGridPoint_Mask<bool>();
-            ((PathGridPointCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridPointGetter item,
             IPathGridPointGetter rhs)
         {
-            return ((PathGridPointCommon)item.CommonInstance).Equals(
+            return ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new PathGridPoint_Mask<bool>();
-            ((PathGridPointCommon)item.CommonInstance).FillEqualsMask(
+            ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

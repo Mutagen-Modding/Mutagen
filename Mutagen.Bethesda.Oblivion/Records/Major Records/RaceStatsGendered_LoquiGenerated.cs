@@ -83,15 +83,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRaceStatsGenderedGetter rhs)) return false;
-            return ((RaceStatsGenderedCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RaceStatsGenderedCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(RaceStatsGendered obj)
         {
-            return ((RaceStatsGenderedCommon)this.CommonInstance).Equals(this, obj);
+            return ((RaceStatsGenderedCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RaceStatsGenderedCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RaceStatsGenderedCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRaceStatsGendered item)
         {
-            ((RaceStatsGenderedCommon)item.CommonInstance).Clear(item: item);
+            ((RaceStatsGenderedCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static RaceStatsGendered_Mask<bool> GetEqualsMask(
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceStatsGenderedGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RaceStatsGenderedCommon)item.CommonInstance).GetEqualsMask(
+            return ((RaceStatsGenderedCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RaceStatsGendered_Mask<bool> printMask = null)
         {
-            return ((RaceStatsGenderedCommon)item.CommonInstance).ToString(
+            return ((RaceStatsGenderedCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RaceStatsGendered_Mask<bool> printMask = null)
         {
-            ((RaceStatsGenderedCommon)item.CommonInstance).ToString(
+            ((RaceStatsGenderedCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceStatsGenderedGetter item,
             RaceStatsGendered_Mask<bool?> checkMask)
         {
-            return ((RaceStatsGenderedCommon)item.CommonInstance).HasBeenSet(
+            return ((RaceStatsGenderedCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RaceStatsGendered_Mask<bool> GetHasBeenSetMask(this IRaceStatsGenderedGetter item)
         {
             var ret = new RaceStatsGendered_Mask<bool>();
-            ((RaceStatsGenderedCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RaceStatsGenderedCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceStatsGenderedGetter item,
             IRaceStatsGenderedGetter rhs)
         {
-            return ((RaceStatsGenderedCommon)item.CommonInstance).Equals(
+            return ((RaceStatsGenderedCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -957,7 +957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RaceStatsGendered_Mask<bool>();
-            ((RaceStatsGenderedCommon)item.CommonInstance).FillEqualsMask(
+            ((RaceStatsGenderedCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

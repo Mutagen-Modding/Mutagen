@@ -157,15 +157,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ILeveledCreatureInternalGetter rhs)) return false;
-            return ((LeveledCreatureCommon)this.CommonInstance).Equals(this, rhs);
+            return ((LeveledCreatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(LeveledCreature obj)
         {
-            return ((LeveledCreatureCommon)this.CommonInstance).Equals(this, obj);
+            return ((LeveledCreatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LeveledCreatureCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LeveledCreatureCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -416,17 +416,6 @@ namespace Mutagen.Bethesda.Oblivion
         public LeveledCreature(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(LeveledCreature obj, LeveledCreature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new LeveledCreature(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -841,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ILeveledCreatureInternal item)
         {
-            ((LeveledCreatureCommon)item.CommonInstance).Clear(item: item);
+            ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static LeveledCreature_Mask<bool> GetEqualsMask(
@@ -849,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILeveledCreatureInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LeveledCreatureCommon)item.CommonInstance).GetEqualsMask(
+            return ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -860,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LeveledCreature_Mask<bool> printMask = null)
         {
-            return ((LeveledCreatureCommon)item.CommonInstance).ToString(
+            return ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -872,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LeveledCreature_Mask<bool> printMask = null)
         {
-            ((LeveledCreatureCommon)item.CommonInstance).ToString(
+            ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -883,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILeveledCreatureInternalGetter item,
             LeveledCreature_Mask<bool?> checkMask)
         {
-            return ((LeveledCreatureCommon)item.CommonInstance).HasBeenSet(
+            return ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -891,7 +880,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LeveledCreature_Mask<bool> GetHasBeenSetMask(this ILeveledCreatureInternalGetter item)
         {
             var ret = new LeveledCreature_Mask<bool>();
-            ((LeveledCreatureCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -901,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILeveledCreatureInternalGetter item,
             ILeveledCreatureInternalGetter rhs)
         {
-            return ((LeveledCreatureCommon)item.CommonInstance).Equals(
+            return ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1346,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new LeveledCreature_Mask<bool>();
-            ((LeveledCreatureCommon)item.CommonInstance).FillEqualsMask(
+            ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1646,6 +1635,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(LeveledCreature obj, LeveledCreature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new LeveledCreature(getNextFormKey());
+            ret.CopyFieldsFrom((LeveledCreature)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (LeveledCreature)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

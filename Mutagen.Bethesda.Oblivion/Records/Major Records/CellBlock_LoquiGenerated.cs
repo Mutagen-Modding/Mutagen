@@ -121,15 +121,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ICellBlockGetter rhs)) return false;
-            return ((CellBlockCommon)this.CommonInstance).Equals(this, rhs);
+            return ((CellBlockCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(CellBlock obj)
         {
-            return ((CellBlockCommon)this.CommonInstance).Equals(this, obj);
+            return ((CellBlockCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((CellBlockCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((CellBlockCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -671,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ICellBlock item)
         {
-            ((CellBlockCommon)item.CommonInstance).Clear(item: item);
+            ((CellBlockCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static CellBlock_Mask<bool> GetEqualsMask(
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICellBlockGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CellBlockCommon)item.CommonInstance).GetEqualsMask(
+            return ((CellBlockCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             CellBlock_Mask<bool> printMask = null)
         {
-            return ((CellBlockCommon)item.CommonInstance).ToString(
+            return ((CellBlockCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             CellBlock_Mask<bool> printMask = null)
         {
-            ((CellBlockCommon)item.CommonInstance).ToString(
+            ((CellBlockCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellBlockGetter item,
             CellBlock_Mask<bool?> checkMask)
         {
-            return ((CellBlockCommon)item.CommonInstance).HasBeenSet(
+            return ((CellBlockCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -721,7 +721,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CellBlock_Mask<bool> GetHasBeenSetMask(this ICellBlockGetter item)
         {
             var ret = new CellBlock_Mask<bool>();
-            ((CellBlockCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((CellBlockCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellBlockGetter item,
             ICellBlockGetter rhs)
         {
-            return ((CellBlockCommon)item.CommonInstance).Equals(
+            return ((CellBlockCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new CellBlock_Mask<bool>();
-            ((CellBlockCommon)item.CommonInstance).FillEqualsMask(
+            ((CellBlockCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

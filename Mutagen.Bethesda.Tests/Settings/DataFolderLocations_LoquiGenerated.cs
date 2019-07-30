@@ -88,15 +88,15 @@ namespace Mutagen.Bethesda.Tests
         public override bool Equals(object obj)
         {
             if (!(obj is IDataFolderLocationsGetter rhs)) return false;
-            return ((DataFolderLocationsCommon)this.CommonInstance).Equals(this, rhs);
+            return ((DataFolderLocationsCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(DataFolderLocations obj)
         {
-            return ((DataFolderLocationsCommon)this.CommonInstance).Equals(this, obj);
+            return ((DataFolderLocationsCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DataFolderLocationsCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((DataFolderLocationsCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public static void Clear(this IDataFolderLocations item)
         {
-            ((DataFolderLocationsCommon)item.CommonInstance).Clear(item: item);
+            ((DataFolderLocationsCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static DataFolderLocations_Mask<bool> GetEqualsMask(
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Tests
             IDataFolderLocationsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DataFolderLocationsCommon)item.CommonInstance).GetEqualsMask(
+            return ((DataFolderLocationsCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null,
             DataFolderLocations_Mask<bool> printMask = null)
         {
-            return ((DataFolderLocationsCommon)item.CommonInstance).ToString(
+            return ((DataFolderLocationsCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null,
             DataFolderLocations_Mask<bool> printMask = null)
         {
-            ((DataFolderLocationsCommon)item.CommonInstance).ToString(
+            ((DataFolderLocationsCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Tests
             this IDataFolderLocationsGetter item,
             DataFolderLocations_Mask<bool?> checkMask)
         {
-            return ((DataFolderLocationsCommon)item.CommonInstance).HasBeenSet(
+            return ((DataFolderLocationsCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Tests
         public static DataFolderLocations_Mask<bool> GetHasBeenSetMask(this IDataFolderLocationsGetter item)
         {
             var ret = new DataFolderLocations_Mask<bool>();
-            ((DataFolderLocationsCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((DataFolderLocationsCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -622,7 +622,7 @@ namespace Mutagen.Bethesda.Tests
             this IDataFolderLocationsGetter item,
             IDataFolderLocationsGetter rhs)
         {
-            return ((DataFolderLocationsCommon)item.CommonInstance).Equals(
+            return ((DataFolderLocationsCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new DataFolderLocations_Mask<bool>();
-            ((DataFolderLocationsCommon)item.CommonInstance).FillEqualsMask(
+            ((DataFolderLocationsCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

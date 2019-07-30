@@ -131,15 +131,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IMagicEffectSubDataGetter rhs)) return false;
-            return ((MagicEffectSubDataCommon)this.CommonInstance).Equals(this, rhs);
+            return ((MagicEffectSubDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(MagicEffectSubData obj)
         {
-            return ((MagicEffectSubDataCommon)this.CommonInstance).Equals(this, obj);
+            return ((MagicEffectSubDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((MagicEffectSubDataCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((MagicEffectSubDataCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IMagicEffectSubData item)
         {
-            ((MagicEffectSubDataCommon)item.CommonInstance).Clear(item: item);
+            ((MagicEffectSubDataCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static MagicEffectSubData_Mask<bool> GetEqualsMask(
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion
             IMagicEffectSubDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MagicEffectSubDataCommon)item.CommonInstance).GetEqualsMask(
+            return ((MagicEffectSubDataCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             MagicEffectSubData_Mask<bool> printMask = null)
         {
-            return ((MagicEffectSubDataCommon)item.CommonInstance).ToString(
+            return ((MagicEffectSubDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             MagicEffectSubData_Mask<bool> printMask = null)
         {
-            ((MagicEffectSubDataCommon)item.CommonInstance).ToString(
+            ((MagicEffectSubDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectSubDataGetter item,
             MagicEffectSubData_Mask<bool?> checkMask)
         {
-            return ((MagicEffectSubDataCommon)item.CommonInstance).HasBeenSet(
+            return ((MagicEffectSubDataCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static MagicEffectSubData_Mask<bool> GetHasBeenSetMask(this IMagicEffectSubDataGetter item)
         {
             var ret = new MagicEffectSubData_Mask<bool>();
-            ((MagicEffectSubDataCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((MagicEffectSubDataCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectSubDataGetter item,
             IMagicEffectSubDataGetter rhs)
         {
-            return ((MagicEffectSubDataCommon)item.CommonInstance).Equals(
+            return ((MagicEffectSubDataCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new MagicEffectSubData_Mask<bool>();
-            ((MagicEffectSubDataCommon)item.CommonInstance).FillEqualsMask(
+            ((MagicEffectSubDataCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

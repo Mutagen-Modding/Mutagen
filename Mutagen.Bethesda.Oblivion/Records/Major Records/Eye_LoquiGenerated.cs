@@ -153,15 +153,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IEyeInternalGetter rhs)) return false;
-            return ((EyeCommon)this.CommonInstance).Equals(this, rhs);
+            return ((EyeCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Eye obj)
         {
-            return ((EyeCommon)this.CommonInstance).Equals(this, obj);
+            return ((EyeCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((EyeCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((EyeCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -369,17 +369,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Eye(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Eye obj, Eye rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Eye(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -759,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IEyeInternal item)
         {
-            ((EyeCommon)item.CommonInstance).Clear(item: item);
+            ((EyeCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Eye_Mask<bool> GetEqualsMask(
@@ -767,7 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
             IEyeInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((EyeCommon)item.CommonInstance).GetEqualsMask(
+            return ((EyeCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -778,7 +767,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Eye_Mask<bool> printMask = null)
         {
-            return ((EyeCommon)item.CommonInstance).ToString(
+            return ((EyeCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -790,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Eye_Mask<bool> printMask = null)
         {
-            ((EyeCommon)item.CommonInstance).ToString(
+            ((EyeCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -801,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEyeInternalGetter item,
             Eye_Mask<bool?> checkMask)
         {
-            return ((EyeCommon)item.CommonInstance).HasBeenSet(
+            return ((EyeCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -809,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Eye_Mask<bool> GetHasBeenSetMask(this IEyeInternalGetter item)
         {
             var ret = new Eye_Mask<bool>();
-            ((EyeCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((EyeCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -819,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEyeInternalGetter item,
             IEyeInternalGetter rhs)
         {
-            return ((EyeCommon)item.CommonInstance).Equals(
+            return ((EyeCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1187,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Eye_Mask<bool>();
-            ((EyeCommon)item.CommonInstance).FillEqualsMask(
+            ((EyeCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1405,6 +1394,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Eye obj, Eye rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Eye(getNextFormKey());
+            ret.CopyFieldsFrom((Eye)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Eye)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

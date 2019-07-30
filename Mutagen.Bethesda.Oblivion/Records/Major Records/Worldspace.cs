@@ -49,43 +49,6 @@ namespace Mutagen.Bethesda.Oblivion
         };
         private static readonly TranslationCrystal SubBlockXmlFolderTranslationCrystal = SubBlockXmlFolderTranslation.GetCrystal();
 
-        private static WorldspaceBlock_CopyMask duplicateBlockCopyMask = new WorldspaceBlock_CopyMask(true)
-        {
-            Items = new MaskItem<CopyOption, WorldspaceSubBlock_CopyMask>(CopyOption.Skip, null)
-        };
-
-        private static WorldspaceSubBlock_CopyMask duplicateSubBlockCopyMask = new WorldspaceSubBlock_CopyMask(true)
-        {
-            Items = new MaskItem<CopyOption, Cell_CopyMask>(CopyOption.Skip, null)
-        };
-
-        partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            if (rhs.Road_IsSet
-                && rhs.Road != null)
-            {
-                obj.Road = (Road)rhs.Road.Duplicate(getNextFormKey, duplicatedRecords);
-            }
-            if (rhs.TopCell_IsSet
-                && rhs.TopCell != null)
-            {
-                obj.TopCell = (Cell)rhs.TopCell.Duplicate(getNextFormKey, duplicatedRecords);
-            }
-            obj.SubCells.SetTo(rhs.SubCells.Items.Select((block) =>
-            {
-                var blockRet = new WorldspaceBlock();
-                blockRet.CopyFieldsFrom(block, duplicateBlockCopyMask);
-                blockRet.Items.SetTo(block.Items.Select((subBlock) =>
-                {
-                    var subBlockRet = new WorldspaceSubBlock();
-                    subBlockRet.CopyFieldsFrom(subBlock, duplicateSubBlockCopyMask);
-                    subBlockRet.Items.SetTo(subBlock.Items.Select(c => (Cell)c.Duplicate(getNextFormKey, duplicatedRecords)));
-                    return subBlockRet;
-                }));
-                return blockRet;
-            }));
-        }
-
         public static async Task<TryGet<Worldspace>> TryCreateXmFolder(
             DirectoryPath dir,
             ErrorMaskBuilder errorMask)
@@ -268,6 +231,46 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
+        public partial class WorldspaceCommon
+        {
+            private static WorldspaceBlock_CopyMask duplicateBlockCopyMask = new WorldspaceBlock_CopyMask(true)
+            {
+                Items = new MaskItem<CopyOption, WorldspaceSubBlock_CopyMask>(CopyOption.Skip, null)
+            };
+
+            private static WorldspaceSubBlock_CopyMask duplicateSubBlockCopyMask = new WorldspaceSubBlock_CopyMask(true)
+            {
+                Items = new MaskItem<CopyOption, Cell_CopyMask>(CopyOption.Skip, null)
+            };
+
+            partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+            {
+                if (rhs.Road_IsSet
+                    && rhs.Road != null)
+                {
+                    obj.Road = (Road)rhs.Road.Duplicate(getNextFormKey, duplicatedRecords);
+                }
+                if (rhs.TopCell_IsSet
+                    && rhs.TopCell != null)
+                {
+                    obj.TopCell = (Cell)rhs.TopCell.Duplicate(getNextFormKey, duplicatedRecords);
+                }
+                obj.SubCells.SetTo(rhs.SubCells.Items.Select((block) =>
+                {
+                    var blockRet = new WorldspaceBlock();
+                    blockRet.CopyFieldsFrom(block, duplicateBlockCopyMask);
+                    blockRet.Items.SetTo(block.Items.Select((subBlock) =>
+                    {
+                        var subBlockRet = new WorldspaceSubBlock();
+                        subBlockRet.CopyFieldsFrom(subBlock, duplicateSubBlockCopyMask);
+                        subBlockRet.Items.SetTo(subBlock.Items.Select(c => (Cell)c.Duplicate(getNextFormKey, duplicatedRecords)));
+                        return subBlockRet;
+                    }));
+                    return blockRet;
+                }));
+            }
+        }
+
         public partial class WorldspaceBinaryWriteTranslation
         {
             static partial void WriteBinaryOffsetLengthCustom(MutagenWriter writer, IWorldspaceInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)

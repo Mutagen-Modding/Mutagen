@@ -244,15 +244,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IIngredientInternalGetter rhs)) return false;
-            return ((IngredientCommon)this.CommonInstance).Equals(this, rhs);
+            return ((IngredientCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Ingredient obj)
         {
-            return ((IngredientCommon)this.CommonInstance).Equals(this, obj);
+            return ((IngredientCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((IngredientCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((IngredientCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -511,17 +511,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Ingredient(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Ingredient obj, Ingredient rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Ingredient(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1049,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IIngredientInternal item)
         {
-            ((IngredientCommon)item.CommonInstance).Clear(item: item);
+            ((IngredientCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Ingredient_Mask<bool> GetEqualsMask(
@@ -1057,7 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion
             IIngredientInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((IngredientCommon)item.CommonInstance).GetEqualsMask(
+            return ((IngredientCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1068,7 +1057,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Ingredient_Mask<bool> printMask = null)
         {
-            return ((IngredientCommon)item.CommonInstance).ToString(
+            return ((IngredientCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1080,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Ingredient_Mask<bool> printMask = null)
         {
-            ((IngredientCommon)item.CommonInstance).ToString(
+            ((IngredientCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1091,7 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IIngredientInternalGetter item,
             Ingredient_Mask<bool?> checkMask)
         {
-            return ((IngredientCommon)item.CommonInstance).HasBeenSet(
+            return ((IngredientCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1099,7 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Ingredient_Mask<bool> GetHasBeenSetMask(this IIngredientInternalGetter item)
         {
             var ret = new Ingredient_Mask<bool>();
-            ((IngredientCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((IngredientCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1109,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IIngredientInternalGetter item,
             IIngredientInternalGetter rhs)
         {
-            return ((IngredientCommon)item.CommonInstance).Equals(
+            return ((IngredientCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1704,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Ingredient_Mask<bool>();
-            ((IngredientCommon)item.CommonInstance).FillEqualsMask(
+            ((IngredientCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2049,6 +2038,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Ingredient obj, Ingredient rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Ingredient(getNextFormKey());
+            ret.CopyFieldsFrom((Ingredient)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Ingredient)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

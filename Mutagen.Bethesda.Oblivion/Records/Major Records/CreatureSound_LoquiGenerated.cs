@@ -115,15 +115,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ICreatureSoundGetter rhs)) return false;
-            return ((CreatureSoundCommon)this.CommonInstance).Equals(this, rhs);
+            return ((CreatureSoundCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(CreatureSound obj)
         {
-            return ((CreatureSoundCommon)this.CommonInstance).Equals(this, obj);
+            return ((CreatureSoundCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((CreatureSoundCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((CreatureSoundCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ICreatureSound item)
         {
-            ((CreatureSoundCommon)item.CommonInstance).Clear(item: item);
+            ((CreatureSoundCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static CreatureSound_Mask<bool> GetEqualsMask(
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICreatureSoundGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CreatureSoundCommon)item.CommonInstance).GetEqualsMask(
+            return ((CreatureSoundCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -660,7 +660,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             CreatureSound_Mask<bool> printMask = null)
         {
-            return ((CreatureSoundCommon)item.CommonInstance).ToString(
+            return ((CreatureSoundCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             CreatureSound_Mask<bool> printMask = null)
         {
-            ((CreatureSoundCommon)item.CommonInstance).ToString(
+            ((CreatureSoundCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICreatureSoundGetter item,
             CreatureSound_Mask<bool?> checkMask)
         {
-            return ((CreatureSoundCommon)item.CommonInstance).HasBeenSet(
+            return ((CreatureSoundCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CreatureSound_Mask<bool> GetHasBeenSetMask(this ICreatureSoundGetter item)
         {
             var ret = new CreatureSound_Mask<bool>();
-            ((CreatureSoundCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((CreatureSoundCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -701,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICreatureSoundGetter item,
             ICreatureSoundGetter rhs)
         {
-            return ((CreatureSoundCommon)item.CommonInstance).Equals(
+            return ((CreatureSoundCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new CreatureSound_Mask<bool>();
-            ((CreatureSoundCommon)item.CommonInstance).FillEqualsMask(
+            ((CreatureSoundCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

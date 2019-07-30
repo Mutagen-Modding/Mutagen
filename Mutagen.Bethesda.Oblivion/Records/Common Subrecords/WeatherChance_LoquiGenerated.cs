@@ -91,15 +91,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IWeatherChanceGetter rhs)) return false;
-            return ((WeatherChanceCommon)this.CommonInstance).Equals(this, rhs);
+            return ((WeatherChanceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(WeatherChance obj)
         {
-            return ((WeatherChanceCommon)this.CommonInstance).Equals(this, obj);
+            return ((WeatherChanceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WeatherChanceCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((WeatherChanceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IWeatherChance item)
         {
-            ((WeatherChanceCommon)item.CommonInstance).Clear(item: item);
+            ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static WeatherChance_Mask<bool> GetEqualsMask(
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWeatherChanceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WeatherChanceCommon)item.CommonInstance).GetEqualsMask(
+            return ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             WeatherChance_Mask<bool> printMask = null)
         {
-            return ((WeatherChanceCommon)item.CommonInstance).ToString(
+            return ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             WeatherChance_Mask<bool> printMask = null)
         {
-            ((WeatherChanceCommon)item.CommonInstance).ToString(
+            ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherChanceGetter item,
             WeatherChance_Mask<bool?> checkMask)
         {
-            return ((WeatherChanceCommon)item.CommonInstance).HasBeenSet(
+            return ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherChance_Mask<bool> GetHasBeenSetMask(this IWeatherChanceGetter item)
         {
             var ret = new WeatherChance_Mask<bool>();
-            ((WeatherChanceCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherChanceGetter item,
             IWeatherChanceGetter rhs)
         {
-            return ((WeatherChanceCommon)item.CommonInstance).Equals(
+            return ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new WeatherChance_Mask<bool>();
-            ((WeatherChanceCommon)item.CommonInstance).FillEqualsMask(
+            ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

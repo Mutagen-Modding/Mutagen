@@ -603,15 +603,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IWaterInternalGetter rhs)) return false;
-            return ((WaterCommon)this.CommonInstance).Equals(this, rhs);
+            return ((WaterCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Water obj)
         {
-            return ((WaterCommon)this.CommonInstance).Equals(this, obj);
+            return ((WaterCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WaterCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((WaterCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -904,17 +904,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Water(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Water obj, Water rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Water(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1998,7 +1987,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IWaterInternal item)
         {
-            ((WaterCommon)item.CommonInstance).Clear(item: item);
+            ((WaterCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Water_Mask<bool> GetEqualsMask(
@@ -2006,7 +1995,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWaterInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WaterCommon)item.CommonInstance).GetEqualsMask(
+            return ((WaterCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -2017,7 +2006,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Water_Mask<bool> printMask = null)
         {
-            return ((WaterCommon)item.CommonInstance).ToString(
+            return ((WaterCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -2029,7 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Water_Mask<bool> printMask = null)
         {
-            ((WaterCommon)item.CommonInstance).ToString(
+            ((WaterCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -2040,7 +2029,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterInternalGetter item,
             Water_Mask<bool?> checkMask)
         {
-            return ((WaterCommon)item.CommonInstance).HasBeenSet(
+            return ((WaterCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -2048,7 +2037,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Water_Mask<bool> GetHasBeenSetMask(this IWaterInternalGetter item)
         {
             var ret = new Water_Mask<bool>();
-            ((WaterCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((WaterCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -2058,7 +2047,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterInternalGetter item,
             IWaterInternalGetter rhs)
         {
-            return ((WaterCommon)item.CommonInstance).Equals(
+            return ((WaterCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -3363,7 +3352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Water_Mask<bool>();
-            ((WaterCommon)item.CommonInstance).FillEqualsMask(
+            ((WaterCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -3850,6 +3839,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Water obj, Water rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Water(getNextFormKey());
+            ret.CopyFieldsFrom((Water)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Water)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

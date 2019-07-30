@@ -98,15 +98,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IDistantLODDataGetter rhs)) return false;
-            return ((DistantLODDataCommon)this.CommonInstance).Equals(this, rhs);
+            return ((DistantLODDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(DistantLODData obj)
         {
-            return ((DistantLODDataCommon)this.CommonInstance).Equals(this, obj);
+            return ((DistantLODDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DistantLODDataCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((DistantLODDataCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IDistantLODData item)
         {
-            ((DistantLODDataCommon)item.CommonInstance).Clear(item: item);
+            ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static DistantLODData_Mask<bool> GetEqualsMask(
@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
             IDistantLODDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DistantLODDataCommon)item.CommonInstance).GetEqualsMask(
+            return ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             DistantLODData_Mask<bool> printMask = null)
         {
-            return ((DistantLODDataCommon)item.CommonInstance).ToString(
+            return ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             DistantLODData_Mask<bool> printMask = null)
         {
-            ((DistantLODDataCommon)item.CommonInstance).ToString(
+            ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODDataGetter item,
             DistantLODData_Mask<bool?> checkMask)
         {
-            return ((DistantLODDataCommon)item.CommonInstance).HasBeenSet(
+            return ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static DistantLODData_Mask<bool> GetHasBeenSetMask(this IDistantLODDataGetter item)
         {
             var ret = new DistantLODData_Mask<bool>();
-            ((DistantLODDataCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODDataGetter item,
             IDistantLODDataGetter rhs)
         {
-            return ((DistantLODDataCommon)item.CommonInstance).Equals(
+            return ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new DistantLODData_Mask<bool>();
-            ((DistantLODDataCommon)item.CommonInstance).FillEqualsMask(
+            ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

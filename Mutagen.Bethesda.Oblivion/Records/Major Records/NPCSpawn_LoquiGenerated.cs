@@ -75,15 +75,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is INPCSpawnInternalGetter rhs)) return false;
-            return ((NPCSpawnCommon)this.CommonInstance).Equals(this, rhs);
+            return ((NPCSpawnCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(NPCSpawn obj)
         {
-            return ((NPCSpawnCommon)this.CommonInstance).Equals(this, obj);
+            return ((NPCSpawnCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((NPCSpawnCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((NPCSpawnCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this INPCSpawnInternal item)
         {
-            ((NPCSpawnCommon)item.CommonInstance).Clear(item: item);
+            ((NPCSpawnCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static NPCSpawn_Mask<bool> GetEqualsMask(
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Oblivion
             INPCSpawnInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((NPCSpawnCommon)item.CommonInstance).GetEqualsMask(
+            return ((NPCSpawnCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             NPCSpawn_Mask<bool> printMask = null)
         {
-            return ((NPCSpawnCommon)item.CommonInstance).ToString(
+            return ((NPCSpawnCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             NPCSpawn_Mask<bool> printMask = null)
         {
-            ((NPCSpawnCommon)item.CommonInstance).ToString(
+            ((NPCSpawnCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCSpawnInternalGetter item,
             NPCSpawn_Mask<bool?> checkMask)
         {
-            return ((NPCSpawnCommon)item.CommonInstance).HasBeenSet(
+            return ((NPCSpawnCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static NPCSpawn_Mask<bool> GetHasBeenSetMask(this INPCSpawnInternalGetter item)
         {
             var ret = new NPCSpawn_Mask<bool>();
-            ((NPCSpawnCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((NPCSpawnCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCSpawnInternalGetter item,
             INPCSpawnInternalGetter rhs)
         {
-            return ((NPCSpawnCommon)item.CommonInstance).Equals(
+            return ((NPCSpawnCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new NPCSpawn_Mask<bool>();
-            ((NPCSpawnCommon)item.CommonInstance).FillEqualsMask(
+            ((NPCSpawnCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -925,6 +925,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(NPCSpawn obj, NPCSpawn rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
     }
     #endregion

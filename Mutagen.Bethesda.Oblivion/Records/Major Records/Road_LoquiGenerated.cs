@@ -88,15 +88,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRoadInternalGetter rhs)) return false;
-            return ((RoadCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RoadCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Road obj)
         {
-            return ((RoadCommon)this.CommonInstance).Equals(this, obj);
+            return ((RoadCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RoadCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RoadCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -291,17 +291,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Road(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Road obj, Road rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Road(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -605,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRoadInternal item)
         {
-            ((RoadCommon)item.CommonInstance).Clear(item: item);
+            ((RoadCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Road_Mask<bool> GetEqualsMask(
@@ -613,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRoadInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RoadCommon)item.CommonInstance).GetEqualsMask(
+            return ((RoadCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -624,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Road_Mask<bool> printMask = null)
         {
-            return ((RoadCommon)item.CommonInstance).ToString(
+            return ((RoadCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -636,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Road_Mask<bool> printMask = null)
         {
-            ((RoadCommon)item.CommonInstance).ToString(
+            ((RoadCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -647,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadInternalGetter item,
             Road_Mask<bool?> checkMask)
         {
-            return ((RoadCommon)item.CommonInstance).HasBeenSet(
+            return ((RoadCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -655,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Road_Mask<bool> GetHasBeenSetMask(this IRoadInternalGetter item)
         {
             var ret = new Road_Mask<bool>();
-            ((RoadCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RoadCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -665,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadInternalGetter item,
             IRoadInternalGetter rhs)
         {
-            return ((RoadCommon)item.CommonInstance).Equals(
+            return ((RoadCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -949,7 +938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Road_Mask<bool>();
-            ((RoadCommon)item.CommonInstance).FillEqualsMask(
+            ((RoadCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1152,6 +1141,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Road obj, Road rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Road(getNextFormKey());
+            ret.CopyFieldsFrom((Road)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Road)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

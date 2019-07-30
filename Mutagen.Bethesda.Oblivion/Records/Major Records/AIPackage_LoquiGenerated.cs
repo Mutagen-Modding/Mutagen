@@ -211,15 +211,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IAIPackageInternalGetter rhs)) return false;
-            return ((AIPackageCommon)this.CommonInstance).Equals(this, rhs);
+            return ((AIPackageCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(AIPackage obj)
         {
-            return ((AIPackageCommon)this.CommonInstance).Equals(this, obj);
+            return ((AIPackageCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((AIPackageCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((AIPackageCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -474,17 +474,6 @@ namespace Mutagen.Bethesda.Oblivion
         public AIPackage(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(AIPackage obj, AIPackage rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new AIPackage(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -969,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IAIPackageInternal item)
         {
-            ((AIPackageCommon)item.CommonInstance).Clear(item: item);
+            ((AIPackageCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static AIPackage_Mask<bool> GetEqualsMask(
@@ -977,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion
             IAIPackageInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AIPackageCommon)item.CommonInstance).GetEqualsMask(
+            return ((AIPackageCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -988,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             AIPackage_Mask<bool> printMask = null)
         {
-            return ((AIPackageCommon)item.CommonInstance).ToString(
+            return ((AIPackageCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1000,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             AIPackage_Mask<bool> printMask = null)
         {
-            ((AIPackageCommon)item.CommonInstance).ToString(
+            ((AIPackageCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1011,7 +1000,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageInternalGetter item,
             AIPackage_Mask<bool?> checkMask)
         {
-            return ((AIPackageCommon)item.CommonInstance).HasBeenSet(
+            return ((AIPackageCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1019,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackage_Mask<bool> GetHasBeenSetMask(this IAIPackageInternalGetter item)
         {
             var ret = new AIPackage_Mask<bool>();
-            ((AIPackageCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((AIPackageCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1029,7 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageInternalGetter item,
             IAIPackageInternalGetter rhs)
         {
-            return ((AIPackageCommon)item.CommonInstance).Equals(
+            return ((AIPackageCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1587,7 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new AIPackage_Mask<bool>();
-            ((AIPackageCommon)item.CommonInstance).FillEqualsMask(
+            ((AIPackageCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1881,6 +1870,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(AIPackage obj, AIPackage rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new AIPackage(getNextFormKey());
+            ret.CopyFieldsFrom((AIPackage)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (AIPackage)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

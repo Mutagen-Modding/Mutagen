@@ -188,15 +188,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IEffectInternalGetter rhs)) return false;
-            return ((EffectCommon)this.CommonInstance).Equals(this, rhs);
+            return ((EffectCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Effect obj)
         {
-            return ((EffectCommon)this.CommonInstance).Equals(this, obj);
+            return ((EffectCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((EffectCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((EffectCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IEffectInternal item)
         {
-            ((EffectCommon)item.CommonInstance).Clear(item: item);
+            ((EffectCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Effect_Mask<bool> GetEqualsMask(
@@ -860,7 +860,7 @@ namespace Mutagen.Bethesda.Oblivion
             IEffectInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((EffectCommon)item.CommonInstance).GetEqualsMask(
+            return ((EffectCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -871,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Effect_Mask<bool> printMask = null)
         {
-            return ((EffectCommon)item.CommonInstance).ToString(
+            return ((EffectCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Effect_Mask<bool> printMask = null)
         {
-            ((EffectCommon)item.CommonInstance).ToString(
+            ((EffectCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -894,7 +894,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectInternalGetter item,
             Effect_Mask<bool?> checkMask)
         {
-            return ((EffectCommon)item.CommonInstance).HasBeenSet(
+            return ((EffectCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Effect_Mask<bool> GetHasBeenSetMask(this IEffectInternalGetter item)
         {
             var ret = new Effect_Mask<bool>();
-            ((EffectCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((EffectCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -912,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectInternalGetter item,
             IEffectInternalGetter rhs)
         {
-            return ((EffectCommon)item.CommonInstance).Equals(
+            return ((EffectCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1386,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Effect_Mask<bool>();
-            ((EffectCommon)item.CommonInstance).FillEqualsMask(
+            ((EffectCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

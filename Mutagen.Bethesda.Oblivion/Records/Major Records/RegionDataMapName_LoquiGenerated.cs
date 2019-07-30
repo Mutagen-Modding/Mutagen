@@ -99,15 +99,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRegionDataMapNameInternalGetter rhs)) return false;
-            return ((RegionDataMapNameCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RegionDataMapNameCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(RegionDataMapName obj)
         {
-            return ((RegionDataMapNameCommon)this.CommonInstance).Equals(this, obj);
+            return ((RegionDataMapNameCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RegionDataMapNameCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RegionDataMapNameCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRegionDataMapNameInternal item)
         {
-            ((RegionDataMapNameCommon)item.CommonInstance).Clear(item: item);
+            ((RegionDataMapNameCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static RegionDataMapName_Mask<bool> GetEqualsMask(
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionDataMapNameInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionDataMapNameCommon)item.CommonInstance).GetEqualsMask(
+            return ((RegionDataMapNameCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionDataMapName_Mask<bool> printMask = null)
         {
-            return ((RegionDataMapNameCommon)item.CommonInstance).ToString(
+            return ((RegionDataMapNameCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionDataMapName_Mask<bool> printMask = null)
         {
-            ((RegionDataMapNameCommon)item.CommonInstance).ToString(
+            ((RegionDataMapNameCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataMapNameInternalGetter item,
             RegionDataMapName_Mask<bool?> checkMask)
         {
-            return ((RegionDataMapNameCommon)item.CommonInstance).HasBeenSet(
+            return ((RegionDataMapNameCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -671,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionDataMapName_Mask<bool> GetHasBeenSetMask(this IRegionDataMapNameInternalGetter item)
         {
             var ret = new RegionDataMapName_Mask<bool>();
-            ((RegionDataMapNameCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RegionDataMapNameCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataMapNameInternalGetter item,
             IRegionDataMapNameInternalGetter rhs)
         {
-            return ((RegionDataMapNameCommon)item.CommonInstance).Equals(
+            return ((RegionDataMapNameCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionDataMapName_Mask<bool>();
-            ((RegionDataMapNameCommon)item.CommonInstance).FillEqualsMask(
+            ((RegionDataMapNameCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

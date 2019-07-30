@@ -12,16 +12,16 @@ using Mutagen.Bethesda.Oblivion.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class DialogTopic
-    {
-        partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            obj.Items.SetTo(rhs.Items.Select((dia) => (DialogItem)dia.Duplicate(getNextFormKey, duplicatedRecords)));
-        }
-    }
-
     namespace Internals
     {
+        public partial class DialogTopicCommon
+        {
+            partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+            {
+                obj.Items.SetTo(rhs.Items.Select((dia) => (DialogItem)dia.Duplicate(getNextFormKey, duplicatedRecords)));
+            }
+        }
+
         public partial class DialogTopicBinaryCreateTranslation
         { 
             static partial void CustomBinaryEndImport(MutagenFrame frame, DialogTopic obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)

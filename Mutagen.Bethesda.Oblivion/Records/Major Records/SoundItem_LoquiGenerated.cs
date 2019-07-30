@@ -109,15 +109,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ISoundItemGetter rhs)) return false;
-            return ((SoundItemCommon)this.CommonInstance).Equals(this, rhs);
+            return ((SoundItemCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(SoundItem obj)
         {
-            return ((SoundItemCommon)this.CommonInstance).Equals(this, obj);
+            return ((SoundItemCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SoundItemCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SoundItemCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ISoundItem item)
         {
-            ((SoundItemCommon)item.CommonInstance).Clear(item: item);
+            ((SoundItemCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static SoundItem_Mask<bool> GetEqualsMask(
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISoundItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SoundItemCommon)item.CommonInstance).GetEqualsMask(
+            return ((SoundItemCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SoundItem_Mask<bool> printMask = null)
         {
-            return ((SoundItemCommon)item.CommonInstance).ToString(
+            return ((SoundItemCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SoundItem_Mask<bool> printMask = null)
         {
-            ((SoundItemCommon)item.CommonInstance).ToString(
+            ((SoundItemCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundItemGetter item,
             SoundItem_Mask<bool?> checkMask)
         {
-            return ((SoundItemCommon)item.CommonInstance).HasBeenSet(
+            return ((SoundItemCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SoundItem_Mask<bool> GetHasBeenSetMask(this ISoundItemGetter item)
         {
             var ret = new SoundItem_Mask<bool>();
-            ((SoundItemCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((SoundItemCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundItemGetter item,
             ISoundItemGetter rhs)
         {
-            return ((SoundItemCommon)item.CommonInstance).Equals(
+            return ((SoundItemCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SoundItem_Mask<bool>();
-            ((SoundItemCommon)item.CommonInstance).FillEqualsMask(
+            ((SoundItemCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

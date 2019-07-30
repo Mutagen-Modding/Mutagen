@@ -1013,15 +1013,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is INPCInternalGetter rhs)) return false;
-            return ((NPCCommon)this.CommonInstance).Equals(this, rhs);
+            return ((NPCCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(NPC obj)
         {
-            return ((NPCCommon)this.CommonInstance).Equals(this, obj);
+            return ((NPCCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((NPCCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((NPCCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -1425,17 +1425,6 @@ namespace Mutagen.Bethesda.Oblivion
         public NPC(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(NPC obj, NPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new NPC(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -2953,7 +2942,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this INPCInternal item)
         {
-            ((NPCCommon)item.CommonInstance).Clear(item: item);
+            ((NPCCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static NPC_Mask<bool> GetEqualsMask(
@@ -2961,7 +2950,7 @@ namespace Mutagen.Bethesda.Oblivion
             INPCInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((NPCCommon)item.CommonInstance).GetEqualsMask(
+            return ((NPCCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -2972,7 +2961,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             NPC_Mask<bool> printMask = null)
         {
-            return ((NPCCommon)item.CommonInstance).ToString(
+            return ((NPCCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -2984,7 +2973,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             NPC_Mask<bool> printMask = null)
         {
-            ((NPCCommon)item.CommonInstance).ToString(
+            ((NPCCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -2995,7 +2984,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCInternalGetter item,
             NPC_Mask<bool?> checkMask)
         {
-            return ((NPCCommon)item.CommonInstance).HasBeenSet(
+            return ((NPCCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -3003,7 +2992,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static NPC_Mask<bool> GetHasBeenSetMask(this INPCInternalGetter item)
         {
             var ret = new NPC_Mask<bool>();
-            ((NPCCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((NPCCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -3013,7 +3002,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCInternalGetter item,
             INPCInternalGetter rhs)
         {
-            return ((NPCCommon)item.CommonInstance).Equals(
+            return ((NPCCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -5450,7 +5439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new NPC_Mask<bool>();
-            ((NPCCommon)item.CommonInstance).FillEqualsMask(
+            ((NPCCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -6493,6 +6482,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(NPC obj, NPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new NPC(getNextFormKey());
+            ret.CopyFieldsFrom((NPC)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (NPC)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

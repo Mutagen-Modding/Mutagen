@@ -141,15 +141,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IMapMarkerGetter rhs)) return false;
-            return ((MapMarkerCommon)this.CommonInstance).Equals(this, rhs);
+            return ((MapMarkerCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(MapMarker obj)
         {
-            return ((MapMarkerCommon)this.CommonInstance).Equals(this, obj);
+            return ((MapMarkerCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((MapMarkerCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((MapMarkerCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IMapMarker item)
         {
-            ((MapMarkerCommon)item.CommonInstance).Clear(item: item);
+            ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static MapMarker_Mask<bool> GetEqualsMask(
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Oblivion
             IMapMarkerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MapMarkerCommon)item.CommonInstance).GetEqualsMask(
+            return ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             MapMarker_Mask<bool> printMask = null)
         {
-            return ((MapMarkerCommon)item.CommonInstance).ToString(
+            return ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             MapMarker_Mask<bool> printMask = null)
         {
-            ((MapMarkerCommon)item.CommonInstance).ToString(
+            ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMapMarkerGetter item,
             MapMarker_Mask<bool?> checkMask)
         {
-            return ((MapMarkerCommon)item.CommonInstance).HasBeenSet(
+            return ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -719,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static MapMarker_Mask<bool> GetHasBeenSetMask(this IMapMarkerGetter item)
         {
             var ret = new MapMarker_Mask<bool>();
-            ((MapMarkerCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMapMarkerGetter item,
             IMapMarkerGetter rhs)
         {
-            return ((MapMarkerCommon)item.CommonInstance).Equals(
+            return ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new MapMarker_Mask<bool>();
-            ((MapMarkerCommon)item.CommonInstance).FillEqualsMask(
+            ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

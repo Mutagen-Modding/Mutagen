@@ -100,15 +100,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IGameSettingFloatInternalGetter rhs)) return false;
-            return ((GameSettingFloatCommon)this.CommonInstance).Equals(this, rhs);
+            return ((GameSettingFloatCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(GameSettingFloat obj)
         {
-            return ((GameSettingFloatCommon)this.CommonInstance).Equals(this, obj);
+            return ((GameSettingFloatCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GameSettingFloatCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((GameSettingFloatCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -314,17 +314,6 @@ namespace Mutagen.Bethesda.Oblivion
         public GameSettingFloat(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(GameSettingFloat obj, GameSettingFloat rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new GameSettingFloat(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -640,7 +629,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IGameSettingFloatInternal item)
         {
-            ((GameSettingFloatCommon)item.CommonInstance).Clear(item: item);
+            ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static GameSettingFloat_Mask<bool> GetEqualsMask(
@@ -648,7 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
             IGameSettingFloatInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GameSettingFloatCommon)item.CommonInstance).GetEqualsMask(
+            return ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -659,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             GameSettingFloat_Mask<bool> printMask = null)
         {
-            return ((GameSettingFloatCommon)item.CommonInstance).ToString(
+            return ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -671,7 +660,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             GameSettingFloat_Mask<bool> printMask = null)
         {
-            ((GameSettingFloatCommon)item.CommonInstance).ToString(
+            ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -682,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGameSettingFloatInternalGetter item,
             GameSettingFloat_Mask<bool?> checkMask)
         {
-            return ((GameSettingFloatCommon)item.CommonInstance).HasBeenSet(
+            return ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -690,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static GameSettingFloat_Mask<bool> GetHasBeenSetMask(this IGameSettingFloatInternalGetter item)
         {
             var ret = new GameSettingFloat_Mask<bool>();
-            ((GameSettingFloatCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -700,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGameSettingFloatInternalGetter item,
             IGameSettingFloatInternalGetter rhs)
         {
-            return ((GameSettingFloatCommon)item.CommonInstance).Equals(
+            return ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -985,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new GameSettingFloat_Mask<bool>();
-            ((GameSettingFloatCommon)item.CommonInstance).FillEqualsMask(
+            ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1204,6 +1193,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(GameSettingFloat obj, GameSettingFloat rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new GameSettingFloat(getNextFormKey());
+            ret.CopyFieldsFrom((GameSettingFloat)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (GameSettingFloat)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

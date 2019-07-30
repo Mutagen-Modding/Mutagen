@@ -170,15 +170,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IDialogTopicInternalGetter rhs)) return false;
-            return ((DialogTopicCommon)this.CommonInstance).Equals(this, rhs);
+            return ((DialogTopicCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(DialogTopic obj)
         {
-            return ((DialogTopicCommon)this.CommonInstance).Equals(this, obj);
+            return ((DialogTopicCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DialogTopicCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((DialogTopicCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -431,17 +431,6 @@ namespace Mutagen.Bethesda.Oblivion
         public DialogTopic(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new DialogTopic(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -846,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IDialogTopicInternal item)
         {
-            ((DialogTopicCommon)item.CommonInstance).Clear(item: item);
+            ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static DialogTopic_Mask<bool> GetEqualsMask(
@@ -854,7 +843,7 @@ namespace Mutagen.Bethesda.Oblivion
             IDialogTopicInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DialogTopicCommon)item.CommonInstance).GetEqualsMask(
+            return ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -865,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             DialogTopic_Mask<bool> printMask = null)
         {
-            return ((DialogTopicCommon)item.CommonInstance).ToString(
+            return ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -877,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             DialogTopic_Mask<bool> printMask = null)
         {
-            ((DialogTopicCommon)item.CommonInstance).ToString(
+            ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -888,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogTopicInternalGetter item,
             DialogTopic_Mask<bool?> checkMask)
         {
-            return ((DialogTopicCommon)item.CommonInstance).HasBeenSet(
+            return ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -896,7 +885,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static DialogTopic_Mask<bool> GetHasBeenSetMask(this IDialogTopicInternalGetter item)
         {
             var ret = new DialogTopic_Mask<bool>();
-            ((DialogTopicCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -906,7 +895,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogTopicInternalGetter item,
             IDialogTopicInternalGetter rhs)
         {
-            return ((DialogTopicCommon)item.CommonInstance).Equals(
+            return ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1343,7 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new DialogTopic_Mask<bool>();
-            ((DialogTopicCommon)item.CommonInstance).FillEqualsMask(
+            ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1619,6 +1608,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new DialogTopic(getNextFormKey());
+            ret.CopyFieldsFrom((DialogTopic)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (DialogTopic)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

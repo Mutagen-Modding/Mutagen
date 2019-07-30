@@ -135,15 +135,15 @@ namespace Mutagen.Bethesda.Tests
         public override bool Equals(object obj)
         {
             if (!(obj is ITargetGetter rhs)) return false;
-            return ((TargetCommon)this.CommonInstance).Equals(this, rhs);
+            return ((TargetCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Target obj)
         {
-            return ((TargetCommon)this.CommonInstance).Equals(this, obj);
+            return ((TargetCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((TargetCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((TargetCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public static void Clear(this ITarget item)
         {
-            ((TargetCommon)item.CommonInstance).Clear(item: item);
+            ((TargetCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Target_Mask<bool> GetEqualsMask(
@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Tests
             ITargetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((TargetCommon)item.CommonInstance).GetEqualsMask(
+            return ((TargetCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null,
             Target_Mask<bool> printMask = null)
         {
-            return ((TargetCommon)item.CommonInstance).ToString(
+            return ((TargetCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null,
             Target_Mask<bool> printMask = null)
         {
-            ((TargetCommon)item.CommonInstance).ToString(
+            ((TargetCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Tests
             this ITargetGetter item,
             Target_Mask<bool?> checkMask)
         {
-            return ((TargetCommon)item.CommonInstance).HasBeenSet(
+            return ((TargetCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -716,7 +716,7 @@ namespace Mutagen.Bethesda.Tests
         public static Target_Mask<bool> GetHasBeenSetMask(this ITargetGetter item)
         {
             var ret = new Target_Mask<bool>();
-            ((TargetCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((TargetCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Tests
             this ITargetGetter item,
             ITargetGetter rhs)
         {
-            return ((TargetCommon)item.CommonInstance).Equals(
+            return ((TargetCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Target_Mask<bool>();
-            ((TargetCommon)item.CommonInstance).FillEqualsMask(
+            ((TargetCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

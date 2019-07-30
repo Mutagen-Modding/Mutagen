@@ -227,15 +227,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRegionDataObjectGetter rhs)) return false;
-            return ((RegionDataObjectCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RegionDataObjectCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(RegionDataObject obj)
         {
-            return ((RegionDataObjectCommon)this.CommonInstance).Equals(this, obj);
+            return ((RegionDataObjectCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RegionDataObjectCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RegionDataObjectCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -994,7 +994,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRegionDataObject item)
         {
-            ((RegionDataObjectCommon)item.CommonInstance).Clear(item: item);
+            ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static RegionDataObject_Mask<bool> GetEqualsMask(
@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionDataObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionDataObjectCommon)item.CommonInstance).GetEqualsMask(
+            return ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1013,7 +1013,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionDataObject_Mask<bool> printMask = null)
         {
-            return ((RegionDataObjectCommon)item.CommonInstance).ToString(
+            return ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1025,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionDataObject_Mask<bool> printMask = null)
         {
-            ((RegionDataObjectCommon)item.CommonInstance).ToString(
+            ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataObjectGetter item,
             RegionDataObject_Mask<bool?> checkMask)
         {
-            return ((RegionDataObjectCommon)item.CommonInstance).HasBeenSet(
+            return ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionDataObject_Mask<bool> GetHasBeenSetMask(this IRegionDataObjectGetter item)
         {
             var ret = new RegionDataObject_Mask<bool>();
-            ((RegionDataObjectCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataObjectGetter item,
             IRegionDataObjectGetter rhs)
         {
-            return ((RegionDataObjectCommon)item.CommonInstance).Equals(
+            return ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1776,7 +1776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionDataObject_Mask<bool>();
-            ((RegionDataObjectCommon)item.CommonInstance).FillEqualsMask(
+            ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

@@ -19,6 +19,35 @@ namespace Mutagen.Bethesda.Generation
             await base.PostLoad(obj);
         }
 
+        public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg)
+        {
+            if (!await obj.IsMajorRecord()) return;
+            //ToDo
+            // Modify to getter interface after copy is refactored
+            fg.AppendLine($"partial void PostDuplicate({obj.Name} obj, {obj.ObjectName} rhs, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords);");
+            fg.AppendLine();
+
+            fg.AppendLine($"public{obj.FunctionOverride()}{nameof(IMajorRecordCommon)} Duplicate({nameof(IMajorRecordCommon)} item, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords)");
+            using (new BraceWrapper(fg))
+            {
+                if (obj.Abstract)
+                {
+                    fg.AppendLine($"throw new {nameof(NotImplementedException)}();");
+                }
+                else
+                {
+                    fg.AppendLine($"var ret = new {obj.Name}(getNextFormKey());");
+                    //ToDo
+                    // Modify to getter interface after copy is refactored
+                    fg.AppendLine($"ret.CopyFieldsFrom(({obj.ObjectName})item);");
+                    fg.AppendLine("duplicatedRecords?.Add((ret, item.FormKey));");
+                    fg.AppendLine($"PostDuplicate(ret, ({obj.ObjectName})item, getNextFormKey, duplicatedRecords);");
+                    fg.AppendLine("return ret;");
+                }
+            }
+            fg.AppendLine();
+        }
+
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInClass(obj, fg);
@@ -40,29 +69,30 @@ namespace Mutagen.Bethesda.Generation
             {
             }
             fg.AppendLine();
+        }
 
-            if (obj.Abstract)
+        public override async Task GenerateInCommonMixin(ObjectGeneration obj, FileGeneration fg)
+        {
+            if (!await obj.IsMajorRecord()) return;
+            if (!obj.IsTopClass) return;
+            using (var args = new FunctionWrapper(fg,
+                $"public static {nameof(IMajorRecordCommon)} {nameof(IDuplicatable.Duplicate)}"))
             {
-                if (obj.IsTopClass)
-                {
-                    fg.AppendLine($"public abstract {nameof(IMajorRecordCommon)} Duplicate(Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords = null);");
-                }
+                //ToDo
+                // Modify to getter interface after copy is refactored
+                args.Add($"this {obj.ObjectName} item");
+                args.Add("Func<FormKey> getNextFormKey");
+                args.Add($"IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords = null");
             }
-            else
+            using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"partial void PostDuplicate({obj.Name} obj, {obj.Name} rhs, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords);");
-                fg.AppendLine();
-                
-                fg.AppendLine($"public override {nameof(IMajorRecordCommon)} Duplicate(Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords)");
-                using (new BraceWrapper(fg))
+                using (var args = new ArgsWrapper(fg,
+                     $"return {obj.CommonClassInstance("item")}.{nameof(IDuplicatable.Duplicate)}"))
                 {
-                    fg.AppendLine($"var ret = new {obj.Name}(getNextFormKey());");
-                    fg.AppendLine("ret.CopyFieldsFrom(this);");
-                    fg.AppendLine("duplicatedRecords?.Add((ret, this.FormKey));");
-                    fg.AppendLine("PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);");
-                    fg.AppendLine("return ret;");
+                    args.AddPassArg("item");
+                    args.AddPassArg("getNextFormKey");
+                    args.AddPassArg("duplicatedRecords");
                 }
-                fg.AppendLine();
             }
         }
     }

@@ -102,15 +102,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ISpellInternalGetter rhs)) return false;
-            return ((SpellCommon)this.CommonInstance).Equals(this, rhs);
+            return ((SpellCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Spell obj)
         {
-            return ((SpellCommon)this.CommonInstance).Equals(this, obj);
+            return ((SpellCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SpellCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SpellCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ISpellInternal item)
         {
-            ((SpellCommon)item.CommonInstance).Clear(item: item);
+            ((SpellCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Spell_Mask<bool> GetEqualsMask(
@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISpellInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SpellCommon)item.CommonInstance).GetEqualsMask(
+            return ((SpellCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Spell_Mask<bool> printMask = null)
         {
-            return ((SpellCommon)item.CommonInstance).ToString(
+            return ((SpellCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Spell_Mask<bool> printMask = null)
         {
-            ((SpellCommon)item.CommonInstance).ToString(
+            ((SpellCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISpellInternalGetter item,
             Spell_Mask<bool?> checkMask)
         {
-            return ((SpellCommon)item.CommonInstance).HasBeenSet(
+            return ((SpellCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Spell_Mask<bool> GetHasBeenSetMask(this ISpellInternalGetter item)
         {
             var ret = new Spell_Mask<bool>();
-            ((SpellCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((SpellCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISpellInternalGetter item,
             ISpellInternalGetter rhs)
         {
-            return ((SpellCommon)item.CommonInstance).Equals(
+            return ((SpellCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Spell_Mask<bool>();
-            ((SpellCommon)item.CommonInstance).FillEqualsMask(
+            ((SpellCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1121,6 +1121,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Spell obj, Spell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
     }
     #endregion

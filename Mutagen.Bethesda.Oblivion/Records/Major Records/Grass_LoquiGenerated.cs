@@ -262,15 +262,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IGrassInternalGetter rhs)) return false;
-            return ((GrassCommon)this.CommonInstance).Equals(this, rhs);
+            return ((GrassCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Grass obj)
         {
-            return ((GrassCommon)this.CommonInstance).Equals(this, obj);
+            return ((GrassCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GrassCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((GrassCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -498,17 +498,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Grass(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Grass obj, Grass rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Grass(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1063,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IGrassInternal item)
         {
-            ((GrassCommon)item.CommonInstance).Clear(item: item);
+            ((GrassCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Grass_Mask<bool> GetEqualsMask(
@@ -1071,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion
             IGrassInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GrassCommon)item.CommonInstance).GetEqualsMask(
+            return ((GrassCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1082,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Grass_Mask<bool> printMask = null)
         {
-            return ((GrassCommon)item.CommonInstance).ToString(
+            return ((GrassCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1094,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Grass_Mask<bool> printMask = null)
         {
-            ((GrassCommon)item.CommonInstance).ToString(
+            ((GrassCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1105,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassInternalGetter item,
             Grass_Mask<bool?> checkMask)
         {
-            return ((GrassCommon)item.CommonInstance).HasBeenSet(
+            return ((GrassCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1113,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Grass_Mask<bool> GetHasBeenSetMask(this IGrassInternalGetter item)
         {
             var ret = new Grass_Mask<bool>();
-            ((GrassCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((GrassCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1123,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassInternalGetter item,
             IGrassInternalGetter rhs)
         {
-            return ((GrassCommon)item.CommonInstance).Equals(
+            return ((GrassCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1799,7 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Grass_Mask<bool>();
-            ((GrassCommon)item.CommonInstance).FillEqualsMask(
+            ((GrassCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2094,6 +2083,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Grass obj, Grass rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Grass(getNextFormKey());
+            ret.CopyFieldsFrom((Grass)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Grass)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

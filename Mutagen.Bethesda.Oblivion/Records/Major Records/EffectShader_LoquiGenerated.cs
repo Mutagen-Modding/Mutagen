@@ -849,15 +849,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IEffectShaderInternalGetter rhs)) return false;
-            return ((EffectShaderCommon)this.CommonInstance).Equals(this, rhs);
+            return ((EffectShaderCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(EffectShader obj)
         {
-            return ((EffectShaderCommon)this.CommonInstance).Equals(this, obj);
+            return ((EffectShaderCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((EffectShaderCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((EffectShaderCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -1132,17 +1132,6 @@ namespace Mutagen.Bethesda.Oblivion
         public EffectShader(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(EffectShader obj, EffectShader rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new EffectShader(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -2755,7 +2744,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IEffectShaderInternal item)
         {
-            ((EffectShaderCommon)item.CommonInstance).Clear(item: item);
+            ((EffectShaderCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static EffectShader_Mask<bool> GetEqualsMask(
@@ -2763,7 +2752,7 @@ namespace Mutagen.Bethesda.Oblivion
             IEffectShaderInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((EffectShaderCommon)item.CommonInstance).GetEqualsMask(
+            return ((EffectShaderCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -2774,7 +2763,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             EffectShader_Mask<bool> printMask = null)
         {
-            return ((EffectShaderCommon)item.CommonInstance).ToString(
+            return ((EffectShaderCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -2786,7 +2775,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             EffectShader_Mask<bool> printMask = null)
         {
-            ((EffectShaderCommon)item.CommonInstance).ToString(
+            ((EffectShaderCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -2797,7 +2786,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderInternalGetter item,
             EffectShader_Mask<bool?> checkMask)
         {
-            return ((EffectShaderCommon)item.CommonInstance).HasBeenSet(
+            return ((EffectShaderCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -2805,7 +2794,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static EffectShader_Mask<bool> GetHasBeenSetMask(this IEffectShaderInternalGetter item)
         {
             var ret = new EffectShader_Mask<bool>();
-            ((EffectShaderCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((EffectShaderCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -2815,7 +2804,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderInternalGetter item,
             IEffectShaderInternalGetter rhs)
         {
-            return ((EffectShaderCommon)item.CommonInstance).Equals(
+            return ((EffectShaderCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -4832,7 +4821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new EffectShader_Mask<bool>();
-            ((EffectShaderCommon)item.CommonInstance).FillEqualsMask(
+            ((EffectShaderCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -5488,6 +5477,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(EffectShader obj, EffectShader rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new EffectShader(getNextFormKey());
+            ret.CopyFieldsFrom((EffectShader)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (EffectShader)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

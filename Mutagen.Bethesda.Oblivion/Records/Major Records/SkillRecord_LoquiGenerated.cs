@@ -333,15 +333,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ISkillRecordInternalGetter rhs)) return false;
-            return ((SkillRecordCommon)this.CommonInstance).Equals(this, rhs);
+            return ((SkillRecordCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(SkillRecord obj)
         {
-            return ((SkillRecordCommon)this.CommonInstance).Equals(this, obj);
+            return ((SkillRecordCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SkillRecordCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SkillRecordCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -568,17 +568,6 @@ namespace Mutagen.Bethesda.Oblivion
         public SkillRecord(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(SkillRecord obj, SkillRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new SkillRecord(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1218,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ISkillRecordInternal item)
         {
-            ((SkillRecordCommon)item.CommonInstance).Clear(item: item);
+            ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static SkillRecord_Mask<bool> GetEqualsMask(
@@ -1226,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISkillRecordInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SkillRecordCommon)item.CommonInstance).GetEqualsMask(
+            return ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1237,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SkillRecord_Mask<bool> printMask = null)
         {
-            return ((SkillRecordCommon)item.CommonInstance).ToString(
+            return ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1249,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SkillRecord_Mask<bool> printMask = null)
         {
-            ((SkillRecordCommon)item.CommonInstance).ToString(
+            ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1260,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillRecordInternalGetter item,
             SkillRecord_Mask<bool?> checkMask)
         {
-            return ((SkillRecordCommon)item.CommonInstance).HasBeenSet(
+            return ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1268,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SkillRecord_Mask<bool> GetHasBeenSetMask(this ISkillRecordInternalGetter item)
         {
             var ret = new SkillRecord_Mask<bool>();
-            ((SkillRecordCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1278,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillRecordInternalGetter item,
             ISkillRecordInternalGetter rhs)
         {
-            return ((SkillRecordCommon)item.CommonInstance).Equals(
+            return ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1985,7 +1974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SkillRecord_Mask<bool>();
-            ((SkillRecordCommon)item.CommonInstance).FillEqualsMask(
+            ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2313,6 +2302,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(SkillRecord obj, SkillRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new SkillRecord(getNextFormKey());
+            ret.CopyFieldsFrom((SkillRecord)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (SkillRecord)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

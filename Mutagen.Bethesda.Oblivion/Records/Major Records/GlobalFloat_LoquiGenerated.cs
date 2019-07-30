@@ -100,15 +100,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IGlobalFloatInternalGetter rhs)) return false;
-            return ((GlobalFloatCommon)this.CommonInstance).Equals(this, rhs);
+            return ((GlobalFloatCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(GlobalFloat obj)
         {
-            return ((GlobalFloatCommon)this.CommonInstance).Equals(this, obj);
+            return ((GlobalFloatCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GlobalFloatCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((GlobalFloatCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -314,17 +314,6 @@ namespace Mutagen.Bethesda.Oblivion
         public GlobalFloat(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(GlobalFloat obj, GlobalFloat rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new GlobalFloat(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -640,7 +629,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IGlobalFloatInternal item)
         {
-            ((GlobalFloatCommon)item.CommonInstance).Clear(item: item);
+            ((GlobalFloatCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static GlobalFloat_Mask<bool> GetEqualsMask(
@@ -648,7 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
             IGlobalFloatInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GlobalFloatCommon)item.CommonInstance).GetEqualsMask(
+            return ((GlobalFloatCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -659,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             GlobalFloat_Mask<bool> printMask = null)
         {
-            return ((GlobalFloatCommon)item.CommonInstance).ToString(
+            return ((GlobalFloatCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -671,7 +660,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             GlobalFloat_Mask<bool> printMask = null)
         {
-            ((GlobalFloatCommon)item.CommonInstance).ToString(
+            ((GlobalFloatCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -682,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGlobalFloatInternalGetter item,
             GlobalFloat_Mask<bool?> checkMask)
         {
-            return ((GlobalFloatCommon)item.CommonInstance).HasBeenSet(
+            return ((GlobalFloatCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -690,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static GlobalFloat_Mask<bool> GetHasBeenSetMask(this IGlobalFloatInternalGetter item)
         {
             var ret = new GlobalFloat_Mask<bool>();
-            ((GlobalFloatCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((GlobalFloatCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -700,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGlobalFloatInternalGetter item,
             IGlobalFloatInternalGetter rhs)
         {
-            return ((GlobalFloatCommon)item.CommonInstance).Equals(
+            return ((GlobalFloatCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -985,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new GlobalFloat_Mask<bool>();
-            ((GlobalFloatCommon)item.CommonInstance).FillEqualsMask(
+            ((GlobalFloatCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1204,6 +1193,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(GlobalFloat obj, GlobalFloat rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new GlobalFloat(getNextFormKey());
+            ret.CopyFieldsFrom((GlobalFloat)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (GlobalFloat)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

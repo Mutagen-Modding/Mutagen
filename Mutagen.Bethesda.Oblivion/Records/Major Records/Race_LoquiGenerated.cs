@@ -536,15 +536,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRaceInternalGetter rhs)) return false;
-            return ((RaceCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RaceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Race obj)
         {
-            return ((RaceCommon)this.CommonInstance).Equals(this, obj);
+            return ((RaceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RaceCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RaceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -873,17 +873,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Race(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Race obj, Race rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Race(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1820,7 +1809,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRaceInternal item)
         {
-            ((RaceCommon)item.CommonInstance).Clear(item: item);
+            ((RaceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Race_Mask<bool> GetEqualsMask(
@@ -1828,7 +1817,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RaceCommon)item.CommonInstance).GetEqualsMask(
+            return ((RaceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1839,7 +1828,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Race_Mask<bool> printMask = null)
         {
-            return ((RaceCommon)item.CommonInstance).ToString(
+            return ((RaceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1851,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Race_Mask<bool> printMask = null)
         {
-            ((RaceCommon)item.CommonInstance).ToString(
+            ((RaceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1862,7 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceInternalGetter item,
             Race_Mask<bool?> checkMask)
         {
-            return ((RaceCommon)item.CommonInstance).HasBeenSet(
+            return ((RaceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1870,7 +1859,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Race_Mask<bool> GetHasBeenSetMask(this IRaceInternalGetter item)
         {
             var ret = new Race_Mask<bool>();
-            ((RaceCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RaceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1880,7 +1869,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceInternalGetter item,
             IRaceInternalGetter rhs)
         {
-            return ((RaceCommon)item.CommonInstance).Equals(
+            return ((RaceCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -3152,7 +3141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Race_Mask<bool>();
-            ((RaceCommon)item.CommonInstance).FillEqualsMask(
+            ((RaceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -3777,6 +3766,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Race obj, Race rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Race(getNextFormKey());
+            ret.CopyFieldsFrom((Race)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Race)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

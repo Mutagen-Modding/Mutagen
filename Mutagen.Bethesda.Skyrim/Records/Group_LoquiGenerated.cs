@@ -115,15 +115,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IGroupGetter<T> rhs)) return false;
-            return ((GroupCommon)this.CommonInstance).Equals(this, rhs);
+            return ((GroupCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Group<T> obj)
         {
-            return ((GroupCommon)this.CommonInstance).Equals(this, obj);
+            return ((GroupCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GroupCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((GroupCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void Clear<T>(this IGroup<T> item)
             where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
         {
-            ((GroupCommon)item.CommonInstance).Clear(item: item);
+            ((GroupCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Group_Mask<bool> GetEqualsMask<T>(
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
             where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((GroupCommon)item.CommonInstance).GetEqualsMask(
+            return ((GroupCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Skyrim
             Group_Mask<bool> printMask = null)
             where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((GroupCommon)item.CommonInstance).ToString(
+            return ((GroupCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Skyrim
             Group_Mask<bool> printMask = null)
             where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            ((GroupCommon)item.CommonInstance).ToString(
+            ((GroupCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim
             Group_Mask<bool?> checkMask)
             where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((GroupCommon)item.CommonInstance).HasBeenSet(
+            return ((GroupCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Skyrim
             where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             var ret = new Group_Mask<bool>();
-            ((GroupCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((GroupCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim
             IGroupGetter<T> rhs)
             where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((GroupCommon)item.CommonInstance).Equals(
+            return ((GroupCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             var ret = new Group_Mask<bool>();
-            ((GroupCommon)item.CommonInstance).FillEqualsMask(
+            ((GroupCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

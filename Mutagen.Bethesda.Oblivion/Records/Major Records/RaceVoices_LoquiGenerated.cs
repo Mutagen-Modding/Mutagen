@@ -90,15 +90,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRaceVoicesGetter rhs)) return false;
-            return ((RaceVoicesCommon)this.CommonInstance).Equals(this, rhs);
+            return ((RaceVoicesCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(RaceVoices obj)
         {
-            return ((RaceVoicesCommon)this.CommonInstance).Equals(this, obj);
+            return ((RaceVoicesCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RaceVoicesCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RaceVoicesCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRaceVoices item)
         {
-            ((RaceVoicesCommon)item.CommonInstance).Clear(item: item);
+            ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static RaceVoices_Mask<bool> GetEqualsMask(
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceVoicesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RaceVoicesCommon)item.CommonInstance).GetEqualsMask(
+            return ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RaceVoices_Mask<bool> printMask = null)
         {
-            return ((RaceVoicesCommon)item.CommonInstance).ToString(
+            return ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RaceVoices_Mask<bool> printMask = null)
         {
-            ((RaceVoicesCommon)item.CommonInstance).ToString(
+            ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceVoicesGetter item,
             RaceVoices_Mask<bool?> checkMask)
         {
-            return ((RaceVoicesCommon)item.CommonInstance).HasBeenSet(
+            return ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RaceVoices_Mask<bool> GetHasBeenSetMask(this IRaceVoicesGetter item)
         {
             var ret = new RaceVoices_Mask<bool>();
-            ((RaceVoicesCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceVoicesGetter item,
             IRaceVoicesGetter rhs)
         {
-            return ((RaceVoicesCommon)item.CommonInstance).Equals(
+            return ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RaceVoices_Mask<bool>();
-            ((RaceVoicesCommon)item.CommonInstance).FillEqualsMask(
+            ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

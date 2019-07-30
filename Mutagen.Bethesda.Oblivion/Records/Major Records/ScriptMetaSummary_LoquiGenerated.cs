@@ -122,15 +122,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IScriptMetaSummaryGetter rhs)) return false;
-            return ((ScriptMetaSummaryCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ScriptMetaSummaryCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(ScriptMetaSummary obj)
         {
-            return ((ScriptMetaSummaryCommon)this.CommonInstance).Equals(this, obj);
+            return ((ScriptMetaSummaryCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ScriptMetaSummaryCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ScriptMetaSummaryCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IScriptMetaSummary item)
         {
-            ((ScriptMetaSummaryCommon)item.CommonInstance).Clear(item: item);
+            ((ScriptMetaSummaryCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static ScriptMetaSummary_Mask<bool> GetEqualsMask(
@@ -658,7 +658,7 @@ namespace Mutagen.Bethesda.Oblivion
             IScriptMetaSummaryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ScriptMetaSummaryCommon)item.CommonInstance).GetEqualsMask(
+            return ((ScriptMetaSummaryCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             ScriptMetaSummary_Mask<bool> printMask = null)
         {
-            return ((ScriptMetaSummaryCommon)item.CommonInstance).ToString(
+            return ((ScriptMetaSummaryCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             ScriptMetaSummary_Mask<bool> printMask = null)
         {
-            ((ScriptMetaSummaryCommon)item.CommonInstance).ToString(
+            ((ScriptMetaSummaryCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptMetaSummaryGetter item,
             ScriptMetaSummary_Mask<bool?> checkMask)
         {
-            return ((ScriptMetaSummaryCommon)item.CommonInstance).HasBeenSet(
+            return ((ScriptMetaSummaryCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ScriptMetaSummary_Mask<bool> GetHasBeenSetMask(this IScriptMetaSummaryGetter item)
         {
             var ret = new ScriptMetaSummary_Mask<bool>();
-            ((ScriptMetaSummaryCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ScriptMetaSummaryCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptMetaSummaryGetter item,
             IScriptMetaSummaryGetter rhs)
         {
-            return ((ScriptMetaSummaryCommon)item.CommonInstance).Equals(
+            return ((ScriptMetaSummaryCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ScriptMetaSummary_Mask<bool>();
-            ((ScriptMetaSummaryCommon)item.CommonInstance).FillEqualsMask(
+            ((ScriptMetaSummaryCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

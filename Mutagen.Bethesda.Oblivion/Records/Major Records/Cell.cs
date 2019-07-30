@@ -30,27 +30,31 @@ namespace Mutagen.Bethesda.Oblivion
             HandChanged = 0x0040,
             BehaveLikeExteriod = 0x0080,
         }
-
-        partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            if (rhs.PathGrid_IsSet
-                && rhs.PathGrid != null)
-            {
-                obj.PathGrid = (PathGrid)rhs.PathGrid.Duplicate(getNextFormKey, duplicatedRecords);
-            }
-            if (rhs.Landscape_IsSet
-                && rhs.Landscape != null)
-            {
-                obj.Landscape = (Landscape)rhs.Landscape.Duplicate(getNextFormKey, duplicatedRecords);
-            }
-            obj.Persistent.SetTo(rhs.Persistent.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords)));
-            obj.Temporary.SetTo(rhs.Temporary.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords)));
-            obj.VisibleWhenDistant.SetTo(rhs.VisibleWhenDistant.Select((i) => (IPlaced)i.Duplicate(getNextFormKey)));
-        }
     }
 
     namespace Internals
     {
+        public partial class CellCommon
+        {
+            partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+            {
+
+                if (rhs.PathGrid_IsSet
+                    && rhs.PathGrid != null)
+                {
+                    obj.PathGrid = (PathGrid)rhs.PathGrid.Duplicate(getNextFormKey, duplicatedRecords);
+                }
+                if (rhs.Landscape_IsSet
+                    && rhs.Landscape != null)
+                {
+                    obj.Landscape = (Landscape)rhs.Landscape.Duplicate(getNextFormKey, duplicatedRecords);
+                }
+                obj.Persistent.SetTo(rhs.Persistent.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords)));
+                obj.Temporary.SetTo(rhs.Temporary.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords)));
+                obj.VisibleWhenDistant.SetTo(rhs.VisibleWhenDistant.Select((i) => (IPlaced)i.Duplicate(getNextFormKey)));
+            }
+        }
+
         public partial class CellBinaryCreateTranslation
         {
             public static async Task CustomBinaryEndImport(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)

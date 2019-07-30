@@ -154,15 +154,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IIdleAnimationInternalGetter rhs)) return false;
-            return ((IdleAnimationCommon)this.CommonInstance).Equals(this, rhs);
+            return ((IdleAnimationCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(IdleAnimation obj)
         {
-            return ((IdleAnimationCommon)this.CommonInstance).Equals(this, obj);
+            return ((IdleAnimationCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((IdleAnimationCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((IdleAnimationCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -403,17 +403,6 @@ namespace Mutagen.Bethesda.Oblivion
         public IdleAnimation(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(IdleAnimation obj, IdleAnimation rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new IdleAnimation(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -817,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IIdleAnimationInternal item)
         {
-            ((IdleAnimationCommon)item.CommonInstance).Clear(item: item);
+            ((IdleAnimationCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static IdleAnimation_Mask<bool> GetEqualsMask(
@@ -825,7 +814,7 @@ namespace Mutagen.Bethesda.Oblivion
             IIdleAnimationInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((IdleAnimationCommon)item.CommonInstance).GetEqualsMask(
+            return ((IdleAnimationCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -836,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             IdleAnimation_Mask<bool> printMask = null)
         {
-            return ((IdleAnimationCommon)item.CommonInstance).ToString(
+            return ((IdleAnimationCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -848,7 +837,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             IdleAnimation_Mask<bool> printMask = null)
         {
-            ((IdleAnimationCommon)item.CommonInstance).ToString(
+            ((IdleAnimationCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -859,7 +848,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IIdleAnimationInternalGetter item,
             IdleAnimation_Mask<bool?> checkMask)
         {
-            return ((IdleAnimationCommon)item.CommonInstance).HasBeenSet(
+            return ((IdleAnimationCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -867,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IdleAnimation_Mask<bool> GetHasBeenSetMask(this IIdleAnimationInternalGetter item)
         {
             var ret = new IdleAnimation_Mask<bool>();
-            ((IdleAnimationCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((IdleAnimationCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -877,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IIdleAnimationInternalGetter item,
             IIdleAnimationInternalGetter rhs)
         {
-            return ((IdleAnimationCommon)item.CommonInstance).Equals(
+            return ((IdleAnimationCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1307,7 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new IdleAnimation_Mask<bool>();
-            ((IdleAnimationCommon)item.CommonInstance).FillEqualsMask(
+            ((IdleAnimationCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1582,6 +1571,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(IdleAnimation obj, IdleAnimation rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new IdleAnimation(getNextFormKey());
+            ret.CopyFieldsFrom((IdleAnimation)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (IdleAnimation)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

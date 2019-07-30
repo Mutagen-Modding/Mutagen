@@ -326,15 +326,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IMagicEffectInternalGetter rhs)) return false;
-            return ((MagicEffectCommon)this.CommonInstance).Equals(this, rhs);
+            return ((MagicEffectCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(MagicEffect obj)
         {
-            return ((MagicEffectCommon)this.CommonInstance).Equals(this, obj);
+            return ((MagicEffectCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((MagicEffectCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((MagicEffectCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -612,17 +612,6 @@ namespace Mutagen.Bethesda.Oblivion
         public MagicEffect(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(MagicEffect obj, MagicEffect rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new MagicEffect(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1301,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IMagicEffectInternal item)
         {
-            ((MagicEffectCommon)item.CommonInstance).Clear(item: item);
+            ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static MagicEffect_Mask<bool> GetEqualsMask(
@@ -1309,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion
             IMagicEffectInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MagicEffectCommon)item.CommonInstance).GetEqualsMask(
+            return ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1320,7 +1309,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             MagicEffect_Mask<bool> printMask = null)
         {
-            return ((MagicEffectCommon)item.CommonInstance).ToString(
+            return ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1332,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             MagicEffect_Mask<bool> printMask = null)
         {
-            ((MagicEffectCommon)item.CommonInstance).ToString(
+            ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1343,7 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectInternalGetter item,
             MagicEffect_Mask<bool?> checkMask)
         {
-            return ((MagicEffectCommon)item.CommonInstance).HasBeenSet(
+            return ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1351,7 +1340,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static MagicEffect_Mask<bool> GetHasBeenSetMask(this IMagicEffectInternalGetter item)
         {
             var ret = new MagicEffect_Mask<bool>();
-            ((MagicEffectCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1361,7 +1350,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectInternalGetter item,
             IMagicEffectInternalGetter rhs)
         {
-            return ((MagicEffectCommon)item.CommonInstance).Equals(
+            return ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -2171,7 +2160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new MagicEffect_Mask<bool>();
-            ((MagicEffectCommon)item.CommonInstance).FillEqualsMask(
+            ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2531,6 +2520,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(MagicEffect obj, MagicEffect rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new MagicEffect(getNextFormKey());
+            ret.CopyFieldsFrom((MagicEffect)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (MagicEffect)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

@@ -91,15 +91,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IWeatherSoundGetter rhs)) return false;
-            return ((WeatherSoundCommon)this.CommonInstance).Equals(this, rhs);
+            return ((WeatherSoundCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(WeatherSound obj)
         {
-            return ((WeatherSoundCommon)this.CommonInstance).Equals(this, obj);
+            return ((WeatherSoundCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WeatherSoundCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((WeatherSoundCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IWeatherSound item)
         {
-            ((WeatherSoundCommon)item.CommonInstance).Clear(item: item);
+            ((WeatherSoundCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static WeatherSound_Mask<bool> GetEqualsMask(
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWeatherSoundGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WeatherSoundCommon)item.CommonInstance).GetEqualsMask(
+            return ((WeatherSoundCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             WeatherSound_Mask<bool> printMask = null)
         {
-            return ((WeatherSoundCommon)item.CommonInstance).ToString(
+            return ((WeatherSoundCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             WeatherSound_Mask<bool> printMask = null)
         {
-            ((WeatherSoundCommon)item.CommonInstance).ToString(
+            ((WeatherSoundCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherSoundGetter item,
             WeatherSound_Mask<bool?> checkMask)
         {
-            return ((WeatherSoundCommon)item.CommonInstance).HasBeenSet(
+            return ((WeatherSoundCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherSound_Mask<bool> GetHasBeenSetMask(this IWeatherSoundGetter item)
         {
             var ret = new WeatherSound_Mask<bool>();
-            ((WeatherSoundCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((WeatherSoundCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherSoundGetter item,
             IWeatherSoundGetter rhs)
         {
-            return ((WeatherSoundCommon)item.CommonInstance).Equals(
+            return ((WeatherSoundCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -905,7 +905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new WeatherSound_Mask<bool>();
-            ((WeatherSoundCommon)item.CommonInstance).FillEqualsMask(
+            ((WeatherSoundCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

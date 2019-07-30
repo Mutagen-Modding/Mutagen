@@ -269,15 +269,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IClimateInternalGetter rhs)) return false;
-            return ((ClimateCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ClimateCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Climate obj)
         {
-            return ((ClimateCommon)this.CommonInstance).Equals(this, obj);
+            return ((ClimateCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ClimateCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ClimateCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -534,17 +534,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Climate(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Climate obj, Climate rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Climate(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1096,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IClimateInternal item)
         {
-            ((ClimateCommon)item.CommonInstance).Clear(item: item);
+            ((ClimateCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Climate_Mask<bool> GetEqualsMask(
@@ -1104,7 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion
             IClimateInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ClimateCommon)item.CommonInstance).GetEqualsMask(
+            return ((ClimateCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1115,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Climate_Mask<bool> printMask = null)
         {
-            return ((ClimateCommon)item.CommonInstance).ToString(
+            return ((ClimateCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1127,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Climate_Mask<bool> printMask = null)
         {
-            ((ClimateCommon)item.CommonInstance).ToString(
+            ((ClimateCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1138,7 +1127,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClimateInternalGetter item,
             Climate_Mask<bool?> checkMask)
         {
-            return ((ClimateCommon)item.CommonInstance).HasBeenSet(
+            return ((ClimateCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1146,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Climate_Mask<bool> GetHasBeenSetMask(this IClimateInternalGetter item)
         {
             var ret = new Climate_Mask<bool>();
-            ((ClimateCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ClimateCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1156,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClimateInternalGetter item,
             IClimateInternalGetter rhs)
         {
-            return ((ClimateCommon)item.CommonInstance).Equals(
+            return ((ClimateCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1819,7 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Climate_Mask<bool>();
-            ((ClimateCommon)item.CommonInstance).FillEqualsMask(
+            ((ClimateCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2139,6 +2128,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Climate obj, Climate rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Climate(getNextFormKey());
+            ret.CopyFieldsFrom((Climate)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Climate)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

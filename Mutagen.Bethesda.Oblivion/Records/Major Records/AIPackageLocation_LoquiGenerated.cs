@@ -99,15 +99,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IAIPackageLocationGetter rhs)) return false;
-            return ((AIPackageLocationCommon)this.CommonInstance).Equals(this, rhs);
+            return ((AIPackageLocationCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(AIPackageLocation obj)
         {
-            return ((AIPackageLocationCommon)this.CommonInstance).Equals(this, obj);
+            return ((AIPackageLocationCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((AIPackageLocationCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((AIPackageLocationCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IAIPackageLocation item)
         {
-            ((AIPackageLocationCommon)item.CommonInstance).Clear(item: item);
+            ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static AIPackageLocation_Mask<bool> GetEqualsMask(
@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
             IAIPackageLocationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AIPackageLocationCommon)item.CommonInstance).GetEqualsMask(
+            return ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             AIPackageLocation_Mask<bool> printMask = null)
         {
-            return ((AIPackageLocationCommon)item.CommonInstance).ToString(
+            return ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             AIPackageLocation_Mask<bool> printMask = null)
         {
-            ((AIPackageLocationCommon)item.CommonInstance).ToString(
+            ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocationGetter item,
             AIPackageLocation_Mask<bool?> checkMask)
         {
-            return ((AIPackageLocationCommon)item.CommonInstance).HasBeenSet(
+            return ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageLocation_Mask<bool> GetHasBeenSetMask(this IAIPackageLocationGetter item)
         {
             var ret = new AIPackageLocation_Mask<bool>();
-            ((AIPackageLocationCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocationGetter item,
             IAIPackageLocationGetter rhs)
         {
-            return ((AIPackageLocationCommon)item.CommonInstance).Equals(
+            return ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new AIPackageLocation_Mask<bool>();
-            ((AIPackageLocationCommon)item.CommonInstance).FillEqualsMask(
+            ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

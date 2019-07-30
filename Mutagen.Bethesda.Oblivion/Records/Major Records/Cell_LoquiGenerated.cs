@@ -460,15 +460,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ICellInternalGetter rhs)) return false;
-            return ((CellCommon)this.CommonInstance).Equals(this, rhs);
+            return ((CellCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Cell obj)
         {
-            return ((CellCommon)this.CommonInstance).Equals(this, obj);
+            return ((CellCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((CellCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((CellCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -808,17 +808,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Cell(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Cell(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1557,7 +1546,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ICellInternal item)
         {
-            ((CellCommon)item.CommonInstance).Clear(item: item);
+            ((CellCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Cell_Mask<bool> GetEqualsMask(
@@ -1565,7 +1554,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICellInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CellCommon)item.CommonInstance).GetEqualsMask(
+            return ((CellCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1576,7 +1565,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Cell_Mask<bool> printMask = null)
         {
-            return ((CellCommon)item.CommonInstance).ToString(
+            return ((CellCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1588,7 +1577,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Cell_Mask<bool> printMask = null)
         {
-            ((CellCommon)item.CommonInstance).ToString(
+            ((CellCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1599,7 +1588,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellInternalGetter item,
             Cell_Mask<bool?> checkMask)
         {
-            return ((CellCommon)item.CommonInstance).HasBeenSet(
+            return ((CellCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1607,7 +1596,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Cell_Mask<bool> GetHasBeenSetMask(this ICellInternalGetter item)
         {
             var ret = new Cell_Mask<bool>();
-            ((CellCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((CellCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1617,7 +1606,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellInternalGetter item,
             ICellInternalGetter rhs)
         {
-            return ((CellCommon)item.CommonInstance).Equals(
+            return ((CellCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -2742,7 +2731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Cell_Mask<bool>();
-            ((CellCommon)item.CommonInstance).FillEqualsMask(
+            ((CellCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -3338,6 +3327,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Cell(getNextFormKey());
+            ret.CopyFieldsFrom((Cell)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Cell)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

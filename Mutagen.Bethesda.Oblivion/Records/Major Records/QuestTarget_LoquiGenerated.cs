@@ -126,15 +126,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IQuestTargetInternalGetter rhs)) return false;
-            return ((QuestTargetCommon)this.CommonInstance).Equals(this, rhs);
+            return ((QuestTargetCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(QuestTarget obj)
         {
-            return ((QuestTargetCommon)this.CommonInstance).Equals(this, obj);
+            return ((QuestTargetCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((QuestTargetCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((QuestTargetCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IQuestTargetInternal item)
         {
-            ((QuestTargetCommon)item.CommonInstance).Clear(item: item);
+            ((QuestTargetCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static QuestTarget_Mask<bool> GetEqualsMask(
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
             IQuestTargetInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((QuestTargetCommon)item.CommonInstance).GetEqualsMask(
+            return ((QuestTargetCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -715,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             QuestTarget_Mask<bool> printMask = null)
         {
-            return ((QuestTargetCommon)item.CommonInstance).ToString(
+            return ((QuestTargetCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             QuestTarget_Mask<bool> printMask = null)
         {
-            ((QuestTargetCommon)item.CommonInstance).ToString(
+            ((QuestTargetCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestTargetInternalGetter item,
             QuestTarget_Mask<bool?> checkMask)
         {
-            return ((QuestTargetCommon)item.CommonInstance).HasBeenSet(
+            return ((QuestTargetCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static QuestTarget_Mask<bool> GetHasBeenSetMask(this IQuestTargetInternalGetter item)
         {
             var ret = new QuestTarget_Mask<bool>();
-            ((QuestTargetCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((QuestTargetCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -756,7 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestTargetInternalGetter item,
             IQuestTargetInternalGetter rhs)
         {
-            return ((QuestTargetCommon)item.CommonInstance).Equals(
+            return ((QuestTargetCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new QuestTarget_Mask<bool>();
-            ((QuestTargetCommon)item.CommonInstance).FillEqualsMask(
+            ((QuestTargetCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

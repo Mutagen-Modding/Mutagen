@@ -145,15 +145,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IActivatorInternalGetter rhs)) return false;
-            return ((ActivatorCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ActivatorCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Activator obj)
         {
-            return ((ActivatorCommon)this.CommonInstance).Equals(this, obj);
+            return ((ActivatorCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ActivatorCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ActivatorCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -392,17 +392,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Activator(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Activator obj, Activator rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Activator(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -805,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IActivatorInternal item)
         {
-            ((ActivatorCommon)item.CommonInstance).Clear(item: item);
+            ((ActivatorCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Activator_Mask<bool> GetEqualsMask(
@@ -813,7 +802,7 @@ namespace Mutagen.Bethesda.Oblivion
             IActivatorInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ActivatorCommon)item.CommonInstance).GetEqualsMask(
+            return ((ActivatorCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -824,7 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Activator_Mask<bool> printMask = null)
         {
-            return ((ActivatorCommon)item.CommonInstance).ToString(
+            return ((ActivatorCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -836,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Activator_Mask<bool> printMask = null)
         {
-            ((ActivatorCommon)item.CommonInstance).ToString(
+            ((ActivatorCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -847,7 +836,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IActivatorInternalGetter item,
             Activator_Mask<bool?> checkMask)
         {
-            return ((ActivatorCommon)item.CommonInstance).HasBeenSet(
+            return ((ActivatorCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -855,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Activator_Mask<bool> GetHasBeenSetMask(this IActivatorInternalGetter item)
         {
             var ret = new Activator_Mask<bool>();
-            ((ActivatorCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ActivatorCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -865,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IActivatorInternalGetter item,
             IActivatorInternalGetter rhs)
         {
-            return ((ActivatorCommon)item.CommonInstance).Equals(
+            return ((ActivatorCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1278,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Activator_Mask<bool>();
-            ((ActivatorCommon)item.CommonInstance).FillEqualsMask(
+            ((ActivatorCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1519,6 +1508,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Activator obj, Activator rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Activator(getNextFormKey());
+            ret.CopyFieldsFrom((Activator)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Activator)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

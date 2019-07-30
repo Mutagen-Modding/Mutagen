@@ -97,15 +97,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IQuestStageGetter rhs)) return false;
-            return ((QuestStageCommon)this.CommonInstance).Equals(this, rhs);
+            return ((QuestStageCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(QuestStage obj)
         {
-            return ((QuestStageCommon)this.CommonInstance).Equals(this, obj);
+            return ((QuestStageCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((QuestStageCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((QuestStageCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IQuestStage item)
         {
-            ((QuestStageCommon)item.CommonInstance).Clear(item: item);
+            ((QuestStageCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static QuestStage_Mask<bool> GetEqualsMask(
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
             IQuestStageGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((QuestStageCommon)item.CommonInstance).GetEqualsMask(
+            return ((QuestStageCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             QuestStage_Mask<bool> printMask = null)
         {
-            return ((QuestStageCommon)item.CommonInstance).ToString(
+            return ((QuestStageCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             QuestStage_Mask<bool> printMask = null)
         {
-            ((QuestStageCommon)item.CommonInstance).ToString(
+            ((QuestStageCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestStageGetter item,
             QuestStage_Mask<bool?> checkMask)
         {
-            return ((QuestStageCommon)item.CommonInstance).HasBeenSet(
+            return ((QuestStageCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static QuestStage_Mask<bool> GetHasBeenSetMask(this IQuestStageGetter item)
         {
             var ret = new QuestStage_Mask<bool>();
-            ((QuestStageCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((QuestStageCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestStageGetter item,
             IQuestStageGetter rhs)
         {
-            return ((QuestStageCommon)item.CommonInstance).Equals(
+            return ((QuestStageCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new QuestStage_Mask<bool>();
-            ((QuestStageCommon)item.CommonInstance).FillEqualsMask(
+            ((QuestStageCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

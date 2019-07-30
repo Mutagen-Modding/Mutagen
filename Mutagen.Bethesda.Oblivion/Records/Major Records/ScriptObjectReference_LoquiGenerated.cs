@@ -82,15 +82,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IScriptObjectReferenceGetter rhs)) return false;
-            return ((ScriptObjectReferenceCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ScriptObjectReferenceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(ScriptObjectReference obj)
         {
-            return ((ScriptObjectReferenceCommon)this.CommonInstance).Equals(this, obj);
+            return ((ScriptObjectReferenceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ScriptObjectReferenceCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ScriptObjectReferenceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IScriptObjectReference item)
         {
-            ((ScriptObjectReferenceCommon)item.CommonInstance).Clear(item: item);
+            ((ScriptObjectReferenceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static ScriptObjectReference_Mask<bool> GetEqualsMask(
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
             IScriptObjectReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ScriptObjectReferenceCommon)item.CommonInstance).GetEqualsMask(
+            return ((ScriptObjectReferenceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             ScriptObjectReference_Mask<bool> printMask = null)
         {
-            return ((ScriptObjectReferenceCommon)item.CommonInstance).ToString(
+            return ((ScriptObjectReferenceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             ScriptObjectReference_Mask<bool> printMask = null)
         {
-            ((ScriptObjectReferenceCommon)item.CommonInstance).ToString(
+            ((ScriptObjectReferenceCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptObjectReferenceGetter item,
             ScriptObjectReference_Mask<bool?> checkMask)
         {
-            return ((ScriptObjectReferenceCommon)item.CommonInstance).HasBeenSet(
+            return ((ScriptObjectReferenceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ScriptObjectReference_Mask<bool> GetHasBeenSetMask(this IScriptObjectReferenceGetter item)
         {
             var ret = new ScriptObjectReference_Mask<bool>();
-            ((ScriptObjectReferenceCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ScriptObjectReferenceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptObjectReferenceGetter item,
             IScriptObjectReferenceGetter rhs)
         {
-            return ((ScriptObjectReferenceCommon)item.CommonInstance).Equals(
+            return ((ScriptObjectReferenceCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ScriptObjectReference_Mask<bool>();
-            ((ScriptObjectReferenceCommon)item.CommonInstance).FillEqualsMask(
+            ((ScriptObjectReferenceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,

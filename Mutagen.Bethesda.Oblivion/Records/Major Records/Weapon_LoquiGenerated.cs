@@ -310,15 +310,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IWeaponInternalGetter rhs)) return false;
-            return ((WeaponCommon)this.CommonInstance).Equals(this, rhs);
+            return ((WeaponCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Weapon obj)
         {
-            return ((WeaponCommon)this.CommonInstance).Equals(this, obj);
+            return ((WeaponCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WeaponCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((WeaponCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -577,17 +577,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Weapon(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Weapon obj, Weapon rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Weapon(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1215,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IWeaponInternal item)
         {
-            ((WeaponCommon)item.CommonInstance).Clear(item: item);
+            ((WeaponCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Weapon_Mask<bool> GetEqualsMask(
@@ -1223,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWeaponInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WeaponCommon)item.CommonInstance).GetEqualsMask(
+            return ((WeaponCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1234,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Weapon_Mask<bool> printMask = null)
         {
-            return ((WeaponCommon)item.CommonInstance).ToString(
+            return ((WeaponCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1246,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Weapon_Mask<bool> printMask = null)
         {
-            ((WeaponCommon)item.CommonInstance).ToString(
+            ((WeaponCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1257,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeaponInternalGetter item,
             Weapon_Mask<bool?> checkMask)
         {
-            return ((WeaponCommon)item.CommonInstance).HasBeenSet(
+            return ((WeaponCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1265,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Weapon_Mask<bool> GetHasBeenSetMask(this IWeaponInternalGetter item)
         {
             var ret = new Weapon_Mask<bool>();
-            ((WeaponCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((WeaponCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1275,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeaponInternalGetter item,
             IWeaponInternalGetter rhs)
         {
-            return ((WeaponCommon)item.CommonInstance).Equals(
+            return ((WeaponCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -2034,7 +2023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Weapon_Mask<bool>();
-            ((WeaponCommon)item.CommonInstance).FillEqualsMask(
+            ((WeaponCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2410,6 +2399,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Weapon obj, Weapon rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Weapon(getNextFormKey());
+            ret.CopyFieldsFrom((Weapon)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Weapon)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

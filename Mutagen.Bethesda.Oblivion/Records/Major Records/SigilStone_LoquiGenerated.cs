@@ -230,15 +230,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ISigilStoneInternalGetter rhs)) return false;
-            return ((SigilStoneCommon)this.CommonInstance).Equals(this, rhs);
+            return ((SigilStoneCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(SigilStone obj)
         {
-            return ((SigilStoneCommon)this.CommonInstance).Equals(this, obj);
+            return ((SigilStoneCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SigilStoneCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SigilStoneCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -497,17 +497,6 @@ namespace Mutagen.Bethesda.Oblivion
         public SigilStone(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(SigilStone obj, SigilStone rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new SigilStone(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1017,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ISigilStoneInternal item)
         {
-            ((SigilStoneCommon)item.CommonInstance).Clear(item: item);
+            ((SigilStoneCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static SigilStone_Mask<bool> GetEqualsMask(
@@ -1025,7 +1014,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISigilStoneInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SigilStoneCommon)item.CommonInstance).GetEqualsMask(
+            return ((SigilStoneCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1036,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SigilStone_Mask<bool> printMask = null)
         {
-            return ((SigilStoneCommon)item.CommonInstance).ToString(
+            return ((SigilStoneCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1048,7 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SigilStone_Mask<bool> printMask = null)
         {
-            ((SigilStoneCommon)item.CommonInstance).ToString(
+            ((SigilStoneCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1059,7 +1048,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISigilStoneInternalGetter item,
             SigilStone_Mask<bool?> checkMask)
         {
-            return ((SigilStoneCommon)item.CommonInstance).HasBeenSet(
+            return ((SigilStoneCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1067,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SigilStone_Mask<bool> GetHasBeenSetMask(this ISigilStoneInternalGetter item)
         {
             var ret = new SigilStone_Mask<bool>();
-            ((SigilStoneCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((SigilStoneCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1077,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISigilStoneInternalGetter item,
             ISigilStoneInternalGetter rhs)
         {
-            return ((SigilStoneCommon)item.CommonInstance).Equals(
+            return ((SigilStoneCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1658,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SigilStone_Mask<bool>();
-            ((SigilStoneCommon)item.CommonInstance).FillEqualsMask(
+            ((SigilStoneCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1995,6 +1984,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(SigilStone obj, SigilStone rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new SigilStone(getNextFormKey());
+            ret.CopyFieldsFrom((SigilStone)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (SigilStone)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

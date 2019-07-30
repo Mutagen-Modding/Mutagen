@@ -266,15 +266,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IAmmoInternalGetter rhs)) return false;
-            return ((AmmoCommon)this.CommonInstance).Equals(this, rhs);
+            return ((AmmoCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Ammo obj)
         {
-            return ((AmmoCommon)this.CommonInstance).Equals(this, obj);
+            return ((AmmoCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((AmmoCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((AmmoCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -524,17 +524,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Ammo(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Ammo obj, Ammo rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Ammo(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1081,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IAmmoInternal item)
         {
-            ((AmmoCommon)item.CommonInstance).Clear(item: item);
+            ((AmmoCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Ammo_Mask<bool> GetEqualsMask(
@@ -1089,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion
             IAmmoInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AmmoCommon)item.CommonInstance).GetEqualsMask(
+            return ((AmmoCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1100,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Ammo_Mask<bool> printMask = null)
         {
-            return ((AmmoCommon)item.CommonInstance).ToString(
+            return ((AmmoCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1112,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Ammo_Mask<bool> printMask = null)
         {
-            ((AmmoCommon)item.CommonInstance).ToString(
+            ((AmmoCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1123,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAmmoInternalGetter item,
             Ammo_Mask<bool?> checkMask)
         {
-            return ((AmmoCommon)item.CommonInstance).HasBeenSet(
+            return ((AmmoCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1131,7 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Ammo_Mask<bool> GetHasBeenSetMask(this IAmmoInternalGetter item)
         {
             var ret = new Ammo_Mask<bool>();
-            ((AmmoCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((AmmoCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1141,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAmmoInternalGetter item,
             IAmmoInternalGetter rhs)
         {
-            return ((AmmoCommon)item.CommonInstance).Equals(
+            return ((AmmoCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1777,7 +1766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Ammo_Mask<bool>();
-            ((AmmoCommon)item.CommonInstance).FillEqualsMask(
+            ((AmmoCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2113,6 +2102,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Ammo obj, Ammo rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Ammo(getNextFormKey());
+            ret.CopyFieldsFrom((Ammo)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Ammo)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

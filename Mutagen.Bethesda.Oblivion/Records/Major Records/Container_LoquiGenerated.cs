@@ -208,15 +208,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IContainerInternalGetter rhs)) return false;
-            return ((ContainerCommon)this.CommonInstance).Equals(this, rhs);
+            return ((ContainerCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Container obj)
         {
-            return ((ContainerCommon)this.CommonInstance).Equals(this, obj);
+            return ((ContainerCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ContainerCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ContainerCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -485,17 +485,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Container(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Container obj, Container rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Container(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -1017,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IContainerInternal item)
         {
-            ((ContainerCommon)item.CommonInstance).Clear(item: item);
+            ((ContainerCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Container_Mask<bool> GetEqualsMask(
@@ -1025,7 +1014,7 @@ namespace Mutagen.Bethesda.Oblivion
             IContainerInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ContainerCommon)item.CommonInstance).GetEqualsMask(
+            return ((ContainerCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1036,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Container_Mask<bool> printMask = null)
         {
-            return ((ContainerCommon)item.CommonInstance).ToString(
+            return ((ContainerCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1048,7 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Container_Mask<bool> printMask = null)
         {
-            ((ContainerCommon)item.CommonInstance).ToString(
+            ((ContainerCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1059,7 +1048,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IContainerInternalGetter item,
             Container_Mask<bool?> checkMask)
         {
-            return ((ContainerCommon)item.CommonInstance).HasBeenSet(
+            return ((ContainerCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1067,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Container_Mask<bool> GetHasBeenSetMask(this IContainerInternalGetter item)
         {
             var ret = new Container_Mask<bool>();
-            ((ContainerCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((ContainerCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1077,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IContainerInternalGetter item,
             IContainerInternalGetter rhs)
         {
-            return ((ContainerCommon)item.CommonInstance).Equals(
+            return ((ContainerCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1645,7 +1634,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Container_Mask<bool>();
-            ((ContainerCommon)item.CommonInstance).FillEqualsMask(
+            ((ContainerCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1957,6 +1946,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Container obj, Container rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Container(getNextFormKey());
+            ret.CopyFieldsFrom((Container)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Container)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion

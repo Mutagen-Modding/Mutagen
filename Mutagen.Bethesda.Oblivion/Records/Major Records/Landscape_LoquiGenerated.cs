@@ -214,15 +214,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ILandscapeInternalGetter rhs)) return false;
-            return ((LandscapeCommon)this.CommonInstance).Equals(this, rhs);
+            return ((LandscapeCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
         public bool Equals(Landscape obj)
         {
-            return ((LandscapeCommon)this.CommonInstance).Equals(this, obj);
+            return ((LandscapeCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LandscapeCommon)this.CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LandscapeCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
@@ -475,17 +475,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Landscape(IMod mod)
             : this(mod.GetNextFormKey())
         {
-        }
-
-        partial void PostDuplicate(Landscape obj, Landscape rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Landscape(getNextFormKey());
-            ret.CopyFieldsFrom(this);
-            duplicatedRecords?.Add((ret, this.FormKey));
-            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
-            return ret;
         }
 
         #endregion
@@ -956,7 +945,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ILandscapeInternal item)
         {
-            ((LandscapeCommon)item.CommonInstance).Clear(item: item);
+            ((LandscapeCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
         public static Landscape_Mask<bool> GetEqualsMask(
@@ -964,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILandscapeInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LandscapeCommon)item.CommonInstance).GetEqualsMask(
+            return ((LandscapeCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -975,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Landscape_Mask<bool> printMask = null)
         {
-            return ((LandscapeCommon)item.CommonInstance).ToString(
+            return ((LandscapeCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -987,7 +976,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Landscape_Mask<bool> printMask = null)
         {
-            ((LandscapeCommon)item.CommonInstance).ToString(
+            ((LandscapeCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -998,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandscapeInternalGetter item,
             Landscape_Mask<bool?> checkMask)
         {
-            return ((LandscapeCommon)item.CommonInstance).HasBeenSet(
+            return ((LandscapeCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1006,7 +995,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Landscape_Mask<bool> GetHasBeenSetMask(this ILandscapeInternalGetter item)
         {
             var ret = new Landscape_Mask<bool>();
-            ((LandscapeCommon)item.CommonInstance).FillHasBeenSetMask(
+            ((LandscapeCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1016,7 +1005,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandscapeInternalGetter item,
             ILandscapeInternalGetter rhs)
         {
-            return ((LandscapeCommon)item.CommonInstance).Equals(
+            return ((LandscapeCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1512,7 +1501,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Landscape_Mask<bool>();
-            ((LandscapeCommon)item.CommonInstance).FillEqualsMask(
+            ((LandscapeCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1812,6 +1801,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+
+        #region Mutagen
+        partial void PostDuplicate(Landscape obj, Landscape rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommon item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Landscape(getNextFormKey());
+            ret.CopyFieldsFrom((Landscape)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Landscape)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
+        #endregion
 
     }
     #endregion
