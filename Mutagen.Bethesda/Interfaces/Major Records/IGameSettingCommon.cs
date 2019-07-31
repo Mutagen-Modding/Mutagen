@@ -80,13 +80,14 @@ namespace Mutagen.Bethesda
 
         public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlySpan<byte> span, MetaDataConstants meta)
         {
-            span = span.Slice(meta.MajorConstants.HeaderLength);
-            var subRecordMeta = meta.SubRecord(span);
-            if (Constants.EditorID != subRecordMeta.RecordType)
+            var majorMeta = meta.MajorRecordFrame(span);
+            var edidLoc = UtilityTranslation.FindFirstSubrecord(majorMeta.ContentSpan, meta, Constants.EditorID);
+            if (edidLoc == -1)
             {
                 return GetResponse<GameSettingType>.Fail($"EDID was not located");
             }
-            var edid = BinaryStringUtility.ProcessWholeToZString(span.Slice(subRecordMeta.HeaderLength, subRecordMeta.RecordLength));
+            var edidMeta = meta.SubRecordFrame(majorMeta.ContentSpan.Slice(edidLoc));
+            var edid = BinaryStringUtility.ProcessWholeToZString(edidMeta.ContentSpan);
             if (edid.Length == 0)
             {
                 return GetResponse<GameSettingType>.Fail("No EDID parsed.");
