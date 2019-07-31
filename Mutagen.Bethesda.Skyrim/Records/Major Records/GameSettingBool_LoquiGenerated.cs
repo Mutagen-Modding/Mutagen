@@ -34,20 +34,20 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class GameSettingFloat :
+    public partial class GameSettingBool :
         GameSetting,
-        IGameSettingFloatInternal,
-        ILoquiObjectSetter<GameSettingFloat>,
-        IEquatable<GameSettingFloat>,
+        IGameSettingBoolInternal,
+        ILoquiObjectSetter<GameSettingBool>,
+        IEquatable<GameSettingBool>,
         IEqualsMask
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => GameSettingFloat_Registration.Instance;
-        public new static GameSettingFloat_Registration Registration => GameSettingFloat_Registration.Instance;
-        protected override object CommonInstance => GameSettingFloatCommon.Instance;
+        ILoquiRegistration ILoquiObject.Registration => GameSettingBool_Registration.Instance;
+        public new static GameSettingBool_Registration Registration => GameSettingBool_Registration.Instance;
+        protected override object CommonInstance => GameSettingBoolCommon.Instance;
 
         #region Ctor
-        protected GameSettingFloat()
+        protected GameSettingBool()
         {
             CustomCtor();
         }
@@ -57,38 +57,38 @@ namespace Mutagen.Bethesda.Skyrim
         #region Data
         public bool Data_IsSet
         {
-            get => _hasBeenSetTracker[(int)GameSettingFloat_FieldIndex.Data];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)GameSettingFloat_FieldIndex.Data, nameof(Data_IsSet));
+            get => _hasBeenSetTracker[(int)GameSettingBool_FieldIndex.Data];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)GameSettingBool_FieldIndex.Data, nameof(Data_IsSet));
         }
-        bool IGameSettingFloatGetter.Data_IsSet => Data_IsSet;
-        private Single _Data;
+        bool IGameSettingBoolGetter.Data_IsSet => Data_IsSet;
+        private Boolean _Data;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Single Data
+        public Boolean Data
         {
             get => this._Data;
             set => Data_Set(value);
         }
-        Single IGameSettingFloatGetter.Data => this.Data;
+        Boolean IGameSettingBoolGetter.Data => this.Data;
         public void Data_Set(
-            Single value,
+            Boolean value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Data, value, _hasBeenSetTracker, markSet, (int)GameSettingFloat_FieldIndex.Data, nameof(Data), nameof(Data_IsSet));
+            this.RaiseAndSetIfChanged(ref _Data, value, _hasBeenSetTracker, markSet, (int)GameSettingBool_FieldIndex.Data, nameof(Data), nameof(Data_IsSet));
         }
         public void Data_Unset()
         {
-            this.Data_Set(default(Single), false);
+            this.Data_Set(default(Boolean), false);
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingFloatInternalGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingBoolInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            GameSettingFloatMixIn.ToString(
+            GameSettingBoolMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -99,27 +99,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IGameSettingFloatInternalGetter rhs)) return false;
-            return ((GameSettingFloatCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IGameSettingBoolInternalGetter rhs)) return false;
+            return ((GameSettingBoolCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
         }
 
-        public bool Equals(GameSettingFloat obj)
+        public bool Equals(GameSettingBool obj)
         {
-            return ((GameSettingFloatCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((GameSettingBoolCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GameSettingFloatCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((GameSettingBoolCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
-        protected override object XmlWriteTranslator => GameSettingFloatXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => GameSettingBoolXmlWriteTranslation.Instance;
         #region Xml Create
         [DebuggerStepThrough]
-        public static GameSettingFloat CreateFromXml(
+        public static GameSettingBool CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
-            GameSettingFloat_TranslationMask translationMask = null)
+            GameSettingBool_TranslationMask translationMask = null)
         {
             return CreateFromXml(
                 missing: missing,
@@ -129,11 +129,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static GameSettingFloat CreateFromXml(
+        public static GameSettingBool CreateFromXml(
             XElement node,
-            out GameSettingFloat_ErrorMask errorMask,
+            out GameSettingBool_ErrorMask errorMask,
             bool doMasks = true,
-            GameSettingFloat_TranslationMask translationMask = null,
+            GameSettingBool_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -142,11 +142,11 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
-            errorMask = GameSettingFloat_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSettingBool_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static GameSettingFloat CreateFromXml(
+        public new static GameSettingBool CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -156,12 +156,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case MissingCreate.New:
                 case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new GameSettingFloat() : null;
+                    if (node == null) return missing == MissingCreate.New ? new GameSettingBool() : null;
                     break;
                 default:
                     break;
             }
-            var ret = new GameSettingFloat();
+            var ret = new GameSettingBool();
             try
             {
                 foreach (var elem in node.Elements())
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Skyrim
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    GameSettingFloatXmlCreateTranslation.FillPublicElementXml(
+                    GameSettingBoolXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -188,10 +188,10 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static GameSettingFloat CreateFromXml(
+        public static GameSettingBool CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
-            GameSettingFloat_TranslationMask translationMask = null)
+            GameSettingBool_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return CreateFromXml(
@@ -200,10 +200,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static GameSettingFloat CreateFromXml(
+        public static GameSettingBool CreateFromXml(
             string path,
-            out GameSettingFloat_ErrorMask errorMask,
-            GameSettingFloat_TranslationMask translationMask = null,
+            out GameSettingBool_ErrorMask errorMask,
+            GameSettingBool_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
@@ -214,10 +214,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static GameSettingFloat CreateFromXml(
+        public static GameSettingBool CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
-            GameSettingFloat_TranslationMask translationMask = null,
+            GameSettingBool_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
@@ -228,10 +228,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static GameSettingFloat CreateFromXml(
+        public static GameSettingBool CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
-            GameSettingFloat_TranslationMask translationMask = null)
+            GameSettingBool_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -240,10 +240,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static GameSettingFloat CreateFromXml(
+        public static GameSettingBool CreateFromXml(
             Stream stream,
-            out GameSettingFloat_ErrorMask errorMask,
-            GameSettingFloat_TranslationMask translationMask = null,
+            out GameSettingBool_ErrorMask errorMask,
+            GameSettingBool_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
@@ -254,10 +254,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static GameSettingFloat CreateFromXml(
+        public static GameSettingBool CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
-            GameSettingFloat_TranslationMask translationMask = null,
+            GameSettingBool_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         protected static void FillPrivateElementXml(
-            GameSettingFloat item,
+            GameSettingBool item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -294,9 +294,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override bool GetHasBeenSet(int index)
         {
-            switch ((GameSettingFloat_FieldIndex)index)
+            switch ((GameSettingBool_FieldIndex)index)
             {
-                case GameSettingFloat_FieldIndex.Data:
+                case GameSettingBool_FieldIndex.Data:
                     return _hasBeenSetTracker[index];
                 default:
                     return base.GetHasBeenSet(index);
@@ -304,14 +304,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = GameSettingFloat_Registration.TRIGGERING_RECORD_TYPE;
-        public GameSettingFloat(FormKey formKey)
+        public new static readonly RecordType GRUP_RECORD_TYPE = GameSettingBool_Registration.TRIGGERING_RECORD_TYPE;
+        public GameSettingBool(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public GameSettingFloat(IMod mod)
+        public GameSettingBool(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
@@ -319,10 +319,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        protected override object BinaryWriteTranslator => GameSettingFloatBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GameSettingBoolBinaryWriteTranslation.Instance;
         #region Binary Create
         [DebuggerStepThrough]
-        public static GameSettingFloat CreateFromBinary(
+        public static GameSettingBool CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -334,10 +334,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static GameSettingFloat CreateFromBinary(
+        public static GameSettingBool CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            out GameSettingFloat_ErrorMask errorMask,
+            out GameSettingBool_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -346,21 +346,21 @@ namespace Mutagen.Bethesda.Skyrim
                 frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = GameSettingFloat_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSettingBool_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static GameSettingFloat CreateFromBinary(
+        public new static GameSettingBool CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<GameSettingFloat>(
-                record: new GameSettingFloat(),
+            return UtilityTranslation.MajorRecordParse<GameSettingBool>(
+                record: new GameSettingBool(),
                 frame: frame,
                 errorMask: errorMask,
-                recType: GameSettingFloat_Registration.GMST_HEADER,
+                recType: GameSettingBool_Registration.GMST_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         protected static void FillBinaryStructs(
-            GameSettingFloat item,
+            GameSettingBool item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            GameSettingFloat item,
+            GameSettingBool item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -396,18 +396,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Single DataParse))
-                    {
-                        item.Data = DataParse;
-                    }
-                    else
-                    {
-                        item.Data = default(Single);
-                    }
-                    return TryGet<int?>.Succeed((int)GameSettingFloat_FieldIndex.Data);
+                    GameSettingBoolBinaryCreateTranslation.FillBinaryDataCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    return TryGet<int?>.Succeed((int)GameSettingBool_FieldIndex.Data);
                 }
                 default:
                     return GameSetting.FillBinaryRecordTypes(
@@ -423,29 +417,29 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public GameSettingFloat Copy(
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null)
+        public GameSettingBool Copy(
+            GameSettingBool_CopyMask copyMask = null,
+            GameSettingBool def = null)
         {
-            return GameSettingFloat.Copy(
+            return GameSettingBool.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static GameSettingFloat Copy(
-            GameSettingFloat item,
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null)
+        public static GameSettingBool Copy(
+            GameSettingBool item,
+            GameSettingBool_CopyMask copyMask = null,
+            GameSettingBool def = null)
         {
-            GameSettingFloat ret;
-            if (item.GetType().Equals(typeof(GameSettingFloat)))
+            GameSettingBool ret;
+            if (item.GetType().Equals(typeof(GameSettingBool)))
             {
-                ret = new GameSettingFloat();
+                ret = new GameSettingBool();
             }
             else
             {
-                ret = (GameSettingFloat)System.Activator.CreateInstance(item.GetType());
+                ret = (GameSettingBool)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -454,19 +448,19 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static GameSettingFloat Copy_ToLoqui(
-            GameSettingFloat item,
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null)
+        public static GameSettingBool Copy_ToLoqui(
+            GameSettingBool item,
+            GameSettingBool_CopyMask copyMask = null,
+            GameSettingBool def = null)
         {
-            GameSettingFloat ret;
-            if (item.GetType().Equals(typeof(GameSettingFloat)))
+            GameSettingBool ret;
+            if (item.GetType().Equals(typeof(GameSettingBool)))
             {
-                ret = new GameSettingFloat() as GameSettingFloat;
+                ret = new GameSettingBool() as GameSettingBool;
             }
             else
             {
-                ret = (GameSettingFloat)System.Activator.CreateInstance(item.GetType());
+                ret = (GameSettingBool)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -486,9 +480,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            GameSettingFloat rhs,
-            GameSettingFloat_CopyMask copyMask,
-            GameSettingFloat def = null)
+            GameSettingBool rhs,
+            GameSettingBool_CopyMask copyMask,
+            GameSettingBool def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -499,29 +493,29 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            GameSettingFloat rhs,
-            out GameSettingFloat_ErrorMask errorMask,
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null,
+            GameSettingBool rhs,
+            out GameSettingBool_ErrorMask errorMask,
+            GameSettingBool_CopyMask copyMask = null,
+            GameSettingBool def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            GameSettingFloatCommon.CopyFieldsFrom(
+            GameSettingBoolCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
-            errorMask = GameSettingFloat_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSettingBool_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyFieldsFrom(
-            GameSettingFloat rhs,
+            GameSettingBool rhs,
             ErrorMaskBuilder errorMask,
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null)
+            GameSettingBool_CopyMask copyMask = null,
+            GameSettingBool def = null)
         {
-            GameSettingFloatCommon.CopyFieldsFrom(
+            GameSettingBoolCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -531,11 +525,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override void SetNthObject(ushort index, object obj)
         {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
+            GameSettingBool_FieldIndex enu = (GameSettingBool_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingFloat_FieldIndex.Data:
-                    this.Data = (Single)obj;
+                case GameSettingBool_FieldIndex.Data:
+                    this.Data = (Boolean)obj;
                     break;
                 default:
                     base.SetNthObject(index, obj);
@@ -545,29 +539,29 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Clear()
         {
-            GameSettingFloatCommon.Instance.Clear(this);
+            GameSettingBoolCommon.Instance.Clear(this);
         }
 
-        public new static GameSettingFloat Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public new static GameSettingBool Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new GameSettingFloat();
+            var ret = new GameSettingBool();
             foreach (var pair in fields)
             {
-                CopyInInternal_GameSettingFloat(ret, pair);
+                CopyInInternal_GameSettingBool(ret, pair);
             }
             return ret;
         }
 
-        protected new static void CopyInInternal_GameSettingFloat(GameSettingFloat obj, KeyValuePair<ushort, object> pair)
+        protected new static void CopyInInternal_GameSettingBool(GameSettingBool obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out GameSettingFloat_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out GameSettingBool_FieldIndex enu))
             {
                 CopyInInternal_GameSetting(obj, pair);
             }
             switch (enu)
             {
-                case GameSettingFloat_FieldIndex.Data:
-                    obj.Data = (Single)pair.Value;
+                case GameSettingBool_FieldIndex.Data:
+                    obj.Data = (Boolean)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -577,47 +571,47 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
-    public partial interface IGameSettingFloat :
-        IGameSettingFloatInternalGetter,
+    public partial interface IGameSettingBool :
+        IGameSettingBoolInternalGetter,
         IGameSetting,
-        ILoquiObjectSetter<IGameSettingFloatInternal>
+        ILoquiObjectSetter<IGameSettingBoolInternal>
     {
-        new Single Data { get; set; }
+        new Boolean Data { get; set; }
         new bool Data_IsSet { get; set; }
-        void Data_Set(Single value, bool hasBeenSet = true);
+        void Data_Set(Boolean value, bool hasBeenSet = true);
         void Data_Unset();
 
         void CopyFieldsFrom(
-            GameSettingFloat rhs,
+            GameSettingBool rhs,
             ErrorMaskBuilder errorMask = null,
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null);
+            GameSettingBool_CopyMask copyMask = null,
+            GameSettingBool def = null);
     }
 
-    public partial interface IGameSettingFloatInternal :
+    public partial interface IGameSettingBoolInternal :
         IGameSettingInternal,
-        IGameSettingFloat,
-        IGameSettingFloatInternalGetter
+        IGameSettingBool,
+        IGameSettingBoolInternalGetter
     {
     }
 
-    public partial interface IGameSettingFloatGetter :
+    public partial interface IGameSettingBoolGetter :
         IGameSettingGetter,
-        ILoquiObject<IGameSettingFloatInternalGetter>,
+        ILoquiObject<IGameSettingBoolInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
         #region Data
-        Single Data { get; }
+        Boolean Data { get; }
         bool Data_IsSet { get; }
 
         #endregion
 
     }
 
-    public partial interface IGameSettingFloatInternalGetter :
+    public partial interface IGameSettingBoolInternalGetter :
         IGameSettingInternalGetter,
-        IGameSettingFloatGetter
+        IGameSettingBoolGetter
     {
 
     }
@@ -625,42 +619,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class GameSettingFloatMixIn
+    public static class GameSettingBoolMixIn
     {
-        public static void Clear(this IGameSettingFloatInternal item)
+        public static void Clear(this IGameSettingBoolInternal item)
         {
-            ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((GameSettingBoolCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
         }
 
-        public static GameSettingFloat_Mask<bool> GetEqualsMask(
-            this IGameSettingFloatInternalGetter item,
-            IGameSettingFloatInternalGetter rhs,
+        public static GameSettingBool_Mask<bool> GetEqualsMask(
+            this IGameSettingBoolInternalGetter item,
+            IGameSettingBoolInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((GameSettingBoolCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IGameSettingFloatInternalGetter item,
+            this IGameSettingBoolInternalGetter item,
             string name = null,
-            GameSettingFloat_Mask<bool> printMask = null)
+            GameSettingBool_Mask<bool> printMask = null)
         {
-            return ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((GameSettingBoolCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IGameSettingFloatInternalGetter item,
+            this IGameSettingBoolInternalGetter item,
             FileGeneration fg,
             string name = null,
-            GameSettingFloat_Mask<bool> printMask = null)
+            GameSettingBool_Mask<bool> printMask = null)
         {
-            ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((GameSettingBoolCommon)((ILoquiObject)item).CommonInstance).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -668,28 +662,28 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IGameSettingFloatInternalGetter item,
-            GameSettingFloat_Mask<bool?> checkMask)
+            this IGameSettingBoolInternalGetter item,
+            GameSettingBool_Mask<bool?> checkMask)
         {
-            return ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((GameSettingBoolCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static GameSettingFloat_Mask<bool> GetHasBeenSetMask(this IGameSettingFloatInternalGetter item)
+        public static GameSettingBool_Mask<bool> GetHasBeenSetMask(this IGameSettingBoolInternalGetter item)
         {
-            var ret = new GameSettingFloat_Mask<bool>();
-            ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            var ret = new GameSettingBool_Mask<bool>();
+            ((GameSettingBoolCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IGameSettingFloatInternalGetter item,
-            IGameSettingFloatInternalGetter rhs)
+            this IGameSettingBoolInternalGetter item,
+            IGameSettingBoolInternalGetter rhs)
         {
-            return ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((GameSettingBoolCommon)((ILoquiObject)item).CommonInstance).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -702,7 +696,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum GameSettingFloat_FieldIndex
+    public enum GameSettingBool_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -716,42 +710,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class GameSettingFloat_Registration : ILoquiRegistration
+    public class GameSettingBool_Registration : ILoquiRegistration
     {
-        public static readonly GameSettingFloat_Registration Instance = new GameSettingFloat_Registration();
+        public static readonly GameSettingBool_Registration Instance = new GameSettingBool_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 7,
+            msgID: 17,
             version: 0);
 
-        public const string GUID = "2769d421-881e-4532-a318-67db7d1eb291";
+        public const string GUID = "6446aadc-335b-4467-b72f-81de8a9ea207";
 
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(GameSettingFloat_Mask<>);
+        public static readonly Type MaskType = typeof(GameSettingBool_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(GameSettingFloat_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(GameSettingBool_ErrorMask);
 
-        public static readonly Type ClassType = typeof(GameSettingFloat);
+        public static readonly Type ClassType = typeof(GameSettingBool);
 
-        public static readonly Type GetterType = typeof(IGameSettingFloatGetter);
+        public static readonly Type GetterType = typeof(IGameSettingBoolGetter);
 
-        public static readonly Type InternalGetterType = typeof(IGameSettingFloatInternalGetter);
+        public static readonly Type InternalGetterType = typeof(IGameSettingBoolInternalGetter);
 
-        public static readonly Type SetterType = typeof(IGameSettingFloat);
+        public static readonly Type SetterType = typeof(IGameSettingBool);
 
-        public static readonly Type InternalSetterType = typeof(IGameSettingFloatInternal);
+        public static readonly Type InternalSetterType = typeof(IGameSettingBoolInternal);
 
-        public static readonly Type CommonType = typeof(GameSettingFloatCommon);
+        public static readonly Type CommonType = typeof(GameSettingBoolCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.GameSettingFloat";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.GameSettingBool";
 
-        public const string Name = "GameSettingFloat";
+        public const string Name = "GameSettingBool";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -764,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (str.Upper)
             {
                 case "DATA":
-                    return (ushort)GameSettingFloat_FieldIndex.Data;
+                    return (ushort)GameSettingBool_FieldIndex.Data;
                 default:
                     return null;
             }
@@ -772,10 +766,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
+            GameSettingBool_FieldIndex enu = (GameSettingBool_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingFloat_FieldIndex.Data:
+                case GameSettingBool_FieldIndex.Data:
                     return false;
                 default:
                     return GameSetting_Registration.GetNthIsEnumerable(index);
@@ -784,10 +778,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
+            GameSettingBool_FieldIndex enu = (GameSettingBool_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingFloat_FieldIndex.Data:
+                case GameSettingBool_FieldIndex.Data:
                     return false;
                 default:
                     return GameSetting_Registration.GetNthIsLoqui(index);
@@ -796,10 +790,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
+            GameSettingBool_FieldIndex enu = (GameSettingBool_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingFloat_FieldIndex.Data:
+                case GameSettingBool_FieldIndex.Data:
                     return false;
                 default:
                     return GameSetting_Registration.GetNthIsSingleton(index);
@@ -808,10 +802,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
+            GameSettingBool_FieldIndex enu = (GameSettingBool_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingFloat_FieldIndex.Data:
+                case GameSettingBool_FieldIndex.Data:
                     return "Data";
                 default:
                     return GameSetting_Registration.GetNthName(index);
@@ -820,10 +814,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
+            GameSettingBool_FieldIndex enu = (GameSettingBool_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingFloat_FieldIndex.Data:
+                case GameSettingBool_FieldIndex.Data:
                     return false;
                 default:
                     return GameSetting_Registration.IsNthDerivative(index);
@@ -832,10 +826,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
+            GameSettingBool_FieldIndex enu = (GameSettingBool_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingFloat_FieldIndex.Data:
+                case GameSettingBool_FieldIndex.Data:
                     return false;
                 default:
                     return GameSetting_Registration.IsProtected(index);
@@ -844,23 +838,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
+            GameSettingBool_FieldIndex enu = (GameSettingBool_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingFloat_FieldIndex.Data:
-                    return typeof(Single);
+                case GameSettingBool_FieldIndex.Data:
+                    return typeof(Boolean);
                 default:
                     return GameSetting_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(GameSettingFloatXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(GameSettingBoolXmlWriteTranslation);
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GMST_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
-        public static readonly Type BinaryWriteTranslation = typeof(GameSettingFloatBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(GameSettingBoolBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -894,17 +888,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class GameSettingFloatCommon : GameSettingCommon
+    public partial class GameSettingBoolCommon : GameSettingCommon
     {
-        public static readonly GameSettingFloatCommon Instance = new GameSettingFloatCommon();
+        public static readonly GameSettingBoolCommon Instance = new GameSettingBoolCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            GameSettingFloat item,
-            GameSettingFloat rhs,
-            GameSettingFloat def,
+            GameSettingBool item,
+            GameSettingBool rhs,
+            GameSettingBool def,
             ErrorMaskBuilder errorMask,
-            GameSettingFloat_CopyMask copyMask)
+            GameSettingBool_CopyMask copyMask)
         {
             GameSettingCommon.CopyFieldsFrom(
                 item,
@@ -914,13 +908,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if (copyMask?.Data ?? true)
             {
-                errorMask?.PushIndex((int)GameSettingFloat_FieldIndex.Data);
+                errorMask?.PushIndex((int)GameSettingBool_FieldIndex.Data);
                 try
                 {
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.Data,
                         rhsHasBeenSet: rhs.Data_IsSet,
-                        defItem: def?.Data ?? default(Single),
+                        defItem: def?.Data ?? default(Boolean),
                         defHasBeenSet: def?.Data_IsSet ?? false,
                         outRhsItem: out var rhsDataItem,
                         outDefItem: out var defDataItem))
@@ -948,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
 
-        public virtual void Clear(IGameSettingFloatInternal item)
+        public virtual void Clear(IGameSettingBoolInternal item)
         {
             ClearPartial();
             item.Data_Unset();
@@ -957,26 +951,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Clear(IGameSettingInternal item)
         {
-            Clear(item: (IGameSettingFloatInternal)item);
+            Clear(item: (IGameSettingBoolInternal)item);
         }
 
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (IGameSettingFloatInternal)item);
+            Clear(item: (IGameSettingBoolInternal)item);
         }
 
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IGameSettingFloatInternal)item);
+            Clear(item: (IGameSettingBoolInternal)item);
         }
 
-        public GameSettingFloat_Mask<bool> GetEqualsMask(
-            IGameSettingFloatInternalGetter item,
-            IGameSettingFloatInternalGetter rhs,
+        public GameSettingBool_Mask<bool> GetEqualsMask(
+            IGameSettingBoolInternalGetter item,
+            IGameSettingBoolInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new GameSettingFloat_Mask<bool>();
-            ((GameSettingFloatCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
+            var ret = new GameSettingBool_Mask<bool>();
+            ((GameSettingBoolCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -985,20 +979,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public void FillEqualsMask(
-            IGameSettingFloatInternalGetter item,
-            IGameSettingFloatInternalGetter rhs,
-            GameSettingFloat_Mask<bool> ret,
+            IGameSettingBoolInternalGetter item,
+            IGameSettingBoolInternalGetter rhs,
+            GameSettingBool_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Data = item.Data_IsSet == rhs.Data_IsSet && item.Data.EqualsWithin(rhs.Data);
+            ret.Data = item.Data_IsSet == rhs.Data_IsSet && item.Data == rhs.Data;
             base.FillEqualsMask(item, rhs, ret, include);
         }
 
         public string ToString(
-            IGameSettingFloatInternalGetter item,
+            IGameSettingBoolInternalGetter item,
             string name = null,
-            GameSettingFloat_Mask<bool> printMask = null)
+            GameSettingBool_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1010,18 +1004,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public void ToString(
-            IGameSettingFloatInternalGetter item,
+            IGameSettingBoolInternalGetter item,
             FileGeneration fg,
             string name = null,
-            GameSettingFloat_Mask<bool> printMask = null)
+            GameSettingBool_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"GameSettingFloat =>");
+                fg.AppendLine($"GameSettingBool =>");
             }
             else
             {
-                fg.AppendLine($"{name} (GameSettingFloat) =>");
+                fg.AppendLine($"{name} (GameSettingBool) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1035,9 +1029,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         protected static void ToStringFields(
-            IGameSettingFloatInternalGetter item,
+            IGameSettingBoolInternalGetter item,
             FileGeneration fg,
-            GameSettingFloat_Mask<bool> printMask = null)
+            GameSettingBool_Mask<bool> printMask = null)
         {
             GameSettingCommon.ToStringFields(
                 item: item,
@@ -1050,8 +1044,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public bool HasBeenSet(
-            IGameSettingFloatInternalGetter item,
-            GameSettingFloat_Mask<bool?> checkMask)
+            IGameSettingBoolInternalGetter item,
+            GameSettingBool_Mask<bool?> checkMask)
         {
             if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_IsSet) return false;
             return base.HasBeenSet(
@@ -1060,8 +1054,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public void FillHasBeenSetMask(
-            IGameSettingFloatInternalGetter item,
-            GameSettingFloat_Mask<bool> mask)
+            IGameSettingBoolInternalGetter item,
+            GameSettingBool_Mask<bool> mask)
         {
             mask.Data = item.Data_IsSet;
             base.FillHasBeenSetMask(
@@ -1069,64 +1063,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 mask: mask);
         }
 
-        public static GameSettingFloat_FieldIndex ConvertFieldIndex(GameSetting_FieldIndex index)
+        public static GameSettingBool_FieldIndex ConvertFieldIndex(GameSetting_FieldIndex index)
         {
             switch (index)
             {
                 case GameSetting_FieldIndex.MajorRecordFlagsRaw:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case GameSetting_FieldIndex.FormKey:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case GameSetting_FieldIndex.Version:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case GameSetting_FieldIndex.EditorID:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case GameSetting_FieldIndex.SkyrimMajorRecordFlags:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case GameSetting_FieldIndex.FormVersion:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case GameSetting_FieldIndex.Version2:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        public static GameSettingFloat_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static GameSettingBool_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        public static GameSettingFloat_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static GameSettingBool_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (GameSettingFloat_FieldIndex)((int)index);
+                    return (GameSettingBool_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1134,8 +1128,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Equals and Hash
         public virtual bool Equals(
-            IGameSettingFloatInternalGetter lhs,
-            IGameSettingFloatInternalGetter rhs)
+            IGameSettingBoolInternalGetter lhs,
+            IGameSettingBoolInternalGetter rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1143,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Data_IsSet != rhs.Data_IsSet) return false;
             if (lhs.Data_IsSet)
             {
-                if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
+                if (lhs.Data != rhs.Data) return false;
             }
             return true;
         }
@@ -1153,8 +1147,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGameSettingInternalGetter rhs)
         {
             return Equals(
-                lhs: (IGameSettingFloatInternalGetter)lhs,
-                rhs: rhs as IGameSettingFloatInternalGetter);
+                lhs: (IGameSettingBoolInternalGetter)lhs,
+                rhs: rhs as IGameSettingBoolInternalGetter);
         }
 
         public override bool Equals(
@@ -1162,8 +1156,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordInternalGetter rhs)
         {
             return Equals(
-                lhs: (IGameSettingFloatInternalGetter)lhs,
-                rhs: rhs as IGameSettingFloatInternalGetter);
+                lhs: (IGameSettingBoolInternalGetter)lhs,
+                rhs: rhs as IGameSettingBoolInternalGetter);
         }
 
         public override bool Equals(
@@ -1171,11 +1165,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordInternalGetter rhs)
         {
             return Equals(
-                lhs: (IGameSettingFloatInternalGetter)lhs,
-                rhs: rhs as IGameSettingFloatInternalGetter);
+                lhs: (IGameSettingBoolInternalGetter)lhs,
+                rhs: rhs as IGameSettingBoolInternalGetter);
         }
 
-        public virtual int GetHashCode(IGameSettingFloatInternalGetter item)
+        public virtual int GetHashCode(IGameSettingBoolInternalGetter item)
         {
             int ret = 0;
             if (item.Data_IsSet)
@@ -1188,31 +1182,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override int GetHashCode(IGameSettingInternalGetter item)
         {
-            return GetHashCode(item: (IGameSettingFloatInternalGetter)item);
+            return GetHashCode(item: (IGameSettingBoolInternalGetter)item);
         }
 
         public override int GetHashCode(ISkyrimMajorRecordInternalGetter item)
         {
-            return GetHashCode(item: (IGameSettingFloatInternalGetter)item);
+            return GetHashCode(item: (IGameSettingBoolInternalGetter)item);
         }
 
         public override int GetHashCode(IMajorRecordInternalGetter item)
         {
-            return GetHashCode(item: (IGameSettingFloatInternalGetter)item);
+            return GetHashCode(item: (IGameSettingBoolInternalGetter)item);
         }
 
         #endregion
 
 
         #region Mutagen
-        partial void PostDuplicate(GameSettingFloat obj, GameSettingFloat rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(GameSettingBool obj, GameSettingBool rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
-            var ret = new GameSettingFloat(getNextFormKey());
-            ret.CopyFieldsFrom((GameSettingFloat)item);
+            var ret = new GameSettingBool(getNextFormKey());
+            ret.CopyFieldsFrom((GameSettingBool)item);
             duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (GameSettingFloat)item, getNextFormKey, duplicatedRecords);
+            PostDuplicate(ret, (GameSettingBool)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
 
@@ -1223,14 +1217,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     #region Modules
     #region Xml Translation
-    public partial class GameSettingFloatXmlWriteTranslation :
+    public partial class GameSettingBoolXmlWriteTranslation :
         GameSettingXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static GameSettingFloatXmlWriteTranslation Instance = new GameSettingFloatXmlWriteTranslation();
+        public new readonly static GameSettingBoolXmlWriteTranslation Instance = new GameSettingBoolXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IGameSettingFloatInternalGetter item,
+            IGameSettingBoolInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1241,29 +1235,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
             if (item.Data_IsSet
-                && (translationMask?.GetShouldTranslate((int)GameSettingFloat_FieldIndex.Data) ?? true))
+                && (translationMask?.GetShouldTranslate((int)GameSettingBool_FieldIndex.Data) ?? true))
             {
-                FloatXmlTranslation.Instance.Write(
+                BooleanXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Data),
                     item: item.Data,
-                    fieldIndex: (int)GameSettingFloat_FieldIndex.Data,
+                    fieldIndex: (int)GameSettingBool_FieldIndex.Data,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IGameSettingFloatInternalGetter item,
+            IGameSettingBoolInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.GameSettingFloat");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.GameSettingBool");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.GameSettingFloat");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.GameSettingBool");
             }
             WriteToNodeXml(
                 item: item,
@@ -1280,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             Write(
-                item: (IGameSettingFloatInternalGetter)item,
+                item: (IGameSettingBoolInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1295,7 +1289,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             Write(
-                item: (IGameSettingFloatInternalGetter)item,
+                item: (IGameSettingBoolInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1310,7 +1304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             Write(
-                item: (IGameSettingFloatInternalGetter)item,
+                item: (IGameSettingBoolInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1325,7 +1319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             Write(
-                item: (IGameSettingFloatInternalGetter)item,
+                item: (IGameSettingBoolInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1334,12 +1328,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class GameSettingFloatXmlCreateTranslation : GameSettingXmlCreateTranslation
+    public partial class GameSettingBoolXmlCreateTranslation : GameSettingXmlCreateTranslation
     {
-        public new readonly static GameSettingFloatXmlCreateTranslation Instance = new GameSettingFloatXmlCreateTranslation();
+        public new readonly static GameSettingBoolXmlCreateTranslation Instance = new GameSettingBoolXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IGameSettingFloatInternal item,
+            IGameSettingBoolInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1348,7 +1342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    GameSettingFloatXmlCreateTranslation.FillPublicElementXml(
+                    GameSettingBoolXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1364,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IGameSettingFloatInternal item,
+            IGameSettingBoolInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1375,17 +1369,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "Data":
                     try
                     {
-                        errorMask?.PushIndex((int)GameSettingFloat_FieldIndex.Data);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        errorMask?.PushIndex((int)GameSettingBool_FieldIndex.Data);
+                        if (BooleanXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DataParse,
+                            item: out Boolean DataParse,
                             errorMask: errorMask))
                         {
                             item.Data = DataParse;
                         }
                         else
                         {
-                            item.Data = default(Single);
+                            item.Data = default(Boolean);
                         }
                     }
                     catch (Exception ex)
@@ -1412,31 +1406,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
 
     #region Xml Write Mixins
-    public static class GameSettingFloatXmlTranslationMixIn
+    public static class GameSettingBoolXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IGameSettingFloatInternalGetter item,
+            this IGameSettingBoolInternalGetter item,
             XElement node,
-            out GameSettingFloat_ErrorMask errorMask,
+            out GameSettingBool_ErrorMask errorMask,
             bool doMasks = true,
-            GameSettingFloat_TranslationMask translationMask = null,
+            GameSettingBool_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GameSettingFloatXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((GameSettingBoolXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GameSettingFloat_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSettingBool_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IGameSettingFloatInternalGetter item,
+            this IGameSettingBoolInternalGetter item,
             string path,
-            out GameSettingFloat_ErrorMask errorMask,
-            GameSettingFloat_TranslationMask translationMask = null,
+            out GameSettingBool_ErrorMask errorMask,
+            GameSettingBool_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -1452,10 +1446,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this IGameSettingFloatInternalGetter item,
+            this IGameSettingBoolInternalGetter item,
             Stream stream,
-            out GameSettingFloat_ErrorMask errorMask,
-            GameSettingFloat_TranslationMask translationMask = null,
+            out GameSettingBool_ErrorMask errorMask,
+            GameSettingBool_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -1476,14 +1470,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Mask
-    public class GameSettingFloat_Mask<T> : GameSetting_Mask<T>, IMask<T>, IEquatable<GameSettingFloat_Mask<T>>
+    public class GameSettingBool_Mask<T> : GameSetting_Mask<T>, IMask<T>, IEquatable<GameSettingBool_Mask<T>>
     {
         #region Ctors
-        public GameSettingFloat_Mask()
+        public GameSettingBool_Mask()
         {
         }
 
-        public GameSettingFloat_Mask(T initialValue)
+        public GameSettingBool_Mask(T initialValue)
         {
             this.Data = initialValue;
         }
@@ -1496,11 +1490,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is GameSettingFloat_Mask<T> rhs)) return false;
+            if (!(obj is GameSettingBool_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(GameSettingFloat_Mask<T> rhs)
+        public bool Equals(GameSettingBool_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
@@ -1527,14 +1521,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Translate
-        public new GameSettingFloat_Mask<R> Translate<R>(Func<T, R> eval)
+        public new GameSettingBool_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new GameSettingFloat_Mask<R>();
+            var ret = new GameSettingBool_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(GameSettingFloat_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(GameSettingBool_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
             obj.Data = eval(this.Data);
@@ -1554,16 +1548,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(GameSettingFloat_Mask<bool> printMask = null)
+        public string ToString(GameSettingBool_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, GameSettingFloat_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, GameSettingBool_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(GameSettingFloat_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(GameSettingBool_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1578,7 +1572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public class GameSettingFloat_ErrorMask : GameSetting_ErrorMask, IErrorMask<GameSettingFloat_ErrorMask>
+    public class GameSettingBool_ErrorMask : GameSetting_ErrorMask, IErrorMask<GameSettingBool_ErrorMask>
     {
         #region Members
         public Exception Data;
@@ -1587,10 +1581,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region IErrorMask
         public override object GetNthMask(int index)
         {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
+            GameSettingBool_FieldIndex enu = (GameSettingBool_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingFloat_FieldIndex.Data:
+                case GameSettingBool_FieldIndex.Data:
                     return Data;
                 default:
                     return base.GetNthMask(index);
@@ -1599,10 +1593,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void SetNthException(int index, Exception ex)
         {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
+            GameSettingBool_FieldIndex enu = (GameSettingBool_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingFloat_FieldIndex.Data:
+                case GameSettingBool_FieldIndex.Data:
                     this.Data = ex;
                     break;
                 default:
@@ -1613,10 +1607,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void SetNthMask(int index, object obj)
         {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
+            GameSettingBool_FieldIndex enu = (GameSettingBool_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingFloat_FieldIndex.Data:
+                case GameSettingBool_FieldIndex.Data:
                     this.Data = (Exception)obj;
                     break;
                 default:
@@ -1643,7 +1637,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void ToString(FileGeneration fg)
         {
-            fg.AppendLine("GameSettingFloat_ErrorMask =>");
+            fg.AppendLine("GameSettingBool_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1669,13 +1663,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Combine
-        public GameSettingFloat_ErrorMask Combine(GameSettingFloat_ErrorMask rhs)
+        public GameSettingBool_ErrorMask Combine(GameSettingBool_ErrorMask rhs)
         {
-            var ret = new GameSettingFloat_ErrorMask();
+            var ret = new GameSettingBool_ErrorMask();
             ret.Data = this.Data.Combine(rhs.Data);
             return ret;
         }
-        public static GameSettingFloat_ErrorMask Combine(GameSettingFloat_ErrorMask lhs, GameSettingFloat_ErrorMask rhs)
+        public static GameSettingBool_ErrorMask Combine(GameSettingBool_ErrorMask lhs, GameSettingBool_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1683,21 +1677,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Factory
-        public static GameSettingFloat_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static GameSettingBool_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            return new GameSettingFloat_ErrorMask();
+            return new GameSettingBool_ErrorMask();
         }
         #endregion
 
     }
-    public class GameSettingFloat_CopyMask : GameSetting_CopyMask
+    public class GameSettingBool_CopyMask : GameSetting_CopyMask
     {
-        public GameSettingFloat_CopyMask()
+        public GameSettingBool_CopyMask()
         {
         }
 
-        public GameSettingFloat_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        public GameSettingBool_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
             this.Data = defaultOn;
         }
@@ -1708,19 +1702,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public class GameSettingFloat_TranslationMask : GameSetting_TranslationMask
+    public class GameSettingBool_TranslationMask : GameSetting_TranslationMask
     {
         #region Members
         public bool Data;
         #endregion
 
         #region Ctors
-        public GameSettingFloat_TranslationMask()
+        public GameSettingBool_TranslationMask()
             : base()
         {
         }
 
-        public GameSettingFloat_TranslationMask(bool defaultOn)
+        public GameSettingBool_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
             this.Data = defaultOn;
@@ -1737,14 +1731,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Binary Translation
-    public partial class GameSettingFloatBinaryWriteTranslation :
+    public partial class GameSettingBoolBinaryWriteTranslation :
         GameSettingBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static GameSettingFloatBinaryWriteTranslation Instance = new GameSettingFloatBinaryWriteTranslation();
+        public new readonly static GameSettingBoolBinaryWriteTranslation Instance = new GameSettingBoolBinaryWriteTranslation();
+
+        static partial void WriteBinaryDataCustom(
+            MutagenWriter writer,
+            IGameSettingBoolInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void WriteBinaryData(
+            MutagenWriter writer,
+            IGameSettingBoolInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WriteBinaryDataCustom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
 
         public static void Write_RecordTypes(
-            IGameSettingFloatInternalGetter item,
+            IGameSettingBoolInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -1756,26 +1769,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            if (item.Data_IsSet)
-            {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Data,
-                    header: recordTypeConverter.ConvertToCustom(GameSettingFloat_Registration.DATA_HEADER),
-                    nullable: false);
-            }
+            GameSettingBoolBinaryWriteTranslation.WriteBinaryData(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
         }
 
         public void Write(
             MutagenWriter writer,
-            IGameSettingFloatInternalGetter item,
+            IGameSettingBoolInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: GameSettingFloat_Registration.GMST_HEADER,
+                record: GameSettingBool_Registration.GMST_HEADER,
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.Write_Embedded(
@@ -1800,7 +1810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IGameSettingFloatInternalGetter)item,
+                item: (IGameSettingBoolInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1815,7 +1825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IGameSettingFloatInternalGetter)item,
+                item: (IGameSettingBoolInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1830,7 +1840,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IGameSettingFloatInternalGetter)item,
+                item: (IGameSettingBoolInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1845,7 +1855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IGameSettingFloatInternalGetter)item,
+                item: (IGameSettingBoolInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1854,59 +1864,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class GameSettingFloatBinaryCreateTranslation : GameSettingBinaryCreateTranslation
+    public partial class GameSettingBoolBinaryCreateTranslation : GameSettingBinaryCreateTranslation
     {
-        public new readonly static GameSettingFloatBinaryCreateTranslation Instance = new GameSettingFloatBinaryCreateTranslation();
+        public new readonly static GameSettingBoolBinaryCreateTranslation Instance = new GameSettingBoolBinaryCreateTranslation();
+
+        static partial void FillBinaryDataCustom(
+            MutagenFrame frame,
+            GameSettingBool item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinaryDataCustomPublic(
+            MutagenFrame frame,
+            GameSettingBool item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinaryDataCustom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
 
     }
 
     #region Binary Write Mixins
-    public static class GameSettingFloatBinaryTranslationMixIn
+    public static class GameSettingBoolBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IGameSettingFloatInternalGetter item,
+            this IGameSettingBoolInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
-            out GameSettingFloat_ErrorMask errorMask,
+            out GameSettingBool_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GameSettingFloatBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((GameSettingBoolBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = GameSettingFloat_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSettingBool_ErrorMask.Factory(errorMaskBuilder);
         }
 
     }
     #endregion
 
-    public partial class GameSettingFloatBinaryWrapper :
+    public partial class GameSettingBoolBinaryWrapper :
         GameSettingBinaryWrapper,
-        IGameSettingFloatInternalGetter
+        IGameSettingBoolInternalGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => GameSettingFloat_Registration.Instance;
-        public new static GameSettingFloat_Registration Registration => GameSettingFloat_Registration.Instance;
-        protected override object CommonInstance => GameSettingFloatCommon.Instance;
+        ILoquiRegistration ILoquiObject.Registration => GameSettingBool_Registration.Instance;
+        public new static GameSettingBool_Registration Registration => GameSettingBool_Registration.Instance;
+        protected override object CommonInstance => GameSettingBoolCommon.Instance;
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingFloatInternalGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingBoolInternalGetter)rhs, include);
 
-        protected override object XmlWriteTranslator => GameSettingFloatXmlWriteTranslation.Instance;
-        protected override object BinaryWriteTranslator => GameSettingFloatBinaryWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => GameSettingBoolXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GameSettingBoolBinaryWriteTranslation.Instance;
 
         #region Data
         private int? _DataLocation;
-        public bool Data_IsSet => _DataLocation.HasValue;
-        public Single Data => _DataLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _DataLocation.Value, _package.Meta)) : default;
+        public bool Data_IsSet => GetDataIsSetCustom();
+        public Boolean Data => GetDataCustom();
         #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
-        protected GameSettingFloatBinaryWrapper(
+        protected GameSettingBoolBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
             : base(
@@ -1915,12 +1944,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static GameSettingFloatBinaryWrapper GameSettingFloatFactory(
+        public static GameSettingBoolBinaryWrapper GameSettingBoolFactory(
             BinaryMemoryReadStream stream,
             BinaryWrapperFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new GameSettingFloatBinaryWrapper(
+            var ret = new GameSettingBoolBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
@@ -1948,7 +1977,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x41544144: // DATA
                 {
                     _DataLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)GameSettingFloat_FieldIndex.Data);
+                    return TryGet<int?>.Succeed((int)GameSettingBool_FieldIndex.Data);
                 }
                 default:
                     return base.FillRecordType(

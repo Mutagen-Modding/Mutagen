@@ -46,6 +46,8 @@ namespace Mutagen.Bethesda.Skyrim
                     return GameSettingInt.CreateFromBinary(frame, masterReferences, recordTypeConverter, errorMask);
                 case GameSettingType.String:
                     return GameSettingString.CreateFromBinary(frame, masterReferences, recordTypeConverter, errorMask);
+                case GameSettingType.Bool:
+                    return GameSettingBool.CreateFromBinary(frame, masterReferences, recordTypeConverter, errorMask);
                 default:
                     errorMask.ReportExceptionOrThrow(
                         new ArgumentException($"Unknown game type: {settingType.Value}"));

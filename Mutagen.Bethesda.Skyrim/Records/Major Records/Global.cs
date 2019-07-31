@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Skyrim
         char TypeChar { get; }
     }
 
-    public partial class Global
+    public partial class Global : GlobalCustomParsing.IGlobalCommon
     {
         protected static readonly RecordType FNAM = new RecordType("FNAM");
 
@@ -31,68 +31,24 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            // Skip to FNAM
-            var initialPos = frame.Position;
-            if (HeaderTranslation.ReadNextRecordType(frame.Reader, out var recLen) != Global_Registration.GLOB_HEADER)
-            {
-                throw new ArgumentException();
-            }
-            frame.CheckUpcomingRead(18);
-            frame.Reader.Position += 16;
-            var edidLength = frame.Reader.ReadInt16();
-            frame.Reader.Position += edidLength;
-
-            // Confirm FNAM
-            var type = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len);
-            if (!type.Equals(FNAM))
-            {
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"Could not find FNAM in its expected location: {frame.Position}"));
-                return null;
-            }
-            if (len != 1)
-            {
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"FNAM had non 1 length: {len}"));
-            }
-
-            // Create proper Global subclass
-            var triggerChar = (char)frame.Reader.ReadUInt8();
-            Global g;
-            switch (triggerChar)
-            {
-                case GlobalInt.TRIGGER_CHAR:
-                    g = GlobalInt.Factory();
-                    break;
-                case GlobalShort.TRIGGER_CHAR:
-                    g = GlobalShort.Factory();
-                    break;
-                case GlobalFloat.TRIGGER_CHAR:
-                    g = GlobalFloat.Factory();
-                    break;
-                default:
-                    errorMask.ReportExceptionOrThrow(
-                        new ArgumentException($"Unknown trigger char: {triggerChar}"));
-                    return null;
-            }
-
-            // Fill with major record fields
-            frame.Reader.Position = initialPos + 8;
-            SkyrimMajorRecord.FillBinary(
+            return GlobalCustomParsing.Create<Global>(
                 frame,
-                g,
                 masterReferences,
-                errorMask);
-
-            // Skip to and read data
-            frame.Reader.Position += 13;
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame,
-                out var rawFloat))
-            {
-                g.RawFloat = rawFloat;
-            }
-            return g;
+                errorMask,
+                getter: (triggerChar) =>
+                {
+                    switch (triggerChar)
+                    {
+                        case GlobalInt.TRIGGER_CHAR:
+                            return GlobalInt.Factory();
+                        case GlobalShort.TRIGGER_CHAR:
+                            return GlobalShort.Factory();
+                        case GlobalFloat.TRIGGER_CHAR:
+                            return GlobalFloat.Factory();
+                        default:
+                            throw new ArgumentException($"Unknown trigger char: {triggerChar}");
+                    }
+                });
         }
     }
 
@@ -119,12 +75,31 @@ namespace Mutagen.Bethesda.Skyrim
             public abstract float RawFloat { get; }
             public abstract char TypeChar { get; }
 
-            //public static GameSettingBinaryWrapper Factory(
-            //    ReadOnlyMemorySlice<byte> data,
-            //    MasterReferences masterReferences,
-            //    MetaDataConstants meta)
-            //{
-            //}
+            public static GlobalBinaryWrapper GlobalFactory(
+                BinaryMemoryReadStream stream,
+                BinaryWrapperFactoryPackage package,
+                RecordTypeConverter recordTypeConverter)
+            {
+                var majorFrame = package.Meta.MajorRecordFrame(stream.RemainingSpan);
+                var globalChar = GlobalCustomParsing.GetGlobalChar(majorFrame);
+                switch (globalChar)
+                {
+                    case GlobalInt.TRIGGER_CHAR:
+                        return GlobalIntBinaryWrapper.GlobalIntFactory(
+                            stream,
+                            package);
+                    case GlobalShort.TRIGGER_CHAR:
+                        return GlobalShortBinaryWrapper.GlobalShortFactory(
+                            stream,
+                            package);
+                    case GlobalFloat.TRIGGER_CHAR:
+                        return GlobalFloatBinaryWrapper.GlobalFloatFactory(
+                            stream,
+                            package);
+                    default:
+                        throw new ArgumentException($"Unknown trigger char: {globalChar}");
+                }
+            }
         }
     }
 }

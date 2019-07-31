@@ -27,6 +27,9 @@
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\GameSettingBool.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\GameSettingFloat.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
@@ -96,6 +99,9 @@
     <Compile Include="ProtocolDefinition_Skyrim.cs" />
     <Compile Include="Records\Group_LoquiGenerated.cs">
       <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingBool_LoquiGenerated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

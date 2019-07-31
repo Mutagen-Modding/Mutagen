@@ -10,7 +10,8 @@ namespace Mutagen.Bethesda
     {
         Float,
         Int,
-        String
+        String,
+        Bool
     }
 
     public interface IGameSettingCommon : IMajorRecordCommon
@@ -28,6 +29,7 @@ namespace Mutagen.Bethesda
         public const char IntChar = 'i';
         public const char FloatChar = 'f';
         public const char StringChar = 's';
+        public const char BoolChar = 'b';
 
         public static bool TryGetGameSettingType(char c, out GameSettingType type)
         {
@@ -41,6 +43,9 @@ namespace Mutagen.Bethesda
                     return true;
                 case FloatChar:
                     type = GameSettingType.Float;
+                    return true;
+                case BoolChar:
+                    type = GameSettingType.Bool;
                     return true;
                 default:
                     type = default;
@@ -58,6 +63,8 @@ namespace Mutagen.Bethesda
                     return IntChar;
                 case GameSettingType.String:
                     return StringChar;
+                case GameSettingType.Bool:
+                    return BoolChar;
                 default:
                     throw new NotImplementedException();
             }

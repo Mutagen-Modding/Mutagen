@@ -703,7 +703,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Version = 2,
         EditorID = 3,
         SkyrimMajorRecordFlags = 4,
-        Data = 5,
+        FormVersion = 5,
+        Version2 = 6,
+        Data = 7,
     }
     #endregion
 
@@ -723,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(GlobalShort_Mask<>);
 
@@ -1075,6 +1077,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (GlobalShort_FieldIndex)((int)index);
                 case Global_FieldIndex.SkyrimMajorRecordFlags:
                     return (GlobalShort_FieldIndex)((int)index);
+                case Global_FieldIndex.FormVersion:
+                    return (GlobalShort_FieldIndex)((int)index);
+                case Global_FieldIndex.Version2:
+                    return (GlobalShort_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1093,6 +1099,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (GlobalShort_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (GlobalShort_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.FormVersion:
+                    return (GlobalShort_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.Version2:
                     return (GlobalShort_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1944,7 +1954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
-            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0x10 + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
             UtilityTranslation.FillSubrecordTypesForWrapper(
                 stream: stream,
