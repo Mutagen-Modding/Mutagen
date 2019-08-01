@@ -7,7 +7,11 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public interface IPlaced : IMajorRecordInternal, ILoquiObjectGetter, IXmlFolderItem
+    public interface IPlaced : IMajorRecordInternal, IPlacedGetter
+    {
+    }
+
+    public interface IPlacedGetter : IMajorRecordInternalGetter, ILoquiObjectGetter, IXmlFolderItem
     {
     }
 }

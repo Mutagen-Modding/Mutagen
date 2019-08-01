@@ -38,7 +38,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IPlacedNPCInternal,
         ILoquiObjectSetter<PlacedNPC>,
-        IPlaced,
         ILinkSubContainer,
         IEquatable<PlacedNPC>,
         IEqualsMask
@@ -1065,6 +1064,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPlacedNPC :
         IPlacedNPCInternalGetter,
         IOblivionMajorRecord,
+        IPlaced,
         ILoquiObjectSetter<IPlacedNPCInternal>
     {
         new NPC Base { get; set; }
@@ -1131,6 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IPlacedNPCGetter :
         IOblivionMajorRecordGetter,
+        IPlacedGetter,
         ILoquiObject<IPlacedNPCInternalGetter>,
         IXmlItem,
         IBinaryItem

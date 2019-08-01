@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlacedNPC" baseClass="OblivionMajorRecord" objType="Record" recordType="ACHR" GUID="1bd10cd8-4d9b-4cc0-9639-51f02a1b2e36" ID="137">
-    <Interface>IPlaced</Interface>
+    <Interface type="IGetter">IPlacedGetter</Interface>
+    <Interface type="ISetter">IPlaced</Interface>
     <Fields>
       <FormIDLink name="Base" recordType="NAME" refName="NPC" />
       <ByteArray name="XPCIFluff" recordType="XPCI" />

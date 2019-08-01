@@ -40,7 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ILandscapeInternal,
         ILoquiObjectSetter<Landscape>,
-        IPlaced,
         ILinkSubContainer,
         IEquatable<Landscape>,
         IEqualsMask
@@ -858,6 +857,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILandscape :
         ILandscapeInternalGetter,
         IOblivionMajorRecord,
+        IPlaced,
         ILoquiObjectSetter<ILandscapeInternal>
     {
         new Byte[] Unknown { get; set; }
@@ -898,6 +898,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILandscapeGetter :
         IOblivionMajorRecordGetter,
+        IPlacedGetter,
         ILoquiObject<ILandscapeInternalGetter>,
         IXmlItem,
         IBinaryItem

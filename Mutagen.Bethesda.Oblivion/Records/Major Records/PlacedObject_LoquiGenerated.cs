@@ -38,7 +38,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IPlacedObjectInternal,
         ILoquiObjectSetter<PlacedObject>,
-        IPlaced,
         ILinkSubContainer,
         IEquatable<PlacedObject>,
         IEqualsMask
@@ -1662,6 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPlacedObject :
         IPlacedObjectInternalGetter,
         IOblivionMajorRecord,
+        IPlaced,
         ILoquiObjectSetter<IPlacedObjectInternal>
     {
         new OblivionMajorRecord Base { get; set; }
@@ -1792,6 +1792,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IPlacedObjectGetter :
         IOblivionMajorRecordGetter,
+        IPlacedGetter,
         ILoquiObject<IPlacedObjectInternalGetter>,
         IXmlItem,
         IBinaryItem
