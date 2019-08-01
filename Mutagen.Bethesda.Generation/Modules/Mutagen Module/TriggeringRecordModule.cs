@@ -273,7 +273,7 @@ namespace Mutagen.Bethesda.Generation
                 else if (loqui.RefType == LoquiType.LoquiRefType.Interface)
                 {
                     var implementingObjs = obj.ProtoGen.Gen.ObjectGenerations
-                        .Where(o => o.Interfaces.Contains(loqui.InterfaceName))
+                        .Where(o => o.Interfaces.ContainsAtLeast(loqui.InterfaceName, LoquiInterfaceType.Direct))
                         .ToArray();
                     await loqui.AddAsSubLoquiType(implementingObjs);
                 }

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>24a31421351bf5088ed5c6aede8492fce88fa5f4</Sha>
+         <Sha>a0045659eecea130ce8cb2aa79dcd6553677e14e</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-28-2019 14:01:27</CommitDate>
-         <Description>ListType:  TypeName swapped to ListInterface usage</Description>
+         <CommitDate>08-01-2019 18:41:05</CommitDate>
+         <Description>Interface upgrade to allow specification of where it should be implemented</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
