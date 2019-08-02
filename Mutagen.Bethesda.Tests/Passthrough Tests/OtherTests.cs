@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public static async Task OblivionESM_Folder_Reimport(PassthroughSettings settings, Target target, Oblivion_Passthrough_Test oblivPassthrough)
+        public static async Task OblivionESM_Folder_Reimport(PassthroughSettings settings, Target target, OblivionPassthroughTest oblivPassthrough)
         {
             Task<OblivionMod> ImportModBinary(string sourcePath)
             {
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Tests
                         modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
                     using (var stream = new BinaryReadStream(sourcePath))
                     {
-                        var eqException = Passthrough_Tests.AssertFilesEqual(
+                        var eqException = PassthroughTest.AssertFilesEqual(
                             stream,
                             reexportPath,
                             amountToReport: 15);

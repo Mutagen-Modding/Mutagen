@@ -2,138 +2,24 @@
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
-using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace Mutagen.Bethesda.Tests
 {
-    public class Oblivion_Passthrough_Test : PassthroughTest
+    public class OblivionProcessor : Processor
     {
         public override GameMode GameMode => GameMode.Oblivion;
         private HashSet<string> magicEffectEDIDs = new HashSet<string>();
-
-        public Oblivion_Passthrough_Test(TestingSettings settings, Target target)
-            : base(settings, target)
-        {
-        }
-
-        protected override async Task<IMod> ImportBinary(FilePath path, ModKey modKey)
-        {
-            return await OblivionMod.CreateFromBinary(
-                path.Path,
-                modKey);
-        }
-
-        public override ModRecordAligner.AlignmentRules GetAlignmentRules()
-        {
-            var ret = new ModRecordAligner.AlignmentRules();
-            ret.AddAlignments(
-                Cell_Registration.CELL_HEADER,
-                new RecordType("EDID"),
-                new RecordType("FULL"),
-                new RecordType("DATA"),
-                new RecordType("XCLC"),
-                new RecordType("XCLL"),
-                new RecordType("XCLR"),
-                new RecordType("XCMT"),
-                new RecordType("XCLW"),
-                new RecordType("XCCM"),
-                new RecordType("XCWT"),
-                new RecordType("XOWN"),
-                new RecordType("XRNK"),
-                new RecordType("XGLB"));
-            ret.AddAlignments(
-                Worldspace_Registration.WRLD_HEADER,
-                new RecordType("EDID"),
-                new RecordType("FULL"),
-                new RecordType("WNAM"),
-                new RecordType("CNAM"),
-                new RecordType("NAM2"),
-                new RecordType("ICON"),
-                new RecordType("MNAM"),
-                new RecordType("DATA"),
-                new RecordType("NAM0"),
-                new RecordType("NAM9"),
-                new RecordType("SNAM"),
-                new RecordType("XXXX"));
-            ret.StopMarkers[Worldspace_Registration.WRLD_HEADER] = new List<RecordType>()
-            {
-                new RecordType("OFST"),
-            };
-            ret.AddAlignments(
-                PlacedObject_Registration.REFR_HEADER,
-                new ModRecordAligner.AlignmentStraightRecord("EDID"),
-                new ModRecordAligner.AlignmentStraightRecord("NAME"),
-                new ModRecordAligner.AlignmentStraightRecord("XPCI"),
-                new ModRecordAligner.AlignmentStraightRecord("FULL"),
-                new ModRecordAligner.AlignmentStraightRecord("XTEL"),
-                new ModRecordAligner.AlignmentStraightRecord("XLOC"),
-                new ModRecordAligner.AlignmentStraightRecord("XOWN"),
-                new ModRecordAligner.AlignmentStraightRecord("XRNK"),
-                new ModRecordAligner.AlignmentStraightRecord("XGLB"),
-                new ModRecordAligner.AlignmentStraightRecord("XESP"),
-                new ModRecordAligner.AlignmentStraightRecord("XTRG"),
-                new ModRecordAligner.AlignmentStraightRecord("XSED"),
-                new ModRecordAligner.AlignmentStraightRecord("XLOD"),
-                new ModRecordAligner.AlignmentStraightRecord("XCHG"),
-                new ModRecordAligner.AlignmentStraightRecord("XHLT"),
-                new ModRecordAligner.AlignmentStraightRecord("XLCM"),
-                new ModRecordAligner.AlignmentStraightRecord("XRTM"),
-                new ModRecordAligner.AlignmentStraightRecord("XACT"),
-                new ModRecordAligner.AlignmentStraightRecord("XCNT"),
-                new ModRecordAligner.AlignmentSubRule(
-                    new RecordType("XMRK"),
-                    new RecordType("FNAM"),
-                    new RecordType("FULL"),
-                    new RecordType("TNAM")),
-                new ModRecordAligner.AlignmentStraightRecord("ONAM"),
-                new ModRecordAligner.AlignmentStraightRecord("XRGD"),
-                new ModRecordAligner.AlignmentStraightRecord("XSCL"),
-                new ModRecordAligner.AlignmentStraightRecord("XSOL"),
-                new ModRecordAligner.AlignmentStraightRecord("DATA"));
-            ret.AddAlignments(
-                PlacedCreature_Registration.ACRE_HEADER,
-                new RecordType("EDID"),
-                new RecordType("NAME"),
-                new RecordType("XOWN"),
-                new RecordType("XRNK"),
-                new RecordType("XGLB"),
-                new RecordType("XESP"),
-                new RecordType("XRGD"),
-                new RecordType("XSCL"),
-                new RecordType("DATA"));
-            ret.AddAlignments(
-                PlacedNPC_Registration.ACHR_HEADER,
-                new RecordType("EDID"),
-                new RecordType("NAME"),
-                new RecordType("XPCI"),
-                new RecordType("FULL"),
-                new RecordType("XLOD"),
-                new RecordType("XESP"),
-                new RecordType("XMRC"),
-                new RecordType("XHRS"),
-                new RecordType("XRGD"),
-                new RecordType("XSCL"),
-                new RecordType("DATA"));
-            ret.SetGroupAlignment(
-                GroupTypeEnum.CellTemporaryChildren,
-                new RecordType("LAND"),
-                new RecordType("PGRD"));
-            return ret;
-        }
 
         #region Dynamic Processing
         /*
          * Some records that seem older have an odd record order.  Rather than accommodating, dynamically mark as exceptions
          */
-        protected override void AddDynamicProcessorInstructions(
+        public override void AddDynamicProcessorInstructions(
             IMutagenReadStream stream,
             byte numMasters,
             FormID formID,
@@ -169,7 +55,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessSigilStone(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
         }
 
-        protected override void PreProcessorJobs(
+        public override void PreProcessorJobs(
             IMutagenReadStream stream,
             RecordLocator.FileLocations fileLocs,
             BinaryFileProcessor.Config instructions,
@@ -184,36 +70,6 @@ namespace Mutagen.Bethesda.Tests
                     instr: instructions,
                     loc: alignedFileLocs[rec.Value.FormID]);
             }
-        }
-
-        private void ProcessLengths(
-            IMutagenReadStream stream,
-            int amount,
-            RangeInt64 loc,
-            FormID formID,
-            BinaryFileProcessor.Config instr,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker,
-            bool doRecordLen = true)
-        {
-            if (amount == 0) return;
-            foreach (var k in fileLocs.GetContainingGroupLocations(formID))
-            {
-                lengthTracker[k] = (uint)(lengthTracker[k] + amount);
-            }
-
-            if (!doRecordLen) return;
-            // Modify Length
-            stream.Position = loc.Min + Constants.HEADER_LENGTH;
-            var existingLen = stream.ReadUInt16();
-            byte[] lenData = new byte[2];
-            using (var writer = new MutagenWriter(new MemoryStream(lenData), this.GameMode))
-            {
-                writer.Write((ushort)(existingLen + amount));
-            }
-            instr.SetSubstitution(
-                loc: loc.Min + Constants.HEADER_LENGTH,
-                sub: lenData);
         }
 
         private void ProcessNPC(

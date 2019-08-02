@@ -35,12 +35,13 @@
     <Compile Include="Benchmarks\OblivionBinaryTranslation.cs" />
     <Compile Include="Benchmarks\OblivionXmlTranslation.cs" />
     <Compile Include="Benchmarks\StringParsing.cs" />
-    <Compile Include="Processing Utilities\BinaryFileProcessor.cs" />
+    <Compile Include="Processing\BinaryFileProcessor.cs" />
     <Compile Include="ComparisonStream.cs" />
     <Compile Include="FlattenedMod_Tests.cs" />
     <Compile Include="ModList_Tests.cs" />
-    <Compile Include="Passthrough_Tests.cs" />
-    <Compile Include="Processing Utilities\ModRecordAligner.cs" />
+    <Compile Include="Processing\ModRecordAligner.cs" />
+    <Compile Include="Processing\OblivionProcessor.cs" />
+    <Compile Include="Processing\Processor.cs" />
     <Compile Include="Settings\DataFolderLocations.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
@@ -54,10 +55,10 @@
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
     <Compile Include="Settings\ProtocolDefinition_Tests.cs" />
-    <Compile Include="Specific Passthrough Tests\OtherTests.cs" />
-    <Compile Include="Specific Passthrough Tests\Oblivion_Passthrough_Test.cs" />
-    <Compile Include="Specific Passthrough Tests\PassthroughTest.cs" />
-    <Compile Include="Specific Passthrough Tests\Skyrim_Passthrough_Test.cs" />
+    <Compile Include="Passthrough Tests\OtherTests.cs" />
+    <Compile Include="Passthrough Tests\OblivionPassthroughTest.cs" />
+    <Compile Include="Passthrough Tests\PassthroughTest.cs" />
+    <Compile Include="Passthrough Tests\Skyrim_Passthrough_Test.cs" />
     <Compile Include="TestBattery.cs" />
     <Compile Include="TestingConstants.cs" />
     <Compile Include="Settings\DataFolderLocations_LoquiGenerated.cs">
