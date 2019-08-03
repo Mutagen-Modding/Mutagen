@@ -19,63 +19,54 @@ namespace Mutagen.Bethesda.Tests
         /*
          * Some records that seem older have an odd record order.  Rather than accommodating, dynamically mark as exceptions
          */
-        public override void AddDynamicProcessorInstructions(
+        protected override void AddDynamicProcessorInstructions(
             IMutagenReadStream stream,
-            byte numMasters,
             FormID formID,
-            RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RecordType recType)
         {
-            ProcessNPC(stream, recType, instr, loc);
-            ProcessCreature(stream, recType, instr, loc);
-            ProcessLeveledItemDataFields(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessRegions(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessPlacedObject(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessPlacedCreature(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessPlacedNPC(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessCells(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessDialogTopics(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessDialogItems(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessIdleAnimations(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessAIPackages(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessCombatStyle(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessWater(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessGameSettings(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessBooks(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessLights(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessSpell(stream, formID, recType, instr, loc, fileLocs, numMasters, lengthTracker);
-            ProcessMisindexedRecords(stream, formID, instr, loc, numMasters);
-            ProcessMagicEffects(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessEnchantments(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessIngredient(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessPotion(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessSigilStone(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            var loc = this._AlignedFileLocs[formID];
+            ProcessNPC(stream, recType,loc);
+            ProcessCreature(stream, recType, loc);
+            ProcessLeveledItemDataFields(stream, formID, recType, loc);
+            ProcessRegions(stream, formID, recType, loc);
+            ProcessPlacedObject(stream, formID, recType, loc);
+            ProcessPlacedCreature(stream, formID, recType, loc);
+            ProcessPlacedNPC(stream, formID, recType, loc);
+            ProcessCells(stream, formID, recType, loc);
+            ProcessDialogTopics(stream, formID, recType, loc);
+            ProcessDialogItems(stream, formID, recType, loc);
+            ProcessIdleAnimations(stream, formID, recType, loc);
+            ProcessAIPackages(stream, formID, recType, loc);
+            ProcessCombatStyle(stream, formID, recType, loc);
+            ProcessWater(stream, formID, recType, loc);
+            ProcessGameSettings(stream, formID, recType, loc);
+            ProcessBooks(stream, formID, recType, loc);
+            ProcessLights(stream, formID, recType, loc);
+            ProcessSpell(stream, formID, recType, loc);
+            ProcessMisindexedRecords(stream, formID, loc);
+            ProcessMagicEffects(stream, formID, recType, loc);
+            ProcessEnchantments(stream, formID, recType, loc);
+            ProcessIngredient(stream, formID, recType, loc);
+            ProcessPotion(stream, formID, recType, loc);
+            ProcessSigilStone(stream, formID, recType, loc);
         }
 
-        public override void PreProcessorJobs(
-            IMutagenReadStream stream,
-            RecordLocator.FileLocations fileLocs,
-            BinaryFileProcessor.Config instructions,
-            RecordLocator.FileLocations alignedFileLocs)
+        protected override void PreProcessorJobs(
+            IMutagenReadStream stream)
         {
-            foreach (var rec in fileLocs.ListedRecords)
+            foreach (var rec in this._SourceFileLocs.ListedRecords)
             {
                 LookForMagicEffects(
                     stream: stream,
                     formID: rec.Value.FormID,
                     recType: rec.Value.Record,
-                    instr: instructions,
-                    loc: alignedFileLocs[rec.Value.FormID]);
+                    loc: this._AlignedFileLocs[rec.Value.FormID]);
             }
         }
 
         private void ProcessNPC(
             IMutagenReadStream stream,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
             RangeInt64 loc)
         {
             if (!NPC_Registration.NPC__HEADER.Equals(recType)) return;
@@ -83,7 +74,6 @@ namespace Mutagen.Bethesda.Tests
             var str = stream.ReadZString((int)loc.Width);
             this.DynamicMove(
                 str,
-                instr,
                 loc,
                 offendingIndices: new RecordType[]
                 {
@@ -104,13 +94,11 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessCreature(
             IMutagenReadStream stream,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
             RangeInt64 loc)
         {
             if (!Creature_Registration.CREA_HEADER.Equals(recType)) return;
             this.AlignRecords(
                 stream,
-                instr,
                 loc,
                 new RecordType[]
                 {
@@ -144,10 +132,7 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!LeveledItem_Registration.LVLI_HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
@@ -161,7 +146,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 var index = str.IndexOf("LVLD");
                 index += 7;
-                instr.SetAddition(
+                this._Instructions.SetAddition(
                     loc: index + loc.Min,
                     addition: new byte[]
                     {
@@ -185,34 +170,28 @@ namespace Mutagen.Bethesda.Tests
                 {
                     writer.Write((ushort)(existingLen - 7));
                 }
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     loc: loc.Min + Constants.HEADER_LENGTH,
                     sub: lenData);
             }
 
             // Remove DATA
             var dataRange = new RangeInt64(dataIndex + loc.Min, dataIndex + loc.Min + 7 - 1);
-            instr.SetRemove(dataRange);
+            this._Instructions.SetRemove(dataRange);
             amount -= (int)dataRange.Width;
 
             ProcessLengths(
                 stream,
                 amount,
                 loc,
-                formID,
-                instr,
-                fileLocs,
-                lengthTracker);
+                formID);
         }
 
         private void ProcessRegions(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!Region_Registration.REGN_HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
@@ -236,7 +215,7 @@ namespace Mutagen.Bethesda.Tests
             foreach (var item in rdats.Reverse())
             {
                 if (item.Key == (int)RegionData.RegionDataType.Icon) continue;
-                instr.SetMove(
+                this._Instructions.SetMove(
                     loc: loc.Max + 1,
                     section: item.Value);
             }
@@ -273,10 +252,10 @@ namespace Mutagen.Bethesda.Tests
                 }
 
                 var arr = memStream.ToArray();
-                instr.SetAddition(
+                this._Instructions.SetAddition(
                     loc: locToPlace,
                     addition: arr);
-                instr.SetRemove(
+                this._Instructions.SetRemove(
                     section: iconLoc);
                 amount += arr.Length;
                 amount -= (int)iconLoc.Width;
@@ -286,10 +265,7 @@ namespace Mutagen.Bethesda.Tests
                 stream,
                 amount,
                 loc,
-                formID,
-                instr,
-                fileLocs,
-                lengthTracker);
+                formID);
         }
 
         private static byte[] ZeroFloat = new byte[] { 0, 0, 0, 0x80 };
@@ -298,10 +274,7 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!PlacedObject_Registration.REFR_HEADER.Equals(recType)) return;
 
@@ -316,12 +289,12 @@ namespace Mutagen.Bethesda.Tests
                 var len = stream.ReadUInt16();
                 if (len == 16)
                 {
-                    lengthTracker[loc.Min] = lengthTracker[loc.Min] - 4;
+                    this._LengthTracker[loc.Min] = this._LengthTracker[loc.Min] - 4;
                     var removeStart = loc.Min + datIndex + 6 + 12;
-                    instr.SetSubstitution(
+                    this._Instructions.SetSubstitution(
                         loc: loc.Min + datIndex + 4,
                         sub: new byte[] { 12, 0 });
-                    instr.SetRemove(
+                    this._Instructions.SetRemove(
                         section: new RangeInt64(
                             removeStart,
                             removeStart + 3));
@@ -336,12 +309,12 @@ namespace Mutagen.Bethesda.Tests
                 var len = stream.ReadUInt16();
                 if (len == 4)
                 {
-                    lengthTracker[loc.Min] = lengthTracker[loc.Min] - 3;
+                    this._LengthTracker[loc.Min] = this._LengthTracker[loc.Min] - 3;
                     var removeStart = loc.Min + datIndex + 6 + 1;
-                    instr.SetSubstitution(
+                    this._Instructions.SetSubstitution(
                         loc: loc.Min + datIndex + 4,
                         sub: new byte[] { 1, 0 });
-                    instr.SetRemove(
+                    this._Instructions.SetRemove(
                         section: new RangeInt64(
                             removeStart,
                             removeStart + 2));
@@ -353,44 +326,38 @@ namespace Mutagen.Bethesda.Tests
             if (datIndex != -1)
             {
                 stream.Position = loc.Min + datIndex + 6;
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
             }
 
             datIndex = str.IndexOf("XTEL");
             if (datIndex != -1)
             {
                 stream.Position = loc.Min + datIndex + 6 + 4;
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
             }
 
             ProcessLengths(
                 stream,
                 amount,
                 loc,
-                formID,
-                instr,
-                fileLocs,
-                lengthTracker);
+                formID);
         }
 
         private void ProcessPlacedCreature(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!PlacedCreature_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
 
@@ -402,32 +369,26 @@ namespace Mutagen.Bethesda.Tests
             if (datIndex != -1)
             {
                 stream.Position = loc.Min + datIndex + 6;
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
             }
 
             ProcessLengths(
                 stream,
                 amount,
                 loc,
-                formID,
-                instr,
-                fileLocs,
-                lengthTracker);
+                formID);
         }
 
         private void ProcessPlacedNPC(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!PlacedNPC_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
 
@@ -439,32 +400,26 @@ namespace Mutagen.Bethesda.Tests
             if (datIndex != -1)
             {
                 stream.Position = loc.Min + datIndex + 6;
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
             }
 
             ProcessLengths(
                 stream,
                 amount,
                 loc,
-                formID,
-                instr,
-                fileLocs,
-                lengthTracker);
+                formID);
         }
 
         private void ProcessCells(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!Cell_Registration.CELL_HEADER.Equals(recType)) return;
 
@@ -497,7 +452,7 @@ namespace Mutagen.Bethesda.Tests
                     stream.Position = startPos + subGrupLen;
                     if (subGrupLen == 0x14)
                     { // Empty group
-                        lengthTracker[grupPos] = lengthTracker[grupPos] - 0x14;
+                        this._LengthTracker[grupPos] = this._LengthTracker[grupPos] - 0x14;
                         removes.Add(new RangeInt64(stream.Position - 0x14, stream.Position - 1));
                         amountRemoved++;
                     }
@@ -516,7 +471,7 @@ namespace Mutagen.Bethesda.Tests
             int amount = 0;
             foreach (var remove in removes)
             {
-                instr.SetRemove(
+                this._Instructions.SetRemove(
                     section: remove);
                 amount -= (int)remove.Width;
             }
@@ -526,9 +481,6 @@ namespace Mutagen.Bethesda.Tests
                 amount,
                 loc,
                 formID,
-                instr,
-                fileLocs,
-                lengthTracker,
                 doRecordLen: false);
         }
 
@@ -536,10 +488,7 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!DialogTopic_Registration.DIAL_HEADER.Equals(recType)) return;
 
@@ -555,7 +504,7 @@ namespace Mutagen.Bethesda.Tests
                 var grupLen = stream.ReadUInt32();
                 if (grupLen == 0x14)
                 {
-                    instr.SetRemove(
+                    this._Instructions.SetRemove(
                         section: new RangeInt64(grupPos, grupPos + 0x14 - 1));
                     amount -= 0x14;
                 }
@@ -566,9 +515,6 @@ namespace Mutagen.Bethesda.Tests
                 amount,
                 loc,
                 formID,
-                instr,
-                fileLocs,
-                lengthTracker,
                 doRecordLen: false);
         }
 
@@ -576,10 +522,7 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!DialogItem_Registration.INFO_HEADER.Equals(recType)) return;
 
@@ -589,10 +532,10 @@ namespace Mutagen.Bethesda.Tests
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
             {
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     loc: dataIndex + loc.Min + 3,
                     sub: new byte[] { (byte)'A', 0x18 });
-                instr.SetAddition(
+                this._Instructions.SetAddition(
                     addition: new byte[4],
                     loc: dataIndex + loc.Min + 0x1A);
                 amount += 4;
@@ -604,12 +547,12 @@ namespace Mutagen.Bethesda.Tests
                 stream.Position = loc.Min + dataIndex + 4;
                 var existingLen = stream.ReadUInt16();
                 var diff = existingLen - 0x14;
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     loc: dataIndex + loc.Min + 3,
                     sub: new byte[] { (byte)'R', 0x14 });
                 if (diff == 0) continue;
                 var locToRemove = loc.Min + dataIndex + 6 + 0x14;
-                instr.SetRemove(
+                this._Instructions.SetRemove(
                     section: new RangeInt64(
                         locToRemove,
                         locToRemove + diff - 1));
@@ -620,20 +563,14 @@ namespace Mutagen.Bethesda.Tests
                 stream,
                 amount,
                 loc,
-                formID,
-                instr,
-                fileLocs,
-                lengthTracker);
+                formID);
         }
 
         private void ProcessIdleAnimations(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!IdleAnimation_Registration.IDLE_HEADER.Equals(recType)) return;
 
@@ -643,10 +580,10 @@ namespace Mutagen.Bethesda.Tests
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
             {
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     loc: dataIndex + loc.Min + 3,
                     sub: new byte[] { (byte)'A', 0x18 });
-                instr.SetAddition(
+                this._Instructions.SetAddition(
                     addition: new byte[4],
                     loc: dataIndex + loc.Min + 0x1A);
                 amount += 4;
@@ -656,20 +593,14 @@ namespace Mutagen.Bethesda.Tests
                 stream,
                 amount,
                 loc,
-                formID,
-                instr,
-                fileLocs,
-                lengthTracker);
+                formID);
         }
 
         private void ProcessAIPackages(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!AIPackage_Registration.PACK_HEADER.Equals(recType)) return;
 
@@ -679,10 +610,10 @@ namespace Mutagen.Bethesda.Tests
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
             {
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     loc: dataIndex + loc.Min + 3,
                     sub: new byte[] { (byte)'A', 0x18 });
-                instr.SetAddition(
+                this._Instructions.SetAddition(
                     addition: new byte[4],
                     loc: dataIndex + loc.Min + 0x1A);
                 amount += 4;
@@ -694,17 +625,17 @@ namespace Mutagen.Bethesda.Tests
                 var len = stream.ReadUInt16();
                 if (len == 4)
                 {
-                    instr.SetSubstitution(
+                    this._Instructions.SetSubstitution(
                         loc: loc.Min + dataIndex + 4,
                         sub: new byte[] { 0x8 });
                     var first1 = stream.ReadUInt8();
                     var first2 = stream.ReadUInt8();
                     var second1 = stream.ReadUInt8();
                     var second2 = stream.ReadUInt8();
-                    instr.SetSubstitution(
+                    this._Instructions.SetSubstitution(
                         loc: loc.Min + dataIndex + 6,
                         sub: new byte[] { first1, first2, 0, 0 });
-                    instr.SetAddition(
+                    this._Instructions.SetAddition(
                         loc: loc.Min + dataIndex + 10,
                         addition: new byte[] { second1, 0, 0, 0 });
                     amount += 4;
@@ -715,20 +646,14 @@ namespace Mutagen.Bethesda.Tests
                 stream,
                 amount,
                 loc,
-                formID,
-                instr,
-                fileLocs,
-                lengthTracker);
+                formID);
         }
 
         private void ProcessCombatStyle(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!CombatStyle_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
@@ -739,32 +664,32 @@ namespace Mutagen.Bethesda.Tests
             if (dataIndex != -1)
             {
                 var move = 2;
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     sub: new byte[] { 0, 0 },
                     loc: loc.Min + dataIndex + 6 + move);
                 move = 38;
                 if (len < 2 + move) return;
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     sub: new byte[] { 0, 0 },
                     loc: loc.Min + dataIndex + 6 + move);
                 move = 53;
                 if (len < 3 + move) return;
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     sub: new byte[] { 0, 0, 0 },
                     loc: loc.Min + dataIndex + 6 + 53);
                 move = 69;
                 if (len < 3 + move) return;
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     sub: new byte[] { 0, 0, 0 },
                     loc: loc.Min + dataIndex + 6 + 69);
                 move = 82;
                 if (len < 2 + move) return;
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     sub: new byte[] { 0, 0 },
                     loc: loc.Min + dataIndex + 6 + 82);
                 move = 113;
                 if (len < 3 + move) return;
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     sub: new byte[] { 0, 0, 0 },
                     loc: loc.Min + dataIndex + 6 + 113);
             }
@@ -774,10 +699,7 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!Water_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
@@ -790,10 +712,10 @@ namespace Mutagen.Bethesda.Tests
             {
                 if (len == 0x02)
                 {
-                    instr.SetSubstitution(
+                    this._Instructions.SetSubstitution(
                         loc: loc.Min + dataIndex + Constants.HEADER_LENGTH,
                         sub: new byte[] { 0, 0 });
-                    instr.SetRemove(
+                    this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
                             loc: loc.Min + dataIndex + 6,
                             length: 2));
@@ -802,10 +724,10 @@ namespace Mutagen.Bethesda.Tests
 
                 if (len == 0x56)
                 {
-                    instr.SetSubstitution(
+                    this._Instructions.SetSubstitution(
                         loc: loc.Min + dataIndex + Constants.HEADER_LENGTH,
                         sub: new byte[] { 0x54, 0 });
-                    instr.SetRemove(
+                    this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
                             loc: loc.Min + dataIndex + 6 + 0x54,
                             length: 2));
@@ -814,10 +736,10 @@ namespace Mutagen.Bethesda.Tests
 
                 if (len == 0x2A)
                 {
-                    instr.SetSubstitution(
+                    this._Instructions.SetSubstitution(
                         loc: loc.Min + dataIndex + Constants.HEADER_LENGTH,
                         sub: new byte[] { 0x28, 0 });
-                    instr.SetRemove(
+                    this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
                             loc: loc.Min + dataIndex + 6 + 0x28,
                             length: 2));
@@ -826,10 +748,10 @@ namespace Mutagen.Bethesda.Tests
 
                 if (len == 0x3E)
                 {
-                    instr.SetSubstitution(
+                    this._Instructions.SetSubstitution(
                         loc: loc.Min + dataIndex + Constants.HEADER_LENGTH,
                         sub: new byte[] { 0x3C, 0 });
-                    instr.SetRemove(
+                    this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
                             loc: loc.Min + dataIndex + 6 + 0x3C,
                             length: 2));
@@ -839,7 +761,7 @@ namespace Mutagen.Bethesda.Tests
                 var move = 0x39;
                 if (len >= 3 + move)
                 {
-                    instr.SetSubstitution(
+                    this._Instructions.SetSubstitution(
                         sub: new byte[] { 0, 0, 0 },
                         loc: loc.Min + dataIndex + 6 + move);
                 }
@@ -849,20 +771,14 @@ namespace Mutagen.Bethesda.Tests
                 stream,
                 amount,
                 loc,
-                formID,
-                instr,
-                fileLocs,
-                lengthTracker);
+                formID);
         }
 
         private void ProcessGameSettings(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!GameSetting_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
@@ -876,7 +792,7 @@ namespace Mutagen.Bethesda.Tests
             if (dataIndex != -1)
             {
                 stream.Position = loc.Min + dataIndex + 6;
-                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream);
             }
         }
 
@@ -884,10 +800,7 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!Book_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
@@ -897,8 +810,8 @@ namespace Mutagen.Bethesda.Tests
             if (dataIndex != -1)
             {
                 stream.Position = loc.Min + dataIndex + 8;
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
             }
         }
 
@@ -906,10 +819,7 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!Light_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
@@ -919,19 +829,19 @@ namespace Mutagen.Bethesda.Tests
             if (dataIndex != -1)
             {
                 stream.Position = loc.Min + dataIndex + 6 + 16;
-                ProcessZeroFloat(stream, instr);
-                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
                 stream.Position += 4;
-                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream);
             }
         }
 
-        private static void ProcessZeroFloat(IMutagenReadStream stream, BinaryFileProcessor.Config instr)
+        private void ProcessZeroFloat(IMutagenReadStream stream)
         {
             var f = stream.ReadFloat();
             if (f == float.Epsilon)
             {
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     stream.Position - 4,
                     new byte[4]);
                 return;
@@ -940,7 +850,7 @@ namespace Mutagen.Bethesda.Tests
             uint floatInt = stream.ReadUInt32();
             if (floatInt == 0x80000000)
             {
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     stream.Position - 4,
                     new byte[4]);
                 return;
@@ -951,11 +861,7 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            byte numMasters,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!SpellUnleveled_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
@@ -966,16 +872,13 @@ namespace Mutagen.Bethesda.Tests
                 var len = stream.ReadUInt16();
                 ProcessFormID(
                     stream,
-                    instr,
-                    pos: loc.Min + scitIndex + 6,
-                    numMasters: numMasters);
+                    pos: loc.Min + scitIndex + 6);
             }
-            ProcessEffectsList(stream, formID, recType, instr, loc);
+            ProcessEffectsList(stream, formID, recType, loc);
         }
 
         private bool DynamicMove(
             string str,
-            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             IEnumerable<RecordType> offendingIndices,
             IEnumerable<RecordType> offendingLimits,
@@ -1008,7 +911,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     throw new ArgumentException();
                 }
-                instr.SetMove(
+                this._Instructions.SetMove(
                     section: new RangeInt64(offender, limit - 1),
                     loc: locToMove);
                 return true;
@@ -1018,7 +921,6 @@ namespace Mutagen.Bethesda.Tests
 
         private void AlignRecords(
             IMutagenReadStream stream,
-            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             IEnumerable<RecordType> rectypes)
         {
@@ -1061,7 +963,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     data[index] = bytes[item.loc + index];
                 }
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     loc: start + loc.Min,
                     sub: data);
                 start += len;
@@ -1091,29 +993,23 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessMisindexedRecords(
             IMutagenReadStream stream,
             FormID formID,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            byte numMasters)
+            RangeInt64 loc)
         {
             ProcessFormID(
                 stream,
-                instr,
-                loc.Min + 12,
-                numMasters);
+                loc.Min + 12);
         }
 
         private void ProcessFormID(
             IMutagenReadStream stream,
-            BinaryFileProcessor.Config instr,
-            long pos,
-            byte numMasters)
+            long pos)
         {
             stream.Position = pos;
             FormID formID = new FormID(stream.ReadUInt32());
-            if (formID.ModID.ID <= numMasters) return;
-            instr.SetSubstitution(
+            if (formID.ModID.ID <= this._NumMasters) return;
+            this._Instructions.SetSubstitution(
                 pos + 3,
-                numMasters);
+                this._NumMasters);
         }
 
         private IEnumerable<int> IterateTypes(string str, RecordType type)
@@ -1131,7 +1027,6 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
             RangeInt64 loc)
         {
             if (!MagicEffect_Registration.MGEF_HEADER.Equals(recType)) return;
@@ -1151,14 +1046,13 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessMagicEDID(
-            IMutagenReadStream stream,
-            BinaryFileProcessor.Config instr)
+            IMutagenReadStream stream)
         {
             var startLoc = stream.Position;
             var edid = stream.ReadZString(4);
             if (!magicEffectEDIDs.Contains(edid))
             {
-                instr.SetSubstitution(
+                this._Instructions.SetSubstitution(
                     startLoc,
                     new byte[4]);
             }
@@ -1168,10 +1062,7 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!MagicEffect_Registration.MGEF_HEADER.Equals(recType)) return;
 
@@ -1191,8 +1082,7 @@ namespace Mutagen.Bethesda.Tests
                 while (len > 0)
                 {
                     ProcessMagicEDID(
-                        stream,
-                        instr);
+                        stream);
                     len -= 4;
                 }
             }
@@ -1202,7 +1092,6 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
             RangeInt64 loc)
         {
             stream.Position = loc.Min;
@@ -1212,16 +1101,14 @@ namespace Mutagen.Bethesda.Tests
             {
                 stream.Position = loc.Min + index + 6;
                 ProcessMagicEDID(
-                    stream,
-                    instr);
+                    stream);
             }
 
             foreach (var index in IterateTypes(str, new RecordType("EFID")))
             {
                 stream.Position = loc.Min + index + 6;
                 ProcessMagicEDID(
-                    stream,
-                    instr);
+                    stream);
             }
 
             foreach (var index in IterateTypes(str, new RecordType("SCIT")))
@@ -1231,8 +1118,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len <= 4) continue;
                 stream.Position = loc.Min + index + 14;
                 ProcessMagicEDID(
-                    stream,
-                    instr);
+                    stream);
             }
         }
 
@@ -1240,52 +1126,40 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!Enchantment_Registration.ENCH_HEADER.Equals(recType)) return;
-            ProcessEffectsList(stream, formID, recType, instr, loc);
+            ProcessEffectsList(stream, formID, recType, loc);
         }
 
         private void ProcessIngredient(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!Ingredient_Registration.INGR_HEADER.Equals(recType)) return;
-            ProcessEffectsList(stream, formID, recType, instr, loc);
+            ProcessEffectsList(stream, formID, recType, loc);
         }
 
         private void ProcessPotion(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!Potion_Registration.ALCH_HEADER.Equals(recType)) return;
-            ProcessEffectsList(stream, formID, recType, instr, loc);
+            ProcessEffectsList(stream, formID, recType, loc);
         }
 
         private void ProcessSigilStone(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RangeInt64 loc)
         {
             if (!SigilStone_Registration.SGST_HEADER.Equals(recType)) return;
-            ProcessEffectsList(stream, formID, recType, instr, loc);
+            ProcessEffectsList(stream, formID, recType, loc);
         }
         #endregion
     }

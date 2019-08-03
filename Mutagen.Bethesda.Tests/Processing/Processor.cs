@@ -11,29 +11,91 @@ namespace Mutagen.Bethesda.Tests
     {
         public abstract GameMode GameMode { get; }
         public readonly MetaDataConstants Meta;
+        protected RecordLocator.FileLocations _SourceFileLocs;
+        protected RecordLocator.FileLocations _AlignedFileLocs;
+        protected BinaryFileProcessor.Config _Instructions = new BinaryFileProcessor.Config();
+        protected Dictionary<long, uint> _LengthTracker = new Dictionary<long, uint>();
+        protected byte _NumMasters;
 
         public Processor()
         {
             this.Meta = MetaDataConstants.Get(this.GameMode);
         }
 
-        public virtual void PreProcessorJobs(
-            IMutagenReadStream stream,
-            RecordLocator.FileLocations fileLocs,
-            BinaryFileProcessor.Config instructions,
-            RecordLocator.FileLocations alignedFileLocs)
+        public void Process(
+            string sourcePath,
+            string preprocessedPath,
+            string outputPath,
+            byte numMasters)
+        {
+            this._NumMasters = numMasters;
+            this._SourceFileLocs = RecordLocator.GetFileLocations(sourcePath, this.GameMode);
+            this._AlignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath, this.GameMode);
+
+            using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
+            {
+                foreach (var grup in this._AlignedFileLocs.GrupLocations.And(this._AlignedFileLocs.ListedRecords.Keys))
+                {
+                    reader.Position = grup + 4;
+                    this._LengthTracker[grup] = reader.ReadUInt32();
+                }
+            }
+
+            using (var stream = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
+            {
+                this.PreProcessorJobs(stream);
+                foreach (var rec in this._SourceFileLocs.ListedRecords)
+                {
+                    this.AddDynamicProcessorInstructions(
+                        stream: stream,
+                        formID: rec.Value.FormID,
+                        recType: rec.Value.Record);
+                }
+            }
+
+            using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
+            {
+                foreach (var grup in this._LengthTracker)
+                {
+                    reader.Position = grup.Key + 4;
+                    if (grup.Value == reader.ReadUInt32()) continue;
+                    this._Instructions.SetSubstitution(
+                        loc: grup.Key + 4,
+                        sub: BitConverter.GetBytes(grup.Value));
+                }
+            }
+
+            using (var processor = new BinaryFileProcessor(
+                new FileStream(preprocessedPath, FileMode.Open, FileAccess.Read),
+                this._Instructions))
+            {
+                try
+                {
+                    using (var outStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                    {
+                        processor.CopyTo(outStream);
+                    }
+                }
+                catch (Exception)
+                {
+                    if (File.Exists(outputPath))
+                    {
+                        File.Delete(outputPath);
+                    }
+                    throw;
+                }
+            }
+        }
+
+        protected virtual void PreProcessorJobs(
+            IMutagenReadStream stream)
         {
         }
 
-        public virtual void AddDynamicProcessorInstructions(
+        protected virtual void AddDynamicProcessorInstructions(
             IMutagenReadStream stream,
-            byte numMasters,
             FormID formID,
-            RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
+            RecordType recType)
         {
         }
 
@@ -88,15 +150,12 @@ namespace Mutagen.Bethesda.Tests
             int amount,
             RangeInt64 loc,
             FormID formID,
-            BinaryFileProcessor.Config instr,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker,
             bool doRecordLen = true)
         {
             if (amount == 0) return;
-            foreach (var k in fileLocs.GetContainingGroupLocations(formID))
+            foreach (var k in this._AlignedFileLocs.GetContainingGroupLocations(formID))
             {
-                lengthTracker[k] = (uint)(lengthTracker[k] + amount);
+                this._LengthTracker[k] = (uint)(this._LengthTracker[k] + amount);
             }
 
             if (!doRecordLen) return;
@@ -108,7 +167,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 writer.Write((ushort)(existingLen + amount));
             }
-            instr.SetSubstitution(
+            this._Instructions.SetSubstitution(
                 loc: loc.Min + Constants.HEADER_LENGTH,
                 sub: lenData);
         }

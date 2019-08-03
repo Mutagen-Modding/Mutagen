@@ -126,78 +126,16 @@ namespace Mutagen.Bethesda.Tests
             BinaryFileProcessor.Config instructions;
             if (!Settings.ReuseCaches || !File.Exists(processedPath))
             {
-                var alignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath, this.GameMode);
-
-                Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
-
-                using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
-                {
-                    foreach (var grup in alignedFileLocs.GrupLocations.And(alignedFileLocs.ListedRecords.Keys))
-                    {
-                        reader.Position = grup + 4;
-                        lengthTracker[grup] = reader.ReadUInt32();
-                    }
-                }
-
                 instructions = new BinaryFileProcessor.Config();
 
-                using (var stream = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
+                var processor = this.ProcessorFactory();
+                if (processor != null)
                 {
-                    var fileLocs = RecordLocator.GetFileLocations(this.FilePath.Path, this.GameMode);
-                    var processor = this.ProcessorFactory();
-                    if (processor != null)
-                    {
-                        processor.PreProcessorJobs(
-                            stream: stream,
-                            fileLocs: fileLocs,
-                            instructions: instructions,
-                            alignedFileLocs: alignedFileLocs);
-                        foreach (var rec in fileLocs.ListedRecords)
-                        {
-                            processor.AddDynamicProcessorInstructions(
-                                stream: stream,
-                                formID: rec.Value.FormID,
-                                recType: rec.Value.Record,
-                                instr: instructions,
-                                loc: alignedFileLocs[rec.Value.FormID],
-                                fileLocs: alignedFileLocs,
-                                lengthTracker: lengthTracker,
-                                numMasters: this.NumMasters);
-                        }
-                    }
-                }
-
-                using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
-                {
-                    foreach (var grup in lengthTracker)
-                    {
-                        reader.Position = grup.Key + 4;
-                        if (grup.Value == reader.ReadUInt32()) continue;
-                        instructions.SetSubstitution(
-                            loc: grup.Key + 4,
-                            sub: BitConverter.GetBytes(grup.Value));
-                    }
-                }
-
-                using (var processor = new BinaryFileProcessor(
-                    new FileStream(preprocessedPath, FileMode.Open, FileAccess.Read),
-                    instructions))
-                {
-                    try
-                    {
-                        using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))
-                        {
-                            processor.CopyTo(outStream);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        if (File.Exists(processedPath))
-                        {
-                            File.Delete(processedPath);
-                        }
-                        throw;
-                    }
+                    processor.Process(
+                        sourcePath: this.FilePath.Path,
+                        preprocessedPath: alignedPath,
+                        outputPath: processedPath,
+                        numMasters: this.NumMasters);
                 }
             }
 
