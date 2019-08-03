@@ -38,11 +38,20 @@
       <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
       <ByteArray name="Timestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
       <ByteArray name="PersistentTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
-      <RefList name="Persistent" binary="NoGeneration" interfaceName="IPlaced" objType="Record" />
+      <RefList name="Persistent" binary="NoGeneration" objType="Record" >
+        <Interface type="ISetter">IPlaced</Interface>
+        <Interface type="IGetter">IPlacedGetter</Interface>
+      </RefList>
       <ByteArray name="TemporaryTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
-      <RefList name="Temporary" binary="NoGeneration" interfaceName="IPlaced" objType="Record" />
+      <RefList name="Temporary" binary="NoGeneration" objType="Record" >
+        <Interface type="ISetter">IPlaced</Interface>
+        <Interface type="IGetter">IPlacedGetter</Interface>
+      </RefList>
       <ByteArray name="VisibleWhenDistantTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
-      <RefList name="VisibleWhenDistant" binary="NoGeneration" interfaceName="IPlaced" objType="Record" />
+      <RefList name="VisibleWhenDistant" binary="NoGeneration" objType="Record" >
+        <Interface type="ISetter">IPlaced</Interface>
+        <Interface type="IGetter">IPlacedGetter</Interface>
+      </RefList>
     </Fields>
   </Object>
   <Object name="CellLighting" recordType="XCLL" objType="Subrecord" GUID="31acbf65-e6be-4373-9fb4-d0f1ab97c089" ID="138">

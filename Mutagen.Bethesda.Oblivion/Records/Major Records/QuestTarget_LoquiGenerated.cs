@@ -62,8 +62,8 @@ namespace Mutagen.Bethesda.Oblivion
         public IPlaced Target { get => Target_Property.Item; set => Target_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<IPlaced> IQuestTarget.Target_Property => this.Target_Property;
-        IPlaced IQuestTargetGetter.Target => this.Target_Property.Item;
-        IFormIDLinkGetter<IPlaced> IQuestTargetGetter.Target_Property => this.Target_Property;
+        IPlacedGetter IQuestTargetGetter.Target => this.Target_Property.Item;
+        IFormIDLinkGetter<IPlacedGetter> IQuestTargetGetter.Target_Property => this.Target_Property;
         #endregion
         #region Flags
         private QuestTarget.Flag _Flags;
@@ -666,8 +666,8 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Target
-        IPlaced Target { get; }
-        IFormIDLinkGetter<IPlaced> Target_Property { get; }
+        IPlacedGetter Target { get; }
+        IFormIDLinkGetter<IPlacedGetter> Target_Property { get; }
 
         #endregion
         #region Flags
@@ -2275,8 +2275,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Target
         private int _TargetLocation => _QSTALocation.Value + 0x0;
         private bool _Target_IsSet => _QSTALocation.HasValue;
-        public IFormIDLinkGetter<IPlaced> Target_Property => _Target_IsSet ? new FormIDLink<IPlaced>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 4)))) : FormIDLink<IPlaced>.Empty;
-        public IPlaced Target => default;
+        public IFormIDLinkGetter<IPlacedGetter> Target_Property => _Target_IsSet ? new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 4)))) : FormIDLink<IPlacedGetter>.Empty;
+        public IPlacedGetter Target => default;
         #endregion
         #region Flags
         private int _FlagsLocation => _QSTALocation.Value + 0x4;

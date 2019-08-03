@@ -25,7 +25,10 @@
   </Object>
   <Object name="PointToReferenceMapping" recordType="PGRL" objType="Subrecord" GUID="4d524dea-fd8a-4f29-bd85-50c3db4b81e0" ID="136">
     <Fields>
-      <FormIDLink name="Reference" interfaceName="IPlaced" objType="Record" />
+      <FormIDLink name="Reference" objType="Record" >
+        <Interface type="IGetter">IPlacedGetter</Interface>
+        <Interface type="ISetter">IPlaced</Interface>
+      </FormIDLink>
       <List name="Points">
         <Int16 />
       </List>

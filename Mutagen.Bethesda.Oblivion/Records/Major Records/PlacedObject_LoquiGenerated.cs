@@ -247,8 +247,8 @@ namespace Mutagen.Bethesda.Oblivion
         public IPlaced Target { get => Target_Property.Item; set => Target_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLink<IPlaced> IPlacedObject.Target_Property => this.Target_Property;
-        IPlaced IPlacedObjectGetter.Target => this.Target_Property.Item;
-        IFormIDSetLinkGetter<IPlaced> IPlacedObjectGetter.Target_Property => this.Target_Property;
+        IPlacedGetter IPlacedObjectGetter.Target => this.Target_Property.Item;
+        IFormIDSetLinkGetter<IPlacedGetter> IPlacedObjectGetter.Target_Property => this.Target_Property;
         #endregion
         #region SpeedTreeSeed
         public bool SpeedTreeSeed_IsSet
@@ -1843,8 +1843,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Target
-        IPlaced Target { get; }
-        IFormIDSetLinkGetter<IPlaced> Target_Property { get; }
+        IPlacedGetter Target { get; }
+        IFormIDSetLinkGetter<IPlacedGetter> Target_Property { get; }
 
         #endregion
         #region SpeedTreeSeed
@@ -6444,8 +6444,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Target
         private int? _TargetLocation;
         public bool Target_IsSet => _TargetLocation.HasValue;
-        public IFormIDSetLinkGetter<IPlaced> Target_Property => _TargetLocation.HasValue ? new FormIDSetLink<IPlaced>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TargetLocation.Value, _package.Meta)))) : FormIDSetLink<IPlaced>.Empty;
-        public IPlaced Target => default;
+        public IFormIDSetLinkGetter<IPlacedGetter> Target_Property => _TargetLocation.HasValue ? new FormIDSetLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TargetLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedGetter>.Empty;
+        public IPlacedGetter Target => default;
         #endregion
         #region SpeedTreeSeed
         private int? _SpeedTreeSeedLocation;

@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Oblivion
         public IPlaced LocationReference { get => LocationReference_Property.Item; set => LocationReference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<IPlaced> IAIPackageLocation.LocationReference_Property => this.LocationReference_Property;
-        IPlaced IAIPackageLocationGetter.LocationReference => this.LocationReference_Property.Item;
-        IFormIDLinkGetter<IPlaced> IAIPackageLocationGetter.LocationReference_Property => this.LocationReference_Property;
+        IPlacedGetter IAIPackageLocationGetter.LocationReference => this.LocationReference_Property.Item;
+        IFormIDLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference_Property => this.LocationReference_Property;
         #endregion
         #region Radius
         private Single _Radius;
@@ -584,8 +584,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region LocationReference
-        IPlaced LocationReference { get; }
-        IFormIDLinkGetter<IPlaced> LocationReference_Property { get; }
+        IPlacedGetter LocationReference { get; }
+        IFormIDLinkGetter<IPlacedGetter> LocationReference_Property { get; }
 
         #endregion
         #region Radius
@@ -1926,8 +1926,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
         #region LocationReference
-        public IFormIDLinkGetter<IPlaced> LocationReference_Property => new FormIDLink<IPlaced>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
-        public IPlaced LocationReference => default;
+        public IFormIDLinkGetter<IPlacedGetter> LocationReference_Property => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IPlacedGetter LocationReference => default;
         #endregion
         public Single Radius => SpanExt.GetFloat(_data.Span.Slice(8, 4));
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);

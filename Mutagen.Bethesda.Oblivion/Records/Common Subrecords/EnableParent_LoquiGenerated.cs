@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Oblivion
         public IPlaced Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<IPlaced> IEnableParent.Reference_Property => this.Reference_Property;
-        IPlaced IEnableParentGetter.Reference => this.Reference_Property.Item;
-        IFormIDLinkGetter<IPlaced> IEnableParentGetter.Reference_Property => this.Reference_Property;
+        IPlacedGetter IEnableParentGetter.Reference => this.Reference_Property.Item;
+        IFormIDLinkGetter<IPlacedGetter> IEnableParentGetter.Reference_Property => this.Reference_Property;
         #endregion
         #region Flags
         private EnableParent.Flag _Flags;
@@ -553,8 +553,8 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Reference
-        IPlaced Reference { get; }
-        IFormIDLinkGetter<IPlaced> Reference_Property { get; }
+        IPlacedGetter Reference { get; }
+        IFormIDLinkGetter<IPlacedGetter> Reference_Property { get; }
 
         #endregion
         #region Flags
@@ -1791,8 +1791,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected BinaryWrapperFactoryPackage _package;
 
         #region Reference
-        public IFormIDLinkGetter<IPlaced> Reference_Property => new FormIDLink<IPlaced>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public IPlaced Reference => default;
+        public IFormIDLinkGetter<IPlacedGetter> Reference_Property => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IPlacedGetter Reference => default;
         #endregion
         public EnableParent.Flag Flags => (EnableParent.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);

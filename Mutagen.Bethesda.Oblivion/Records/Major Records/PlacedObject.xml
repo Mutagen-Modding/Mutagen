@@ -9,11 +9,16 @@
       <ByteArray name="FULLFluff" recordType="FULL" />
       <RefDirect name="TeleportDestination" refName="TeleportDestination" />
       <RefDirect name="Lock" refName="LockInformation" />
-      <FormIDLink name="Owner" recordType="XOWN" interfaceName="IOwner" objType="Record" />
+      <FormIDLink name="Owner" recordType="XOWN" objType="Record">
+        <Interface>IOwner</Interface>
+      </FormIDLink>
       <Int32 name="FactionRank" recordType="XRNK" />
       <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="EnableParent" refName="EnableParent" />
-      <FormIDLink name="Target" recordType="XTRG" objType="Record" interfaceName="IPlaced" />
+      <FormIDLink name="Target" recordType="XTRG" objType="Record" >
+        <Interface type="IGetter">IPlacedGetter</Interface>
+        <Interface type="ISetter">IPlaced</Interface>
+      </FormIDLink>
       <UInt8 name="SpeedTreeSeed" recordType="XSED" />
       <RefDirect name="DistantLODData" refName="DistantLODData" />
       <Float name="Charge" recordType="XCHG" />
@@ -37,7 +42,10 @@
   </Object>
   <Object name="TeleportDestination" recordType="XTEL" objType="Subrecord" GUID="852c0c03-6606-4ae4-8733-4375d9cd1544" ID="122">
     <Fields>
-      <FormIDLink name="Destination" interfaceName="IPlaced" objType="Record" />
+      <FormIDLink name="Destination" objType="Record" >
+        <Interface type="ISetter">IPlaced</Interface>
+        <Interface type="IGetter">IPlacedGetter</Interface>
+      </FormIDLink>
       <P3Float name="Position" />
       <P3Float name="Rotation" />
     </Fields>

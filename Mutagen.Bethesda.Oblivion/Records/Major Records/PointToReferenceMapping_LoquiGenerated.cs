@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
         public IPlaced Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<IPlaced> IPointToReferenceMapping.Reference_Property => this.Reference_Property;
-        IPlaced IPointToReferenceMappingGetter.Reference => this.Reference_Property.Item;
-        IFormIDLinkGetter<IPlaced> IPointToReferenceMappingGetter.Reference_Property => this.Reference_Property;
+        IPlacedGetter IPointToReferenceMappingGetter.Reference => this.Reference_Property.Item;
+        IFormIDLinkGetter<IPlacedGetter> IPointToReferenceMappingGetter.Reference_Property => this.Reference_Property;
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -538,8 +538,8 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Reference
-        IPlaced Reference { get; }
-        IFormIDLinkGetter<IPlaced> Reference_Property { get; }
+        IPlacedGetter Reference { get; }
+        IFormIDLinkGetter<IPlacedGetter> Reference_Property { get; }
 
         #endregion
         #region Points
@@ -1875,8 +1875,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected BinaryWrapperFactoryPackage _package;
 
         #region Reference
-        public IFormIDLinkGetter<IPlaced> Reference_Property => new FormIDLink<IPlaced>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public IPlaced Reference => default;
+        public IFormIDLinkGetter<IPlacedGetter> Reference_Property => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IPlacedGetter Reference => default;
         #endregion
         public IReadOnlyList<Int16> Points { get; private set; } = EmptySetList<Int16>.Instance;
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);

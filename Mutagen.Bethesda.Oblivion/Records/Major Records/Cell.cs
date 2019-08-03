@@ -325,7 +325,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 masterReferences);
                             writer.Write((int)GroupTypeEnum.CellPersistentChildren);
                             writer.Write(obj.PersistentTimestamp);
-                            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Write(
+                            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                 writer: writer,
                                 items: obj.Persistent,
                                 fieldIndex: (int)Cell_FieldIndex.Persistent,
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     masterReferences: masterReferences,
                                     errorMask: errorMask);
                             }
-                            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Write(
+                            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                 writer: writer,
                                 items: obj.Temporary,
                                 fieldIndex: (int)Cell_FieldIndex.Temporary,
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 masterReferences);
                             writer.Write((int)GroupTypeEnum.CellVisibleDistantChildren);
                             writer.Write(obj.VisibleWhenDistantTimestamp);
-                            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Write(
+                            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                 writer: writer,
                                 items: obj.VisibleWhenDistant,
                                 fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,

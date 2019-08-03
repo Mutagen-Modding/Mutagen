@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IPlaced> ICell.Persistent => _Persistent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IPlaced> ICellGetter.Persistent => _Persistent;
+        IReadOnlySetList<IPlacedGetter> ICellGetter.Persistent => _Persistent;
         #endregion
 
         #endregion
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IPlaced> ICell.Temporary => _Temporary;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IPlaced> ICellGetter.Temporary => _Temporary;
+        IReadOnlySetList<IPlacedGetter> ICellGetter.Temporary => _Temporary;
         #endregion
 
         #endregion
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IPlaced> ICell.VisibleWhenDistant => _VisibleWhenDistant;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IPlaced> ICellGetter.VisibleWhenDistant => _VisibleWhenDistant;
+        IReadOnlySetList<IPlacedGetter> ICellGetter.VisibleWhenDistant => _VisibleWhenDistant;
         #endregion
 
         #endregion
@@ -1513,21 +1513,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Persistent
-        IReadOnlySetList<IPlaced> Persistent { get; }
+        IReadOnlySetList<IPlacedGetter> Persistent { get; }
         #endregion
         #region TemporaryTimestamp
         ReadOnlySpan<Byte> TemporaryTimestamp { get; }
 
         #endregion
         #region Temporary
-        IReadOnlySetList<IPlaced> Temporary { get; }
+        IReadOnlySetList<IPlacedGetter> Temporary { get; }
         #endregion
         #region VisibleWhenDistantTimestamp
         ReadOnlySpan<Byte> VisibleWhenDistantTimestamp { get; }
 
         #endregion
         #region VisibleWhenDistant
-        IReadOnlySetList<IPlaced> VisibleWhenDistant { get; }
+        IReadOnlySetList<IPlacedGetter> VisibleWhenDistant { get; }
         #endregion
 
     }
@@ -3540,14 +3540,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Persistent.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
             {
-                ListXmlTranslation<IPlaced>.Instance.Write(
+                ListXmlTranslation<IPlacedGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Persistent),
                     item: item.Persistent,
                     fieldIndex: (int)Cell_FieldIndex.Persistent,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Persistent),
-                    transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IPlacedGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((IXmlWriteTranslator)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -3570,14 +3570,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Temporary.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
             {
-                ListXmlTranslation<IPlaced>.Instance.Write(
+                ListXmlTranslation<IPlacedGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Temporary),
                     item: item.Temporary,
                     fieldIndex: (int)Cell_FieldIndex.Temporary,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Temporary),
-                    transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IPlacedGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((IXmlWriteTranslator)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -3600,14 +3600,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.VisibleWhenDistant.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistant) ?? true))
             {
-                ListXmlTranslation<IPlaced>.Instance.Write(
+                ListXmlTranslation<IPlacedGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.VisibleWhenDistant),
                     item: item.VisibleWhenDistant,
                     fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.VisibleWhenDistant),
-                    transl: (XElement subNode, IPlaced subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IPlacedGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((IXmlWriteTranslator)((IXmlItem)loquiItem).XmlWriteTranslator).Write(

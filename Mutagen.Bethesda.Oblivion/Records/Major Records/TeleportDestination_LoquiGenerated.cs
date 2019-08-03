@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Oblivion
         public IPlaced Destination { get => Destination_Property.Item; set => Destination_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLink<IPlaced> ITeleportDestination.Destination_Property => this.Destination_Property;
-        IPlaced ITeleportDestinationGetter.Destination => this.Destination_Property.Item;
-        IFormIDLinkGetter<IPlaced> ITeleportDestinationGetter.Destination_Property => this.Destination_Property;
+        IPlacedGetter ITeleportDestinationGetter.Destination => this.Destination_Property.Item;
+        IFormIDLinkGetter<IPlacedGetter> ITeleportDestinationGetter.Destination_Property => this.Destination_Property;
         #endregion
         #region Position
         private P3Float _Position;
@@ -580,8 +580,8 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Destination
-        IPlaced Destination { get; }
-        IFormIDLinkGetter<IPlaced> Destination_Property { get; }
+        IPlacedGetter Destination { get; }
+        IFormIDLinkGetter<IPlacedGetter> Destination_Property { get; }
 
         #endregion
         #region Position
@@ -1924,8 +1924,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected BinaryWrapperFactoryPackage _package;
 
         #region Destination
-        public IFormIDLinkGetter<IPlaced> Destination_Property => new FormIDLink<IPlaced>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public IPlaced Destination => default;
+        public IFormIDLinkGetter<IPlacedGetter> Destination_Property => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IPlacedGetter Destination => default;
         #endregion
         public P3Float Position => P3FloatBinaryTranslation.Read(_data.Span.Slice(4, 12));
         public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Span.Slice(16, 12));
