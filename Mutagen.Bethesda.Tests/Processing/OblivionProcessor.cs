@@ -180,10 +180,10 @@ namespace Mutagen.Bethesda.Tests
             this._Instructions.SetRemove(dataRange);
             amount -= (int)dataRange.Width;
 
-            ProcessLengths(
+            ProcessSubrecordLengths(
                 stream,
                 amount,
-                loc,
+                loc.Min,
                 formID);
         }
 
@@ -261,10 +261,10 @@ namespace Mutagen.Bethesda.Tests
                 amount -= (int)iconLoc.Width;
             }
 
-            ProcessLengths(
+            ProcessSubrecordLengths(
                 stream,
                 amount,
-                loc,
+                loc.Min,
                 formID);
         }
 
@@ -346,10 +346,10 @@ namespace Mutagen.Bethesda.Tests
                 ProcessZeroFloat(stream);
             }
 
-            ProcessLengths(
+            ProcessSubrecordLengths(
                 stream,
                 amount,
-                loc,
+                loc.Min,
                 formID);
         }
 
@@ -377,10 +377,10 @@ namespace Mutagen.Bethesda.Tests
                 ProcessZeroFloat(stream);
             }
 
-            ProcessLengths(
+            ProcessSubrecordLengths(
                 stream,
                 amount,
-                loc,
+                loc.Min,
                 formID);
         }
 
@@ -408,10 +408,10 @@ namespace Mutagen.Bethesda.Tests
                 ProcessZeroFloat(stream);
             }
 
-            ProcessLengths(
+            ProcessSubrecordLengths(
                 stream,
                 amount,
-                loc,
+                loc.Min,
                 formID);
         }
 
@@ -476,10 +476,10 @@ namespace Mutagen.Bethesda.Tests
                 amount -= (int)remove.Width;
             }
 
-            ProcessLengths(
+            ProcessSubrecordLengths(
                 stream,
                 amount,
-                loc,
+                loc.Min,
                 formID,
                 doRecordLen: false);
         }
@@ -510,10 +510,10 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            ProcessLengths(
+            ProcessSubrecordLengths(
                 stream,
                 amount,
-                loc,
+                loc.Min,
                 formID,
                 doRecordLen: false);
         }
@@ -559,10 +559,10 @@ namespace Mutagen.Bethesda.Tests
                 amount -= diff;
             }
 
-            ProcessLengths(
+            ProcessSubrecordLengths(
                 stream,
                 amount,
-                loc,
+                loc.Min,
                 formID);
         }
 
@@ -589,10 +589,10 @@ namespace Mutagen.Bethesda.Tests
                 amount += 4;
             }
 
-            ProcessLengths(
+            ProcessSubrecordLengths(
                 stream,
                 amount,
-                loc,
+                loc.Min,
                 formID);
         }
 
@@ -642,10 +642,10 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            ProcessLengths(
+            ProcessSubrecordLengths(
                 stream,
                 amount,
-                loc,
+                loc.Min,
                 formID);
         }
 
@@ -767,10 +767,10 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            ProcessLengths(
+            ProcessSubrecordLengths(
                 stream,
                 amount,
-                loc,
+                loc.Min,
                 formID);
         }
 
