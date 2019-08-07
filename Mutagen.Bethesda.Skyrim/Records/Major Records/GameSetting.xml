@@ -19,4 +19,9 @@
       <String name="Data" recordType="DATA" />
     </Fields>
   </Object>
+  <Object name="GameSettingBool" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="6446aadc-335b-4467-b72f-81de8a9ea207" ID="17">
+    <Fields>
+      <Bool name="Data" recordType="DATA" binary="Custom" />
+    </Fields>
+  </Object>
 </Loqui>

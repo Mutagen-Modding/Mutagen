@@ -72,20 +72,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region LastModified
-        private Byte[] _LastModified = new byte[4];
-        public Byte[] LastModified
+        private Int32 _LastModified;
+        public Int32 LastModified
         {
-            get => _LastModified;
-            set
-            {
-                this._LastModified = value;
-                if (value == null)
-                {
-                    this._LastModified = new byte[4];
-                }
-            }
+            get => this._LastModified;
+            set => this.RaiseAndSetIfChanged(ref this._LastModified, value, nameof(LastModified));
         }
-        ReadOnlySpan<Byte> IGroupGetter<T>.LastModified => this.LastModified;
         #endregion
         #region Items
         private readonly SourceSetCache<T, FormKey> _Items = new SourceSetCache<T, FormKey>((item) => item.FormKey);
@@ -411,16 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.GroupType = default(GroupTypeEnum);
             }
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out Byte[] LastModifiedParse))
-            {
-                item.LastModified = LastModifiedParse;
-            }
-            else
-            {
-                item.LastModified = default(Byte[]);
-            }
+            item.LastModified = frame.ReadInt32();
         }
 
         protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
@@ -585,7 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.GroupType = (GroupTypeEnum)obj;
                     break;
                 case Group_FieldIndex.LastModified:
-                    this.LastModified = (Byte[])obj;
+                    this.LastModified = (Int32)obj;
                     break;
                 case Group_FieldIndex.Items:
                     this.Items.SetTo((IEnumerable<T>)(SourceSetCache<T, FormKey>)obj);
@@ -622,7 +605,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.GroupType = (GroupTypeEnum)pair.Value;
                     break;
                 case Group_FieldIndex.LastModified:
-                    obj.LastModified = (Byte[])pair.Value;
+                    obj.LastModified = (Int32)pair.Value;
                     break;
                 case Group_FieldIndex.Items:
                     obj.Items.SetTo((IEnumerable<T>)(SourceSetCache<T, FormKey>)pair.Value);
@@ -642,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new GroupTypeEnum GroupType { get; set; }
 
-        new Byte[] LastModified { get; set; }
+        new Int32 LastModified { get; set; }
 
         new ISourceCache<T, FormKey> Items { get; }
         void CopyFieldsFrom<T_CopyMask>(
@@ -665,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region LastModified
-        ReadOnlySpan<Byte> LastModified { get; }
+        Int32 LastModified { get; }
 
         #endregion
         #region Items
@@ -966,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Group_FieldIndex.GroupType:
                     return typeof(GroupTypeEnum);
                 case Group_FieldIndex.LastModified:
-                    return typeof(Byte[]);
+                    return typeof(Int32);
                 case Group_FieldIndex.Items:
                     return typeof(SourceSetCache<T, FormKey>);
                 default:
@@ -1068,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.GroupType = default(GroupTypeEnum);
-            item.LastModified = default(Byte[]);
+            item.LastModified = default(Int32);
             item.Items.Clear();
         }
 
@@ -1096,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.GroupType = item.GroupType == rhs.GroupType;
-            ret.LastModified = MemoryExtensions.SequenceEqual(item.LastModified, rhs.LastModified);
+            ret.LastModified = item.LastModified == rhs.LastModified;
             ret.Items = EqualsMaskHelper.CacheEqualsHelper(
                 lhs: item.Items,
                 rhs: rhs.Items,
@@ -1157,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.LastModified ?? true)
             {
-                fg.AppendLine($"LastModified => {SpanExt.ToHexString(item.LastModified)}");
+                fg.AppendLine($"LastModified => {item.LastModified}");
             }
             if (printMask?.Items?.Overall ?? true)
             {
@@ -1206,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.GroupType != rhs.GroupType) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.LastModified, rhs.LastModified)) return false;
+            if (lhs.LastModified != rhs.LastModified) return false;
             if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
             return true;
         }
@@ -1251,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.LastModified) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LastModified),
                     item: item.LastModified,
@@ -1424,16 +1407,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        if (Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] LastModifiedParse,
+                            item: out Int32 LastModifiedParse,
                             errorMask: errorMask))
                         {
                             item.LastModified = LastModifiedParse;
                         }
                         else
                         {
-                            item.LastModified = default(Byte[]);
+                            item.LastModified = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -2083,9 +2066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.GroupType,
                 length: 4);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.LastModified);
+            writer.Write(item.LastModified);
         }
 
         public static void Write_RecordTypes<T>(
@@ -2259,7 +2240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
         #endregion
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
-        public ReadOnlySpan<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
+        public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
         protected GroupBinaryWrapper(

@@ -3,6 +3,8 @@
   <Object name="SkyrimMajorRecord" objType="Record" abstract="true" baseClass="Bethesda.MajorRecord" GUID="4c3a4042-d85b-4f7e-8f54-443bb2efefd4" ID="4">
     <Fields>
       <Enum name="SkyrimMajorRecordFlags" enumName="SkyrimMajorRecord.SkyrimMajorRecordFlag" binary="NoGeneration" generateClassMembers="false" />
+      <UInt16 name="FormVersion" />
+      <UInt16 name="Version2" />
     </Fields>
   </Object>
 </Loqui>

@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Tests
                 yield return OtherTests.OblivionESM_GroupMask_Import(settings, oblivPassthrough);
                 yield return OtherTests.OblivionESM_GroupMask_Export(settings, oblivPassthrough);
             }
-            var oblivPassthroughTest = new Oblivion_Passthrough_Test(settings, oblivPassthrough);
+            var oblivPassthroughTest = new OblivionPassthroughTest(settings, oblivPassthrough);
             if (settings.PassthroughSettings?.TestFolder ?? false)
             {
                 yield return OtherTests.OblivionESM_Folder_Reimport(settings.PassthroughSettings, oblivPassthrough, oblivPassthroughTest);

@@ -10,7 +10,8 @@ namespace Mutagen.Bethesda
     {
         Float,
         Int,
-        String
+        String,
+        Bool
     }
 
     public interface IGameSettingCommon : IMajorRecordCommon
@@ -28,6 +29,7 @@ namespace Mutagen.Bethesda
         public const char IntChar = 'i';
         public const char FloatChar = 'f';
         public const char StringChar = 's';
+        public const char BoolChar = 'b';
 
         public static bool TryGetGameSettingType(char c, out GameSettingType type)
         {
@@ -41,6 +43,9 @@ namespace Mutagen.Bethesda
                     return true;
                 case FloatChar:
                     type = GameSettingType.Float;
+                    return true;
+                case BoolChar:
+                    type = GameSettingType.Bool;
                     return true;
                 default:
                     type = default;
@@ -58,6 +63,8 @@ namespace Mutagen.Bethesda
                     return IntChar;
                 case GameSettingType.String:
                     return StringChar;
+                case GameSettingType.Bool:
+                    return BoolChar;
                 default:
                     throw new NotImplementedException();
             }
@@ -80,13 +87,14 @@ namespace Mutagen.Bethesda
 
         public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlySpan<byte> span, MetaDataConstants meta)
         {
-            span = span.Slice(meta.MajorConstants.HeaderLength);
-            var subRecordMeta = meta.SubRecord(span);
-            if (Constants.EditorID != subRecordMeta.RecordType)
+            var majorMeta = meta.MajorRecordFrame(span);
+            var edidLoc = UtilityTranslation.FindFirstSubrecord(majorMeta.ContentSpan, meta, Constants.EditorID);
+            if (edidLoc == -1)
             {
                 return GetResponse<GameSettingType>.Fail($"EDID was not located");
             }
-            var edid = BinaryStringUtility.ProcessWholeToZString(span.Slice(subRecordMeta.HeaderLength, subRecordMeta.RecordLength));
+            var edidMeta = meta.SubRecordFrame(majorMeta.ContentSpan.Slice(edidLoc));
+            var edid = BinaryStringUtility.ProcessWholeToZString(edidMeta.ContentSpan);
             if (edid.Length == 0)
             {
                 return GetResponse<GameSettingType>.Fail("No EDID parsed.");

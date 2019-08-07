@@ -3,8 +3,10 @@ using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Preprocessing;
 using Noggog;
+using Noggog.Streams.Binary;
 using Noggog.Utility;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -30,6 +32,7 @@ namespace Mutagen.Bethesda.Tests
 
         public abstract GameMode GameMode { get; }
         public readonly MetaDataConstants Meta;
+        protected abstract Processor ProcessorFactory();
 
         public PassthroughTest(TestingSettings settings, Target target)
         {
@@ -42,33 +45,6 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public abstract ModRecordAligner.AlignmentRules GetAlignmentRules();
-
-        protected virtual BinaryFileProcessor.Config GetInstructions(
-            Dictionary<long, uint> lengthTracker,
-            RecordLocator.FileLocations fileLocs)
-        {
-            return new BinaryFileProcessor.Config();
-        }
-
-        protected virtual void AddDynamicProcessorInstructions(
-            IMutagenReadStream stream,
-            byte numMasters,
-            FormID formID,
-            RecordType recType,
-            BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker)
-        {
-        }
-
-        protected virtual void PreProcessorJobs(
-            IMutagenReadStream stream,
-            RecordLocator.FileLocations fileLocs,
-            BinaryFileProcessor.Config instructions,
-            RecordLocator.FileLocations alignedFileLocs)
-        {
-        }
 
         public async Task<TempFolder> SetupProcessedFiles()
         {
@@ -150,76 +126,16 @@ namespace Mutagen.Bethesda.Tests
             BinaryFileProcessor.Config instructions;
             if (!Settings.ReuseCaches || !File.Exists(processedPath))
             {
-                var alignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath, this.GameMode);
+                instructions = new BinaryFileProcessor.Config();
 
-                Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
-
-                using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
+                var processor = this.ProcessorFactory();
+                if (processor != null)
                 {
-                    foreach (var grup in alignedFileLocs.GrupLocations.And(alignedFileLocs.ListedRecords.Keys))
-                    {
-                        reader.Position = grup + 4;
-                        lengthTracker[grup] = reader.ReadUInt32();
-                    }
-                }
-
-                instructions = GetInstructions(
-                    lengthTracker,
-                    alignedFileLocs);
-
-                using (var stream = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
-                {
-                    var fileLocs = RecordLocator.GetFileLocations(this.FilePath.Path, this.GameMode);
-                    PreProcessorJobs(
-                        stream: stream,
-                        fileLocs: fileLocs,
-                        instructions: instructions,
-                        alignedFileLocs: alignedFileLocs);
-                    foreach (var rec in fileLocs.ListedRecords)
-                    {
-                        AddDynamicProcessorInstructions(
-                            stream: stream,
-                            formID: rec.Value.FormID,
-                            recType: rec.Value.Record,
-                            instr: instructions,
-                            loc: alignedFileLocs[rec.Value.FormID],
-                            fileLocs: alignedFileLocs,
-                            lengthTracker: lengthTracker,
-                            numMasters: this.NumMasters);
-                    }
-                }
-
-                using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
-                {
-                    foreach (var grup in lengthTracker)
-                    {
-                        reader.Position = grup.Key + 4;
-                        if (grup.Value == reader.ReadUInt32()) continue;
-                        instructions.SetSubstitution(
-                            loc: grup.Key + 4,
-                            sub: BitConverter.GetBytes(grup.Value));
-                    }
-                }
-
-                using (var processor = new BinaryFileProcessor(
-                    new FileStream(preprocessedPath, FileMode.Open, FileAccess.Read),
-                    instructions))
-                {
-                    try
-                    {
-                        using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))
-                        {
-                            processor.CopyTo(outStream);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        if (File.Exists(processedPath))
-                        {
-                            File.Delete(processedPath);
-                        }
-                        throw;
-                    }
+                    processor.Process(
+                        sourcePath: this.FilePath.Path,
+                        preprocessedPath: alignedPath,
+                        outputPath: processedPath,
+                        numMasters: this.NumMasters);
                 }
             }
 
@@ -256,7 +172,7 @@ namespace Mutagen.Bethesda.Tests
 
                     using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
                     {
-                        var ret = Passthrough_Tests.AssertFilesEqual(
+                        var ret = AssertFilesEqual(
                             stream,
                             outputPath,
                             amountToReport: 15);
@@ -287,7 +203,7 @@ namespace Mutagen.Bethesda.Tests
 
                     using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
                     {
-                        var ret = Passthrough_Tests.AssertFilesEqual(
+                        var ret = PassthroughTest.AssertFilesEqual(
                             stream,
                             binaryWrapper,
                             amountToReport: 15);
@@ -323,11 +239,90 @@ namespace Mutagen.Bethesda.Tests
             switch (target.GameMode)
             {
                 case GameMode.Oblivion:
-                    return new Oblivion_Passthrough_Test(settings, target);
+                    return new OblivionPassthroughTest(settings, target);
                 case GameMode.Skyrim:
                     return new Skyrim_Passthrough_Test(settings, target);
                 default:
                     throw new NotImplementedException();
+            }
+        }
+
+        public static (Exception Exception, IEnumerable<RangeInt64> Sections, bool HadMore) AssertFilesEqual(
+            Stream stream,
+            string path2,
+            RangeCollection ignoreList = null,
+            ushort amountToReport = 5)
+        {
+            List<RangeInt32> errorRanges = new List<RangeInt32>();
+            using (var reader2 = new BinaryReadStream(path2))
+            {
+                Stream compareStream = new ComparisonStream(
+                    stream,
+                    reader2);
+
+                if (ignoreList != null)
+                {
+                    compareStream = new BasicSubstitutionRangeStream(
+                        compareStream,
+                        ignoreList,
+                        toSubstitute: 0);
+                }
+
+                var errs = GetDifferences(compareStream)
+                    .First(amountToReport)
+                    .ToArray();
+                if (errs.Length > 0)
+                {
+                    var posStr = string.Join(" ", errs.Select((r) =>
+                    {
+                        return r.ToString("X");
+                    }));
+                    return (new ArgumentException($"{path2} Bytes did not match at positions: {posStr}"), errs, false);
+                }
+                if (stream.Position != stream.Length)
+                {
+                    return (new ArgumentException($"{path2} Stream had more data past position 0x{stream.Position.ToString("X")} than {path2}"), errs, true);
+                }
+                if (reader2.Position != reader2.Length)
+                {
+                    return (new ArgumentException($"{path2} Stream {path2} had more data past position 0x{reader2.Position.ToString("X")} than source stream."), errs, true);
+                }
+                return (null, errs, false);
+            }
+        }
+
+        public static IEnumerable<RangeInt64> GetDifferences(
+            Stream reader)
+        {
+            byte[] buf = new byte[4096];
+            bool inRange = false;
+            long startRange = 0;
+            var len = reader.Length;
+            long pos = 0;
+            while (pos < len)
+            {
+                var read = reader.Read(buf, 0, buf.Length);
+                for (int i = 0; i < read; i++)
+                {
+                    if (buf[i] != 0)
+                    {
+                        if (!inRange)
+                        {
+                            startRange = pos + i;
+                            inRange = true;
+                        }
+                    }
+                    else
+                    {
+                        if (inRange)
+                        {
+                            var sourceRange = new RangeInt64(startRange, pos + i);
+                            yield return sourceRange;
+                            inRange = false;
+                        }
+                    }
+                }
+                pos += read;
             }
         }
     }

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             Settings = TestingSettings.CreateFromXml(settingsPath.Path);
             System.Console.WriteLine("Target settings: " + Settings.ToString());
 
-            var passthrough = new Oblivion_Passthrough_Test(Settings, new Target()
+            var passthrough = new OblivionPassthroughTest(Settings, new Target()
             {
                 Path = $"Oblivion.esm",
                 Do = true,

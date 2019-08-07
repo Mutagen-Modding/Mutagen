@@ -25,5 +25,7 @@ namespace Mutagen.Bethesda.Tests
         {
             return await SkyrimMod.CreateFromBinary(path.Path, modKey);
         }
+
+        protected override Processor ProcessorFactory() => null;
     }
 }
