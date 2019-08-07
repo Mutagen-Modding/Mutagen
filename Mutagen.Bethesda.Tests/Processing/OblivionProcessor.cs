@@ -24,6 +24,7 @@ namespace Mutagen.Bethesda.Tests
             FormID formID,
             RecordType recType)
         {
+            base.AddDynamicProcessorInstructions(stream, formID, recType);
             var loc = this._AlignedFileLocs[formID];
             ProcessNPC(stream, recType,loc);
             ProcessCreature(stream, recType, loc);

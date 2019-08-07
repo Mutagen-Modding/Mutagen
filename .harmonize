@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>24a31421351bf5088ed5c6aede8492fce88fa5f4</Sha>
+         <Sha>af862fba644818a335f1e4b8169844c9c54f87aa</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-28-2019 14:01:27</CommitDate>
-         <Description>ListType:  TypeName swapped to ListInterface usage</Description>
+         <CommitDate>07-29-2019 21:25:07</CommitDate>
+         <Description>Translation Common Class instance calls cast to ILoquiObject</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

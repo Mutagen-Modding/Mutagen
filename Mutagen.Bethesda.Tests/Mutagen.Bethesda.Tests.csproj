@@ -42,6 +42,7 @@
     <Compile Include="Processing\ModRecordAligner.cs" />
     <Compile Include="Processing\OblivionProcessor.cs" />
     <Compile Include="Processing\Processor.cs" />
+    <Compile Include="Processing\SkyrimProcessor.cs" />
     <Compile Include="Settings\DataFolderLocations.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>

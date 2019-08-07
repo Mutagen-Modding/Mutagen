@@ -98,12 +98,13 @@ namespace Mutagen.Bethesda.Tests
             FormID formID,
             RecordType recType)
         {
+            var loc = this._AlignedFileLocs[formID];
+            ProcessEDID(stream, loc);
         }
 
         public void ProcessEDID(
             IMutagenReadStream stream,
-            RangeInt64 loc,
-            BinaryFileProcessor.Config instr)
+            RangeInt64 loc)
         {
             stream.Position = loc.Min;
             var majorFrame = this.Meta.ReadMajorRecordFrame(stream);
