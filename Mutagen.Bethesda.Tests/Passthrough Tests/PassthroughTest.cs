@@ -143,6 +143,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         protected abstract Task<IMod> ImportBinary(FilePath path, ModKey modKey);
+        protected abstract Task<IModGetter> ImportBinaryWrapper(FilePath path, ModKey modKey);
 
         public async Task BinaryPassthroughTest()
         {
@@ -161,7 +162,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     var mod = await ImportBinary(this.FilePath.Path, modKey);
 
-                    foreach (var record in mod.MajorRecords.Items)
+                    foreach (var record in mod.MajorRecords.Values)
                     {
                         record.IsCompressed = false;
                     }
@@ -192,10 +193,7 @@ namespace Mutagen.Bethesda.Tests
 
                 if (Settings.TestBinaryWrapper)
                 {
-                    var bytes = File.ReadAllBytes(this.FilePath.Path);
-                    var wrapper = OblivionModBinaryWrapper.OblivionModFactory(
-                        new MemorySlice<byte>(bytes),
-                        modKey);
+                    var wrapper = await ImportBinaryWrapper(this.FilePath.Path, modKey);
 
                     wrapper.WriteToBinary(
                         binaryWrapper,

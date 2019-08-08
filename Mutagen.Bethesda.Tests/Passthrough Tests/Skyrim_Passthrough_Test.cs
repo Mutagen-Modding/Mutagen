@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 
 namespace Mutagen.Bethesda.Tests
@@ -19,6 +21,14 @@ namespace Mutagen.Bethesda.Tests
         public override ModRecordAligner.AlignmentRules GetAlignmentRules()
         {
             return new ModRecordAligner.AlignmentRules();
+        }
+
+        protected override async Task<IModGetter> ImportBinaryWrapper(FilePath path, ModKey modKey)
+        {
+            var bytes = File.ReadAllBytes(this.FilePath.Path);
+            return SkyrimModBinaryWrapper.SkyrimModFactory(
+                new MemorySlice<byte>(bytes),
+                modKey);
         }
 
         protected override async Task<IMod> ImportBinary(FilePath path, ModKey modKey)

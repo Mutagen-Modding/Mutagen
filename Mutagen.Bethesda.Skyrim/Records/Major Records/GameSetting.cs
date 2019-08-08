@@ -7,6 +7,7 @@ using ReactiveUI;
 using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Linq;
+using Noggog;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -52,6 +53,37 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask.ReportExceptionOrThrow(
                         new ArgumentException($"Unknown game type: {settingType.Value}"));
                     return null;
+            }
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class GameSettingBinaryWrapper
+        {
+            public static GameSettingBinaryWrapper GameSettingFactory(
+                BinaryMemoryReadStream stream,
+                BinaryWrapperFactoryPackage package,
+                RecordTypeConverter recordTypeConverter)
+            {
+                var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingSpan, package.Meta);
+                if (settingType.Failed)
+                {
+                    throw new ArgumentException($"Error splitting to desired GameSetting type: {settingType.Reason}");
+                }
+                switch (settingType.Value)
+                {
+                    case GameSettingType.Float:
+                        return GameSettingFloatBinaryWrapper.GameSettingFloatFactory(stream, package);
+                    case GameSettingType.Int:
+                        return GameSettingIntBinaryWrapper.GameSettingIntFactory(stream, package);
+                    case GameSettingType.String:
+                        return GameSettingStringBinaryWrapper.GameSettingStringFactory(stream, package);
+                    case GameSettingType.Bool:
+                        return GameSettingBoolBinaryWrapper.GameSettingBoolFactory(stream, package);
+                    default:
+                        throw new ArgumentException($"Unknown game type: {settingType.Value}");
+                }
             }
         }
     }

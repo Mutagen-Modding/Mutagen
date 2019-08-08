@@ -1428,7 +1428,6 @@ namespace Mutagen.Bethesda.Generation
                 || obj.Name.Contains("ListGroup")
                 || obj.Name.Contains("Road")
                 || obj.Name.Contains("PathGrid")
-                || obj.Name.Contains("SkyrimMod")
                 || obj.Name.Contains("DialogTopic")
                 ) return;
 

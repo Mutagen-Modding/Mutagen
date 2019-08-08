@@ -2611,6 +2611,128 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
+    public partial class SkyrimModBinaryWrapper : ISkyrimModGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
+        public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
+        protected object CommonInstance => SkyrimModCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModGetter)rhs, include);
+
+        public GameMode GameMode => GameMode.Skyrim;
+        IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
+        void IModGetter.WriteToBinary(
+            string path,
+            ModKey modKey)
+        {
+            this.WriteToBinary(
+                path: path,
+                modKey: modKey);
+        }
+        IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
+        IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
+        protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected ReadOnlyMemorySlice<byte> _data;
+        protected BinaryWrapperFactoryPackage _package;
+        public ModKey ModKey { get; }
+
+        #region ModHeader
+        private IModHeaderGetter _ModHeader;
+        public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
+        public bool ModHeader_IsSet => ModHeader != null;
+        #endregion
+        #region GameSettings
+        private IGroupGetter<IGameSettingInternalGetter> _GameSettings;
+        public IGroupGetter<IGameSettingInternalGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
+        #endregion
+        #region Globals
+        private IGroupGetter<IGlobalInternalGetter> _Globals;
+        public IGroupGetter<IGlobalInternalGetter> Globals => _Globals ?? new Group<Global>(this);
+        #endregion
+        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+
+        protected SkyrimModBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            ModKey modKey)
+        {
+            this._data = bytes;
+            this._package = new BinaryWrapperFactoryPackage()
+            {
+                Meta = MetaDataConstants.Get(this.GameMode),
+                Mod = this
+            };
+            this.ModKey = modKey;
+        }
+
+        public static SkyrimModBinaryWrapper SkyrimModFactory(
+            ReadOnlyMemorySlice<byte> bytes,
+            ModKey modKey)
+        {
+            var ret = new SkyrimModBinaryWrapper(
+                bytes: bytes,
+                modKey: modKey);
+            var stream = new BinaryMemoryReadStream(bytes);
+            ret.CustomCtor(stream, offset: 0);
+            UtilityTranslation.FillModTypesForWrapper(
+                stream: stream,
+                meta: ret._package.Meta,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x34534554: // TES4
+                {
+                    this._ModHeader = ModHeaderBinaryWrapper.ModHeaderFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    _package.MasterReferences = new MasterReferences(
+                        this.ModHeader.MasterReferences.Select(
+                            master => new MasterReference()
+                            {
+                                Master = master.Master,
+                                FileSize = master.FileSize,
+                                 FileSize_IsSet = master.FileSize_IsSet
+                            })
+                            .ToList(),
+                        this.ModKey);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
+                }
+                case 0x54534D47: // GMST
+                {
+                    this._GameSettings = GroupBinaryWrapper<IGameSettingInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
+                }
+                case 0x424F4C47: // GLOB
+                {
+                    this._Globals = GroupBinaryWrapper<IGlobalInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
+                }
+                default:
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+    }
+
     #endregion
 
     #endregion
