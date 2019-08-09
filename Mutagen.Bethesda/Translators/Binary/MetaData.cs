@@ -41,17 +41,20 @@ namespace Mutagen.Bethesda.Binary
 
     public class MajorRecordConstants : RecordConstants
     {
-        public sbyte FlagLocation { get; }
+        public sbyte FlagLocationOffset { get; }
+        public sbyte FormIDLocationOffset { get; }
 
         public MajorRecordConstants(
             GameMode gameMode,
             ObjectType type, 
             sbyte headerLength,
             sbyte lengthLength,
-            sbyte flagsLoc) 
+            sbyte flagsLoc,
+            sbyte formIDloc)
             : base(gameMode, type, headerLength, lengthLength)
         {
-            this.FlagLocation = flagsLoc;
+            this.FlagLocationOffset = flagsLoc;
+            this.FormIDLocationOffset = formIDloc;
         }
     }
 
@@ -80,7 +83,8 @@ namespace Mutagen.Bethesda.Binary
                 ObjectType.Record,
                 headerLength: 20,
                 lengthLength: 4,
-                flagsLoc: 8),
+                flagsLoc: 8,
+                formIDloc: 12),
             SubConstants = new RecordConstants(
                 GameMode.Oblivion,
                 ObjectType.Subrecord,
@@ -103,7 +107,8 @@ namespace Mutagen.Bethesda.Binary
                 ObjectType.Record,
                 headerLength: 24,
                 lengthLength: 4,
-                flagsLoc: 8),
+                flagsLoc: 8,
+                formIDloc: 12),
             SubConstants = new RecordConstants(
                 GameMode.Skyrim,
                 ObjectType.Subrecord,

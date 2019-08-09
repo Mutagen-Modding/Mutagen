@@ -100,6 +100,7 @@ namespace Mutagen.Bethesda.Tests
         {
             var loc = this._AlignedFileLocs[formID];
             ProcessEDID(stream, loc);
+            ProcessFormIDOverflow(stream, loc);
         }
 
         public void ProcessEDID(
@@ -114,6 +115,20 @@ namespace Mutagen.Bethesda.Tests
                 stream,
                 loc.Min + majorFrame.Header.HeaderLength + edidLoc,
                 majorFrame.Header.FormID);
+        }
+
+        public void ProcessFormIDOverflow(
+            IMutagenReadStream stream,
+            RangeInt64 loc)
+        {
+            stream.Position = loc.Min;
+            var majorMeta = this.Meta.GetMajorRecord(stream);
+            var formID = majorMeta.FormID;
+            if (formID.ModID.ID < this._NumMasters) return;
+            // Need to zero out master
+            this._Instructions.SetSubstitution(
+                loc.Min + this.Meta.MajorConstants.FormIDLocationOffset + 3,
+                0);
         }
 
         public void ProcessStringTermination(
