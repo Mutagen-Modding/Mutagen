@@ -1663,6 +1663,10 @@ namespace Mutagen.Bethesda.Generation
                     }
                     using (new BraceWrapper(fg))
                     {
+                        if (obj.GetObjectType() == ObjectType.Record)
+                        {
+                            fg.AppendLine($"stream = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.DecompressStream)}(stream, package.Meta);");
+                        }
                         using (var args = new ArgsWrapper(fg,
                             $"var ret = new {BinaryWrapperClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}"))
                         {

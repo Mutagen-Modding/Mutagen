@@ -1920,6 +1920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryWrapperFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
+            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
             var ret = new GameSettingFloatBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
