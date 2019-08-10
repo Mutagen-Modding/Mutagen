@@ -381,16 +381,16 @@ namespace Mutagen.Bethesda
                 {
                     throw new ArgumentException("Did not see GRUP header as expected.");
                 }
-                var startPos = stream.Position;
+                var minimumFinalPos = stream.Position + groupMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
                     offset: 0,
                     type: groupMeta.ContainedRecordType,
                     lastParsed: lastParsed);
                 if (parsed.Failed) break;
-                if (startPos == stream.Position)
+                if (minimumFinalPos > stream.Position)
                 {
-                    stream.Position += checked((int)groupMeta.TotalLength);
+                    stream.Position = checked((int)minimumFinalPos);
                 }
                 lastParsed = parsed.Value;
             }
@@ -455,16 +455,16 @@ namespace Mutagen.Bethesda
             while (stream.Position < finalPos)
             {
                 MajorRecordMeta majorMeta = meta.MajorRecord(stream.RemainingSpan);
-                var startPos = stream.Position;
+                var minimumFinalPos = stream.Position + majorMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
                     offset: offset,
                     type: recordTypeConverter.ConvertToStandard(majorMeta.RecordType),
                     lastParsed: lastParsed);
                 if (parsed.Failed) break;
-                if (startPos == stream.Position)
+                if (minimumFinalPos > stream.Position)
                 {
-                    stream.Position += checked((int)majorMeta.TotalLength);
+                    stream.Position = checked((int)minimumFinalPos);
                 }
                 lastParsed = parsed.Value;
             }
@@ -486,16 +486,16 @@ namespace Mutagen.Bethesda
                 {
                     throw new DataMisalignedException();
                 }
-                var startPos = stream.Position;
+                var minimumFinalPos = stream.Position + groupMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
                     offset: offset,
                     type: recordTypeConverter.ConvertToStandard(groupMeta.RecordType),
                     lastParsed: lastParsed);
                 if (parsed.Failed) break;
-                if (startPos == stream.Position)
+                if (minimumFinalPos > stream.Position)
                 {
-                    stream.Position += checked((int)groupMeta.TotalLength);
+                    stream.Position = checked((int)minimumFinalPos);
                 }
                 lastParsed = parsed.Value;
             }
@@ -513,16 +513,16 @@ namespace Mutagen.Bethesda
             while (stream.Position < finalPos)
             {
                 SubRecordMeta subMeta = meta.SubRecord(stream.RemainingSpan);
-                var startPos = stream.Position;
+                var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
                     offset: offset,
                     type: recordTypeConverter.ConvertToStandard(subMeta.RecordType),
                     lastParsed: lastParsed);
                 if (parsed.Failed) break;
-                if (startPos == stream.Position)
+                if (minimumFinalPos > stream.Position)
                 {
-                    stream.Position += checked((int)subMeta.TotalLength);
+                    stream.Position = minimumFinalPos;
                 }
                 lastParsed = parsed.Value;
             }
@@ -539,16 +539,16 @@ namespace Mutagen.Bethesda
             while (!stream.Complete)
             {
                 SubRecordMeta subMeta = meta.SubRecord(stream.RemainingSpan);
-                var startPos = stream.Position;
+                var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
                     offset: offset,
                     type: recordTypeConverter.ConvertToStandard(subMeta.RecordType),
                     lastParsed: lastParsed);
                 if (parsed.Failed) break;
-                if (startPos == stream.Position)
+                if (minimumFinalPos > stream.Position)
                 {
-                    stream.Position += checked((int)subMeta.TotalLength);
+                    stream.Position = minimumFinalPos;
                 }
                 lastParsed = parsed.Value;
             }
